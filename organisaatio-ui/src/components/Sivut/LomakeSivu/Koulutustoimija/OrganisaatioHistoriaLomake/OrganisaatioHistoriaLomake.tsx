@@ -10,11 +10,9 @@ type organisaatioHistoriaProps = {
     handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
 };
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {
     const [{ data: historia, loading: historiaLoading, error: historiaError }] = useAxios(
-        `${urlPrefix}/organisaatio/v4/1.2.246.562.10.69981965515/historia`
+        `/organisaatio/organisaatio/v4/1.2.246.562.10.69981965515/historia`
     );
     console.log('hist', historia);
     const liittyneetColumns = [

@@ -15,15 +15,13 @@ import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 const Ryhmat: React.FC = (props) => {
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
     const [ryhmat, setRyhmat] = useState<Ryhma[] | undefined>(undefined);
     useEffect(() => {
         async function fetch() {
             try {
-                const response = await Axios.get(`${urlPrefix}/organisaatio/v3/ryhmat?aktiivinen=true`);
+                const response = await Axios.get(`/organisaatio/organisaatio/v3/ryhmat?aktiivinen=true`);
                 const data = response.data;
                 console.log('data', data);
                 setRyhmat([...data]);

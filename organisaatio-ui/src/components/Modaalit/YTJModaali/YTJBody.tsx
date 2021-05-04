@@ -11,8 +11,6 @@ type Props = {
     korvaaOrganisaatio: (ytiedot: YtjOrganisaatio) => void;
 };
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 export default function YTJBody({ ytunnus = '', korvaaOrganisaatio }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [yTunnus, setyTunnus] = useState(ytunnus);
@@ -21,7 +19,7 @@ export default function YTJBody({ ytunnus = '', korvaaOrganisaatio }: Props) {
     async function haeYtjTiedot() {
         try {
             if (yTunnus) {
-                const { data } = await Axios.get(`${urlPrefix}/ytj/${yTunnus}`);
+                const { data } = await Axios.get(`/organisaatio/ytj/${yTunnus}`);
                 console.log('got ytjtieto', data);
                 setYtjTiedot(data);
             }

@@ -19,8 +19,6 @@ import Axios from 'axios';
 const KAIKKIVALITTU = '1',
     RAJATUT_VALITTU = '0';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 type Props = {
     match: any;
 };
@@ -30,14 +28,14 @@ export default function LisatietotyypinMuokkaus(props: Props) {
     const [lisatietotyyppi, setLisatietotyyppi] = useState<undefined | any>();
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
         Koodi[]
-    >(`${urlPrefix}/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
+    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
     const {
         match: { params },
     } = props;
     useEffect(() => {
         async function fetch() {
             try {
-                const response = await Axios.get(`${urlPrefix}/lisatieto/lisatietotyyppi/${params.nimi}`);
+                const response = await Axios.get(`/organisaatio/lisatieto/lisatietotyyppi/${params.nimi}`);
                 const lisatietotyyppi = response.data;
                 setLisatietotyyppi(lisatietotyyppi);
             } catch (error) {

@@ -13,10 +13,6 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useEffect } from 'react';
 import Axios from 'axios';
 
-// const KAIKKIVALITTU = '1';
-
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 type Props = {
     match: any;
 };
@@ -33,7 +29,7 @@ export default function RyhmanMuokkaus(props: Props) {
     useEffect(() => {
         async function fetch() {
             try {
-                const response = await Axios.get(`${urlPrefix}/organisaatio/v4/${params.oid}?includeImage=true`);
+                const response = await Axios.get(`/organisaatio/organisaatio/v4/${params.oid}?includeImage=true`);
                 const ryhma = response.data;
                 setRyhma(ryhma);
             } catch (error) {

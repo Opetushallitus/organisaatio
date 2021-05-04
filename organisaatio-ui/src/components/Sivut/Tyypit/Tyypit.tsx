@@ -25,8 +25,6 @@ type Props = {
     tyyppi: 'lisatietotyypit' | 'yhteystietojentyyppi';
 };
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : 'organisaatio';
-
 const Tyypit = (props: Props) => {
     const { i18n, language } = useContext(LanguageContext);
     const [tyypit, setTyypit] = useState<string[] | YhteystietoTyyppi[] | undefined>(undefined);
@@ -34,7 +32,7 @@ const Tyypit = (props: Props) => {
         async function fetch() {
             try {
                 const response = await Axios.get(
-                    `${urlPrefix}/${
+                    `/organisaatio/${
                         props.tyyppi === 'yhteystietojentyyppi' ? props.tyyppi : `lisatieto/${props.tyyppi}`
                     }`
                 );

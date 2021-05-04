@@ -19,15 +19,13 @@ import Axios from 'axios';
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 const LomakeSivu = (props: any) => {
     const { i18n, language } = useContext(LanguageContext);
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]
-    >(`${urlPrefix}/koodisto/ORGANISAATIOTYYPPI/koodi`);
+    >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
     const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError }] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/MAATJAVALTIOT1/koodi`
+        `/organisaatio/koodisto/MAATJAVALTIOT1/koodi`
     );
     const [
         {
@@ -35,9 +33,9 @@ const LomakeSivu = (props: any) => {
             loading: oppilaitoksenOpetuskieletLoading,
             error: oppilaitoksenOpetuskieletError,
         },
-    ] = useAxios<Koodi[]>(`${urlPrefix}/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
+    ] = useAxios<Koodi[]>(`/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
     const [{ data: postinumerot, loading: postinumerotLoading, error: postinumerotError }] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/POSTI/koodi?onlyValid=true`
+        `/organisaatio/koodisto/POSTI/koodi?onlyValid=true`
     );
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [stashedOrganisaatio, setStashedOrganisaatio] = useState<Organisaatio | undefined>(undefined);
@@ -48,11 +46,11 @@ const LomakeSivu = (props: any) => {
     useEffect(() => {
         async function fetch() {
             try {
-                const response = await Axios.get(`${urlPrefix}/organisaatio/v4/${params.oid}?includeImage=true`);
+                const response = await Axios.get(`/organisaatio/organisaatio/v4/${params.oid}?includeImage=true`);
                 const organisaatio = response.data;
                 if (organisaatio.parentOidPath) {
                     const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
-                    const orgTree = await Axios.post(`${urlPrefix}/organisaatio/v4/findbyoids`, idArr);
+                    const orgTree = await Axios.post(`/organisaatio/organisaatio/v4/findbyoids`, idArr);
                     console.log('orgtee', orgTree.data, idArr, organisaatio.parentOidPath);
                     const organisaatioNimiPolku = idArr.map((oid: string) => ({
                         oid,
@@ -71,7 +69,7 @@ const LomakeSivu = (props: any) => {
     async function putOrganisaatio() {
         try {
             if (organisaatio && organisaatio.oid) {
-                const response = await Axios.put(`${urlPrefix}/organisaatio/v4/${organisaatio.oid}`, organisaatio);
+                const response = await Axios.put(`/organisaatio/organisaatio/v4/${organisaatio.oid}`, organisaatio);
                 console.log('updated org response', response);
                 props.history.push(`/lomake/${organisaatio.oid}`);
             }

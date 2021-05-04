@@ -21,13 +21,11 @@ import UOTFooter from '../../../Modaalit/UusiOsoiteTyyppi/UOTFooter';
 
 const KAIKKIVALITTU = '1';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 export default function YhteystietotyypinMuokkaus() {
     const { i18n, language } = useContext(LanguageContext);
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
         Koodi[]
-    >(`${urlPrefix}/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
+    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
     const [isKaikkiValittu, setIsKaikkiValittu] = useState(KAIKKIVALITTU);
     const [isModaliAuki, setIsModaaliAuki] = useState(false);
 

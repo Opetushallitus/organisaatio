@@ -12,8 +12,6 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
     date.setFullYear(date.getFullYear() - 1);
@@ -40,10 +38,10 @@ const TaulukkoSivu = (props) => {
                 const response =
                     isOPHVirkailija || (!isOPHVirkailija && !omatOrganisaatiotSelected)
                         ? await Axios.get(
-                              `${urlPrefix}/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`
+                              `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`
                           )
                         : await Axios.get(
-                              `${urlPrefix}/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
+                              `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
                           );
                 const data = response.data;
                 console.log('data', data);
