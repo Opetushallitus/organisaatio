@@ -78,8 +78,8 @@ export type Yhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotW
 export interface Organisaatio {
     oid?: string;
     ytunnus: string;
-    nimi: any;
-    nimet: any;
+    nimi: any; // TODO?
+    nimet: any; // TODO?
     alkuPvm: LocalDate | null;
     yritysmuoto: string;
     tyypit: KoodiUri[];
@@ -115,6 +115,7 @@ export interface Ryhma {
     tyypit: string[];
     kayttoryhmat: string[];
     kuvaus: any;
+    kuvaus2?: any;
     oid?: string;
     parentOid: string;
     parentOidPath?: string;
@@ -147,4 +148,7 @@ export type Kayttaja = {
 };
 
 export type VirheKoodi = string;
-export type Virheet = Record<string, VirheKoodi>;
+export type SelectOptionType = {
+    value: string;
+    label: string;
+};

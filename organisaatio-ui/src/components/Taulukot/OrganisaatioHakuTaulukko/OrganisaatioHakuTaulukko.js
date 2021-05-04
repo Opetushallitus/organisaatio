@@ -90,7 +90,6 @@ export default function OrganisaatioHakuTaulukko({
     setOmatOrganisaatiotSelected,
 }) {
     const { i18n } = useContext(LanguageContext);
-    console.log('tablecolumns', tableColumns, inputData);
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => inputData, [inputData]);
 
@@ -111,7 +110,6 @@ export default function OrganisaatioHakuTaulukko({
   );
 
    */
-    console.log('pöö', inputData, tableColumns);
     const {
         getTableProps,
         getTableBodyProps,

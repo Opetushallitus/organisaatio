@@ -52,7 +52,6 @@ export default function RyhmanMuokkaus(props: Props) {
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
-    console.log('yhtopts', ryhmaTyypitOptions, kayttoRyhmatOptions, 'ryhma', ryhma);
     const kayttoRyhmat = kayttoRyhmatOptions.filter(
         (rt) =>
             ryhma.kayttoryhmat.map((k: string) => k.slice(0, -2)).includes(rt.value) ||
