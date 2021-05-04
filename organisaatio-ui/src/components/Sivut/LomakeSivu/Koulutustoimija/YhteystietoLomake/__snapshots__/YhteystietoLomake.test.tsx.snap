@@ -1,5 +1,98 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`YhteystietoLomake Change lang creates needed yhteystietos 1`] = `
+Array [
+  Object {
+    "kieli": "kieli_fi#1",
+    "osoite": "",
+    "osoiteTyyppi": "posti",
+    "postinumeroUri": "",
+    "postitoimipaikka": "",
+  },
+  Object {
+    "kieli": "kieli_fi#1",
+    "osoite": "",
+    "osoiteTyyppi": "kaynti",
+    "postinumeroUri": "",
+    "postitoimipaikka": "",
+  },
+  Object {
+    "kieli": "kieli_fi#1",
+    "numero": "",
+  },
+  Object {
+    "email": "",
+    "kieli": "kieli_fi#1",
+  },
+  Object {
+    "kieli": "kieli_fi#1",
+    "www": "",
+  },
+  Object {
+    "kieli": "test",
+    "osoite": "",
+    "osoiteTyyppi": "posti",
+    "postinumeroUri": "",
+    "postitoimipaikka": "",
+  },
+  Object {
+    "kieli": "test",
+    "osoite": "",
+    "osoiteTyyppi": "kaynti",
+    "postinumeroUri": "",
+    "postitoimipaikka": "",
+  },
+  Object {
+    "kieli": "test",
+    "numero": "",
+  },
+  Object {
+    "email": "",
+    "kieli": "test",
+  },
+  Object {
+    "kieli": "test",
+    "www": "",
+  },
+]
+`;
+
+exports[`YhteystietoLomake Checkbox Copies posti to kaynti when checked 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "yhteystiedot",
+      "value": Array [
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "testi",
+          "osoiteTyyppi": "posti",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "testi",
+          "osoiteTyyppi": "kaynti",
+          "postinumeroUri": undefined,
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "numero": "",
+        },
+        Object {
+          "email": "",
+          "kieli": "kieli_fi#1",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "www": "",
+        },
+      ],
+    },
+  ],
+]
+`;
+
 exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
 <div
   className="UloinKehys"
@@ -37,6 +130,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
   >
     <ForwardRef
       checked={false}
+      id="checkbox"
       onChange={[Function]}
     >
       Postiosoite on sama kuin käyntiosoite
@@ -149,4 +243,194 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
     </div>
   </div>
 </div>
+`;
+
+exports[`YhteystietoLomake Update address kaynti 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "yhteystiedot",
+      "value": Array [
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "posti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "test",
+          "osoiteTyyppi": "kaynti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "numero": "",
+        },
+        Object {
+          "email": "",
+          "kieli": "kieli_fi#1",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "www": "",
+        },
+      ],
+    },
+  ],
+]
+`;
+
+exports[`YhteystietoLomake Update address posti 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "yhteystiedot",
+      "value": Array [
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "test",
+          "osoiteTyyppi": "posti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "kaynti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "numero": "",
+        },
+        Object {
+          "email": "",
+          "kieli": "kieli_fi#1",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "www": "",
+        },
+      ],
+    },
+  ],
+]
+`;
+
+exports[`YhteystietoLomake Update field email 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "yhteystiedot",
+      "value": Array [
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "posti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "kaynti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "numero": "",
+        },
+        Object {
+          "email": "test",
+          "kieli": "kieli_fi#1",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "www": "",
+        },
+      ],
+    },
+  ],
+]
+`;
+
+exports[`YhteystietoLomake Update field numero 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "yhteystiedot",
+      "value": Array [
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "posti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "kaynti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "numero": "test",
+        },
+        Object {
+          "email": "",
+          "kieli": "kieli_fi#1",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "www": "",
+        },
+      ],
+    },
+  ],
+]
+`;
+
+exports[`YhteystietoLomake Update field www 1`] = `
+Array [
+  Array [
+    Object {
+      "name": "yhteystiedot",
+      "value": Array [
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "posti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "osoite": "",
+          "osoiteTyyppi": "kaynti",
+          "postinumeroUri": "",
+          "postitoimipaikka": "",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "numero": "",
+        },
+        Object {
+          "email": "",
+          "kieli": "kieli_fi#1",
+        },
+        Object {
+          "kieli": "kieli_fi#1",
+          "www": "test",
+        },
+      ],
+    },
+  ],
+]
 `;

@@ -8,7 +8,7 @@ import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../
 
 export type Props = {
     yhteystiedot: Yhteystiedot[];
-    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
+    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: Yhteystiedot[] }) => void;
 };
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
@@ -124,6 +124,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
             </div>
             <div className={styles.Rivi}>
                 <Checkbox
+                    id="checkbox"
                     checked={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                     onChange={handlePostiOsSamaKuinKaynti}
                 >
