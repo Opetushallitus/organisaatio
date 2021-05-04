@@ -3,59 +3,124 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "@iconify/icons-fa-solid": "1.0.11",
     "@iconify/react": "1.1.3",
-    "@opetushallitus/virkailija-ui-components": "0.3.2",
+    "@opetushallitus/virkailija-ui-components": "0.4.0",
+    "axios": "^0.21.1",
+    "axios-hooks": "1.10.0",
+    "moment": "2.29.1",
+    "react-accessible-accordion": "3.3.3",
+    "react-datepicker": "3.2.2",
+    "react-router-dom": "5.2.0",
+    "react-scripts": "^4.0.3",
+    "react-table": "7.2.0",
+    "styled-components": "5.1.1",
+    "universal-cookie": "4.0.4"
+  },
+  "devDependencies": {
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.5.0",
     "@testing-library/user-event": "7.2.1",
+    "@types/enzyme": "^3.10.8",
+    "@types/jest": "^26.0.0",
     "@types/node": "14.0.13",
-    "@types/react": "16.9.36",
+    "@types/react": "16.14.5",
     "@types/react-datepicker": "2.11.1",
     "@types/react-dom": "16.9.8",
     "@types/react-router-dom": "5.1.5",
     "@types/react-select": "3.0.14",
     "@types/react-table": "7.0.19",
     "@types/styled-components": "4.4.0",
-    "axios": "^0.21.1",
-    "axios-hooks": "1.10.0",
-    "http-proxy-middleware": "1.0.4",
-    "moment": "2.29.1",
-    "react": "16.13.1",
-    "react-accessible-accordion": "3.3.3",
-    "react-datepicker": "3.2.2",
-    "react-dom": "16.13.1",
-    "react-router-dom": "5.2.0",
-    "react-scripts": "^4.0.3",
-    "react-table": "7.2.0",
-    "styled-components": "5.1.1",
-    "typescript": "3.6.4",
-    "universal-cookie": "4.0.4"
-  },
-  "devDependencies": {
-    "@types/enzyme": "^3.10.8",
-    "@types/jest": "^26.0.0",
+    "@typescript-eslint/eslint-plugin": "4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "concurrently": "^6.0.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "enzyme-to-json": "^3.6.2",
+    "eslint": "7.25.0",
+    "eslint-plugin-jest": "24.1.3",
+    "http-proxy-middleware": "1.0.4",
     "jest-enzyme": "^7.1.2",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "typescript": "^4.2.4"
   },
   "scripts": {
     "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
     "nginx": "docker-compose -f nginx/docker-compose.yml up",
     "start": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI='' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint --ext .ts,.tsx src",
+    "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
-    "prettier": "prettier --check 'src/**/*{ts,tsx}'",
-    "prettier:fix": "prettier --write 'src/**/*{ts,tsx}'"
+    "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
+    "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "overrides": [
+      {
+        "files": [
+          "src/**/*.ts",
+          "src/**/*.tsx"
+        ],
+        "parser": "@typescript-eslint/parser",
+        "parserOptions": {
+          "ecmaVersion": 2017,
+          "sourceType": "module"
+        },
+        "plugins": [
+          "@typescript-eslint/eslint-plugin"
+        ],
+        "rules": {
+          "no-var": "error",
+          "prefer-const": "error",
+          "prefer-rest-params": "error",
+          "prefer-spread": "error",
+          "@typescript-eslint/no-explicit-any": "warn",
+          "@typescript-eslint/array-type": "error",
+          "@typescript-eslint/ban-types": "error",
+          "@typescript-eslint/no-array-constructor": "error",
+          "@typescript-eslint/no-empty-interface": "error",
+          "@typescript-eslint/no-inferrable-types": "error",
+          "@typescript-eslint/no-misused-new": "error",
+          "@typescript-eslint/no-namespace": "error",
+          "@typescript-eslint/no-non-null-assertion": "error",
+          "@typescript-eslint/no-parameter-properties": "error",
+          "no-unused-vars": "off",
+          "@typescript-eslint/no-unused-vars": "error",
+          "no-use-before-define": "off",
+          "@typescript-eslint/no-use-before-define": "warn",
+          "@typescript-eslint/prefer-namespace-keyword": "error"
+        },
+        "settings": {
+          "import/extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ],
+          "import/parsers": {
+            "@typescript-eslint/parser": [
+              ".ts",
+              ".tsx"
+            ]
+          },
+          "import/resolver": {
+            "node": {
+              "extensions": [
+                ".js",
+                ".jsx",
+                ".ts",
+                ".tsx"
+              ]
+            }
+          }
+        }
+      }
+    ]
   },
   "proxy": "http://localhost:8080",
   "browserslist": {

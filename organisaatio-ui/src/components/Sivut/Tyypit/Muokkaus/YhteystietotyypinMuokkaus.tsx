@@ -23,9 +23,7 @@ const KAIKKIVALITTU = '1';
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
-type Props = {};
-
-export default function YhteystietotyypinMuokkaus(props: Props) {
+export default function YhteystietotyypinMuokkaus() {
     const { i18n, language } = useContext(LanguageContext);
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
         Koodi[]

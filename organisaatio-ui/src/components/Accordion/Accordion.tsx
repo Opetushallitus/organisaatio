@@ -11,7 +11,7 @@ import {
 
 type props = {
     lomakkeet: ReactElement<any>[];
-    otsikot: String[];
+    otsikot: string[];
     preExpanded?: number;
     handlePreExpanded?: (number: number) => void;
     handleChange?: (event: FormEvent<HTMLDivElement>) => void;

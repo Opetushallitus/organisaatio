@@ -1,34 +1,31 @@
-
 import moment from 'moment';
 
 export default {
-//    emptyNimi = {
-//        "nimi" : {
-//            "fi" : "",
-//            "sv" : "",
-//            "en" : ""
-//        },
-//        "alkuPvm" : ""
-//    };
-
+    //    emptyNimi = {
+    //        "nimi" : {
+    //            "fi" : "",
+    //            "sv" : "",
+    //            "en" : ""
+    //        },
+    //        "alkuPvm" : ""
+    //    };
 
     model: {
-        nimihistoria : [],
+        nimihistoria: [],
 
         // Nimi rakenne stringiksi (ei alkupäivämäärää)
-        nimiToString: function(nimi) {
+        nimiToString: function (nimi) {
             var nimiStr = '';
             if (nimi && 'nimi' in nimi) {
-                ['fi', 'sv', 'en'].forEach(function(key) {
-                    if (key in nimi.nimi)
-                        nimiStr += '[' + key + '] ' + nimi.nimi[key];
+                ['fi', 'sv', 'en'].forEach(function (key) {
+                    if (key in nimi.nimi) nimiStr += '[' + key + '] ' + nimi.nimi[key];
                 });
             }
             return nimiStr;
         },
 
         // Tyhjenneteään mallin tiedot
-        clear: function() {
+        clear: function () {
             console.debug('clear()');
 
             this.nimihistoria = [];
@@ -37,7 +34,7 @@ export default {
         // Palauttaa nimihistorian perusteella organisaation nimen.
         // Nimi on joko tämänhetkinen (voimassaoloajaltaan nykyinen) nimi
         // tai sitten uudelle organisaatiolle tulevaisuuden nimi.
-        getNimi: function(nimiHistoria) {
+        getNimi: function (nimiHistoria) {
             var historia = nimiHistoria;
             if (historia === null) {
                 historia = this.nimihistoria;
@@ -53,7 +50,7 @@ export default {
         },
 
         // Haetaan Nimihistorian ajastettu
-        getAjastettuNimi: function(nimiHistoria) {
+        getAjastettuNimi: function (nimiHistoria) {
             var historia = nimiHistoria;
             if (historia === null) {
                 historia = this.nimihistoria;
@@ -69,7 +66,7 @@ export default {
         },
 
         // Haetaan Nimihistorian uusin nimi
-        getUusinNimi: function(nimiHistoria) {
+        getUusinNimi: function (nimiHistoria) {
             var historia = nimiHistoria;
             if (historia === null) {
                 historia = this.nimihistoria;
@@ -82,7 +79,7 @@ export default {
             if (historia.length > 0) {
                 nimi = historia[0];
             }
-            for(var i=0; i < historia.length; i++) {
+            for (var i = 0; i < historia.length; i++) {
                 if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm))) {
                     nimi = historia[i];
                 }
@@ -93,7 +90,7 @@ export default {
         },
 
         // Haetaan nimihistorian sisältämä nykyinen nimi (ei siis tuleva ajastettu nimi)
-        getCurrentNimi: function(nimiHistoria) {
+        getCurrentNimi: function (nimiHistoria) {
             var historia = nimiHistoria;
             if (historia === null) {
                 historia = this.nimihistoria;
@@ -107,9 +104,11 @@ export default {
             if (historia.length > 0) {
                 nimi = historia[0];
             }
-            for(var i=0; i < historia.length; i++) {
-                if (moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
-                        moment(historia[i].alkuPvm).isBefore(moment())) {
+            for (var i = 0; i < historia.length; i++) {
+                if (
+                    moment(historia[i].alkuPvm).isAfter(moment(nimi.alkuPvm)) &&
+                    moment(historia[i].alkuPvm).isBefore(moment())
+                ) {
                     nimi = historia[i];
                 }
             }
@@ -119,7 +118,7 @@ export default {
         },
 
         // Tarkastetaan onko annetun nimen muutos ajastus --> siis alkupvm tulevaisuudessa
-        isAjastettuMuutos: function(tarkistettavaNimi) {
+        isAjastettuMuutos: function (tarkistettavaNimi) {
             var nimi = tarkistettavaNimi;
             if (nimi === null) {
                 nimi = this.getUusinNimi();
@@ -127,29 +126,23 @@ export default {
 
             var ajastettuMuutos = false;
             if (nimi !== null) {
-                if('alkuPvm' in nimi &&
-                        moment(nimi.alkuPvm).isValid() &&
-                        moment(nimi.alkuPvm).isAfter(moment())) {
+                if ('alkuPvm' in nimi && moment(nimi.alkuPvm).isValid() && moment(nimi.alkuPvm).isAfter(moment())) {
                     ajastettuMuutos = true;
                 }
             }
 
-            console.debug('isAjastettuMuutos() ' + this.nimiToString(nimi) + " = " + ajastettuMuutos);
+            console.debug('isAjastettuMuutos() ' + this.nimiToString(nimi) + ' = ' + ajastettuMuutos);
             return ajastettuMuutos;
         },
 
         // Palauttaa nimihistorian
-        getNimihistoria: function() {
+        getNimihistoria: function () {
             return this.nimihistoria;
         },
 
         // Alustetaan NimiHistoriaModel uudella nimihistorialla
-        setNimihistoria: function(nimihistoria) {
+        setNimihistoria: function (nimihistoria) {
             this.nimihistoria = nimihistoria;
-
-        }
-    }
+        },
+    },
 };
-
-
-

@@ -3,107 +3,121 @@ import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import { useState } from 'react';
-import { Koodi, Osoite, Yhteystiedot } from '../../../../../types/types';
-import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { SyntheticEvent } from 'react';
+import { useState, SyntheticEvent } from 'react';
+import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
 
-export type yhteystietoProps = {
+export type Props = {
     yhteystiedot: Yhteystiedot[];
-    handleOnChange: ({ name, value }: { name: string; value: any }) => void;
-    postinumerot: Koodi[];
+    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
 };
 
-export default function YhteystietoLomake(props: yhteystietoProps): React.ReactElement {
-    const [kieleksi, setKieleksi] = useState('kieli_fi#1');
-    const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi, onSama: false });
+type SupportedOsoiteType = 'kaynti' | 'posti';
+type SupportedYhteystietoType = 'www' | 'email' | 'numero';
 
-    const { yhteystiedot, handleOnChange, postinumerot } = props;
+const DEFAULT_LANGUAGE_CODE = 'kieli_fi#1';
+const NAME_WWW = 'www';
+const NAME_EMAIL = 'email';
+const NAME_PHONE = 'numero';
 
-    const currentVisibleYhteystiedot = {
-        posti: { osoite: '', postinumeroUri: '' },
-        kaynti: { osoite: '', postinumeroUri: '' },
-        puhelin: { numero: '' },
-        www: { www: '' },
-        email: { email: '' },
-    };
-    yhteystiedot.forEach((yT: any) => {
-        if (yT.kieli === kieleksi) {
-            if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'posti') {
-                currentVisibleYhteystiedot.posti = yT;
-            } else if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'kaynti') {
-                currentVisibleYhteystiedot.kaynti = yT;
-            } else if (yT.tyyppi && yT.tyyppi === 'puhelin') {
-                currentVisibleYhteystiedot.puhelin = yT;
-            } else if (yT.www) {
-                currentVisibleYhteystiedot.www = yT;
-            } else if (yT.email) {
-                currentVisibleYhteystiedot.email = yT;
-            }
-        }
-    });
+// this should be defined in some common place relating to localization
+const SUPPORTED_LANGUAGES = [
+    { value: DEFAULT_LANGUAGE_CODE, label: 'Suomeksi' },
+    { value: 'kieli_sv#1', label: 'Ruotsiksi' },
+    { value: 'kieli_en#1', label: 'Englanniksi' },
+];
+
+const initializeOsoite = (kieli: string, osoiteTyyppi: SupportedOsoiteType): YhteystiedotOsoite => ({
+    kieli,
+    osoiteTyyppi,
+    postinumeroUri: '',
+    postitoimipaikka: '',
+    osoite: '',
+});
+
+const isOsoite = (yhteystieto: Yhteystiedot): yhteystieto is YhteystiedotOsoite =>
+    yhteystieto.hasOwnProperty('osoiteTyyppi');
+
+const isSupportedYhteystietoType = (name: string): name is SupportedYhteystietoType =>
+    [NAME_EMAIL, NAME_PHONE, NAME_WWW].includes(name);
+
+export const getOsoite = (
+    yhteystiedot: Yhteystiedot[],
+    kieli: string,
+    osoiteTyyppi: SupportedOsoiteType
+): YhteystiedotOsoite => {
+    const found = yhteystiedot.find(
+        (yhteystieto: Yhteystiedot) =>
+            isOsoite(yhteystieto) && yhteystieto.kieli === kieli && yhteystieto.osoiteTyyppi === osoiteTyyppi
+    );
+    if (found) {
+        return found as YhteystiedotOsoite;
+    }
+    yhteystiedot.push(initializeOsoite(kieli, osoiteTyyppi));
+    return getOsoite(yhteystiedot, kieli, osoiteTyyppi);
+};
+
+export const getYhteystieto = (
+    yhteystiedot: Yhteystiedot[],
+    kieli: string,
+    osoiteTyyppi: SupportedYhteystietoType
+): Yhteystiedot => {
+    const found = yhteystiedot.find(
+        (yhteystieto: Yhteystiedot) => yhteystieto.kieli === kieli && yhteystieto.hasOwnProperty(osoiteTyyppi)
+    );
+    if (found) {
+        return found as Yhteystiedot;
+    }
+    yhteystiedot.push({ kieli, [osoiteTyyppi]: '' } as Yhteystiedot);
+    return getYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
+};
+
+const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.ReactElement => {
+    const [kieleksi, setKieleksi] = useState<string>(DEFAULT_LANGUAGE_CODE);
+    const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi: DEFAULT_LANGUAGE_CODE, onSama: false });
+
     const handlePostiOsSamaKuinKaynti = (event: SyntheticEvent) => {
         const element = event.target as HTMLInputElement;
-        const postiYt = Object.assign(
-            {},
-            yhteystiedot.find((yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'posti')
-        );
-        const kayntiYt = yhteystiedot.find((yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'kaynti');
-        if (postiYt && kayntiYt && element.checked) {
+        setPostiSamakuinKaynti({ kieleksi: kieleksi, onSama: element.checked });
+        copyAddress(element.checked);
+    };
+
+    const copyAddress = (copy: boolean) => {
+        if (copy) {
+            const postiYt = getOsoite(yhteystiedot, kieleksi, 'posti');
+            const kayntiYt = getOsoite(yhteystiedot, kieleksi, 'kaynti');
             kayntiYt.osoite = postiYt.osoite;
             kayntiYt.postinumeroUri = postiYt.postinumeroUri;
-            handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
-        }
-        setPostiSamakuinKaynti({ kieleksi: kieleksi, onSama: !postiSamakuinKaynti.onSama });
-    };
-    const handleYhteystietoOnChange = (event: SyntheticEvent) => {
-        const element = event.target as HTMLInputElement;
-        const name = element.name;
-        const oikeankieliset = yhteystiedot.filter((yt: Yhteystiedot) => yt.kieli === kieleksi);
-        if (oikeankieliset.length > 0) {
-            if (name === 'www' || name === 'email' || name === 'numero') {
-                const oikea = oikeankieliset.find((yt) => yt.hasOwnProperty(name));
-                if (oikea) oikea[name] = element.value;
-                else yhteystiedot.push({ kieli: kieleksi, [name]: element.value });
-            } else {
-                const jaettu = name.split('.');
-                const pohja = jaettu[0] as keyof Yhteystiedot;
-                const avain = jaettu[1] as keyof Osoite;
-                const oikea = oikeankieliset.find((yt) => yt.osoiteTyyppi && yt.osoiteTyyppi === pohja);
-                if (oikea) {
-                    oikea[avain] = element.value;
-                    if (
-                        oikea.osoiteTyyppi === 'posti' &&
-                        kieleksi === postiSamakuinKaynti.kieleksi &&
-                        postiSamakuinKaynti.onSama
-                    ) {
-                        const kayntiYt = yhteystiedot.find(
-                            (yt: Yhteystiedot) => yt.kieli === kieleksi && yt.osoiteTyyppi === 'kaynti'
-                        );
-                        if (kayntiYt) {
-                            kayntiYt.osoite = oikea.osoite;
-                            kayntiYt.postinumeroUri = oikea.postinumeroUri;
-                        }
-                    }
-                }
-            }
         }
         handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
     };
-    if (!postinumerot) {
-        return <Spin />;
-    }
+
+    const handleYhteystietoOnChange = (event: SyntheticEvent) => {
+        const element = event.target as HTMLInputElement;
+        yhteystietoOnChange(element.name, element.value);
+    };
+
+    const yhteystietoOnChange = (name: string, value: string) => {
+        isSupportedYhteystietoType(name) ? updateField(name, value) : updateAddress(name, value);
+    };
+
+    const updateField = (name: SupportedYhteystietoType, value: string) => {
+        getYhteystieto(yhteystiedot, kieleksi, name)[name] = value;
+        handleOnChange({ name: 'yhteystiedot', value: yhteystiedot });
+    };
+
+    const updateAddress = (name: string, value: string) => {
+        const [osoiteTyyppi, attribute] = [...name.split('.')] as [SupportedOsoiteType, keyof Osoite];
+        getOsoite(yhteystiedot, kieleksi, osoiteTyyppi)[attribute] = value;
+        copyAddress(postiSamakuinKaynti.onSama);
+    };
+
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <RadioGroup
                         value={kieleksi}
-                        options={[
-                            { value: 'kieli_fi#1', label: 'Suomeksi' },
-                            { value: 'kieli_sv#1', label: 'Ruotsiksi' },
-                            { value: 'kieli_en#1', label: 'Englanniksi' },
-                        ]}
+                        options={SUPPORTED_LANGUAGES}
                         onChange={(e) => setKieleksi(e.target.value)}
                     />
                 </div>
@@ -122,7 +136,7 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                     <Input
                         name="posti.osoite"
                         onChange={handleYhteystietoOnChange}
-                        value={currentVisibleYhteystiedot.posti && currentVisibleYhteystiedot.posti.osoite}
+                        value={getOsoite(yhteystiedot, kieleksi, 'posti').osoite}
                     />
                 </div>
                 <div className={styles.KenttaLyhyt}>
@@ -130,7 +144,7 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                     <Input
                         name="posti.postinumeroUri"
                         onChange={handleYhteystietoOnChange}
-                        value={currentVisibleYhteystiedot.posti && currentVisibleYhteystiedot.posti.postinumeroUri}
+                        value={getOsoite(yhteystiedot, kieleksi, 'posti').postinumeroUri}
                     />
                 </div>
             </div>
@@ -141,7 +155,7 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                         disabled={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                         name="kaynti.osoite"
                         onChange={handleYhteystietoOnChange}
-                        value={currentVisibleYhteystiedot.kaynti && currentVisibleYhteystiedot.kaynti.osoite}
+                        value={getOsoite(yhteystiedot, kieleksi, 'kaynti').osoite}
                     />
                 </div>
                 <div className={styles.KenttaLyhyt}>
@@ -149,7 +163,7 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                     <Input
                         disabled={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                         onChange={handleYhteystietoOnChange}
-                        value={currentVisibleYhteystiedot.kaynti && currentVisibleYhteystiedot.kaynti.postinumeroUri}
+                        value={getOsoite(yhteystiedot, kieleksi, 'kaynti').postinumeroUri}
                         name="kaynti.postinumeroUri"
                     />
                 </div>
@@ -158,8 +172,8 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                 <div className={styles.Kentta}>
                     <label>Puhelinnumero</label>
                     <Input
-                        value={currentVisibleYhteystiedot.puhelin && currentVisibleYhteystiedot.puhelin.numero}
-                        name="numero"
+                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_PHONE)[NAME_PHONE]}
+                        name={NAME_PHONE}
                         onChange={handleYhteystietoOnChange}
                     />
                 </div>
@@ -168,8 +182,8 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                 <div className={styles.Kentta}>
                     <label>Sähköpostiosoite</label>
                     <Input
-                        value={currentVisibleYhteystiedot.email && currentVisibleYhteystiedot.email.email}
-                        name="email"
+                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_EMAIL)[NAME_EMAIL]}
+                        name={NAME_EMAIL}
                         onChange={handleYhteystietoOnChange}
                     />
                 </div>
@@ -178,12 +192,14 @@ export default function YhteystietoLomake(props: yhteystietoProps): React.ReactE
                 <div className={styles.Kentta}>
                     <label>Www-osoite</label>
                     <Input
-                        value={currentVisibleYhteystiedot.www && currentVisibleYhteystiedot.www.www}
-                        name="www"
+                        value={getYhteystieto(yhteystiedot, kieleksi, NAME_WWW)[NAME_WWW]}
+                        name={NAME_WWW}
                         onChange={handleYhteystietoOnChange}
                     />
                 </div>
             </div>
         </div>
     );
-}
+};
+
+export default YhteystietoLomake;

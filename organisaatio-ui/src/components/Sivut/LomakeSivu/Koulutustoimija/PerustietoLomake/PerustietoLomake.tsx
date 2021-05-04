@@ -17,7 +17,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { YtjOrganisaatio } from '../../../../../types/types';
+import { YtjOrganisaatio, Organisaatio } from '../../../../../types/types';
 
 type OrganisaatioProps = {
     organisaatio: any;
@@ -25,7 +25,7 @@ type OrganisaatioProps = {
     organisaatioTyypit: any;
     maatJaValtiot: any;
     opetuskielet: any;
-    handleOnChange: ({ name, value }: { name: string; value: any }) => void;
+    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
     setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
 };
 

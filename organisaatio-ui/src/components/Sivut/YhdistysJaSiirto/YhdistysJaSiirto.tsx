@@ -4,9 +4,7 @@ import { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 
-type Props = {};
-
-export default function YhdistysJaSiirto(props: Props) {
+export default function YhdistysJaSiirto() {
     const { i18n } = useContext(LanguageContext);
     return (
         <div className={styles.SiirtoLomake}>

@@ -9,16 +9,16 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext } from '../../../../contexts/contexts';
-import { Koodi, Organisaatio } from '../../../../types/types';
+import { Koodi, Organisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
-import YhteystietoLomake from './YhteystietoLomake/YhteystietoLomake';
+import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 import Axios from 'axios';
 
 const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
 
-const tyhjaOrganisaatio = {
+const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
     nimi: '',
     nimet: '',
@@ -30,35 +30,38 @@ const tyhjaOrganisaatio = {
     maaUri: '',
     kieletUris: [],
     yhteystiedot: ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
-        .map((kieli) => [
-            {
-                kieli,
-                tyyppi: 'puhelin',
-                numero: '',
-            },
-            {
-                kieli,
-                email: '',
-            },
-            {
-                kieli,
-                www: '',
-            },
-            {
-                kieli,
-                osoiteTyyppi: 'posti',
-                osoite: '',
-                postinumeroUri: '',
-                postitoimipaikka: '',
-            },
-            {
-                kieli,
-                osoiteTyyppi: 'kaynti',
-                osoite: '',
-                postinumeroUri: '',
-                postitoimipaikka: '',
-            },
-        ])
+        .map(
+            (kieli) =>
+                [
+                    {
+                        kieli,
+                        tyyppi: 'puhelin',
+                        numero: '',
+                    },
+                    {
+                        kieli,
+                        email: '',
+                    },
+                    {
+                        kieli,
+                        www: '',
+                    },
+                    {
+                        kieli,
+                        osoiteTyyppi: 'posti',
+                        osoite: '',
+                        postinumeroUri: '',
+                        postitoimipaikka: '',
+                    },
+                    {
+                        kieli,
+                        osoiteTyyppi: 'kaynti',
+                        osoite: '',
+                        postinumeroUri: '',
+                        postitoimipaikka: '',
+                    },
+                ] as Yhteystiedot[]
+        )
         .flat(),
 };
 
@@ -78,7 +81,7 @@ const UusiToimijaLomake = (props: any) => {
         },
     ] = useAxios<Koodi[]>(`${urlPrefix}/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
     const [organisaatio, setOrganisaatio] = useReducer(
-        (state: Organisaatio, newState: Organisaatio) => ({ ...state, ...newState }),
+        (state: Organisaatio, newState: Organisaatio): Organisaatio => ({ ...state, ...newState }),
         tyhjaOrganisaatio
     );
 
@@ -94,7 +97,7 @@ const UusiToimijaLomake = (props: any) => {
     }
 
     function handleCancel() {
-        setOrganisaatio(Object.assign({}, tyhjaOrganisaatio));
+        setOrganisaatio({ ...tyhjaOrganisaatio });
         props.history.push('/');
     }
 

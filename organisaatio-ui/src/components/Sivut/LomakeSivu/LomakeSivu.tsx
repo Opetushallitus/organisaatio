@@ -54,7 +54,7 @@ const LomakeSivu = (props: any) => {
                     const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
                     const orgTree = await Axios.post(`${urlPrefix}/organisaatio/v4/findbyoids`, idArr);
                     console.log('orgtee', orgTree.data, idArr, organisaatio.parentOidPath);
-                    const organisaatioNimiPolku = idArr.map((oid: String) => ({
+                    const organisaatioNimiPolku = idArr.map((oid: string) => ({
                         oid,
                         nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
                     }));
@@ -126,7 +126,7 @@ const LomakeSivu = (props: any) => {
         console.log('Korvattu org ytj:stä tulevalla datalla ainakin suurelta osin', organisaatio);
     };
 
-    const handleOnChange = ({ name, value }: { name: string; value: any }) => {
+    const handleOnChange = ({ name, value }: { name: keyof Organisaatio; value: any }) => {
         setOrganisaatio((organisaatio) => {
             const updatedOrg = Object.assign({}, organisaatio, { [name]: value });
             console.log('päiv', updatedOrg);
@@ -196,11 +196,7 @@ const LomakeSivu = (props: any) => {
                             maatJaValtiot={maatJaValtiot}
                             opetuskielet={oppilaitoksenOpetuskielet}
                         />,
-                        <YhteystietoLomake
-                            postinumerot={postinumerot}
-                            handleOnChange={handleOnChange}
-                            yhteystiedot={organisaatio.yhteystiedot}
-                        />,
+                        <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />,
                         <NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />,
                         <OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />,
                     ]}
