@@ -10,7 +10,9 @@ import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.*;
+
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,33 +24,14 @@ import static org.junit.Assert.*;
  */
 public class YTJServiceImplTest {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    
-    public YTJServiceImplTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(YTJServiceImplTest.class);
 
     @Test
-    public void testHashHex() throws Exception {
+    public void testHashHex() {
         String str = "Str to be hashed";
         YTJServiceImpl instance = new YTJServiceImpl();
         String hex = instance.createHashHex(str);
-        assertTrue(hex != null);
+        assertNotNull(hex);
     }
     /**
      * Test of findByYNimi method, of class YTJServiceImpl.
@@ -62,7 +45,7 @@ public class YTJServiceImplTest {
         boolean naytaPassiiviset = false;
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
-        List result = instance.findByYNimi(nimi, naytaPassiiviset, kieli);
+        instance.findByYNimi(nimi, naytaPassiiviset, kieli);
     }
 
     /*Ignore this test so that YTJ is not called every time when project is compiled
@@ -80,14 +63,14 @@ public class YTJServiceImplTest {
         instance.setSalainenavain("XX");
         try {
             List<YTJDTO> results = instance.findByYNimi(nimi,naytaPassiiviset,kieli);
-            log.info("Got {} results", results.size());
+            LOGGER.info("Got {} results", results.size());
             /*for (YTJDTO dto:results) {
                 log.info("Organisaatio nimi: {}",dto.getNimi());
             }*/
             assertTrue(results.size() > 0);
         } catch (Exception exp) {
-            log.info("Exception in findByNimiSuccess : {}",exp.toString());
-            assertTrue(false);
+            LOGGER.info("Exception in findByNimiSuccess : {}",exp.toString());
+            fail();
         }
     }
 
@@ -103,7 +86,7 @@ public class YTJServiceImplTest {
     // Test of findByYTunnusBatch method, of class YTJServiceImpl
     @Ignore
     @Test
-    public void testFindByYTunnusBatchSuccess() throws Exception {
+    public void testFindByYTunnusBatchSuccess() {
         List<String> ytunnus = new ArrayList<String>(){{add("0313471-7");add("0201256-6");add("2189312-7");}};
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
@@ -115,8 +98,8 @@ public class YTJServiceImplTest {
             assertEquals("Helsingin kaupunki".toLowerCase(), result.get(1).getNimi().trim().toLowerCase());
             assertEquals("Mikkelin Ammattikorkeakoulu Oy".toLowerCase(), result.get(2).getNimi().trim().toLowerCase());
         } catch (Exception exp) {
-            log.info("Exception in findByYTunnus : {}",exp.toString());
-            assertTrue(false);
+            LOGGER.info("Exception in findByYTunnus : {}",exp.toString());
+            fail();
         }
     }
 
@@ -139,7 +122,7 @@ public class YTJServiceImplTest {
      */
     @Ignore
     @Test
-    public void testFindByYTunnusSuccess() throws Exception {
+    public void testFindByYTunnusSuccess() {
         String ytunnus = "0313471-7"; // Helsingin yliopisto
         YTJKieli kieli = YTJKieli.FI;
         YTJServiceImpl instance = new YTJServiceImpl();
@@ -149,8 +132,8 @@ public class YTJServiceImplTest {
             YTJDTO result = instance.findByYTunnus(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.getNimi().trim().toLowerCase());
         } catch (Exception exp) {
-            log.info("Exception in findByYTunnus : {}",exp.toString());
-            assertTrue(false);
+            LOGGER.info("Exception in findByYTunnus : {}",exp.toString());
+            fail();
         }
     }
 

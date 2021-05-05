@@ -5,14 +5,13 @@ import fi.vm.sade.organisaatio.model.OppilaitostyyppiRajoite;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatiotyyppiRajoite;
 import fi.vm.sade.organisaatio.repository.LisatietoTyyppiRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -26,7 +25,6 @@ import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -37,7 +35,7 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Before
+    @BeforeEach
     public void setup() {
         this.createAndPersistOrganisation("oid", "Oppilaitos", "oppilaitoskoodi_12#1");
     }

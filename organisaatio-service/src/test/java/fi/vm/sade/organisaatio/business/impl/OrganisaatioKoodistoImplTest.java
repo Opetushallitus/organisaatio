@@ -10,8 +10,8 @@ import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.properties.OphProperties;
 import org.json.JSONException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ public class OrganisaatioKoodistoImplTest {
     private OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
     private ObjectMapper mapper = new ObjectMapperConfiguration().objectMapper(new JsonJavaSqlDateSerializer());
 
-    @Before
+    @BeforeEach
     public void setup() {
         properties.addFiles("/application.properties");
         clientMock = mock(OrganisaatioKoodistoClient.class);

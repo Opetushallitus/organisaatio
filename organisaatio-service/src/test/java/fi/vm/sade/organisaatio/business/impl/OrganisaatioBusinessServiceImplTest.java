@@ -9,7 +9,6 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
@@ -22,22 +21,18 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
-import fi.vm.sade.rajapinnat.ytj.api.YTJService;
-import fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
@@ -50,13 +45,13 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.data.MapEntry.entry;
-import static org.mockito.Mockito.spy;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link OrganisaatioBusinessServiceImpl} class.
  * Created by vrouvine on 02/12/14.
  */
-@RunWith(SpringRunner.class)
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -80,7 +75,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         @Bean
         @Primary
         public YTJService ytjService() {
-            return spy(new YTJServiceMock());
+            return mock(YTJService.class);
         }
 
         @Bean
@@ -106,12 +101,12 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         executeSqlScript("classpath:data/truncate_tables.sql", false);
     }
@@ -119,15 +114,14 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Test
     public void processOrganisaatioSuhdeChangesNoNewChanges() {
         Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
-        Assert.assertNotNull(results);
-        Assert.assertTrue("Results should be empty!", results.isEmpty());
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
     }
 
     @Test
     public void processOrganisaatiosuhdeChangesOneNewChange() throws Exception {
         long parentId = 7L;
         long childId = 4L;
-        String oldParentOid = "1.2.2004.1";
         String newParentOid = "1.2.2004.5";
 
         int rowCount = countRowsInTable("organisaatiosuhde");
@@ -138,28 +132,28 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         // End old organisaatiosuhde
         jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[] {time, 3});
 
-        Assert.assertEquals("Row count should match!", rowCount + 1, countRowsInTable("organisaatiosuhde"));
+        assertEquals(rowCount + 1, countRowsInTable("organisaatiosuhde"));
 
         Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
-        Assert.assertNotNull(results);
-        Assert.assertEquals("Results size does not match!", 1, results.size());
+        assertNotNull(results);
+        assertEquals(1, results.size());
 
         Organisaatio modified = results.iterator().next();
-        Assert.assertEquals("Modified organisation does not match!", Long.valueOf(4), modified.getId());
+        assertEquals(Long.valueOf(4), modified.getId());
 
-        Assert.assertEquals("Parent oid path should match!", "|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
+        assertEquals("|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
 
         String oid = "1.2.2004.4";
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
-        Assert.assertEquals("Parent oid path should match for oid: " + oid, modified.getParentOidPath() + modified.getOid() + "|", org.getParentOidPath());
+        assertEquals(modified.getParentOidPath() + modified.getOid() + "|", org.getParentOidPath());
 
         oid = "1.2.2005.4";
         Organisaatio org2 = organisaatioRepository.customFindByOid(oid);
-        Assert.assertEquals("Parent oid path should match for oid: " + oid, modified.getParentOidPath() + modified.getOid() + "|", org2.getParentOidPath());
+        assertEquals(modified.getParentOidPath() + modified.getOid() + "|", org2.getParentOidPath());
 
         oid = "1.2.2005.5";
         org2 = organisaatioRepository.customFindByOid(oid);
-        Assert.assertEquals("Parent oid path should match for oid: " + oid, org.getParentOidPath() + org.getOid() + "|", org2.getParentOidPath());
+        assertEquals(org.getParentOidPath() + org.getOid() + "|", org2.getParentOidPath());
 
         checkParent(modified, "1.2.2004.4");
         checkParent(modified, "1.2.2005.4");
@@ -302,20 +296,18 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
 
-    private Organisaatio checkParentOidPath(Organisaatio parent, String oid) {
+    private void checkParentOidPath(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
-        Assert.assertEquals("Parent oid path should match for oid: " + oid, parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
-        return org;
+        assertEquals(parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
     }
 
-    private Organisaatio checkParent(Organisaatio parent, String oid) {
+    private void checkParent(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
         String pop = org.getParentOidPath();
         String[] list = pop.split("[|]+");
         String parentOid = list[list.length-1];
         Organisaatio orgParent = organisaatioRepository.customFindByOid(parentOid);
-        Assert.assertEquals("Parent oid should match for oid: " + oid, parent.getOid(), orgParent.getOid());
-        return org;
+        assertEquals(parent.getOid(), orgParent.getOid());
     }
 
     @Test
@@ -326,10 +318,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
         try {
             service.save(model, true);
-            Assert.fail("should throw ValidationException");
+            fail();
         } catch (Throwable e) {
-            Assert.assertNotNull(e.getMessage());
-            Assert.assertTrue(e.getMessage().equals("validation.Organisaatio.poistettu"));
+            assertNotNull(e.getMessage());
+            assertEquals(e.getMessage(), "validation.Organisaatio.poistettu");
         }
     }
 
@@ -341,13 +333,13 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         model.setKieletUris(null);
         model.setAlkuPvm(new Date());
         OrganisaatioResult organisaatioResult = service.save(model, false);
-        Assert.assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
+        assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
 
         model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
         organisaatioRepository.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
         model.setYTunnus("4567891-0");
         organisaatioResult = service.save(model, true);
-        Assert.assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
+        assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
 
     }
 

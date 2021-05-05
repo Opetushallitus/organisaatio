@@ -1,19 +1,20 @@
 package fi.vm.sade.organisaatio.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Before;
-import org.junit.Test;
 
 public class ObjectMapperConfigurationTest {
 
     private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         objectMapper = new ObjectMapperConfiguration().objectMapper(new JsonJavaSqlDateSerializer());
     }

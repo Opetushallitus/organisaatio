@@ -4,7 +4,8 @@ package fi.vm.sade.organisaatio.config;
 import fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 
-import fi.vm.sade.rajapinnat.ytj.service.YTJServiceImpl;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
+import fi.vm.sade.organisaatio.ytj.service.YTJServiceImpl;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.modelmapper.ModelMapper;
@@ -35,7 +36,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public YTJServiceImpl ytjService() {
+    public YTJService ytjService() {
         YTJServiceImpl ytjService = new YTJServiceImpl();
         ytjService.setAsiakastunnus(ytjAsiakastunnus);
         ytjService.setSalainenavain(ytjAvain);

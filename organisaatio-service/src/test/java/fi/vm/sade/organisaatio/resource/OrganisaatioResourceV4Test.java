@@ -3,29 +3,23 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.oid.service.mock.OIDServiceMock;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
-import fi.vm.sade.organisaatio.business.impl.OrganisaatioKoodistoMock;
 import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
-import fi.vm.sade.rajapinnat.ytj.api.YTJService;
-import fi.vm.sade.rajapinnat.ytj.mock.YTJServiceMock;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,9 +31,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.mock;
 
-@RunWith(SpringRunner.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -64,7 +57,7 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
         @Bean
         @Primary
         public YTJService ytjService() {
-            return spy(new YTJServiceMock());
+            return mock(YTJService.class);
         }
 
         @Bean
@@ -76,12 +69,12 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioResourceV4 resource;
 
-    @Before
+    @BeforeEach
     public void setup() {
         executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         executeSqlScript("classpath:data/truncate_tables.sql", false);
     }

@@ -17,13 +17,14 @@
 package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
+import org.junit.jupiter.api.Test;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class OrganisaatioServiceAlgorithmsTest extends Assert {
+public class OrganisaatioServiceAlgorithmsTest {
 	
 	
 	private static Date testDate(int n) {
@@ -38,10 +39,10 @@ public class OrganisaatioServiceAlgorithmsTest extends Assert {
 		Date D3 = testDate(3);
 		
 		// ei ylempää lpvm:ää hierarkiassa
-		assertEquals(null, OrganisaatioUtil.getUpdatedLakkautusPvm(null, null, null, null));
+		assertNull(OrganisaatioUtil.getUpdatedLakkautusPvm(null, null, null, null));
 		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(null, D1, null, null));
 		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, D1, null, null));
-		assertEquals(null, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, null, null));
+		assertNull(OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, null, null));
 
 		// parentilla lpvm
 		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, D2, null, D1));
@@ -61,7 +62,7 @@ public class OrganisaatioServiceAlgorithmsTest extends Assert {
 		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D3, D1, D3, D1));
 		
 		// poisto
-		assertEquals(null, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, D2, null));
+		assertNull(OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, D2, null));
 		assertEquals(D2, OrganisaatioUtil.getUpdatedLakkautusPvm(D2, null, D2, D2));
 		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, null, D2, D2));
 		assertEquals(D1, OrganisaatioUtil.getUpdatedLakkautusPvm(D1, null, D2, null));

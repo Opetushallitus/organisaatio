@@ -2,51 +2,39 @@ package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class OrganisationHierarchyValidatorTopLevelTest {
 
     private static final String ROOT_OID = "1";
+    private final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(ROOT_OID);
 
-    private final OrganisationHierarchyValidator validator;
-    private final OrganisaatioTyyppi tyyppi;
-    private final boolean expected;
-
-    public OrganisationHierarchyValidatorTopLevelTest(OrganisaatioTyyppi tyyppi, boolean expected) {
-        this.validator = new OrganisationHierarchyValidator(ROOT_OID);
-        this.tyyppi = tyyppi;
-        this.expected = expected;
+    private static Stream<Arguments> parameters()  {
+        return Stream.of(
+                Arguments.of(OrganisaatioTyyppi.KOULUTUSTOIMIJA, true),
+                Arguments.of(OrganisaatioTyyppi.OPPILAITOS, false),
+                Arguments.of(OrganisaatioTyyppi.TOIMIPISTE, false),
+                Arguments.of(OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE, false),
+                Arguments.of(OrganisaatioTyyppi.MUU_ORGANISAATIO, true),
+                Arguments.of(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA, true),
+                Arguments.of(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA, false),
+                Arguments.of(OrganisaatioTyyppi.TYOELAMAJARJESTO, true),
+                Arguments.of(OrganisaatioTyyppi.KUNTA, true)
+        );
     }
 
-    @Parameterized.Parameters(name = "parent:null + child:{0} -> {1}")
-    public static Collection<Object[]> parameters() throws IOException {
-        return asList(new Object[][] {
-                {OrganisaatioTyyppi.KOULUTUSTOIMIJA, true},
-                {OrganisaatioTyyppi.OPPILAITOS, false},
-                {OrganisaatioTyyppi.TOIMIPISTE, false},
-                {OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE, false},
-                {OrganisaatioTyyppi.MUU_ORGANISAATIO, true},
-                {OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA, true},
-                {OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA, false},
-                {OrganisaatioTyyppi.TYOELAMAJARJESTO, true},
-                {OrganisaatioTyyppi.KUNTA, true},
-        });
-    }
-
-    @Test
-    public void test() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void test(OrganisaatioTyyppi tyyppi, boolean expected) {
         assertThat(validator.apply(new AbstractMap.SimpleEntry<>(null, getOrg(tyyppi)))).isEqualTo(expected);
     }
 

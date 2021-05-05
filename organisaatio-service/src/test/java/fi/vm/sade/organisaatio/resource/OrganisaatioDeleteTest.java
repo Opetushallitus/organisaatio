@@ -15,8 +15,7 @@
 
 package fi.vm.sade.organisaatio.resource;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,31 +23,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjonta;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.kubek2k.springockito.annotations.ReplaceWithMock; // TODO replacement ??
-import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
 
-import static org.mockito.Mockito.doNothing;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 
-@RunWith(SpringRunner.class)
 @Transactional
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
@@ -74,11 +62,6 @@ public class OrganisaatioDeleteTest {
     OrganisaatioResource res;
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDeleteTest.class);
-
-
-    @Before
-    public void setUp() {
-    }
 
     @Test
     @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001", "APP_ORGANISAATIOHALLINTA_CRUD"})

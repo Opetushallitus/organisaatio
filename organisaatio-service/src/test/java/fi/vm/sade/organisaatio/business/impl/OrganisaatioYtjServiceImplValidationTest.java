@@ -7,14 +7,15 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJOsoiteDTO;
 import fi.ytj.YTunnusDTO;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrganisaatioYtjServiceImplValidationTest {
     private final OrganisaatioYtjServiceImpl organisaatioYtjService = new OrganisaatioYtjServiceImpl();
@@ -24,7 +25,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
     private YTJDTO ytjdto;
     private final Organisaatio org = new Organisaatio();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         ReflectionTestUtils.setField(organisaatioYtjService, "checker", checker);
         ReflectionTestUtils.setField(organisaatioBusinessService, "checker", checker);
@@ -43,14 +44,14 @@ public class OrganisaatioYtjServiceImplValidationTest {
         // nimen alkupvm
         ytjdto.setAloitusPvm("01.02.2013");
         // original name
-        Assert.assertEquals("nimi", org.getNimi().getString("fi"));
-        Assert.assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
+        assertEquals("nimi", org.getNimi().getString("fi"));
+        assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
         // updated name from YTJ
-        Assert.assertEquals("NIMI", org.getNimi().getString("fi"));
-        Assert.assertEquals(1, org.getNimet().size());
-        Assert.assertEquals(org.getNimet().iterator().next().getAlkuPvm(), new GregorianCalendar(2013, Calendar.FEBRUARY, 1).getTime());
+        assertEquals("NIMI", org.getNimi().getString("fi"));
+        assertEquals(1, org.getNimet().size());
+        assertEquals(org.getNimet().iterator().next().getAlkuPvm(), new GregorianCalendar(2013, Calendar.FEBRUARY, 1).getTime());
         // same koodiValue in name history
-        Assert.assertEquals("NIMI", org.getNimet().iterator().next().getNimi().getString("fi"));
+        assertEquals("NIMI", org.getNimet().iterator().next().getNimi().getString("fi"));
     }
 
     @Test
@@ -61,15 +62,15 @@ public class OrganisaatioYtjServiceImplValidationTest {
         org.setNimet(new ArrayList<>());
         generateOrganisaatioNimi(new GregorianCalendar(2010, Calendar.JANUARY, 1).getTime());
         org.setAlkuPvm(new GregorianCalendar(2010, Calendar.JANUARY, 1).getTime());
-        Assert.assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
+        assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
         try {
             // date updated from YTJ
-            Assert.assertEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
+            assertEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
         } catch (ParseException e) {
-            Assert.fail();
+            fail();
         }
         YtjPaivitysLoki loki = (YtjPaivitysLoki) ReflectionTestUtils.getField(organisaatioYtjService, "ytjPaivitysLoki");
-        Assert.assertTrue(loki.getYtjVirheet().isEmpty());
+        assertTrue(loki.getYtjVirheet().isEmpty());
     }
 
     @Test
@@ -87,14 +88,14 @@ public class OrganisaatioYtjServiceImplValidationTest {
         Set<OrganisaatioSuhde> children = new HashSet<>();
         children.add(os1);
         ReflectionTestUtils.setField(org, "childSuhteet", children);
-        Assert.assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
+        assertTrue((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
         try {
-            Assert.assertEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
+            assertEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
         } catch (ParseException e) {
-            Assert.fail();
+            fail();
         }
         YtjPaivitysLoki loki = (YtjPaivitysLoki) ReflectionTestUtils.getField(organisaatioYtjService, "ytjPaivitysLoki");
-        Assert.assertTrue(loki.getYtjVirheet().isEmpty());
+        assertTrue(loki.getYtjVirheet().isEmpty());
         //Assert.assertTrue(loki.getYtjVirheet().size()==1);
         //Assert.assertEquals(YtjVirhe.YTJVirheKohde.ALKUPVM, loki.getYtjVirheet().get(0).getVirhekohde());
         //Assert.assertEquals("ilmoitukset.log.virhe.alkupvm.tarkistukset", loki.getYtjVirheet().get(0).getVirheviesti());
@@ -105,18 +106,18 @@ public class OrganisaatioYtjServiceImplValidationTest {
         ytjdto.getYritysTunnus().setAlkupvm("01.02.1870");
         // just to pass name validations, we are not testing that now
         ytjdto.setAloitusPvm("01.01.2010");
-        Assert.assertFalse((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
+        assertFalse((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
         try {
             // date updated from YTJ
-            Assert.assertNotEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
+            assertNotEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
         } catch (ParseException e) {
-            Assert.fail();
+            fail();
         }
         YtjPaivitysLoki loki = (YtjPaivitysLoki) ReflectionTestUtils.getField(organisaatioYtjService, "ytjPaivitysLoki");
-        Assert.assertFalse(loki.getYtjVirheet().isEmpty());
-        Assert.assertTrue(loki.getYtjVirheet().size()==1);
-        Assert.assertEquals(YtjVirhe.YTJVirheKohde.ALKUPVM, loki.getYtjVirheet().get(0).getVirhekohde());
-        Assert.assertEquals("ilmoitukset.log.virhe.alkupvm.tarkistukset", loki.getYtjVirheet().get(0).getVirheviesti());
+        assertFalse(loki.getYtjVirheet().isEmpty());
+        assertTrue(loki.getYtjVirheet().size()==1);
+        assertEquals(YtjVirhe.YTJVirheKohde.ALKUPVM, loki.getYtjVirheet().get(0).getVirhekohde());
+        assertEquals("ilmoitukset.log.virhe.alkupvm.tarkistukset", loki.getYtjVirheet().get(0).getVirheviesti());
     }
 
     private YTJDTO generateValidYtjdto() {

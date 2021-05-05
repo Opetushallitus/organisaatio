@@ -8,6 +8,7 @@ plugins {
 
 ext {
 	queryDslVersion = '4.1.4'
+	junitVersion = '5.6.2'
 }
 
 flyway {
@@ -27,7 +28,10 @@ mainClassName='fi.vm.sade.organisaatio.OrganisaatioApplication'
 dependencies {
 	implementation project(':organisaatio-ui')
 	compile project(':organisaatio-api')
+	implementation project(':ytj-client:ytj-api')
+	implementation project(':ytj-client:ytj-webservice')
 	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.1'
@@ -42,7 +46,7 @@ dependencies {
 	implementation('org.postgresql:postgresql')
 	compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '7.2'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
-	compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
+	compile 'net.sf.dozer:dozer:5.5.1'
 	compile group: 'org.apache.cxf', name: 'cxf-rt-core', version: '2.7.18'
 	//compile group: 'org.apache.cxf', name: 'cxf-bundle-jaxrs', version: '2.5.1'
 	compile group: 'org.apache.cxf', name: 'cxf-api', version: '2.7.18'
@@ -68,16 +72,6 @@ dependencies {
 		exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_2.5_spec'
 
 	}
-	compile('fi.vm.sade.rajapinnat.ytj:ytj-api:13.0-SNAPSHOT') {
-		exclude group: 'org.slf4j', module: 'slf4j-api'
-		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-		exclude group: 'org.slf4j', module: 'log4j'
-	}
-	compile('fi.vm.sade.rajapinnat:ytj-service:13.0-SNAPSHOT') {
-		exclude group: 'org.slf4j', module: 'slf4j-api'
-		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-		exclude group: 'org.slf4j', module: 'log4j'
-	}
 	compile('fi.vm.sade.koodisto:koodisto-api:9.0-SNAPSHOT') {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
@@ -93,6 +87,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.3.0.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '1.1.7.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.3.0.RELEASE'
@@ -115,9 +110,8 @@ dependencies {
 	annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: '4.1.4', classifier: 'jpa'
 	implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
 
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-api:5.6.0")
+	//testCompile 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+	//testRuntimeOnly("org.junit.jupiter:junit-jupiter-api:5.6.2")
 	testCompile group: 'org.powermock', name: 'powermock-reflect', version: '2.0.7'
 	testCompile "com.github.tomakehurst:wiremock-jre8:2.26.3"
 	testCompile group: 'org.kubek2k', name: 'springockito-annotations', version: '1.0.9'
@@ -126,6 +120,14 @@ dependencies {
 	// testCompile('org.mockito:mockito-junit-jupiter:2.23.0')
 
 }
+
+configurations {
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+		exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
+	}
+}
+		
 
 test {
 	useJUnitPlatform()

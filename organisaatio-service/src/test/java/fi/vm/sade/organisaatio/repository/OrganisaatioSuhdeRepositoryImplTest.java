@@ -1,25 +1,21 @@
 package fi.vm.sade.organisaatio.repository;
 
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioSuhdeRepositoryImpl;
 import fi.vm.sade.organisaatio.model.*;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.*;
+
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -59,32 +55,32 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
         t = createDate("1.1.2001");
         organisaatioSuhdeRepository.addChild(a.getId(), b.getId(), t, null);
         printOrganisaatioSuhdeTable();
-        Assert.assertTrue(verifyChildren(t, a.getId(), b.getId()));
+        assertTrue(verifyChildren(t, a.getId(), b.getId()));
 
         t = createDate("2.1.2001");
         organisaatioSuhdeRepository.addChild(a.getId(), c.getId(), t, null);
         printOrganisaatioSuhdeTable();
-        Assert.assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
+        assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
 
         t = createDate("3.1.2001");
         organisaatioSuhdeRepository.addChild(d.getId(), e.getId(), t, null);
         printOrganisaatioSuhdeTable();
-        Assert.assertTrue(verifyChildren(t, d.getId(), e.getId()));
+        assertTrue(verifyChildren(t, d.getId(), e.getId()));
 
         t = createDate("4.1.2001");
         organisaatioSuhdeRepository.addChild(OPH.getId(), e.getId(), t, null);
         printOrganisaatioSuhdeTable();
-        Assert.assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
 
         t = createDate("5.1.2001");
         organisaatioSuhdeRepository.addChild(c.getId(), b.getId(), t, null);
         printOrganisaatioSuhdeTable();
-        Assert.assertTrue(verifyChildren(t, c.getId(), b.getId()));
+        assertTrue(verifyChildren(t, c.getId(), b.getId()));
 
         t = createDate("6.1.2001");
         organisaatioSuhdeRepository.addChild(c.getId(), d.getId(), t, null);
         printOrganisaatioSuhdeTable();
-        Assert.assertTrue(verifyChildren(t, c.getId(), b.getId(), d.getId()));
+        assertTrue(verifyChildren(t, c.getId(), b.getId(), d.getId()));
 
         //
         // Test "history"
@@ -92,59 +88,59 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
 
         // "before everything"
         t = createDate("1.1.2000");
-        Assert.assertTrue(verifyChildren(t, a.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         t = createDate("1.1.2001");
         // after a -> b
-        Assert.assertTrue(verifyChildren(t, a.getId(), b.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId(), b.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         t = createDate("2.1.2001");
         // after a -> b
         // after a -> c
-        Assert.assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         t = createDate("3.1.2001");
         // after a -> b
         // after a -> c
         // after d -> e
-        Assert.assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId(), e.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId()));
+        assertTrue(verifyChildren(t, d.getId(), e.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         t = createDate("4.1.2001");
         // after a -> b
         // after a -> c
         // after d -> e  this removed
-        Assert.assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         t = createDate("5.1.2001");
         // after a -> b  this removed
         // after a -> c
         // after d -> e  this removed
         // after c -> b
-        Assert.assertTrue(verifyChildren(t, a.getId(), c.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId(), b.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId(), c.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId(), b.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         t = createDate("6.1.2001");
         // after a -> b  this removed
@@ -152,17 +148,17 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
         // after d -> e  this removed
         // after c -> b
         // after c -> d
-        Assert.assertTrue(verifyChildren(t, a.getId(), c.getId()));
-        Assert.assertTrue(verifyChildren(t, b.getId()));
-        Assert.assertTrue(verifyChildren(t, c.getId(), b.getId(), d.getId()));
-        Assert.assertTrue(verifyChildren(t, d.getId()));
-        Assert.assertTrue(verifyChildren(t, e.getId()));
+        assertTrue(verifyChildren(t, a.getId(), c.getId()));
+        assertTrue(verifyChildren(t, b.getId()));
+        assertTrue(verifyChildren(t, c.getId(), b.getId(), d.getId()));
+        assertTrue(verifyChildren(t, d.getId()));
+        assertTrue(verifyChildren(t, e.getId()));
 
         printOrganisaatioSuhdeTable();
 
         t = new Date();
         this.organisaatioSuhdeRepository.delete(this.organisaatioSuhdeRepository.findParentTo(e.getId(), new Date()));
-        Assert.assertTrue(verifyChildren(t, d.getId(), e.getId()));
+        assertTrue(verifyChildren(t, d.getId(), e.getId()));
 
 
         //
@@ -181,21 +177,21 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
         Date date = dateFormat.parse("2000-01-01");
         LOG.info("Quering with date {}", date);
         List<OrganisaatioSuhde> list = organisaatioSuhdeRepository.findForDay(date);
-        Assert.assertEquals("Organisaatio suhde count does not match!", 4, list.size());
+        assertEquals(4, list.size());
     }
 
     @Test
     public void findForDayWithNull() throws Exception {
         executeSqlScript("classpath:data/organisaatiosuhde_data.sql", false);
         List<OrganisaatioSuhde> list = organisaatioSuhdeRepository.findForDay(null);
-        Assert.assertTrue("Organisaatiosuhde list should be empty!", list.isEmpty());
+        assertTrue(list.isEmpty());
     }
 
     @Test
     public void findForDayWithZeroDate() throws Exception {
         executeSqlScript("classpath:data/organisaatiosuhde_data.sql", false);
         List<OrganisaatioSuhde> list = organisaatioSuhdeRepository.findForDay(new Date(0));
-        Assert.assertTrue("Organisaatiosuhde list should be empty!", list.isEmpty());
+        assertTrue(list.isEmpty());
     }
 
     private void printOrganisaatioSuhdeTable() {
@@ -234,7 +230,7 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             return sdf.parse(s);
         } catch (ParseException e) {
-            Assert.fail("Invalid date in test: " + s);
+            fail("Invalid date in test: " + s);
             return null;
         }
     }
