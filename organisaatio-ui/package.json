@@ -55,7 +55,8 @@
     "jest-enzyme": "^7.1.2",
     "prettier": "2.2.1",
     "typescript": "^4.2.4",
-    "wait-on": "^6.0.0"
+    "wait-on": "^6.0.0",
+    "husky": "^6.0.0"
   },
   "scripts": {
     "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
