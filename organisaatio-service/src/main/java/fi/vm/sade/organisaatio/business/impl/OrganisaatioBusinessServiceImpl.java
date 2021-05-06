@@ -617,7 +617,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
         String jarjNro;
-        int nextVal = parentOppilaitos.getChildCount(new Date()) + 1;
+        int nextVal = parentOppilaitos.getChildCount(null) + 1;
         for (int i = nextVal; i < 100; i++) {
             jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
             if (checker.checkToimipistekoodiIsUniqueAndNotUsed(parentOppilaitos.getOppilaitosKoodi() + jarjNro)) {
