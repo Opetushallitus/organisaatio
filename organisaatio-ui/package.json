@@ -56,7 +56,8 @@
     "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
     "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
-    "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'"
+    "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'",
+    "audit": "npm audit || true"
   },
   "eslintConfig": {
     "extends": "react-app",

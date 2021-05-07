@@ -8,7 +8,7 @@ node {
 	download = true
 }
 task audit(type: NpmTask, dependsOn: npmInstall) {
-	args = ['audit']
+	args = ['run', 'audit']
 }
 task lint(type: NpmTask, dependsOn: audit) {
 	args = ['run', 'lint']
