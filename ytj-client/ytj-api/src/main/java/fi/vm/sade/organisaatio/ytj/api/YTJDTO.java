@@ -1,6 +1,3 @@
-/*
- *  License?
- */
 package fi.vm.sade.organisaatio.ytj.api;
 
 import fi.ytj.ArrayOfYritysTunnusHistoriaDTO;
@@ -11,10 +8,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author mlyly
- */
 @XmlRootElement(name = "YTJ")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class YTJDTO {

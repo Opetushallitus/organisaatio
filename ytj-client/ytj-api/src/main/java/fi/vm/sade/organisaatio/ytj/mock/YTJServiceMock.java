@@ -1,16 +1,10 @@
-/*
- *  License?
- */
 package fi.vm.sade.organisaatio.ytj.mock;
 
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJOsoiteDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
-import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.ytj.YTunnusDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +18,6 @@ import java.util.Map;
  */
 public class YTJServiceMock implements YTJService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(YTJServiceMock.class);
-
     public YTJServiceMock() {
         initMockData();
     }
@@ -37,8 +29,8 @@ public class YTJServiceMock implements YTJService {
 
     // Stupid mock that just adds values to the list even if value is not found and null is added to the list.
     @Override
-    public List<YTJDTO> findByYTunnusBatch(List<String> ytunnuses, YTJKieli ytjKieli) throws YtjConnectionException {
-        List<YTJDTO> ytjdtos = new ArrayList<YTJDTO>();
+    public List<YTJDTO> findByYTunnusBatch(List<String> ytunnuses, YTJKieli ytjKieli) {
+        List<YTJDTO> ytjdtos = new ArrayList<>();
         for(String str : ytunnuses) {
             ytjdtos.add(findByYTunnus(str, ytjKieli));
         }
@@ -47,7 +39,7 @@ public class YTJServiceMock implements YTJService {
 
     @Override
     public List<YTJDTO> findByYNimi(String nimi, boolean naytaPassiiviset, YTJKieli kieli) {
-        List<YTJDTO> result = new ArrayList<YTJDTO>();
+        List<YTJDTO> result = new ArrayList<>();
 
         for (YTJDTO ytjdto : dataByYTunnus.values()) {
             if (ytjdto.getNimi().contains(nimi)) {
@@ -58,11 +50,7 @@ public class YTJServiceMock implements YTJService {
         return result;
     }
 
-    /*
-     * MOCK DATA
-     */
-
-    private Map<String, YTJDTO> dataByYTunnus = new HashMap<String, YTJDTO>();
+    private final Map<String, YTJDTO> dataByYTunnus = new HashMap<>();
 
     private void initMockData() {
         for (String[] strings : MOCK_DATA) {
