@@ -6,102 +6,101 @@ import fi.ytj.YrityksenOsoiteV2DTO;
 import fi.ytj.YrityksenYhteystietoDTO;
 import fi.ytj.YritysHakuDTO;
 import fi.ytj.YritysTiedotV2DTO;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- *
- * @author Tuomas Katva
- */
 public class YtjDtoMapperHelper {
 
     public static final String KIELI_SV = "Svenska";
+    private static final String YHTEYSTIETOLAJI_PUHELIN = "1";
+    private static final String YHTEYSTIETOLAJI_FAKSI = "2";
+    private static final String YHTEYSTIETOLAJI_EMAIL = "3";
+    private static final String YHTEYSTIETOLAJI_WWW = "4";
+    private static final String YHTEYSTIETOLAJI_MATKAPUHELIN = "5";
 
 
     public YTJDTO mapYritysTiedotV2DTOtoYTJDTO(YritysTiedotV2DTO vastaus) {
         YTJDTO ytj = new YTJDTO();
-        if (vastaus.getYrityksenKieli() != null && vastaus.getYrityksenKieli().getSeloste() != null && vastaus.getYrityksenKieli().getSeloste().equalsIgnoreCase(KIELI_SV)) {
+        if (vastaus.getYrityksenKieli() != null
+                && vastaus.getYrityksenKieli().getSeloste() != null
+                && vastaus.getYrityksenKieli().getSeloste().equalsIgnoreCase(KIELI_SV)) {
             ytj.setSvNimi(vastaus.getToiminimi().getToiminimi());
         } else {
-        ytj.setNimi(vastaus.getToiminimi().getToiminimi() != null ? vastaus.getToiminimi().getToiminimi() 
-        : (vastaus.getYrityksenHenkilo() != null ? vastaus.getYrityksenHenkilo().getNimi() : null));
+            ytj.setNimi(vastaus.getToiminimi().getToiminimi() != null
+                    ? vastaus.getToiminimi().getToiminimi()
+                    : (vastaus.getYrityksenHenkilo() != null ? vastaus.getYrityksenHenkilo().getNimi() : null));
         }
         ytj.setYtunnus(vastaus.getYritysTunnus().getYTunnus());
         ytj.setKotiPaikkaKoodi(vastaus.getKotipaikka() != null ? vastaus.getKotipaikka().getKoodi() : null);
         ytj.setPostiOsoite(vastaus.getYrityksenPostiOsoite() != null ? mapYtjOsoite(vastaus.getYrityksenPostiOsoite()) : null);
         ytj.setKotiPaikka(vastaus.getKotipaikka() != null ? vastaus.getKotipaikka().getSeloste() : null);
         if (vastaus.getToiminimi() != null ) {
-        ytj.setAloitusPvm(vastaus.getToiminimi().getAlkuPvm() != null ? vastaus.getToiminimi().getAlkuPvm() : null);
+            ytj.setAloitusPvm(vastaus.getToiminimi().getAlkuPvm());
         }
         if (vastaus.getYrityksenKieli() != null) {
-        ytj.setYrityksenKieli(vastaus.getYrityksenKieli().getSeloste() != null ? vastaus.getYrityksenKieli().getSeloste() : "");
+            ytj.setYrityksenKieli(vastaus.getYrityksenKieli().getSeloste() != null ? vastaus.getYrityksenKieli().getSeloste() : "");
         }
-        //If kayntiosoite-katu or postilokero is not null then try to map it
-        ytj.setKayntiOsoite( vastaus.getYrityksenKayntiOsoite() != null ?  mapYtjOsoite(vastaus.getYrityksenKayntiOsoite()) : null);
+        ytj.setKayntiOsoite(
+                vastaus.getYrityksenKayntiOsoite() != null ?  mapYtjOsoite(vastaus.getYrityksenKayntiOsoite()) : null);
         mapYhteysTiedot(vastaus, ytj);
         mapYritysmuotoAndToimiala(vastaus, ytj);
-        ytj.setYritysTunnus(vastaus.getYritysTunnus() != null ? vastaus.getYritysTunnus() : null);
-        ytj.setYritystunnusHistoria(vastaus.getYritystunnusHistoria() != null ? vastaus.getYritystunnusHistoria() : null);
+        ytj.setYritysTunnus(vastaus.getYritysTunnus());
+        ytj.setYritystunnusHistoria(vastaus.getYritystunnusHistoria());
         return ytj;
     }
 
     private YTJOsoiteDTO mapYtjOsoite(YrityksenOsoiteV2DTO osoiteParam) {
+        YTJOsoiteDTO osoite = null;
         if (osoiteParam != null) {
-        YTJOsoiteDTO osoite = new YTJOsoiteDTO();
-
-        
-        osoite.setKieli(osoiteParam.getKieli());
-        osoite.setKatu(getKatuOsoite(osoiteParam));
-        osoite.setPostinumero(osoiteParam.getPostinumero());
-        osoite.setToimipaikka(osoiteParam.getToimipaikka());
-        osoite.setMaa(osoiteParam.getMaa());
-        osoite.setMaakoodi(osoiteParam.getMaakoodi());
-        return osoite;
-        } else {
-            return null;
+            osoite = new YTJOsoiteDTO();
+            osoite.setKieli(osoiteParam.getKieli());
+            osoite.setKatu(getKatuOsoite(osoiteParam));
+            osoite.setPostinumero(osoiteParam.getPostinumero());
+            osoite.setToimipaikka(osoiteParam.getToimipaikka());
+            osoite.setMaa(osoiteParam.getMaa());
+            osoite.setMaakoodi(osoiteParam.getMaakoodi());
         }
+        return osoite;
     }
-    
+
     private void mapYhteysTiedot(YritysTiedotV2DTO yritysParam, YTJDTO yritys) {
         if (yritysParam.getYrityksenYhteystiedot() != null) {
-        for (YrityksenYhteystietoDTO yhtTieto:yritysParam.getYrityksenYhteystiedot().getYrityksenYhteystietoDTO()) {
-            //Yhteystieto lajit = 4 : www, 3 : email, 5 : matkapuhelin, 1 : puhelin, 2 : faksi
-            if (yhtTieto.getLaji().trim().equals("4")) {
-                yritys.setWww(yhtTieto.getYhteysTieto());
-            } else if (yhtTieto.getLaji().trim().equals("3")) {
-                yritys.setSahkoposti(yhtTieto.getYhteysTieto());
-            } else if (yhtTieto.getLaji().trim().equals("5")) {
-                yritys.setPuhelin(yhtTieto.getYhteysTieto());
-            }  else if (yhtTieto.getLaji().trim().equals("1")) {
-                yritys.setPuhelin(yhtTieto.getYhteysTieto());
-            }  else if (yhtTieto.getLaji().trim().equals("2")) {
-                yritys.setFaksi(yhtTieto.getYhteysTieto());
+            for (YrityksenYhteystietoDTO yhtTieto : yritysParam.getYrityksenYhteystiedot().getYrityksenYhteystietoDTO()) {
+                switch (yhtTieto.getLaji().trim()) {
+                    case YHTEYSTIETOLAJI_PUHELIN:
+                    case YHTEYSTIETOLAJI_MATKAPUHELIN: yritys.setPuhelin(yhtTieto.getYhteysTieto()); break;
+                    case YHTEYSTIETOLAJI_FAKSI: yritys.setFaksi(yhtTieto.getYhteysTieto()); break;
+                    case YHTEYSTIETOLAJI_EMAIL: yritys.setSahkoposti(yhtTieto.getYhteysTieto()); break;
+                    case YHTEYSTIETOLAJI_WWW: yritys.setWww(yhtTieto.getYhteysTieto()); break;
+                    default: /* nop */
+                }
             }
-            //Add other if's if needed
-        }
         }
     }
-    
+
     private void mapYritysmuotoAndToimiala(YritysTiedotV2DTO yritysParam, YTJDTO yritys) {
         if (yritysParam.getYritysmuoto() != null) {
-        yritys.setYritysmuoto(yritysParam.getYritysmuoto().getSeloste());
-        yritys.setYritysmuotoKoodi(yritysParam.getYritysmuoto().getKoodi());
+            yritys.setYritysmuoto(yritysParam.getYritysmuoto().getSeloste());
+            yritys.setYritysmuotoKoodi(yritysParam.getYritysmuoto().getKoodi());
         }
         if (yritysParam.getToimiala() != null) {
-        yritys.setToimiala(yritysParam.getToimiala().getSeloste());
-        yritys.setToimialaKoodi(yritysParam.getToimiala().getKoodi());
+            yritys.setToimiala(yritysParam.getToimiala().getSeloste());
+            yritys.setToimialaKoodi(yritysParam.getToimiala().getKoodi());
         }
     }
 
     private String getKatuOsoite(YrityksenOsoiteV2DTO osoiteParam) {
+        if (osoiteParam.getKatu() != null
+                && osoiteParam.getKatu().trim().length() > 0
+                || osoiteParam.getUlkomaanosoite() != null
+                && osoiteParam.getUlkomaanosoite().trim().length() > 0) {
+            String kokoKatuOsoite = String.join(" ",
+                    osoiteParam.getKatu(),
+                    (osoiteParam.getTalo() != null ? osoiteParam.getTalo() : ""),
+                    (osoiteParam.getPorras() != null ? osoiteParam.getPorras() : ""),
+                    (osoiteParam.getHuoneisto() != null ? osoiteParam.getHuoneisto() : ""));
 
-        if (osoiteParam.getKatu() != null && osoiteParam.getKatu().trim().length() > 0 ||osoiteParam.getUlkomaanosoite() != null && osoiteParam.getUlkomaanosoite().trim().length() > 0) {
-            String kokoKatuOsoite;
-
-            kokoKatuOsoite = osoiteParam.getKatu() + " " + (osoiteParam.getTalo() != null ? osoiteParam.getTalo() : "") + " " 
-            + (osoiteParam.getPorras() != null ? osoiteParam.getPorras() : "") +  " " + (osoiteParam.getHuoneisto() != null ? osoiteParam.getHuoneisto() : "");
-
-            if(kokoKatuOsoite == null || kokoKatuOsoite.trim().length() < 1) {
+            if (kokoKatuOsoite.trim().length() < 1) {
                 kokoKatuOsoite = osoiteParam.getUlkomaanosoite();
             }
 
@@ -111,33 +110,23 @@ public class YtjDtoMapperHelper {
         } else {
             return null;
         }
-
     }
 
     public List<YTJDTO> mapYritysHakuDTOListToDtoList(List<YritysHakuDTO> vastaukset) {
         if (vastaukset != null) {
-        List<YTJDTO> yritykset = new ArrayList<YTJDTO>();
-        for (YritysHakuDTO vastaus : vastaukset) {
-            yritykset.add(mapYritysHakuDTOToDto(vastaus));
-        }
-
-
-        return yritykset;
-        } else{
+            return vastaukset.stream().map(this::mapYritysHakuDTOToDto).collect(Collectors.toList());
+        } else {
             return null;
         }
     }
 
     public YTJDTO mapYritysHakuDTOToDto(YritysHakuDTO ytjParam) {
+        YTJDTO dto = null;
         if (ytjParam != null) {
-        YTJDTO dto = new YTJDTO();
-        dto.setNimi(ytjParam.getYritysnimi() != null ? ytjParam.getYritysnimi() : null);
-        dto.setYtunnus(ytjParam.getYTunnus() != null ? ytjParam.getYTunnus() : null);
-
-
-        return dto;
-        } else {
-            return null;
+            dto = new YTJDTO();
+            dto.setNimi(ytjParam.getYritysnimi());
+            dto.setYtunnus(ytjParam.getYTunnus());
         }
+        return dto;
     }
 }

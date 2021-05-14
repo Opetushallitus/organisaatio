@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.vm.sade.organisaatio.ytj.service;
 
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
@@ -18,10 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Tuomas Katva
- */
 public class YTJServiceImplTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(YTJServiceImplTest.class);
@@ -58,15 +50,10 @@ public class YTJServiceImplTest {
         String nimi = "Katva";
         boolean naytaPassiiviset = false;
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("XX");
-        instance.setSalainenavain("XX");
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX");
         try {
             List<YTJDTO> results = instance.findByYNimi(nimi,naytaPassiiviset,kieli);
             LOGGER.info("Got {} results", results.size());
-            /*for (YTJDTO dto:results) {
-                log.info("Organisaatio nimi: {}",dto.getNimi());
-            }*/
             assertTrue(results.size() > 0);
         } catch (Exception exp) {
             LOGGER.info("Exception in findByNimiSuccess : {}",exp.toString());
@@ -89,9 +76,7 @@ public class YTJServiceImplTest {
     public void testFindByYTunnusBatchSuccess() {
         List<String> ytunnus = new ArrayList<String>(){{add("0313471-7");add("0201256-6");add("2189312-7");}};
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("XX");
-        instance.setSalainenavain("XX");
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX");
         try {
             List<YTJDTO> result = instance.findByYTunnusBatch(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.get(0).getNimi().trim().toLowerCase());
@@ -125,9 +110,7 @@ public class YTJServiceImplTest {
     public void testFindByYTunnusSuccess() {
         String ytunnus = "0313471-7"; // Helsingin yliopisto
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("XX");
-        instance.setSalainenavain("XX");
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX");
         try {
             YTJDTO result = instance.findByYTunnus(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.getNimi().trim().toLowerCase());
