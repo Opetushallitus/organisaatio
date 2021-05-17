@@ -51,7 +51,7 @@
     "nginx": "docker-compose -f nginx/docker-compose.yml up",
     "start": "BROWSER=none react-scripts start",
     "build": "CI='' react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
@@ -138,5 +138,11 @@
   },
   "scarfSettings": {
     "enabled": false
+  },
+  "jest": {
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ]
   }
 }

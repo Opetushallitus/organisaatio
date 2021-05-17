@@ -18,7 +18,7 @@ task checkFormatting(type: NpmTask, dependsOn: lint) {
 }
 task uiTest(type: NpmTask, dependsOn: checkFormatting) {
 	environment = ['CI': 'true']
-	args = ['run', 'test', '--', '--coverage']
+	args = ['run', 'test']
 }
 task bundle(type: NpmTask, dependsOn: uiTest) {
 	args = ['run', 'build']
