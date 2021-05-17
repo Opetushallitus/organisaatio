@@ -15,10 +15,10 @@ bin/
 *.iml
 nb-configuration.xml
 phantomjsdriver.log
-/build
+**/build
 /organisaatio-api/build
 /organisaatio-service/build
-/.gradle
+**/.gradle
 **/pom.xml.versionsBackup
 **/*.orig
 solr-data/

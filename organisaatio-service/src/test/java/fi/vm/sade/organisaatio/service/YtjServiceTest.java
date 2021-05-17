@@ -2,25 +2,23 @@ package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl;
 import fi.vm.sade.organisaatio.resource.YTJResource;
-import fi.vm.sade.rajapinnat.ytj.api.YTJDTO;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
+import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
 public class YtjServiceTest {
+
     private YTJResource ytjResource;
 
     private OrganisaatioYtjServiceImpl organisaatioYtjService;
@@ -47,21 +45,21 @@ public class YtjServiceTest {
     public void fetchLessThan1000() {
         final int amount = 500;
         List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
-        Assert.assertEquals(amount, ytjdtoList.size());
+        assertEquals(amount, ytjdtoList.size());
     }
 
     @Test
     public void fetch1000Test() {
         final int amount = 1000;
         List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
-        Assert.assertEquals(amount, ytjdtoList.size());
+        assertEquals(amount, ytjdtoList.size());
     }
 
     @Test
     public void fetchMoreThan1000Test() {
         final int amount = 1500;
         List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
-        Assert.assertEquals(amount, ytjdtoList.size());
+        assertEquals(amount, ytjdtoList.size());
     }
 
     private List<YTJDTO> invokeFetchDataFromYtj(int amount) {

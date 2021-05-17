@@ -5,8 +5,8 @@ import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +19,7 @@ public class SearchCriteriaServiceTest {
 
     private OrganisaatioPermissionServiceImpl organisaatioPermissionServiceMock;
 
-    @Before
+    @BeforeEach
     public void setup() {
         organisaatioPermissionServiceMock = mock(OrganisaatioPermissionServiceImpl.class);
         service = new SearchCriteriaService(new SearchCriteriaModelMapper(), new OrganisaatioDTOV4ModelMapper(),

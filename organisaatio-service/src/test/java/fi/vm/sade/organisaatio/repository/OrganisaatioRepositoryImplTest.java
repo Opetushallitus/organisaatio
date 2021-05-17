@@ -2,20 +2,16 @@ package fi.vm.sade.organisaatio.repository;
 
 import fi.vm.sade.organisaatio.RyhmaBuilder;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioSuhdeRepositoryImpl;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.model.*;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -24,8 +20,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -52,12 +48,12 @@ public class OrganisaatioRepositoryImplTest {
 
         final String oid = e.getOid();
         List<String> oids = organisaatioRepository.findParentOidsTo(oid);
-        Assert.assertEquals(5, oids.size());
-        Assert.assertEquals(a.getOid(), oids.get(0));
-        Assert.assertEquals(b.getOid(), oids.get(1));
-        Assert.assertEquals(c.getOid(), oids.get(2));
-        Assert.assertEquals(d.getOid(), oids.get(3));
-        Assert.assertEquals(e.getOid(), oids.get(4));
+        assertEquals(5, oids.size());
+        assertEquals(a.getOid(), oids.get(0));
+        assertEquals(b.getOid(), oids.get(1));
+        assertEquals(c.getOid(), oids.get(2));
+        assertEquals(d.getOid(), oids.get(3));
+        assertEquals(e.getOid(), oids.get(4));
     }
 
     @Test
@@ -157,7 +153,7 @@ public class OrganisaatioRepositoryImplTest {
 
         b = organisaatioRepository.customFindByOid(b.getOid());
 
-        Assert.assertEquals(a.getOid(), b.getParent().getOid());
+        assertEquals(a.getOid(), b.getParent().getOid());
     }
 
     @Test
@@ -170,24 +166,24 @@ public class OrganisaatioRepositoryImplTest {
         Organisaatio f = createOrganisaatio("F", a, true, generateParentOids(a), generateParentIdPath(a));
 
         List<Organisaatio> children = this.organisaatioRepository.findChildren(a.getOid(), false, true);
-        Assert.assertEquals(2, children.size());
-        Assert.assertTrue(organisaatiotContain(children, b));
-        Assert.assertTrue(organisaatiotContain(children, c));
-        Assert.assertFalse(organisaatiotContain(children, f));
+        assertEquals(2, children.size());
+        assertTrue(organisaatiotContain(children, b));
+        assertTrue(organisaatiotContain(children, c));
+        assertFalse(organisaatiotContain(children, f));
 
         children = organisaatioRepository.findChildren(c.getOid(), false, true);
-        Assert.assertEquals(1,children.size());
-        Assert.assertTrue(organisaatiotContain(children, e));
+        assertEquals(1,children.size());
+        assertTrue(organisaatiotContain(children, e));
 
         children = organisaatioRepository.findChildren(e.getOid(), false, true);
-        Assert.assertEquals(0, children.size());
+        assertEquals(0, children.size());
 
         children = organisaatioRepository.findChildren(d.getOid(), false, true);
-        Assert.assertEquals(0, children.size());
+        assertEquals(0, children.size());
 
         children = this.organisaatioRepository.findChildren(a.getOid(), true, true);
-        Assert.assertEquals(3, children.size());
-        Assert.assertTrue(organisaatiotContain(children, f));
+        assertEquals(3, children.size());
+        assertTrue(organisaatiotContain(children, f));
 
     }
 

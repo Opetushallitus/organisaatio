@@ -1,17 +1,16 @@
 package fi.vm.sade.organisaatio.config;
 
-
 import fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 
-import fi.vm.sade.rajapinnat.ytj.service.YTJServiceImpl;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
+import fi.vm.sade.organisaatio.ytj.service.YTJServiceImpl;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 
 @Configuration
 public class ApplicationConfig {
@@ -24,22 +23,17 @@ public class ApplicationConfig {
 
     @Bean
     public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper;
+        return new ModelMapper();
     }
 
     @Bean
     public OIDServiceSimpleImpl oidService() {
-        OIDServiceSimpleImpl oidService = new OIDServiceSimpleImpl();
-        return oidService;
+        return new OIDServiceSimpleImpl();
     }
 
     @Bean
-    public YTJServiceImpl ytjService() {
-        YTJServiceImpl ytjService = new YTJServiceImpl();
-        ytjService.setAsiakastunnus(ytjAsiakastunnus);
-        ytjService.setSalainenavain(ytjAvain);
-        return ytjService;
+    public YTJService ytjService() {
+        return new YTJServiceImpl(ytjAsiakastunnus, ytjAvain);
     }
 
     @Bean
@@ -55,7 +49,6 @@ public class ApplicationConfig {
 
     @Bean
     ConverterFactory converterFactory() {
-        ConverterFactory converterFactory = new ConverterFactory();
-        return converterFactory;
+        return new ConverterFactory();
     }
 }

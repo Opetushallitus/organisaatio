@@ -18,16 +18,13 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.client.OrganisaatioViestintaClient;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +32,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -66,11 +63,6 @@ public class ViestintaTest {
     @Autowired
     private OrganisaatioViestintaImpl organisaatioViestinta;
 
-    //@Before
-    //public void setUp() {
-       // MockitoAnnotations.initMocks(this);
-    //}
-
     @Test
     public void messageFromLogTestWith1Error() {
         final YtjVirhe virhe = new YtjVirhe();
@@ -88,7 +80,7 @@ public class ViestintaTest {
         loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
 
         String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
-        Assert.assertEquals(validMessage, outputMessage);
+        assertEquals(validMessage, outputMessage);
     }
 
     @Test
@@ -102,7 +94,7 @@ public class ViestintaTest {
         loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
 
         String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
-        Assert.assertEquals(validMessage, outputMessage);
+        assertEquals(validMessage, outputMessage);
     }
 
     @Test
@@ -138,9 +130,9 @@ public class ViestintaTest {
         loki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT_VIRHEITA);
 
         String outputMessage = ReflectionTestUtils.invokeMethod(organisaatioViestinta, "generateMessageFromPaivitysloki", loki);
-        Assert.assertTrue(outputMessage.contains(validMessagePart1));
-        Assert.assertTrue(outputMessage.contains(validMessagePart2));
-        Assert.assertTrue(outputMessage.contains(validMessagePart3));
-        Assert.assertTrue(outputMessage.contains(validMessagePart4));
+        assertTrue(outputMessage.contains(validMessagePart1));
+        assertTrue(outputMessage.contains(validMessagePart2));
+        assertTrue(outputMessage.contains(validMessagePart3));
+        assertTrue(outputMessage.contains(validMessagePart4));
     }
 }

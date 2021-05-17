@@ -16,9 +16,8 @@
  */
 package fi.vm.sade.organisaatio.service.filters;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -27,11 +26,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class CsrfHeaderFilterTest extends Assert {
+public class CsrfHeaderFilterTest {
 
     private final static String CSRF_COOKIE_VALUE = "cookie-value";
     private final static String CSRF_HEADER_OLD_VALUE = "old-value";
@@ -41,17 +41,12 @@ public class CsrfHeaderFilterTest extends Assert {
     private HttpServletRequest nextRequest;
     private FilterChain filterChain;
 
-    @Before
+    @BeforeEach
     public void setup() {
         csrfHeaderFilter = new CsrfHeaderFilter();
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
-        filterChain = new FilterChain() {
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-                nextRequest = (HttpServletRequest)request;
-            }
-        };
+        filterChain = (request, response) -> nextRequest = (HttpServletRequest)request;
     }
 
 	@Test
@@ -88,7 +83,7 @@ public class CsrfHeaderFilterTest extends Assert {
 
         csrfHeaderFilter.doFilter(request, response, filterChain);
 
-        assertEquals("Still old value", CSRF_HEADER_OLD_VALUE, nextRequest.getHeader(CSRF_HEADER_NAME));
+        assertEquals(CSRF_HEADER_OLD_VALUE, nextRequest.getHeader(CSRF_HEADER_NAME), "Still old value");
     }
 
     private Cookie[] createCookies(String name, String value) {

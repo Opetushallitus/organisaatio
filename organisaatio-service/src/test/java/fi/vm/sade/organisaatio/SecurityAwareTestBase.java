@@ -1,8 +1,9 @@
 package fi.vm.sade.organisaatio;
 
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
     /**
      * Set permissions for current user, setup Mock oid provider
      */
-    @Before
+    @BeforeEach
     public void before() {
         setCurrentUser("ophadmin", getAuthority("APP_" + OrganisaatioPermissionServiceImpl.ORGANISAATIOHALLINTA + "_CRUD", ophOid));
         OidProvider oidProvider = Mockito.mock(OidProvider.class);
@@ -60,7 +61,7 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
         Whitebox.setInternalState(authorizer, "oidProvider", oidProvider);
     }
     
-    @After
+    @AfterEach
     public void after(){
         //restore original oidprovider
         Whitebox.setInternalState(authorizer, "oidProvider", this.oidProvider);

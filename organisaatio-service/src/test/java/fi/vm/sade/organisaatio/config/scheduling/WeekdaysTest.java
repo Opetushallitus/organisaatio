@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
 import com.github.kagkarlsson.scheduler.task.ExecutionComplete;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalTime;

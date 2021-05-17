@@ -2,25 +2,18 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
-import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Hibernate;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -45,8 +34,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @org.springframework.test.context.jdbc.Sql(
         scripts = "classpath:data/basic_organisaatio_data.sql",
@@ -57,7 +45,6 @@ import static org.junit.Assert.assertNotNull;
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
 )
 @ActiveProfiles("dev")
-@RunWith(SpringRunner.class)
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -88,7 +75,7 @@ public class OrganisaatioResourceTest {
                 new String[]{rootOrganisaatioOid, "1.2.2004.1", "1.2.2004.3", "1.2.2005.4"});
 
         String s = res.parentoids("1.2.2005.4");
-        Assert.assertEquals(reference, s);
+        assertEquals(reference, s);
     }
 
     @Test
@@ -97,7 +84,7 @@ public class OrganisaatioResourceTest {
                 new String[]{rootOrganisaatioOid});
 
         String s = res.parentoids(rootOrganisaatioOid);
-        Assert.assertEquals(reference, s);
+        assertEquals(reference, s);
     }
 
     @Test
@@ -106,7 +93,7 @@ public class OrganisaatioResourceTest {
                 new String[]{rootOrganisaatioOid, "does_not_exist"});
 
         String s = res.parentoids("does_not_exist");
-        Assert.assertEquals(reference, s);
+        assertEquals(reference, s);
     }
 
     @Test
@@ -119,14 +106,14 @@ public class OrganisaatioResourceTest {
         OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
         node2foo.setParentOid(parentOid);
         ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
-        Assert.assertEquals("Parent oid should match!", parentOid, updated.getOrganisaatio().getParentOid());
+        assertEquals(parentOid, updated.getOrganisaatio().getParentOid(), "Parent oid should match!");
         LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
         List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid(), false);
-        Assert.assertEquals("Children count should match!", 2, children.size());
+        assertEquals(2, children.size(), "Children count should match!");
         for (OrganisaatioRDTO child : children) {
             LOG.info("Child oid path: {}, id path: {}", child.getParentOidPath());
-            Assert.assertEquals("Child parent oid path should match!",
-                    updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|", child.getParentOidPath());
+            assertEquals(updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|",
+                    child.getParentOidPath(), "Child parent oid path should match!");
         }
     }
 
@@ -208,7 +195,7 @@ public class OrganisaatioResourceTest {
     @Test
     public void testFetchingHakutoimisto() throws Exception {
         HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.2004.4").getEntity();
-        Assert.assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
+        assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
                 ImmutableMap.of(
@@ -222,7 +209,7 @@ public class OrganisaatioResourceTest {
     @Test
     public void testMixedOsoitetyyppi() throws Exception {
         HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.8000.1").getEntity();
-        Assert.assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
+        assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
                 ImmutableMap.of(

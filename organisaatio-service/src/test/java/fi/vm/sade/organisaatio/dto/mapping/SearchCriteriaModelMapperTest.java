@@ -3,15 +3,16 @@ package fi.vm.sade.organisaatio.dto.mapping;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SearchCriteriaModelMapperTest {
 
     private SearchCriteriaModelMapper mapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mapper = new SearchCriteriaModelMapper();
     }

@@ -21,15 +21,17 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map.Entry;
 
-import org.junit.Assert;
-
-import org.junit.Test;
-
 import com.google.common.collect.Maps;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrganisationDateValidatorTest {
 
@@ -38,8 +40,8 @@ public class OrganisationDateValidatorTest {
 	}
     private final OrganisationDateValidator validator = new OrganisationDateValidator(false);
     private final OrganisationDateValidator validatorSkipStartDate = new OrganisationDateValidator(true);
-    private Organisaatio parent = new Organisaatio();
-    private Organisaatio child = new Organisaatio();
+    private final Organisaatio parent = new Organisaatio();
+    private final Organisaatio child = new Organisaatio();
     private final Entry<Organisaatio, Organisaatio> parentChild = Maps.immutableEntry(parent, child);
 	
     @Test
@@ -124,19 +126,19 @@ public class OrganisationDateValidatorTest {
         assertTrue(validator.apply(parentChild));
     }
 
-    @Test(expected = OrganisaatioDateException.class)
+    @Test
     public void childBeginningAfterParentEndFails() {
         // child start date after parent end date
         child.setAlkuPvm(date(5));
         parent.setLakkautusPvm(date(1));
-        validator.apply(parentChild);
+        assertThrows(OrganisaatioDateException.class, () -> validator.apply(parentChild));
     }
 
-    @Test(expected = OrganisaatioDateException.class)
+    @Test
     public void childBeginningAfterParentEndFailsWithoutStartDateValidation() {
         child.setAlkuPvm(date(5));
         parent.setLakkautusPvm(date(1));
-        validatorSkipStartDate.apply(parentChild);
+        assertThrows(OrganisaatioDateException.class, () -> validatorSkipStartDate.apply(parentChild));
     }
 
 }

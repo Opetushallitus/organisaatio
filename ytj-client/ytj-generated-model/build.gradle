@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library'
+    id "io.mateo.cxf-codegen" version "1.0.0-rc.2"
+}
+
+dependencies {
+    api 'javax.xml.bind:jaxb-api:2.3.1'
+    api 'javax.xml.ws:jaxws-api:2.3.1'
+    api 'javax.jws:javax.jws-api:1.1'
+    cxfCodegen 'jakarta.xml.ws:jakarta.xml.ws-api:2.3.3'
+    cxfCodegen 'jakarta.annotation:jakarta.annotation-api:1.3.5'
+    cxfCodegen 'org.apache.cxf.xjcplugins:cxf-xjc-ts:2.6.0'
+    cxfCodegen 'org.apache.cxf.xjcplugins:cxf-xjc-boolean:2.6.0'
+}
+
+description = "Organisaatio :: YTJ Client :: generated-model - ${version}"
+
+cxfCodegen {
+    wsdl2java {
+        ytj {
+            wsdl = file("src/main/resources/wsdl/yritystiedot.wsdl")
+            wsdlLocation = "classpath:wsdl/yritystiedot.wsdl"
+            markGenerated = true
+            extraArgs = ["-xjc-Xbg", "-verbose"]
+        }
+    }
+}
+
+compileJava.dependsOn wsdl2javaYtj
