@@ -16,8 +16,6 @@ import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 import Axios from 'axios';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
     nimi: '',
@@ -69,9 +67,9 @@ const UusiToimijaLomake = (props: any) => {
     const { i18n } = useContext(LanguageContext);
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]
-    >(`${urlPrefix}/koodisto/ORGANISAATIOTYYPPI/koodi`);
+    >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
     const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError }] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/MAATJAVALTIOT1/koodi`
+        `/organisaatio/koodisto/MAATJAVALTIOT1/koodi`
     );
     const [
         {
@@ -79,7 +77,7 @@ const UusiToimijaLomake = (props: any) => {
             loading: oppilaitoksenOpetuskieletLoading,
             error: oppilaitoksenOpetuskieletError,
         },
-    ] = useAxios<Koodi[]>(`${urlPrefix}/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
+    ] = useAxios<Koodi[]>(`/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
     const [organisaatio, setOrganisaatio] = useReducer(
         (state: Organisaatio, newState: Organisaatio): Organisaatio => ({ ...state, ...newState }),
         tyhjaOrganisaatio
@@ -87,7 +85,7 @@ const UusiToimijaLomake = (props: any) => {
 
     async function postOrganisaatio() {
         try {
-            const response = await Axios.post(`${urlPrefix}/organisaatio/v4/`, organisaatio);
+            const response = await Axios.post(`/organisaatio/organisaatio/v4/`, organisaatio);
             console.error('saved org response', response);
             props.history.push('/');
         } catch (error) {

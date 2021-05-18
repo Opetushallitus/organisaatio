@@ -22,8 +22,6 @@ import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/Yhteys
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
 
-const urlPrefix = process.env.NODE_ENV === 'development' ? '/api' : '/organisaatio';
-
 const theme = createTheme();
 
 const OrganisaatioApp: React.FC = () => {
@@ -35,7 +33,7 @@ const OrganisaatioApp: React.FC = () => {
     useEffect(() => {
         async function fetchLanguage() {
             try {
-                const response = await axios.get(`${urlPrefix}/lokalisointi/kieli`);
+                const response = await axios.get(`/organisaatio/lokalisointi/kieli`);
                 setLanguage(response.data);
             } catch (error) {
                 console.log(error);
@@ -46,20 +44,20 @@ const OrganisaatioApp: React.FC = () => {
         fetchLanguage();
     }, []);
     const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
-        `${urlPrefix}/lokalisointi`
+        `/organisaatio/lokalisointi`
     );
     const [{ data: kunnat, loading: kunnatLoading, error: kunnatError }] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/KUNTA/koodi`
+        `/organisaatio/koodisto/KUNTA/koodi`
     );
     const [{ data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError }] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/RYHMATYYPIT/koodi`
+        `/organisaatio/koodisto/RYHMATYYPIT/koodi`
     );
     const [{ data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError }] = useAxios<Koodi[]>(
-        `${urlPrefix}/koodisto/KAYTTORYHMAT/koodi`
+        `/organisaatio/koodisto/KAYTTORYHMAT/koodi`
     );
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]
-    >(`${urlPrefix}/koodisto/ORGANISAATIOTYYPPI/koodi`);
+    >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
     if (
         languageLoading ||
         lokalisointiLoading ||

@@ -1,8 +1,30 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## TL;DR
+
+```
+> git clone git@github.com:Opetushallitus/organisaatio.git
+> cd organisaatio/organisaatio-ui
+> npm install
+> npm run dev
+```
+
+open http://localhost:8080/cas to authenticate
+
+access http://localhost:8080/organisaatio to access app
+
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm run dev`
+
+Starts up the app in development mode and [nginx proxy](nginx) for accessing backend.
+
+Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
 ### `npm start`
 
