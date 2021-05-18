@@ -51,13 +51,13 @@
     "nginx": "docker-compose -f nginx/docker-compose.yml up",
     "start": "BROWSER=none react-scripts start",
     "build": "CI='' react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",
     "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
     "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'",
-    "audit": "npm audit || true"
+    "audit": "npm audit --only=prod --audit-level=critical"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -138,5 +138,11 @@
   },
   "scarfSettings": {
     "enabled": false
+  },
+  "jest": {
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ]
   }
 }
