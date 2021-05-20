@@ -110,18 +110,31 @@ export interface YtjOrganisaatio {
 }
 
 export interface Ryhma {
-    nimi: any;
-    yritysmuoto: string;
-    tyypit: string[];
+    yritysmuoto?: string; // TODO Tuleeko nämä???
+    kuvaus?: any; // TODO Tuleeko nämä???
+    kayntiosoite: any;
     kayttoryhmat: string[];
-    kuvaus: any;
-    kuvaus2?: any;
+    kieletUris: any[];
+    kuvaus2: any;
+    lisatiedot: string[];
+    lakkautusPvm?: string;
+    muutKotipaikatUris: string[];
+    muutOppilaitosTyyppiUris: string[];
+    nimet: any[];
+    nimi: any;
     oid?: string;
     parentOid: string;
-    parentOidPath?: string;
+    parentOidPath: string;
+    piilotettu: boolean;
+    postiosoite: any;
     ryhmatyypit: string[];
     status: string;
+    toimipistekoodi: string;
+    tyypit: string[];
     version: number;
+    vuosiluokat: any[];
+    yhteystiedot: Yhteystiedot[];
+    yhteystietoArvos: any[];
 }
 
 export interface YhteystietoTyyppi {
@@ -151,4 +164,10 @@ export type VirheKoodi = string;
 export type SelectOptionType = {
     value: string;
     label: string;
+};
+
+export type LanguagedInputBind = {
+    name: string;
+    value: string;
+    onChange: (e: React.FormEvent<HTMLInputElement>) => void;
 };

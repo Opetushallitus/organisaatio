@@ -1,0 +1,373 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MuokkausLomake Buttons Passivoi button clicks 1`] = `
+Array [
+  Array [],
+]
+`;
+
+exports[`MuokkausLomake Buttons Peruuta button clicks 1`] = `
+Array [
+  Array [],
+]
+`;
+
+exports[`MuokkausLomake Buttons Poista button clicks 1`] = `
+Array [
+  Array [],
+]
+`;
+
+exports[`MuokkausLomake Buttons Tallenna button clicks 1`] = `
+Array [
+  Array [],
+]
+`;
+
+exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
+<PohjaSivu>
+  <div
+    className="YlaBanneri"
+  >
+    <div>
+      <a
+        href="/organisaatio/ryhmat"
+      >
+        <Icon
+          icon={
+            Object {
+              "body": "<path d=\\"M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z\\" fill=\\"currentColor\\"/>",
+              "height": 512,
+              "width": 576,
+            }
+          }
+        />
+      </a>
+    </div>
+    <div>
+      <a
+        href="/organisaatio/ryhmat"
+      >
+        KAIKKI_RYHMAT
+      </a>
+    </div>
+  </div>
+  <div
+    className="PaaKehys"
+  >
+    <div
+      className="ValiContainer"
+    >
+      <div
+        className="ValiOtsikko"
+      >
+        <h3>
+          RYHMA
+        </h3>
+        <h1 />
+      </div>
+    </div>
+    <div
+      className="PaaOsio"
+    >
+      <div
+        className="OtsikkoRivi"
+      >
+        <div
+          className="Otsikko"
+        >
+          <h3>
+            RYHMAN_TIEDOT_OTSIKKO
+          </h3>
+        </div>
+      </div>
+      <div
+        className="OidRivi"
+      >
+        <span
+          className="AvainKevyestiBoldattu"
+        >
+          OID
+        </span>
+        <span
+          className="ReadOnly"
+        />
+      </div>
+      <div
+        className="Rivi"
+      >
+        <div
+          className="Kentta"
+        >
+          <label>
+            RYHMAN_NIMI
+          </label>
+          <div
+            className="Rivi"
+          >
+            <label>
+              SUOMEKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                name="nimiFi"
+                onChange={[MockFunction]}
+                value="1"
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label>
+              RUOTSIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                name="nimiSv"
+                onChange={[MockFunction]}
+                value="2"
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label>
+              ENGLANNIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                name="nimiEn"
+                onChange={[MockFunction]}
+                value="3"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="Rivi"
+      >
+        <div
+          className="Kentta"
+        >
+          <label>
+            RYHMAN_KUVAUS
+          </label>
+          <div
+            className="Rivi"
+          >
+            <label>
+              SUOMEKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                name="kuvaus2Fi"
+                onChange={[MockFunction]}
+                value="4"
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label>
+              RUOTSIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                name="kuvaus2Sv"
+                onChange={[MockFunction]}
+                value="5"
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label>
+              ENGLANNIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                name="kuvaus2En"
+                onChange={[MockFunction]}
+                value="6"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="Rivi"
+      >
+        <div
+          className="Kentta"
+        >
+          <label>
+            RYHMAN_TYYPPI
+          </label>
+          <Select
+            isDisabled={false}
+            isMulti={true}
+            name="ryhmatyypit"
+            onChange={[MockFunction]}
+            options={Array []}
+            value={Array []}
+          />
+        </div>
+      </div>
+      <div
+        className="Rivi"
+      >
+        <div
+          className="Kentta"
+        >
+          <label>
+            RYHMAN_KAYTTOTARKOITUS
+          </label>
+          <Select
+            isDisabled={false}
+            isMulti={true}
+            name="kayttoryhmat"
+            onChange={[MockFunction]}
+            options={Array []}
+            value={Array []}
+          />
+        </div>
+      </div>
+      <div
+        className="AlinRivi"
+      >
+        <ForwardRef
+          name="passivoibutton"
+          onClick={[MockFunction]}
+          variant="outlined"
+        >
+          PASSIVOI_RYHMA
+        </ForwardRef>
+        <ForwardRef
+          name="poistabutton"
+          onClick={[MockFunction]}
+          variant="outlined"
+        >
+          POISTA_RYHMA
+        </ForwardRef>
+      </div>
+    </div>
+  </div>
+  <div
+    className="AlaBanneri"
+  >
+    <div>
+      <ForwardRef
+        className="Versionappula"
+        name="peruutabutton"
+        onClick={[MockFunction]}
+        variant="outlined"
+      >
+        SULJE_TIEDOT
+      </ForwardRef>
+      <ForwardRef
+        className="Versionappula"
+        disabled={false}
+        name="tallennabutton"
+        onClick={[MockFunction]}
+      >
+        TALLENNA
+      </ForwardRef>
+    </div>
+  </div>
+</PohjaSivu>
+`;
+
+exports[`MuokkausLomake Update kuvaus2 in all languages kuvaus2En 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "kuvaus2En",
+        "value": "testiKuvaus2",
+      },
+    },
+  ],
+]
+`;
+
+exports[`MuokkausLomake Update kuvaus2 in all languages kuvaus2Fi 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "kuvaus2Fi",
+        "value": "testiKuvaus2",
+      },
+    },
+  ],
+]
+`;
+
+exports[`MuokkausLomake Update kuvaus2 in all languages kuvaus2Sv 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "kuvaus2Sv",
+        "value": "testiKuvaus2",
+      },
+    },
+  ],
+]
+`;
+
+exports[`MuokkausLomake Update nimi in all languages nimiEn 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "nimiEn",
+        "value": "testiNimi",
+      },
+    },
+  ],
+]
+`;
+
+exports[`MuokkausLomake Update nimi in all languages nimiFi 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "nimiFi",
+        "value": "testiNimi",
+      },
+    },
+  ],
+]
+`;
+
+exports[`MuokkausLomake Update nimi in all languages nimiSv 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "nimiSv",
+        "value": "testiNimi",
+      },
+    },
+  ],
+]
+`;

@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { useEffect } from 'react';
+import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../mappers';
 import Axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { Ryhma } from '../../../types/types';
@@ -12,19 +13,10 @@ import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Column } from 'react-table';
 
-export const dropKoodiVersionSuffix = (koodi: string) => {
-    const hasVersioningHashtag = koodi.search('#');
-    if (hasVersioningHashtag && hasVersioningHashtag) {
-        return koodi.slice(0, hasVersioningHashtag);
-    }
-    return koodi;
-};
-
 const Ryhmat: React.FC = () => {
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
     const [ryhmat, setRyhmat] = useState<Ryhma[]>([]);
-    // TODO TS jutut ja haku mapperit tyyppien ja käyttötarkoituksen osalta
     const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
         () => [
             {
@@ -32,16 +24,16 @@ const Ryhmat: React.FC = () => {
                 id: 'Nimi',
                 Cell: ({ row }) => {
                     return (
-                        <a href={`/ryhmat/muokkaus/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
-                            {row.original.nimi[language] ||
-                                row.original.nimi['fi'] ||
-                                row.original.nimi['sv'] ||
-                                row.original.nimi['en']}
+                        <a
+                            href={`/organisaatio/ryhmat/muokkaus/${row.original.oid}`}
+                            className={styles.nimenMaksimiPituus}
+                        >
+                            {mapLocalizedKoodiToLang(language, 'nimi', row.original)}
                         </a>
                     );
                 },
                 accessor: (values) => {
-                    return values.nimi[language] || values.nimi.fi || values.nimi.sv || values.nimi.en || '';
+                    return mapLocalizedKoodiToLang(language, 'nimi', values);
                 },
                 //collapse: true,
             },
