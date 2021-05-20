@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { YhteystietoTyyppi } from '../../../types/types';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
+import { Column } from 'react-table';
 
 const nimiMapper = (nimi: any, language: string) => {
     if (nimi.teksti && nimi.teksti.length > 0) {
@@ -27,7 +28,7 @@ type Props = {
 
 const Tyypit = (props: Props) => {
     const { i18n, language } = useContext(LanguageContext);
-    const [tyypit, setTyypit] = useState<string[] | YhteystietoTyyppi[] | undefined>(undefined);
+    const [tyypit, setTyypit] = useState<YhteystietoTyyppi[]>([]);
     useEffect(() => {
         async function fetch() {
             try {
@@ -37,7 +38,6 @@ const Tyypit = (props: Props) => {
                     }`
                 );
                 const data = response.data;
-                console.log('data', data);
                 setTyypit([...data]);
             } catch (error) {
                 console.error('error fetching', error);
@@ -75,7 +75,7 @@ const Tyypit = (props: Props) => {
                 );
             },
         },
-    ];
+    ] as Column<YhteystietoTyyppi>[];
     return (
         <TyypitJaRyhmatKehys>
             <div className={styles.OtsikkoRivi}>
@@ -97,7 +97,7 @@ const Tyypit = (props: Props) => {
                 </div>
             </div>
             <div className={styles.TaulukkoKehys}>
-                <NormaaliTaulukko data={tyypit} tableColumns={tyypitColumns} />
+                <NormaaliTaulukko yhteystietoTyypitData={tyypit} yhteystietotyypitColumns={tyypitColumns} />
             </div>
         </TyypitJaRyhmatKehys>
     );

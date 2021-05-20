@@ -15,22 +15,9 @@
     margin-right: 1rem;
 }
 
-.FiltteriContainer {
-}
-
-.FiltteriRivi {
-    display: flex;
-    flex-direction:row;
-    padding: 1.5rem;
-    justify-content: space-between;
-}
 
 .HakuvalikkoRivi {
     justify-content: space-between;
-}
-
-.FiltteriInputOsa {
-    min-width: 60vw;
 }
 
 .Kentta {

@@ -1,3 +1,5 @@
+// TODO ei käytetä??
+
 import moment from 'moment';
 import nimiHistoria from './nimiHistoria';
 

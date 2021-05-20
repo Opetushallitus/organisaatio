@@ -1,3 +1,4 @@
+// TODO ei käytetä??
 const ytjMapper = (yritystiedot: any, alkuperainenOrg: any) => {
     const nimi: any = {
         nimi: {},

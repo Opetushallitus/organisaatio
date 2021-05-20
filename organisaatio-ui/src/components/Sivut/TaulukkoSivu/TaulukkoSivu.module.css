@@ -5,16 +5,16 @@
     flex-direction: column;
     justify-content: flex-start;
     box-sizing: border-box;
-    border: 1px solid #CCCCCC;
-    background-color: #FFFFFF;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
 }
 
 .OtsikkoContainer {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     justify-content: space-between;
     padding: 1rem 2rem;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid #cccccc;
     align-items: center;
 }
 
@@ -26,14 +26,13 @@
     overflow-y: hidden;
 }
 
-
 .TaulukkoContainer td {
     height: 3rem;
-   /* width: 1%; */
+    /* width: 1%; */
 }
 
 .TaulukkoContainer td.collapse {
-   /* width: 0.0000000001%; */
+    /* width: 0.0000000001%; */
 }
 
 .PaginationContainer {
@@ -43,7 +42,7 @@
     justify-content: center;
 }
 
-.PaginationSivunvaihto  {
+.PaginationSivunvaihto {
     margin: auto;
 }
 .PaginationYhteensa {
@@ -51,13 +50,14 @@
 }
 
 .NaytaSivullaSelect {
-    border:none;
+    border: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     -ms-appearance: none;
     width: 2rem;
-    background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat right;
+    background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>")
+        no-repeat right;
     background-position-x: 0.7rem;
 }
 
@@ -71,12 +71,11 @@
 }
 
 .SininenTausta {
-    background: #159ECB;
+    background: #159ecb;
 }
 .PunainenTausta {
     background: #e44e4e;
 }
-
 
 .Expander.Expander {
     padding-right: 1rem;

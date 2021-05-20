@@ -58,13 +58,17 @@ const OrganisaatioApp: React.FC = () => {
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]
     >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
+    const [{ data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError }] = useAxios<Koodi[]>(
+        `organisaatio/koodisto/RYHMANTILA/koodi`
+    );
     if (
         languageLoading ||
         lokalisointiLoading ||
         kunnatLoading ||
         ryhmaTyypitLoading ||
         kayttoRyhmatLoading ||
-        organisaatioTyypitLoading
+        organisaatioTyypitLoading ||
+        ryhmanTilatLoading
     ) {
         return (
             <ThemeProvider theme={theme}>
@@ -72,7 +76,14 @@ const OrganisaatioApp: React.FC = () => {
             </ThemeProvider>
         );
     }
-    if (lokalisointiError || kunnatError || ryhmaTyypitError || kayttoRyhmatError || organisaatioTyypitError) {
+    if (
+        lokalisointiError ||
+        kunnatError ||
+        ryhmaTyypitError ||
+        kayttoRyhmatError ||
+        organisaatioTyypitError ||
+        ryhmanTilatError
+    ) {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
     }
     const i18n = new I18nImpl(lokalisointi, language);
@@ -80,13 +91,20 @@ const OrganisaatioApp: React.FC = () => {
     const ryhmaTyypitKoodisto = new KoodistoImpl(ryhmaTyypit, language);
     const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
     const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, language);
+    const ryhmanTilaKoodisto = new KoodistoImpl(ryhmanTilat, language);
 
     return (
         <Router basename="/organisaatio">
             <ThemeProvider theme={theme}>
                 <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
                     <KoodistoContext.Provider
-                        value={{ kuntaKoodisto, ryhmaTyypitKoodisto, kayttoRyhmatKoodisto, organisaatioTyypitKoodisto }}
+                        value={{
+                            kuntaKoodisto,
+                            ryhmaTyypitKoodisto,
+                            kayttoRyhmatKoodisto,
+                            organisaatioTyypitKoodisto,
+                            ryhmanTilaKoodisto,
+                        }}
                     >
                         <Switch>
                             <Route path="/" exact component={TaulukkoSivu} />

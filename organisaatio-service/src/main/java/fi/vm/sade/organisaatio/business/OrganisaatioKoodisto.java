@@ -46,6 +46,7 @@ public interface OrganisaatioKoodisto {
         YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi"),
         POSTI("posti"),
         RYHMATYYPIT("ryhmatyypit"),
+        RYHMANTILA("ryhmantila"),
         KAYTTORYHMAT("kayttoryhmat"),
         OPPILAITOSTYYPPI("oppilaitostyyppi");
         private final String uri;
