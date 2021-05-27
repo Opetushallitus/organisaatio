@@ -1,6 +1,6 @@
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
-    if (hasVersioningHashtag) {
+    if (hasVersioningHashtag !== -1) {
         return koodi.slice(0, hasVersioningHashtag);
     }
     return koodi;
