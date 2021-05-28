@@ -1,14 +1,11 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { useEffect } from 'react';
 import Axios, { AxiosResponse } from 'axios';
 import { Ryhma, SelectOptionType } from '../../../../types/types';
 import { useLanguagedInput } from '../../../../customHooks/CustomHooks';
 import { ActionMeta, ValueType } from 'react-select';
 import MuokkausLomake from './MuokkausLomake';
-import { useContext } from 'react';
 import { LanguageContext } from '../../../../contexts/contexts';
 
 export type RyhmanMuokausProps = {
@@ -29,26 +26,6 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     const { i18n } = useContext(LanguageContext);
     const [ryhma, setRyhma] = useState<Ryhma>();
     // const [isModaliAuki, setIsModaaliAuki ] = useState(false);
-    useEffect(() => {
-        async function fetch() {
-            try {
-                const response = (await Axios.get(
-                    `/organisaatio/organisaatio/v4/${match.params.oid}?includeImage=true`
-                )) as AxiosResponse;
-                const ryhma = response.data as Ryhma;
-                setRyhma(ryhma);
-                setNimiFiValue(ryhma.nimi['fi']);
-                setNimiSvValue(ryhma.nimi['sv']);
-                setNimiEnValue(ryhma.nimi['en']);
-                setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
-                setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
-                setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
-            } catch (error) {
-                console.error('error fetching', error);
-            }
-        }
-        fetch();
-    }, [match.params.oid]);
 
     const onPassivoitu = !ryhma || ryhma.status === 'PASSIIVINEN';
     const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useLanguagedInput(
@@ -81,6 +58,36 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
         'kuvaus2En',
         onPassivoitu
     );
+
+    React.useEffect(() => {
+        console.log('HELLO FROM USEEFFECT!');
+        async function fetch() {
+            try {
+                const response = (await Axios.get(
+                    `/organisaatio/organisaatio/v4/${match.params.oid}?includeImage=true`
+                )) as AxiosResponse;
+                const ryhma = response.data as Ryhma;
+                setRyhma(ryhma);
+                setNimiFiValue(ryhma.nimi['fi']);
+                setNimiSvValue(ryhma.nimi['sv']);
+                setNimiEnValue(ryhma.nimi['en']);
+                setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
+                setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
+                setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
+            } catch (error) {
+                console.error('error fetching', error);
+            }
+        }
+        fetch();
+    }, [
+        match.params.oid,
+        setKuvausEnValue,
+        setKuvausFiValue,
+        setKuvausSvValue,
+        setNimiEnValue,
+        setNimiFiValue,
+        setNimiSvValue,
+    ]);
 
     if (!ryhma) {
         return <Spin />;
