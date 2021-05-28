@@ -28,7 +28,7 @@ export const deleteRyhma = async (ryhma: Ryhma) => await Axios.delete(`/organisa
 const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausProps>) => {
     const { i18n } = useContext(LanguageContext);
     const [ryhma, setRyhma] = useState<Ryhma>();
-    // const [isModaliAuki, setIsModaaliAuki ] = useState(false);
+
     useEffect(() => {
         async function fetch() {
             try {

@@ -35,7 +35,6 @@ const Ryhmat: React.FC = () => {
                 accessor: (values) => {
                     return mapLocalizedKoodiToLang(language, 'nimi', values);
                 },
-                //collapse: true,
             },
             {
                 Header: i18n.translate('RYHMAN_TYYPPI'),

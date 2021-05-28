@@ -4,30 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import MuokkausLomake, { MuokkausLomakeProps } from './MuokkausLomake';
 
-const MINIMAL_PROPS: MuokkausLomakeProps = {
-    ryhma: {
-        kayntiosoite: '',
-        kayttoryhmat: [],
-        kieletUris: [],
-        kuvaus2: '',
-        lisatiedot: [],
-        muutKotipaikatUris: [],
-        muutOppilaitosTyyppiUris: [],
-        nimet: [],
-        nimi: '',
-        parentOid: '222',
-        parentOidPath: '222',
-        piilotettu: false,
-        postiosoite: '',
-        ryhmatyypit: [],
-        status: 'AKTIIVINEN',
-        toimipistekoodi: 'koodipiste',
-        tyypit: [],
-        version: 1,
-        vuosiluokat: [],
-        yhteystiedot: [],
-        yhteystietoArvos: [],
-    },
+const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     nimiFiBind: {
         name: 'nimiFi',
         value: '1',
@@ -79,13 +56,13 @@ beforeEach(() => {
 describe('MuokkausLomake', () => {
     describe('Rendering', () => {
         it('Renders without crashing', () => {
-            const wrapper = shallow(<MuokkausLomake {...testProps} />);
+            const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
             expect(wrapper).toMatchSnapshot();
         });
     });
     describe('Update nimi in all languages', () => {
         test.each([['nimiFi'], ['nimiSv'], ['nimiEn']])('%s', (name) => {
-            const wrapper = shallow(<MuokkausLomake {...testProps} />);
+            const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
             const field = wrapper.find({ name });
             field.simulate('change', { target: { name, value: 'testiNimi' } });
             expect(testProps[`${name}Bind`].onChange).toHaveBeenCalledTimes(1);
@@ -95,7 +72,7 @@ describe('MuokkausLomake', () => {
 
     describe('Update kuvaus2 in all languages', () => {
         test.each([['kuvaus2Fi'], ['kuvaus2Sv'], ['kuvaus2En']])('%s', (name) => {
-            const wrapper = shallow(<MuokkausLomake {...testProps} />);
+            const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
             const field = wrapper.find({ name });
             field.simulate('change', { target: { name, value: 'testiKuvaus2' } });
             expect(testProps[`${name}Bind`].onChange).toHaveBeenCalledTimes(1);
@@ -106,7 +83,7 @@ describe('MuokkausLomake', () => {
     describe('Buttons', () => {
         describe('Passivoi button', () => {
             it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps} />);
+                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
                 const button = wrapper.find({ name: 'passivoibutton' });
                 button.simulate('click');
                 expect(testProps.handlePassivoi).toHaveBeenCalledTimes(1);
@@ -115,7 +92,7 @@ describe('MuokkausLomake', () => {
         });
         describe('Poista button', () => {
             it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps} />);
+                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
                 const button = wrapper.find({ name: 'poistabutton' });
                 button.simulate('click');
                 expect(testProps.handlePoista).toHaveBeenCalledTimes(1);
@@ -125,7 +102,7 @@ describe('MuokkausLomake', () => {
 
         describe('Tallenna button', () => {
             it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps} />);
+                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
                 const button = wrapper.find({ name: 'tallennabutton' });
                 button.simulate('click');
                 expect(testProps.handleTallenna).toHaveBeenCalledTimes(1);
@@ -135,7 +112,7 @@ describe('MuokkausLomake', () => {
 
         describe('Peruuta button', () => {
             it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps} />);
+                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
                 const button = wrapper.find({ name: 'peruutabutton' });
                 button.simulate('click');
                 expect(testProps.handlePeruuta).toHaveBeenCalledTimes(1);

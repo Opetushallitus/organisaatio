@@ -18,11 +18,9 @@ describe('Ryhmat', () => {
     });
 
     describe('Rendering', () => {
-        it('Renders without crashing', () => {
-            expect(wrapper).toMatchSnapshot();
-        });
         it('Renders spinner when there is no data', () => {
             expect(wrapper.contains(<Spin />)).toBe(true);
+            expect(wrapper).toMatchSnapshot();
         });
     });
 });

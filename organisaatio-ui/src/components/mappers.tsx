@@ -1,7 +1,7 @@
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
     if (hasVersioningHashtag !== -1) {
-        return koodi.slice(0, hasVersioningHashtag);
+        return koodi.replace(/#.+$/,'');
     }
     return koodi;
 };

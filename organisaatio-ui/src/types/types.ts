@@ -151,16 +151,6 @@ export interface OrganisaatioNimiJaOid {
     nimi: any;
 }
 
-// kayttooikeus
-export type Kayttaja = {
-    etunimi: string;
-    sukunimi: string;
-    sahkoposti: string;
-    asiointikieli: string;
-    saateteksti: string;
-};
-
-export type VirheKoodi = string;
 export type SelectOptionType = {
     value: string;
     label: string;

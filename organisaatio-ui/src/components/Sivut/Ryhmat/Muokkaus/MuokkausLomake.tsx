@@ -12,6 +12,20 @@ import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
 import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../../mappers';
 
+export const mapKoodistoOptions = (koodit: Koodi[], language) =>
+    koodit.map((koodi: Koodi) => ({
+        value: koodi.uri,
+        label: mapLocalizedKoodiToLang(language, 'nimi', koodi),
+    }));
+
+export const mapValuesToSelect = (KoodiUriValues: string[], selectOptions) =>
+    KoodiUriValues.map((kayttoRyhmaUriWithVersion: string) =>
+        selectOptions.find(
+            (kayttoRyhmaSelectOption) =>
+                dropKoodiVersionSuffix(kayttoRyhmaUriWithVersion) === kayttoRyhmaSelectOption.value
+        )
+    );
+
 export type MuokkausLomakeProps = {
     ryhma: Ryhma;
     nimiFiBind: LanguagedInputBind;
@@ -47,25 +61,11 @@ const MuokkausLomake = ({
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
 
-    const ryhmaTyypitOptions = ryhmaTyypitKoodisto.koodit().map((k: Koodi) => ({
-        value: k.uri,
-        label: mapLocalizedKoodiToLang(language, 'nimi', k),
-    }));
+    const ryhmaTyypitOptions = mapKoodistoOptions(ryhmaTyypitKoodisto.koodit(), language);
+    const kayttoRyhmatOptions = mapKoodistoOptions(kayttoRyhmatKoodisto.koodit(), language);
 
-    const kayttoRyhmatOptions = kayttoRyhmatKoodisto.koodit().map((k: Koodi) => ({
-        value: k.uri,
-        label: mapLocalizedKoodiToLang(language, 'nimi', k),
-    }));
-    const kayttoRyhmat = kayttoRyhmatOptions.filter(
-        (rt) =>
-            ryhma.kayttoryhmat.map((k: string) => dropKoodiVersionSuffix(k)).includes(rt.value) ||
-            ryhma.kayttoryhmat.includes(rt.value)
-    );
-    const ryhmaTyypit = ryhmaTyypitOptions.filter(
-        (rt) =>
-            ryhma.ryhmatyypit.map((k: string) => dropKoodiVersionSuffix(k)).includes(rt.value) ||
-            ryhma.ryhmatyypit.includes(rt.value)
-    );
+    const kayttoRyhmat = mapValuesToSelect(ryhma.kayttoryhmat, kayttoRyhmatOptions);
+    const ryhmaTyypit = mapValuesToSelect(ryhma.ryhmatyypit, ryhmaTyypitOptions);
 
     return (
         <PohjaSivu>
@@ -149,7 +149,7 @@ const MuokkausLomake = ({
                                 isDisabled={ryhma.status === 'PASSIIVINEN'}
                                 name={'ryhmatyypit'}
                                 isMulti
-                                value={ryhmaTyypit as ValueType<SelectOptionType>}
+                                value={ryhmaTyypit}
                                 options={ryhmaTyypitOptions}
                                 onChange={handleRyhmaSelectOnChange}
                             />
