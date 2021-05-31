@@ -156,7 +156,7 @@ const MuokkausLomake = ({
                     </div>
                     <div className={styles.AlinRivi}>
                         <Button name="passivoibutton" variant="outlined" onClick={handlePassivoi}>
-                            {ryhma && ryhma.status === 'AKTIIVINEN'
+                            {ryhma.status === 'AKTIIVINEN'
                                 ? i18n.translate('PASSIVOI_RYHMA')
                                 : i18n.translate('AKTIVOI_RYHMA')}
                         </Button>
