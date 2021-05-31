@@ -40,6 +40,16 @@ const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     handlePassivoi: jest.fn(),
     handlePoista: jest.fn(),
     handleTallenna: jest.fn(),
+    ryhma: {
+        nimi: {
+            fi: 'Suominimi',
+        },
+        ryhmatyypit: [],
+        kayttoryhmat: [],
+        status: 'AKTIIVINEN',
+        oid: '1234',
+        kayntiosoite: 'dds',
+    } as any,
 };
 
 let testProps = { ...MINIMAL_PROPS };
@@ -56,13 +66,13 @@ beforeEach(() => {
 describe('MuokkausLomake', () => {
     describe('Rendering', () => {
         it('Renders without crashing', () => {
-            const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
             expect(wrapper).toMatchSnapshot();
         });
     });
     describe('Update nimi in all languages', () => {
         test.each([['nimiFi'], ['nimiSv'], ['nimiEn']])('%s', (name) => {
-            const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
             const field = wrapper.find({ name });
             field.simulate('change', { target: { name, value: 'testiNimi' } });
             expect(testProps[`${name}Bind`].onChange).toHaveBeenCalledTimes(1);
@@ -72,7 +82,7 @@ describe('MuokkausLomake', () => {
 
     describe('Update kuvaus2 in all languages', () => {
         test.each([['kuvaus2Fi'], ['kuvaus2Sv'], ['kuvaus2En']])('%s', (name) => {
-            const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
             const field = wrapper.find({ name });
             field.simulate('change', { target: { name, value: 'testiKuvaus2' } });
             expect(testProps[`${name}Bind`].onChange).toHaveBeenCalledTimes(1);
@@ -82,41 +92,41 @@ describe('MuokkausLomake', () => {
 
     describe('Buttons', () => {
         describe('Passivoi button', () => {
-            it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            it('Calls its onClick handler when clicked', () => {
+                const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'passivoibutton' });
+                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handlePassivoi).toHaveBeenCalledTimes(1);
-                expect((testProps.handlePassivoi as jest.Mock).mock.calls).toMatchSnapshot();
             });
         });
         describe('Poista button', () => {
-            it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            it('Calls its onClick handler when clicked', () => {
+                const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'poistabutton' });
+                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handlePoista).toHaveBeenCalledTimes(1);
-                expect((testProps.handlePoista as jest.Mock).mock.calls).toMatchSnapshot();
             });
         });
 
         describe('Tallenna button', () => {
-            it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            it('Calls its onClick handler when clicked', () => {
+                const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'tallennabutton' });
+                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handleTallenna).toHaveBeenCalledTimes(1);
-                expect((testProps.handleTallenna as jest.Mock).mock.calls).toMatchSnapshot();
             });
         });
 
         describe('Peruuta button', () => {
-            it('clicks', () => {
-                const wrapper = shallow(<MuokkausLomake {...testProps as MuokkausLomakeProps} />);
+            it('Calls its onClick handler when clicked', () => {
+                const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'peruutabutton' });
+                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handlePeruuta).toHaveBeenCalledTimes(1);
-                expect((testProps.handlePeruuta as jest.Mock).mock.calls).toMatchSnapshot();
             });
         });
     });

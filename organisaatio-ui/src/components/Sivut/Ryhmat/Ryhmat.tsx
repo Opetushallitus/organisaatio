@@ -6,7 +6,8 @@ import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { useEffect } from 'react';
 import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../mappers';
-import Axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import { getRyhmat } from '../../HttpRequests';
 import { useState } from 'react';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
@@ -91,9 +92,7 @@ const Ryhmat: React.FC = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = (await Axios.get(
-                    `/organisaatio/organisaatio/v3/ryhmat?aktiivinen=true`
-                )) as AxiosResponse;
+                const response = (await getRyhmat()) as AxiosResponse;
                 const ryhmatData = response.data;
                 setRyhmat([...ryhmatData]);
             } catch (error) {

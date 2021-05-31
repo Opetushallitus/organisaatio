@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useEffect } from 'react';
-import Axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import { getRyhma, deleteRyhma, putRyhma } from '../../../HttpRequests';
 import { Ryhma, SelectOptionType } from '../../../../types/types';
 import { useLanguagedInput } from '../../../../customHooks/CustomHooks';
 import { ActionMeta, ValueType } from 'react-select';
@@ -22,9 +23,6 @@ export type OrganisaatioPutResponseType = {
 
 export const currentDateToStr = () => new Date().toISOString().split('T')[0];
 
-export const putRyhma = async (ryhma: Ryhma) => await Axios.put(`/organisaatio/organisaatio/v4/${ryhma.oid}`, ryhma);
-export const deleteRyhma = async (ryhma: Ryhma) => await Axios.delete(`/organisaatio/organisaatio/v4/${ryhma.oid}`);
-
 const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausProps>) => {
     const { i18n } = useContext(LanguageContext);
     const [ryhma, setRyhma] = useState<Ryhma>();
@@ -32,17 +30,15 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     useEffect(() => {
         async function fetch() {
             try {
-                const response = (await Axios.get(
-                    `/organisaatio/organisaatio/v4/${match.params.oid}?includeImage=true`
-                )) as AxiosResponse;
+                const response = (await getRyhma(match.params.oid)) as AxiosResponse;
                 const ryhma = response.data as Ryhma;
                 setRyhma(ryhma);
-                setNimiFiValue(ryhma.nimi['fi']);
-                setNimiSvValue(ryhma.nimi['sv']);
-                setNimiEnValue(ryhma.nimi['en']);
-                setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
-                setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
-                setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
+                ryhma.nimi['fi'] && setNimiFiValue(ryhma.nimi['fi']);
+                ryhma.nimi['sv'] && setNimiSvValue(ryhma.nimi['sv']);
+                ryhma.nimi['en'] && setNimiEnValue(ryhma.nimi['en']);
+                ryhma.kuvaus2['kieli_fi#1'] && setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
+                ryhma.kuvaus2['kieli_sv#1'] && setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
+                ryhma.kuvaus2['kieli_en#1'] && setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
             } catch (error) {
                 console.error('error fetching', error);
             }
@@ -77,7 +73,7 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
         onPassivoitu
     );
     const { value: kuvaus2EnValue, bind: kuvaus2EnBind, setValue: setKuvausEnValue } = useLanguagedInput(
-        ryhma && ryhma.kuvaus2['kieli_en#1'],
+        '',
         'kuvaus2En',
         onPassivoitu
     );

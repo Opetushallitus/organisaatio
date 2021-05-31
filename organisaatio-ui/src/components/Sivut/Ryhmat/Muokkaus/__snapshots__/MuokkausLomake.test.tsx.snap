@@ -1,29 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MuokkausLomake Buttons Passivoi button clicks 1`] = `
-Array [
-  Array [],
-]
-`;
-
-exports[`MuokkausLomake Buttons Peruuta button clicks 1`] = `
-Array [
-  Array [],
-]
-`;
-
-exports[`MuokkausLomake Buttons Poista button clicks 1`] = `
-Array [
-  Array [],
-]
-`;
-
-exports[`MuokkausLomake Buttons Tallenna button clicks 1`] = `
-Array [
-  Array [],
-]
-`;
-
 exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
 <PohjaSivu>
   <div
@@ -64,7 +40,9 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         <h3>
           RYHMA
         </h3>
-        <h1 />
+        <h1>
+          Suominimi
+        </h1>
       </div>
     </div>
     <div
@@ -91,7 +69,9 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         </span>
         <span
           className="ReadOnly"
-        />
+        >
+          1234
+        </span>
       </div>
       <div
         className="Rivi"
