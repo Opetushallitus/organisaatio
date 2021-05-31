@@ -1,4 +1,5 @@
-import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from './mappers';
+import { dropKoodiVersionSuffix, mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from './mappers';
+import { Koodi } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -39,6 +40,44 @@ describe('mappers', () => {
         });
         it('Maps koodi to empty string if there are no language props', () => {
             expect(mapLocalizedKoodiToLang('', 'emptyprop', esimerkkiMonikielinenObjekti)).toBe('');
+        });
+    });
+
+    describe('mapKoodistoOptions', () => {
+        const koodit: Koodi[] = [
+            {
+                uri: 'koodi_1',
+                nimi: {
+                    fi: 'Koodi',
+                    sv: 'Kod',
+                    en: 'Code',
+                },
+                arvo: '1',
+                versio: 2,
+            },
+        ];
+
+        it('Maps koodit to options array with value and label', () => {
+            const options = mapKoodistoOptions(koodit, 'fi');
+            expect(options.length).toBe(1);
+            expect(options[0].value).toBe('koodi_1#2');
+            expect(options[0].label).toBe('Koodi');
+        });
+    });
+    describe('mapValuesToSelect', () => {
+        const kooditUrit: string[] = ['koodi_2#1'];
+        const kooditSelectOptions = [
+            {
+                label: 'Koodi2',
+                value: 'koodi_2#1',
+            },
+        ];
+
+        it('Maps ', () => {
+            const selectValues = mapValuesToSelect(kooditUrit, kooditSelectOptions);
+            expect(selectValues.length).toBe(1);
+            expect(selectValues[0].value).toBe('koodi_2#1');
+            expect(selectValues[0].label).toBe('Koodi2');
         });
     });
 });

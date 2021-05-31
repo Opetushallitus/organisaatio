@@ -5,23 +5,12 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { ActionMeta, ValueType } from 'react-select';
-import { Koodi, LanguagedInputBind, Ryhma, SelectOptionType } from '../../../../types/types';
+import { LanguagedInputBind, Ryhma, SelectOptionType } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
-import { mapLocalizedKoodiToLang } from '../../../mappers';
-
-export const mapKoodistoOptions = (koodit: Koodi[], language) =>
-    koodit.map((koodi: Koodi) => ({
-        value: `${koodi.uri}#${koodi.versio}`,
-        label: mapLocalizedKoodiToLang(language, 'nimi', koodi),
-    }));
-
-export const mapValuesToSelect = (KoodiUriValues: string[], selectOptions) =>
-    KoodiUriValues.map((koodiUriWithVersion: string) =>
-        selectOptions.find((kayttoRyhmaSelectOption) => koodiUriWithVersion === kayttoRyhmaSelectOption.value)
-    );
+import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
 
 export type MuokkausLomakeProps = {
     ryhma: Ryhma;
