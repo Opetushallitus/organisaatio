@@ -9,6 +9,7 @@ export type Koodi = {
     uri: KoodiUri;
     arvo: KoodiArvo;
     nimi: LocalizableText;
+    versio: number;
 };
 
 // lokalisointi

@@ -92,7 +92,7 @@ describe('MuokkausLomake', () => {
 
     describe('Buttons', () => {
         describe('Passivoi button', () => {
-            it('Calls its onClick handler when clicked', () => {
+            it('handlePassive in invoked when passivoi is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'passivoibutton' });
                 expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
@@ -101,7 +101,7 @@ describe('MuokkausLomake', () => {
             });
         });
         describe('Poista button', () => {
-            it('Calls its onClick handler when clicked', () => {
+            it('handlePoista in invoked when poista is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'poistabutton' });
                 expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
@@ -111,7 +111,7 @@ describe('MuokkausLomake', () => {
         });
 
         describe('Tallenna button', () => {
-            it('Calls its onClick handler when clicked', () => {
+            it('handleTallenna in invoked when tallenna is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'tallennabutton' });
                 expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
@@ -121,7 +121,7 @@ describe('MuokkausLomake', () => {
         });
 
         describe('Peruuta button', () => {
-            it('Calls its onClick handler when clicked', () => {
+            it('handlePeruuta in invoked when peruuta is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'peruutabutton' });
                 expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);

@@ -10,20 +10,17 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
-import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../../mappers';
+import { mapLocalizedKoodiToLang } from '../../../mappers';
 
 export const mapKoodistoOptions = (koodit: Koodi[], language) =>
     koodit.map((koodi: Koodi) => ({
-        value: koodi.uri,
+        value: `${koodi.uri}#${koodi.versio}`,
         label: mapLocalizedKoodiToLang(language, 'nimi', koodi),
     }));
 
 export const mapValuesToSelect = (KoodiUriValues: string[], selectOptions) =>
-    KoodiUriValues.map((kayttoRyhmaUriWithVersion: string) =>
-        selectOptions.find(
-            (kayttoRyhmaSelectOption) =>
-                dropKoodiVersionSuffix(kayttoRyhmaUriWithVersion) === kayttoRyhmaSelectOption.value
-        )
+    KoodiUriValues.map((koodiUriWithVersion: string) =>
+        selectOptions.find((kayttoRyhmaSelectOption) => koodiUriWithVersion === kayttoRyhmaSelectOption.value)
     );
 
 export type MuokkausLomakeProps = {

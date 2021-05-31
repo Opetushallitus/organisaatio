@@ -27,25 +27,6 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     const { i18n } = useContext(LanguageContext);
     const [ryhma, setRyhma] = useState<Ryhma>();
 
-    useEffect(() => {
-        async function fetch() {
-            try {
-                const response = (await getRyhma(match.params.oid)) as AxiosResponse;
-                const ryhma = response.data as Ryhma;
-                setRyhma(ryhma);
-                ryhma.nimi['fi'] && setNimiFiValue(ryhma.nimi['fi']);
-                ryhma.nimi['sv'] && setNimiSvValue(ryhma.nimi['sv']);
-                ryhma.nimi['en'] && setNimiEnValue(ryhma.nimi['en']);
-                ryhma.kuvaus2['kieli_fi#1'] && setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
-                ryhma.kuvaus2['kieli_sv#1'] && setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
-                ryhma.kuvaus2['kieli_en#1'] && setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
-            } catch (error) {
-                console.error('error fetching', error);
-            }
-        }
-        fetch();
-    }, [match.params.oid]);
-
     const onPassivoitu = !ryhma || ryhma.status === 'PASSIIVINEN';
     const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useLanguagedInput(
         '',
@@ -78,6 +59,33 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
         onPassivoitu
     );
 
+    useEffect(() => {
+        async function fetch() {
+            try {
+                const response = (await getRyhma(match.params.oid)) as AxiosResponse;
+                const ryhma = response.data as Ryhma;
+                setRyhma(ryhma);
+                ryhma.nimi['fi'] && setNimiFiValue(ryhma.nimi['fi']);
+                ryhma.nimi['sv'] && setNimiSvValue(ryhma.nimi['sv']);
+                ryhma.nimi['en'] && setNimiEnValue(ryhma.nimi['en']);
+                ryhma.kuvaus2['kieli_fi#1'] && setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
+                ryhma.kuvaus2['kieli_sv#1'] && setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
+                ryhma.kuvaus2['kieli_en#1'] && setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
+            } catch (error) {
+                console.error('error fetching', error);
+            }
+        }
+        fetch();
+    }, [
+        match.params.oid,
+        setKuvausEnValue,
+        setKuvausSvValue,
+        setKuvausFiValue,
+        setNimiEnValue,
+        setNimiSvValue,
+        setNimiFiValue,
+    ]);
+
     if (!ryhma) {
         return <Spin />;
     }
@@ -106,13 +114,13 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
                 },
             };
             try {
-                const response = await putRyhma(newRyhma);
-                console.log('dsdds', response);
+                const {
+                    data: { organisaatio: updatedRyhma },
+                } = (await putRyhma(newRyhma)) as AxiosResponse;
+                setRyhma(updatedRyhma);
+                history.push('/ryhmat');
             } catch (error) {
-                console.error('error while updating ryhmat', error);
-            } finally {
-                setRyhma(newRyhma);
-                //history.push(`/ryhmat/muokkaus/${newRyhma.oid}`);
+                console.error('error while updating ryhma', error);
             }
         }
     };
@@ -122,8 +130,12 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     };
     const handlePoista = async () => {
         const r = global.window.confirm(i18n.translate('RYHMAT_POISTO_VARMISTUSTEKSTI'));
-        r && (await deleteRyhma(ryhma));
-        //return history.push('/ryhmat');
+        try {
+            r && (await deleteRyhma(ryhma));
+            history.push('/ryhmat');
+        } catch (error) {
+            console.error('error while deleting ryhma', error);
+        }
     };
 
     const handlePassivoi = async () => {

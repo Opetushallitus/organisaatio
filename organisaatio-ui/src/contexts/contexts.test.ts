@@ -10,6 +10,7 @@ const koodit: Koodi[] = [
             en: 'Code',
         },
         arvo: '1',
+        versio: 1,
     },
 ];
 
