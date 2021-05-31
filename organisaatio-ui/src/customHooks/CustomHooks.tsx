@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useLanguagedInput = (initialValue: string | undefined = '', name: string, disabled: boolean) => {
+export const useTranslatedInput = (initialValue: string | undefined = '', name: string, disabled: boolean) => {
     const [value, setValue] = useState<string>(initialValue);
     return {
         name,

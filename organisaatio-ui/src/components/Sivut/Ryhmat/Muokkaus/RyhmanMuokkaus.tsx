@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { AxiosResponse } from 'axios';
 import { getRyhma, deleteRyhma, putRyhma } from '../../../HttpRequests';
 import { Ryhma, SelectOptionType } from '../../../../types/types';
-import { useLanguagedInput } from '../../../../customHooks/CustomHooks';
+import { useTranslatedInput } from '../../../../customHooks/CustomHooks';
 import { ActionMeta, ValueType } from 'react-select';
 import MuokkausLomake from './MuokkausLomake';
 import { useContext } from 'react';
@@ -28,32 +28,32 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     const [ryhma, setRyhma] = useState<Ryhma>();
 
     const onPassivoitu = !ryhma || ryhma.status === 'PASSIIVINEN';
-    const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useLanguagedInput(
+    const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useTranslatedInput(
         '',
         'nimiFi',
         onPassivoitu
     );
-    const { value: nimiSvValue, bind: nimiSvBind, setValue: setNimiSvValue } = useLanguagedInput(
+    const { value: nimiSvValue, bind: nimiSvBind, setValue: setNimiSvValue } = useTranslatedInput(
         '',
         'nimiSv',
         onPassivoitu
     );
-    const { value: nimiEnValue, bind: nimiEnBind, setValue: setNimiEnValue } = useLanguagedInput(
+    const { value: nimiEnValue, bind: nimiEnBind, setValue: setNimiEnValue } = useTranslatedInput(
         '',
         'nimiEn',
         onPassivoitu
     );
-    const { value: kuvaus2FiValue, bind: kuvaus2FiBind, setValue: setKuvausFiValue } = useLanguagedInput(
+    const { value: kuvaus2FiValue, bind: kuvaus2FiBind, setValue: setKuvausFiValue } = useTranslatedInput(
         '',
         'kuvaus2Fi',
         onPassivoitu
     );
-    const { value: kuvaus2SvValue, bind: kuvaus2SvBind, setValue: setKuvausSvValue } = useLanguagedInput(
+    const { value: kuvaus2SvValue, bind: kuvaus2SvBind, setValue: setKuvausSvValue } = useTranslatedInput(
         '',
         'kuvaus2Sv',
         onPassivoitu
     );
-    const { value: kuvaus2EnValue, bind: kuvaus2EnBind, setValue: setKuvausEnValue } = useLanguagedInput(
+    const { value: kuvaus2EnValue, bind: kuvaus2EnBind, setValue: setKuvausEnValue } = useTranslatedInput(
         '',
         'kuvaus2En',
         onPassivoitu

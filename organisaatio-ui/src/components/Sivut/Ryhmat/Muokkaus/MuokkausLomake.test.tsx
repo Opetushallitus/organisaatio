@@ -95,7 +95,7 @@ describe('MuokkausLomake', () => {
             it('handlePassive in invoked when passivoi is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'passivoibutton' });
-                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
+                expect(testProps.handlePassivoi).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handlePassivoi).toHaveBeenCalledTimes(1);
             });
@@ -104,7 +104,7 @@ describe('MuokkausLomake', () => {
             it('handlePoista in invoked when poista is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'poistabutton' });
-                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
+                expect(testProps.handlePoista).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handlePoista).toHaveBeenCalledTimes(1);
             });
@@ -124,7 +124,7 @@ describe('MuokkausLomake', () => {
             it('handlePeruuta in invoked when peruuta is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
                 const button = wrapper.find({ name: 'peruutabutton' });
-                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
+                expect(testProps.handlePeruuta).toHaveBeenCalledTimes(0);
                 button.simulate('click');
                 expect(testProps.handlePeruuta).toHaveBeenCalledTimes(1);
             });
