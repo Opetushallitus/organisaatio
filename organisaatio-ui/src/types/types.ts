@@ -161,4 +161,5 @@ export type LanguagedInputBind = {
     name: string;
     value: string;
     onChange: (e: React.FormEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
 };
