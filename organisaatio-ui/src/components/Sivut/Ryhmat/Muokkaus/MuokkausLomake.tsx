@@ -12,6 +12,8 @@ import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
 import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
 
+const KIELEKSI = ['SUOMEKSI', 'RUOTSIKSI', 'ENGLANNIKSI'];
+
 export type MuokkausLomakeProps = {
     ryhma: Ryhma;
     nimiFiBind: LanguagedInputBind;
@@ -52,7 +54,6 @@ const MuokkausLomake = ({
 
     const kayttoRyhmat = mapValuesToSelect(ryhma.kayttoryhmat, kayttoRyhmatOptions);
     const ryhmaTyypit = mapValuesToSelect(ryhma.ryhmatyypit, ryhmaTyypitOptions);
-
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
@@ -85,47 +86,27 @@ const MuokkausLomake = ({
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_NIMI')}</label>
-                            <div className={styles.Rivi}>
-                                <label>{i18n.translate('SUOMEKSI')}</label>
-                                <div className={styles.PitkaInput}>
-                                    <Input {...nimiFiBind} />
+                            {[nimiFiBind, nimiSvBind, nimiEnBind].map((bind, index) => (
+                                <div className={styles.Rivi}>
+                                    <label>{i18n.translate(KIELEKSI[index])}</label>
+                                    <div className={styles.PitkaInput}>
+                                        <Input {...bind} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className={styles.Rivi}>
-                                <label>{i18n.translate('RUOTSIKSI')}</label>
-                                <div className={styles.PitkaInput}>
-                                    <Input {...nimiSvBind} />
-                                </div>
-                            </div>
-                            <div className={styles.Rivi}>
-                                <label>{i18n.translate('ENGLANNIKSI')}</label>
-                                <div className={styles.PitkaInput}>
-                                    <Input {...nimiEnBind} />
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_KUVAUS')}</label>
-                            <div className={styles.Rivi}>
-                                <label>{i18n.translate('SUOMEKSI')}</label>
-                                <div className={styles.PitkaInput}>
-                                    <Input {...kuvaus2FiBind} />
+                            {[kuvaus2FiBind, kuvaus2SvBind, kuvaus2EnBind].map((bind, index) => (
+                                <div className={styles.Rivi}>
+                                    <label>{i18n.translate(KIELEKSI[index])}</label>
+                                    <div className={styles.PitkaInput}>
+                                        <Input {...bind} />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className={styles.Rivi}>
-                                <label>{i18n.translate('RUOTSIKSI')}</label>
-                                <div className={styles.PitkaInput}>
-                                    <Input {...kuvaus2SvBind} />
-                                </div>
-                            </div>
-                            <div className={styles.Rivi}>
-                                <label>{i18n.translate('ENGLANNIKSI')}</label>
-                                <div className={styles.PitkaInput}>
-                                    <Input {...kuvaus2EnBind} />
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                     <div className={styles.Rivi}>
