@@ -157,7 +157,8 @@ export type SelectOptionType = {
     label: string;
 };
 
-export type LanguagedInputBind = {
+export type TranslatedInputBind = {
+    localizationKey: string;
     name: string;
     value: string;
     onChange: (e: React.FormEvent<HTMLInputElement>) => void;

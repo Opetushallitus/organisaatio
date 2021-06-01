@@ -2,39 +2,49 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
 
-import MuokkausLomake, { MuokkausLomakeProps } from './MuokkausLomake';
+import MuokkausLomake, { InputRivi, MuokkausLomakeProps } from './MuokkausLomake';
 
 const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
-    nimiFiBind: {
-        name: 'nimiFi',
-        value: '1',
-        onChange: jest.fn(),
-    },
-    nimiSvBind: {
-        name: 'nimiSv',
-        value: '2',
-        onChange: jest.fn(),
-    },
-    nimiEnBind: {
-        name: 'nimiEn',
-        value: '3',
-        onChange: jest.fn(),
-    },
-    kuvaus2FiBind: {
-        name: 'kuvaus2Fi',
-        value: '4',
-        onChange: jest.fn(),
-    },
-    kuvaus2SvBind: {
-        name: 'kuvaus2Sv',
-        value: '5',
-        onChange: jest.fn(),
-    },
-    kuvaus2EnBind: {
-        name: 'kuvaus2En',
-        value: '6',
-        onChange: jest.fn(),
-    },
+    nimiBinds: [
+        {
+            localizationKey: 'SUOMEKSI',
+            name: 'nimiFi',
+            value: '1',
+            onChange: jest.fn(),
+        },
+        {
+            localizationKey: 'RUOTSIKSI',
+            name: 'nimiSv',
+            value: '2',
+            onChange: jest.fn(),
+        },
+        {
+            localizationKey: 'ENGLANNIKSI',
+            name: 'nimiEn',
+            value: '3',
+            onChange: jest.fn(),
+        },
+    ],
+    kuvausBinds: [
+        {
+            localizationKey: 'SUOMEKSI',
+            name: 'kuvaus2Fi',
+            value: '4',
+            onChange: jest.fn(),
+        },
+        {
+            localizationKey: 'RUOTSIKSI',
+            name: 'kuvaus2Sv',
+            value: '5',
+            onChange: jest.fn(),
+        },
+        {
+            localizationKey: 'ENGLANNIKSI',
+            name: 'kuvaus2En',
+            value: '6',
+            onChange: jest.fn(),
+        },
+    ],
     handleRyhmaSelectOnChange: jest.fn(),
     handlePeruuta: jest.fn(),
     handlePassivoi: jest.fn(),
@@ -71,22 +81,24 @@ describe('MuokkausLomake', () => {
         });
     });
     describe('Update nimi in all languages', () => {
-        test.each([['nimiFi'], ['nimiSv'], ['nimiEn']])('%s', (name) => {
-            const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
-            const field = wrapper.find({ name });
-            field.simulate('change', { target: { name, value: 'testiNimi' } });
-            expect(testProps[`${name}Bind`].onChange).toHaveBeenCalledTimes(1);
-            expect((testProps[`${name}Bind`].onChange as jest.Mock).mock.calls).toMatchSnapshot();
+        const { nimiBinds = [] } = testProps;
+        nimiBinds.forEach((bind) => {
+            const wrapper = shallow(<InputRivi bind={bind} labelText={bind.localizationKey} />);
+            const field = wrapper.find({ name: bind.name });
+            field.simulate('change', { target: { name: bind.name, value: 'testiNimi' } });
+            expect(bind.onChange).toHaveBeenCalledTimes(1);
+            expect((bind.onChange as jest.Mock).mock.calls).toMatchSnapshot();
         });
     });
 
     describe('Update kuvaus2 in all languages', () => {
-        test.each([['kuvaus2Fi'], ['kuvaus2Sv'], ['kuvaus2En']])('%s', (name) => {
-            const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
-            const field = wrapper.find({ name });
-            field.simulate('change', { target: { name, value: 'testiKuvaus2' } });
-            expect(testProps[`${name}Bind`].onChange).toHaveBeenCalledTimes(1);
-            expect((testProps[`${name}Bind`].onChange as jest.Mock).mock.calls).toMatchSnapshot();
+        const { kuvausBinds = [] } = testProps;
+        kuvausBinds.forEach((bind) => {
+            const wrapper = shallow(<InputRivi bind={bind} labelText={bind.localizationKey} />);
+            const field = wrapper.find({ name: bind.name });
+            field.simulate('change', { target: { name: bind.name, value: 'testiKuvaus2' } });
+            expect(bind.onChange).toHaveBeenCalledTimes(1);
+            expect((bind.onChange as jest.Mock).mock.calls).toMatchSnapshot();
         });
     });
 

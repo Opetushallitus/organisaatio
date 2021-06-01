@@ -31,32 +31,38 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useTranslatedInput(
         '',
         'nimiFi',
-        onPassivoitu
+        onPassivoitu,
+        'SUOMEKSI'
     );
     const { value: nimiSvValue, bind: nimiSvBind, setValue: setNimiSvValue } = useTranslatedInput(
         '',
         'nimiSv',
-        onPassivoitu
+        onPassivoitu,
+        'RUOTSIKSI'
     );
     const { value: nimiEnValue, bind: nimiEnBind, setValue: setNimiEnValue } = useTranslatedInput(
         '',
         'nimiEn',
-        onPassivoitu
+        onPassivoitu,
+        'ENGLANNIKSI'
     );
     const { value: kuvaus2FiValue, bind: kuvaus2FiBind, setValue: setKuvausFiValue } = useTranslatedInput(
         '',
         'kuvaus2Fi',
-        onPassivoitu
+        onPassivoitu,
+        'SUOMEKSI'
     );
     const { value: kuvaus2SvValue, bind: kuvaus2SvBind, setValue: setKuvausSvValue } = useTranslatedInput(
         '',
         'kuvaus2Sv',
-        onPassivoitu
+        onPassivoitu,
+        'RUOTSIKSI'
     );
     const { value: kuvaus2EnValue, bind: kuvaus2EnBind, setValue: setKuvausEnValue } = useTranslatedInput(
         '',
         'kuvaus2En',
-        onPassivoitu
+        onPassivoitu,
+        'ENGLANNIKSI'
     );
 
     useEffect(() => {
@@ -155,12 +161,8 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
 
     return (
         <MuokkausLomake
-            nimiFiBind={nimiFiBind}
-            nimiSvBind={nimiSvBind}
-            nimiEnBind={nimiEnBind}
-            kuvaus2FiBind={kuvaus2FiBind}
-            kuvaus2SvBind={kuvaus2SvBind}
-            kuvaus2EnBind={kuvaus2EnBind}
+            nimiBinds={[nimiFiBind, nimiSvBind, nimiEnBind]}
+            kuvausBinds={[kuvaus2FiBind, kuvaus2SvBind, kuvaus2EnBind]}
             ryhma={ryhma}
             handleRyhmaSelectOnChange={handleRyhmaSelectOnChange}
             handlePeruuta={handlePeruuta}

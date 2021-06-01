@@ -1,5 +1,83 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[` 1`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "nimiFi",
+        "value": "testiNimi",
+      },
+    },
+  ],
+]
+`;
+
+exports[` 2`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "nimiSv",
+        "value": "testiNimi",
+      },
+    },
+  ],
+]
+`;
+
+exports[` 3`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "nimiEn",
+        "value": "testiNimi",
+      },
+    },
+  ],
+]
+`;
+
+exports[` 4`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "kuvaus2Fi",
+        "value": "testiKuvaus2",
+      },
+    },
+  ],
+]
+`;
+
+exports[` 5`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "kuvaus2Sv",
+        "value": "testiKuvaus2",
+      },
+    },
+  ],
+]
+`;
+
+exports[` 6`] = `
+Array [
+  Array [
+    Object {
+      "target": Object {
+        "name": "kuvaus2En",
+        "value": "testiKuvaus2",
+      },
+    },
+  ],
+]
+`;
+
 exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
 <PohjaSivu>
   <div
@@ -82,54 +160,42 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <label>
             RYHMAN_NIMI
           </label>
-          <div
-            className="Rivi"
-          >
-            <label>
-              SUOMEKSI
-            </label>
-            <div
-              className="PitkaInput"
-            >
-              <ForwardRef
-                name="nimiFi"
-                onChange={[MockFunction]}
-                value="1"
-              />
-            </div>
-          </div>
-          <div
-            className="Rivi"
-          >
-            <label>
-              RUOTSIKSI
-            </label>
-            <div
-              className="PitkaInput"
-            >
-              <ForwardRef
-                name="nimiSv"
-                onChange={[MockFunction]}
-                value="2"
-              />
-            </div>
-          </div>
-          <div
-            className="Rivi"
-          >
-            <label>
-              ENGLANNIKSI
-            </label>
-            <div
-              className="PitkaInput"
-            >
-              <ForwardRef
-                name="nimiEn"
-                onChange={[MockFunction]}
-                value="3"
-              />
-            </div>
-          </div>
+          <InputRivi
+            bind={
+              Object {
+                "localizationKey": "SUOMEKSI",
+                "name": "nimiFi",
+                "onChange": [MockFunction],
+                "value": "1",
+              }
+            }
+            key="nimiFi"
+            labelText="SUOMEKSI"
+          />
+          <InputRivi
+            bind={
+              Object {
+                "localizationKey": "RUOTSIKSI",
+                "name": "nimiSv",
+                "onChange": [MockFunction],
+                "value": "2",
+              }
+            }
+            key="nimiSv"
+            labelText="RUOTSIKSI"
+          />
+          <InputRivi
+            bind={
+              Object {
+                "localizationKey": "ENGLANNIKSI",
+                "name": "nimiEn",
+                "onChange": [MockFunction],
+                "value": "3",
+              }
+            }
+            key="nimiEn"
+            labelText="ENGLANNIKSI"
+          />
         </div>
       </div>
       <div
@@ -141,54 +207,42 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <label>
             RYHMAN_KUVAUS
           </label>
-          <div
-            className="Rivi"
-          >
-            <label>
-              SUOMEKSI
-            </label>
-            <div
-              className="PitkaInput"
-            >
-              <ForwardRef
-                name="kuvaus2Fi"
-                onChange={[MockFunction]}
-                value="4"
-              />
-            </div>
-          </div>
-          <div
-            className="Rivi"
-          >
-            <label>
-              RUOTSIKSI
-            </label>
-            <div
-              className="PitkaInput"
-            >
-              <ForwardRef
-                name="kuvaus2Sv"
-                onChange={[MockFunction]}
-                value="5"
-              />
-            </div>
-          </div>
-          <div
-            className="Rivi"
-          >
-            <label>
-              ENGLANNIKSI
-            </label>
-            <div
-              className="PitkaInput"
-            >
-              <ForwardRef
-                name="kuvaus2En"
-                onChange={[MockFunction]}
-                value="6"
-              />
-            </div>
-          </div>
+          <InputRivi
+            bind={
+              Object {
+                "localizationKey": "SUOMEKSI",
+                "name": "kuvaus2Fi",
+                "onChange": [MockFunction],
+                "value": "4",
+              }
+            }
+            key="kuvaus2Fi"
+            labelText="SUOMEKSI"
+          />
+          <InputRivi
+            bind={
+              Object {
+                "localizationKey": "RUOTSIKSI",
+                "name": "kuvaus2Sv",
+                "onChange": [MockFunction],
+                "value": "5",
+              }
+            }
+            key="kuvaus2Sv"
+            labelText="RUOTSIKSI"
+          />
+          <InputRivi
+            bind={
+              Object {
+                "localizationKey": "ENGLANNIKSI",
+                "name": "kuvaus2En",
+                "onChange": [MockFunction],
+                "value": "6",
+              }
+            }
+            key="kuvaus2En"
+            labelText="ENGLANNIKSI"
+          />
         </div>
       </div>
       <div
@@ -272,82 +326,4 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
     </div>
   </div>
 </PohjaSivu>
-`;
-
-exports[`MuokkausLomake Update kuvaus2 in all languages kuvaus2En 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "kuvaus2En",
-        "value": "testiKuvaus2",
-      },
-    },
-  ],
-]
-`;
-
-exports[`MuokkausLomake Update kuvaus2 in all languages kuvaus2Fi 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "kuvaus2Fi",
-        "value": "testiKuvaus2",
-      },
-    },
-  ],
-]
-`;
-
-exports[`MuokkausLomake Update kuvaus2 in all languages kuvaus2Sv 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "kuvaus2Sv",
-        "value": "testiKuvaus2",
-      },
-    },
-  ],
-]
-`;
-
-exports[`MuokkausLomake Update nimi in all languages nimiEn 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "nimiEn",
-        "value": "testiNimi",
-      },
-    },
-  ],
-]
-`;
-
-exports[`MuokkausLomake Update nimi in all languages nimiFi 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "nimiFi",
-        "value": "testiNimi",
-      },
-    },
-  ],
-]
-`;
-
-exports[`MuokkausLomake Update nimi in all languages nimiSv 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "nimiSv",
-        "value": "testiNimi",
-      },
-    },
-  ],
-]
 `;

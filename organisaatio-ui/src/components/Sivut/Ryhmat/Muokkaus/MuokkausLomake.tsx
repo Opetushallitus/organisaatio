@@ -5,23 +5,17 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { ActionMeta, ValueType } from 'react-select';
-import { LanguagedInputBind, Ryhma, SelectOptionType } from '../../../../types/types';
+import { TranslatedInputBind, Ryhma, SelectOptionType } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
 import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
 
-const KIELEKSI = ['SUOMEKSI', 'RUOTSIKSI', 'ENGLANNIKSI'];
-
 export type MuokkausLomakeProps = {
     ryhma: Ryhma;
-    nimiFiBind: LanguagedInputBind;
-    nimiSvBind: LanguagedInputBind;
-    nimiEnBind: LanguagedInputBind;
-    kuvaus2FiBind: LanguagedInputBind;
-    kuvaus2SvBind: LanguagedInputBind;
-    kuvaus2EnBind: LanguagedInputBind;
+    nimiBinds: TranslatedInputBind[];
+    kuvausBinds: TranslatedInputBind[];
     handleRyhmaSelectOnChange: (
         values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined,
         action: ActionMeta<SelectOptionType>
@@ -32,14 +26,26 @@ export type MuokkausLomakeProps = {
     handleTallenna: () => void;
 };
 
+export type InputBindProps = {
+    bind: TranslatedInputBind;
+    labelText: string;
+};
+
+export const InputRivi = ({ bind, labelText }: InputBindProps) => {
+    return (
+        <div className={styles.Rivi}>
+            <label htmlFor={bind.name}>{labelText}</label>
+            <div className={styles.PitkaInput}>
+                <Input id={bind.name} {...bind} />
+            </div>
+        </div>
+    );
+};
+
 const MuokkausLomake = ({
     ryhma,
-    nimiFiBind,
-    nimiSvBind,
-    nimiEnBind,
-    kuvaus2FiBind,
-    kuvaus2SvBind,
-    kuvaus2EnBind,
+    nimiBinds,
+    kuvausBinds,
     handleRyhmaSelectOnChange,
     handlePeruuta,
     handlePassivoi,
@@ -86,26 +92,24 @@ const MuokkausLomake = ({
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_NIMI')}</label>
-                            {[nimiFiBind, nimiSvBind, nimiEnBind].map((bind, index) => (
-                                <div className={styles.Rivi}>
-                                    <label>{i18n.translate(KIELEKSI[index])}</label>
-                                    <div className={styles.PitkaInput}>
-                                        <Input {...bind} />
-                                    </div>
-                                </div>
+                            {nimiBinds.map((bind) => (
+                                <InputRivi
+                                    key={bind.name}
+                                    bind={bind}
+                                    labelText={i18n.translate(bind.localizationKey)}
+                                />
                             ))}
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_KUVAUS')}</label>
-                            {[kuvaus2FiBind, kuvaus2SvBind, kuvaus2EnBind].map((bind, index) => (
-                                <div className={styles.Rivi}>
-                                    <label>{i18n.translate(KIELEKSI[index])}</label>
-                                    <div className={styles.PitkaInput}>
-                                        <Input {...bind} />
-                                    </div>
-                                </div>
+                            {kuvausBinds.map((bind) => (
+                                <InputRivi
+                                    key={bind.name}
+                                    bind={bind}
+                                    labelText={i18n.translate(bind.localizationKey)}
+                                />
                             ))}
                         </div>
                     </div>
