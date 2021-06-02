@@ -261,9 +261,14 @@ const NormaaliTaulukko = ({
                         <Icon icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
-                        if (option === pageIndex) return <Button onClick={() => gotoPage(option)}>{option + 1}</Button>;
+                        if (option === pageIndex)
+                            return (
+                                <Button key={pageIndex} onClick={() => gotoPage(option)}>
+                                    {option + 1}
+                                </Button>
+                            );
                         return (
-                            <Button variant="text" color="secondary" onClick={() => gotoPage(option)}>
+                            <Button key={pageIndex} variant="text" color="secondary" onClick={() => gotoPage(option)}>
                                 {option + 1}
                             </Button>
                         );

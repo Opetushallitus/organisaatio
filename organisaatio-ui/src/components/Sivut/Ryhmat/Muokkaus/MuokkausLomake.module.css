@@ -19,8 +19,12 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 10rem;
+    justify-content: flex-end;
+    padding: 0 5rem;
+}
+
+.AlaBanneri button:first-of-type {
+    margin-right: 1rem;
 }
 
 .PaaKehys {
@@ -82,11 +86,15 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding-left: 3rem;
+    padding-left: 2rem;
+    padding-top: 1rem;
     margin-top: 2rem;
-    height: 5rem;
     border-top: 1px solid #CCCCCC;
 
+}
+
+.AlinRivi button:first-of-type {
+    margin-right: 1rem;
 }
 
 .OidRivi {
