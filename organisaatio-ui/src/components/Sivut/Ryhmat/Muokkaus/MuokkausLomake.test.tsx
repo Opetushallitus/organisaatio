@@ -83,7 +83,7 @@ describe('MuokkausLomake', () => {
     describe('Update nimi in all languages', () => {
         const { nimiBinds = [] } = testProps;
         nimiBinds.forEach((bind) => {
-            const wrapper = shallow(<InputRivi bind={bind} labelText={bind.localizationKey} />);
+            const wrapper = shallow(<InputRivi bind={bind} />);
             const field = wrapper.find({ name: bind.name });
             field.simulate('change', { target: { name: bind.name, value: 'testiNimi' } });
             expect(bind.onChange).toHaveBeenCalledTimes(1);
@@ -94,7 +94,7 @@ describe('MuokkausLomake', () => {
     describe('Update kuvaus2 in all languages', () => {
         const { kuvausBinds = [] } = testProps;
         kuvausBinds.forEach((bind) => {
-            const wrapper = shallow(<InputRivi bind={bind} labelText={bind.localizationKey} />);
+            const wrapper = shallow(<InputRivi bind={bind} />);
             const field = wrapper.find({ name: bind.name });
             field.simulate('change', { target: { name: bind.name, value: 'testiKuvaus2' } });
             expect(bind.onChange).toHaveBeenCalledTimes(1);

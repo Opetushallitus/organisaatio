@@ -28,15 +28,16 @@ export type MuokkausLomakeProps = {
 
 export type InputBindProps = {
     bind: TranslatedInputBind;
-    labelText: string;
 };
 
-export const InputRivi = ({ bind, labelText }: InputBindProps) => {
+export const InputRivi = ({ bind }: InputBindProps) => {
+    const { i18n } = useContext(LanguageContext);
+    const { localizationKey, ...rest } = bind;
     return (
         <div className={styles.Rivi}>
-            <label htmlFor={bind.name}>{labelText}</label>
+            <label htmlFor={bind.name}>{i18n.translate(localizationKey)}</label>
             <div className={styles.PitkaInput}>
-                <Input id={bind.name} {...bind} />
+                <Input id={bind.name} {...rest} />
             </div>
         </div>
     );
@@ -93,11 +94,7 @@ const MuokkausLomake = ({
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_NIMI')}</label>
                             {nimiBinds.map((bind) => (
-                                <InputRivi
-                                    key={bind.name}
-                                    bind={bind}
-                                    labelText={i18n.translate(bind.localizationKey)}
-                                />
+                                <InputRivi key={bind.name} bind={bind} />
                             ))}
                         </div>
                     </div>
@@ -105,11 +102,7 @@ const MuokkausLomake = ({
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_KUVAUS')}</label>
                             {kuvausBinds.map((bind) => (
-                                <InputRivi
-                                    key={bind.name}
-                                    bind={bind}
-                                    labelText={i18n.translate(bind.localizationKey)}
-                                />
+                                <InputRivi key={bind.name} bind={bind} />
                             ))}
                         </div>
                     </div>
