@@ -12,6 +12,8 @@ import MuokkausLomake from './MuokkausLomake';
 import { useContext } from 'react';
 import { LanguageContext } from '../../../../contexts/contexts';
 
+const ROOT_OID = '1.2.246.562.10.00000000001'; // KOVAKOODATTU AINAKIN TOISTAISEKSI
+
 export type RyhmanMuokausProps = {
     oid?: string;
 };
@@ -28,7 +30,7 @@ const emptyRyhma: Ryhma = {
     kuvaus2: {
         fi: '',
     },
-    parentOid: '1.2.246.562.10.00000000001', // TODO ROOT OID KATSOTTAVA MITEN TULEE TÄNNE? EI MENE LÄPI JOS EI OLE KUTSUSSA MUKANA
+    parentOid: ROOT_OID,
     oid: null,
     ryhmatyypit: [],
     kayttoryhmat: [],
