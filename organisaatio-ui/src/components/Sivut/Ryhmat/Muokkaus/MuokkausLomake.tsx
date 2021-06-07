@@ -13,6 +13,7 @@ import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts'
 import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
 
 export type MuokkausLomakeProps = {
+    onUusi: boolean;
     ryhma: Ryhma;
     nimiBinds: TranslatedInputBind[];
     kuvausBinds: TranslatedInputBind[];
@@ -44,6 +45,7 @@ export const InputRivi = ({ bind }: InputBindProps) => {
 };
 
 const MuokkausLomake = ({
+    onUusi,
     ryhma,
     nimiBinds,
     kuvausBinds,
@@ -132,16 +134,19 @@ const MuokkausLomake = ({
                             />
                         </div>
                     </div>
-                    <div className={styles.AlinRivi}>
-                        <Button name="passivoibutton" variant="outlined" onClick={handlePassivoi}>
-                            {ryhma.status === 'AKTIIVINEN'
-                                ? i18n.translate('PASSIVOI_RYHMA')
-                                : i18n.translate('AKTIVOI_RYHMA')}
-                        </Button>
-                        <Button name="poistabutton" variant="outlined" onClick={handlePoista}>
-                            {i18n.translate('POISTA_RYHMA')}
-                        </Button>
-                    </div>
+                    {!onUusi && (
+                        <div className={styles.AlinRivi}>
+                            <Button name="passivoibutton" variant="outlined" onClick={handlePassivoi}>
+                                {ryhma.status === 'AKTIIVINEN'
+                                    ? i18n.translate('PASSIVOI_RYHMA')
+                                    : i18n.translate('AKTIVOI_RYHMA')}
+                            </Button>
+                            ,
+                            <Button name="poistabutton" variant="outlined" onClick={handlePoista}>
+                                {i18n.translate('POISTA_RYHMA')}
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className={styles.AlaBanneri}>

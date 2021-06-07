@@ -51,6 +51,7 @@
     "start": "BROWSER=none react-scripts start",
     "build": "CI='' react-scripts build",
     "test": "react-scripts test --coverage --watchAll=false",
+    "updateSnaps": "react-scripts test --coverage --updateSnapshot --watchAll=false",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
     "lint:fix": "eslint --ext .ts,.tsx src --fix",

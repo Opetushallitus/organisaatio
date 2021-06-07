@@ -118,6 +118,11 @@ const OrganisaatioApp: React.FC = () => {
                             />
                             <Route path="/lisatietotyypit/muokkaus/:nimi" component={LisatietotyypinMuokkaus} />
                             <Route path="/yhteystietotyypit/muokkaus" component={YhteystietotyypinMuokkaus} />
+                            <Route
+                                exact
+                                path="/ryhmat/uusi"
+                                component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                            />
                             <Route path="/ryhmat/muokkaus/:oid" component={RyhmanMuokkaus} />
                             <Route path="*">
                                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>

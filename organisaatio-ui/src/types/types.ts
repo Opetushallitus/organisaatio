@@ -113,29 +113,29 @@ export interface YtjOrganisaatio {
 export interface Ryhma {
     yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: any; // TODO Tuleeko nämä???
-    kayntiosoite: any;
+    kayntiosoite?: any;
     kayttoryhmat: string[];
-    kieletUris: any[];
+    kieletUris?: any[];
     kuvaus2: any;
-    lisatiedot: string[];
+    lisatiedot?: string[];
     lakkautusPvm?: string;
-    muutKotipaikatUris: string[];
-    muutOppilaitosTyyppiUris: string[];
-    nimet: any[];
+    muutKotipaikatUris?: string[];
+    muutOppilaitosTyyppiUris?: string[];
+    nimet?: any[];
     nimi: any;
-    oid?: string;
-    parentOid: string;
-    parentOidPath: string;
-    piilotettu: boolean;
-    postiosoite: any;
+    oid?: string | null;
+    parentOid?: string;
+    parentOidPath?: string;
+    piilotettu?: boolean;
+    postiosoite?: any;
     ryhmatyypit: string[];
     status: string;
-    toimipistekoodi: string;
+    toimipistekoodi?: string;
     tyypit: string[];
-    version: number;
-    vuosiluokat: any[];
-    yhteystiedot: Yhteystiedot[];
-    yhteystietoArvos: any[];
+    version?: number;
+    vuosiluokat?: any[];
+    yhteystiedot?: Yhteystiedot[];
+    yhteystietoArvos?: any[];
 }
 
 export interface YhteystietoTyyppi {

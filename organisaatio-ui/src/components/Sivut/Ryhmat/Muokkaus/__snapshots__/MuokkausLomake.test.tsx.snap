@@ -287,6 +287,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         >
           PASSIVOI_RYHMA
         </ForwardRef>
+        ,
         <ForwardRef
           name="poistabutton"
           onClick={[MockFunction]}

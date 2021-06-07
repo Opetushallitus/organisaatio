@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useEffect } from 'react';
 import { AxiosResponse } from 'axios';
-import { getRyhma, deleteRyhma, putRyhma } from '../../../HttpRequests';
+import { getRyhma, deleteRyhma, putRyhma, postRyhma } from '../../../HttpRequests';
 import { Ryhma, SelectOptionType } from '../../../../types/types';
 import { useTranslatedInput } from '../../../../customHooks/CustomHooks';
 import { ActionMeta, ValueType } from 'react-select';
@@ -13,7 +13,7 @@ import { useContext } from 'react';
 import { LanguageContext } from '../../../../contexts/contexts';
 
 export type RyhmanMuokausProps = {
-    oid: string;
+    oid?: string;
 };
 
 export type OrganisaatioPutResponseType = {
@@ -21,11 +21,27 @@ export type OrganisaatioPutResponseType = {
     organisaatio: Ryhma;
 };
 
+const emptyRyhma: Ryhma = {
+    nimi: {
+        fi: '',
+    },
+    kuvaus2: {
+        fi: '',
+    },
+    parentOid: '1.2.246.562.10.00000000001', // TODO ROOT OID KATSOTTAVA MITEN TULEE TÄNNE? EI MENE LÄPI JOS EI OLE KUTSUSSA MUKANA
+    oid: null,
+    ryhmatyypit: [],
+    kayttoryhmat: [],
+    status: 'AKTIIVINEN',
+    tyypit: ['Ryhma'],
+};
+
 export const currentDateToStr = () => new Date().toISOString().split('T')[0];
 
-const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausProps>) => {
+const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuokausProps> & { isNew?: boolean }) => {
     const { i18n } = useContext(LanguageContext);
     const [ryhma, setRyhma] = useState<Ryhma>();
+    const onUusi = isNew || history.location.pathname.includes('uusi');
 
     const onPassivoitu = !ryhma || ryhma.status === 'PASSIIVINEN';
     const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useTranslatedInput(
@@ -66,11 +82,10 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     );
 
     useEffect(() => {
-        async function fetch() {
+        async function fetch(oid) {
             try {
-                const response = (await getRyhma(match.params.oid)) as AxiosResponse;
-                const ryhma = response.data as Ryhma;
-                setRyhma(ryhma);
+                const ryhma = await getRyhma(oid);
+                setRyhma(ryhma as Ryhma);
                 ryhma.nimi['fi'] && setNimiFiValue(ryhma.nimi['fi']);
                 ryhma.nimi['sv'] && setNimiSvValue(ryhma.nimi['sv']);
                 ryhma.nimi['en'] && setNimiEnValue(ryhma.nimi['en']);
@@ -81,8 +96,13 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
                 console.error('error fetching', error);
             }
         }
-        fetch();
+        if (match.params.oid && !isNew) {
+            fetch(match.params.oid);
+        } else {
+            setRyhma({ ...emptyRyhma });
+        }
     }, [
+        onUusi,
         match.params.oid,
         setKuvausEnValue,
         setKuvausSvValue,
@@ -109,7 +129,7 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
     };
 
     const handleTallenna = async () => {
-        if (ryhma && ryhma.oid) {
+        if (ryhma) {
             const newRyhma = {
                 ...ryhma,
                 nimi: { fi: nimiFiValue, sv: nimiSvValue, en: nimiEnValue },
@@ -120,10 +140,8 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
                 },
             };
             try {
-                const {
-                    data: { organisaatio: updatedRyhma },
-                } = (await putRyhma(newRyhma)) as AxiosResponse;
-                setRyhma(updatedRyhma);
+                const { organisaatio: updatedRyhma } = onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
+                setRyhma(updatedRyhma as Ryhma);
                 history.push('/ryhmat');
             } catch (error) {
                 console.error('error while updating ryhma', error);
@@ -161,6 +179,7 @@ const RyhmanMuokkaus = ({ match, history }: RouteComponentProps<RyhmanMuokausPro
 
     return (
         <MuokkausLomake
+            onUusi={onUusi}
             nimiBinds={[nimiFiBind, nimiSvBind, nimiEnBind]}
             kuvausBinds={[kuvaus2FiBind, kuvaus2SvBind, kuvaus2EnBind]}
             ryhma={ryhma}
