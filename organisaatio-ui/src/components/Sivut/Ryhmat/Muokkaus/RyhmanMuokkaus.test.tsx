@@ -31,6 +31,16 @@ const MINIMAL_PROPS: DeepPartial<Interface> = {
     },
 };
 
+const testiRyhma = {
+    nimi: {
+        fi: 'Suominimi',
+    },
+    ryhmatyypit: [],
+    kayttoryhmat: [],
+    status: 'AKTIIVINEN',
+    oid: '1234',
+} as Partial<Ryhma>;
+
 jest.mock('@opetushallitus/virkailija-ui-components/Spin', () => () => <div>Spin</div>);
 jest.mock('@opetushallitus/virkailija-ui-components/Button', () => () => <button key={Math.random()}>btn</button>);
 jest.mock('@opetushallitus/virkailija-ui-components/Input', () => () => <input />);
@@ -42,24 +52,18 @@ afterAll(() => {
 });
 
 describe('RyhmanMuokkaus', () => {
+    const axiosResponse = {
+        data: testiRyhma as Partial<Ryhma>,
+    } as Partial<AxiosResponse>;
+    beforeEach(() => {
+        (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
+    });
     it('Renders Spinner when there is no ryhma and is not new', () => {
         render(<RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />);
         expect(screen.getByText('Spin')).toBeInTheDocument();
     });
 
     it('Renders form after there is ryhma when is not new', async () => {
-        const axiosResponse = {
-            data: {
-                nimi: {
-                    fi: 'Suominimi',
-                },
-                ryhmatyypit: [],
-                kayttoryhmat: [],
-                status: 'AKTIIVINEN',
-                oid: '1234',
-            } as Partial<Ryhma>,
-        } as Partial<AxiosResponse>;
-        (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
         render(<RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />);
         expect(await screen.findByText('Suominimi')).toBeInTheDocument();
     });

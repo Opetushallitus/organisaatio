@@ -98,7 +98,7 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
                 console.error('error fetching', error);
             }
         }
-        if (match.params.oid && !isNew) {
+        if (match.params.oid && !onUusi) {
             fetch(match.params.oid);
         } else {
             setRyhma({ ...emptyRyhma });
