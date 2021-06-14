@@ -6,18 +6,19 @@ import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { useEffect } from 'react';
 import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../mappers';
-import { AxiosResponse } from 'axios';
 import { getRyhmat } from '../../HttpRequests';
 import { useState } from 'react';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Column } from 'react-table';
+import { useHistory } from 'react-router-dom';
 
-const Ryhmat: React.FC = () => {
+const Ryhmat = () => {
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
     const [ryhmat, setRyhmat] = useState<Ryhma[]>([]);
+    const history = useHistory();
     const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
         () => [
             {
@@ -25,10 +26,7 @@ const Ryhmat: React.FC = () => {
                 id: 'Nimi',
                 Cell: ({ row }) => {
                     return (
-                        <a
-                            href={`/organisaatio/ryhmat/muokkaus/${row.original.oid}`}
-                            className={styles.nimenMaksimiPituus}
-                        >
+                        <a href={`/ryhmat/muokkaus/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
                             {mapLocalizedKoodiToLang(language, 'nimi', row.original)}
                         </a>
                     );
@@ -92,15 +90,18 @@ const Ryhmat: React.FC = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = (await getRyhmat()) as AxiosResponse;
-                const ryhmatData = response.data;
-                setRyhmat([...ryhmatData]);
+                const ryhmatData = await getRyhmat();
+                setRyhmat([...ryhmatData] as Ryhma[]);
             } catch (error) {
                 console.error('error fetching', error);
             }
         };
         fetch();
     }, []);
+
+    const handleLisaaRyhma = () => {
+        return history.push('/organisaatio/ryhmat/uusi');
+    };
 
     if (ryhmat.length === 0) {
         return <Spin />;
@@ -113,7 +114,10 @@ const Ryhmat: React.FC = () => {
                     <h3>{i18n.translate('RYHMAT_OTSIKKO')}</h3>
                 </div>
                 <div>
-                    <Button className={styles.LisaaUusiBtn}> + {i18n.translate('RYHMAT_LISAA_UUSI')}</Button>
+                    <Button onClick={handleLisaaRyhma} className={styles.LisaaUusiBtn}>
+                        {' '}
+                        + {i18n.translate('RYHMAT_LISAA_UUSI')}
+                    </Button>
                 </div>
             </div>
             <div>
