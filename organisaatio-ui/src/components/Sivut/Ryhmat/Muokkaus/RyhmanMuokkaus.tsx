@@ -5,12 +5,11 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useEffect } from 'react';
 import { AxiosResponse } from 'axios';
 import { getRyhma, deleteRyhma, putRyhma, postRyhma } from '../../../HttpRequests';
-import { Ryhma, SelectOptionType } from '../../../../types/types';
-import { useTranslatedInput } from '../../../../customHooks/CustomHooks';
-import { ActionMeta, ValueType } from 'react-select';
+import { Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
 import { useContext } from 'react';
 import { LanguageContext } from '../../../../contexts/contexts';
+import { FieldValues, SubmitHandler } from 'react-hook-form';
 
 const ROOT_OID = '1.2.246.562.10.00000000001'; // KOVAKOODATTU AINAKIN TOISTAISEKSI
 
@@ -28,7 +27,7 @@ const emptyRyhma: Ryhma = {
         fi: '',
     },
     kuvaus2: {
-        fi: '',
+        'kieli_fi#1': '',
     },
     parentOid: ROOT_OID,
     oid: null,
@@ -45,55 +44,11 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
     const [ryhma, setRyhma] = useState<Ryhma>();
     const onUusi = isNew || history.location.pathname.includes('uusi');
 
-    const onPassivoitu = !ryhma || ryhma.status === 'PASSIIVINEN';
-    const { value: nimiFiValue, bind: nimiFiBind, setValue: setNimiFiValue } = useTranslatedInput(
-        '',
-        'nimiFi',
-        onPassivoitu,
-        'SUOMEKSI'
-    );
-    const { value: nimiSvValue, bind: nimiSvBind, setValue: setNimiSvValue } = useTranslatedInput(
-        '',
-        'nimiSv',
-        onPassivoitu,
-        'RUOTSIKSI'
-    );
-    const { value: nimiEnValue, bind: nimiEnBind, setValue: setNimiEnValue } = useTranslatedInput(
-        '',
-        'nimiEn',
-        onPassivoitu,
-        'ENGLANNIKSI'
-    );
-    const { value: kuvaus2FiValue, bind: kuvaus2FiBind, setValue: setKuvausFiValue } = useTranslatedInput(
-        '',
-        'kuvaus2Fi',
-        onPassivoitu,
-        'SUOMEKSI'
-    );
-    const { value: kuvaus2SvValue, bind: kuvaus2SvBind, setValue: setKuvausSvValue } = useTranslatedInput(
-        '',
-        'kuvaus2Sv',
-        onPassivoitu,
-        'RUOTSIKSI'
-    );
-    const { value: kuvaus2EnValue, bind: kuvaus2EnBind, setValue: setKuvausEnValue } = useTranslatedInput(
-        '',
-        'kuvaus2En',
-        onPassivoitu,
-        'ENGLANNIKSI'
-    );
-
     useEffect(() => {
         async function fetch(oid) {
             try {
                 const ryhma = await getRyhma(oid);
                 setRyhma(ryhma as Ryhma);
-                ryhma.nimi['fi'] && setNimiFiValue(ryhma.nimi['fi']);
-                ryhma.nimi['sv'] && setNimiSvValue(ryhma.nimi['sv']);
-                ryhma.nimi['en'] && setNimiEnValue(ryhma.nimi['en']);
-                ryhma.kuvaus2['kieli_fi#1'] && setKuvausFiValue(ryhma.kuvaus2['kieli_fi#1']);
-                ryhma.kuvaus2['kieli_sv#1'] && setKuvausSvValue(ryhma.kuvaus2['kieli_sv#1']);
-                ryhma.kuvaus2['kieli_en#1'] && setKuvausEnValue(ryhma.kuvaus2['kieli_en#1']);
             } catch (error) {
                 console.error('error fetching', error);
             }
@@ -103,43 +58,33 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
         } else {
             setRyhma({ ...emptyRyhma });
         }
-    }, [
-        onUusi,
-        match.params.oid,
-        setKuvausEnValue,
-        setKuvausSvValue,
-        setKuvausFiValue,
-        setNimiEnValue,
-        setNimiSvValue,
-        setNimiFiValue,
-    ]);
+    }, [onUusi, match.params.oid]);
 
     if (!ryhma) {
         return <Spin />;
     }
 
-    const handleRyhmaSelectOnChange = (
-        values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined,
-        action: ActionMeta<SelectOptionType>
-    ) => {
-        const newRyhma = {
-            ...ryhma,
-            [action.name as string]:
-                (values && (values as ValueType<SelectOptionType>[]).map((v) => (v as SelectOptionType).value)) || [],
-        } as Ryhma;
-        setRyhma(newRyhma);
-    };
-
-    const handleTallenna = async () => {
+    const handleTallenna: SubmitHandler<FieldValues> = async ({
+        nimiFi,
+        nimiSv,
+        nimiEn,
+        kuvaus2Fi,
+        kuvaus2Sv,
+        kuvaus2En,
+        ryhmatyypit,
+        kayttoryhmat,
+    }) => {
         if (ryhma) {
             const newRyhma = {
                 ...ryhma,
-                nimi: { fi: nimiFiValue, sv: nimiSvValue, en: nimiEnValue },
+                nimi: { fi: nimiFi, sv: nimiSv, en: nimiEn },
                 kuvaus2: {
-                    'kieli_fi#1': kuvaus2FiValue,
-                    'kieli_sv#1': kuvaus2SvValue,
-                    'kieli_en#1': kuvaus2EnValue,
+                    'kieli_fi#1': kuvaus2Fi,
+                    'kieli_sv#1': kuvaus2Sv,
+                    'kieli_en#1': kuvaus2En,
                 },
+                ryhmatyypit: ryhmatyypit.map((rt) => rt.value),
+                kayttoryhmat: kayttoryhmat.map((rt) => rt.value),
             };
             try {
                 const { organisaatio: updatedRyhma } = onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
@@ -178,14 +123,10 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
         } = (await putRyhma(newRyhma)) as AxiosResponse<OrganisaatioPutResponseType>;
         setRyhma(updatedRyhma);
     };
-
     return (
         <MuokkausLomake
             onUusi={onUusi}
-            nimiBinds={[nimiFiBind, nimiSvBind, nimiEnBind]}
-            kuvausBinds={[kuvaus2FiBind, kuvaus2SvBind, kuvaus2EnBind]}
             ryhma={ryhma}
-            handleRyhmaSelectOnChange={handleRyhmaSelectOnChange}
             handlePeruuta={handlePeruuta}
             handlePassivoi={handlePassivoi}
             handlePoista={handlePoista}

@@ -4,52 +4,64 @@ import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { ActionMeta, ValueType } from 'react-select';
-import { TranslatedInputBind, Ryhma, SelectOptionType } from '../../../../types/types';
+import { TranslatedInputBind, Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
 import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
+import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { FieldValues } from 'react-hook-form/dist/types/fields';
+import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
     ryhma: Ryhma;
-    nimiBinds: TranslatedInputBind[];
-    kuvausBinds: TranslatedInputBind[];
-    handleRyhmaSelectOnChange: (
-        values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined,
-        action: ActionMeta<SelectOptionType>
-    ) => void;
     handlePeruuta: () => void;
     handlePassivoi: () => void;
     handlePoista: () => void;
-    handleTallenna: () => void;
+    handleTallenna: SubmitHandler<FieldValues>;
 };
 
 export type InputBindProps = {
     bind: TranslatedInputBind;
+    errors: FieldErrors<FieldValues>;
 };
 
-export const InputRivi = ({ bind }: InputBindProps) => {
-    const { i18n } = useContext(LanguageContext);
-    const { localizationKey, ...rest } = bind;
-    return (
-        <div className={styles.Rivi}>
-            <label htmlFor={bind.name}>{i18n.translate(localizationKey)}</label>
-            <div className={styles.PitkaInput}>
-                <Input id={bind.name} {...rest} />
-            </div>
-        </div>
-    );
-};
+const ryhmatLomakeSchema = Joi.object({
+    nimiEn: Joi.string(),
+    nimiFi: Joi.string(),
+    nimiSv: Joi.string(),
+    kuvaus2Fi: Joi.string(),
+    kuvaus2Sv: Joi.string(),
+    kuvaus2En: Joi.string(),
+    ryhmatyypit: Joi.array(),
+    kayttoryhmat: Joi.array(),
+})
+    .when(Joi.object({ nimiFi: Joi.string().required() }).unknown(), {
+        then: Joi.object({ nimiSv: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
+    })
+    .when(Joi.object({ nimiSv: Joi.string().required() }).unknown(), {
+        then: Joi.object({ nimiFi: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
+    })
+    .when(Joi.object({ nimiEn: Joi.string().required() }).unknown(), {
+        then: Joi.object({ nimiFi: Joi.string().allow(''), nimiSv: Joi.string().allow('') }),
+    })
+    .when(Joi.object({ kuvaus2Fi: Joi.string().required() }).unknown(), {
+        then: Joi.object({ kuvaus2Sv: Joi.string().allow(''), kuvaus2En: Joi.string().allow('') }),
+    })
+    .when(Joi.object({ kuvaus2Sv: Joi.string().required() }).unknown(), {
+        then: Joi.object({ kuvaus2Fi: Joi.string().allow(''), kuvaus2En: Joi.string().allow('') }),
+    })
+    .when(Joi.object({ kuvaus2En: Joi.string().required() }).unknown(), {
+        then: Joi.object({ kuvausSv: Joi.string().allow(''), kuvaus2Fi: Joi.string().allow('') }),
+    });
 
 const MuokkausLomake = ({
     onUusi,
     ryhma,
-    nimiBinds,
-    kuvausBinds,
-    handleRyhmaSelectOnChange,
     handlePeruuta,
     handlePassivoi,
     handlePoista,
@@ -63,6 +75,15 @@ const MuokkausLomake = ({
 
     const kayttoRyhmat = mapValuesToSelect(ryhma.kayttoryhmat, kayttoRyhmatOptions);
     const ryhmaTyypit = mapValuesToSelect(ryhma.ryhmatyypit, ryhmaTyypitOptions);
+    const isDisabled = !ryhma || ryhma.status === 'PASSIIVINEN';
+    const {
+        register,
+        formState: { errors: validationErrors },
+        handleSubmit,
+        control,
+    } = useForm({ resolver: joiResolver(ryhmatLomakeSchema) });
+
+    console.log('err', validationErrors);
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
@@ -95,42 +116,117 @@ const MuokkausLomake = ({
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_NIMI')}</label>
-                            {nimiBinds.map((bind) => (
-                                <InputRivi key={bind.name} bind={bind} />
-                            ))}
+                            <div className={styles.Rivi}>
+                                <label htmlFor={'nimiFi'}>{i18n.translate('SUOMEKSI')}</label>
+                                <div className={styles.PitkaInput}>
+                                    <Input
+                                        disabled={isDisabled}
+                                        error={!!validationErrors['nimiFi']}
+                                        id={'nimiFi'}
+                                        {...register('nimiFi')}
+                                        defaultValue={ryhma.nimi['fi']}
+                                    />
+                                </div>
+                            </div>
+                            <div className={styles.Rivi}>
+                                <label htmlFor={'nimiSv'}>{i18n.translate('RUOTSIKSI')}</label>
+                                <div className={styles.PitkaInput}>
+                                    <Input
+                                        disabled={isDisabled}
+                                        error={!!validationErrors['nimiSv']}
+                                        id={'nimiSv'}
+                                        {...register('nimiSv')}
+                                        defaultValue={ryhma.nimi['sv']}
+                                    />
+                                </div>
+                            </div>
+                            <div className={styles.Rivi}>
+                                <label htmlFor={'nimiEn'}>{i18n.translate('ENGLANNIKSI')}</label>
+                                <div className={styles.PitkaInput}>
+                                    <Input
+                                        disabled={isDisabled}
+                                        error={!!validationErrors['nimiEn']}
+                                        id={'nimiEn'}
+                                        {...register('nimiEn')}
+                                        defaultValue={ryhma.nimi['en']}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_KUVAUS')}</label>
-                            {kuvausBinds.map((bind) => (
-                                <InputRivi key={bind.name} bind={bind} />
-                            ))}
+                            <div className={styles.Rivi}>
+                                <label htmlFor={'kuvaus2Fi'}>{i18n.translate('SUOMEKSI')}</label>
+                                <div className={styles.PitkaInput}>
+                                    <Input
+                                        error={!!validationErrors['kuvaus2Fi']}
+                                        id={'kuvaus2Fi'}
+                                        {...register('kuvaus2Fi')}
+                                        defaultValue={ryhma.kuvaus2['kieli_fi#1']}
+                                    />
+                                </div>
+                            </div>
+                            <div className={styles.Rivi}>
+                                <label htmlFor={'kuvaus2Sv'}>{i18n.translate('RUOTSIKSI')}</label>
+                                <div className={styles.PitkaInput}>
+                                    <Input
+                                        error={!!validationErrors['kuvaus2Sv']}
+                                        id={'kuvaus2Sv'}
+                                        {...register('kuvaus2Sv')}
+                                        defaultValue={ryhma.kuvaus2['kieli_sv#1']}
+                                    />
+                                </div>
+                            </div>
+                            <div className={styles.Rivi}>
+                                <label htmlFor={'kuvaus2En'}>{i18n.translate('ENGLANNIKSI')}</label>
+                                <div className={styles.PitkaInput}>
+                                    <Input
+                                        error={!!validationErrors['kuvaus2En']}
+                                        id={'kuvaus2En'}
+                                        {...register('kuvaus2En')}
+                                        defaultValue={ryhma.kuvaus2['kieli_en#1']}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_TYYPPI')}</label>
-                            <Select
-                                isDisabled={ryhma.status === 'PASSIIVINEN'}
+                            <Controller
+                                control={control}
                                 name={'ryhmatyypit'}
-                                isMulti
-                                value={ryhmaTyypit}
-                                options={ryhmaTyypitOptions}
-                                onChange={handleRyhmaSelectOnChange}
+                                defaultValue={ryhmaTyypit}
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        error={!!validationErrors['ryhmatyypit']}
+                                        isMulti
+                                        options={ryhmaTyypitOptions}
+                                        isDisabled={isDisabled}
+                                    />
+                                )}
                             />
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
                             <label>{i18n.translate('RYHMAN_KAYTTOTARKOITUS')}</label>
-                            <Select
-                                isDisabled={ryhma.status === 'PASSIIVINEN'}
+                            <Controller
+                                control={control}
                                 name={'kayttoryhmat'}
-                                isMulti
-                                value={kayttoRyhmat}
-                                options={kayttoRyhmatOptions}
-                                onChange={handleRyhmaSelectOnChange}
+                                defaultValue={kayttoRyhmat}
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        error={!!validationErrors['kayttoryhmat']}
+                                        isMulti
+                                        options={kayttoRyhmatOptions}
+                                        isDisabled={isDisabled}
+                                    />
+                                )}
                             />
                         </div>
                     </div>
@@ -163,7 +259,7 @@ const MuokkausLomake = ({
                         disabled={ryhma.status === 'PASSIIVINEN'}
                         name="tallennabutton"
                         className={styles.Versionappula}
-                        onClick={handleTallenna}
+                        onClick={handleSubmit(handleTallenna)}
                     >
                         {i18n.translate('TALLENNA')}
                     </Button>

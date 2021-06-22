@@ -26,7 +26,7 @@ const Ryhmat = () => {
                 id: 'Nimi',
                 Cell: ({ row }) => {
                     return (
-                        <a href={`/ryhmat/muokkaus/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
+                        <a href={`/organisaatio/ryhmat/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
                             {mapLocalizedKoodiToLang(language, 'nimi', row.original)}
                         </a>
                     );
