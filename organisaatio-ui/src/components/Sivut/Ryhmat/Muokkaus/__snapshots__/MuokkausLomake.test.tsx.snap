@@ -1,83 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[` 1`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "nimiFi",
-        "value": "testiNimi",
-      },
-    },
-  ],
-]
-`;
-
-exports[` 2`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "nimiSv",
-        "value": "testiNimi",
-      },
-    },
-  ],
-]
-`;
-
-exports[` 3`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "nimiEn",
-        "value": "testiNimi",
-      },
-    },
-  ],
-]
-`;
-
-exports[` 4`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "kuvaus2Fi",
-        "value": "testiKuvaus2",
-      },
-    },
-  ],
-]
-`;
-
-exports[` 5`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "kuvaus2Sv",
-        "value": "testiKuvaus2",
-      },
-    },
-  ],
-]
-`;
-
-exports[` 6`] = `
-Array [
-  Array [
-    Object {
-      "target": Object {
-        "name": "kuvaus2En",
-        "value": "testiKuvaus2",
-      },
-    },
-  ],
-]
-`;
-
 exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
 <PohjaSivu>
   <div
@@ -160,39 +82,70 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <label>
             RYHMAN_NIMI
           </label>
-          <InputRivi
-            bind={
-              Object {
-                "localizationKey": "SUOMEKSI",
-                "name": "nimiFi",
-                "onChange": [MockFunction],
-                "value": "1",
-              }
-            }
-            key="nimiFi"
-          />
-          <InputRivi
-            bind={
-              Object {
-                "localizationKey": "RUOTSIKSI",
-                "name": "nimiSv",
-                "onChange": [MockFunction],
-                "value": "2",
-              }
-            }
-            key="nimiSv"
-          />
-          <InputRivi
-            bind={
-              Object {
-                "localizationKey": "ENGLANNIKSI",
-                "name": "nimiEn",
-                "onChange": [MockFunction],
-                "value": "3",
-              }
-            }
-            key="nimiEn"
-          />
+          <div
+            className="Rivi"
+          >
+            <label
+              htmlFor="nimiFi"
+            >
+              SUOMEKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                defaultValue="Suominimi"
+                disabled={false}
+                error={false}
+                id="nimiFi"
+                name="nimiFi"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label
+              htmlFor="nimiSv"
+            >
+              RUOTSIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                disabled={false}
+                error={false}
+                id="nimiSv"
+                name="nimiSv"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label
+              htmlFor="nimiEn"
+            >
+              ENGLANNIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                disabled={false}
+                error={false}
+                id="nimiEn"
+                name="nimiEn"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div
@@ -204,39 +157,67 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <label>
             RYHMAN_KUVAUS
           </label>
-          <InputRivi
-            bind={
-              Object {
-                "localizationKey": "SUOMEKSI",
-                "name": "kuvaus2Fi",
-                "onChange": [MockFunction],
-                "value": "4",
-              }
-            }
-            key="kuvaus2Fi"
-          />
-          <InputRivi
-            bind={
-              Object {
-                "localizationKey": "RUOTSIKSI",
-                "name": "kuvaus2Sv",
-                "onChange": [MockFunction],
-                "value": "5",
-              }
-            }
-            key="kuvaus2Sv"
-          />
-          <InputRivi
-            bind={
-              Object {
-                "localizationKey": "ENGLANNIKSI",
-                "name": "kuvaus2En",
-                "onChange": [MockFunction],
-                "value": "6",
-              }
-            }
-            key="kuvaus2En"
-          />
+          <div
+            className="Rivi"
+          >
+            <label
+              htmlFor="kuvaus2Fi"
+            >
+              SUOMEKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                defaultValue="testikuvaus"
+                error={false}
+                id="kuvaus2Fi"
+                name="kuvaus2Fi"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label
+              htmlFor="kuvaus2Sv"
+            >
+              RUOTSIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                error={false}
+                id="kuvaus2Sv"
+                name="kuvaus2Sv"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
+          <div
+            className="Rivi"
+          >
+            <label
+              htmlFor="kuvaus2En"
+            >
+              ENGLANNIKSI
+            </label>
+            <div
+              className="PitkaInput"
+            >
+              <ForwardRef
+                error={false}
+                id="kuvaus2En"
+                name="kuvaus2En"
+                onBlur={[Function]}
+                onChange={[Function]}
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div
@@ -248,13 +229,153 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <label>
             RYHMAN_TYYPPI
           </label>
-          <Select
-            isDisabled={false}
-            isMulti={true}
+          <Component
+            control={
+              Object {
+                "defaultValuesRef": Object {
+                  "current": Object {},
+                },
+                "fieldArrayDefaultValuesRef": Object {
+                  "current": Object {},
+                },
+                "fieldsRef": Object {
+                  "current": Object {
+                    "kuvaus2En": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "kuvaus2En",
+                        "ref": Object {
+                          "name": "kuvaus2En",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "kuvaus2Fi": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "kuvaus2Fi",
+                        "ref": Object {
+                          "name": "kuvaus2Fi",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "kuvaus2Sv": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "kuvaus2Sv",
+                        "ref": Object {
+                          "name": "kuvaus2Sv",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "nimiEn": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "nimiEn",
+                        "ref": Object {
+                          "name": "nimiEn",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "nimiFi": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "nimiFi",
+                        "ref": Object {
+                          "name": "nimiFi",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "nimiSv": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "nimiSv",
+                        "ref": Object {
+                          "name": "nimiSv",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                  },
+                },
+                "formStateRef": Object {
+                  "current": Object {
+                    "dirtyFields": Object {},
+                    "errors": Object {},
+                    "isDirty": false,
+                    "isSubmitSuccessful": false,
+                    "isSubmitted": false,
+                    "isSubmitting": false,
+                    "isValid": false,
+                    "isValidating": false,
+                    "submitCount": 0,
+                    "touchedFields": Object {},
+                  },
+                },
+                "getIsDirty": [Function],
+                "inFieldArrayActionRef": Object {
+                  "current": false,
+                },
+                "namesRef": Object {
+                  "current": Object {
+                    "array": Set {},
+                    "mount": Set {
+                      "nimiFi",
+                      "nimiSv",
+                      "nimiEn",
+                      "kuvaus2Fi",
+                      "kuvaus2Sv",
+                      "kuvaus2En",
+                    },
+                    "unMount": Set {},
+                    "watch": Set {},
+                    "watchAll": false,
+                  },
+                },
+                "readFormStateRef": Object {
+                  "current": Object {
+                    "dirtyFields": false,
+                    "errors": "all",
+                    "isDirty": false,
+                    "isValid": false,
+                    "isValidating": false,
+                    "touchedFields": false,
+                  },
+                },
+                "register": [Function],
+                "shouldUnmount": undefined,
+                "subjectsRef": Object {
+                  "current": Object {
+                    "array": ke {
+                      "observers": Array [],
+                    },
+                    "control": ke {
+                      "observers": Array [],
+                    },
+                    "state": ke {
+                      "observers": Array [],
+                    },
+                    "watch": ke {
+                      "observers": Array [],
+                    },
+                  },
+                },
+                "unregister": [Function],
+                "updateIsValid": [Function],
+                "watchInternal": [Function],
+              }
+            }
+            defaultValue={
+              Array [
+                undefined,
+              ]
+            }
             name="ryhmatyypit"
-            onChange={[MockFunction]}
-            options={Array []}
-            value={Array []}
+            render={[Function]}
           />
         </div>
       </div>
@@ -267,13 +388,153 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <label>
             RYHMAN_KAYTTOTARKOITUS
           </label>
-          <Select
-            isDisabled={false}
-            isMulti={true}
+          <Component
+            control={
+              Object {
+                "defaultValuesRef": Object {
+                  "current": Object {},
+                },
+                "fieldArrayDefaultValuesRef": Object {
+                  "current": Object {},
+                },
+                "fieldsRef": Object {
+                  "current": Object {
+                    "kuvaus2En": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "kuvaus2En",
+                        "ref": Object {
+                          "name": "kuvaus2En",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "kuvaus2Fi": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "kuvaus2Fi",
+                        "ref": Object {
+                          "name": "kuvaus2Fi",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "kuvaus2Sv": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "kuvaus2Sv",
+                        "ref": Object {
+                          "name": "kuvaus2Sv",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "nimiEn": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "nimiEn",
+                        "ref": Object {
+                          "name": "nimiEn",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "nimiFi": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "nimiFi",
+                        "ref": Object {
+                          "name": "nimiFi",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                    "nimiSv": Object {
+                      "_f": Object {
+                        "mount": true,
+                        "name": "nimiSv",
+                        "ref": Object {
+                          "name": "nimiSv",
+                        },
+                        "value": undefined,
+                      },
+                    },
+                  },
+                },
+                "formStateRef": Object {
+                  "current": Object {
+                    "dirtyFields": Object {},
+                    "errors": Object {},
+                    "isDirty": false,
+                    "isSubmitSuccessful": false,
+                    "isSubmitted": false,
+                    "isSubmitting": false,
+                    "isValid": false,
+                    "isValidating": false,
+                    "submitCount": 0,
+                    "touchedFields": Object {},
+                  },
+                },
+                "getIsDirty": [Function],
+                "inFieldArrayActionRef": Object {
+                  "current": false,
+                },
+                "namesRef": Object {
+                  "current": Object {
+                    "array": Set {},
+                    "mount": Set {
+                      "nimiFi",
+                      "nimiSv",
+                      "nimiEn",
+                      "kuvaus2Fi",
+                      "kuvaus2Sv",
+                      "kuvaus2En",
+                    },
+                    "unMount": Set {},
+                    "watch": Set {},
+                    "watchAll": false,
+                  },
+                },
+                "readFormStateRef": Object {
+                  "current": Object {
+                    "dirtyFields": false,
+                    "errors": "all",
+                    "isDirty": false,
+                    "isValid": false,
+                    "isValidating": false,
+                    "touchedFields": false,
+                  },
+                },
+                "register": [Function],
+                "shouldUnmount": undefined,
+                "subjectsRef": Object {
+                  "current": Object {
+                    "array": ke {
+                      "observers": Array [],
+                    },
+                    "control": ke {
+                      "observers": Array [],
+                    },
+                    "state": ke {
+                      "observers": Array [],
+                    },
+                    "watch": ke {
+                      "observers": Array [],
+                    },
+                  },
+                },
+                "unregister": [Function],
+                "updateIsValid": [Function],
+                "watchInternal": [Function],
+              }
+            }
+            defaultValue={
+              Array [
+                undefined,
+              ]
+            }
             name="kayttoryhmat"
-            onChange={[MockFunction]}
-            options={Array []}
-            value={Array []}
+            render={[Function]}
           />
         </div>
       </div>
@@ -314,7 +575,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         className="Versionappula"
         disabled={false}
         name="tallennabutton"
-        onClick={[MockFunction]}
+        onClick={[Function]}
       >
         TALLENNA
       </ForwardRef>

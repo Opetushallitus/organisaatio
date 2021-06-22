@@ -123,7 +123,7 @@ const OrganisaatioApp: React.FC = () => {
                                 path="/ryhmat/uusi"
                                 component={(props) => <RyhmanMuokkaus {...props} isNew />}
                             />
-                            <Route path="/ryhmat/muokkaus/:oid" component={RyhmanMuokkaus} />
+                            <Route path="/ryhmat/:oid" component={RyhmanMuokkaus} />
                             <Route path="*">
                                 <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
                             </Route>

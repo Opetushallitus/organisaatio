@@ -2,50 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
 
-import MuokkausLomake, { InputRivi, MuokkausLomakeProps } from './MuokkausLomake';
+import MuokkausLomake, { MuokkausLomakeProps, ryhmatLomakeSchema } from './MuokkausLomake';
 
 const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
-    nimiBinds: [
-        {
-            localizationKey: 'SUOMEKSI',
-            name: 'nimiFi',
-            value: '1',
-            onChange: jest.fn(),
-        },
-        {
-            localizationKey: 'RUOTSIKSI',
-            name: 'nimiSv',
-            value: '2',
-            onChange: jest.fn(),
-        },
-        {
-            localizationKey: 'ENGLANNIKSI',
-            name: 'nimiEn',
-            value: '3',
-            onChange: jest.fn(),
-        },
-    ],
-    kuvausBinds: [
-        {
-            localizationKey: 'SUOMEKSI',
-            name: 'kuvaus2Fi',
-            value: '4',
-            onChange: jest.fn(),
-        },
-        {
-            localizationKey: 'RUOTSIKSI',
-            name: 'kuvaus2Sv',
-            value: '5',
-            onChange: jest.fn(),
-        },
-        {
-            localizationKey: 'ENGLANNIKSI',
-            name: 'kuvaus2En',
-            value: '6',
-            onChange: jest.fn(),
-        },
-    ],
-    handleRyhmaSelectOnChange: jest.fn(),
     handlePeruuta: jest.fn(),
     handlePassivoi: jest.fn(),
     handlePoista: jest.fn(),
@@ -54,11 +13,14 @@ const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
         nimi: {
             fi: 'Suominimi',
         },
-        ryhmatyypit: [],
-        kayttoryhmat: [],
+        ryhmatyypit: ['hakukohde#1'],
+        kayttoryhmat: ['testikayttoryhma#1'],
         status: 'AKTIIVINEN',
         oid: '1234',
         kayntiosoite: 'dds',
+        kuvaus2: {
+            'kieli_fi#1': 'testikuvaus',
+        },
     } as any,
 };
 
@@ -78,27 +40,6 @@ describe('MuokkausLomake', () => {
         it('Renders without crashing', () => {
             const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
             expect(wrapper).toMatchSnapshot();
-        });
-    });
-    describe('Update nimi in all languages', () => {
-        const { nimiBinds = [] } = testProps;
-        nimiBinds.forEach((bind) => {
-            const wrapper = shallow(<InputRivi bind={bind} />);
-            const field = wrapper.find({ name: bind.name });
-            field.simulate('change', { target: { name: bind.name, value: 'testiNimi' } });
-            expect(bind.onChange).toHaveBeenCalledTimes(1);
-            expect((bind.onChange as jest.Mock).mock.calls).toMatchSnapshot();
-        });
-    });
-
-    describe('Update kuvaus2 in all languages', () => {
-        const { kuvausBinds = [] } = testProps;
-        kuvausBinds.forEach((bind) => {
-            const wrapper = shallow(<InputRivi bind={bind} />);
-            const field = wrapper.find({ name: bind.name });
-            field.simulate('change', { target: { name: bind.name, value: 'testiKuvaus2' } });
-            expect(bind.onChange).toHaveBeenCalledTimes(1);
-            expect((bind.onChange as jest.Mock).mock.calls).toMatchSnapshot();
         });
     });
 
@@ -122,16 +63,6 @@ describe('MuokkausLomake', () => {
             });
         });
 
-        describe('Tallenna button', () => {
-            it('handleTallenna in invoked when tallenna is clicked', () => {
-                const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
-                const button = wrapper.find({ name: 'tallennabutton' });
-                expect(testProps.handleTallenna).toHaveBeenCalledTimes(0);
-                button.simulate('click');
-                expect(testProps.handleTallenna).toHaveBeenCalledTimes(1);
-            });
-        });
-
         describe('Peruuta button', () => {
             it('handlePeruuta in invoked when peruuta is clicked', () => {
                 const wrapper = shallow(<MuokkausLomake {...(testProps as MuokkausLomakeProps)} />);
@@ -140,6 +71,56 @@ describe('MuokkausLomake', () => {
                 button.simulate('click');
                 expect(testProps.handlePeruuta).toHaveBeenCalledTimes(1);
             });
+        });
+    });
+    describe('Schema validation', () => {
+        it('will NOT pass pass if no nimi is given', () => {
+            const nonameData = {
+                kuvaus2Fi: 'testikuvaus',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(nonameData)).toHaveProperty('error');
+        });
+
+        it('will NOT pass pass if no kuvaus is given', () => {
+            const nokuvausData = {
+                nimiFi: 'nimi',
+                kuvaus2Fi: '',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(nokuvausData)).toHaveProperty('error');
+        });
+
+        it('will NOT pass pass if no ryhmatyypit is given', () => {
+            const noryhmatyypitData = {
+                nimiFi: 'nimi',
+                kuvaus2Fi: 'kuvaus',
+                ryhmatyypit: [],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
+        });
+
+        it('will NOT pass pass if no kayttoryhmat is given', () => {
+            const noryhmatyypitData = {
+                nimiFi: 'nimi',
+                kuvaus2Fi: 'kuvaus',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: [],
+            };
+            expect(ryhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
+        });
+
+        it('will pass if one nimi and one kuvaus is filled and ryhmatyypit and kayttoryhmat are not empty', () => {
+            const validData = {
+                nimiFi: 'suominimi',
+                kuvaus2Fi: 'testikuvaus',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(validData).error).toBeUndefined();
         });
     });
 });

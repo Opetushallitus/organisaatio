@@ -35,6 +35,9 @@ const testiRyhma = {
     nimi: {
         fi: 'Suominimi',
     },
+    kuvaus2: {
+        'kieli_fi#1': 'testikuvaus',
+    },
     ryhmatyypit: [],
     kayttoryhmat: [],
     status: 'AKTIIVINEN',
