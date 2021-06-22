@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
 
-import MuokkausLomake, { MuokkausLomakeProps } from './MuokkausLomake';
+import MuokkausLomake, { MuokkausLomakeProps, ryhmatLomakeSchema } from './MuokkausLomake';
 
 const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     handlePeruuta: jest.fn(),
@@ -71,6 +71,56 @@ describe('MuokkausLomake', () => {
                 button.simulate('click');
                 expect(testProps.handlePeruuta).toHaveBeenCalledTimes(1);
             });
+        });
+    });
+    describe('Schema validation', () => {
+        it('will NOT pass pass if no nimi is given', () => {
+            const nonameData = {
+                kuvaus2Fi: 'testikuvaus',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(nonameData)).toHaveProperty('error');
+        });
+
+        it('will NOT pass pass if no kuvaus is given', () => {
+            const nokuvausData = {
+                nimiFi: 'nimi',
+                kuvaus2Fi: '',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(nokuvausData)).toHaveProperty('error');
+        });
+
+        it('will NOT pass pass if no ryhmatyypit is given', () => {
+            const noryhmatyypitData = {
+                nimiFi: 'nimi',
+                kuvaus2Fi: 'kuvaus',
+                ryhmatyypit: [],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
+        });
+
+        it('will NOT pass pass if no kayttoryhmat is given', () => {
+            const noryhmatyypitData = {
+                nimiFi: 'nimi',
+                kuvaus2Fi: 'kuvaus',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: [],
+            };
+            expect(ryhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
+        });
+
+        it('will pass if one nimi and one kuvaus is filled and ryhmatyypit and kayttoryhmat are not empty', () => {
+            const validData = {
+                nimiFi: 'suominimi',
+                kuvaus2Fi: 'testikuvaus',
+                ryhmatyypit: ['testi'],
+                kayttoryhmat: ['testi'],
+            };
+            expect(ryhmatLomakeSchema.validate(validData).error).toBeUndefined();
         });
     });
 });

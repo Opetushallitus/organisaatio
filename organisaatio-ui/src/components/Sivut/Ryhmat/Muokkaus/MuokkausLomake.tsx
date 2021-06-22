@@ -4,13 +4,12 @@ import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { TranslatedInputBind, Ryhma } from '../../../../types/types';
+import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
 import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -25,22 +24,17 @@ export type MuokkausLomakeProps = {
     handleTallenna: SubmitHandler<FieldValues>;
 };
 
-export type InputBindProps = {
-    bind: TranslatedInputBind;
-    errors: FieldErrors<FieldValues>;
-};
-
-const ryhmatLomakeSchema = Joi.object({
+export const ryhmatLomakeSchema = Joi.object({
     nimiEn: Joi.string(),
     nimiFi: Joi.string(),
     nimiSv: Joi.string(),
     kuvaus2Fi: Joi.string(),
     kuvaus2Sv: Joi.string(),
     kuvaus2En: Joi.string(),
-    ryhmatyypit: Joi.array(),
-    kayttoryhmat: Joi.array(),
+    ryhmatyypit: Joi.array().min(1).required(),
+    kayttoryhmat: Joi.array().min(1).required(),
 })
-    .when(Joi.object({ nimiFi: Joi.string().required() }).unknown(), {
+    .when(Joi.object({ nimiFi: Joi.string().required() }), {
         then: Joi.object({ nimiSv: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
     })
     .when(Joi.object({ nimiSv: Joi.string().required() }).unknown(), {
@@ -57,7 +51,10 @@ const ryhmatLomakeSchema = Joi.object({
     })
     .when(Joi.object({ kuvaus2En: Joi.string().required() }).unknown(), {
         then: Joi.object({ kuvausSv: Joi.string().allow(''), kuvaus2Fi: Joi.string().allow('') }),
-    });
+    })
+    .or('nimiFi', 'nimiSv', 'nimiEn')
+    .or('kuvaus2Fi', 'kuvaus2Sv', 'kuvaus2En')
+    .and('ryhmatyypit', 'kayttoryhmat');
 
 const MuokkausLomake = ({
     onUusi,
@@ -83,7 +80,6 @@ const MuokkausLomake = ({
         control,
     } = useForm({ resolver: joiResolver(ryhmatLomakeSchema) });
 
-    console.log('err', validationErrors);
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
