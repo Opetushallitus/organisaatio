@@ -42,8 +42,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     <script type="text/javascript" src="/organisaatio-ui/jslib/angular-locales_fi_sv_en.js"></script>
 
     <!--conf -->
-    <script type="text/javascript"  src="/organisaatio-ui/configuration/configuration.js"></script>
-    <script type="text/javascript">if(AUTH_MODE === 'dev')$.getScript('/servers/cas/myroles');</script>
+    <script type="text/javascript" src="/organisaatio-ui/configuration/configuration.js" defer></script>
+    <script type="text/javascript" type="module">if (AUTH_MODE === 'dev') $.getScript('/servers/cas/myroles');</script>
 
     <!-- app js-->
     <script type="text/javascript" src="/organisaatio-ui/js/logging.js"></script>
@@ -155,7 +155,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
             </div>
         </div>
     </div><!-- /LoadingCtrl -->
-    <script>organisaatioInitialize();</script>
+    <script type="module">try { organisaatioInitialize(); } catch (err) {window.location.reload(false);}</script>
 </body>
 
 </html>
