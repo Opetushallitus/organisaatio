@@ -83,7 +83,7 @@ describe('MuokkausLomake', () => {
             expect(ryhmatLomakeSchema.validate(nonameData)).toHaveProperty('error');
         });
 
-        it('will NOT pass pass if no kuvaus is given', () => {
+        it('will NOT pass pass if empty kuvaus is given', () => {
             const nokuvausData = {
                 nimiFi: 'nimi',
                 kuvaus2Fi: '',
