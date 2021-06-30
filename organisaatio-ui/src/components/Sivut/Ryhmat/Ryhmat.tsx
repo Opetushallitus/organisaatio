@@ -100,7 +100,7 @@ const Ryhmat = () => {
     }, []);
 
     const handleLisaaRyhma = () => {
-        return history.push('/organisaatio/ryhmat/uusi');
+        return history.push('/ryhmat/uusi');
     };
 
     if (ryhmat.length === 0) {

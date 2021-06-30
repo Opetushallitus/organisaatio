@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useEffect } from 'react';
-import { AxiosResponse } from 'axios';
 import { getRyhma, deleteRyhma, putRyhma, postRyhma } from '../../../HttpRequests';
 import { Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
@@ -15,11 +14,6 @@ const ROOT_OID = '1.2.246.562.10.00000000001'; // KOVAKOODATTU AINAKIN TOISTAISE
 
 export type RyhmanMuokausProps = {
     oid?: string;
-};
-
-export type OrganisaatioPutResponseType = {
-    status: string;
-    organisaatio: Ryhma;
 };
 
 const emptyRyhma: Ryhma = {
@@ -118,9 +112,7 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
             const { lakkautusPvm, ...rest } = ryhma;
             newRyhma = rest;
         }
-        const {
-            data: { organisaatio: updatedRyhma },
-        } = (await putRyhma(newRyhma)) as AxiosResponse<OrganisaatioPutResponseType>;
+        const { organisaatio: updatedRyhma } = await putRyhma(newRyhma);
         setRyhma(updatedRyhma);
     };
     return (

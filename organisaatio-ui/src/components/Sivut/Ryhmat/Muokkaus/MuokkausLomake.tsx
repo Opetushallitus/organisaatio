@@ -34,7 +34,7 @@ export const ryhmatLomakeSchema = Joi.object({
     ryhmatyypit: Joi.array().min(1).required(),
     kayttoryhmat: Joi.array().min(1).required(),
 })
-    .when(Joi.object({ nimiFi: Joi.string().required() }), {
+    .when(Joi.object({ nimiFi: Joi.string().required() }).unknown(), {
         then: Joi.object({ nimiSv: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
     })
     .when(Joi.object({ nimiSv: Joi.string().required() }).unknown(), {
