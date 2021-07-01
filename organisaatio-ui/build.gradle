@@ -23,6 +23,8 @@ task uiTest(type: NpmTask, dependsOn: checkFormatting) {
 	args = ['run', 'test']
 }
 task bundle(type: NpmTask, dependsOn: uiTest) {
+	inputs.files(project.files('src', 'public'))
+	outputs.dir("${project.buildDir}")
 	args = ['run', 'build']
 }
 task run(type: NpmTask) {
@@ -30,7 +32,8 @@ task run(type: NpmTask) {
 }
 
 task webjar(type: Jar, dependsOn: 'jar') {
-	from(fileTree('build')) {
+	inputs.files(project.files("${project.buildDir}"))
+	from(fileTree("${project.buildDir}")) {
 		exclude 'libs/'
 		into 'META-INF/resources'
 	}
