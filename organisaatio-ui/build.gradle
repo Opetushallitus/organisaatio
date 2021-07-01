@@ -8,6 +8,8 @@ node {
 	download = true
 }
 task audit(type: NpmTask, dependsOn: npmInstall) {
+	inputs.files(project.file('package.json'))
+	outputs.dir("${project.buildDir}/node_modules/")
 	args = ['run', 'audit']
 }
 task lint(type: NpmTask, dependsOn: audit) {
