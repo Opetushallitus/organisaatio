@@ -4,6 +4,7 @@ plugins {
 	id 'java'
 	id 'application'
 	id "org.flywaydb.flyway" version "6.4.4"
+	id "com.coditory.integration-test" version "1.2.1"
 }
 
 ext {
@@ -118,9 +119,9 @@ configurations {
 		exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
 	}
 }
-		
 
-test {
+
+tasks.withType(Test) {
 	useJUnitPlatform()
 	testLogging {
 		exceptionFormat = 'full'
