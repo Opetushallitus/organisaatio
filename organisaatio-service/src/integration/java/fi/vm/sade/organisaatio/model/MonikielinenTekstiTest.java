@@ -13,9 +13,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.organisaatio.integrationtest;
+package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
