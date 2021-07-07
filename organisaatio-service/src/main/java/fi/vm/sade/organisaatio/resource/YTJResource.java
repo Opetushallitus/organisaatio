@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +67,7 @@ public class YTJResource {
             ex.printStackTrace();
             LOG.error("YtjConnectionException : " + ex.toString());
             
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
         }
         
         return ytj; 
@@ -81,7 +82,7 @@ public class YTJResource {
     private Organisaatio getOrganisaatioByYTunnus(String ytunnus) {
         YTJDTO ytjdto = findByYTunnus(ytunnus);
         if (ytjdto.getYtunnus() == null) {
-            throw new OrganisaatioResourceException(Response.Status.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
         }
         return conversionService.convert(ytjdto, Organisaatio.class);
     }
@@ -97,7 +98,7 @@ public class YTJResource {
                 ex.printStackTrace();
                 LOG.warn("YtjConnectionException : " + ex.toString());
 
-                throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+                throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
             }
         }
         return ytjList;
@@ -122,7 +123,7 @@ public class YTJResource {
             ex.printStackTrace();
             LOG.error("YtjConnectionException : " + ex.toString());
 
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
         }
         return ytjListResult;
     }

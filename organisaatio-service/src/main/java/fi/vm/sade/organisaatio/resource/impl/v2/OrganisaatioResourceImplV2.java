@@ -46,12 +46,12 @@ import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SearchCriteriaService;
-import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +66,6 @@ import java.util.*;
  */
 @Component
 @Transactional(readOnly = true)
-@CrossOriginResourceSharing(allowAllOrigins = true)
 public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
@@ -280,7 +279,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         LOG.debug("searchOrganisaatioPaivittaja: " + oid);
@@ -306,7 +305,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         List<OrganisaatioNimi> organisaatioNimet = organisaatioBusinessService.getOrganisaatioNimet(oid);
@@ -337,7 +336,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         LOG.debug("getOrganisaationLOPTiedotByOID: " + oid);
@@ -386,7 +385,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.newOrganisaatioNimi(oid, nimidto);
@@ -404,7 +403,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
 
@@ -423,7 +422,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
@@ -441,7 +440,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             return tulos;
         } catch (ValidationException ex) {
             LOG.warn("Error saving multiple organizations", ex);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             LOG.warn("Error saving multiple organizations", sbe);
@@ -451,7 +450,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             throw ore;
         } catch (Throwable t) {
             LOG.error("Error saving multiple organizations", t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
     }
@@ -561,7 +560,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
@@ -634,7 +633,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(organisaatioOid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + organisaatioOid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {

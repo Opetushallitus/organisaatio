@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,7 +56,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -160,7 +160,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 }
             }
         } catch (Exception ex) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.getMessage(), "organisaatio.error.merge.aux.data");
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), "organisaatio.error.merge.aux.data");
         }
     }
 
@@ -252,7 +252,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setPaivitysPvm(new Date());
         } catch (Throwable t) {
             LOG.error("Could not set updater for organisation!", t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
         }
 
         // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
@@ -278,7 +278,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             generateOids(entity);
             generateOidsMetadata(entity.getMetadata());
         } catch (ExceptionMessage em) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
 
         // Generoidaan opetuspiteenJarjNro
@@ -490,7 +490,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 try {
                     ya.setYhteystietoArvoOid(oidService.newOid(NodeClassCode.TEKN_5));
                 } catch (ExceptionMessage em) {
-                    throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+                    throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
                 }
                 if (updating) {
                     yhteystietoArvoRepository.save(ya); // TODO works?
@@ -744,7 +744,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             try {
                                 child.setPaivittaja(getCurrentUser());
                             } catch (Throwable t) {
-                                throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
+                                throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
                             }
                         }
                         child.setPaivitysPvm(new Date());
