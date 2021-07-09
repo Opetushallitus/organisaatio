@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl;
+import fi.vm.sade.organisaatio.config.properties.YtjProperties;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
@@ -8,18 +9,18 @@ import fi.vm.sade.organisaatio.ytj.service.YTJServiceImpl;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
+@ConfigurationPropertiesScan
+@PropertySource(value = "classpath:/organisaatio.properties",
+                ignoreResourceNotFound = true)
+@PropertySource(value = "${user.home}/oph-configuration/organisaatio.properties",
+                ignoreResourceNotFound = true)
 public class ApplicationConfig {
-
-    @Value("${rajapinnat.ytj.asiakastunnus}")
-    private String ytjAsiakastunnus;
-
-    @Value("${rajapinnat.ytj.avain}")
-    private String ytjAvain;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -32,8 +33,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public YTJService ytjService() {
-        return new YTJServiceImpl(ytjAsiakastunnus, ytjAvain);
+    public YTJService ytjService(YtjProperties properties) {
+        return new YTJServiceImpl(properties.asiakastunnus, properties.avain);
     }
 
     @Bean

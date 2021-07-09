@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
-import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.organisaatio.config.properties.CasProperties;
 import fi.vm.sade.properties.OphProperties;
 import org.jasig.cas.client.session.SingleSignOutFilter;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -22,32 +20,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Profile("!dev")
 @Configuration
 @EnableGlobalMethodSecurity(jsr250Enabled = false, prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private CasProperties casProperties;
-    private OphProperties ophProperties;
-    private Environment environment;
-    private UserDetailsService userDetailsService;
+
+    private final CasProperties casProperties;
+    private final OphProperties ophProperties;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfiguration(CasProperties casProperties, OphProperties ophProperties, Environment environment, UserDetailsService userDetailsService) {
+    public WebSecurityConfiguration(CasProperties casProperties, OphProperties ophProperties, UserDetailsService userDetailsService) {
         this.casProperties = casProperties;
         this.ophProperties = ophProperties;
-        this.environment = environment;
         this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(casProperties.getService() + "/j_spring_cas_security_check");
-        serviceProperties.setSendRenew(casProperties.getSendRenew());
+        serviceProperties.setService(casProperties.service + "/j_spring_cas_security_check");
+        serviceProperties.setSendRenew(casProperties.sendRenew);
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
     }
@@ -62,7 +57,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         casAuthenticationProvider.setUserDetailsService(this.userDetailsService);
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
-        casAuthenticationProvider.setKey(casProperties.getKey());
+        casAuthenticationProvider.setKey(casProperties.key);
         return casAuthenticationProvider;
     }
 
