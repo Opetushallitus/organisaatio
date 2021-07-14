@@ -3,18 +3,17 @@ package fi.vm.sade.organisaatio.service.converter;
 import fi.vm.sade.organisaatio.api.model.types.*;
 import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import org.dozer.DozerBeanMapper;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.core.Response;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -311,7 +310,7 @@ public class ConverterFactory {
                  */
                  entity = this.yhteystietojenTyyppiDAO.findByOid(dto.getOid()).get(0);
                  if (entity.getVersion() != dto.getVersion()) {
-                     throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Data version changed.", "yhteystietojentyyppi.exception.modified");
+                     throw new OrganisaatioResourceException(HttpStatus.CONFLICT, "Data version changed.", "yhteystietojentyyppi.exception.modified");
                  }
                  mapper.map(dto, entity);
              } else {

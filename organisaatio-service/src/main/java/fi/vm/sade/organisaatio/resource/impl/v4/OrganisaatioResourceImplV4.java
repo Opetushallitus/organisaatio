@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,7 +69,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         return this.organisaatioFindBusinessService.findChildrenById(oid, includeImage);
     }
@@ -82,7 +81,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
     }
@@ -96,14 +95,14 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to update organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             return organisaatioBusinessService.save(ordto, true);
         } catch (ValidationException ex) {
             LOG.warn("Error saving " + oid, ex);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             LOG.warn("Error saving " + oid, sbe);
@@ -113,7 +112,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             throw ore;
         } catch (Throwable t) {
             LOG.error("Error saving " + oid, t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
     }
@@ -133,20 +132,20 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         try {
             return organisaatioBusinessService.save(ordto, false);
         } catch (ValidationException ex) {
             LOG.warn("Error saving new org", ex);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
             LOG.warn("Error saving new org", sbe);
             throw new OrganisaatioResourceException(sbe);
         } catch (Throwable t) {
             LOG.warn("Error saving new org", t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
     }
@@ -175,7 +174,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
@@ -203,7 +202,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
                 permissionChecker.checkReadOrganisation(oid);
             } catch (NotAuthorizedException nae) {
                 LOG.warn("Not authorized to read organisation: " + oid);
-                throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+                throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
             }
         }
         return processRows(organisaatioFindBusinessService.findDescendants(oid, globalReadAccess));

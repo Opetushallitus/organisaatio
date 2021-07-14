@@ -33,15 +33,12 @@ import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,11 +99,11 @@ public class YhteystietojenTyyppiResource {
             generateOids(dto);
         }
         catch (ExceptionMessage em) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
         YhteystietojenTyyppi entity = converterFactory.convertYhteystietojenTyyppiToJPA(dto, true);
         if (entity == null) {
-            throw new OrganisaatioResourceException(Response.Status.BAD_REQUEST, "Entity is null.");
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "Entity is null.");
         }
         yhteystietojenTyyppiRepository.save(entity); //TODO works?
         return (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(entity);
@@ -125,22 +122,22 @@ public class YhteystietojenTyyppiResource {
 
         // Validate
         for (YhteystietojenTyyppi t : yhteystietojenTyyppiRepository.findAll()) {
-            YhteystietojenTyyppiDTO dtd = (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(t);
+            YhteystietojenTyyppiDTO dtd = converterFactory.convertToDTO(t);
             if (MonikielinenTekstiUtil.haveSameText(yhteystietojenTyyppi.getNimi(), dtd.getNimi())) {
-                throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
+                throw new OrganisaatioResourceException(HttpStatus.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
             }
         }
 
         try {
             generateOids(yhteystietojenTyyppi);
         } catch (ExceptionMessage em) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
         YhteystietojenTyyppi entity = converterFactory.convertYhteystietojenTyyppiToJPA(yhteystietojenTyyppi, true);
         try {
             entity = this.yhteystietojenTyyppiRepository.save(entity);
         } catch (PersistenceException e) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, e.toString(), "yhteystietojentyyppi.exception.savefailed");
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, e.toString(), "yhteystietojentyyppi.exception.savefailed");
         }
 
         return converterFactory.convertToDTO(entity, YhteystietojenTyyppiDTO.class);
@@ -154,13 +151,13 @@ public class YhteystietojenTyyppiResource {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae.toString());
         }
 
         List<YhteystietojenTyyppi> tyypit = this.yhteystietojenTyyppiRepository.findByOid(oid);
         if (tyypit.isEmpty()) {
             throw new OrganisaatioResourceException(
-                    Response.Status.NOT_FOUND,
+                    HttpStatus.NOT_FOUND,
                     oid,
                     "yhteystietojentyyppi.exception.remove.notfound"
             );
@@ -177,7 +174,7 @@ public class YhteystietojenTyyppiResource {
             this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);
         } else {
             throw new OrganisaatioResourceException(
-                    Response.Status.CONFLICT,
+                    HttpStatus.CONFLICT,
                     oid,
                     "yhteystietojentyyppi.exception.remove.inuse"
             );

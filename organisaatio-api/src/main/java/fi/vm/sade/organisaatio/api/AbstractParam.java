@@ -15,20 +15,20 @@
 
 package fi.vm.sade.organisaatio.api;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import fi.vm.sade.organisaatio.resource.ApiException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public abstract class AbstractParam<V> {
     private final V value;
     private final String originalParam;
 
-    public AbstractParam(String param) throws WebApplicationException {
+    public AbstractParam(String param) throws ApiException {
         this.originalParam = param;
         try {
             this.value = parse(param);
         } catch (Throwable e) {
-            throw new WebApplicationException(onError(param, e));
+            throw new ApiException(onError(param, e));
         }
     }
 
@@ -47,11 +47,8 @@ public abstract class AbstractParam<V> {
 
     protected abstract V parse(String param) throws Throwable;
 
-    protected Response onError(String param, Throwable e) {
-        return Response
-                .status(Status.BAD_REQUEST)
-                .entity(getErrorMessage(param, e))
-                .build();
+    protected ResponseEntity<?> onError(String param, Throwable e) {
+        return new ResponseEntity<>(getErrorMessage(param, e), HttpStatus.BAD_REQUEST);
     }
 
     protected String getErrorMessage(String param, Throwable e) {
