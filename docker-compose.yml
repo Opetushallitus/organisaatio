@@ -1,0 +1,28 @@
+version: "3.3"
+services:
+  organisaatio-service:
+    build: ./organisaatio-service
+    ports:
+      - "8180:8180"
+    environment:
+#      - spring.profiles.active=dev
+      - organisaatio.dev-userdetails.enabled=true
+      - organisaatio.dev-userdetails.attributes-path=file:///var/tmp/cas-mock/attributes.json
+      - cas.base=http://cas-mock:8080/cas
+      - cas.login=http://localhost:8080/cas/login
+    volumes:
+      - ./cas-mock:/var/tmp/cas-mock:ro
+  organisaatio-db:
+    image: postgres:10.6
+    environment:
+      - POSTGRES_USER=oph
+      - POSTGRES_PASSWORD=oph
+      - POSTGRES_DB=organisaatio
+  cas-mock:
+    image: soulwing/cas-mock-server
+    ports:
+      - "8080:8080"
+    environment:
+      - ATTRIBUTES_JSON_URL=file:///var/tmp/cas-mock/attributes.json
+    volumes:
+      - ./cas-mock:/var/tmp/cas-mock:ro

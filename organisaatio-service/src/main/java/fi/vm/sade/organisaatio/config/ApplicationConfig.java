@@ -12,14 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ConfigurationPropertiesScan
-@PropertySource(value = "classpath:/organisaatio.properties",
-                ignoreResourceNotFound = true)
-@PropertySource(value = "${user.home}/oph-configuration/organisaatio.properties",
-                ignoreResourceNotFound = true)
 public class ApplicationConfig {
 
     @Bean

@@ -1,26 +1,25 @@
 package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.properties.OphProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
-import java.nio.file.Paths;
-import java.util.Arrays;
-
 @Configuration
+@PropertySource(value = "classpath:/organisaatio.properties")
+@PropertySource(value = "${user.home}/oph-configuration/organisaatio.properties",
+        ignoreResourceNotFound = true)
 public class UrlConfiguration {
 
     @Bean
     public OphProperties properties(Environment environment) {
         OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
-        //properties.addOptionalFiles("/dev.properties");
-        //properties.addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/common.properties").toString());
-        //properties.addOptionalFiles(Paths.get(System.getProperties().getProperty("user.home"), "/oph-configuration/organisaatio-service.properties").toString());
+        properties.addDefault("cas.base", environment.getRequiredProperty("cas.base"));
+        properties.addDefault("cas.login", environment.getRequiredProperty("cas.login"));
         properties.addDefault("host.virkailija", environment.getRequiredProperty("host.virkailija"));
         properties.addDefault("host.alb", environment.getRequiredProperty("host.alb"));
+        properties.addDefault("url.virkailija", environment.getRequiredProperty("url.virkailija"));
         properties.addDefault("organisaatio.service.username", environment.getRequiredProperty("organisaatio.service.username"));
         properties.addDefault("organisaatio.service.password", environment.getRequiredProperty("organisaatio.service.password"));
         properties.addDefault("organisaatio.service.username.to.koodisto", environment.getRequiredProperty("organisaatio.service.username.to.koodisto"));

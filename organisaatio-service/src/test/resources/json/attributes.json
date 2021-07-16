@@ -1,0 +1,13 @@
+{
+  "teemup": {
+    "attributes": {
+      "oid": "1"
+    }
+  },
+  "lukash": {
+    "attributes": {
+      "oid": "2",
+      "authorities": [ "MALLASOIKEUS" ]
+    }
+  }
+}

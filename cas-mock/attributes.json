@@ -1,0 +1,11 @@
+{
+  "testuser": {
+    "attributes": {
+      "oid": "1.2.246.562.10.99999999999",
+      "authorities": [
+        "ROLE_APP_ORGANISAATIOHALLINTA",
+        "ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001"
+      ]
+    }
+  }
+}
