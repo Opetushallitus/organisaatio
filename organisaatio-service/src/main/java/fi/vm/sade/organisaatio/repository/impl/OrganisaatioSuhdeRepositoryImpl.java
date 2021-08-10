@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
     private OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
 
     @Autowired(required = true)
-    public OrganisaatioSuhdeRepositoryImpl(@Lazy OrganisaatioRepository organisaatioRepository, OrganisaatioSuhdeRepository organisaatioSuhdeRepository) {
+    public OrganisaatioSuhdeRepositoryImpl(@Lazy OrganisaatioRepository organisaatioRepository, @Lazy OrganisaatioSuhdeRepository organisaatioSuhdeRepository) {
         this.organisaatioRepository = organisaatioRepository;
         this.organisaatioSuhdeRepository = organisaatioSuhdeRepository;
     }
@@ -115,12 +116,13 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.child.id.eq(childId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
+
         List<OrganisaatioSuhde> suhteet = new JPAQuery<>(em).from(qSuhde)
                 .join(qSuhde.parent, qOrganisaatio).fetchJoin()
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
-                .select(qSuhde)
-                .fetch();
+               .select(qSuhde)
+               .fetch();
 
         if (suhteet != null && !suhteet.isEmpty()) {
             return suhteet.get(0);

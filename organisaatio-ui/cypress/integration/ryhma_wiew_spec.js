@@ -1,0 +1,27 @@
+describe('Organisaatiot Page', () => {
+  before(() => {
+    cy.visit('/organisaatio/ryhmat/1.2.246.562.28.64635646082');
+  })
+  it('Shows Humak Ryhma', () => {
+    expect(cy.get('#nimiFi').value).to.have.valueOf('Humak, alueyksikkö')
+  })
+  it('Can edit Swedish name', () => {
+    cy.get('#nimiSv').type('Humak Ruotsiksi');
+    expect(cy.get('#nimiSv').value).to.have.valueOf('Humak Ruotsiksi\'')
+  })
+  it('Can edit Swedish kuvaus', () => {
+    cy.get('#kuvaus2Sv').type('Humak Ruotsiksi');
+  })
+  it('will show validate error if there is no name set', () => {
+    cy.get('#nimiSv').clear();
+    cy.get('#nimiFi').clear();
+    cy.get('button').last().click();
+    cy.get('#nimiFi').should('be.visible').should('have.css', 'border-color').and('match', /228, 78, 78/);
+  })
+
+  /*
+  it('Can save edited organisation', () => {
+    cy.get('button').last().click()
+  })
+   */
+})
