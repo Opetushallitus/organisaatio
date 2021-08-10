@@ -256,7 +256,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
 
-
+        String opJarjNro;
+        if (oldOrg != null && isEmpty(oldOrg.getOpetuspisteenJarjNro()) && isEmpty(oldOrg.getToimipisteKoodi())) {
+            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit());
+            entity.setOpetuspisteenJarjNro(opJarjNro);
+        } else {
+            opJarjNro = entity.getOpetuspisteenJarjNro();
+        }
 
         boolean isVarhaiskasvatuksenToimipaikka = checkIfVarhaiskasvatuksenToimipaikka(entity);
         setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
@@ -268,7 +274,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         setYhteystietoArvot(entity, true);
 
-        generateNaturalToimipistekoodi(entity, oldOrg, parentOrg);
+        generateToimipistekoodi(entity, oldOrg, parentOrg);
 
         // call super.insert OR update which saves & validates jpa
         LOG.debug("updating " + entity);
@@ -283,16 +289,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (parentOrg != null && organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
             updateOrganisaatioNameHierarchy(entity, oldName);
         }
-
-
-        String opJarjNro;
-        if ((oldOrg != null && isEmpty(oldOrg.getOpetuspisteenJarjNro()) && isEmpty(oldOrg.getToimipisteKoodi()))) {
-            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit());
-            entity.setOpetuspisteenJarjNro(opJarjNro);
-        } else {
-            opJarjNro = entity.getOpetuspisteenJarjNro();
-        }
-
         // Saving the parent relationship
         entity = saveParentSuhteet(entity, parentOrg, opJarjNro);
 
@@ -334,7 +330,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
 
         Organisaatio oldOrg = null;
-        Map<String, String> oldName = null;
 
         // Asetetaan parent path
         setParentPath(entity, parentOid);
@@ -371,7 +366,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         setYhteystietoArvot(entity, false);
 
-        generateNaturalToimipistekoodi(entity, oldOrg, parentOrg);
+        generateToimipistekoodi(entity, oldOrg, parentOrg);
 
         //save org
         entity = organisaatioRepository.saveAndFlush(entity);
@@ -499,7 +494,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return ret;
     }
 
-    private String calculateToimipisteKoodi(Organisaatio org) {
+    public String calculateToimipisteKoodi(Organisaatio org) {
         return calculateToimipisteKoodi(org, org.getParent());
     }
 
@@ -510,39 +505,29 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
      * @param org Toimipiste
      * @return Toimipistekoodi
      */
-    private String calculateToimipisteKoodi(Organisaatio org, Organisaatio parent) {
-        LOG.debug("calculateToimipisteKoodi(org={})", org);
+    public static String calculateToimipisteKoodi(Organisaatio org, Organisaatio parent) {
 
         if (org == null) {
-            LOG.warn("  org  == null, return ''");
             return "";
         }
 
         if (organisaatioIsOfType(org, OrganisaatioTyyppi.OPPILAITOS)) {
-            LOG.debug("  org  == OPPILAITOS, return oppilaitoskoodi: '{}'", org.getOppilaitosKoodi());
             return org.getOppilaitosKoodi();
         }
 
         if (organisaatioIsOfType(org, OrganisaatioTyyppi.TOIMIPISTE)) {
-            LOG.debug("  org  == TOIMIPISTE, return parent opk/olk code AND this ones order number: '{}'", org.getOpetuspisteenJarjNro());
-
             Organisaatio parentOppilaitos = findParentOppilaitos(org, parent);
             if (parentOppilaitos == null) {
-                LOG.warn("Oppilaitos not found in parents");
                 return null;
             }
 
             String opJarjNro = org.getOpetuspisteenJarjNro();
             if (isEmpty(opJarjNro)) {
-                LOG.warn("Organisaatiolta {} puuttuu opetuspisteen järjestysnumero, return ''", org.getOid());
                 return "";
             }
 
             return parentOppilaitos.getOppilaitosKoodi() + opJarjNro;
         }
-
-        LOG.debug("calculateToimipisteKoodi == TYPE unknown?: types='{}'", org.getTyypit());
-
         return "";
     }
 
@@ -553,7 +538,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
      * @param organisaatioTyyppi Type to evaluate against
      * @return is organisaatio given type
      */
-    private boolean organisaatioIsOfType(Organisaatio org, OrganisaatioTyyppi organisaatioTyyppi) {
+    private static boolean organisaatioIsOfType(Organisaatio org, OrganisaatioTyyppi organisaatioTyyppi) {
         if (organisaatioTyyppi == null || org == null) {
             return false;
         }
@@ -649,7 +634,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setParentIdPath(parentIdPath.toString());
     }
 
-    private Organisaatio findParentOppilaitos(Organisaatio organisaatio, Organisaatio parent) {
+    private static Organisaatio findParentOppilaitos(Organisaatio organisaatio, Organisaatio parent) {
         Organisaatio currentParent = organisaatio.getParent();
 
         // Uuden organisaation luonnin yhteydessä ei parent-suhdetta ole välttämättä vielä
@@ -681,7 +666,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return false;
     }
 
-    private boolean isEmpty(String val) {
+    private static boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }
 
@@ -1275,7 +1260,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private void generateNaturalToimipistekoodi(Organisaatio entity, Organisaatio oldOrg, Organisaatio parentOrg) {
+    public void generateToimipistekoodi(Organisaatio entity, Organisaatio oldOrg, Organisaatio parentOrg) {
         // Generate natural key, OVT-4954
         // "Jos kyseessä on koulutustoimija pitäisi palauttaa y-tunnus."
         // "Jos oppilaitos, palautetaan oppilaitosnumero."
