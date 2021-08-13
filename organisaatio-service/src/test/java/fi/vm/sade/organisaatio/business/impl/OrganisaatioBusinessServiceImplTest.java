@@ -443,7 +443,9 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         this.jdbcTemplate.update("UPDATE organisaatio_nimi SET alkupvm = CURRENT_TIMESTAMP WHERE alkupvm > CURRENT_TIMESTAMP ");
         this.service.updateCurrentOrganisaatioNimet();
         Organisaatio oppilaitos = this.organisaatioFindBusinessService.findById(organisaatioResult.getOrganisaatio().getOid());
+
         assertThat(oppilaitos.getNimi().getString("fi")).isEqualTo("toinen nimi");
+        assertThat(oppilaitos.getNimihaku()).isEqualTo("toinen nimi");
         assertThat(oppilaitos.getPaivitysPvm()).isAfter(paivitysPvmOnCreate);
     }
 

@@ -1190,6 +1190,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             // Päiviteään organisaatiolle nimihistorian current nimi
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
+            organisaatio.setNimihaku(OrganisaatioNimiUtil.createNimihaku(organisaatio.getNimi()));
 
             // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
             if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {
