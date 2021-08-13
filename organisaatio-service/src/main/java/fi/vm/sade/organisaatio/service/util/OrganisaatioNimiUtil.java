@@ -24,6 +24,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -88,5 +92,16 @@ public class OrganisaatioNimiUtil {
             }
         }
         return false;
+    }
+
+    public static String createNimihaku(MonikielinenTeksti nimi) {
+        String nimihaku =  Optional
+                .ofNullable(nimi)
+                .map(MonikielinenTeksti::getValues)
+                .map(Map::values)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .collect(Collectors.joining(","));
+        return nimihaku.isBlank() ? null : nimihaku;
     }
 }
