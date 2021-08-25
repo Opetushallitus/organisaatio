@@ -446,7 +446,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="controls">
             <span ng-repeat="kieli in model.organisaatio.kieletUris">
                 <button type="button" class="btn btn-small" ng-click="model.removeLang(kieli, ytform);
-                            form.$dirty = true">{{model.uriLocalizedNames[kieli]}}&nbsp;<i class="icon-remove"></i></button>
+                            form.$dirty = true">{{model.uriLocalizedNames[stripVersion(kieli)]}}&nbsp;<i class="icon-remove"></i></button>
             </span>
             <select id="maa" ng-model="model.koodisto.kieliplaceholder"
                     ng-options="kieli.uri as kieli.nimi for kieli in model.koodisto.opetuskielet | orderBy:'nimi'" ng-required="false"

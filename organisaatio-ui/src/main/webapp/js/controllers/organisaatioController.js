@@ -527,4 +527,9 @@ app.controller('OrganisaatioController', function OrganisaatioController($scope,
         }
         return localisedKoodi;
     }
+
+    $scope.stripVersion = function(idWithVersion) {
+        return idWithVersion.replace(/#\d*$/,"");
+    }
+
 });
