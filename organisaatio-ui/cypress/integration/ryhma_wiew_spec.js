@@ -1,5 +1,16 @@
 describe('Organisaatiot Page', () => {
   before(() => {
+    cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' })
+    cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi', { fixture: 'organisaatiotyypit.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/RYHMANTILA/koodi', { fixture: 'ryhmantilat.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/RYHMATYYPIT/koodi', { fixture: 'ryhmatyypit.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/KAYTTORYHMAT/koodi', { fixture: 'kayttoryhmat.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/MAATJAVALTIOT1/koodi', { fixture: 'MAATJAVALTIOT.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/POSTI/koodi*', { fixture: 'POSTI.json' })
+    cy.intercept('GET', '/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi*', { fixture: 'OPPILAITOKSENOPETUSKIELI.json' })
+    cy.intercept('GET', '/organisaatio/organisaatio/v4/*', { fixture: 'humakRyhma.json' })
     cy.visit('/organisaatio/ryhmat/1.2.246.562.28.64635646082');
   })
   it('Shows Humak Ryhma', () => {

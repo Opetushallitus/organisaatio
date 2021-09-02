@@ -52,7 +52,7 @@
   "scripts": {
     "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
     "nginx": "docker-compose -f nginx/docker-compose.yml up",
-    "start": "BROWSER=none react-scripts start",
+    "start": "BROWSER=none PORT=3003 react-scripts start",
     "build": "CI='' react-scripts build",
     "test": "react-scripts test --coverage --watchAll=false",
     "updateSnaps": "react-scripts test --coverage --updateSnapshot --watchAll=false",
@@ -62,7 +62,9 @@
     "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
     "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'",
     "audit": "npm audit --only=prod --audit-level=critical",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:ci": "START_SERVER_AND_TEST_INSECURE=1 concurrently 'npm start' 'npm run cypress:run'"
   },
   "eslintConfig": {
     "extends": "react-app",
