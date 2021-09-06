@@ -1,17 +1,17 @@
 describe('Ryhmat Page', () => {
   beforeEach(() => {
-    cy.intercept('GET', '/organisaatio/organisaatio/v3/ryhmat*', { fixture: 'ryhmatArr.json' })
-    cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' })
-    cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi', { fixture: 'organisaatiotyypit.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/RYHMANTILA/koodi', { fixture: 'ryhmantilat.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/RYHMATYYPIT/koodi', { fixture: 'ryhmatyypit.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/KAYTTORYHMAT/koodi', { fixture: 'kayttoryhmat.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/MAATJAVALTIOT1/koodi', { fixture: 'MAATJAVALTIOT.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/POSTI/koodi*', { fixture: 'POSTI.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi*', { fixture: 'OPPILAITOKSENOPETUSKIELI.json' })
-    cy.intercept('GET', '/organisaatio/organisaatio/v4/*', { fixture: 'humakRyhma.json' })
+    cy.intercept('GET', '/organisaatio/organisaatio/v3/ryhmat*', { fixture: 'ryhmatArr.json' });
+    cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' });
+    cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi', { fixture: 'organisaatiotyypit.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/RYHMANTILA/koodi', { fixture: 'ryhmantilat.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/RYHMATYYPIT/koodi', { fixture: 'ryhmatyypit.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/KAYTTORYHMAT/koodi', { fixture: 'kayttoryhmat.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/MAATJAVALTIOT1/koodi', { fixture: 'MAATJAVALTIOT.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/POSTI/koodi*', { fixture: 'POSTI.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi*', { fixture: 'OPPILAITOKSENOPETUSKIELI.json' });
+    cy.intercept('GET', '/organisaatio/organisaatio/v4/*', { fixture: 'humakRyhma.json' });
   })
   it('Renders table of Ryhmat', () => {
     cy.visit('/ryhmat');
@@ -38,7 +38,10 @@ describe('Ryhmat Page', () => {
   it('Can use table pagination', () => {
     cy.get('table')
       .then(() => {
-        cy.get('button').contains('2').click()
+        cy.get('tbody').children().should('have.length', 10);
+        cy.get('button').contains('2').should('have.attr', 'color', 'secondary').click();
+        cy.get('tbody').children().should('have.length', 10);
+        cy.get('button').contains('2').should('have.attr', 'color', 'primary')
       })
   })
 
@@ -46,7 +49,7 @@ describe('Ryhmat Page', () => {
     cy.get('table')
       .then(() => {
         cy.get('tbody').children().should('have.length', 10);
-        cy.get('select').last().select('30')
+        cy.get('select').last().select('30');
         cy.get('tbody').children().should('have.length', 30);
       })
   })

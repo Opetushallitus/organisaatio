@@ -1,16 +1,16 @@
 describe('Organisaatiot Page', () => {
   before(() => {
-    cy.intercept('GET', '/organisaatio/organisaatio/v4/hierarkia/hae*', { fixture: 'opetushallitusOrgInArray.json' })
-    cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' })
-    cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi', { fixture: 'organisaatiotyypit.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/RYHMANTILA/koodi', { fixture: 'ryhmantilat.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/RYHMATYYPIT/koodi', { fixture: 'ryhmatyypit.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/KAYTTORYHMAT/koodi', { fixture: 'kayttoryhmat.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/MAATJAVALTIOT1/koodi', { fixture: 'MAATJAVALTIOT.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/POSTI/koodi*', { fixture: 'POSTI.json' })
-    cy.intercept('GET', '/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi*', { fixture: 'OPPILAITOKSENOPETUSKIELI.json' })
+    cy.intercept('GET', '/organisaatio/organisaatio/v4/hierarkia/hae*', { fixture: 'opetushallitusOrgInArray.json' });
+    cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' });
+    cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi', { fixture: 'organisaatiotyypit.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/RYHMANTILA/koodi', { fixture: 'ryhmantilat.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/RYHMATYYPIT/koodi', { fixture: 'ryhmatyypit.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/KAYTTORYHMAT/koodi', { fixture: 'kayttoryhmat.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/MAATJAVALTIOT1/koodi', { fixture: 'MAATJAVALTIOT.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/POSTI/koodi*', { fixture: 'POSTI.json' });
+    cy.intercept('GET', '/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi*', { fixture: 'OPPILAITOKSENOPETUSKIELI.json' });
     cy.visit('/');
   })
   it('Renders table of organisations', () => {
@@ -24,7 +24,7 @@ describe('Organisaatiot Page', () => {
         expect(cy.get('a').value).to.have.valueOf('Opetushallitus')
       })
   })
-  /*it('finds passive organisations too', () => {
+  /* TODO it('finds passive organisations too', () => {
     cy.get('table')
       .then(($table) => {
         cy.get('input').last().click();
