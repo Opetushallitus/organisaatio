@@ -30,10 +30,4 @@ describe('Organisaatiot Page', () => {
   it('Can edit Organisaatiohistoria', () => {
     cy.get('#accordion__heading-3 > span').click()
   })
-
-  /*
-  it('Can save edited organisation', () => {
-    cy.get('button').last().click()
-  })
-   */
 })

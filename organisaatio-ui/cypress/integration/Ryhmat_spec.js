@@ -1,4 +1,4 @@
-describe('Organisaatiot Page', () => {
+describe('Ryhmat Page', () => {
   beforeEach(() => {
     cy.intercept('GET', '/organisaatio/organisaatio/v3/ryhmat*', { fixture: 'ryhmatArr.json' })
     cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' })
@@ -18,21 +18,60 @@ describe('Organisaatiot Page', () => {
     cy.get('table', { timeout: 30000});
   })
 
+  it('Can use table filters', () => {
+    cy.get('table')
+      .then(() => {
+        cy.get('#react-select-3-input').type('koulutus{enter}{enter}', {force: true});
+        expect(cy.get('a').first().value).to.have.valueOf('Avoin AMK');
+        cy.get('#react-select-3-input').type('{backspace}{enter}', {force: true});
+
+        cy.get('#react-select-5-input').type('Priorisoiva{enter}{enter}', {force: true});
+        expect(cy.get('a').first().value).to.have.valueOf('Arcada 2nd Application');
+        cy.get('#react-select-5-input').type('{backspace}{enter}', {force: true});
+
+        cy.get('#react-select-7-input').type('Passiivinen{enter}{enter}', {force: true});
+        cy.get('tbody').children().should('have.length', 0);
+        cy.get('#react-select-7-input').type('{backspace}{enter}', {force: true});
+      })
+  })
+
+  it('Can use table pagination', () => {
+    cy.get('table')
+      .then(() => {
+        cy.get('button').contains('2').click()
+      })
+  })
+
+  it('Can use table näyta sivulla', () => {
+    cy.get('table')
+      .then(() => {
+        cy.get('tbody').children().should('have.length', 10);
+        cy.get('select').last().select('30')
+        cy.get('tbody').children().should('have.length', 30);
+      })
+  })
+
   it('Finds humak from table', () => {
     cy.get('table')
-      .then(($table) => {
+      .then(() => {
         cy.get('input').first().type('humak, alue');
-        expect(cy.get('a').value).to.have.valueOf('Humak, alueyksikkö')
+        expect(cy.get('a').value).to.have.valueOf('Humak, alueyksikkö');
       })
   })
 
   it('Can open humak organisation', () => {
     cy.get('table')
-      .then(($table) => {
-        cy.get('input').first().clear({ force: true }).type('humak, alue');
+      .then(() => {
         expect(cy.get('a').value).to.have.valueOf('Humak, alueyksikkö');
         cy.get('a').click();
+        expect(cy.get('h1').value).to.have.valueOf('Humak, alueyksikkö');
       })
   })
+  it('Can transition to create a new ryhma organisation', () => {
+      cy.visit('/ryhmat');
+      cy.get('table', { timeout: 30000}).then(() => {
+        cy.get('button').first().click();
+        expect(cy.get('h1').value).to.have.valueOf('');
+      });
+  })
 })
-

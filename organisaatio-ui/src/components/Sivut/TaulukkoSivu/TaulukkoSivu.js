@@ -38,7 +38,7 @@ const TaulukkoSivu = (props) => {
                 const response =
                     isOPHVirkailija || (!isOPHVirkailija && !omatOrganisaatiotSelected)
                         ? await Axios.get(
-                              `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.48587687889`
+                              `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`
                           )
                         : await Axios.get(
                               `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
