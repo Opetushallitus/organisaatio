@@ -79,7 +79,7 @@ const TaulukkoSivu = (props) => {
                 ) : null,
         },
         {
-            Header: i18n.translate('NIMI'),
+            Header: i18n.translate('TAULUKKO_NIMI'),
             id: 'Nimi',
             accessor: (values) => {
                 return values.nimi[language] || values.nimi.fi || values.nimi.sv || values.nimi.fi || values.nimi.en;
@@ -97,14 +97,14 @@ const TaulukkoSivu = (props) => {
             },
         },
         {
-            Header: i18n.translate('KUNTA'),
+            Header: i18n.translate('TAULUKKO_KUNTA'),
             accessor: (values) => {
                 const nimi = kuntaKoodisto.uri2Nimi(values.kotipaikkaUri);
                 return nimi || '';
             },
         },
         {
-            Header: i18n.translate('TYYPPI'),
+            Header: i18n.translate('TAULUKKO_TYYPPI'),
             accessor: (values) => values.organisaatiotyypit.map((ot) => ot),
             Cell: ({ row }) => (
                 <span>
@@ -113,15 +113,15 @@ const TaulukkoSivu = (props) => {
             ),
         },
         {
-            Header: i18n.translate('TUNNISTE'),
+            Header: i18n.translate('TAULUKKO_TUNNISTE'),
             accessor: 'ytunnus',
         },
         {
-            Header: 'Oid',
+            Header: i18n.translate('LABEL_OID'),
             accessor: 'oid',
         },
         {
-            Header: i18n.translate('TARKISTUS'),
+            Header: i18n.translate('TAULUKKO_TARKISTUS'),
             id: 'tarkistus',
             accessor: (values) => (tarkastaLipunVari(values.tarkastusPvm) ? null : 'tarkistus'),
             Cell: ({ row }) => (
@@ -149,7 +149,7 @@ const TaulukkoSivu = (props) => {
                     {isOPHVirkailija && (
                         <Button style={{ height: '3rem' }} onClick={handleLisaaUusiToimija}>
                             {' '}
-                            + {i18n.translate('LISAA_UUSI_TOIMIJA')}
+                            + {i18n.translate('TAULUKKO_LISAA_UUSI_TOIMIJA')}
                         </Button>
                     )}
                 </div>

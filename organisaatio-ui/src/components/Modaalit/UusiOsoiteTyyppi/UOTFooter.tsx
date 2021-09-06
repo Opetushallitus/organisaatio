@@ -13,10 +13,10 @@ export default function UOTFooter({ tallennaCallback, peruutaCallback }: Props) 
     return (
         <div className={styles.FooterRivi}>
             <Button className={styles.FooterButton} variant="outlined" onClick={peruutaCallback}>
-                {i18n.translate('PERUUTA')}
+                {i18n.translate('BUTTON_PERUUTA')}
             </Button>
             <Button className={styles.FooterButton} onClick={tallennaCallback}>
-                {i18n.translate('TALLENNA')}
+                {i18n.translate('BUTTON_TALLENNA')}
             </Button>
         </div>
     );

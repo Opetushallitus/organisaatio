@@ -79,7 +79,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                 </div>
                 <div className={styles.FiltteriRivi}>
                     <div className={styles.Kentta}>
-                        <label>{i18n.translate('RYHMAN_TYYPPI')}</label>
+                        <label>{i18n.translate('RYHMAT_RYHMAN_TYYPPI')}</label>
                         <Select
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
@@ -99,7 +99,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                         />
                     </div>
                     <div className={styles.Kentta}>
-                        <label>{i18n.translate('RYHMAN_KAYTTOTARKOITUS')}</label>
+                        <label>{i18n.translate('RYHMAT_RYHMAN_KAYTTOTARKOITUS')}</label>
                         <Select
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
@@ -119,7 +119,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                         />
                     </div>
                     <div className={styles.Kentta}>
-                        <label>{i18n.translate('RYHMAT_TILA')}</label>
+                        <label>{i18n.translate('RYHMAT_RYHMAT_TILA')}</label>
                         <Select
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined

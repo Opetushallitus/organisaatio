@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './LomakeSivu.module.css';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
@@ -14,7 +14,6 @@ import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomak
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
 import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLomake/OrganisaatioHistoriaLomake';
-import { useEffect } from 'react';
 import Axios from 'axios';
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
@@ -63,6 +62,7 @@ const LomakeSivu = (props: any) => {
                 console.error('error fetching', error);
             }
         }
+
         fetch();
     }, [params.oid]);
 
@@ -177,8 +177,8 @@ const LomakeSivu = (props: any) => {
                     </h1>
                 </div>
                 <div className={styles.ValiNappulat}>
-                    <Button>{i18n.translate('YHDISTA_ORGANISAATIO')}</Button>
-                    <Button>+ {i18n.translate('LISAA_UUSI_OPPILAITOS')}</Button>
+                    <Button>{i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}</Button>
+                    <Button>+ {i18n.translate('LOMAKE_LISAA_UUSI_OPPILAITOS')}</Button>
                 </div>
             </div>
             <div className={styles.PaaOsio}>
@@ -198,26 +198,31 @@ const LomakeSivu = (props: any) => {
                         <NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />,
                         <OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />,
                     ]}
-                    otsikot={['Perustiedot', 'Yhteystiedot', 'Nimihistoria', 'Organisaatiohistoria']}
+                    otsikot={[
+                        i18n.translate('LOMAKE_PERUSTIEDOT'),
+                        i18n.translate('LOMAKE_YHTEYSTIEDOT'),
+                        i18n.translate('LOMAKE_NIMIHISTORIA'),
+                        i18n.translate('LOMAKE_HISTORIA'),
+                    ]}
                 />
             </div>
             <div className={styles.AlaBanneri}>
                 <div className={styles.VersioContainer}>
                     <Button variant="outlined" className={styles.Versionappula}>
                         <span className="material-icons">timeline</span>
-                        <span className={styles.VersionappulanTeksti}>{i18n.translate('VERSIOHISTORIA')}</span>
+                        <span className={styles.VersionappulanTeksti}>{i18n.translate('BUTTON_VERSIOHISTORIA')}</span>
                     </Button>
                     <div className={styles.MuokattuKolumni}>
-                        <span>{i18n.translate('MUOKATTU_VIIMEKSI')}</span>
+                        <span>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
                         <span>01.01.2020 16:39 ngo Schimpff</span>
                     </div>
                 </div>
                 <div>
                     <Button variant="outlined" className={styles.Versionappula} onClick={() => props.history.push('/')}>
-                        {i18n.translate('SULJE_TIEDOT')}
+                        {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula} onClick={putOrganisaatio}>
-                        {i18n.translate('TALLENNA')}
+                        {i18n.translate('BUTTON_TALLENNA')}
                     </Button>
                 </div>
             </div>

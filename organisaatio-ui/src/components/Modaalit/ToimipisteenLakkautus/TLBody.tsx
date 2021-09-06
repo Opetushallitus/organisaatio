@@ -8,7 +8,7 @@ export default function TLBody() {
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyKentta}>
-                <label>{i18n.translate('NIMENMUUTOS_TULEE_VOIMAAN')}</label>
+                <label>{i18n.translate('TOIMIPISTEEN_LAKKAUTUS_PVM')}</label>
                 <Input value={''} />
             </div>
         </div>

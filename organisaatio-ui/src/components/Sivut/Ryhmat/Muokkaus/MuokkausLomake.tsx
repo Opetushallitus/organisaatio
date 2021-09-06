@@ -89,31 +89,31 @@ const MuokkausLomake = ({
                     </a>
                 </div>
                 <div>
-                    <a href="/organisaatio/ryhmat">{i18n.translate('KAIKKI_RYHMAT')}</a>
+                    <a href="/organisaatio/ryhmat">{i18n.translate('RYHMAT_KAIKKI_RYHMAT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>
                 <div className={styles.ValiContainer}>
                     <div className={styles.ValiOtsikko}>
-                        <h3>{i18n.translate('RYHMA')}</h3>
+                        <h3>{i18n.translate('RYHMAT_RYHMA')}</h3>
                         <h1>{mapLocalizedKoodiToLang(language, 'nimi', ryhma)}</h1>
                     </div>
                 </div>
                 <div className={styles.PaaOsio}>
                     <div className={styles.OtsikkoRivi}>
                         <div className={styles.Otsikko}>
-                            <h3>{i18n.translate('RYHMAN_TIEDOT_OTSIKKO')}</h3>
+                            <h3>{i18n.translate('RYHMAT_RYHMAN_TIEDOT_OTSIKKO')}</h3>
                         </div>
                     </div>
                     <div className={styles.OidRivi}>
-                        <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('OID')}</span>
+                        <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('LABEL_OID')}</span>
                         <span className={styles.ReadOnly}>{ryhma.oid || ''}</span>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
-                            <label>{i18n.translate('RYHMAN_NIMI')}</label>
+                            <label>{i18n.translate('RYHMAT_RYHMAN_NIMI')}</label>
                             <div className={styles.Rivi}>
-                                <label htmlFor={'nimiFi'}>{i18n.translate('SUOMEKSI')}</label>
+                                <label htmlFor={'nimiFi'}>{i18n.translate('LABEL_SUOMEKSI')}</label>
                                 <div className={styles.PitkaInput}>
                                     <Input
                                         disabled={isDisabled}
@@ -125,7 +125,7 @@ const MuokkausLomake = ({
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
-                                <label htmlFor={'nimiSv'}>{i18n.translate('RUOTSIKSI')}</label>
+                                <label htmlFor={'nimiSv'}>{i18n.translate('LABEL_RUOTSIKSI')}</label>
                                 <div className={styles.PitkaInput}>
                                     <Input
                                         disabled={isDisabled}
@@ -137,7 +137,7 @@ const MuokkausLomake = ({
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
-                                <label htmlFor={'nimiEn'}>{i18n.translate('ENGLANNIKSI')}</label>
+                                <label htmlFor={'nimiEn'}>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
                                 <div className={styles.PitkaInput}>
                                     <Input
                                         disabled={isDisabled}
@@ -152,9 +152,9 @@ const MuokkausLomake = ({
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
-                            <label>{i18n.translate('RYHMAN_KUVAUS')}</label>
+                            <label>{i18n.translate('RYHMAT_RYHMAN_KUVAUS')}</label>
                             <div className={styles.Rivi}>
-                                <label htmlFor={'kuvaus2Fi'}>{i18n.translate('SUOMEKSI')}</label>
+                                <label htmlFor={'kuvaus2Fi'}>{i18n.translate('LABEL_SUOMEKSI')}</label>
                                 <div className={styles.PitkaInput}>
                                     <Input
                                         error={!!validationErrors['kuvaus2Fi']}
@@ -165,7 +165,7 @@ const MuokkausLomake = ({
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
-                                <label htmlFor={'kuvaus2Sv'}>{i18n.translate('RUOTSIKSI')}</label>
+                                <label htmlFor={'kuvaus2Sv'}>{i18n.translate('LABEL_RUOTSIKSI')}</label>
                                 <div className={styles.PitkaInput}>
                                     <Input
                                         error={!!validationErrors['kuvaus2Sv']}
@@ -176,7 +176,7 @@ const MuokkausLomake = ({
                                 </div>
                             </div>
                             <div className={styles.Rivi}>
-                                <label htmlFor={'kuvaus2En'}>{i18n.translate('ENGLANNIKSI')}</label>
+                                <label htmlFor={'kuvaus2En'}>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
                                 <div className={styles.PitkaInput}>
                                     <Input
                                         error={!!validationErrors['kuvaus2En']}
@@ -190,7 +190,7 @@ const MuokkausLomake = ({
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
-                            <label>{i18n.translate('RYHMAN_TYYPPI')}</label>
+                            <label>{i18n.translate('RYHMAT_RYHMAN_TYYPPI')}</label>
                             <Controller
                                 control={control}
                                 name={'ryhmatyypit'}
@@ -209,7 +209,7 @@ const MuokkausLomake = ({
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
-                            <label>{i18n.translate('RYHMAN_KAYTTOTARKOITUS')}</label>
+                            <label>{i18n.translate('RYHMAT_RYHMAN_KAYTTOTARKOITUS')}</label>
                             <Controller
                                 control={control}
                                 name={'kayttoryhmat'}
@@ -230,12 +230,12 @@ const MuokkausLomake = ({
                         <div className={styles.AlinRivi}>
                             <Button name="passivoibutton" variant="outlined" onClick={handlePassivoi}>
                                 {ryhma.status === 'AKTIIVINEN'
-                                    ? i18n.translate('PASSIVOI_RYHMA')
-                                    : i18n.translate('AKTIVOI_RYHMA')}
+                                    ? i18n.translate('RYHMAT_PASSIVOI_RYHMA')
+                                    : i18n.translate('RYHMAT_AKTIVOI_RYHMA')}
                             </Button>
                             ,
                             <Button name="poistabutton" variant="outlined" onClick={handlePoista}>
-                                {i18n.translate('POISTA_RYHMA')}
+                                {i18n.translate('RYHMAT_POISTA_RYHMA')}
                             </Button>
                         </div>
                     )}
@@ -249,7 +249,7 @@ const MuokkausLomake = ({
                         className={styles.Versionappula}
                         onClick={handlePeruuta}
                     >
-                        {i18n.translate('SULJE_TIEDOT')}
+                        {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button
                         disabled={ryhma.status === 'PASSIIVINEN'}
@@ -257,7 +257,7 @@ const MuokkausLomake = ({
                         className={styles.Versionappula}
                         onClick={handleSubmit(handleTallenna)}
                     >
-                        {i18n.translate('TALLENNA')}
+                        {i18n.translate('BUTTON_TALLENNA')}
                     </Button>
                 </div>
             </div>
