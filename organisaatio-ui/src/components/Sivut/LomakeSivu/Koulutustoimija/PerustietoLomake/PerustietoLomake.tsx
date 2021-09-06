@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import styles from './PerustietoLomake.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { useContext, useState } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
 import TNHeader from '../../../../Modaalit/ToimipisteenNimenmuutos/TNHeader';
@@ -17,7 +17,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { YtjOrganisaatio, Organisaatio } from '../../../../../types/types';
+import { Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 
 type OrganisaatioProps = {
     organisaatio: any;
@@ -81,10 +81,14 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('LABEL_OID')}</span>
                     <span className={styles.ReadOnly}>{organisaatio.oid}</span>
                     {organisaatio.yritysmuoto && [
-                        <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('PERUSTIETO_YRITYSMUOTO')}</span>,
+                        <span className={styles.AvainKevyestiBoldattu}>
+                            {i18n.translate('PERUSTIETO_YRITYSMUOTO')}
+                        </span>,
                         <span className={styles.ReadOnly}>{organisaatio.yritysmuoto}</span>,
                     ]}
-                    <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}</span>
+                    <span className={styles.AvainKevyestiBoldattu}>
+                        {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
+                    </span>
                     <span className={styles.ReadOnly}>
                         {organisaatio.nimi[language] ||
                             organisaatio.nimi['fi'] ||

@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { Organisaatio } from '../../../../../types/types';
-import { useContext } from 'react';
 import { LanguageContext } from '../../../../../contexts/contexts';
 
 type nimiHistoriaProps = {
@@ -16,7 +16,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
 
     const columns = [
         {
-            Header: i18n.translate('NIMIHISTORIA_NIMEN_VOIMASSAOLO') ,
+            Header: i18n.translate('NIMIHISTORIA_NIMEN_VOIMASSAOLO'),
             accessor: 'alkuPvm',
         },
         {
