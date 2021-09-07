@@ -197,6 +197,7 @@ const MuokkausLomake = ({
                                 defaultValue={ryhmaTyypit}
                                 render={({ field }) => (
                                     <Select
+                                        id="RYHMALOMAKE_RYHMAN_TYYPPI_SELECT"
                                         {...field}
                                         error={!!validationErrors['ryhmatyypit']}
                                         isMulti
@@ -216,6 +217,7 @@ const MuokkausLomake = ({
                                 defaultValue={kayttoRyhmat}
                                 render={({ field }) => (
                                     <Select
+                                        id="RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT"
                                         {...field}
                                         error={!!validationErrors['kayttoryhmat']}
                                         isMulti

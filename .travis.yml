@@ -1,12 +1,3 @@
-sudo: required
-language: java
-jdk:
-  - openjdk11
-services:
-  - docker
-cache:
-  directories:
-    - $HOME/.gradle
 env:
   global:
     # ARTIFACTORY_USERNAME
@@ -17,30 +8,69 @@ env:
     - secure: "Fzy+TYEe3HNZ1gFPbvDQ+7CQLJoAU146ch1Lg62AqD6qvLOW13CN71x1opBHn87tgwbAMu+R87NHfHv1D9IsBY4pWy4rh3OE0kKdiBlsktvbOYIgGdNqugtIISniIM+VV3U9LkSHlkQk7qFHvvaI2PgmhEAOltK3qMjEcDkV2vY="
     # AWS_SECRET_ACCESS_KEY
     - secure: "PHCsorIqkSQ7IjSGEHQcRZ7rrdyNpfc72VGJAHZnPrRREfPxh+nI9n48VrSrIXrZSX5o0GpkJK8147UxON6lXbE2pLXQWBNNt9D5i73OD63JY00olDcdNuVRmy0SQ2bApqphVnAyU98c/QYxKhMx6EM2W4COmXl+q1n1NtCm+O4="
+jobs:
+  include:
+    - language: node_js
+      node_js:
+        # Node 10.3+ includes npm@6 which has good "npm ci" command
+        - 11.1
 
-install:
-  - git clone https://github.com/Opetushallitus/ci-tools.git
-  - source ci-tools/common/setup-tools.sh
-  - export ARTIFACT_NAME="organisaatio2"
-  - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
-  - export TZ=Europe/Helsinki # TODO: fix tests
+      # if using Ubuntu 16 need this library
+      # https://github.com/cypress-io/cypress-documentation/pull/1647
+      addons:
+        apt:
+          packages:
+            - libgconf-2-4
 
-script:
-  - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-  - mv organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
-  - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+      cache:
+        # cache both npm modules and Cypress binary
+        directories:
+         # - ~/.npm
+         # - ~/.cache
 
-  - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
-  - ./ci-tools/common/pull-image.sh
-  - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
+      script:
+        - cd organisaatio-ui && npm ci && npm install serve -g
+        # start server in the background
+        - PUBLIC_URL=/ npm run build
+        - serve -s build -l 3003 &
+        # run all Cypress tests and record on the dashboard
+        - npm run cypress:run
+        # after all tests finish running we need
+        # to kill all background jobs (like "npm start &")
+        # this avoids flake in Travis jobs
+        - kill $(jobs -p) || true
+    - language: java
+      sudo: required
+      jdk:
+        - openjdk11
+      services:
+        - docker
+      cache:
+        directories:
+          - $HOME/.gradle
+      install:
+        - git clone https://github.com/Opetushallitus/ci-tools.git
+        - source ci-tools/common/setup-tools.sh
+        - export ARTIFACT_NAME="organisaatio2"
+        - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
+        - export TZ=Europe/Helsinki # TODO: fix tests
 
-deploy:
-  ##- provider: script
-  ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
-  ##  skip_cleanup: true
-  ##  on:
-  ##    branch: master TODO deploy gradlella?
-  - provider: script
-    script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
-    on:
-      all_branches: true
+      script:
+        - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+        - mv organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
+        - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+
+        - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
+        - ./ci-tools/common/pull-image.sh
+        - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
+
+      deploy:
+        ##- provider: script
+        ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
+        ##  skip_cleanup: true
+        ##  on:
+        ##    branch: master TODO deploy gradlella?
+        - provider: script
+          script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+          on:
+            all_branches: true

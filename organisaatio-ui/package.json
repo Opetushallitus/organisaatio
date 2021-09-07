@@ -66,7 +66,7 @@
     "audit": "npm audit --only=prod --audit-level=critical",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:ci": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003/organisaatio && npm run cypress:run' 'npm start'"
+    "cypress:test": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003 && npm run cypress:run' 'npm run start'"
   },
   "eslintConfig": {
     "extends": "react-app",

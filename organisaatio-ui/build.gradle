@@ -29,14 +29,14 @@ task uiTest(type: NpmTask, dependsOn: checkFormatting) {
 	args = ['run', 'test']
 }
 
-task igTest(type: NpmTask, dependsOn: uiTest) {
+task igTest(type: NpmTask) {
 	inputs.files(files('src'))
 	outputs.dir('src')
 	environment = ['CI': 'true']
-	args = ['run', 'cypress:ci']
+	args = ['run', 'cypress:test']
 }
 
-task bundle(type: NpmTask, dependsOn: igTest) {
+task bundle(type: NpmTask, dependsOn: uiTest) {
 	inputs.files(files('src', 'public'))
 	outputs.dir("${buildDir}")
 	args = ['run', 'build']

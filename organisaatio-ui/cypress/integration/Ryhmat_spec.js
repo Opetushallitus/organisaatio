@@ -21,17 +21,17 @@ describe('Ryhmat Page', () => {
   it('Can use table filters', () => {
     cy.get('table')
       .then(() => {
-        cy.get('#react-select-3-input').type('koulutus{enter}{enter}', {force: true});
+        cy.get('#RYHMAN_TYYPPI_SELECT input').type('koulutus{enter}{enter}', {force: true});
         expect(cy.get('a').first().value).to.have.valueOf('Avoin AMK');
-        cy.get('#react-select-3-input').type('{backspace}{enter}', {force: true});
+        cy.get('#RYHMAN_TYYPPI_SELECT input').type('{backspace}{enter}', {force: true});
 
-        cy.get('#react-select-5-input').type('Priorisoiva{enter}{enter}', {force: true});
+        cy.get('#RYHMAN_KAYTTOTARKOITUS_SELECT input').type('Priorisoiva{enter}{enter}', {force: true});
         expect(cy.get('a').first().value).to.have.valueOf('Arcada 2nd Application');
-        cy.get('#react-select-5-input').type('{backspace}{enter}', {force: true});
+        cy.get('#RYHMAN_KAYTTOTARKOITUS_SELECT input').type('{backspace}{enter}', {force: true});
 
-        cy.get('#react-select-7-input').type('Passiivinen{enter}{enter}', {force: true});
+        cy.get('#RYHMAN_TILA_SELECT input').type('Passiivinen{enter}{enter}', {force: true});
         cy.get('tbody').children().should('have.length', 0);
-        cy.get('#react-select-7-input').type('{backspace}{enter}', {force: true});
+        cy.get('#RYHMAN_TILA_SELECT input').type('{backspace}{enter}', {force: true});
       })
   })
 
