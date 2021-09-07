@@ -168,7 +168,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <div class="controls">
             <label class="control-label control-label-left">
                 <div ng-repeat="kieli in model.organisaatio.kieletUris">
-                    {{model.uriLocalizedNames[kieli]}}<br>
+                    {{model.uriLocalizedNames[stripVersion(kieli)]}}<br>
                 </div>
             </label>
         </div>
