@@ -6,8 +6,8 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
     className="YlaBanneri"
   >
     <div>
-      <a
-        href="/organisaatio/ryhmat"
+      <Link
+        to="/ryhmat"
       >
         <Icon
           icon={
@@ -18,14 +18,14 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             }
           }
         />
-      </a>
+      </Link>
     </div>
     <div>
-      <a
-        href="/organisaatio/ryhmat"
+      <Link
+        to="/ryhmat"
       >
         RYHMAT_KAIKKI_RYHMAT
-      </a>
+      </Link>
     </div>
   </div>
   <div

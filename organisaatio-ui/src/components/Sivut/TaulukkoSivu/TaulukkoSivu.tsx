@@ -11,6 +11,8 @@ import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/Or
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
+import { Organisaatio } from '../../../types/types';
+import { Link } from 'react-router-dom';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -25,7 +27,7 @@ const TaulukkoSivu = (props) => {
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
 
-    const [organisaatiot, setOrganisaatiot] = useState([]);
+    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[] | undefined[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
     const [isOPHVirkailija, setIsOPHVirkailija] = React.useState(true);
@@ -86,13 +88,13 @@ const TaulukkoSivu = (props) => {
             },
             Cell: ({ row }) => {
                 return (
-                    <a href={`/organisaatio/lomake/${row.original.oid}`}>
+                    <Link to={`/lomake/${row.original.oid}`}>
                         {row.original.nimi[language] ||
                             row.original.nimi.fi ||
                             row.original.nimi.sv ||
                             row.original.nimi.fi ||
                             row.original.nimi.en}
-                    </a>
+                    </Link>
                 );
             },
         },

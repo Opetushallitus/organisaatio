@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import Ryhmat from './Ryhmat';
 import axios, { AxiosResponse } from 'axios';
 import { Ryhma } from '../../../types/types';
+import { BrowserRouter } from 'react-router-dom';
 
 jest.mock('@opetushallitus/virkailija-ui-components/Spin', () => () => <div>Spin</div>);
 jest.mock('@opetushallitus/virkailija-ui-components/Button', () => () => <button key={Math.random()}>btn</button>);
@@ -19,7 +20,11 @@ afterAll(() => {
 describe('Ryhmat', () => {
     describe('Rendering', () => {
         it('Renders Spinner when there is no data', () => {
-            render(<Ryhmat />);
+            render(
+                <BrowserRouter basename="/organisaatio">
+                    <Ryhmat />
+                </BrowserRouter>
+            );
             expect(screen.getByText('Spin')).toBeInTheDocument();
         });
 
@@ -39,7 +44,11 @@ describe('Ryhmat', () => {
             } as Partial<AxiosResponse>;
             (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
 
-            render(<Ryhmat />);
+            render(
+                <BrowserRouter basename="/organisaatio">
+                    <Ryhmat />
+                </BrowserRouter>
+            );
             expect(await screen.findByRole('table')).toBeInTheDocument();
         });
     });

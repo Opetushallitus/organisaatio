@@ -15,6 +15,7 @@ import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoL
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 import Axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
@@ -122,10 +123,10 @@ const UusiToimijaLomake = (props: any) => {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/">
+                    <Link to="/">
                         <Icon icon={homeIcon} />
                         {i18n.translate('UUSI_TOIMIJA_TITLE')}
-                    </a>
+                    </Link>
                 </div>
             </div>
             <div className={styles.ValiContainer}>

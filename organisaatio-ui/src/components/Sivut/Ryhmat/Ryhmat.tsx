@@ -12,7 +12,7 @@ import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Column } from 'react-table';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const Ryhmat = () => {
     const { i18n, language } = useContext(LanguageContext);
@@ -26,9 +26,9 @@ const Ryhmat = () => {
                 id: 'Nimi',
                 Cell: ({ row }) => {
                     return (
-                        <a href={`/organisaatio/ryhmat/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
+                        <Link to={`/ryhmat/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
                             {mapLocalizedKoodiToLang(language, 'nimi', row.original)}
-                        </a>
+                        </Link>
                     );
                 },
                 accessor: (values) => {

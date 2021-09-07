@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { useTable } from 'react-table';
 
-export default function YksinkertainenTaulukko({ data: inputData = [], tableColumns = [] }) {
+export default function YksinkertainenTaulukko({
+    data: inputData = [],
+    tableColumns = [],
+}: {
+    data: any[];
+    tableColumns: any[];
+}) {
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => inputData, [inputData]);
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable({ columns, data });
     return (
-        <table {...getTableProps()} style={{ borderSpacing: 0 }}>
+        <table {...getTableProps()} style={{ borderSpacing: 0, paddingTop: 20 }}>
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>

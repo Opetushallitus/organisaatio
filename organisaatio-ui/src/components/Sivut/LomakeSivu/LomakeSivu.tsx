@@ -17,6 +17,7 @@ import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLo
 import Axios from 'axios';
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
+import { Link } from 'react-router-dom';
 
 const LomakeSivu = (props: any) => {
     const { i18n, language } = useContext(LanguageContext);
@@ -153,15 +154,13 @@ const LomakeSivu = (props: any) => {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/">
+                    <Link to="/">
                         <Icon icon={homeIcon} />
-                    </a>
+                    </Link>
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [
                     <div>
-                        <a href={`/organisaatio/lomake/${o.oid}`}>
-                            {o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}
-                        </a>
+                        <Link to={`${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</Link>
                     </div>,
                     organisaatioNimiPolku.length - 1 !== index && <div> &gt; </div>,
                 ])}
@@ -202,7 +201,7 @@ const LomakeSivu = (props: any) => {
                         i18n.translate('LOMAKE_PERUSTIEDOT'),
                         i18n.translate('LOMAKE_YHTEYSTIEDOT'),
                         i18n.translate('LOMAKE_NIMIHISTORIA'),
-                        i18n.translate('LOMAKE_HISTORIA'),
+                        i18n.translate('LOMAKE_RAKENNE'),
                     ]}
                 />
             </div>

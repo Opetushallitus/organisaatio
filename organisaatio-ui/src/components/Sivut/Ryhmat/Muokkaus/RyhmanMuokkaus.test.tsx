@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { History } from 'history';
 
 import RyhmanMuokkaus, { RyhmanMuokausProps } from './RyhmanMuokkaus';
-import { RouteComponentProps, match } from 'react-router-dom';
+import { RouteComponentProps, match, BrowserRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { Ryhma } from '../../../../types/types';
 import axios, { AxiosResponse } from 'axios';
@@ -62,17 +62,29 @@ describe('RyhmanMuokkaus', () => {
         (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
     });
     it('Renders Spinner when there is no ryhma and is not new', () => {
-        render(<RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />);
+        render(
+            <BrowserRouter basename="/organisaatio">
+                <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+            </BrowserRouter>
+        );
         expect(screen.getByText('Spin')).toBeInTheDocument();
     });
 
     it('Renders form after there is ryhma when is not new', async () => {
-        render(<RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />);
+        render(
+            <BrowserRouter basename="/organisaatio">
+                <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+            </BrowserRouter>
+        );
         expect(await screen.findByText('Suominimi')).toBeInTheDocument();
     });
 
     it('Renders new ryhma form using empty ryhma when isNew prop is added', async () => {
-        render(<RyhmanMuokkaus isNew {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />);
+        render(
+            <BrowserRouter basename="/organisaatio">
+                <RyhmanMuokkaus isNew {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+            </BrowserRouter>
+        );
         const alinRivi = screen.queryAllByRole('generic').find((div) => div.className === 'AlinRivi');
         const alaBanneri = screen.queryAllByRole('generic').find((div) => div.className === 'AlaBanneri');
         expect(alaBanneri).toBeInTheDocument();
@@ -83,7 +95,11 @@ describe('RyhmanMuokkaus', () => {
             match: { params: {} },
             history: { location: { pathname: '/uusi' }, push: jest.fn() },
         };
-        render(<RyhmanMuokkaus {...(UUSIPROPS as RouteComponentProps<RyhmanMuokausProps>)} />);
+        render(
+            <BrowserRouter basename="/organisaatio">
+                <RyhmanMuokkaus {...(UUSIPROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+            </BrowserRouter>
+        );
         const alinRivi = screen.queryAllByRole('generic').find((div) => div.className === 'AlinRivi');
         const alaBanneri = screen.queryAllByRole('generic').find((div) => div.className === 'AlaBanneri');
         expect(alaBanneri).toBeInTheDocument();
