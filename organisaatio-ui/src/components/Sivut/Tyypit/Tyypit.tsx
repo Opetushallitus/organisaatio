@@ -82,8 +82,8 @@ const Tyypit = (props: Props) => {
                 <div className={styles.Otsikko}>
                     <h3>
                         {props.tyyppi === 'yhteystietojentyyppi'
-                            ? i18n.translate('YHTEYSTIETOTYYPIT_OTSIKKO')
-                            : i18n.translate('LISÄTIETOTYYPIT_OTSIKKO')}
+                            ? i18n.translate('TYYPIT_YHTEYSTIETOTYYPIT_OTSIKKO')
+                            : i18n.translate('TYYPIT_LISÄTIETOTYYPIT_OTSIKKO')}
                     </h3>
                 </div>
                 <div>
@@ -91,8 +91,8 @@ const Tyypit = (props: Props) => {
                         {' '}
                         +{' '}
                         {props.tyyppi === 'yhteystietojentyyppi'
-                            ? i18n.translate('YHTEYSTIETOTYYPIT_LISAA_UUSI')
-                            : i18n.translate('LISÄTIETOTYYPIT_LISAA_UUSI')}
+                            ? i18n.translate('TYYPIT_YHTEYSTIETOTYYPIT_LISAA_UUSI')
+                            : i18n.translate('TYYPIT_LISÄTIETOTYYPIT_LISAA_UUSI')}
                     </Button>
                 </div>
             </div>

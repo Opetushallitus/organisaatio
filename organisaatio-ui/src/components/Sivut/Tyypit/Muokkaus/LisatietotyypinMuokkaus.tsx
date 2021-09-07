@@ -73,37 +73,37 @@ export default function LisatietotyypinMuokkaus(props: Props) {
                     </a>
                 </div>
                 <div>
-                    <a href="/organisaatio/lisatietotyypit">{i18n.translate('KAIKKI_LISATIETOTYYPIT')}</a>
+                    <a href="/organisaatio/lisatietotyypit">{i18n.translate('TYYPIT_KAIKKI_LISATIETOTYYPIT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>
                 <div className={styles.ValiContainer}>
                     <div className={styles.ValiOtsikko}>
-                        <h3>{i18n.translate('LISATIETOTYYPPI')}</h3>
-                        <h1>{i18n.translate('UUDEN_LISATIETOTYYPIN_LISAAMINEN')}</h1>
+                        <h3>{i18n.translate('TYYPIT_LISATIETOTYYPPI')}</h3>
+                        <h1>{i18n.translate('TYYPIT_UUDEN_LISATIETOTYYPIN_LISAAMINEN')}</h1>
                     </div>
                 </div>
                 <div className={styles.PaaOsio}>
                     <div className={styles.OtsikkoRivi}>
                         <div className={styles.Otsikko}>
-                            <h3>{i18n.translate('LISATIETOTYYPPI_LISAA_UUSI_OTSIKKO')}</h3>
+                            <h3>{i18n.translate('TYYPIT_LISATIETOTYYPPI_LISAA_UUSI_OTSIKKO')}</h3>
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
-                            <label>{i18n.translate('LISATIETOTYYPPI_NIMI')}</label>
+                            <label>{i18n.translate('TYYPIT_LISATIETOTYYPPI_NIMI')}</label>
                             <Input value={lisatietotyyppi ? lisatietotyyppi.nimi : ''} />
                         </div>
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
-                            <div>{i18n.translate('SALLITUT_OPPILAITOSTYYPIT')}</div>
+                            <div>{i18n.translate('TYYPIT_SALLITUT_OPPILAITOSTYYPIT')}</div>
                             <div className={styles.MonivalintaKentta}>
                                 <RadioGroup
                                     value={isKaikkiValittu}
                                     options={[
-                                        { value: '1', label: i18n.translate('KAIKKI') },
-                                        { value: '0', label: i18n.translate('RAJATUT_OPPILAITOSTYYPIT') },
+                                        { value: '1', label: i18n.translate('TYYPIT_KAIKKI') },
+                                        { value: '0', label: i18n.translate('TYYPIT_RAJATUT_OPPILAITOSTYYPIT') },
                                     ]}
                                     onChange={(e) => setIsKaikkiValittu(e.target.value)}
                                 />
@@ -126,18 +126,18 @@ export default function LisatietotyypinMuokkaus(props: Props) {
                 <div className={styles.VersioContainer}>
                     <Button variant="outlined" className={styles.Versionappula}>
                         <span className="material-icons">timeline</span>
-                        <span className={styles.VersionappulanTeksti}>{i18n.translate('VERSIOHISTORIA')}</span>
+                        <span className={styles.VersionappulanTeksti}>{i18n.translate('BUTTON_VERSIOHISTORIA')}</span>
                     </Button>
                     <div className={styles.MuokattuKolumni}>
-                        <span>{i18n.translate('MUOKATTU_VIIMEKSI')}</span>
+                        <span>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
                         <span>01.01.2020 16:39 ingo Schimpff</span>
                     </div>
                 </div>
                 <div>
                     <Button variant="outlined" className={styles.Versionappula}>
-                        {i18n.translate('SULJE_TIEDOT')}
+                        {i18n.translate('BUTTON_SULJE')}
                     </Button>
-                    <Button className={styles.Versionappula}>{i18n.translate('TALLENNA')}</Button>
+                    <Button className={styles.Versionappula}>{i18n.translate('BUTTON_TALLENNA')}</Button>
                 </div>
             </div>
         </PohjaSivu>

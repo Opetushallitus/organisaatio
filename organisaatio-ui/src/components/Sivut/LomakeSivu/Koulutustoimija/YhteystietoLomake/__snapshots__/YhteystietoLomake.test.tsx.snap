@@ -133,7 +133,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       id="checkbox"
       onChange={[Function]}
     >
-      Postiosoite on sama kuin käyntiosoite
+      YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE
     </ForwardRef>
   </div>
   <div
@@ -143,7 +143,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="Kentta"
     >
       <label>
-        Postiosoite
+        YHTEYSTIEDOT_POSTIOSOITE
       </label>
       <ForwardRef
         name="posti.osoite"
@@ -155,7 +155,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="KenttaLyhyt"
     >
       <label>
-        Postinumero
+        YHTEYSTIEDOT_POSTINUMERO
       </label>
       <ForwardRef
         name="posti.postinumeroUri"
@@ -171,7 +171,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="Kentta"
     >
       <label>
-        Käyntiosoite
+        YHTEYSTIEDOT_KAYNTIOSOITE
       </label>
       <ForwardRef
         disabled={false}
@@ -184,7 +184,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="KenttaLyhyt"
     >
       <label>
-        Postinumero
+        YHTEYSTIEDOT_POSTINUMERO
       </label>
       <ForwardRef
         disabled={false}
@@ -201,7 +201,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="Kentta"
     >
       <label>
-        Puhelinnumero
+        YHTEYSTIEDOT_PUHELINNUMERO
       </label>
       <ForwardRef
         name="numero"
@@ -217,7 +217,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="Kentta"
     >
       <label>
-        Sähköpostiosoite
+        YHTEYSTIEDOT_SAHKOPOSTIOSOITE
       </label>
       <ForwardRef
         name="email"
@@ -233,7 +233,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
       className="Kentta"
     >
       <label>
-        Www-osoite
+        YHTEYSTIEDOT_WWW_OSOITE
       </label>
       <ForwardRef
         name="www"

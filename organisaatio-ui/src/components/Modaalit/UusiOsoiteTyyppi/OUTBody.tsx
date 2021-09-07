@@ -8,19 +8,19 @@ export default function OUTBody() {
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.Rivi}>
-                <label>{i18n.translate('SUOMEKSI')}</label>
+                <label>{i18n.translate('LABEL_SUOMEKSI')}</label>
                 <div className={styles.PitkaInput}>
                     <Input value={''} />
                 </div>
             </div>
             <div className={styles.Rivi}>
-                <label>{i18n.translate('RUOTSIKSI')}</label>
+                <label>{i18n.translate('LABEL_RUOTSIKSI')}</label>
                 <div className={styles.PitkaInput}>
                     <Input value={''} />
                 </div>{' '}
             </div>
             <div className={styles.Rivi}>
-                <label>{i18n.translate('ENGLANNIKSI')}</label>
+                <label>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
                 <div className={styles.PitkaInput}>
                     <Input value={''} />
                 </div>{' '}

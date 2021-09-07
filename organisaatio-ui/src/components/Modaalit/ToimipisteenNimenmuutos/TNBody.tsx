@@ -30,15 +30,15 @@ export default function TNBody(props: TNProps) {
         <div className={styles.BodyKehys}>
             <div className={styles.BodyKentta}>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('SUOMEKSI')}</label>
+                    <label>{i18n.translate('LABEL_SUOMEKSI')}</label>
                     <Input name="fi" value={nimi.fi || ''} onChange={handleOnChange} />
                 </div>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('RUOTSIKSI')}</label>
+                    <label>{i18n.translate('LABEL_RUOTSIKSI')}</label>
                     <Input name="sv" value={nimi.sv || ''} onChange={handleOnChange} />
                 </div>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ENGLANNIKSI')}</label>
+                    <label>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
                     <Input name="en" value={nimi.en || ''} onChange={handleOnChange} />
                 </div>
             </div>

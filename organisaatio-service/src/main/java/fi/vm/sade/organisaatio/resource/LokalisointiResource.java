@@ -27,7 +27,7 @@ public class LokalisointiResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Tuo Lokalisoinnit")
     public Map<String, Map<String, String>> getLokalisointi() {
-        return lokalisointiClient.getByCategory("organisaatio");
+        return lokalisointiClient.getByCategory("organisaatio2");
     }
 
     @GetMapping(path= "/kieli", produces = "application/json;charset=UTF-8")

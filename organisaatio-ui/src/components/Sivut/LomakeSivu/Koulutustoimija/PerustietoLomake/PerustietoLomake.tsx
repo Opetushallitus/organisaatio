@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import styles from './PerustietoLomake.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { useContext, useState } from 'react';
-import { KoodistoContext } from '../../../../../contexts/contexts';
+import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
 import TNHeader from '../../../../Modaalit/ToimipisteenNimenmuutos/TNHeader';
 import TNBody from '../../../../Modaalit/ToimipisteenNimenmuutos/TNBody';
@@ -17,7 +17,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { YtjOrganisaatio, Organisaatio } from '../../../../../types/types';
+import { Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 
 type OrganisaatioProps = {
     organisaatio: any;
@@ -36,6 +36,7 @@ interface iOption {
 
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
+    const { i18n } = useContext(LanguageContext);
     const {
         organisaatio,
         organisaatioTyypit,
@@ -77,13 +78,17 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
                 <div className={styles.Ruudukko}>
-                    <span className={styles.AvainKevyestiBoldattu}> OID</span>
+                    <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('LABEL_OID')}</span>
                     <span className={styles.ReadOnly}>{organisaatio.oid}</span>
                     {organisaatio.yritysmuoto && [
-                        <span className={styles.AvainKevyestiBoldattu}>Yritysmuoto</span>,
+                        <span className={styles.AvainKevyestiBoldattu}>
+                            {i18n.translate('PERUSTIETO_YRITYSMUOTO')}
+                        </span>,
                         <span className={styles.ReadOnly}>{organisaatio.yritysmuoto}</span>,
                     ]}
-                    <span className={styles.AvainKevyestiBoldattu}>Organisaation nimi</span>
+                    <span className={styles.AvainKevyestiBoldattu}>
+                        {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
+                    </span>
                     <span className={styles.ReadOnly}>
                         {organisaatio.nimi[language] ||
                             organisaatio.nimi['fi'] ||
@@ -93,13 +98,13 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                 </div>
                 <div>
                     <Button className={styles.Nappi} variant="outlined" onClick={() => setNimenmuutosModaaliAuki(true)}>
-                        Muokkaa organisaation nimeä
+                        {i18n.translate('PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA')}
                     </Button>
                 </div>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Y-tunnus</label>
+                    <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
                     <Input
                         name="ytunnus"
                         value={organisaatio.ytunnus || ''}
@@ -107,12 +112,12 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     />
                 </div>
                 <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
-                    Päivitä YTJ-tiedot
+                    {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
                 </Button>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Organisaatiotyyppi *</label>
+                    <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>
                     <CheckboxGroup
                         value={[...organisaatio.tyypit]}
                         options={organisaatioTyypit.map((oT: any) => ({
@@ -128,19 +133,19 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Organisaatio merkitty rekisteriin (perustamispäivämäärä)</label>
+                    <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
                     <DatePickerInput
                         value={organisaatio.alkuPvm}
                         onChange={(date: Date) => handleOnChange({ name: 'alkuPvm', value: date })}
                     />
                 </div>
                 <Button className={styles.Nappi} variant="outlined" onClick={() => setLakkautusModaaliAuki(true)}>
-                    Merkitse organisaatio lakkautetuksi
+                    {i18n.translate('PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI')}
                 </Button>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Pääsijaintikunta</label>
+                    <label>{i18n.translate('PERUSTIETO_PAASIJAINTIKUNTA')}</label>
                     <Select
                         value={kaikkiKunnat.find((kk) => kk.value === organisaatio.kotipaikkaUri)}
                         options={kaikkiKunnat}
@@ -150,7 +155,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     />
                 </div>
                 <div className={styles.Kentta}>
-                    <label>Muut kunnat</label>
+                    <label>{i18n.translate('PERUSTIETO_MUUT_KUNNAT')}</label>
                     <Select
                         isMulti
                         value={
@@ -172,7 +177,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>maa</label>
+                    <label>{i18n.translate('PERUSTIETO_MAA')}</label>
                     <Select
                         onChange={(selected) => handleOnChange({ name: 'maaUri', value: (selected as iOption).value })}
                         value={maatJaValtiot
@@ -192,7 +197,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Opetuskieli</label>
+                    <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
                     <Select
                         onChange={(selected = []) =>
                             handleOnChange({

@@ -3,8 +3,9 @@ import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import { useState, SyntheticEvent } from 'react';
+import { useState, SyntheticEvent, useContext } from 'react';
 import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
+import { LanguageContext } from '../../../../../contexts/contexts';
 
 export type Props = {
     yhteystiedot: Yhteystiedot[];
@@ -72,6 +73,7 @@ export const getYhteystieto = (
 };
 
 const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.ReactElement => {
+    const { i18n } = useContext(LanguageContext);
     const [kieleksi, setKieleksi] = useState<string>(DEFAULT_LANGUAGE_CODE);
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi: DEFAULT_LANGUAGE_CODE, onSama: false });
 
@@ -128,12 +130,12 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
                     checked={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                     onChange={handlePostiOsSamaKuinKaynti}
                 >
-                    Postiosoite on sama kuin käyntiosoite
+                    {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE')}
                 </Checkbox>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Postiosoite</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}</label>
                     <Input
                         name="posti.osoite"
                         onChange={handleYhteystietoOnChange}
@@ -141,7 +143,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
                     />
                 </div>
                 <div className={styles.KenttaLyhyt}>
-                    <label>Postinumero</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}</label>
                     <Input
                         name="posti.postinumeroUri"
                         onChange={handleYhteystietoOnChange}
@@ -151,7 +153,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Käyntiosoite</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_KAYNTIOSOITE')}</label>
                     <Input
                         disabled={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                         name="kaynti.osoite"
@@ -160,7 +162,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
                     />
                 </div>
                 <div className={styles.KenttaLyhyt}>
-                    <label>Postinumero</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}</label>
                     <Input
                         disabled={kieleksi === postiSamakuinKaynti.kieleksi && postiSamakuinKaynti.onSama}
                         onChange={handleYhteystietoOnChange}
@@ -171,7 +173,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Puhelinnumero</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}</label>
                     <Input
                         value={getYhteystieto(yhteystiedot, kieleksi, NAME_PHONE)[NAME_PHONE]}
                         name={NAME_PHONE}
@@ -181,7 +183,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Sähköpostiosoite</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}</label>
                     <Input
                         value={getYhteystieto(yhteystiedot, kieleksi, NAME_EMAIL)[NAME_EMAIL]}
                         name={NAME_EMAIL}
@@ -191,7 +193,7 @@ const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.React
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>Www-osoite</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}</label>
                     <Input
                         value={getYhteystieto(yhteystiedot, kieleksi, NAME_WWW)[NAME_WWW]}
                         name={NAME_WWW}
