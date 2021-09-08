@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenNimenmuutos.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
+import { Nimi } from '../../../types/types';
 
 interface NimiType {
     fi: 'fi';
@@ -10,8 +11,8 @@ interface NimiType {
 }
 
 type TNProps = {
-    handleChange: (nimi: { fi: string; sv: string; en: string }) => void;
-    nimi: { fi: string; sv: string; en: string };
+    handleChange: (nimi: Nimi) => void;
+    nimi: { fi?: string; sv?: string; en?: string };
 };
 
 export default function TNBody(props: TNProps) {

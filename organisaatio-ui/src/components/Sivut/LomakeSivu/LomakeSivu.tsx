@@ -18,8 +18,11 @@ import Axios from 'axios';
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 import { Link } from 'react-router-dom';
-
-const LomakeSivu = (props: any) => {
+type LomakeSivuProps = {
+    match: { params: { oid: string } };
+    history: string[];
+};
+const LomakeSivu = (props: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]
@@ -151,8 +154,9 @@ const LomakeSivu = (props: any) => {
         );
     }
 
-    const lomakkeet = () => {
+    const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
+        const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
                 setYtjDataFetched={setYtjDataFetched}
@@ -164,16 +168,22 @@ const LomakeSivu = (props: any) => {
                 opetuskielet={oppilaitoksenOpetuskielet}
             />
         );
-        if (organisaatio.yhteystiedot)
+        otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
+        if (organisaatio.yhteystiedot) {
             lomakkeet.push(
                 <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
             );
-
+            otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        }
         lomakkeet.push(<NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />);
-        if (organisaatio.oid !== ROOT_OID)
-            lomakkeet.push(<OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />);
+        otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
 
-        return lomakkeet;
+        if (organisaatio.oid !== ROOT_OID) {
+            lomakkeet.push(<OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />);
+            otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
+        }
+
+        return { lomakkeet: lomakkeet, otsikot: otsikot };
     };
 
     return (
@@ -208,15 +218,7 @@ const LomakeSivu = (props: any) => {
             </div>
             <div className={styles.PaaOsio}>
                 {/*<YhdistysJaSiirto />*/}
-                <Accordion
-                    lomakkeet={lomakkeet()}
-                    otsikot={[
-                        i18n.translate('LOMAKE_PERUSTIEDOT'),
-                        i18n.translate('LOMAKE_YHTEYSTIEDOT'),
-                        i18n.translate('LOMAKE_NIMIHISTORIA'),
-                        i18n.translate('LOMAKE_RAKENNE'),
-                    ]}
-                />
+                <Accordion {...accordionProps()} />
             </div>
             <div className={styles.AlaBanneri}>
                 <div className={styles.VersioContainer}>

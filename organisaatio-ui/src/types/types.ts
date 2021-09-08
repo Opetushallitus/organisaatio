@@ -76,7 +76,7 @@ export type YhteystiedotOsoite = YhteystiedotBase & {
 
 export type Yhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
 
-type Nimi = {
+export type Nimi = {
     fi?: string;
     sv?: string;
     en?: string;
@@ -86,7 +86,7 @@ export interface Organisaatio {
     oid?: string;
     ytunnus: string;
     nimi: Nimi; // TODO?
-    nimet?: any; // TODO?
+    nimet: any; // TODO?
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
     tyypit?: KoodiUri[];

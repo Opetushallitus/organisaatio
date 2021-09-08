@@ -17,12 +17,12 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
+import { Koodi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 
 type OrganisaatioProps = {
-    organisaatio: any;
+    organisaatio: Organisaatio;
     language: string;
-    organisaatioTyypit: any;
+    organisaatioTyypit: Koodi[];
     maatJaValtiot: any;
     opetuskielet: any;
     handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
@@ -51,7 +51,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
 
     const { kuntaKoodisto } = useContext(KoodistoContext);
-    const kaikkiKunnat = kuntaKoodisto.koodit().map((k: any) => ({
+    const kaikkiKunnat: { value: string; label: string }[] = kuntaKoodisto.koodit().map((k: any) => ({
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
@@ -118,24 +118,26 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>
-                    <CheckboxGroup
-                        value={[...organisaatio.tyypit]}
-                        options={organisaatioTyypit.map((oT: any) => ({
-                            value: oT.uri,
-                            label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
-                        }))}
-                        onChange={(tyypit) => {
-                            console.log(tyypit);
-                            handleOnChange({ name: 'tyypit', value: tyypit });
-                        }}
-                    />
+                    {organisaatio.tyypit && (
+                        <CheckboxGroup
+                            value={[...organisaatio.tyypit]}
+                            options={organisaatioTyypit.map((oT: any) => ({
+                                value: oT.uri,
+                                label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
+                            }))}
+                            onChange={(tyypit) => {
+                                console.log(tyypit);
+                                handleOnChange({ name: 'tyypit', value: tyypit });
+                            }}
+                        />
+                    )}
                 </div>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
                     <DatePickerInput
-                        value={organisaatio.alkuPvm}
+                        value={organisaatio.alkuPvm || ''}
                         onChange={(date: Date) => handleOnChange({ name: 'alkuPvm', value: date })}
                     />
                 </div>
@@ -159,9 +161,9 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <Select
                         isMulti
                         value={
-                            organisaatio.muutKotipaikatUris.length
-                                ? organisaatio.muutKotipaikatUris.map((mk: string) =>
-                                      kaikkiKunnat.find((kk) => kk.value === mk)
+                            organisaatio.muutKotipaikatUris
+                                ? organisaatio.muutKotipaikatUris.map(
+                                      (mk) => kaikkiKunnat.find((kk) => kk.value === mk) || { label: '', value: '' }
                                   )
                                 : []
                         }

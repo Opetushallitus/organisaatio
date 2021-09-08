@@ -119,8 +119,9 @@ const UusiToimijaLomake = (props: any) => {
             </div>
         );
     }
-    const lomakkeet = () => {
+    const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
+        const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
                 handleJatka={() => setLomakeAvoinna(1)}
@@ -131,12 +132,15 @@ const UusiToimijaLomake = (props: any) => {
                 opetuskielet={oppilaitoksenOpetuskielet}
             />
         );
-        if (organisaatio.yhteystiedot)
+        otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
+        if (organisaatio.yhteystiedot) {
             lomakkeet.push(
                 <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
             );
+            otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        }
 
-        return lomakkeet;
+        return { lomakkeet: lomakkeet, otsikot: otsikot };
     };
 
     return (
@@ -163,8 +167,7 @@ const UusiToimijaLomake = (props: any) => {
                         console.log('accordionevent', event);
                         //setLomakeAvoinna(avoinnaIndex[0] + 1)
                     }}
-                    lomakkeet={lomakkeet()}
-                    otsikot={['Perustiedot', 'Yhteystiedot']} // TODO kriisisähköposti?
+                    {...accordionProps()}
                 />
             </div>
             <div className={styles.AlaBanneri}>

@@ -6,7 +6,7 @@ import { Organisaatio } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
 
 type nimiHistoriaProps = {
-    nimet: any;
+    nimet: string[];
     handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
 };
 
