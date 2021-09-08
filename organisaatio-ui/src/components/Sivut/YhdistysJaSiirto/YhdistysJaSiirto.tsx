@@ -9,17 +9,17 @@ export default function YhdistysJaSiirto() {
     return (
         <div className={styles.SiirtoLomake}>
             <div className={styles.Rivi}>
-                <h3>{i18n.translate('ORGANISAATION_YHDISTAMINEN_OTSIKKO')}</h3>
+                <h3>{i18n.translate('YHDISTYS_ORGANISAATION_YHDISTAMINEN_OTSIKKO')}</h3>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHDISTETTAVA_KOULUTUSTOIMIJA')}</label>
+                    <label>{i18n.translate('YHDISTYS_YHDISTETTAVA_KOULUTUSTOIMIJA')}</label>
                     <Input value={''} />
                 </div>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>{i18n.translate('NIMENMUUTOS_TULEE_VOIMAAN')}</label>
+                    <label>{i18n.translate('YHDISTYS_NIMENMUUTOS_TULEE_VOIMAAN')}</label>
                     <Input value={''} />
                 </div>
             </div>

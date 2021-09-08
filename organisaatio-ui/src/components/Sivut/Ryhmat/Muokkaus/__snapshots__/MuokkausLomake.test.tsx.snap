@@ -24,7 +24,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
       <a
         href="/organisaatio/ryhmat"
       >
-        KAIKKI_RYHMAT
+        RYHMAT_KAIKKI_RYHMAT
       </a>
     </div>
   </div>
@@ -38,7 +38,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         className="ValiOtsikko"
       >
         <h3>
-          RYHMA
+          RYHMAT_RYHMA
         </h3>
         <h1>
           Suominimi
@@ -55,7 +55,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           className="Otsikko"
         >
           <h3>
-            RYHMAN_TIEDOT_OTSIKKO
+            RYHMAT_RYHMAN_TIEDOT_OTSIKKO
           </h3>
         </div>
       </div>
@@ -65,7 +65,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         <span
           className="AvainKevyestiBoldattu"
         >
-          OID
+          LABEL_OID
         </span>
         <span
           className="ReadOnly"
@@ -80,7 +80,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           className="Kentta"
         >
           <label>
-            RYHMAN_NIMI
+            RYHMAT_RYHMAN_NIMI
           </label>
           <div
             className="Rivi"
@@ -88,7 +88,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             <label
               htmlFor="nimiFi"
             >
-              SUOMEKSI
+              LABEL_SUOMEKSI
             </label>
             <div
               className="PitkaInput"
@@ -110,7 +110,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             <label
               htmlFor="nimiSv"
             >
-              RUOTSIKSI
+              LABEL_RUOTSIKSI
             </label>
             <div
               className="PitkaInput"
@@ -131,7 +131,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             <label
               htmlFor="nimiEn"
             >
-              ENGLANNIKSI
+              LABEL_ENGLANNIKSI
             </label>
             <div
               className="PitkaInput"
@@ -155,7 +155,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           className="Kentta"
         >
           <label>
-            RYHMAN_KUVAUS
+            RYHMAT_RYHMAN_KUVAUS
           </label>
           <div
             className="Rivi"
@@ -163,7 +163,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             <label
               htmlFor="kuvaus2Fi"
             >
-              SUOMEKSI
+              LABEL_SUOMEKSI
             </label>
             <div
               className="PitkaInput"
@@ -184,7 +184,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             <label
               htmlFor="kuvaus2Sv"
             >
-              RUOTSIKSI
+              LABEL_RUOTSIKSI
             </label>
             <div
               className="PitkaInput"
@@ -204,7 +204,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             <label
               htmlFor="kuvaus2En"
             >
-              ENGLANNIKSI
+              LABEL_ENGLANNIKSI
             </label>
             <div
               className="PitkaInput"
@@ -227,7 +227,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           className="Kentta"
         >
           <label>
-            RYHMAN_TYYPPI
+            RYHMAT_RYHMAN_TYYPPI
           </label>
           <Component
             control={
@@ -386,7 +386,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           className="Kentta"
         >
           <label>
-            RYHMAN_KAYTTOTARKOITUS
+            RYHMAT_RYHMAN_KAYTTOTARKOITUS
           </label>
           <Component
             control={
@@ -546,7 +546,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           onClick={[MockFunction]}
           variant="outlined"
         >
-          PASSIVOI_RYHMA
+          RYHMAT_PASSIVOI_RYHMA
         </ForwardRef>
         ,
         <ForwardRef
@@ -554,7 +554,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           onClick={[MockFunction]}
           variant="outlined"
         >
-          POISTA_RYHMA
+          RYHMAT_POISTA_RYHMA
         </ForwardRef>
       </div>
     </div>
@@ -569,7 +569,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         onClick={[MockFunction]}
         variant="outlined"
       >
-        SULJE_TIEDOT
+        BUTTON_SULJE
       </ForwardRef>
       <ForwardRef
         className="Versionappula"
@@ -577,7 +577,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
         name="tallennabutton"
         onClick={[Function]}
       >
-        TALLENNA
+        BUTTON_TALLENNA
       </ForwardRef>
     </div>
   </div>

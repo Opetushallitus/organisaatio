@@ -37,7 +37,7 @@ function Hakufiltterit({
                         variant={!omatOrganisaatiotSelected ? 'outlined' : 'contained'}
                         onClick={() => setOmatOrganisaatiotSelected(true)}
                     >
-                        {i18n.translate('OMAT_ORGANISAATIOT')}
+                        {i18n.translate('TAULUKKO_OMAT_ORGANISAATIOT')}
                     </Button>
                     <Button
                         onClick={() => setOmatOrganisaatiotSelected(false)}
@@ -45,14 +45,14 @@ function Hakufiltterit({
                         color={'primary'}
                         variant={omatOrganisaatiotSelected ? 'outlined' : 'contained'}
                     >
-                        {i18n.translate('KAIKKI_ORGANISAATIOT')}
+                        {i18n.translate('TAULUKKO_KAIKKI_ORGANISAATIOT')}
                     </Button>
                 </div>
             )}
             <div className={styles.FiltteriContainer}>
                 <div className={styles.FiltteriInputOsa}>
                     <Input
-                        placeholder={i18n.translate('TOIMIJA_HAKU_PLACEHOLDER')}
+                        placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
                         onChange={(e) => {
                             setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
                         }}
@@ -67,7 +67,7 @@ function Hakufiltterit({
                             setNaytaPassivoidut(e.target.checked);
                         }}
                     >
-                        {i18n.translate('CHECKBOX_NAYTA_PASSIVOIDUT')}
+                        {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
                     </Checkbox>
                 </div>
                 <Button variant="outlined" className={styles.LisatiedotNappi}>

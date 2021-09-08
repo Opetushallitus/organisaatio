@@ -22,7 +22,7 @@ const Ryhmat = () => {
     const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
         () => [
             {
-                Header: i18n.translate('RYHMAN_NIMI'),
+                Header: i18n.translate('RYHMAT_RYHMAN_NIMI'),
                 id: 'Nimi',
                 Cell: ({ row }) => {
                     return (
@@ -36,7 +36,7 @@ const Ryhmat = () => {
                 },
             },
             {
-                Header: i18n.translate('RYHMAN_TYYPPI'),
+                Header: i18n.translate('RYHMAT_RYHMAN_TYYPPI'),
                 id: 'Tyyppi',
                 Cell: ({ row }) => {
                     if (row.original.ryhmatyypit.length > 0) {
@@ -56,7 +56,7 @@ const Ryhmat = () => {
                 },
             },
             {
-                Header: i18n.translate('KAYTTOTARKOITUS'),
+                Header: i18n.translate('RYHMAT_KAYTTOTARKOITUS'),
                 id: 'Kayttotarkoitus',
                 Cell: ({ row }) => {
                     if (row.original.kayttoryhmat.length > 0) {
@@ -76,11 +76,11 @@ const Ryhmat = () => {
                 },
             },
             {
-                Header: i18n.translate('RYHMAN_TILA'),
+                Header: i18n.translate('RYHMAT_RYHMAN_TILA'),
                 accessor: 'status',
             },
             {
-                Header: i18n.translate('OID'),
+                Header: i18n.translate('LABEL_OID'),
                 accessor: 'oid',
             },
         ],

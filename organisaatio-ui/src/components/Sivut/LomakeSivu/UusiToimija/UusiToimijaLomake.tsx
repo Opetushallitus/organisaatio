@@ -124,14 +124,14 @@ const UusiToimijaLomake = (props: any) => {
                 <div>
                     <a href="/">
                         <Icon icon={homeIcon} />
-                        {i18n.translate('UUSI_TOIMIJA')}
+                        {i18n.translate('UUSI_TOIMIJA_TITLE')}
                     </a>
                 </div>
             </div>
             <div className={styles.ValiContainer}>
                 <div className={styles.ValiOtsikko}>
-                    <h3>{i18n.translate('TOIMIJA')}</h3>
-                    <h1>{i18n.translate('UUDEN_TOIMIJAN_LISAAMINEN')}</h1>
+                    <h3>{i18n.translate('UUSI_TOIMIJA_TOIMIJA_TITLE')}</h3>
+                    <h1>{i18n.translate('UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN')}</h1>
                 </div>
             </div>
             <div className={styles.PaaOsio}>
@@ -159,10 +159,10 @@ const UusiToimijaLomake = (props: any) => {
             <div className={styles.AlaBanneri}>
                 <div>
                     <Button variant="outlined" className={styles.Versionappula} onClick={handleCancel}>
-                        {i18n.translate('SULJE_TIEDOT')}
+                        {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula} onClick={postOrganisaatio}>
-                        {i18n.translate('TALLENNA')}
+                        {i18n.translate('BUTTON_TALLENNA')}
                     </Button>
                 </div>
             </div>

@@ -12,7 +12,7 @@ export default function YTJFooter({ peruutaCallback }: Props) {
     return (
         <div className={styles.FooterRivi}>
             <Button className={styles.FooterButton} variant="outlined" onClick={peruutaCallback}>
-                {i18n.translate('PERUUTA')}
+                {i18n.translate('BUTTON_PERUUTA')}
             </Button>
         </div>
     );
