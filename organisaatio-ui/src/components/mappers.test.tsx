@@ -6,11 +6,14 @@ describe('mappers', () => {
     const koodiWithoutVersion = 'kieli_fi';
 
     const esimerkkiMonikielinenObjekti = {
+        uri: 'uri',
+        arvo: 'arvo',
         nimi: {
             fi: 'suominimi',
             sv: 'ruotsinimi',
             en: 'enkkunimi',
         },
+        versio: 1,
         kuvaus: {
             sv: 'ruotsikuvaus',
         },
