@@ -23,6 +23,7 @@ const Ryhmat = () => {
         () => [
             {
                 Header: i18n.translate('RYHMAT_RYHMAN_NIMI'),
+                collapse: true,
                 id: 'Nimi',
                 Cell: ({ row }) => {
                     return (

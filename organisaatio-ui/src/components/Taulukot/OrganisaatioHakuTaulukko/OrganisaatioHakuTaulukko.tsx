@@ -1,19 +1,30 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
-import { useExpanded, usePagination, useTable, useGlobalFilter, useSortBy, Column } from 'react-table';
+import { Column, useExpanded, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import searchIcon from '@iconify/icons-fa-solid/search';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
+import { Organisaatio } from '../../../types/types';
 
 const mapPaginationSelectors = (index) => {
     if (index < 3) return [0, 5];
     return [index - 2, index + 3];
+};
+
+type OrganisaatioHakuTaulukkoProps = {
+    isOPHVirkailija: boolean;
+    data: Organisaatio[];
+    tableColumns: Column<Organisaatio>[];
+    naytaPassivoidut: boolean;
+    setNaytaPassivoidut: any;
+    omatOrganisaatiotSelected: boolean;
+    setOmatOrganisaatiotSelected: any;
 };
 
 function Hakufiltterit({
@@ -86,15 +97,7 @@ export default function OrganisaatioHakuTaulukko({
     setNaytaPassivoidut,
     omatOrganisaatiotSelected,
     setOmatOrganisaatiotSelected,
-}: {
-    isOPHVirkailija: boolean;
-    data: any;
-    tableColumns: Column<any>[];
-    naytaPassivoidut: boolean;
-    setNaytaPassivoidut: any;
-    omatOrganisaatiotSelected: boolean;
-    setOmatOrganisaatiotSelected: any;
-}) {
+}: OrganisaatioHakuTaulukkoProps) {
     const { i18n } = useContext(LanguageContext);
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => inputData, [inputData]);
@@ -175,7 +178,7 @@ export default function OrganisaatioHakuTaulukko({
                             {headerGroup.headers.map((column) => (
                                 <th
                                     {...column.getHeaderProps({
-                                        className: false ? styles.collapse : '',
+                                        className: false ? styles.collapse : '', //TODO take care of collapse
                                     })}
                                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                                 >
@@ -194,7 +197,7 @@ export default function OrganisaatioHakuTaulukko({
                                     return (
                                         <td
                                             {...cell.getCellProps({
-                                                className: false ? styles.collapse : '',
+                                                className: false ? styles.collapse : '', //TODO take care of collapse
                                             })}
                                             style={{
                                                 background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',

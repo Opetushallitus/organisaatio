@@ -14,18 +14,10 @@ type organisaatioHistoriaProps = {
 };
 
 export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {
-    const ophOid = '1.2.246.562.10.00000000001';
     const { i18n, language } = useContext(LanguageContext);
-    const [
-        { data: historia, loading: historiaLoading, error: historiaError }, //TODO tyjennä historia
-        // refetch,
-    ] = useAxios(`/organisaatio/organisaatio/v4/${props.oid}/historia`); //, { manual: true });
-    // useEffect(() => {
-    //     if (props.oid !== ophOid) refetch();
-    // }, [props.oid]);
-    if (props.oid === ophOid) {
-        return <div className={styles.Rivi}>{i18n.translate('RAKENNE_EI_LADATA_OPH')}</div>;
-    }
+    const [{ data: historia, loading: historiaLoading, error: historiaError }, ,] = useAxios(
+        `/organisaatio/organisaatio/v4/${props.oid}/historia`
+    );
     console.log('hist', historiaLoading, historia);
     if (!historia || historiaLoading || historiaError) {
         return <Spin />;

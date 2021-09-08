@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
-    nimi: '',
+    nimi: {},
     nimet: '',
     alkuPvm: null,
     yritysmuoto: '',
@@ -119,6 +119,26 @@ const UusiToimijaLomake = (props: any) => {
             </div>
         );
     }
+    const lomakkeet = () => {
+        const lomakkeet = [] as React.ReactElement[];
+        lomakkeet.push(
+            <PerustietoLomake
+                handleJatka={() => setLomakeAvoinna(1)}
+                handleOnChange={handleOnChange}
+                organisaatioTyypit={organisaatioTyypit}
+                organisaatio={organisaatio}
+                maatJaValtiot={maatJaValtiot}
+                opetuskielet={oppilaitoksenOpetuskielet}
+            />
+        );
+        if (organisaatio.yhteystiedot)
+            lomakkeet.push(
+                <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
+            );
+
+        return lomakkeet;
+    };
+
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
@@ -143,17 +163,7 @@ const UusiToimijaLomake = (props: any) => {
                         console.log('accordionevent', event);
                         //setLomakeAvoinna(avoinnaIndex[0] + 1)
                     }}
-                    lomakkeet={[
-                        <PerustietoLomake
-                            handleJatka={() => setLomakeAvoinna(1)}
-                            handleOnChange={handleOnChange}
-                            organisaatioTyypit={organisaatioTyypit}
-                            organisaatio={organisaatio}
-                            maatJaValtiot={maatJaValtiot}
-                            opetuskielet={oppilaitoksenOpetuskielet}
-                        />,
-                        <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />,
-                    ]}
+                    lomakkeet={lomakkeet()}
                     otsikot={['Perustiedot', 'Yhteystiedot']} // TODO kriisisähköposti?
                 />
             </div>

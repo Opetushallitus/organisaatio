@@ -13,6 +13,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
 import { Organisaatio } from '../../../types/types';
 import { Link } from 'react-router-dom';
+import { Column } from 'react-table';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -27,7 +28,7 @@ const TaulukkoSivu = (props) => {
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
 
-    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[] | undefined[]>([]);
+    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
     const [isOPHVirkailija, setIsOPHVirkailija] = React.useState(true);
@@ -56,87 +57,98 @@ const TaulukkoSivu = (props) => {
         fetch();
     }, [naytaPassivoidut, isOPHVirkailija, omatOrganisaatiotSelected]);
 
-    const columns = [
-        {
-            // Build our expander column
-            id: 'expander', // Make sure it has an ID
-            collapse: true,
-            Cell: ({ row }) =>
-                // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-                // to build the toggle for expanding a row
-                row.canExpand ? (
-                    <span
-                        className={styles.Expander}
-                        {...row.getToggleRowExpandedProps({
-                            style: {
-                                // We can even use the row.depth property
-                                // and paddingLeft to indicate the depth
-                                // of the row
-                                paddingLeft: `${row.depth + 1}rem`,
-                            },
-                        })}
-                    >
-                        {row.isExpanded ? <Icon icon={chevronUp} /> : <Icon icon={chevronDown} />}
+    const columns: Column<Organisaatio>[] = React.useMemo(
+        () => [
+            {
+                // Build our expander column
+                id: 'expander', // Make sure it has an ID
+                collapse: true,
+                Cell: ({ row }) =>
+                    // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
+                    // to build the toggle for expanding a row
+                    row.canExpand ? (
+                        <span
+                            className={styles.Expander}
+                            {...row.getToggleRowExpandedProps({
+                                style: {
+                                    // We can even use the row.depth property
+                                    // and paddingLeft to indicate the depth
+                                    // of the row
+                                    paddingLeft: `${row.depth + 1}rem`,
+                                },
+                            })}
+                        >
+                            {row.isExpanded ? <Icon icon={chevronUp} /> : <Icon icon={chevronDown} />}
+                        </span>
+                    ) : null,
+            },
+            {
+                Header: i18n.translate('TAULUKKO_NIMI'),
+                id: 'Nimi',
+                accessor: (values) => {
+                    return (
+                        values.nimi[language] || values.nimi.fi || values.nimi.sv || values.nimi.fi || values.nimi.en
+                    );
+                },
+                Cell: ({ row }) => {
+                    return (
+                        <Link to={`/lomake/${row.original.oid}`}>
+                            {row.original.nimi[language] ||
+                                row.original.nimi.fi ||
+                                row.original.nimi.sv ||
+                                row.original.nimi.fi ||
+                                row.original.nimi.en}
+                        </Link>
+                    );
+                },
+            },
+            {
+                Header: i18n.translate('TAULUKKO_KUNTA'),
+                accessor: (values) => {
+                    const nimi = kuntaKoodisto.uri2Nimi(values.kotipaikkaUri);
+                    return nimi || '';
+                },
+            },
+            {
+                Header: i18n.translate('TAULUKKO_TYYPPI'),
+                accessor: (values) => {
+                    //const a = values.tyypit.map((ot) => ot);
+                    //console.log('VALUES', values);
+                    return values.tyypit;
+                },
+                Cell: ({ row }) => (
+                    <span>
+                        {row.original.organisaatiotyypit
+                            .map((ot) => organisaatioTyypitKoodisto.uri2Nimi(ot))
+                            .join(', ')}
                     </span>
-                ) : null,
-        },
-        {
-            Header: i18n.translate('TAULUKKO_NIMI'),
-            id: 'Nimi',
-            accessor: (values) => {
-                return values.nimi[language] || values.nimi.fi || values.nimi.sv || values.nimi.fi || values.nimi.en;
+                ),
             },
-            Cell: ({ row }) => {
-                return (
-                    <Link to={`/lomake/${row.original.oid}`}>
-                        {row.original.nimi[language] ||
-                            row.original.nimi.fi ||
-                            row.original.nimi.sv ||
-                            row.original.nimi.fi ||
-                            row.original.nimi.en}
-                    </Link>
-                );
+            {
+                Header: i18n.translate('TAULUKKO_TUNNISTE'),
+                accessor: 'ytunnus',
             },
-        },
-        {
-            Header: i18n.translate('TAULUKKO_KUNTA'),
-            accessor: (values) => {
-                const nimi = kuntaKoodisto.uri2Nimi(values.kotipaikkaUri);
-                return nimi || '';
+            {
+                Header: i18n.translate('LABEL_OID'),
+                accessor: 'oid',
             },
-        },
-        {
-            Header: i18n.translate('TAULUKKO_TYYPPI'),
-            accessor: (values) => values.organisaatiotyypit.map((ot) => ot),
-            Cell: ({ row }) => (
-                <span>
-                    {row.original.organisaatiotyypit.map((ot) => organisaatioTyypitKoodisto.uri2Nimi(ot)).join(', ')}
-                </span>
-            ),
-        },
-        {
-            Header: i18n.translate('TAULUKKO_TUNNISTE'),
-            accessor: 'ytunnus',
-        },
-        {
-            Header: i18n.translate('LABEL_OID'),
-            accessor: 'oid',
-        },
-        {
-            Header: i18n.translate('TAULUKKO_TARKISTUS'),
-            id: 'tarkistus',
-            accessor: (values) => (tarkastaLipunVari(values.tarkastusPvm) ? null : 'tarkistus'),
-            Cell: ({ row }) => (
-                <div
-                    className={`${styles.LippuNappi} ${
-                        tarkastaLipunVari(row.original.tarkastusPvm) ? styles.SininenTausta : styles.PunainenTausta
-                    }`}
-                >
-                    <LippuIkoni />
-                </div>
-            ),
-        },
-    ];
+            {
+                Header: i18n.translate('TAULUKKO_TARKISTUS'),
+                id: 'tarkistus',
+                //   accessor: (values) => (tarkastaLipunVari(values.tarkastusPvm) ? null : 'tarkistus'),
+                Cell: ({ row }) => (
+                    <div
+                        className={`${styles.LippuNappi} ${
+                            tarkastaLipunVari(row.original.tarkastusPvm) ? styles.SininenTausta : styles.PunainenTausta
+                        }`}
+                    >
+                        <LippuIkoni />
+                    </div>
+                ),
+            },
+        ],
+        [i18n, language]
+    );
 
     const data = organisaatiot;
     return (

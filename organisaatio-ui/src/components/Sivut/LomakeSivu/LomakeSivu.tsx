@@ -8,7 +8,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import homeIcon from '@iconify/icons-fa-solid/home';
 
-import { LanguageContext } from '../../../contexts/contexts';
+import { LanguageContext, ROOT_OID } from '../../../contexts/contexts';
 import { Koodi, Organisaatio, OrganisaatioNimiJaOid, YtjOrganisaatio } from '../../../types/types';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
@@ -94,6 +94,7 @@ const LomakeSivu = (props: any) => {
         setStashedOrganisaatio(Object.assign({}, organisaatio));
         console.log('tallennettu alkuperäinen org muistiin', stashedOrganisaatio);
         organisaatio &&
+            organisaatio.yhteystiedot &&
             organisaatio.yhteystiedot
                 .filter((yT) => yT.kieli === 'kieli_fi#1')
                 .forEach((yT: any) => {
@@ -150,6 +151,31 @@ const LomakeSivu = (props: any) => {
         );
     }
 
+    const lomakkeet = () => {
+        const lomakkeet = [] as React.ReactElement[];
+        lomakkeet.push(
+            <PerustietoLomake
+                setYtjDataFetched={setYtjDataFetched}
+                handleOnChange={handleOnChange}
+                organisaatioTyypit={organisaatioTyypit}
+                organisaatio={organisaatio}
+                language={language}
+                maatJaValtiot={maatJaValtiot}
+                opetuskielet={oppilaitoksenOpetuskielet}
+            />
+        );
+        if (organisaatio.yhteystiedot)
+            lomakkeet.push(
+                <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
+            );
+
+        lomakkeet.push(<NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />);
+        if (organisaatio.oid !== ROOT_OID)
+            lomakkeet.push(<OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />);
+
+        return lomakkeet;
+    };
+
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
@@ -167,7 +193,7 @@ const LomakeSivu = (props: any) => {
             </div>
             <div className={styles.ValiContainer}>
                 <div className={styles.ValiOtsikko}>
-                    <h3>{organisaatio.tyypit[0]}</h3>
+                    <h3>{organisaatio.tyypit ? organisaatio.tyypit[0] : 'N/A'}</h3>
                     <h1>
                         {organisaatio.nimi[language] ||
                             organisaatio.nimi['fi'] ||
@@ -183,20 +209,7 @@ const LomakeSivu = (props: any) => {
             <div className={styles.PaaOsio}>
                 {/*<YhdistysJaSiirto />*/}
                 <Accordion
-                    lomakkeet={[
-                        <PerustietoLomake
-                            setYtjDataFetched={setYtjDataFetched}
-                            handleOnChange={handleOnChange}
-                            organisaatioTyypit={organisaatioTyypit}
-                            organisaatio={organisaatio}
-                            language={language}
-                            maatJaValtiot={maatJaValtiot}
-                            opetuskielet={oppilaitoksenOpetuskielet}
-                        />,
-                        <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />,
-                        <NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />,
-                        <OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />,
-                    ]}
+                    lomakkeet={lomakkeet()}
                     otsikot={[
                         i18n.translate('LOMAKE_PERUSTIEDOT'),
                         i18n.translate('LOMAKE_YHTEYSTIEDOT'),
