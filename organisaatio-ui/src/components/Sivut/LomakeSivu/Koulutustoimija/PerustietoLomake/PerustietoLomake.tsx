@@ -64,7 +64,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
 
     const handleNimiTallennus = () => {
         const nimet = { nimi: Object.assign({}, nimi), alkuPvm: new Date().toISOString().split('T')[0] };
-        console.log(nimet);
         handleOnChange({ name: 'nimet', value: [nimet] });
         handleOnChange({ name: 'nimi', value: nimi });
     };

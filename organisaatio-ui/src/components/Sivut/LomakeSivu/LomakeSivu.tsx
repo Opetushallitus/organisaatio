@@ -219,7 +219,7 @@ const LomakeSivu = (props: LomakeSivuProps) => {
             </div>
             <div className={styles.ValiContainer}>
                 <div className={styles.ValiOtsikko}>
-                    <h3>{organisaatio.tyypit ? organisaatio.tyypit[0] : 'N/A'}</h3>
+                    <h3>{organisaatio.tyypit ? organisaatio.tyypit[0] : i18n.translate('LABEL_NOT_AVAILABLE')}</h3>
                     <h1>
                         {organisaatio.nimi[language] ||
                             organisaatio.nimi['fi'] ||
