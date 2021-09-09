@@ -494,19 +494,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return ret;
     }
 
-    public String calculateToimipisteKoodi(Organisaatio org) {
-        return calculateToimipisteKoodi(org, org.getParent());
-    }
-
     /**
      * Lasketaan opetuspisteen / toimipisteen koodi.
      * Lisätään parent oppilaitoksen oppilaitoskoodiin opetuspisteen järjestysnumero.
-     *
      * @param org Toimipiste
      * @return Toimipistekoodi
      */
-    public static String calculateToimipisteKoodi(Organisaatio org, Organisaatio parent) {
-
+    public String calculateToimipisteKoodi(Organisaatio org, Organisaatio parent) {
+        if (parent == null) {
+            parent = org.getParent();
+        }
         if (org == null) {
             return "";
         }
@@ -538,7 +535,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
      * @param organisaatioTyyppi Type to evaluate against
      * @return is organisaatio given type
      */
-    private static boolean organisaatioIsOfType(Organisaatio org, OrganisaatioTyyppi organisaatioTyyppi) {
+    private boolean organisaatioIsOfType(Organisaatio org, OrganisaatioTyyppi organisaatioTyyppi) {
         if (organisaatioTyyppi == null || org == null) {
             return false;
         }
@@ -1078,7 +1075,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
             String opJarjNro = generateOpetuspisteenJarjNro(organisaatio);
             organisaatio.setOpetuspisteenJarjNro(opJarjNro);
-            organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio));
+            organisaatio.setToimipisteKoodi(calculateToimipisteKoodi(organisaatio, null));
             parentRelation.setOpetuspisteenJarjNro(opJarjNro);
 
             Calendar previousDay = Calendar.getInstance();

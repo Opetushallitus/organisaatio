@@ -97,6 +97,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Autowired
+    private OrganisaatioBusinessServiceImpl organisaatioBusinessServiceImpl;
+    @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
 
     @Autowired
@@ -579,11 +581,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Organisaatio toimipiste = toimipisteResult1.getOrganisaatio();
         Organisaatio oppilaitos = oppilaitosResult1.getOrganisaatio();
 
-        assertThat(OrganisaatioBusinessServiceImpl.calculateToimipisteKoodi(toimipiste, koulutustoimija)).isEqualTo("oppilaitoskoodi01");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(toimipiste, koulutustoimija)).isEqualTo("oppilaitoskoodi01");
         toimipiste.setOpetuspisteenJarjNro(null);
-        assertThat(OrganisaatioBusinessServiceImpl.calculateToimipisteKoodi(toimipiste, oppilaitos)).isEqualTo("");
-        assertThat(OrganisaatioBusinessServiceImpl.calculateToimipisteKoodi(null, koulutustoimija)).isEqualTo("");
-        assertThat(OrganisaatioBusinessServiceImpl.calculateToimipisteKoodi(oppilaitos, null)).isEqualTo("oppilaitoskoodi");
-        assertThat(OrganisaatioBusinessServiceImpl.calculateToimipisteKoodi(koulutustoimija, oppilaitos)).isEqualTo("");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(toimipiste, oppilaitos)).isEqualTo("");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(null, koulutustoimija)).isEqualTo("");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(oppilaitos, null)).isEqualTo("oppilaitoskoodi");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(koulutustoimija, oppilaitos)).isEqualTo("");
     }
 }
