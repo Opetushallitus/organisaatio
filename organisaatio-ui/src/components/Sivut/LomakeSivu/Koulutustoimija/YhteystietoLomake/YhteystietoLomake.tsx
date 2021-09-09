@@ -6,10 +6,17 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { useState, SyntheticEvent, useContext } from 'react';
 import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
+import { KoodiUri, Nimi } from '../../../../../types/types';
 
 export type Props = {
     yhteystiedot: Yhteystiedot[];
-    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: Yhteystiedot[] }) => void;
+    handleOnChange: ({
+        name,
+        value,
+    }: {
+        name: keyof Organisaatio;
+        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
+    }) => void;
 };
 
 type SupportedOsoiteType = 'kaynti' | 'posti';

@@ -2,12 +2,11 @@ import * as React from 'react';
 import { useContext } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import { Organisaatio } from '../../../../../types/types';
+import { Nimi } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
 
 type nimiHistoriaProps = {
-    nimet: string[];
-    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
+    nimet: Nimi[];
 };
 
 export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
@@ -21,7 +20,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
         },
         {
             Header: i18n.translate('NIMIHISTORIA_NIMI'),
-            Cell: ({ row }: any) =>
+            Cell: ({ row }: { row: { original: { nimi: Nimi } } }) =>
                 Object.keys(row.original.nimi).map((k, i) => (
                     <span>{`${row.original.nimi[k]} [${k}]${
                         Object.keys(row.original.nimi).length - 1 > i ? ', ' : ''

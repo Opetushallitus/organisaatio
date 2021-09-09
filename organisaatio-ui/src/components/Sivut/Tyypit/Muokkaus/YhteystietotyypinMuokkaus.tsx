@@ -24,7 +24,7 @@ export default function YhteystietotyypinMuokkaus() {
     const { i18n, language } = useContext(LanguageContext);
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
         Koodi[]
-    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
+    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`); //TODO the random parameter should probably be random
     const [isKaikkiValittu, setIsKaikkiValittu] = useState(KAIKKIVALITTU);
     const [isModaliAuki, setIsModaaliAuki] = useState(false);
 
@@ -32,9 +32,9 @@ export default function YhteystietotyypinMuokkaus() {
         return <Spin />;
     }
 
-    const oppilaitosTyypitOptions = oppilaitosTyypit.map((k: any) => ({
+    const oppilaitosTyypitOptions = oppilaitosTyypit.map((k: Koodi) => ({
         value: k.uri,
-        label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
+        label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '',
     }));
     console.log('yhtopts', oppilaitosTyypitOptions);
     return (

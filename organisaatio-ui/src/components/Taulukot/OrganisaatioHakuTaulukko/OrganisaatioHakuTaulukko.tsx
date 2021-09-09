@@ -22,9 +22,9 @@ type OrganisaatioHakuTaulukkoProps = {
     data: Organisaatio[];
     tableColumns: Column<Organisaatio>[];
     naytaPassivoidut: boolean;
-    setNaytaPassivoidut: any;
+    setNaytaPassivoidut: (value: boolean) => void;
     omatOrganisaatiotSelected: boolean;
-    setOmatOrganisaatiotSelected: any;
+    setOmatOrganisaatiotSelected: (value: boolean) => void;
 };
 
 function Hakufiltterit({

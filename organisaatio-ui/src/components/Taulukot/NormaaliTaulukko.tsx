@@ -9,6 +9,7 @@ import {
     useFilters,
     Column,
     TableInstance,
+    FilterValue,
 } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
@@ -38,8 +39,8 @@ export type NormaaliTaulukkoProps = {
 };
 
 export type FiltteritProps = {
-    setFilter: (columnId: string, updater: any) => void;
-    setGlobalFilter: (filterValue: any) => void;
+    setFilter: (columnId: string, updater: string | undefined | (string | null | undefined)[]) => void;
+    setGlobalFilter: (filterValue: FilterValue) => void;
     globalFilter: string;
 };
 

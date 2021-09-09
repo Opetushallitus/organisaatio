@@ -86,7 +86,7 @@ export interface Organisaatio {
     oid?: string;
     ytunnus: string;
     nimi: Nimi; // TODO?
-    nimet: any; // TODO?
+    nimet: Nimi[]; // TODO?
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
     tyypit?: KoodiUri[];

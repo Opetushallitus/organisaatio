@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
     nimi: {},
-    nimet: '',
+    nimet: [],
     alkuPvm: null,
     yritysmuoto: '',
     tyypit: [],
@@ -64,7 +64,7 @@ const tyhjaOrganisaatio: Organisaatio = {
         .flat(),
 };
 
-const UusiToimijaLomake = (props: any) => {
+const UusiToimijaLomake = (props: { history: string[] }) => {
     const { i18n } = useContext(LanguageContext);
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]

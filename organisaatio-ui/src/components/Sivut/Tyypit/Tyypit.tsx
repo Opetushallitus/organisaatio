@@ -52,7 +52,7 @@ const Tyypit = (props: Props) => {
     const tyypitColumns = [
         {
             Header: i18n.translate('TYYPIT_NIMI'),
-            Cell: ({ row }: { row: any }) => {
+            Cell: ({ row }: { row: { original: string | { nimi: any } } }) => {
                 if (typeof row.original === 'string') {
                     return (
                         <a

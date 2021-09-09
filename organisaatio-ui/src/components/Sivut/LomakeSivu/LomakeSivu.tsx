@@ -9,7 +9,15 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext, ROOT_OID } from '../../../contexts/contexts';
-import { Koodi, Organisaatio, OrganisaatioNimiJaOid, YtjOrganisaatio } from '../../../types/types';
+import {
+    Koodi,
+    KoodiUri,
+    Nimi,
+    Organisaatio,
+    OrganisaatioNimiJaOid,
+    Yhteystiedot,
+    YtjOrganisaatio,
+} from '../../../types/types';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
@@ -101,6 +109,7 @@ const LomakeSivu = (props: LomakeSivuProps) => {
             organisaatio.yhteystiedot
                 .filter((yT) => yT.kieli === 'kieli_fi#1')
                 .forEach((yT: any) => {
+                    // TODO fixing type is complicated, must refactor types for yhteystiedot from ytj
                     if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'posti') {
                         const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = postiOsoite;
                         const postinumeroKoodi = postinumerot.find((p) => p.arvo === postinumero);
@@ -129,13 +138,20 @@ const LomakeSivu = (props: LomakeSivuProps) => {
         console.log('Korvattu org ytj:stä tulevalla datalla ainakin suurelta osin', organisaatio);
     };
 
-    const handleOnChange = ({ name, value }: { name: keyof Organisaatio; value: any }) => {
+    const handleOnChange = ({
+        name,
+        value,
+    }: {
+        name: keyof Organisaatio;
+        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
+    }) => {
         setOrganisaatio((organisaatio) => {
             const updatedOrg = Object.assign({}, organisaatio, { [name]: value });
             console.log('päiv', updatedOrg);
             return updatedOrg;
         });
     };
+
     if (
         !organisaatio ||
         organisaatioTyypitLoading ||
@@ -175,11 +191,11 @@ const LomakeSivu = (props: LomakeSivuProps) => {
             );
             otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         }
-        lomakkeet.push(<NimiHistoriaLomake handleOnChange={handleOnChange} nimet={organisaatio.nimet} />);
+        lomakkeet.push(<NimiHistoriaLomake nimet={organisaatio.nimet} />);
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
 
         if (organisaatio.oid !== ROOT_OID) {
-            lomakkeet.push(<OrganisaatioHistoriaLomake handleOnChange={handleOnChange} oid={organisaatio.oid} />);
+            lomakkeet.push(<OrganisaatioHistoriaLomake oid={organisaatio.oid} />);
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
 

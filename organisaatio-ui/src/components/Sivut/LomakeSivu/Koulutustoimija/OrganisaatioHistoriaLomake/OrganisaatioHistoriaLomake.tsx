@@ -4,18 +4,16 @@ import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import useAxios from 'axios-hooks';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { Organisaatio } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
 
 type organisaatioHistoriaProps = {
     oid?: string;
-    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
 };
 
 export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const [{ data: historia, loading: historiaLoading, error: historiaError }, ,] = useAxios(
+    const [{ data: historia, loading: historiaLoading, error: historiaError }] = useAxios(
         `/organisaatio/organisaatio/v4/${props.oid}/historia`
     );
     console.log('hist', historiaLoading, historia);

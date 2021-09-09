@@ -17,15 +17,21 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { Koodi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
+import { Koodi, KoodiUri, Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 
 type OrganisaatioProps = {
     organisaatio: Organisaatio;
     language: string;
     organisaatioTyypit: Koodi[];
-    maatJaValtiot: any;
-    opetuskielet: any;
-    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
+    maatJaValtiot: Koodi[];
+    opetuskielet: Koodi[];
+    handleOnChange: ({
+        name,
+        value,
+    }: {
+        name: keyof Organisaatio;
+        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri;
+    }) => void;
     setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
 };
 
@@ -51,13 +57,14 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
 
     const { kuntaKoodisto } = useContext(KoodistoContext);
-    const kaikkiKunnat: { value: string; label: string }[] = kuntaKoodisto.koodit().map((k: any) => ({
+    const kaikkiKunnat: { value: string; label: string }[] = kuntaKoodisto.koodit().map((k: Koodi) => ({
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
     }));
 
     const handleNimiTallennus = () => {
         const nimet = { nimi: Object.assign({}, nimi), alkuPvm: new Date().toISOString().split('T')[0] };
+        console.log(nimet);
         handleOnChange({ name: 'nimet', value: [nimet] });
         handleOnChange({ name: 'nimi', value: nimi });
     };
@@ -67,7 +74,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         setYTJModaaliAuki(false);
     };
 
-    const kielistetytOpetuskielet = opetuskielet.map((mv: any) => ({
+    const kielistetytOpetuskielet = opetuskielet.map((mv) => ({
         value: `${mv.uri}#${mv.versio}`,
         label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
     }));
@@ -121,7 +128,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     {organisaatio.tyypit && (
                         <CheckboxGroup
                             value={[...organisaatio.tyypit]}
-                            options={organisaatioTyypit.map((oT: any) => ({
+                            options={organisaatioTyypit.map((oT) => ({
                                 value: oT.uri,
                                 label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
                             }))}
@@ -183,14 +190,14 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <Select
                         onChange={(selected) => handleOnChange({ name: 'maaUri', value: (selected as iOption).value })}
                         value={maatJaValtiot
-                            .map((mv: any) => ({
+                            .map((mv) => ({
                                 value: mv.uri,
                                 label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
                             }))
-                            .find((mv: any) => {
+                            .find((mv) => {
                                 return mv.value === organisaatio.maaUri;
                             })}
-                        options={maatJaValtiot.map((mv: any) => ({
+                        options={maatJaValtiot.map((mv) => ({
                             value: mv.uri,
                             label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
                         }))}
@@ -210,8 +217,12 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         isMulti
                         value={
                             organisaatio.muutKotipaikatUris &&
-                            organisaatio.kieletUris.map((ku: string) =>
-                                kielistetytOpetuskielet.find((ok: any) => ku === ok.value)
+                            organisaatio.kieletUris.map(
+                                (ku) =>
+                                    kielistetytOpetuskielet.find((ok) => ku === ok.value) || {
+                                        value: '',
+                                        label: '',
+                                    }
                             )
                         }
                         options={kielistetytOpetuskielet}

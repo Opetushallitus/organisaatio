@@ -147,7 +147,7 @@ const TaulukkoSivu = (props) => {
                 ),
             },
         ],
-        [i18n, language]
+        [kuntaKoodisto, organisaatioTyypitKoodisto, i18n, language]
     );
 
     const data = organisaatiot;
