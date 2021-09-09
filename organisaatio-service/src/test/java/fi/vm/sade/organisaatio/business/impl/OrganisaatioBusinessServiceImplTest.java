@@ -296,12 +296,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
                 .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
     }
 
-    @Test
     private void checkParentOidPath(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
         assertEquals(parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
     }
-    @Test
+
     private void checkParent(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
         String pop = org.getParentOidPath();
