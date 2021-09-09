@@ -28,7 +28,6 @@ type OrganisaatioHakuTaulukkoProps = {
 };
 
 function Hakufiltterit({
-    preGlobalFilteredRows,
     globalFilter,
     setGlobalFilter,
     naytaPassivoidut,
@@ -127,7 +126,6 @@ export default function OrganisaatioHakuTaulukko({
         page, // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
         globalFilter,
-        preGlobalFilteredRows,
         setGlobalFilter,
 
         // The rest of these things are super handy, too ;)
@@ -165,7 +163,6 @@ export default function OrganisaatioHakuTaulukko({
                 setOmatOrganisaatiotSelected={setOmatOrganisaatiotSelected}
                 isOPHVirkailija={isOPHVirkailija}
                 i18n={i18n}
-                preGlobalFilteredRows={preGlobalFilteredRows}
                 globalFilter={globalFilter}
                 setGlobalFilter={setGlobalFilter}
                 naytaPassivoidut={naytaPassivoidut}
@@ -173,12 +170,14 @@ export default function OrganisaatioHakuTaulukko({
             />
             <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
                 <thead>
-                    {headerGroups.map((headerGroup) => (
+                    {headerGroups.map((
+                        headerGroup: any //TODO remove any and take care of collapse
+                    ) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column) => (
                                 <th
                                     {...column.getHeaderProps({
-                                        className: false ? styles.collapse : '', //TODO take care of collapse
+                                        className: column.collapse ? styles.collapse : '',
                                     })}
                                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                                 >
@@ -193,11 +192,12 @@ export default function OrganisaatioHakuTaulukko({
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => {
+                                {row.cells.map((cell: any) => {
+                                    //TODO remove any and take care of collapse
                                     return (
                                         <td
                                             {...cell.getCellProps({
-                                                className: false ? styles.collapse : '', //TODO take care of collapse
+                                                className: cell.row.collapse ? styles.collapse : '',
                                             })}
                                             style={{
                                                 background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
