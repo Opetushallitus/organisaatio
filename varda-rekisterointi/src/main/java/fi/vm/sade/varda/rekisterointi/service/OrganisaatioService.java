@@ -60,7 +60,8 @@ public class OrganisaatioService {
                 dto.kotipaikkaUri,
                 dto.maaUri,
                 dto.kieletUris,
-                muunnaYhteystiedot(dto));
+                muunnaYhteystiedot(dto),
+                false);
     }
 
     /**

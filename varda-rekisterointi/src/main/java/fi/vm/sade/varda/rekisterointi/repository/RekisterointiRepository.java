@@ -16,6 +16,7 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
             "o.nimi_alkupvm AS organisaatio_nimi_alkupvm, o.yritysmuoto AS organisaatio_yritysmuoto, " +
             "o.tyypit AS organisaatio_tyypit, o.kotipaikka AS organisaatio_kotipaikka, o.maa AS organisaatio_maa, " +
             "o.kielet_uris AS organisaatio_kielet_uris, " +
+            "o.uudelleen_rekisterointi as organisaatio_uudelleen_rekisterointi, " +
             "y.rekisterointi_id AS organisaatio_yhteystiedot_rekisterointi_id, " +
             "y.puhelinnumero AS organisaatio_yhteystiedot_puhelinnumero, " +
             "y.sahkoposti AS organisaatio_yhteystiedot_sahkoposti, " +
@@ -60,5 +61,6 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
                                                                          @Param("kunnat") String[] kunnat,
                                                                          @Param("organisaatio") String organisaatio);
 
-
+    @Query(value = REKISTEROINTI_SELECT + " WHERE o.ytunnus = :ytunnus")
+    Iterable<Rekisterointi> findByYtunnus(@Param("ytunnus") String ytunnus);
 }
