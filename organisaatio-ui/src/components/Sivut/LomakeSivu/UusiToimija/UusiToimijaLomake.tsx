@@ -15,11 +15,12 @@ import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoL
 import Icon from '@iconify/react';
 import useAxios from 'axios-hooks';
 import Axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
-    nimi: '',
-    nimet: '',
+    nimi: {},
+    nimet: [],
     alkuPvm: null,
     yritysmuoto: '',
     tyypit: [],
@@ -63,7 +64,7 @@ const tyhjaOrganisaatio: Organisaatio = {
         .flat(),
 };
 
-const UusiToimijaLomake = (props: any) => {
+const UusiToimijaLomake = (props: { history: string[] }) => {
     const { i18n } = useContext(LanguageContext);
     const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
         Koodi[]
@@ -118,14 +119,38 @@ const UusiToimijaLomake = (props: any) => {
             </div>
         );
     }
+    const accordionProps = () => {
+        const lomakkeet = [] as React.ReactElement[];
+        const otsikot = [] as string[];
+        lomakkeet.push(
+            <PerustietoLomake
+                handleJatka={() => setLomakeAvoinna(1)}
+                handleOnChange={handleOnChange}
+                organisaatioTyypit={organisaatioTyypit}
+                organisaatio={organisaatio}
+                maatJaValtiot={maatJaValtiot}
+                opetuskielet={oppilaitoksenOpetuskielet}
+            />
+        );
+        otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
+        if (organisaatio.yhteystiedot) {
+            lomakkeet.push(
+                <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
+            );
+            otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        }
+
+        return { lomakkeet: lomakkeet, otsikot: otsikot };
+    };
+
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/">
+                    <Link to="/">
                         <Icon icon={homeIcon} />
                         {i18n.translate('UUSI_TOIMIJA_TITLE')}
-                    </a>
+                    </Link>
                 </div>
             </div>
             <div className={styles.ValiContainer}>
@@ -142,18 +167,7 @@ const UusiToimijaLomake = (props: any) => {
                         console.log('accordionevent', event);
                         //setLomakeAvoinna(avoinnaIndex[0] + 1)
                     }}
-                    lomakkeet={[
-                        <PerustietoLomake
-                            handleJatka={() => setLomakeAvoinna(1)}
-                            handleOnChange={handleOnChange}
-                            organisaatioTyypit={organisaatioTyypit}
-                            organisaatio={organisaatio}
-                            maatJaValtiot={maatJaValtiot}
-                            opetuskielet={oppilaitoksenOpetuskielet}
-                        />,
-                        <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />,
-                    ]}
-                    otsikot={['Perustiedot', 'Yhteystiedot']} // TODO kriisisähköposti?
+                    {...accordionProps()}
                 />
             </div>
             <div className={styles.AlaBanneri}>

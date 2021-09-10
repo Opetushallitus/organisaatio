@@ -76,19 +76,25 @@ export type YhteystiedotOsoite = YhteystiedotBase & {
 
 export type Yhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
 
+export type Nimi = {
+    fi?: string;
+    sv?: string;
+    en?: string;
+};
+
 export interface Organisaatio {
     oid?: string;
     ytunnus: string;
-    nimi: any; // TODO?
-    nimet: any; // TODO?
+    nimi: Nimi; // TODO?
+    nimet: Nimi[]; // TODO?
     alkuPvm: LocalDate | null;
-    yritysmuoto: string;
-    tyypit: KoodiUri[];
+    yritysmuoto?: string;
+    tyypit?: KoodiUri[];
     kotipaikkaUri: KoodiUri;
-    muutKotipaikatUris: KoodiUri[];
-    maaUri: KoodiUri;
+    muutKotipaikatUris?: KoodiUri[];
+    maaUri?: KoodiUri;
     kieletUris: KoodiUri[];
-    yhteystiedot: Yhteystiedot[];
+    yhteystiedot?: Yhteystiedot[];
 }
 
 export interface YtjOrganisaatio {

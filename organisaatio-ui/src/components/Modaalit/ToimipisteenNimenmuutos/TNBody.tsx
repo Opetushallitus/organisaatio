@@ -2,16 +2,11 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenNimenmuutos.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-
-interface NimiType {
-    fi: 'fi';
-    sv: 'sv';
-    en: 'en';
-}
+import { Nimi } from '../../../types/types';
 
 type TNProps = {
-    handleChange: (nimi: { fi: string; sv: string; en: string }) => void;
-    nimi: { fi: string; sv: string; en: string };
+    handleChange: (nimi: Nimi) => void;
+    nimi: Nimi;
 };
 
 export default function TNBody(props: TNProps) {
@@ -19,7 +14,7 @@ export default function TNBody(props: TNProps) {
     const { handleChange, nimi } = props;
     const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target as HTMLInputElement;
-        const inputinNimi = input.name as keyof NimiType;
+        const inputinNimi = input.name as keyof Nimi;
         console.log('dasda', nimi, inputinNimi);
         const uusiNimi = Object.assign({}, nimi);
         uusiNimi[inputinNimi] = input.value;

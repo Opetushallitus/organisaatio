@@ -3,11 +3,9 @@ import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import useAxios from 'axios-hooks';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { Organisaatio } from '../../../../../types/types';
 
 type organisaatioHistoriaProps = {
     oid?: string;
-    handleOnChange: ({ name, value }: { name: keyof Organisaatio; value: any }) => void;
 };
 
 export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {

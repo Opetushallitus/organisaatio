@@ -4,11 +4,11 @@ import './index.css';
 import OrganisaatioApp from './OrganisaatioApp';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import { ROOT_OID } from './contexts/contexts';
 
 const cookies = new Cookies();
-
 axios.interceptors.request.use((config) => {
-    config.headers['Caller-Id'] = '1.2.246.562.10.00000000001.organisaatio-ui';
+    config.headers['Caller-Id'] = `${ROOT_OID}.organisaatio-ui`;
     config.headers['CSRF'] = cookies.get('CSRF');
     return config;
 });

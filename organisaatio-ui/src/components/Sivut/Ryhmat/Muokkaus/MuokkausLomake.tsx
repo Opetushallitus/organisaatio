@@ -14,6 +14,7 @@ import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Joi from 'joi';
+import { Link } from 'react-router-dom';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -84,12 +85,12 @@ const MuokkausLomake = ({
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio/ryhmat">
+                    <Link to="/ryhmat">
                         <Icon icon={homeIcon} />
-                    </a>
+                    </Link>
                 </div>
                 <div>
-                    <a href="/organisaatio/ryhmat">{i18n.translate('RYHMAT_KAIKKI_RYHMAT')}</a>
+                    <Link to="/ryhmat">{i18n.translate('RYHMAT_KAIKKI_RYHMAT')}</Link>
                 </div>
             </div>
             <div className={styles.PaaKehys}>

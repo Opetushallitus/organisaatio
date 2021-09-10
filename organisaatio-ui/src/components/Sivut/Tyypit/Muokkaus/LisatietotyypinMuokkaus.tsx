@@ -20,7 +20,7 @@ const KAIKKIVALITTU = '1',
     RAJATUT_VALITTU = '0';
 
 type Props = {
-    match: any;
+    match: { params: { nimi: string } };
 };
 
 export default function LisatietotyypinMuokkaus(props: Props) {
@@ -28,7 +28,7 @@ export default function LisatietotyypinMuokkaus(props: Props) {
     const [lisatietotyyppi, setLisatietotyyppi] = useState<undefined | any>();
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
         Koodi[]
-    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=1595328878067&onlyValidKoodis=true`);
+    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=${Date.now()}&onlyValidKoodis=true`); //TODO the random parameter should probably be random
     const {
         match: { params },
     } = props;
@@ -50,9 +50,9 @@ export default function LisatietotyypinMuokkaus(props: Props) {
         return <Spin />;
     }
 
-    const oppilaitosTyypitOptions = oppilaitosTyypit.map((k: any) => ({
+    const oppilaitosTyypitOptions = oppilaitosTyypit.map((k) => ({
         value: k.uri,
-        label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
+        label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '',
     }));
     const valitutRajoitteet = lisatietotyyppi.rajoitteet
         .filter((r: any) => r.rajoitetyyppi === 'OPPILAITOSTYYPPI')

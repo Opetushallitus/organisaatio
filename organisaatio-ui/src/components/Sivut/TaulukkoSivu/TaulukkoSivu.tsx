@@ -5,12 +5,14 @@ import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import chevronUp from '@iconify/icons-fa-solid/chevron-up';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { LanguageContext, KoodistoContext } from '../../../contexts/contexts';
+import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/OrganisaatioHakuTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
+import { Organisaatio } from '../../../types/types';
+import { Link } from 'react-router-dom';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -25,7 +27,7 @@ const TaulukkoSivu = (props) => {
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
 
-    const [organisaatiot, setOrganisaatiot] = useState([]);
+    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
     const [isOPHVirkailija, setIsOPHVirkailija] = React.useState(true);
@@ -54,7 +56,7 @@ const TaulukkoSivu = (props) => {
         fetch();
     }, [naytaPassivoidut, isOPHVirkailija, omatOrganisaatiotSelected]);
 
-    const columns = [
+    const columns: any = [
         {
             // Build our expander column
             id: 'expander', // Make sure it has an ID
@@ -86,13 +88,13 @@ const TaulukkoSivu = (props) => {
             },
             Cell: ({ row }) => {
                 return (
-                    <a href={`/organisaatio/lomake/${row.original.oid}`}>
+                    <Link to={`/lomake/${row.original.oid}`}>
                         {row.original.nimi[language] ||
                             row.original.nimi.fi ||
                             row.original.nimi.sv ||
                             row.original.nimi.fi ||
                             row.original.nimi.en}
-                    </a>
+                    </Link>
                 );
             },
         },
@@ -104,8 +106,10 @@ const TaulukkoSivu = (props) => {
             },
         },
         {
-            Header: i18n.translate('TAULUKKO_TYYPPI'),
-            accessor: (values) => values.organisaatiotyypit.map((ot) => ot),
+            Header: i18n.translate('TAULUKKO_TYYPPIX'),
+            accessor: (values) => {
+                return values.tyypit;
+            },
             Cell: ({ row }) => (
                 <span>
                     {row.original.organisaatiotyypit.map((ot) => organisaatioTyypitKoodisto.uri2Nimi(ot)).join(', ')}
@@ -123,7 +127,7 @@ const TaulukkoSivu = (props) => {
         {
             Header: i18n.translate('TAULUKKO_TARKISTUS'),
             id: 'tarkistus',
-            accessor: (values) => (tarkastaLipunVari(values.tarkastusPvm) ? null : 'tarkistus'),
+            //   accessor: (values) => (tarkastaLipunVari(values.tarkastusPvm) ? null : 'tarkistus'),
             Cell: ({ row }) => (
                 <div
                     className={`${styles.LippuNappi} ${

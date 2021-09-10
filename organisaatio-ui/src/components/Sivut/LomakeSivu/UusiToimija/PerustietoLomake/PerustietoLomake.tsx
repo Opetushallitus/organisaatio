@@ -12,13 +12,20 @@ import TNFooter from '../../../../Modaalit/ToimipisteenNimenmuutos/TNFooter';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import TNUusiBody from '../../../../Modaalit/ToimipisteenNimenmuutos/TNUusiBody';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
+import { Koodi, KoodiUri, Organisaatio, Yhteystiedot } from '../../../../../types/types';
 
 type OrganisaatioProps = {
-    organisaatio: any;
-    organisaatioTyypit: any;
-    maatJaValtiot: any;
-    opetuskielet: any;
-    handleOnChange: ({ name, value }: { name: string; value: any }) => void;
+    organisaatio: Organisaatio;
+    organisaatioTyypit: Koodi[];
+    maatJaValtiot: Koodi[];
+    opetuskielet: Koodi[];
+    handleOnChange: ({
+        name,
+        value,
+    }: {
+        name: string;
+        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
+    }) => void;
     handleJatka: () => void;
 };
 type Nimi = {
@@ -46,9 +53,9 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     const { kuntaKoodisto } = useContext(KoodistoContext);
-    const kaikkiKunnat = kuntaKoodisto.koodit().map((k: any) => ({
+    const kaikkiKunnat = kuntaKoodisto.koodit().map((k) => ({
         value: k.uri,
-        label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'],
+        label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '',
     }));
     const [nimi, setNimi] = useState(tyhjaNimi);
 
@@ -114,24 +121,26 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
-                    <CheckboxGroup
-                        value={[...organisaatio.tyypit]}
-                        options={organisaatioTyypit.map((oT: any) => ({
-                            value: oT.uri,
-                            label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
-                        }))}
-                        onChange={(tyypit) => {
-                            console.log(tyypit);
-                            handleOnChange({ name: 'tyypit', value: tyypit });
-                        }}
-                    />
+                    {organisaatio.tyypit && (
+                        <CheckboxGroup
+                            value={[...organisaatio.tyypit]}
+                            options={organisaatioTyypit.map((oT) => ({
+                                value: oT.uri,
+                                label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
+                            }))}
+                            onChange={(tyypit) => {
+                                console.log(tyypit);
+                                handleOnChange({ name: 'tyypit', value: tyypit });
+                            }}
+                        />
+                    )}
                 </div>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
                     <DatePickerInput
-                        value={organisaatio.alkuPvm}
+                        value={organisaatio.alkuPvm || ''}
                         onChange={(date: Date) => handleOnChange({ name: 'alkuPvm', value: date })}
                     />
                 </div>
@@ -152,16 +161,12 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     />
                 </div>
                 <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_MUUT_KUNNAT')}</label>
+                    <label>{i18n.translate('PERUSTIETO_MUUT_KUNNATs')}</label>
                     <Select
                         isMulti
-                        value={
-                            organisaatio.muutKotipaikatUris && organisaatio.muutKotipaikatUris.length
-                                ? kaikkiKunnat.filter(
-                                      (kk) => !!organisaatio.muutKotipaikatUris.find((mku: string) => mku === kk.value)
-                                  )
-                                : []
-                        }
+                        value={(organisaatio.muutKotipaikatUris || []).map(
+                            (mk) => kaikkiKunnat.find((kk) => kk.value === mk) || { label: '', value: '' }
+                        )}
                         options={kaikkiKunnat}
                         onChange={(option) => {
                             console.log('opts', option);
@@ -179,16 +184,16 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <Select
                         onChange={(selected) => handleOnChange({ name: 'maaUri', value: (selected as iOption).value })}
                         value={maatJaValtiot
-                            .map((mv: any) => ({
+                            .map((mv) => ({
                                 value: mv.uri,
-                                label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
+                                label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'] || '',
                             }))
-                            .find((mv: any) => {
+                            .find((mv) => {
                                 return mv.value === organisaatio.maaUri;
                             })}
-                        options={maatJaValtiot.map((mv: any) => ({
+                        options={maatJaValtiot.map((mv) => ({
                             value: mv.uri,
-                            label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
+                            label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'] || '',
                         }))}
                     />
                 </div>
@@ -202,18 +207,18 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         }
                         isMulti
                         value={opetuskielet
-                            .map((mv: any) => ({
+                            .map((mv) => ({
                                 value: `${mv.uri}#${mv.versio}`,
-                                label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
+                                label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'] || '',
                             }))
-                            .find((mv: any) => {
+                            .find((mv) => {
                                 return organisaatio.kieletUris.find(
                                     (kU: string) => kU.slice(0, kU.length - 2) === mv.value
                                 );
                             })}
-                        options={opetuskielet.map((mv: any) => ({
+                        options={opetuskielet.map((mv) => ({
                             value: `${mv.uri}#${mv.versio}`,
-                            label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'],
+                            label: mv.nimi[language] || mv.nimi['fi'] || mv.nimi['sv'] || mv.nimi['en'] || '',
                         }))}
                     />
                 </div>
