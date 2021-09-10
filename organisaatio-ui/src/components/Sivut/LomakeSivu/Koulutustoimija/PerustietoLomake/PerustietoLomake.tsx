@@ -166,13 +166,9 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <label>{i18n.translate('PERUSTIETO_MUUT_KUNNAT')}</label>
                     <Select
                         isMulti
-                        value={
-                            organisaatio.muutKotipaikatUris
-                                ? organisaatio.muutKotipaikatUris.map(
-                                      (mk) => kaikkiKunnat.find((kk) => kk.value === mk) || { label: '', value: '' }
-                                  )
-                                : []
-                        }
+                        value={(organisaatio.muutKotipaikatUris || []).map(
+                            (mk) => kaikkiKunnat.find((kk) => kk.value === mk) || { label: '', value: '' }
+                        )}
                         options={kaikkiKunnat}
                         onChange={(option = []) => {
                             handleOnChange({
