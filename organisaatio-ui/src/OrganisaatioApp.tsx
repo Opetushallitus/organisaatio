@@ -1,13 +1,13 @@
 import * as React from 'react';
-import {ThemeProvider} from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 //import 'normalize.css';
 // import 'oph-virkailija-style-guide/oph-styles.css'
-import {registerLocale} from 'react-datepicker';
-import {enGB, fi, sv} from 'date-fns/locale';
-import {I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext} from './contexts/contexts';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import {Koodi, Lokalisointi} from './types/types';
+import { registerLocale } from 'react-datepicker';
+import { enGB, fi, sv } from 'date-fns/locale';
+import { I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Koodi, Lokalisointi } from './types/types';
 import useAxios from 'axios-hooks';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
@@ -19,7 +19,7 @@ import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/Lisatiet
 import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
-import {useCASLanguage} from './api/useCAS';
+import { useCASLanguage } from './api/useCAS';
 
 const theme = createTheme();
 
