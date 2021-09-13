@@ -31,7 +31,7 @@ const historiaSorter = (a: OrganisaatioSuhde | OrganisaatioLiitos, b: Organisaat
     return a.alkuPvm.localeCompare(b.alkuPvm);
 };
 
-const OrhanisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) => {
+const OrganisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) => {
     const { i18n, language } = useContext(LanguageContext);
     return (
         <Link to={`/lomake/${organisaatio.oid}`}>
@@ -49,7 +49,7 @@ const OrhanisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) 
 const historiaMapperSuhde = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
     return {
         oid: a[key].oid,
-        nimiHref: <OrhanisaatioLink organisaatio={a[key]} />,
+        nimiHref: <OrganisaatioLink organisaatio={a[key]} />,
         alkuPvm: a.alkuPvm,
         status: a[key].status,
     };
@@ -58,7 +58,7 @@ const historiaMapperSuhde = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
 const historiaMapperLiitos = (a: OrganisaatioLiitos, key: 'organisaatio' | 'kohde') => {
     return {
         oid: a[key].oid,
-        nimiHref: <OrhanisaatioLink organisaatio={a[key]} />,
+        nimiHref: <OrganisaatioLink organisaatio={a[key]} />,
         alkuPvm: a.alkuPvm,
         loppuPvm: a.loppuPvm,
         status: a[key].status,
