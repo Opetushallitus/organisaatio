@@ -175,31 +175,31 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException {
+    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTO model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if (updating) {
+        if (entity.getOid() != null) {
             return update(entity, model.getParentOid());
         }
         return save(entity, model.getParentOid());
     }
 
     @Override
-    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException {
+    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTOV3 model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if (updating) {
+        if (entity.getOid() != null) {
             return update(entity, model.getParentOid());
         }
         return save(entity, model.getParentOid());
     }
 
     @Override
-    public ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException {
+    public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         OrganisaatioResult organisaatioResult;
-        if (updating) {
+        if (entity.getOid() != null) {
             organisaatioResult = update(entity, model.getParentOid());
         } else {
             organisaatioResult = save(entity, model.getParentOid());
@@ -208,9 +208,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private OrganisaatioResult update(Organisaatio entity, String parentOid) {
-        if (entity.getOid() == null) {
-            throw new ValidationException("Oid cannot be null");
-        }
 
         Organisaatio parentOrg = fetchParentOrg(parentOid);
 
@@ -232,8 +229,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         setParentPath(entity, parentOid);
 
         checkToimipisteNimiFormat(entity, parentOrg);
-
-        // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
 
         boolean parentChanged = false;
         Organisaatio oldParent = null;
@@ -276,14 +271,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         generateToimipistekoodi(entity, oldOrg, parentOrg);
 
-        // call super.insert OR update which saves & validates jpa
         LOG.debug("updating " + entity);
         try {
             entity = organisaatioRepository.saveAndFlush(entity);
         } catch (OptimisticLockException ole) {
             throw new OrganisaatioModifiedException(ole);
         }
-      // entity = organisaatioRepository.findById(entity.getId()).orElseThrow(); // TODO virheet
 
         // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
         if (parentOrg != null && organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {

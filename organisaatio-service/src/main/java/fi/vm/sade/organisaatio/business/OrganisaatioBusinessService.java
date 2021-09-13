@@ -33,28 +33,25 @@ public interface OrganisaatioBusinessService {
 
     /**
      * @param model
-     * @param updating
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException;
+    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTO model) throws ValidationException;
 
     /**
      * @param model
-     * @param updating
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException;
+    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTOV3 model) throws ValidationException;
 
     /**
      * Organisaatio api v4 wrapperi organisaation luomiseen ja tallennukseen.
      * @param model Organisaatio v4 rajapinnan mukainen dto organisaatiosta
-     * @param updating Luodaanko uusi vai päivitetäänkö
      * @return Organisaatio v4 rajapinnan tulos dto
      * @throws ValidationException Validointivirhe jos organisaation tiedot ovat virheellisiä
      */
-    ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException;
+    public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException;
 
     /**
      * @param oid
