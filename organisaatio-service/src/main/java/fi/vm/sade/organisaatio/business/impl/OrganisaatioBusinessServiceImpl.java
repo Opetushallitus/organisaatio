@@ -719,7 +719,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                             }
                         }
                         child.setPaivitysPvm(new Date());
-                        child = organisaatioRepository.save(child); // TODO works?
+                        child = organisaatioRepository.save(child);
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
                     } else {
                         // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
