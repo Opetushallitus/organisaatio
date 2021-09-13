@@ -5,7 +5,7 @@ import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko'
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
-import { OrganisaatioBase, OrganisaatioLiitos, OrganisaatioSuhde } from '../../../../../types/types';
+import { OrganisaatioBase, OrganisaatioSuhde } from '../../../../../types/types';
 import useOrganisaatioHistoria from '../../../../../api/useOrganisaatioHistoria';
 
 const liittyneetColumns = [
@@ -27,7 +27,7 @@ const sisaltyvatColumns = [
     ['RAKENNE_SISALTYVAT_NIMI', 'nimiHref'],
 ];
 
-const historiaSorter = (a: OrganisaatioSuhde | OrganisaatioLiitos, b: OrganisaatioSuhde | OrganisaatioLiitos) => {
+const historiaSorter = (a: OrganisaatioSuhde, b: OrganisaatioSuhde) => {
     return a.alkuPvm.localeCompare(b.alkuPvm);
 };
 
@@ -46,21 +46,11 @@ const OrganisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) 
     );
 };
 
-const historiaMapperSuhde = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
+const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
     return {
         oid: a[key].oid,
         nimiHref: <OrganisaatioLink organisaatio={a[key]} />,
         alkuPvm: a.alkuPvm,
-        status: a[key].status,
-    };
-};
-
-const historiaMapperLiitos = (a: OrganisaatioLiitos, key: 'organisaatio' | 'kohde') => {
-    return {
-        oid: a[key].oid,
-        nimiHref: <OrganisaatioLink organisaatio={a[key]} />,
-        alkuPvm: a.alkuPvm,
-        loppuPvm: a.loppuPvm,
         status: a[key].status,
     };
 };
@@ -78,13 +68,13 @@ export default function OrganisaatioHistoriaLomake(props: { oid: string }) {
 
     const columnMapper = (column: string[]) => ({ Header: i18n.translate(column[0]), accessor: column[1] });
 
-    const liittyneetData = historia.liitokset.sort(historiaSorter).map((a) => historiaMapperLiitos(a, 'organisaatio'));
+    const liittyneetData = historia.liitokset.sort(historiaSorter).map((a) => historiaMapper(a, 'parent'));
 
-    const yhdistettyData = historia.liittymiset.sort(historiaSorter).map((a) => historiaMapperLiitos(a, 'kohde'));
+    const yhdistettyData = historia.liittymiset.sort(historiaSorter).map((a) => historiaMapper(a, 'child'));
 
-    const ylemmanTasonData = historia.parentSuhteet.sort(historiaSorter).map((a) => historiaMapperSuhde(a, 'parent'));
+    const ylemmanTasonData = historia.parentSuhteet.sort(historiaSorter).map((a) => historiaMapper(a, 'parent'));
 
-    const sisaltyvatData = historia.childSuhteet.sort(historiaSorter).map((a) => historiaMapperSuhde(a, 'child'));
+    const sisaltyvatData = historia.childSuhteet.sort(historiaSorter).map((a) => historiaMapper(a, 'child'));
 
     return (
         <div className={styles.UloinKehys}>

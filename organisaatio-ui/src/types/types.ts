@@ -145,20 +145,16 @@ export type Ryhma = OrganisaatioBase & {
 };
 export type OrganisaatioSuhde = {
     alkuPvm: string;
+    loppuPvm?: string;
     child: OrganisaatioBase;
     parent: OrganisaatioBase;
 };
-export type OrganisaatioLiitos = {
-    alkuPvm: string;
-    loppuPvm?: string;
-    kohde: OrganisaatioBase;
-    organisaatio: OrganisaatioBase;
-};
+
 export type OrganisaatioHistoria = {
     childSuhteet: OrganisaatioSuhde[];
     parentSuhteet: OrganisaatioSuhde[];
-    liitokset: OrganisaatioLiitos[];
-    liittymiset: OrganisaatioLiitos[];
+    liitokset: OrganisaatioSuhde[];
+    liittymiset: OrganisaatioSuhde[];
 };
 export interface YhteystietoTyyppi {
     allLisatietokenttas: any;
