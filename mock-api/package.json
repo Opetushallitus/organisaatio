@@ -1,0 +1,14 @@
+{
+  "name": "mock-api",
+  "version": "1.0.0",
+  "description": "Mock API for local use and Travis builds",
+  "main": "app.js",
+  "scripts": {
+    "mock-api": "node ./src/app.js"
+  },
+  "dependencies": {
+    "connect-api-mocker": "^1.10.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
