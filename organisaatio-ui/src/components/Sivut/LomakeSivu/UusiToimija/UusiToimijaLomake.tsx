@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
     nimi: {},
+    status: '',
     nimet: [],
     alkuPvm: null,
     yritysmuoto: '',

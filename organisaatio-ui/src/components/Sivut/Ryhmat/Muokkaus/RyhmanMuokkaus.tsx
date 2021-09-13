@@ -22,7 +22,7 @@ const emptyRyhma: Ryhma = {
         'kieli_fi#1': '',
     },
     parentOid: ROOT_OID,
-    oid: null,
+    oid: undefined,
     ryhmatyypit: [],
     kayttoryhmat: [],
     status: 'AKTIIVINEN',

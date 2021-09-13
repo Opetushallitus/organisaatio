@@ -81,11 +81,13 @@ export type Nimi = {
     sv?: string;
     en?: string;
 };
-
-export interface Organisaatio {
+export type OrganisaatioBase = {
     oid?: string;
+    nimi: Nimi;
+    status: string;
+};
+export type Organisaatio = OrganisaatioBase & {
     ytunnus: string;
-    nimi: Nimi; // TODO?
     nimet: Nimi[]; // TODO?
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
@@ -95,7 +97,7 @@ export interface Organisaatio {
     maaUri?: KoodiUri;
     kieletUris: KoodiUri[];
     yhteystiedot?: Yhteystiedot[];
-}
+};
 
 export interface YtjOrganisaatio {
     ytunnus: string;
@@ -116,7 +118,7 @@ export interface YtjOrganisaatio {
     yritysTunnus: ytjYtunnus;
 }
 
-export interface Ryhma {
+export type Ryhma = OrganisaatioBase & {
     yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: any; // TODO Tuleeko nämä???
     kayntiosoite?: any;
@@ -128,22 +130,36 @@ export interface Ryhma {
     muutKotipaikatUris?: string[];
     muutOppilaitosTyyppiUris?: string[];
     nimet?: any[];
-    nimi: any;
-    oid?: string | null;
     parentOid?: string;
     parentOidPath?: string;
     piilotettu?: boolean;
     postiosoite?: any;
     ryhmatyypit: string[];
-    status: string;
+
     toimipistekoodi?: string;
     tyypit: string[];
     version?: number;
     vuosiluokat?: any[];
     yhteystiedot?: Yhteystiedot[];
     yhteystietoArvos?: any[];
-}
-
+};
+export type OrganisaatioSuhde = {
+    alkuPvm: string;
+    child: OrganisaatioBase;
+    parent: OrganisaatioBase;
+};
+export type OrganisaatioLiitos = {
+    alkuPvm: string;
+    loppuPvm?: string;
+    kohde: OrganisaatioBase;
+    organisaatio: OrganisaatioBase;
+};
+export type OrganisaatioHistoria = {
+    childSuhteet: OrganisaatioSuhde[];
+    parentSuhteet: OrganisaatioSuhde[];
+    liitokset: OrganisaatioLiitos[];
+    liittymiset: OrganisaatioLiitos[];
+};
 export interface YhteystietoTyyppi {
     allLisatietokenttas: any;
     oid?: string;

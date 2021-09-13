@@ -28,13 +28,11 @@ export class I18nImpl implements I18n {
 
 type LanguageContextType = {
     language: Language;
-    setLanguage: (language: Language) => void;
     i18n: I18n;
 };
 
 export const LanguageContext = React.createContext<LanguageContextType>({
     language: 'fi',
-    setLanguage: (language: Language) => {},
     i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
 });
 

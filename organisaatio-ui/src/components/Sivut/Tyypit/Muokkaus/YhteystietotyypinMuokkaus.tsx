@@ -24,7 +24,7 @@ export default function YhteystietotyypinMuokkaus() {
     const { i18n, language } = useContext(LanguageContext);
     const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
         Koodi[]
-    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=${Date.now()}&onlyValidKoodis=true`); //TODO the random parameter should probably be random
+    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=${Date.now()}&onlyValidKoodis=true`);
     const [isKaikkiValittu, setIsKaikkiValittu] = useState(KAIKKIVALITTU);
     const [isModaliAuki, setIsModaaliAuki] = useState(false);
 

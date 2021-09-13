@@ -1,17 +1,15 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 //import 'normalize.css';
 // import 'oph-virkailija-style-guide/oph-styles.css'
 import { registerLocale } from 'react-datepicker';
-import { fi, sv, enGB } from 'date-fns/locale';
-import { LanguageContext, I18nImpl, KoodistoImpl, KoodistoContext } from './contexts/contexts';
+import { enGB, fi, sv } from 'date-fns/locale';
+import { I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Koodi, Language, Lokalisointi } from './types/types';
+import { Koodi, Lokalisointi } from './types/types';
 import useAxios from 'axios-hooks';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import axios from 'axios';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
@@ -21,6 +19,7 @@ import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/Lisatiet
 import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
+import { useCASLanguage } from './api/useCAS';
 
 const theme = createTheme();
 
@@ -28,21 +27,7 @@ const OrganisaatioApp: React.FC = () => {
     registerLocale('fi', fi);
     registerLocale('sv', sv);
     registerLocale('en', enGB);
-    const [language, setLanguage] = useState<Language>('fi');
-    const [languageLoading, setLanguageLoading] = useState(true);
-    useEffect(() => {
-        async function fetchLanguage() {
-            try {
-                const response = await axios.get(`/organisaatio/lokalisointi/kieli`);
-                setLanguage(response.data);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLanguageLoading(false);
-            }
-        }
-        fetchLanguage();
-    }, []);
+    const { data: language, loading: languageLoading, error: languageError } = useCASLanguage();
     const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
         `/organisaatio/lokalisointi`
     );
@@ -77,6 +62,7 @@ const OrganisaatioApp: React.FC = () => {
         );
     }
     if (
+        languageError ||
         lokalisointiError ||
         kunnatError ||
         ryhmaTyypitError ||
@@ -96,7 +82,7 @@ const OrganisaatioApp: React.FC = () => {
     return (
         <Router basename="/organisaatio">
             <ThemeProvider theme={theme}>
-                <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
+                <LanguageContext.Provider value={{ language: language, i18n: i18n }}>
                     <KoodistoContext.Provider
                         value={{
                             kuntaKoodisto,
