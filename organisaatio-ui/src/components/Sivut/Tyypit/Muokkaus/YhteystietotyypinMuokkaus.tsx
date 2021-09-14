@@ -17,14 +17,16 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import UOTHeader from '../../../Modaalit/UusiOsoiteTyyppi/UOTHeader';
 import UOTBody from '../../../Modaalit/UusiOsoiteTyyppi/OUTBody';
 import UOTFooter from '../../../Modaalit/UusiOsoiteTyyppi/UOTFooter';
+import useKoodisto from '../../../../api/useKoodisto';
 
 const KAIKKIVALITTU = '1';
 
 export default function YhteystietotyypinMuokkaus() {
     const { i18n, language } = useContext(LanguageContext);
-    const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
-        Koodi[]
-    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=${Date.now()}&onlyValidKoodis=true`);
+    const { data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError } = useKoodisto(
+        'OPPILAITOSTYYPPI',
+        true
+    );
     const [isKaikkiValittu, setIsKaikkiValittu] = useState(KAIKKIVALITTU);
     const [isModaliAuki, setIsModaaliAuki] = useState(false);
 
