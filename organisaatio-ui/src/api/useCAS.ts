@@ -3,7 +3,8 @@ import { urls } from 'oph-urls-js';
 import { CASMe } from '../types/apiTypes';
 
 export function useCASLanguage() {
-    let virkailija = 'http://localhost:9000';
+    //let virkailija = 'http://localhost:9000';
+    let virkailija = 'https://virkailija.untuvaopintopolku.fi';
     try {
         virkailija = urls.url('url-virkailija');
     } catch (error) {
