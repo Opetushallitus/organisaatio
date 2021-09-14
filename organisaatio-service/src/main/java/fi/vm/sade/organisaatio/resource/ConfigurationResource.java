@@ -13,7 +13,7 @@ public class ConfigurationResource {
     @Autowired
     private UrlConfiguration urlConfiguration;
 
-    @GetMapping(value = "/frontProperties", produces = "application/json")
+    @GetMapping(value = "/frontproperties", produces = "application/json")
     public String frontProperties() {
         return urlConfiguration.frontPropertiesToJson();
     }
