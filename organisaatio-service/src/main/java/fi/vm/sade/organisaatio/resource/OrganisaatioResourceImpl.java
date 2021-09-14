@@ -253,7 +253,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true);
+            OrganisaatioResult result = organisaatioBusinessService.saveOrUpdate(ordto);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {
@@ -306,7 +306,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);
+            OrganisaatioResult result = organisaatioBusinessService.saveOrUpdate(ordto);
             return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
                     result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
         } catch (ValidationException ex) {

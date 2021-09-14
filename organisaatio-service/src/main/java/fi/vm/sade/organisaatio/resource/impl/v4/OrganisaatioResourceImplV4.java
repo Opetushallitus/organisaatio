@@ -99,7 +99,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         }
 
         try {
-            return organisaatioBusinessService.save(ordto, true);
+            return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
             LOG.warn("Error saving " + oid, ex);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -135,7 +135,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         try {
-            return organisaatioBusinessService.save(ordto, false);
+            return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
             LOG.warn("Error saving new org", ex);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,

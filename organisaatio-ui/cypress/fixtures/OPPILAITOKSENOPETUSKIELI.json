@@ -1,0 +1,57 @@
+[
+  {
+    "arvo": "4",
+    "uri": "oppilaitoksenopetuskieli_4",
+    "versio": 2,
+    "nimi": {
+      "fi": "englanti",
+      "sv": "engelska"
+    }
+  },
+  {
+    "arvo": "2",
+    "uri": "oppilaitoksenopetuskieli_2",
+    "versio": 2,
+    "nimi": {
+      "fi": "ruotsi",
+      "sv": "svenska"
+    }
+  },
+  {
+    "arvo": "3",
+    "uri": "oppilaitoksenopetuskieli_3",
+    "versio": 2,
+    "nimi": {
+      "fi": "suomi/ruotsi",
+      "sv": "finska/svenska"
+    }
+  },
+  {
+    "arvo": "1",
+    "uri": "oppilaitoksenopetuskieli_1",
+    "versio": 2,
+    "nimi": {
+      "sv": "finska",
+      "fi": "suomi",
+      "en": "finnish"
+    }
+  },
+  {
+    "arvo": "9",
+    "uri": "oppilaitoksenopetuskieli_9",
+    "versio": 2,
+    "nimi": {
+      "fi": "muu",
+      "sv": "annat"
+    }
+  },
+  {
+    "arvo": "5",
+    "uri": "oppilaitoksenopetuskieli_5",
+    "versio": 2,
+    "nimi": {
+      "sv": "samiska",
+      "fi": "saame"
+    }
+  }
+]

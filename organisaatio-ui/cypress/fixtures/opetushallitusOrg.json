@@ -1,0 +1,125 @@
+{
+  "version": 5,
+  "metadata": {
+    "data": {
+      "YLEISKUVAUS": {},
+      "KANSAINVALISET_KOULUTUSOHJELMAT": {},
+      "KIELIOPINNOT": {},
+      "TERVEYDENHUOLTOPALVELUT": {},
+      "TEHTAVANIMIKE": {},
+      "SAHKOPOSTIOSOITE": {},
+      "RAHOITUS": {},
+      "AIEMMIN_HANKITTU_OSAAMINEN": {},
+      "sosiaalinenmedia_7#1": {},
+      "sosiaalinenmedia_5#1": {},
+      "sosiaalinenmedia_6#1": {},
+      "OPISKELIJALIIKKUVUUS": {},
+      "VAKUUTUKSET": {},
+      "OPISKELIJA_JARJESTOT": {},
+      "VALINTAMENETTELY": {},
+      "sosiaalinenmedia_3#1": {},
+      "sosiaalinenmedia_4#1": {},
+      "VASTUUHENKILOT": {},
+      "KUSTANNUKSET": {},
+      "sosiaalinenmedia_1#1": {},
+      "OPPIMISYMPARISTO": {},
+      "sosiaalinenmedia_2#1": {},
+      "PUHELINNUMERO": {},
+      "NIMI": {},
+      "OPISKELIJALIIKUNTA": {},
+      "VUOSIKELLO": {},
+      "OPISKELIJARUOKAILU": {},
+      "ESTEETOMYYS": {},
+      "VAPAA_AIKA": {},
+      "TIETOA_ASUMISESTA": {},
+      "TYOHARJOITTELU": {}
+    },
+    "nimi": {},
+    "yhteystiedot": [],
+    "hakutoimistoEctsNimi": {},
+    "hakutoimistoEctsEmail": {},
+    "hakutoimistoEctsPuhelin": {},
+    "hakutoimistoEctsTehtavanimike": {},
+    "hakutoimistonNimi": {},
+    "luontiPvm": 1486471441014,
+    "muokkausPvm": 1486471441014
+  },
+  "oid": "1.2.246.562.10.48587687889",
+  "parentOidPath": "|1.2.246.562.10.00000000001|",
+  "piilotettu": false,
+  "status": "AKTIIVINEN",
+  "toimipistekoodi": "",
+  "kotipaikkaUri": "kunta_091",
+  "kieletUris": [
+    "oppilaitoksenopetuskieli_1#1"
+  ],
+  "parentOid": "1.2.246.562.10.00000000001",
+  "nimi": {
+    "fi": "Opetushallitus"
+  },
+  "vuosiluokat": [],
+  "alkuPvm": "2016-06-23",
+  "yritysmuoto": "Valtio ja sen laitokset",
+  "tyypit": [
+    "organisaatiotyyppi_01",
+    "organisaatiotyyppi_05"
+  ],
+  "nimet": [
+    {
+      "nimi": {
+        "fi": "Opetushallitus"
+      },
+      "alkuPvm": "2016-11-29",
+      "version": 0
+    }
+  ],
+  "kuvaus2": {},
+  "yhteystiedot": [
+    {
+      "osoiteTyyppi": "kaynti",
+      "kieli": "kieli_fi#1",
+      "postinumeroUri": "posti_00530",
+      "yhteystietoOid": "1.2.246.562.5.71864039517",
+      "id": "1693200",
+      "postitoimipaikka": "HELSINKI",
+      "osoite": "Maailmannavanaukio 250",
+      "ytjPaivitysPvm": "2017-02-07"
+    },
+    {
+      "osoiteTyyppi": "posti",
+      "kieli": "kieli_fi#1",
+      "postinumeroUri": "posti_00530",
+      "yhteystietoOid": "1.2.246.562.5.76545421059",
+      "id": "1693201",
+      "postitoimipaikka": "HELSINKI",
+      "osoite": "Hakaniemenranta 6",
+      "ytjPaivitysPvm": "2021-04-28"
+    }
+  ],
+  "yhteystietoArvos": [],
+  "ryhmatyypit": [],
+  "kayttoryhmat": [],
+  "postiosoite": {
+    "postinumeroUri": "posti_00530",
+    "osoiteTyyppi": "posti",
+    "yhteystietoOid": "1.2.246.562.5.76545421059",
+    "postitoimipaikka": "HELSINKI",
+    "osoite": "Hakaniemenranta 6",
+    "ytjPaivitysPvm": "2021-04-28"
+  },
+  "maaUri": "maatjavaltiot1_fin",
+  "ytjkieli": "kieli_fi#1",
+  "ytjpaivitysPvm": "2021-04-28",
+  "ytunnus": "2769790-1",
+  "muutKotipaikatUris": [],
+  "muutOppilaitosTyyppiUris": [],
+  "lisatiedot": [],
+  "kayntiosoite": {
+    "postinumeroUri": "posti_00530",
+    "osoiteTyyppi": "kaynti",
+    "yhteystietoOid": "1.2.246.562.5.71864039517",
+    "postitoimipaikka": "HELSINKI",
+    "osoite": "Maailmannavanaukio 250",
+    "ytjPaivitysPvm": "2017-02-07"
+  }
+}

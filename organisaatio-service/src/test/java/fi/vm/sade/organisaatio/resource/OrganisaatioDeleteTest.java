@@ -162,7 +162,7 @@ public class OrganisaatioDeleteTest {
     private OrganisaatioRDTO createOrganisaatio(String nimi, OrganisaatioRDTO parent) {
         LOG.info("createOrganisaatio({})", nimi);
 
-        OrganisaatioRDTO o = OrganisaatioRDTOTestUtil.createOrganisaatio(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), parent);
+        OrganisaatioRDTO o = OrganisaatioRDTOTestUtil.createOrganisaatio(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), parent, true);
 
         return res.newOrganisaatio(o).getOrganisaatio();
     }

@@ -157,7 +157,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         }
 
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true);
+            OrganisaatioResult result = organisaatioBusinessService.saveOrUpdate(ordto);
             return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
         } catch (ValidationException ex) {
             LOG.warn("Error saving " + oid, ex);
@@ -209,7 +209,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);
+            OrganisaatioResult result = organisaatioBusinessService.saveOrUpdate(ordto);
             return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
         } catch (ValidationException ex) {
             LOG.warn("Error saving new org", ex);

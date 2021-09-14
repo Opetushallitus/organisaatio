@@ -1,0 +1,60 @@
+{
+  "childSuhteet": [
+    {
+      "child": {
+        "oid": "1.2.246.562.10.727160772010",
+        "nimi": {
+          "fi": "Haaga-Helia ammattikorkeakoulu",
+          "sv": "Haaga-Helia yrkeshögskola",
+          "en": "Haaga-Helia University of Applied Sciences"
+        },
+        "status": "AKTIIVINEN",
+        "tyypit": [
+          "organisaatiotyyppi_02"
+        ]
+      },
+      "parent": {
+        "oid": "1.2.246.562.10.69981965515",
+        "nimi": {
+          "fi": "Haaga-Helia ammattikorkeakoulu Oy"
+        },
+        "status": "AKTIIVINEN",
+        "tyypit": [
+          "organisaatiotyyppi_01"
+        ]
+      },
+      "alkuPvm": "2013-04-12",
+      "suhdeTyyppi": "HISTORIA"
+    }
+  ],
+  "parentSuhteet": [
+    {
+      "child": {
+        "oid": "1.2.246.562.10.69981965515",
+        "nimi": {
+          "fi": "Haaga-Helia ammattikorkeakoulu Oy"
+        },
+        "status": "AKTIIVINEN",
+        "tyypit": [
+          "organisaatiotyyppi_01"
+        ]
+      },
+      "parent": {
+        "oid": "1.2.246.562.10.00000000001",
+        "nimi": {
+          "fi": "Opetushallitus",
+          "sv": "Utbildningsstyrelsen",
+          "en": "Finnish National Agency for Education"
+        },
+        "status": "AKTIIVINEN",
+        "tyypit": [
+          "organisaatiotyyppi_05"
+        ]
+      },
+      "alkuPvm": "2013-04-12",
+      "suhdeTyyppi": "HISTORIA"
+    }
+  ],
+  "liitokset": [],
+  "liittymiset": []
+}

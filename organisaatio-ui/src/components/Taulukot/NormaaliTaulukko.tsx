@@ -82,6 +82,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                     <div className={styles.Kentta}>
                         <label>{i18n.translate('RYHMAT_RYHMAN_TYYPPI')}</label>
                         <Select
+                            id="RYHMAN_TYYPPI_SELECT"
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
                             ) => {
@@ -102,6 +103,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                     <div className={styles.Kentta}>
                         <label>{i18n.translate('RYHMAT_RYHMAN_KAYTTOTARKOITUS')}</label>
                         <Select
+                            id="RYHMAN_KAYTTOTARKOITUS_SELECT"
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
                             ) => {
@@ -122,6 +124,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                     <div className={styles.Kentta}>
                         <label>{i18n.translate('RYHMAT_RYHMAT_TILA')}</label>
                         <Select
+                            id={'RYHMAN_TILA_SELECT'}
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
                             ) => {
@@ -262,14 +265,9 @@ const NormaaliTaulukko = ({
                         <Icon icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
-                        if (option === pageIndex)
-                            return (
-                                <Button key={pageIndex} onClick={() => gotoPage(option)}>
-                                    {option + 1}
-                                </Button>
-                            );
+                        if (option === pageIndex) return <Button onClick={() => gotoPage(option)}>{option + 1}</Button>;
                         return (
-                            <Button key={pageIndex} variant="text" color="secondary" onClick={() => gotoPage(option)}>
+                            <Button variant="text" color="secondary" onClick={() => gotoPage(option)}>
                                 {option + 1}
                             </Button>
                         );

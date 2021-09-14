@@ -60,7 +60,7 @@ public class YTJResourceTest extends SecurityAwareTestBase {
         // lisätään pakolliset tiedot ennen tallennusta
         varhaiskasvatuksenJarjestaja.setTyypit(singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue()));
 
-        varhaiskasvatuksenJarjestaja = organisaatioBusinessService.save(varhaiskasvatuksenJarjestaja, false).getOrganisaatio();
+        varhaiskasvatuksenJarjestaja = organisaatioBusinessService.saveOrUpdate(varhaiskasvatuksenJarjestaja).getOrganisaatio();
 
         assertThat(varhaiskasvatuksenJarjestaja).returns("1.2.246.562.24.00000000001", OrganisaatioRDTOV4::getParentOid);
 
@@ -76,7 +76,7 @@ public class YTJResourceTest extends SecurityAwareTestBase {
         tiedot.setVarhaiskasvatuksenJarjestamismuodot(singleton("vardajarjestamismuoto_jm03"));
         varhaiskasvatuksenToimipaikka.setVarhaiskasvatuksenToimipaikkaTiedot(tiedot);
 
-        varhaiskasvatuksenToimipaikka = organisaatioBusinessService.save(varhaiskasvatuksenToimipaikka, false).getOrganisaatio();
+        varhaiskasvatuksenToimipaikka = organisaatioBusinessService.saveOrUpdate(varhaiskasvatuksenToimipaikka).getOrganisaatio();
 
         assertThat(varhaiskasvatuksenToimipaikka).returns(varhaiskasvatuksenJarjestaja.getOid(), OrganisaatioRDTOV4::getParentOid);
     }

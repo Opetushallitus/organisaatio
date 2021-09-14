@@ -121,7 +121,7 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTO createKoulutustoimija(String nimi,
                                                          String ytunnus,
                                                          String oid) {
-        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), oid, OPH_OID);
+        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), oid, OPH_OID, false);
         koulutustoimija.setYTunnus(ytunnus);
 
         return koulutustoimija;
@@ -129,18 +129,18 @@ public final class OrganisaatioRDTOTestUtil {
 
     public static OrganisaatioRDTO createOrganisaatio(String nimi,
                                                       String organisaatioTyyppi,
-                                                      String parentOid) {
-        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid);
+                                                      String parentOid, boolean nullifyOid) {
+        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
     }
 
     public static OrganisaatioRDTO createOrganisaatio(String nimi,
                                                       String organisaatioTyyppi,
-                                                      OrganisaatioRDTO parent) {
+                                                      OrganisaatioRDTO parent, boolean nullifyOid) {
         String parentOid = OPH_OID;
         if (parent != null) {
             parentOid = parent.getOid();
         }
-        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid);
+        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
     }
 
     /**
@@ -157,7 +157,7 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTO createOrganisaatio(String nimi,
                                                       String organisaatioTyyppi,
                                                       String oid,
-                                                      String parentOid) {
+                                                      String parentOid, boolean nullifyOid) {
         OrganisaatioRDTO organisaatio = new OrganisaatioRDTO();
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
 
@@ -166,7 +166,10 @@ public final class OrganisaatioRDTOTestUtil {
         nimet.add(nimiRDTO);
         organisaatio.setNimet(nimet);
 
-        if (isNullOrEmpty(oid)) {
+        if (nullifyOid) {
+            organisaatio.setOid(null);
+        }
+        else if (isNullOrEmpty(oid)) {
             organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
         }
         else {

@@ -5,6 +5,7 @@ import fi.vm.sade.oid.service.mock.OIDServiceMock;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioBusinessServiceImpl;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
@@ -96,6 +97,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Autowired
+    private OrganisaatioBusinessServiceImpl organisaatioBusinessServiceImpl;
+    @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
 
     @Autowired
@@ -165,22 +168,22 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Transactional
     public void processNewOrganisaatioSuhdeChangesWithHistoria() {
         Organisaatio koulutustoimija1 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija1", rootOid), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija1", rootOid, true))
                 .getOrganisaatio();
         assertThat(koulutustoimija1).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
         Organisaatio koulutustoimija2 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija2", rootOid), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija2", rootOid, true))
                 .getOrganisaatio();
         assertThat(koulutustoimija2).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
 
         Organisaatio oppilaitos = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos", koulutustoimija1.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos", koulutustoimija1.getOid(), true))
                 .getOrganisaatio();
         assertThat(oppilaitos)
                 .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
         Organisaatio toimipiste = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste", oppilaitos.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste", oppilaitos.getOid(), true))
                 .getOrganisaatio();
         assertThat(toimipiste)
                 .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
@@ -203,31 +206,31 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Transactional
     public void processNewOrganisaatioSuhdeChangesWithLiitos() {
         Organisaatio koulutustoimija = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija", rootOid), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija", rootOid, true))
                 .getOrganisaatio();
         assertThat(koulutustoimija).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
 
         Organisaatio oppilaitos1 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos1", koulutustoimija.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos1", koulutustoimija.getOid(), true))
                 .getOrganisaatio();
         assertThat(oppilaitos1)
                 .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
         Organisaatio toimipiste1 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste1", oppilaitos1.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste1", oppilaitos1.getOid(), true))
                 .getOrganisaatio();
         assertThat(toimipiste1)
                 .returns(oppilaitos1.getParentOidPath() + oppilaitos1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos1.getParentIdPath() + oppilaitos1.getId() + "|", Organisaatio::getParentIdPath);
 
         Organisaatio oppilaitos2 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos2", koulutustoimija.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos2", koulutustoimija.getOid(), true))
                 .getOrganisaatio();
         assertThat(oppilaitos2)
                 .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
         Organisaatio toimipiste2 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste2", oppilaitos2.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste2", oppilaitos2.getOid(), true))
                 .getOrganisaatio();
         assertThat(toimipiste2)
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
@@ -250,33 +253,33 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Transactional
     public void processNewOrganisaatioSuhdeChangesWithLiitosToAnotherTree() {
         Organisaatio koulutustoimija1 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija1", rootOid), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija1", rootOid, true))
                 .getOrganisaatio();
         assertThat(koulutustoimija1).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
         Organisaatio oppilaitos1 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos1", koulutustoimija1.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos1", koulutustoimija1.getOid(), true))
                 .getOrganisaatio();
         assertThat(oppilaitos1)
                 .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
         Organisaatio toimipiste1 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste1", oppilaitos1.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste1", oppilaitos1.getOid(), true))
                 .getOrganisaatio();
         assertThat(toimipiste1)
                 .returns(oppilaitos1.getParentOidPath() + oppilaitos1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos1.getParentIdPath() + oppilaitos1.getId() + "|", Organisaatio::getParentIdPath);
 
         Organisaatio koulutustoimija2 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija2", rootOid), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), "koulutustoimija2", rootOid, true))
                 .getOrganisaatio();
         Organisaatio oppilaitos2 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos2", koulutustoimija2.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2", OrganisaatioTyyppi.OPPILAITOS.value(), "oppilaitos2", koulutustoimija2.getOid(), true))
                 .getOrganisaatio();
         assertThat(oppilaitos2)
                 .returns(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|", Organisaatio::getParentIdPath);
         Organisaatio toimipiste2 = service
-                .save(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste2", oppilaitos2.getOid()), false)
+                .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio("toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), "toimipiste2", oppilaitos2.getOid(), true))
                 .getOrganisaatio();
         assertThat(toimipiste2)
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
@@ -294,7 +297,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
     }
-
 
     private void checkParentOidPath(Organisaatio parent, String oid) {
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
@@ -317,7 +319,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         model.setOid(removedOid);
         jdbcTemplate.update("update organisaatio set organisaatiopoistettu = TRUE where oid = ?", removedOid);
         try {
-            service.save(model, true);
+            service.saveOrUpdate(model);
             fail();
         } catch (Throwable e) {
             assertNotNull(e.getMessage());
@@ -327,18 +329,18 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void saveNewAndUpdateOrganisation() {
-        OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid);
+        OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid, true);
         model.setKayntiosoite(null);
         model.setYhteystiedot(null);
         model.setKieletUris(null);
         model.setAlkuPvm(new Date());
-        OrganisaatioResult organisaatioResult = service.save(model, false);
-        assertEquals("65432.1", organisaatioResult.getOrganisaatio().getOid());
+        OrganisaatioResult organisaatioResult = service.saveOrUpdate(model);
+        assertNotNull(organisaatioResult.getOrganisaatio().getId());
 
         model = organisaatioToOrganisaatioRDTOConverter.convert(organisaatioResult.getOrganisaatio());
         organisaatioRepository.getJpaEntityManager().detach(organisaatioResult.getOrganisaatio());
         model.setYTunnus("4567891-0");
-        organisaatioResult = service.save(model, true);
+        organisaatioResult = service.saveOrUpdate(model);
         assertEquals("4567891-0", organisaatioResult.getOrganisaatio().getYtunnus());
 
     }
@@ -346,22 +348,23 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Transactional
     @Test
     public void updateOppilaitosShouldUpdateToimipisteNames() {
-        OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
-        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija, false);
+        OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
+        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija);
         String koulutustoimijaOid = koulutustoimijaResult1.getOrganisaatio().getOid();
-        OrganisaatioRDTO oppilaitos = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi)", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimijaOid);
-        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos, false);
+        OrganisaatioRDTO oppilaitos = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi)", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimijaOid, true);
+        OrganisaatioResult oppilaitosResult1 = service.saveOrUpdate(oppilaitos);
         Date oppilaitosModifiedDateBeforeNameSave = oppilaitosResult1.getOrganisaatio().getPaivitysPvm();
         String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
-        OrganisaatioRDTO toimipiste = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi), toimipiste1 (fi)", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
+        OrganisaatioRDTO toimipiste = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi), toimipiste1 (fi)", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid, true);
         toimipiste.getNimi().put("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)");
         toimipiste.getNimi().put("sv", "toimipiste1 (sv)");
-        OrganisaatioResult toimipisteResult1 = service.save(toimipiste, false);
+        OrganisaatioResult toimipisteResult1 = service.saveOrUpdate(toimipiste);
         Date toimipisteModifiedDateBeforeOppilaitosSave = toimipisteResult1.getOrganisaatio().getPaivitysPvm();
 
-        oppilaitos.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
+        oppilaitos.setOid(oppilaitos1oid);
         oppilaitos.getNimi().put("en", "oppilaitos1-päivitetty (en)");
-        OrganisaatioResult oppilaitosAfterNameSave = service.save(oppilaitos, true);
+        oppilaitos.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
+        OrganisaatioResult oppilaitosAfterNameSave = service.saveOrUpdate(oppilaitos);
 
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(toimipisteResult1.getOrganisaatio().getOid());
         Map<String, String> nimet = organisaatio.getNimi().getValues();
@@ -377,71 +380,72 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @Test
     public void saveToimipisteShouldGenerateOpetuspisteenJarjNroAndToimipistekoodiWhenEmpty() {
-        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
-        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija1, false);
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
+        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija1);
         String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
-        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid);
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid, true);
         oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
-        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos1, false);
+        OrganisaatioResult oppilaitosResult1 = service.saveOrUpdate(oppilaitos1);
         String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
 
-        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
-        OrganisaatioResult toimipisteResult1 = service.save(toimipiste1, false);
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid, true);
+        OrganisaatioResult toimipisteResult1 = service.saveOrUpdate(toimipiste1);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
 
-        OrganisaatioRDTO toimipiste2 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2, toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
-        OrganisaatioResult toimipisteResult2 = service.save(toimipiste2, false);
+        OrganisaatioRDTO toimipiste2 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos2, toimipiste2", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid, true);
+        OrganisaatioResult toimipisteResult2 = service.saveOrUpdate(toimipiste2);
 
         toimipisteResult2.getOrganisaatio().setOpetuspisteenJarjNro(null);
         toimipisteResult2.getOrganisaatio().setToimipisteKoodi(null);
-        organisaatioRepository.save(toimipisteResult2.getOrganisaatio());
+        organisaatioRepository.saveAndFlush(toimipisteResult2.getOrganisaatio());
         //jdbcTemplate.update("update organisaatio set opetuspisteenjarjnro = null, toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
-        toimipisteResult2 = service.save(toimipiste2, true);
+        toimipisteResult2 = service.saveOrUpdate(toimipiste2);
         assertThat(toimipisteResult2.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("02");
         assertThat(toimipisteResult2.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi02");
     }
 
     @Test
     public void saveToimipisteShouldMaintainToimipistekoodiWhenOpetuspisteenJarjNroEmpty() {
-        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
-        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija1, false);
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
+        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija1);
         String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
-        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid);
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid, true);
         oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
-        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos1, false);
+        OrganisaatioResult oppilaitosResult1 = service.saveOrUpdate(oppilaitos1);
         String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
 
-        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
-        OrganisaatioResult toimipisteResult1 = service.save(toimipiste1, false);
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid, true);
+        OrganisaatioResult toimipisteResult1 = service.saveOrUpdate(toimipiste1);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
 
         toimipisteResult1.getOrganisaatio().setOpetuspisteenJarjNro(null);
-        Organisaatio org = organisaatioRepository.save(toimipisteResult1.getOrganisaatio());
-        toimipisteResult1 = service.save(toimipiste1, true);
+        Organisaatio org = organisaatioRepository.saveAndFlush(toimipisteResult1.getOrganisaatio());
+        toimipiste1.setOid(org.getOid());
+        toimipisteResult1 = service.saveOrUpdate(toimipiste1);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isNull();
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
     }
 
     @Test
     public void saveToimipisteShouldGenerateToimipistekoodiWhenEmpty() {
-        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
-        OrganisaatioResult koulutustoimijaResult1 = service.save(koulutustoimija1, false);
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
+        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija1);
         String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
-        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid);
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid, true);
         oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
-        OrganisaatioResult oppilaitosResult1 = service.save(oppilaitos1, false);
+        OrganisaatioResult oppilaitosResult1 = service.saveOrUpdate(oppilaitos1);
         String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
 
-        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid);
-        OrganisaatioResult toimipisteResult1 = service.save(toimipiste1, false);
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid, true);
+        OrganisaatioResult toimipisteResult1 = service.saveOrUpdate(toimipiste1);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
 
 
         jdbcTemplate.update("update organisaatio set toimipistekoodi = null where oid = ?", toimipisteResult1.getOrganisaatio().getOid());
-        toimipisteResult1 = service.save(toimipiste1, true);
+        toimipisteResult1 = service.saveOrUpdate(toimipiste1);
         assertThat(toimipisteResult1.getOrganisaatio().getOpetuspisteenJarjNro()).isEqualTo("01");
         assertThat(toimipisteResult1.getOrganisaatio().getToimipisteKoodi()).isEqualTo("oppilaitoskoodi01");
     }
@@ -451,11 +455,11 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         LocalDate localDate = LocalDate.of(2016, Month.FEBRUARY, 15);
         Date date1 = Date.from(localDate.atTime(9, 39).toInstant(ZoneOffset.UTC));
         Date date2 = Date.from(localDate.atTime(9, 40).toInstant(ZoneOffset.UTC));
-        OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid);
+        OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
         koulutustoimija.getNimet().add(OrganisaatioRDTOTestUtil.createNimi("koulutustoimija11", date1));
         koulutustoimija.getNimet().add(OrganisaatioRDTOTestUtil.createNimi("koulutustoimija12", date2));
 
-        Throwable throwable = catchThrowable(() -> service.save(koulutustoimija, false));
+        Throwable throwable = catchThrowable(() -> service.saveOrUpdate(koulutustoimija));
 
         assertThat(throwable).isExactlyInstanceOf(OrganisaatioNameHistoryNotValidException.class);
     }
@@ -463,10 +467,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Transactional
     @Test
     public void updateCurrentOrganisaatioNimet() {
-        OrganisaatioRDTO oppilaitosRdto = OrganisaatioRDTOTestUtil.createOrganisaatio("nimi", OrganisaatioTyyppi.OPPILAITOS.value(), rootOid);
+        OrganisaatioRDTO oppilaitosRdto = OrganisaatioRDTOTestUtil.createOrganisaatio("nimi", OrganisaatioTyyppi.OPPILAITOS.value(), rootOid, true);
         oppilaitosRdto.getNimet().forEach(nimi -> nimi.setAlkuPvm(Date.from(LocalDate.now().minus(2, ChronoUnit.DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant())));
         oppilaitosRdto.getNimet().add(OrganisaatioRDTOTestUtil.createNimi("toinen nimi", Date.from(LocalDate.now().plus(2, ChronoUnit.DAYS).atStartOfDay(ZoneId.systemDefault()).toInstant())));
-        OrganisaatioResult organisaatioResult = this.service.save(oppilaitosRdto, false);
+        OrganisaatioResult organisaatioResult = this.service.saveOrUpdate(oppilaitosRdto);
         Date paivitysPvmOnCreate = organisaatioResult.getOrganisaatio().getPaivitysPvm();
 
         // Muutetaan tuleva alkupvm voimassa olevaksi tästä hetkestä eteen päin
@@ -527,7 +531,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         varhaiskasvatuksenToimipaikkaTiedotDto.setVarhaiskasvatuksenJarjestamismuodot(Collections.singleton("vardajarjestamismuoto_jm03"));
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);
 
-        ResultRDTOV4 result = this.service.save(organisaatio, false);
+        ResultRDTOV4 result = this.service.saveOrUpdate(organisaatio);
         assertThat(result.getOrganisaatio().getParentOid()).isEqualTo("1.2.8000.1");
         assertThat(result.getOrganisaatio().getParentOidPath()).isEqualTo("|1.2.246.562.24.00000000001|1.2.8000.1|");
         assertThat(result.getOrganisaatio().getTyypit()).containsExactly(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue());
@@ -558,8 +562,32 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         VarhaiskasvatuksenToimipaikkaTiedotDto varhaiskasvatuksenToimipaikkaTiedotDto = new VarhaiskasvatuksenToimipaikkaTiedotDto();
         organisaatio.setVarhaiskasvatuksenToimipaikkaTiedot(varhaiskasvatuksenToimipaikkaTiedotDto);
 
-        assertThatThrownBy(() -> this.service.save(organisaatio, false))
+        assertThatThrownBy(() -> this.service.saveOrUpdate(organisaatio))
                 .isInstanceOf(ValidationException.class)
                 .hasMessage("validation.Organisaatio.varhaiskasvatuksentoimipaikka.badorganisationtype");
+    }
+
+    @Test
+    public void calculateToimipisteKoodiTest() {
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
+        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija1);
+        String koulutustoimija1Oid = koulutustoimijaResult1.getOrganisaatio().getOid();
+        OrganisaatioRDTO oppilaitos1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimija1Oid, true);
+        oppilaitos1.setOppilaitosKoodi("oppilaitoskoodi");
+        OrganisaatioResult oppilaitosResult1 = service.saveOrUpdate(oppilaitos1);
+        String oppilaitos1oid = oppilaitosResult1.getOrganisaatio().getOid();
+
+        OrganisaatioRDTO toimipiste1 = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1, toimipiste1", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos1oid, true);
+        OrganisaatioResult toimipisteResult1 = service.saveOrUpdate(toimipiste1);
+        Organisaatio koulutustoimija = koulutustoimijaResult1.getOrganisaatio();
+        Organisaatio toimipiste = toimipisteResult1.getOrganisaatio();
+        Organisaatio oppilaitos = oppilaitosResult1.getOrganisaatio();
+
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(toimipiste, koulutustoimija)).isEqualTo("oppilaitoskoodi01");
+        toimipiste.setOpetuspisteenJarjNro(null);
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(toimipiste, oppilaitos)).isEqualTo("");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(null, koulutustoimija)).isEqualTo("");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(oppilaitos, null)).isEqualTo("oppilaitoskoodi");
+        assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(koulutustoimija, oppilaitos)).isEqualTo("");
     }
 }

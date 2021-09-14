@@ -1,0 +1,42 @@
+[
+  {
+    "version": 0,
+    "oid": "1.2.246.562.10.00000000001",
+    "parentOidPath": "",
+    "piilotettu": false,
+    "status": "AKTIIVINEN",
+    "kieletUris": [],
+    "nimi": {
+      "fi": "Opetushallitus",
+      "sv": "Utbildningsstyrelsen",
+      "en": "Finnish National Agency for Education"
+    },
+    "vuosiluokat": [],
+    "alkuPvm": "1970-01-01",
+    "tyypit": [
+      "organisaatiotyyppi_05"
+    ],
+    "nimet": [
+      {
+        "nimi": {
+          "fi": "Opetushallitus",
+          "sv": "Utbildningsstyrelsen",
+          "en": "Finnish National Agency for Education"
+        },
+        "alkuPvm": "1970-01-01",
+        "version": 0
+      }
+    ],
+    "kuvaus2": {},
+    "yhteystiedot": [],
+    "yhteystietoArvos": [],
+    "ryhmatyypit": [],
+    "kayttoryhmat": [],
+    "postiosoite": {},
+    "maaUri": "maatjavaltiot1_fin",
+    "muutKotipaikatUris": [],
+    "muutOppilaitosTyyppiUris": [],
+    "lisatiedot": [],
+    "kayntiosoite": {}
+  }
+]

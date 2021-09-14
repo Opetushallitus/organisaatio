@@ -40,6 +40,7 @@ exports[`Normaalitaulukko Hakufiltterit Renders without crashing 1`] = `
           RYHMAT_RYHMAN_TYYPPI
         </label>
         <Select
+          id="RYHMAN_TYYPPI_SELECT"
           isMulti={true}
           onChange={[Function]}
           options={Array []}
@@ -52,6 +53,7 @@ exports[`Normaalitaulukko Hakufiltterit Renders without crashing 1`] = `
           RYHMAT_RYHMAN_KAYTTOTARKOITUS
         </label>
         <Select
+          id="RYHMAN_KAYTTOTARKOITUS_SELECT"
           isMulti={true}
           onChange={[Function]}
           options={Array []}
@@ -64,6 +66,7 @@ exports[`Normaalitaulukko Hakufiltterit Renders without crashing 1`] = `
           RYHMAT_RYHMAT_TILA
         </label>
         <Select
+          id="RYHMAN_TILA_SELECT"
           isMulti={true}
           onChange={[Function]}
           options={Array []}
