@@ -182,3 +182,7 @@ export type TranslatedInputBind = {
     onChange: (e: React.FormEvent<HTMLInputElement>) => void;
     disabled?: boolean;
 };
+
+export type FrontProperties = {
+    urlVirkailija: string;
+};

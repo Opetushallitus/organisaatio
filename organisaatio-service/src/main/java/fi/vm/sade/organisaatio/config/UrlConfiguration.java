@@ -25,6 +25,7 @@ public class UrlConfiguration  extends OphProperties {
         this.addOverride("port.koodisto-service", environment.getRequiredProperty("port.koodisto-service"));
         this.addOverride("port.tarjonta-service", environment.getRequiredProperty("port.tarjonta-service"));
         this.addOverride("port.organisaatio-service", environment.getRequiredProperty("port.organisaatio-service"));
-        this.frontProperties.setProperty("url-virkailija", this.require("url-virkailija"));
+        this.frontProperties.setProperty("urlVirkailija", this.require("url-virkailija"));
+        this.frontProperties.setProperty("rootOrganisaatioOid", this.require("root.organisaatio.oid"));
     }
 }
