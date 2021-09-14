@@ -3,13 +3,7 @@ import { urls } from 'oph-urls-js';
 import { CASMe } from '../types/apiTypes';
 
 export function useCASLanguage() {
-    //let virkailija = 'http://localhost:9000';
-    let virkailija = 'https://virkailija.untuvaopintopolku.fi';
-    try {
-        virkailija = urls.url('url-virkailija');
-    } catch (error) {
-        console.error('url-virkailija not set on server');
-    }
+    const virkailija = urls.url('url-virkailija');
     const url = `${virkailija}/kayttooikeus-service/cas/me`;
     const [{ data, loading, error }] = useAxios<CASMe>(url);
     return { data: data && data.lang, loading, error };

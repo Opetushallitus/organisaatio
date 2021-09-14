@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 //import 'normalize.css';
@@ -20,13 +21,18 @@ import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/Yhteys
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
 import { useCASLanguage } from './api/useCAS';
+import Loading from './components/Loading/Loading';
 
 const theme = createTheme();
-
+const Error = () => {
+    const { i18n } = useContext(LanguageContext);
+    return <ErrorPage>{i18n.translate('LABEL_ERROR_LOADING_DATA')}</ErrorPage>;
+};
 const OrganisaatioApp: React.FC = () => {
     registerLocale('fi', fi);
     registerLocale('sv', sv);
     registerLocale('en', enGB);
+
     const { data: language, loading: languageLoading, error: languageError } = useCASLanguage();
     const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
         `/organisaatio/lokalisointi`
@@ -55,11 +61,7 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitLoading ||
         ryhmanTilatLoading
     ) {
-        return (
-            <ThemeProvider theme={theme}>
-                <Spin />
-            </ThemeProvider>
-        );
+        return <Loading />;
     }
     if (
         languageError ||
@@ -70,7 +72,7 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitError ||
         ryhmanTilatError
     ) {
-        return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
+        return <Error />;
     }
     const i18n = new I18nImpl(lokalisointi, language);
     const kuntaKoodisto = new KoodistoImpl(kunnat, language);
