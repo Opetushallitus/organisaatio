@@ -9,7 +9,6 @@ import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import useAxios from 'axios-hooks';
 import { Koodi } from '../../../../types/types';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';

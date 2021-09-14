@@ -9,11 +9,10 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext } from '../../../../contexts/contexts';
-import { Koodi, Organisaatio, Yhteystiedot } from '../../../../types/types';
+import { Organisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import useAxios from 'axios-hooks';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
 import useKoodisto from '../../../../api/useKoodisto';
