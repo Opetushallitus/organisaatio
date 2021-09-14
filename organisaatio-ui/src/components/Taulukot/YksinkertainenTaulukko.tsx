@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { useTable } from 'react-table';
+import { Column, useTable } from 'react-table';
+
+type taulukkoData = any;
 
 export default function YksinkertainenTaulukko({
     data: inputData = [],
     tableColumns = [],
 }: {
-    data: any[];
-    tableColumns: any[];
+    data: taulukkoData[];
+    tableColumns: Column<taulukkoData>[];
 }) {
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => inputData, [inputData]);

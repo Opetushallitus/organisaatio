@@ -9,7 +9,6 @@ import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import useAxios from 'axios-hooks';
 import { Koodi } from '../../../../types/types';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
@@ -17,14 +16,16 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import UOTHeader from '../../../Modaalit/UusiOsoiteTyyppi/UOTHeader';
 import UOTBody from '../../../Modaalit/UusiOsoiteTyyppi/OUTBody';
 import UOTFooter from '../../../Modaalit/UusiOsoiteTyyppi/UOTFooter';
+import useKoodisto from '../../../../api/useKoodisto';
 
 const KAIKKIVALITTU = '1';
 
 export default function YhteystietotyypinMuokkaus() {
     const { i18n, language } = useContext(LanguageContext);
-    const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
-        Koodi[]
-    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=${Date.now()}&onlyValidKoodis=true`); //TODO the random parameter should probably be random
+    const { data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError } = useKoodisto(
+        'OPPILAITOSTYYPPI',
+        true
+    );
     const [isKaikkiValittu, setIsKaikkiValittu] = useState(KAIKKIVALITTU);
     const [isModaliAuki, setIsModaaliAuki] = useState(false);
 

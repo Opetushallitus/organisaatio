@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { useEffect } from 'react';
-import { getRyhma, deleteRyhma, putRyhma, postRyhma } from '../../../HttpRequests';
+import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../HttpRequests';
 import { Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
-import { useContext } from 'react';
 import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 
@@ -22,7 +20,7 @@ const emptyRyhma: Ryhma = {
         'kieli_fi#1': '',
     },
     parentOid: ROOT_OID,
-    oid: null,
+    oid: undefined,
     ryhmatyypit: [],
     kayttoryhmat: [],
     status: 'AKTIIVINEN',

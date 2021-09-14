@@ -2,103 +2,79 @@ import * as React from 'react';
 import { useContext } from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import useAxios from 'axios-hooks';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
+import { OrganisaatioBase, OrganisaatioSuhde } from '../../../../../types/types';
+import useOrganisaatioHistoria from '../../../../../api/useOrganisaatioHistoria';
 
-type organisaatioHistoriaProps = {
-    oid?: string;
+const liittyneetColumns = [
+    ['RAKENNE_LIITOSPVM', 'alkuPvm'],
+    ['RAKENNE_LIITTYNEET_NIMI', 'nimiHref'],
+];
+const yhdistettyColumns = [
+    ['RAKENNE_LIITOSPVM', 'alkuPvm'],
+    ['RAKENNE_YHDISTETTY_NIMI', 'nimiHref'],
+];
+const ylemmanTasonColumns = [
+    ['RAKENNE_ALKUPVM', 'alkuPvm'],
+    ['RAKENNE_LOPPUPVM', 'loppuPvm'],
+    ['RAKENNE_YLEMMAN_TASON_NIMI', 'nimiHref'],
+];
+const sisaltyvatColumns = [
+    ['RAKENNE_ALKUPVM', 'alkuPvm'],
+    ['RAKENNE_LOPPUPVM', 'loppuPvm'],
+    ['RAKENNE_SISALTYVAT_NIMI', 'nimiHref'],
+];
+
+const historiaSorter = (a: OrganisaatioSuhde, b: OrganisaatioSuhde) => {
+    return a.alkuPvm.localeCompare(b.alkuPvm);
 };
 
-export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaProps) {
+const OrganisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) => {
     const { i18n, language } = useContext(LanguageContext);
-    const [{ data: historia, loading: historiaLoading, error: historiaError }] = useAxios(
-        `/organisaatio/organisaatio/v4/${props.oid}/historia`
+    return (
+        <Link to={`/lomake/${organisaatio.oid}`}>
+            {(organisaatio.nimi[language] ||
+                organisaatio.nimi['fi'] ||
+                organisaatio.nimi['sv'] ||
+                organisaatio.nimi['en']) +
+                (organisaatio.status !== 'AKTIIVINEN'
+                    ? `(${i18n.translate('LABEL_' + organisaatio.status.toUpperCase())})`
+                    : '')}
+        </Link>
     );
-    console.log('hist', historiaLoading, historia);
-    if (!historia || historiaLoading || historiaError) {
+};
+
+const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
+    return {
+        oid: a[key].oid,
+        nimiHref: <OrganisaatioLink organisaatio={a[key]} />,
+        alkuPvm: a.alkuPvm,
+        status: a[key].status,
+    };
+};
+
+export default function OrganisaatioHistoriaLomake(props: { oid: string }) {
+    const { i18n } = useContext(LanguageContext);
+    const { historia, historiaLoading, historiaError } = useOrganisaatioHistoria(props.oid);
+
+    const loading = () => {
+        return !historia || historiaLoading || historiaError;
+    };
+    if (loading()) {
         return <Spin />;
     }
 
-    const renderLink = (a) => {
-        return (
-            <Link to={`/lomake/${a.oid}`}>
-                {(a.nimi[language] || a.nimi['fi'] || a.nimi['sv'] || a.nimi['en']) +
-                    (a.status !== 'AKTIIVINEN' ? '(' + i18n.translate('LABEL_' + a.status.toUpperCase()) + ')' : '')}
-            </Link>
-        );
-    };
-    const historiaSorter = (a, b) => {
-        return a.alkuPvm.localeCompare(b.alkuPvm);
-    };
-    const historiaMapper = (a, key) => {
-        return {
-            oid: a[key].oid,
-            nimiHref: renderLink(a[key]),
-            alkuPvm: a.alkuPvm,
-            loppuPvm: a.loppuPvm,
-            status: a[key].status,
-        };
-    };
+    const columnMapper = (column: string[]) => ({ Header: i18n.translate(column[0]), accessor: column[1] });
 
-    const liittyneetColumns = [
-        {
-            Header: i18n.translate('RAKENNE_LIITOSPVM'),
-            accessor: 'alkuPvm',
-        },
-        {
-            Header: i18n.translate('RAKENNE_LIITTYNEET_NIMI'),
-            accessor: 'nimiHref',
-        },
-    ];
-    const yhdistettyColumns = [
-        {
-            Header: i18n.translate('RAKENNE_LIITOSPVM'),
-            accessor: 'alkuPvm',
-        },
-        {
-            Header: i18n.translate('RAKENNE_YHDISTETTY_NIMI'),
-            accessor: 'nimiHref',
-        },
-    ];
-    const ylemmanTasonColumns = [
-        {
-            Header: i18n.translate('RAKENNE_ALKUPVM'),
-            accessor: 'alkuPvm',
-        },
-        {
-            Header: i18n.translate('RAKENNE_LOPPUPVM'),
-            accessor: 'loppuPvm',
-        },
-        {
-            Header: i18n.translate('RAKENNE_YLEMMAN_TASON_NIMI'),
-            accessor: 'nimiHref',
-        },
-    ];
+    const liittyneetData = historia.liitokset.sort(historiaSorter).map((a) => historiaMapper(a, 'parent'));
 
-    const sisaltyvatColumns = [
-        {
-            Header: i18n.translate('RAKENNE_ALKUPVM'),
-            accessor: 'alkuPvm',
-        },
-        {
-            Header: i18n.translate('RAKENNE_LOPPUPVM'),
-            accessor: 'loppuPvm',
-        },
-        {
-            Header: i18n.translate('RAKENNE_SISALTYVAT_NIMI'),
-            accessor: 'nimiHref',
-        },
-    ];
+    const yhdistettyData = historia.liittymiset.sort(historiaSorter).map((a) => historiaMapper(a, 'child'));
 
-    const liittyneetData = historia.liitokset.map((a) => historiaMapper(a, 'organisaatio')).sort(historiaSorter);
+    const ylemmanTasonData = historia.parentSuhteet.sort(historiaSorter).map((a) => historiaMapper(a, 'parent'));
 
-    const yhdistettyData = historia.liittymiset.map((a) => historiaMapper(a, 'kohde')).sort(historiaSorter);
-
-    const ylemmanTasonData = historia.parentSuhteet.map((a) => historiaMapper(a, 'parent')).sort(historiaSorter);
-
-    const sisaltyvatData = historia.childSuhteet.map((a) => historiaMapper(a, 'child')).sort(historiaSorter);
+    const sisaltyvatData = historia.childSuhteet.sort(historiaSorter).map((a) => historiaMapper(a, 'child'));
 
     return (
         <div className={styles.UloinKehys}>
@@ -107,10 +83,16 @@ export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaPr
                     <div>
                         <h2>{i18n.translate('RAKENNE_LIITOKSET_OTSIKKO')}</h2>
                         {liittyneetData.length > 0 && (
-                            <YksinkertainenTaulukko data={liittyneetData} tableColumns={liittyneetColumns} />
+                            <YksinkertainenTaulukko
+                                data={liittyneetData}
+                                tableColumns={liittyneetColumns.map(columnMapper)}
+                            />
                         )}
                         {yhdistettyData.length > 0 && (
-                            <YksinkertainenTaulukko data={yhdistettyData} tableColumns={yhdistettyColumns} />
+                            <YksinkertainenTaulukko
+                                data={yhdistettyData}
+                                tableColumns={yhdistettyColumns.map(columnMapper)}
+                            />
                         )}
                     </div>
                 </div>
@@ -119,7 +101,10 @@ export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaPr
                 <div className={styles.Rivi}>
                     <div>
                         <h2>{i18n.translate('RAKENNE_YLEMMAN_TASON_OTSIKKO')}</h2>
-                        <YksinkertainenTaulukko data={ylemmanTasonData} tableColumns={ylemmanTasonColumns} />
+                        <YksinkertainenTaulukko
+                            data={ylemmanTasonData}
+                            tableColumns={ylemmanTasonColumns.map(columnMapper)}
+                        />
                     </div>
                 </div>
             )}
@@ -127,7 +112,10 @@ export default function OrganisaatioHistoriaLomake(props: organisaatioHistoriaPr
                 <div className={styles.Rivi}>
                     <div>
                         <h2>{i18n.translate('RAKENNE_SISALTYVAT_OTSIKKO')}</h2>
-                        <YksinkertainenTaulukko data={sisaltyvatData} tableColumns={sisaltyvatColumns} />
+                        <YksinkertainenTaulukko
+                            data={sisaltyvatData}
+                            tableColumns={sisaltyvatColumns.map(columnMapper)}
+                        />
                     </div>
                 </div>
             )}

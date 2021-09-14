@@ -9,17 +9,18 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext } from '../../../../contexts/contexts';
-import { Koodi, Organisaatio, Yhteystiedot } from '../../../../types/types';
+import { Organisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import useAxios from 'axios-hooks';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
+import useKoodisto from '../../../../api/useKoodisto';
 
 const tyhjaOrganisaatio: Organisaatio = {
     ytunnus: '',
     nimi: {},
+    status: '',
     nimet: [],
     alkuPvm: null,
     yritysmuoto: '',
@@ -66,19 +67,20 @@ const tyhjaOrganisaatio: Organisaatio = {
 
 const UusiToimijaLomake = (props: { history: string[] }) => {
     const { i18n } = useContext(LanguageContext);
-    const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
-        Koodi[]
-    >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
-    const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/MAATJAVALTIOT1/koodi`
+    const {
+        data: organisaatioTyypit,
+        loading: organisaatioTyypitLoading,
+        error: organisaatioTyypitError,
+    } = useKoodisto('ORGANISAATIOTYYPPI');
+    const { data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError } = useKoodisto(
+        'MAATJAVALTIOT1'
     );
-    const [
-        {
-            data: oppilaitoksenOpetuskielet,
-            loading: oppilaitoksenOpetuskieletLoading,
-            error: oppilaitoksenOpetuskieletError,
-        },
-    ] = useAxios<Koodi[]>(`/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
+
+    const {
+        data: oppilaitoksenOpetuskielet,
+        loading: oppilaitoksenOpetuskieletLoading,
+        error: oppilaitoksenOpetuskieletError,
+    } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
     const [organisaatio, setOrganisaatio] = useReducer(
         (state: Organisaatio, newState: Organisaatio): Organisaatio => ({ ...state, ...newState }),
         tyhjaOrganisaatio
