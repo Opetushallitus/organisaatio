@@ -25,6 +25,32 @@ Aja projektin juuressa
 ``` bash
    .\gradlew clean build
 ```
+### Paikallinen tietokanta
+Paikallinen kehitys nojaa paikallisesti asennettuun tietokantaan. Aja sopiva postgres dockerissa esimeskiksi seuraavalla composella:
+```
+version: '3'
+services:
+  database:
+    container_name: oph-postgers-db
+    image: postgres:13.4
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=ophoph
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+      - ./backup:/tmp/backup
+    ports:
+      - 5432:5432
+volumes:
+  database-data:
+```
+Tuo backup pallero ympäristöstä tai luo tyhjä kanta organisaatio sovellusta varten. Lataa backup S3:sta ja tallenna composen viereen /backup hakemistoon ja backupin palautus onnistuu:
+```
+docker exec oph-postgers-db dropdb -U app organisaatio
+docker exec oph-postgers-db createdb -U app -T template0 organisaatio
+docker exec oph-postgers-db pg_restore -U app -d organisaatio /tmp/backup/organisaatio.backup
+```
+
 ### Käynnistäminen
 #### Virkailija-mock
 Lokaalikehitystä varten voit käynnistää mock-api moduulin.
