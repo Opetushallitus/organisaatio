@@ -12,8 +12,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
-
-@Profile("dev")
+/* TODO CHECK IF THIS IS NEEDED IN LOCAL DEV
 @Configuration
 @EnableGlobalMethodSecurity(jsr250Enabled = false, prePostEnabled = false, securedEnabled = true)
 @EnableWebSecurity
@@ -23,7 +22,7 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
        web.ignoring().antMatchers("/**");
     }
-    /*
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
@@ -37,5 +36,6 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authenticationProvider;
     }
 
-     */
+
 }
+*/

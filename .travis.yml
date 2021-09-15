@@ -41,10 +41,22 @@ jobs:
         - kill $(jobs -p) || true
     - language: java
       sudo: required
+      env:
+        - NODE_VERSION=11.1
+      install:
+        - nvm install $NODE_VERSION
+        - nvm use $NODE_VERSION
+        - cd mock-api && npm install
+      script:
+      - npm run mock-api &
+
+    - language: java
+      sudo: required
       jdk:
         - openjdk11
       services:
         - docker
+        - postgresql
       cache:
         directories:
           - $HOME/.gradle
