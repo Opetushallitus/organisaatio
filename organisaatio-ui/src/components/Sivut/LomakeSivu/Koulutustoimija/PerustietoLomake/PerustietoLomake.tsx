@@ -79,7 +79,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     }));
 
     const [nimi, setNimi] = useState(organisaatio.nimi);
-    console.log('orgkiele', organisaatio.kieletUris);
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -87,10 +86,12 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('LABEL_OID')}</span>
                     <span className={styles.ReadOnly}>{organisaatio.oid}</span>
                     {organisaatio.yritysmuoto && [
-                        <span className={styles.AvainKevyestiBoldattu}>
+                        <span key={1} className={styles.AvainKevyestiBoldattu}>
                             {i18n.translate('PERUSTIETO_YRITYSMUOTO')}
                         </span>,
-                        <span className={styles.ReadOnly}>{organisaatio.yritysmuoto}</span>,
+                        <span key={2} className={styles.ReadOnly}>
+                            {organisaatio.yritysmuoto}
+                        </span>,
                     ]}
                     <span className={styles.AvainKevyestiBoldattu}>
                         {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
@@ -132,7 +133,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                                 label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
                             }))}
                             onChange={(tyypit) => {
-                                console.log(tyypit);
                                 handleOnChange({ name: 'tyypit', value: tyypit });
                             }}
                         />

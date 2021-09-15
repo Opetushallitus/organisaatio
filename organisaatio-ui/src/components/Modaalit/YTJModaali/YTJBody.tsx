@@ -20,7 +20,6 @@ export default function YTJBody({ ytunnus = '', korvaaOrganisaatio }: Props) {
         try {
             if (yTunnus) {
                 const { data } = await Axios.get(`/organisaatio/ytj/${yTunnus}`);
-                console.log('got ytjtieto', data);
                 setYtjTiedot(data);
             }
         } catch (error) {

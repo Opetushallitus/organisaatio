@@ -27,8 +27,6 @@ export default {
 
         // Tyhjenneteään mallin tiedot
         clear: function () {
-            console.debug('clear()');
-
             this.nimihistoria = [];
         },
 
@@ -86,7 +84,6 @@ export default {
                 }
             }
 
-            console.debug('getUusinNimi() ' + model.nimiToString(nimi));
             return nimi;
         },
 
@@ -114,7 +111,6 @@ export default {
                 }
             }
 
-            console.debug('getCurrentNimi() ' + this.nimiToString(nimi));
             return nimi;
         },
 
@@ -132,7 +128,6 @@ export default {
                 }
             }
 
-            console.debug('isAjastettuMuutos() ' + this.nimiToString(nimi) + ' = ' + ajastettuMuutos);
             return ajastettuMuutos;
         },
 

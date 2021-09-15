@@ -48,7 +48,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
 
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
-    const [stashedOrganisaatio, setStashedOrganisaatio] = useState<Organisaatio | undefined>(undefined);
+    //const [stashedOrganisaatio, setStashedOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     useEffect(() => {
         async function fetch() {
@@ -75,8 +75,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     async function putOrganisaatio() {
         try {
             if (organisaatio && organisaatio.oid) {
-                const response = await Axios.put(`/organisaatio/organisaatio/v4/${organisaatio.oid}`, organisaatio);
-                console.log('updated org response', response);
+                await Axios.put(`/organisaatio/organisaatio/v4/${organisaatio.oid}`, organisaatio);
                 history.push(`/lomake/${organisaatio.oid}`);
             }
         } catch (error) {
@@ -96,8 +95,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         } = ytjOrganisaatio;
         const alkuPvm = alkupvm.split('.');
         [alkuPvm[0], alkuPvm[2]] = [alkuPvm[2], alkuPvm[0]]; // reverse date to YYYY-MM-DD format
-        setStashedOrganisaatio(Object.assign({}, organisaatio));
-        console.log('tallennettu alkuperäinen org muistiin', stashedOrganisaatio);
+        //setStashedOrganisaatio(Object.assign({}, organisaatio));
+        //console.log('tallennettu alkuperäinen org muistiin', stashedOrganisaatio);
         organisaatio &&
             organisaatio.yhteystiedot &&
             organisaatio.yhteystiedot
@@ -113,7 +112,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             postitoimipaikka,
                         });
                     } else if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'kaynti') {
-                        console.log(yT, ytjOrganisaatio);
                         const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = kayntiOsoite;
                         const postinumeroKoodi = postinumerot.find((p) => p.arvo === postinumero);
                         yT = Object.assign(yT, {
@@ -122,14 +120,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             postitoimipaikka,
                         });
                     } else if (yT.tyyppi && yT.tyyppi === 'puhelin') {
-                        console.log(yT, ytjOrganisaatio);
                         yT.numero = ytjOrganisaatio.puhelin;
                     }
                 });
         setOrganisaatio(
             Object.assign({}, organisaatio, { nimi: { fi: nimi }, alkuPvm: alkuPvm.join('-'), ytunnus, yritysmuoto })
         ); // TODO nimet?
-        console.log('Korvattu org ytj:stä tulevalla datalla ainakin suurelta osin', organisaatio);
     };
 
     const handleOnChange = ({
@@ -141,7 +137,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     }) => {
         setOrganisaatio((organisaatio) => {
             const updatedOrg = Object.assign({}, organisaatio, { [name]: value });
-            console.log('päiv', updatedOrg);
             return updatedOrg;
         });
     };
@@ -205,7 +200,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </Link>
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [
-                    <div>
+                    <div key={o.oid}>
                         <Link to={`${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</Link>
                     </div>,
                     organisaatioNimiPolku.length - 1 !== index && <div> &gt; </div>,
@@ -242,7 +237,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula} onClick={() => history.push('/')}>
+                    <Button
+                        variant="outlined"
+                        className={styles.Versionappula}
+                        onClick={() => history.push('/organisaatio')}
+                    >
                         {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula} onClick={putOrganisaatio}>

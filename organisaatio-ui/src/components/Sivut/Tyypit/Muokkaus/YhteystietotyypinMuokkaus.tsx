@@ -37,7 +37,6 @@ export default function YhteystietotyypinMuokkaus() {
         value: k.uri,
         label: k.nimi[language] || k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '',
     }));
-    console.log('yhtopts', oppilaitosTyypitOptions);
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>

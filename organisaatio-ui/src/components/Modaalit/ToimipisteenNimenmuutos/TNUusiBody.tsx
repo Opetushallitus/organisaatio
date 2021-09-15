@@ -20,12 +20,10 @@ export default function TNUusiBody(props: TNProps) {
     const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target as HTMLInputElement;
         const inputinNimi = input.name as keyof NimiType;
-        console.log('dasda', nimi, inputinNimi);
         const uusiNimi = Object.assign({}, nimi);
         uusiNimi[inputinNimi] = input.value;
         return handleChange(uusiNimi);
     };
-    console.log('ping2', nimi);
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyKentta}>

@@ -90,7 +90,7 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
         try {
             const response = await Axios.post(`/organisaatio/organisaatio/v4/`, organisaatio);
             console.error('saved org response', response);
-            props.history.push('/');
+            props.history.push('/organisaatio');
         } catch (error) {
             console.error('error while posting org', error);
         } finally {
@@ -99,7 +99,7 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
 
     function handleCancel() {
         setOrganisaatio({ ...tyhjaOrganisaatio });
-        props.history.push('/');
+        props.history.push('/organisaatio');
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
@@ -166,7 +166,6 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
                     preExpanded={lomakeAvoinna}
                     handlePreExpanded={setLomakeAvoinna}
                     handleChange={(event) => {
-                        console.log('accordionevent', event);
                         //setLomakeAvoinna(avoinnaIndex[0] + 1)
                     }}
                     {...accordionProps()}
