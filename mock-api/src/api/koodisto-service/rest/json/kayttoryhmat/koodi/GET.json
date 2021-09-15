@@ -1,1 +1,272 @@
-[{"koodiUri":"kayttoryhmat_5","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_5","version":0,"versio":1,"koodisto":{"koodistoUri":"kayttoryhmat","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"5","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Perusteiden laadinta","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Utarbetande av grunderna","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"kayttoryhmat_2","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_2","version":0,"versio":1,"koodisto":{"koodistoUri":"kayttoryhmat","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"2","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Rajaava","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Avgränsande","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"kayttoryhmat_1","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_1","version":0,"versio":1,"koodisto":{"koodistoUri":"kayttoryhmat","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"1","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Allmän","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"},{"nimi":"Yleinen","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"}]},{"koodiUri":"kayttoryhmat_4","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_4","version":0,"versio":1,"koodisto":{"koodistoUri":"kayttoryhmat","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"4","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Liiteosoite","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Bilageadress","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"kayttoryhmat_6","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_6","version":0,"versio":1,"koodisto":{"koodistoUri":"kayttoryhmat","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"6","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Käyttöoikeus","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Behörigheter","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"kayttoryhmat_3","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_3","version":0,"versio":1,"koodisto":{"koodistoUri":"kayttoryhmat","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"3","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Prioriserande","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"},{"nimi":"Priorisoiva","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"}]}]
+[
+    {
+        "koodiArvo": "5",
+        "koodiUri": "kayttoryhmat_5",
+        "koodisto": {
+            "koodistoUri": "kayttoryhmat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Perusteiden laadinta",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Utarbetande av grunderna",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_5",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "2",
+        "koodiUri": "kayttoryhmat_2",
+        "koodisto": {
+            "koodistoUri": "kayttoryhmat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Rajaava",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Avgr\u00e4nsande",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_2",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "1",
+        "koodiUri": "kayttoryhmat_1",
+        "koodisto": {
+            "koodistoUri": "kayttoryhmat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Allm\u00e4n",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Yleinen",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_1",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "4",
+        "koodiUri": "kayttoryhmat_4",
+        "koodisto": {
+            "koodistoUri": "kayttoryhmat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Liiteosoite",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Bilageadress",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_4",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "6",
+        "koodiUri": "kayttoryhmat_6",
+        "koodisto": {
+            "koodistoUri": "kayttoryhmat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "K\u00e4ytt\u00f6oikeus",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Beh\u00f6righeter",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_6",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "3",
+        "koodiUri": "kayttoryhmat_3",
+        "koodisto": {
+            "koodistoUri": "kayttoryhmat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Prioriserande",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Priorisoiva",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/kayttoryhmat_3",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    }
+]

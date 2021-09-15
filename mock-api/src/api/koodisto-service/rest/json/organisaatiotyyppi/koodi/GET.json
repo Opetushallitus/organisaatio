@@ -1,1 +1,443 @@
-[{"koodiUri":"organisaatiotyyppi_04","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_04","version":1,"versio":3,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"04","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2013-10-28","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Oppisopimustoimipiste","kuvaus":"Oppisopimustoimipiste on alueellinen oppisopimustietoutta jakava toimija ja se kuuluu Koulutustoimijan toimipisteisiin.","lyhytNimi":"Oppisopimustoimipiste","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"},{"nimi":"Läroavtalsplats","kuvaus":"","lyhytNimi":"Läroavtalsplats","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"}]},{"koodiUri":"organisaatiotyyppi_07","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_07","version":3,"versio":2,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"07","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2018-08-16","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Varhaiskasvatuksen järjestäjä","kuvaus":"Varhaiskasvatuksen järjestäjä on Varhaiskasvatuksen toimipaikkojen ylläpitäjä ja jolla on YTJ-palvelussa Y-tunnus.","lyhytNimi":"Varhaiskasvatuksen järjestäjä","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"},{"nimi":"Anordnare av småbarnspedagogik","kuvaus":"Anordnare av småbarnspedagogik","lyhytNimi":"Anordnare av småbarnspedagogik","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"}]},{"koodiUri":"organisaatiotyyppi_09","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_09","version":1,"versio":1,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"09","paivitysPvm":"2021-02-19","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2020-12-31","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Kunta","kuvaus":"","lyhytNimi":"Kunta","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"},{"nimi":"Kommun","kuvaus":"","lyhytNimi":"Kommun","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"},{"nimi":"Kunta","kuvaus":"","lyhytNimi":"Kunta","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"EN"}]},{"koodiUri":"organisaatiotyyppi_01","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_01","version":1,"versio":3,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"01","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2012-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Koulutustoimija","kuvaus":"Koulutustoimija on oppilaitoksen/oppilaitoksien ylläpitäjä jolla on joko Opetus- ja kulttuuriministreiön järjestämislupa,  Valtioneuvoston lupa koulutuksen järjestämiseen tai lakisääteinen lupa koulutuksen järjestämiseen.\n\nKoulutustoimijalla tulee olla Y-tunnus YTJ-rekisterissä tai Valtionkonttorin antama virastotunnus.","lyhytNimi":"Koulutustoimija","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"},{"nimi":"Utbildningsaktör","kuvaus":"","lyhytNimi":"Utbildningsaktör","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"}]},{"koodiUri":"organisaatiotyyppi_03","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_03","version":1,"versio":3,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"03","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2012-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Verksamhetsställe","kuvaus":"","lyhytNimi":"Verksamhetsställe","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"},{"nimi":"Toimipiste","kuvaus":"Toimipiste on eri osoitteessa kun oppilaitos koulutusta järjestävä toimipiste, yksikkö/osasto/tiedekunta. Toimipiste kuuluu aina johonkin oppilaitokseen.","lyhytNimi":"Toimipiste","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"}]},{"koodiUri":"organisaatiotyyppi_02","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_02","version":1,"versio":3,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"02","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2012-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Läroanstalt","kuvaus":"","lyhytNimi":"Läroanstalt","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"},{"nimi":"Oppilaitos","kuvaus":"Oppilaitos on koulutusta järjestäjä operatiivinen taho ja jolla on tilastokeskuksen oppilaitosrekisterin oppilaitosnumero (esim. 00001 Härmän lukio)","lyhytNimi":"Oppilaitos","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"}]},{"koodiUri":"organisaatiotyyppi_05","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_05","version":1,"versio":3,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"05","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2012-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Muu organisaatio","kuvaus":"Luokkaan kuuluu valtion virastot ja laitokset sekä joukko yrityksiä jotka ovat Opintopolussa Valtioavustus palvelua, ASHAA, tai Opintopolun käyttöoikeuksia varten.","lyhytNimi":"Muu organisaatio","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"},{"nimi":"Annan organisation","kuvaus":"","lyhytNimi":"Annan organisation","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"}]},{"koodiUri":"organisaatiotyyppi_06","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_06","version":1,"versio":3,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"06","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2015-10-22","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Arbetslivsorganisation","kuvaus":"Arbetslivsorganisation","lyhytNimi":"Arbetslivsorganisation","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"},{"nimi":"Tyoelamajarjesto","kuvaus":"Tyoelamajarjesto","lyhytNimi":"Tyoelamajarjesto","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"EN"},{"nimi":"Työelämäjärjestö","kuvaus":"Työelämäjärjestät on lisätty AIPALIA varten. Lupaa niiden poistamiselle ei ole saatu Riikka Vackerilta joka oli palvelun palvelun omistaja.","lyhytNimi":"Tyoelamajarjesto","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"}]},{"koodiUri":"organisaatiotyyppi_08","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_08","version":2,"versio":1,"koodisto":{"koodistoUri":"organisaatiotyyppi","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[3]},"koodiArvo":"08","paivitysPvm":"2020-10-22","paivittajaOid":"1.2.246.562.24.25909319372","voimassaAlkuPvm":"2018-10-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Verksamhetsställe för småbarnspedagogik","kuvaus":"","lyhytNimi":"","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"},{"nimi":"Varhaiskasvatuksen toimipaikka","kuvaus":"Varhaiskasvatuksen toimipaikka jolla on Varhaiskasvatuksen järjestäjä. Toimipaikkatietoja ylläpidetään VARDA palvelussa josta ne päivittyvät Opintopolun Organisaatiopalveluun.","lyhytNimi":"","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"},{"nimi":"Varhaiskasvatuksen toimipaikka","kuvaus":"","lyhytNimi":"","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"EN"}]}]
+[
+    {
+        "koodiArvo": "04",
+        "koodiUri": "organisaatiotyyppi_04",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Oppisopimustoimipiste on alueellinen oppisopimustietoutta jakava toimija ja se kuuluu Koulutustoimijan toimipisteisiin.",
+                "lyhytNimi": "Oppisopimustoimipiste",
+                "nimi": "Oppisopimustoimipiste",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "L\u00e4roavtalsplats",
+                "nimi": "L\u00e4roavtalsplats",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_04",
+        "tila": "LUONNOS",
+        "versio": 3,
+        "version": 1,
+        "voimassaAlkuPvm": "2013-10-28",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "07",
+        "koodiUri": "organisaatiotyyppi_07",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Varhaiskasvatuksen j\u00e4rjest\u00e4j\u00e4 on Varhaiskasvatuksen toimipaikkojen yll\u00e4pit\u00e4j\u00e4 ja jolla on YTJ-palvelussa Y-tunnus.",
+                "lyhytNimi": "Varhaiskasvatuksen j\u00e4rjest\u00e4j\u00e4",
+                "nimi": "Varhaiskasvatuksen j\u00e4rjest\u00e4j\u00e4",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Anordnare av sm\u00e5barnspedagogik",
+                "lyhytNimi": "Anordnare av sm\u00e5barnspedagogik",
+                "nimi": "Anordnare av sm\u00e5barnspedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_07",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 3,
+        "voimassaAlkuPvm": "2018-08-16",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "09",
+        "koodiUri": "organisaatiotyyppi_09",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "",
+                "lyhytNimi": "Kunta",
+                "nimi": "Kunta",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "Kommun",
+                "nimi": "Kommun",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "",
+                "lyhytNimi": "Kunta",
+                "nimi": "Kunta",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2021-02-19",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_09",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2020-12-31",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "01",
+        "koodiUri": "organisaatiotyyppi_01",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Koulutustoimija on oppilaitoksen/oppilaitoksien yll\u00e4pit\u00e4j\u00e4 jolla on joko Opetus- ja kulttuuriministrei\u00f6n j\u00e4rjest\u00e4mislupa,  Valtioneuvoston lupa koulutuksen j\u00e4rjest\u00e4miseen tai lakis\u00e4\u00e4teinen lupa koulutuksen j\u00e4rjest\u00e4miseen.\n\nKoulutustoimijalla tulee olla Y-tunnus YTJ-rekisteriss\u00e4 tai Valtionkonttorin antama virastotunnus.",
+                "lyhytNimi": "Koulutustoimija",
+                "nimi": "Koulutustoimija",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "Utbildningsakt\u00f6r",
+                "nimi": "Utbildningsakt\u00f6r",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_01",
+        "tila": "LUONNOS",
+        "versio": 3,
+        "version": 1,
+        "voimassaAlkuPvm": "2012-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "03",
+        "koodiUri": "organisaatiotyyppi_03",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "Verksamhetsst\u00e4lle",
+                "nimi": "Verksamhetsst\u00e4lle",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Toimipiste on eri osoitteessa kun oppilaitos koulutusta j\u00e4rjest\u00e4v\u00e4 toimipiste, yksikk\u00f6/osasto/tiedekunta. Toimipiste kuuluu aina johonkin oppilaitokseen.",
+                "lyhytNimi": "Toimipiste",
+                "nimi": "Toimipiste",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_03",
+        "tila": "LUONNOS",
+        "versio": 3,
+        "version": 1,
+        "voimassaAlkuPvm": "2012-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "02",
+        "koodiUri": "organisaatiotyyppi_02",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "L\u00e4roanstalt",
+                "nimi": "L\u00e4roanstalt",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Oppilaitos on koulutusta j\u00e4rjest\u00e4j\u00e4 operatiivinen taho ja jolla on tilastokeskuksen oppilaitosrekisterin oppilaitosnumero (esim. 00001 H\u00e4rm\u00e4n lukio)",
+                "lyhytNimi": "Oppilaitos",
+                "nimi": "Oppilaitos",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_02",
+        "tila": "LUONNOS",
+        "versio": 3,
+        "version": 1,
+        "voimassaAlkuPvm": "2012-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "05",
+        "koodiUri": "organisaatiotyyppi_05",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Luokkaan kuuluu valtion virastot ja laitokset sek\u00e4 joukko yrityksi\u00e4 jotka ovat Opintopolussa Valtioavustus palvelua, ASHAA, tai Opintopolun k\u00e4ytt\u00f6oikeuksia varten.",
+                "lyhytNimi": "Muu organisaatio",
+                "nimi": "Muu organisaatio",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "Annan organisation",
+                "nimi": "Annan organisation",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_05",
+        "tila": "LUONNOS",
+        "versio": 3,
+        "version": 1,
+        "voimassaAlkuPvm": "2012-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "06",
+        "koodiUri": "organisaatiotyyppi_06",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Arbetslivsorganisation",
+                "lyhytNimi": "Arbetslivsorganisation",
+                "nimi": "Arbetslivsorganisation",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Tyoelamajarjesto",
+                "lyhytNimi": "Tyoelamajarjesto",
+                "nimi": "Tyoelamajarjesto",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ty\u00f6el\u00e4m\u00e4j\u00e4rjest\u00e4t on lis\u00e4tty AIPALIA varten. Lupaa niiden poistamiselle ei ole saatu Riikka Vackerilta joka oli palvelun palvelun omistaja.",
+                "lyhytNimi": "Tyoelamajarjesto",
+                "nimi": "Ty\u00f6el\u00e4m\u00e4j\u00e4rjest\u00f6",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_06",
+        "tila": "LUONNOS",
+        "versio": 3,
+        "version": 1,
+        "voimassaAlkuPvm": "2015-10-22",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "08",
+        "koodiUri": "organisaatiotyyppi_08",
+        "koodisto": {
+            "koodistoUri": "organisaatiotyyppi",
+            "koodistoVersios": [
+                3
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "",
+                "lyhytNimi": "",
+                "nimi": "Verksamhetsst\u00e4lle f\u00f6r sm\u00e5barnspedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Varhaiskasvatuksen toimipaikka jolla on Varhaiskasvatuksen j\u00e4rjest\u00e4j\u00e4. Toimipaikkatietoja yll\u00e4pidet\u00e4\u00e4n VARDA palvelussa josta ne p\u00e4ivittyv\u00e4t Opintopolun Organisaatiopalveluun.",
+                "lyhytNimi": "",
+                "nimi": "Varhaiskasvatuksen toimipaikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "",
+                "lyhytNimi": "",
+                "nimi": "Varhaiskasvatuksen toimipaikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-10-22",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/organisaatiotyyppi_08",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2018-10-01",
+        "voimassaLoppuPvm": null
+    }
+]
