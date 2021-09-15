@@ -10,7 +10,6 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext, ROOT_OID } from '../../../contexts/contexts';
 import {
-    Koodi,
     KoodiUri,
     Nimi,
     Organisaatio,
@@ -24,36 +23,33 @@ import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistori
 import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLomake/OrganisaatioHistoriaLomake';
 import Axios from 'axios';
 import Icon from '@iconify/react';
-import useAxios from 'axios-hooks';
 import { Link } from 'react-router-dom';
+import useKoodisto from '../../../api/useKoodisto';
+
 type LomakeSivuProps = {
     match: { params: { oid: string } };
     history: string[];
 };
-const LomakeSivu = (props: LomakeSivuProps) => {
+const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
-    const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
-        Koodi[]
-    >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
-    const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/MAATJAVALTIOT1/koodi`
+    const {
+        data: organisaatioTyypit,
+        loading: organisaatioTyypitLoading,
+        error: organisaatioTyypitError,
+    } = useKoodisto('ORGANISAATIOTYYPPI');
+    const { data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError } = useKoodisto(
+        'MAATJAVALTIOT1'
     );
-    const [
-        {
-            data: oppilaitoksenOpetuskielet,
-            loading: oppilaitoksenOpetuskieletLoading,
-            error: oppilaitoksenOpetuskieletError,
-        },
-    ] = useAxios<Koodi[]>(`/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi`);
-    const [{ data: postinumerot, loading: postinumerotLoading, error: postinumerotError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/POSTI/koodi?onlyValid=true`
-    );
+    const {
+        data: oppilaitoksenOpetuskielet,
+        loading: oppilaitoksenOpetuskieletLoading,
+        error: oppilaitoksenOpetuskieletError,
+    } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
+    const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
+
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [stashedOrganisaatio, setStashedOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
-    const {
-        match: { params },
-    } = props;
     useEffect(() => {
         async function fetch() {
             try {
@@ -62,7 +58,6 @@ const LomakeSivu = (props: LomakeSivuProps) => {
                 if (organisaatio.parentOidPath) {
                     const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
                     const orgTree = await Axios.post(`/organisaatio/organisaatio/v4/findbyoids`, idArr);
-                    console.log('orgtee', orgTree.data, idArr, organisaatio.parentOidPath);
                     const organisaatioNimiPolku = idArr.map((oid: string) => ({
                         oid,
                         nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
@@ -74,7 +69,6 @@ const LomakeSivu = (props: LomakeSivuProps) => {
                 console.error('error fetching', error);
             }
         }
-
         fetch();
     }, [params.oid]);
 
@@ -83,7 +77,7 @@ const LomakeSivu = (props: LomakeSivuProps) => {
             if (organisaatio && organisaatio.oid) {
                 const response = await Axios.put(`/organisaatio/organisaatio/v4/${organisaatio.oid}`, organisaatio);
                 console.log('updated org response', response);
-                props.history.push(`/lomake/${organisaatio.oid}`);
+                history.push(`/lomake/${organisaatio.oid}`);
             }
         } catch (error) {
             console.error('error while updating org', error);
@@ -194,7 +188,7 @@ const LomakeSivu = (props: LomakeSivuProps) => {
         lomakkeet.push(<NimiHistoriaLomake nimet={organisaatio.nimet} />);
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
 
-        if (organisaatio.oid !== ROOT_OID) {
+        if (organisaatio.oid !== ROOT_OID && organisaatio.oid) {
             lomakkeet.push(<OrganisaatioHistoriaLomake oid={organisaatio.oid} />);
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
@@ -248,7 +242,7 @@ const LomakeSivu = (props: LomakeSivuProps) => {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula} onClick={() => props.history.push('/')}>
+                    <Button variant="outlined" className={styles.Versionappula} onClick={() => history.push('/')}>
                         {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula} onClick={putOrganisaatio}>

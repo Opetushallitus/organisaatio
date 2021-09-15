@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './LisatietotyypinMuokkaus.module.css';
-import { useContext } from 'react';
 import { LanguageContext } from '../../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
@@ -8,13 +8,10 @@ import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import { useState } from 'react';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import useAxios from 'axios-hooks';
-import { Koodi } from '../../../../types/types';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { useEffect } from 'react';
 import Axios from 'axios';
+import useKoodisto from '../../../../api/useKoodisto';
 
 const KAIKKIVALITTU = '1',
     RAJATUT_VALITTU = '0';
@@ -26,9 +23,10 @@ type Props = {
 export default function LisatietotyypinMuokkaus(props: Props) {
     const { i18n, language } = useContext(LanguageContext);
     const [lisatietotyyppi, setLisatietotyyppi] = useState<undefined | any>();
-    const [{ data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError }] = useAxios<
-        Koodi[]
-    >(`/organisaatio/koodisto/OPPILAITOSTYYPPI/koodi?noCache=${Date.now()}&onlyValidKoodis=true`); //TODO the random parameter should probably be random
+    const { data: oppilaitosTyypit, loading: oppilaitosTyypitLoading, error: oppilaitosTyypitError } = useKoodisto(
+        'OPPILAITOSTYYPPI',
+        true
+    );
     const {
         match: { params },
     } = props;

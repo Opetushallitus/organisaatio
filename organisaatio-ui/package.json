@@ -11,6 +11,7 @@
     "axios-hooks": "1.10.0",
     "joi": "^17.4.0",
     "moment": "2.29.1",
+    "oph-urls-js": "github:Opetushallitus/oph-urls-js#master",
     "react": "16.13.1",
     "react-accessible-accordion": "3.3.3",
     "react-datepicker": "3.2.2",

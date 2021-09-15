@@ -1,66 +1,50 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
-//import 'normalize.css';
-// import 'oph-virkailija-style-guide/oph-styles.css'
 import { registerLocale } from 'react-datepicker';
-import { fi, sv, enGB } from 'date-fns/locale';
-import { LanguageContext, I18nImpl, KoodistoImpl, KoodistoContext } from './contexts/contexts';
+import { enGB, fi, sv } from 'date-fns/locale';
+import { I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Koodi, Language, Lokalisointi } from './types/types';
+import { Lokalisointi } from './types/types';
 import useAxios from 'axios-hooks';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import axios from 'axios';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
-import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import Ryhmat from './components/Sivut/Ryhmat/Ryhmat';
 import Tyypit from './components/Sivut/Tyypit/Tyypit';
 import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/LisatietotyypinMuokkaus';
 import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
+import { useCASLanguage } from './api/useCAS';
+import Loading from './components/Loading/Loading';
+import useKoodisto from './api/useKoodisto';
 
 const theme = createTheme();
-
+const Error = () => {
+    const { i18n } = useContext(LanguageContext);
+    return <ErrorPage>{i18n.translate('LABEL_ERROR_LOADING_DATA')}</ErrorPage>;
+};
 const OrganisaatioApp: React.FC = () => {
     registerLocale('fi', fi);
     registerLocale('sv', sv);
     registerLocale('en', enGB);
-    const [language, setLanguage] = useState<Language>('fi');
-    const [languageLoading, setLanguageLoading] = useState(true);
-    useEffect(() => {
-        async function fetchLanguage() {
-            try {
-                const response = await axios.get(`/organisaatio/lokalisointi/kieli`);
-                setLanguage(response.data);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLanguageLoading(false);
-            }
-        }
-        fetchLanguage();
-    }, []);
+
+    const { data: language, loading: languageLoading, error: languageError } = useCASLanguage();
     const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
         `/organisaatio/lokalisointi`
     );
-    const [{ data: kunnat, loading: kunnatLoading, error: kunnatError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/KUNTA/koodi`
-    );
-    const [{ data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/RYHMATYYPIT/koodi`
-    );
-    const [{ data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/KAYTTORYHMAT/koodi`
-    );
-    const [{ data: organisaatioTyypit, loading: organisaatioTyypitLoading, error: organisaatioTyypitError }] = useAxios<
-        Koodi[]
-    >(`/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi`);
-    const [{ data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError }] = useAxios<Koodi[]>(
-        `/organisaatio/koodisto/RYHMANTILA/koodi`
-    );
+    const { data: kunnat, loading: kunnatLoading, error: kunnatError } = useKoodisto('KUNTA');
+    const { data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError } = useKoodisto('RYHMATYYPIT');
+
+    const { data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError } = useKoodisto('KAYTTORYHMAT');
+    const {
+        data: organisaatioTyypit,
+        loading: organisaatioTyypitLoading,
+        error: organisaatioTyypitError,
+    } = useKoodisto('ORGANISAATIOTYYPPI');
+    const { data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError } = useKoodisto('RYHMANTILA');
     if (
         languageLoading ||
         lokalisointiLoading ||
@@ -70,13 +54,10 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitLoading ||
         ryhmanTilatLoading
     ) {
-        return (
-            <ThemeProvider theme={theme}>
-                <Spin />
-            </ThemeProvider>
-        );
+        return <Loading />;
     }
     if (
+        languageError ||
         lokalisointiError ||
         kunnatError ||
         ryhmaTyypitError ||
@@ -84,7 +65,7 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitError ||
         ryhmanTilatError
     ) {
-        return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
+        return <Error />;
     }
     const i18n = new I18nImpl(lokalisointi, language);
     const kuntaKoodisto = new KoodistoImpl(kunnat, language);
@@ -96,7 +77,7 @@ const OrganisaatioApp: React.FC = () => {
     return (
         <Router basename="/organisaatio">
             <ThemeProvider theme={theme}>
-                <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
+                <LanguageContext.Provider value={{ language: language, i18n: i18n }}>
                     <KoodistoContext.Provider
                         value={{
                             kuntaKoodisto,
