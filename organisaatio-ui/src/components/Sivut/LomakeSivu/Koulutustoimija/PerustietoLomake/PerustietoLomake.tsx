@@ -86,10 +86,10 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('LABEL_OID')}</span>
                     <span className={styles.ReadOnly}>{organisaatio.oid}</span>
                     {organisaatio.yritysmuoto && [
-                        <span key={1} className={styles.AvainKevyestiBoldattu}>
+                        <span key={'yritysmuoto_title'} className={styles.AvainKevyestiBoldattu}>
                             {i18n.translate('PERUSTIETO_YRITYSMUOTO')}
                         </span>,
-                        <span key={2} className={styles.ReadOnly}>
+                        <span key={'yritysmuoto_arvo'} className={styles.ReadOnly}>
                             {organisaatio.yritysmuoto}
                         </span>,
                     ]}
