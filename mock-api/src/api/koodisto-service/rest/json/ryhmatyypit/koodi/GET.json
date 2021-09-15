@@ -1,1 +1,239 @@
-[{"koodiUri":"ryhmatyypit_5","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_5","version":0,"versio":1,"koodisto":{"koodistoUri":"ryhmatyypit","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"5","paivitysPvm":"2017-09-06","paivittajaOid":null,"voimassaAlkuPvm":"2017-08-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Opetussuunnitelmatyöryhmä","kuvaus":"Opetussuunnitelmatyöryhmä","lyhytNimi":"Opetussuunnitelmatyöryhmä","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Opetussuunnitelmatyöryhmä","kuvaus":"Opetussuunnitelmatyöryhmä","lyhytNimi":"Opetussuunnitelmatyöryhmä","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"EN"},{"nimi":"Opetussuunnitelmatyöryhmä","kuvaus":"Opetussuunnitelmatyöryhmä","lyhytNimi":"Opetussuunnitelmatyöryhmä","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"ryhmatyypit_2","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_2","version":0,"versio":1,"koodisto":{"koodistoUri":"ryhmatyypit","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"2","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Hakukohde","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Ansökningsmål","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"ryhmatyypit_4","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_4","version":0,"versio":1,"koodisto":{"koodistoUri":"ryhmatyypit","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"4","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Utbildning","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"},{"nimi":"Koulutus","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"}]},{"koodiUri":"ryhmatyypit_1","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_1","version":0,"versio":1,"koodisto":{"koodistoUri":"ryhmatyypit","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"1","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Organisation","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"},{"nimi":"Organisaatio","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"}]},{"koodiUri":"ryhmatyypit_3","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_3","version":0,"versio":1,"koodisto":{"koodistoUri":"ryhmatyypit","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[1]},"koodiArvo":"3","paivitysPvm":"2015-01-28","paivittajaOid":null,"voimassaAlkuPvm":"2015-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"Perustetyöryhmä","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"Arbetsgruppen för läroplaner","kuvaus":null,"lyhytNimi":null,"kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]}]
+[
+    {
+        "koodiArvo": "5",
+        "koodiUri": "ryhmatyypit_5",
+        "koodisto": {
+            "koodistoUri": "ryhmatyypit",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "lyhytNimi": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "nimi": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "EN",
+                "kuvaus": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "lyhytNimi": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "nimi": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "lyhytNimi": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "nimi": "Opetussuunnitelmaty\u00f6ryhm\u00e4",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2017-09-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_5",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2017-08-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "2",
+        "koodiUri": "ryhmatyypit_2",
+        "koodisto": {
+            "koodistoUri": "ryhmatyypit",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Hakukohde",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Ans\u00f6kningsm\u00e5l",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_2",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "4",
+        "koodiUri": "ryhmatyypit_4",
+        "koodisto": {
+            "koodistoUri": "ryhmatyypit",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Utbildning",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Koulutus",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_4",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "1",
+        "koodiUri": "ryhmatyypit_1",
+        "koodisto": {
+            "koodistoUri": "ryhmatyypit",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Organisation",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Organisaatio",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_1",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "3",
+        "koodiUri": "ryhmatyypit_3",
+        "koodisto": {
+            "koodistoUri": "ryhmatyypit",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Perustety\u00f6ryhm\u00e4",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "Arbetsgruppen f\u00f6r l\u00e4roplaner",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2015-01-28",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_3",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2015-01-01",
+        "voimassaLoppuPvm": null
+    }
+]

@@ -1,1 +1,284 @@
-[{"koodiUri":"oppilaitoksenopetuskieli_4","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_4","version":0,"versio":2,"koodisto":{"koodistoUri":"oppilaitoksenopetuskieli","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[2]},"koodiArvo":"4","paivitysPvm":"2021-08-24","paivittajaOid":"1.2.246.562.24.69633009338","voimassaAlkuPvm":"1990-01-04","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"englanti","kuvaus":"englanti","lyhytNimi":"englanti","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"engelska","kuvaus":"engelska","lyhytNimi":"engelska","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"oppilaitoksenopetuskieli_2","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_2","version":0,"versio":2,"koodisto":{"koodistoUri":"oppilaitoksenopetuskieli","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[2]},"koodiArvo":"2","paivitysPvm":"2021-08-24","paivittajaOid":"1.2.246.562.24.69633009338","voimassaAlkuPvm":"1990-01-02","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"ruotsi","kuvaus":"ruotsi","lyhytNimi":"ruotsi","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"svenska","kuvaus":"svenska","lyhytNimi":"svenska","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"oppilaitoksenopetuskieli_3","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_3","version":0,"versio":2,"koodisto":{"koodistoUri":"oppilaitoksenopetuskieli","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[2]},"koodiArvo":"3","paivitysPvm":"2021-08-24","paivittajaOid":"1.2.246.562.24.69633009338","voimassaAlkuPvm":"1990-01-03","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"suomi/ruotsi","kuvaus":"suomi/ruotsi","lyhytNimi":"suomi/ruotsi","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"finska/svenska","kuvaus":"finska/svenska","lyhytNimi":"finska/svenska","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"oppilaitoksenopetuskieli_1","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_1","version":4,"versio":2,"koodisto":{"koodistoUri":"oppilaitoksenopetuskieli","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[2]},"koodiArvo":"1","paivitysPvm":"2021-08-24","paivittajaOid":"1.2.246.562.24.69633009338","voimassaAlkuPvm":"1990-01-01","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"finnish","kuvaus":"","lyhytNimi":"","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"EN"},{"nimi":"finska","kuvaus":"finska","lyhytNimi":"finska","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"SV"},{"nimi":"suomi","kuvaus":"suomi","lyhytNimi":"suomi","kayttoohje":"","kasite":"","sisaltaaMerkityksen":"","eiSisallaMerkitysta":"","huomioitavaKoodi":"","sisaltaaKoodiston":"","kieli":"FI"}]},{"koodiUri":"oppilaitoksenopetuskieli_9","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_9","version":0,"versio":2,"koodisto":{"koodistoUri":"oppilaitoksenopetuskieli","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[2]},"koodiArvo":"9","paivitysPvm":"2021-08-24","paivittajaOid":"1.2.246.562.24.69633009338","voimassaAlkuPvm":"1990-01-06","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"muu","kuvaus":"muu","lyhytNimi":"muu","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"},{"nimi":"annat","kuvaus":"annat","lyhytNimi":"annat","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"}]},{"koodiUri":"oppilaitoksenopetuskieli_5","resourceUri":"https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_5","version":0,"versio":2,"koodisto":{"koodistoUri":"oppilaitoksenopetuskieli","organisaatioOid":"1.2.246.562.10.00000000001","koodistoVersios":[2]},"koodiArvo":"5","paivitysPvm":"2021-08-24","paivittajaOid":"1.2.246.562.24.69633009338","voimassaAlkuPvm":"1990-01-05","voimassaLoppuPvm":null,"tila":"LUONNOS","metadata":[{"nimi":"samiska","kuvaus":"samiska","lyhytNimi":"samiska","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"SV"},{"nimi":"saame","kuvaus":"saame","lyhytNimi":"saame","kayttoohje":null,"kasite":null,"sisaltaaMerkityksen":null,"eiSisallaMerkitysta":null,"huomioitavaKoodi":null,"sisaltaaKoodiston":null,"kieli":"FI"}]}]
+[
+    {
+        "koodiArvo": "4",
+        "koodiUri": "oppilaitoksenopetuskieli_4",
+        "koodisto": {
+            "koodistoUri": "oppilaitoksenopetuskieli",
+            "koodistoVersios": [
+                2
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "englanti",
+                "lyhytNimi": "englanti",
+                "nimi": "englanti",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "engelska",
+                "lyhytNimi": "engelska",
+                "nimi": "engelska",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-08-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_4",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 0,
+        "voimassaAlkuPvm": "1990-01-04",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "2",
+        "koodiUri": "oppilaitoksenopetuskieli_2",
+        "koodisto": {
+            "koodistoUri": "oppilaitoksenopetuskieli",
+            "koodistoVersios": [
+                2
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "ruotsi",
+                "lyhytNimi": "ruotsi",
+                "nimi": "ruotsi",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "svenska",
+                "lyhytNimi": "svenska",
+                "nimi": "svenska",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-08-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_2",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 0,
+        "voimassaAlkuPvm": "1990-01-02",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "3",
+        "koodiUri": "oppilaitoksenopetuskieli_3",
+        "koodisto": {
+            "koodistoUri": "oppilaitoksenopetuskieli",
+            "koodistoVersios": [
+                2
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "suomi/ruotsi",
+                "lyhytNimi": "suomi/ruotsi",
+                "nimi": "suomi/ruotsi",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "finska/svenska",
+                "lyhytNimi": "finska/svenska",
+                "nimi": "finska/svenska",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-08-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_3",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 0,
+        "voimassaAlkuPvm": "1990-01-03",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "1",
+        "koodiUri": "oppilaitoksenopetuskieli_1",
+        "koodisto": {
+            "koodistoUri": "oppilaitoksenopetuskieli",
+            "koodistoVersios": [
+                2
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "",
+                "lyhytNimi": "",
+                "nimi": "finnish",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "finska",
+                "lyhytNimi": "finska",
+                "nimi": "finska",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "suomi",
+                "lyhytNimi": "suomi",
+                "nimi": "suomi",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-08-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_1",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 4,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "9",
+        "koodiUri": "oppilaitoksenopetuskieli_9",
+        "koodisto": {
+            "koodistoUri": "oppilaitoksenopetuskieli",
+            "koodistoVersios": [
+                2
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "muu",
+                "lyhytNimi": "muu",
+                "nimi": "muu",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "annat",
+                "lyhytNimi": "annat",
+                "nimi": "annat",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-08-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_9",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 0,
+        "voimassaAlkuPvm": "1990-01-06",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "5",
+        "koodiUri": "oppilaitoksenopetuskieli_5",
+        "koodisto": {
+            "koodistoUri": "oppilaitoksenopetuskieli",
+            "koodistoVersios": [
+                2
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "samiska",
+                "lyhytNimi": "samiska",
+                "nimi": "samiska",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "saame",
+                "lyhytNimi": "saame",
+                "nimi": "saame",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-08-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitoksenopetuskieli_5",
+        "tila": "LUONNOS",
+        "versio": 2,
+        "version": 0,
+        "voimassaAlkuPvm": "1990-01-05",
+        "voimassaLoppuPvm": null
+    }
+]
