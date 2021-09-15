@@ -25,7 +25,7 @@ export default function OrganisaatioMuokkausAccordion(props: props) {
             {lomakkeet.map((lomake, index) => {
                 return (
                     <AccordionItem
-                        key={index}
+                        key={lomake.key}
                         {...(isPreExpandedInUse ? { dangerouslySetExpanded: preExpanded === index } : {})}
                         onChange={handleChange}
                         uuid={`${index}`}

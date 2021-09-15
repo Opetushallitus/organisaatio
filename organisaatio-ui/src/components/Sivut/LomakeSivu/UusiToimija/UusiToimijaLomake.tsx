@@ -126,6 +126,7 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                key={'perustietolomake'}
                 handleJatka={() => setLomakeAvoinna(1)}
                 handleOnChange={handleOnChange}
                 organisaatioTyypit={organisaatioTyypit}
@@ -137,7 +138,11 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         if (organisaatio.yhteystiedot) {
             lomakkeet.push(
-                <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
+                <YhteystietoLomake
+                    key={'yhteystietolomake'}
+                    handleOnChange={handleOnChange}
+                    yhteystiedot={organisaatio.yhteystiedot}
+                />
             );
             otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         }

@@ -164,6 +164,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                key={'perustietolomake'}
                 setYtjDataFetched={setYtjDataFetched}
                 handleOnChange={handleOnChange}
                 organisaatioTyypit={organisaatioTyypit}
@@ -176,15 +177,19 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         if (organisaatio.yhteystiedot) {
             lomakkeet.push(
-                <YhteystietoLomake handleOnChange={handleOnChange} yhteystiedot={organisaatio.yhteystiedot} />
+                <YhteystietoLomake
+                    key={'yhteystietolomake'}
+                    handleOnChange={handleOnChange}
+                    yhteystiedot={organisaatio.yhteystiedot}
+                />
             );
             otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         }
-        lomakkeet.push(<NimiHistoriaLomake nimet={organisaatio.nimet} />);
+        lomakkeet.push(<NimiHistoriaLomake key={'nimihistorialomake'} nimet={organisaatio.nimet} />);
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
 
         if (organisaatio.oid !== ROOT_OID && organisaatio.oid) {
-            lomakkeet.push(<OrganisaatioHistoriaLomake oid={organisaatio.oid} />);
+            lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} oid={organisaatio.oid} />);
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
 
