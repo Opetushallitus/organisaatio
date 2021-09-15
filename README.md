@@ -103,7 +103,7 @@ käynnistä sitten ui ajamalla:
 ``` bash
 npm run start
 ```
-ui käynnistyy porttiin 3000. Avaa http://localhost:3000/organisaatio selaimessa. Tarkasta verkkokutsuista failanneet pyynnöt ja kopioi joku niistä osoiteriville niin pääset autentikoitumaan.
+ui käynnistyy porttiin 3003. Avaa http://localhost:3003/organisaatio selaimessa. Tarkasta verkkokutsuista failanneet pyynnöt ja kopioi joku niistä osoiteriville niin pääset autentikoitumaan.
 Kun tämä on tehty, organisaatiopalvelu aukeaa localhostissa oikein.
 ### Profiilit
 dev-profiili toimii ilman käyttöoikeuksia, ja antaa käyttäjälle cas-kirjautumisen jälkeen suoraan täydet oikat. KTS. fi.vm.sade.organisaatio.config.DevUserDetailsServiceConfiguration.
