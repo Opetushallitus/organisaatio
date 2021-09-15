@@ -1,0 +1,35 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="OrganisaatioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="fi.vm.sade.organisaatio.organisaatio-service.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="fi.vm.sade.organisaatio.OrganisaatioApplication" />
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <option name="VM_PARAMETERS" value="-Dspring.config.location=classpath:application.properties" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+    <envs>
+      <env name="organisaatio.service.username" value="xxx" />
+      <env name="organisaatio.service.password" value="xxx" />
+      <env name="organisaatio.service.username.to.koodisto" value="" />
+      <env name="organisaatio.service.password.to.koodisto" value="" />
+      <env name="organisaatio-service.scheduled.update.cron.expression" value="0 * * * * ?" />
+      <env name="organisaatio.service.username.to.viestinta" value="" />
+      <env name="organisaatio.service.password.to.viestinta" value="" />
+      <env name="organisaatio-service.postgresql.url" value="" />
+      <env name="organisaatio-service.postgresql.user" value="" />
+      <env name="organisaatio-service.postgresql.password" value="" />
+      <env name="host.ilb" value="" />
+      <env name="host.alb" value="" />
+      <env name="spring.datasource.url" value="jdbc:postgresql://localhost:5432/organisaatio" />
+      <env name="spring.datasource.username" value="app" />
+      <env name="spring.datasource.password" value="ophoph" />
+      <env name="cas.service" value="" />
+      <env name="root.organisaatio.oid" value="1.2.246.562.10.00000000001" />
+      <env name="ryhmasahkoposti.service.email" value="" />
+      <env name="url-virkailija" value="http://localhost:9000" />
+      <env name="host.virkailija" value="localhost:9000" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
