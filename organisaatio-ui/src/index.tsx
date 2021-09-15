@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 import { ROOT_OID } from './contexts/contexts';
 import useFrontProperties from './api/useFrontProperties';
 import Loading from './components/Loading/Loading';
+import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
@@ -20,7 +21,7 @@ const InitGate = ({ children }) => {
     if (frontPropertiesLoading) {
         return <Loading />;
     } else if (frontPropertiesError) {
-        return <div>Sovelluksen lataaminen epäonnistui!</div>;
+        return <ErrorPage>Service unavailable.</ErrorPage>;
     } else {
         return children;
     }
