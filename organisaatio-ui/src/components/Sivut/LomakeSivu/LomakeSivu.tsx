@@ -48,7 +48,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
 
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
-    //const [stashedOrganisaatio, setStashedOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     useEffect(() => {
         async function fetch() {
@@ -95,8 +94,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         } = ytjOrganisaatio;
         const alkuPvm = alkupvm.split('.');
         [alkuPvm[0], alkuPvm[2]] = [alkuPvm[2], alkuPvm[0]]; // reverse date to YYYY-MM-DD format
-        //setStashedOrganisaatio(Object.assign({}, organisaatio));
-        //console.log('tallennettu alkuperäinen org muistiin', stashedOrganisaatio);
         organisaatio &&
             organisaatio.yhteystiedot &&
             organisaatio.yhteystiedot
