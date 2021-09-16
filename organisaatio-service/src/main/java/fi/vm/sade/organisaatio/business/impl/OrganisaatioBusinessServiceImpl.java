@@ -1273,7 +1273,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return entity;
     }
 
-    public void setPaivittajaData(Organisaatio entity) {
+    protected void setPaivittajaData(Organisaatio entity) {
         // Asetetaan päivittäjä ja päivityksen aikaleima
         try {
             entity.setPaivittaja(getCurrentUser());
