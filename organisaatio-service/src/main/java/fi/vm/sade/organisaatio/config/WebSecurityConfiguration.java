@@ -123,7 +123,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(casAuthenticationEntryPoint())
+                .exceptionHandling()
+                //.accessDeniedHandler(accessDeniedHandler()) // Kts. CustomAccessDeniedHandler
+                .authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
     }
