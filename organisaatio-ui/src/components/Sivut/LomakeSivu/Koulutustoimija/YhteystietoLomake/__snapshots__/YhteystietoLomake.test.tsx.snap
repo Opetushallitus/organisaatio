@@ -103,7 +103,7 @@ exports[`YhteystietoLomake Rendering Renders without crashing 1`] = `
     <div
       className="Kentta"
     >
-      <Component
+      <RadioGroup
         onChange={[Function]}
         options={
           Array [

@@ -46,7 +46,6 @@ const TaulukkoSivu = (props) => {
                               `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
                           );
                 const data = response.data;
-                console.log('data', data);
                 setOrganisaatiot([...data.organisaatiot]);
                 setIsLoading(false);
             } catch (error) {

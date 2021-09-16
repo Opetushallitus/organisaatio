@@ -19,13 +19,13 @@ type props = {
 
 export default function OrganisaatioMuokkausAccordion(props: props) {
     const { lomakkeet, otsikot, preExpanded, handleChange, handlePreExpanded = () => {} } = props;
-    console.log('oasddsa', preExpanded);
     const isPreExpandedInUse = !!preExpanded;
     return (
         <Accordion className={styles.Accordion}>
             {lomakkeet.map((lomake, index) => {
                 return (
                     <AccordionItem
+                        key={lomake.key}
                         {...(isPreExpandedInUse ? { dangerouslySetExpanded: preExpanded === index } : {})}
                         onChange={handleChange}
                         uuid={`${index}`}

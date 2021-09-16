@@ -61,7 +61,6 @@ export default function LisatietotyypinMuokkaus(props: Props) {
         setIsKaikkiValittu(RAJATUT_VALITTU);
     }
 
-    console.log('otopts', oppilaitosTyypitOptions);
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
