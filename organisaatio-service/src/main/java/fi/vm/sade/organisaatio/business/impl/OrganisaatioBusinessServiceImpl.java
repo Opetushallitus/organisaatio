@@ -1273,11 +1273,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return entity;
     }
 
-    private void setPaivittajaData(Organisaatio entity) {
+    public void setPaivittajaData(Organisaatio entity) {
         // Asetetaan päivittäjä ja päivityksen aikaleima
         try {
-            // TODO entity.setPaivittaja(getCurrentUser());
-            entity.setPaivittaja("useristesti");
+            entity.setPaivittaja(getCurrentUser());
             entity.setPaivitysPvm(new Date());
         } catch (Throwable t) {
             LOG.error("Could not set updater for organisation!", t);

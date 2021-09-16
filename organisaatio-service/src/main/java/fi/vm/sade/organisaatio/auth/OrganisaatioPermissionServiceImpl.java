@@ -129,17 +129,17 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         case OPPILAITOS:
         case MUU_ORGANISAATIO:
             //only oph
-            return true; // TODO checkAccess(ophOid, ROLE_CRUD);
+            return checkAccess(ophOid, ROLE_CRUD);
         case VARHAISKASVATUKSEN_JARJESTAJA:
         case TYOELAMAJARJESTO:
             //only oph
-            return true; // TODO checkAccess(ophOid, ROLE_CRUD);
+            return checkAccess(ophOid, ROLE_CRUD);
         case OPPISOPIMUSTOIMIPISTE:
         case TOIMIPISTE:
         case VARHAISKASVATUKSEN_TOIMIPAIKKA:
-            return true; // TODO checkAccess(new String[]{ROLE_CRUD}) || checkAccess(ophOid, ROLE_CRUD);
+            return checkAccess(new String[]{ROLE_CRUD}) || checkAccess(ophOid, ROLE_CRUD);
         case RYHMA:
-            return true; // TODO userCanCreateDeleteRyhma();
+            return userCanCreateDeleteRyhma();
 
         default:
             log.error("Unhandled or type:" + tyyppi + " returning false!");
@@ -225,11 +225,11 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     }
 
     private boolean userCanCreateDeleteRyhma() {
-        return true; // TODO checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD);
+        return checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD);
     }
 
     private boolean userCanEditRyhma() {
-        return true; // TODO checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD, ROLE_RU);
+        return checkAccess(new String[]{ROLE_RYHMA}) || checkAccess(ophOid, ROLE_CRUD, ROLE_RU);
     }
 
     public boolean isReadAccessToAll() {

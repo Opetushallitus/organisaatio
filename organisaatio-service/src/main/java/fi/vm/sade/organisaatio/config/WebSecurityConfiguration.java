@@ -22,10 +22,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
-@Profile("!dev")
 @Configuration
 @EnableGlobalMethodSecurity(jsr250Enabled = false, prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
@@ -123,9 +123,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())
-                .exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
+    }
+
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 
     @Override
