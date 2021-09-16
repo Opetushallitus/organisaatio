@@ -73,7 +73,6 @@ function Hakufiltterit({
                         type="checkbox"
                         checked={naytaPassivoidut}
                         onChange={(e) => {
-                            console.log('e', e.target);
                             setNaytaPassivoidut(e.target.checked);
                         }}
                     >

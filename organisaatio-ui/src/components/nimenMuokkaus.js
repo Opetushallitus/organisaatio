@@ -31,7 +31,6 @@ export default {
 
         // Tyhjenneteään mallin tiedot
         clear: function () {
-            console.debug('clear()');
             this.oid = '';
             this.minAlkuPvm = '';
             this.nimi = {};
@@ -46,7 +45,6 @@ export default {
 
         // Asetetaan nimihistoria, jota tullaan muokkaamaan
         setNimihistoria: function (nimihistoria) {
-            console.debug('setNimihistoria()');
             this.muokattavaNimihistoria = Object.assign({}, nimihistoria);
             this.uusinNimi = this.historiaModel.getUusinNimi(this.muokattavaNimihistoria);
 
@@ -73,7 +71,6 @@ export default {
 
         // Asetetaan muokattu versio ogranisaation nykyisestä nimestä
         setEditedNimi: function (nimi) {
-            console.debug('setEditedNimi()', nimi);
             var emptyNimi = {
                 nimi: {},
                 alkuPvm: '',
@@ -98,7 +95,6 @@ export default {
 
         // Palautetaan muokattu nimihistoria
         getNimihistoria: function () {
-            console.debug('getNimiHistoria()');
             return this.muokattavaNimihistoria;
         },
 
@@ -131,7 +127,6 @@ export default {
 
         // Laitetaan annettu nimi editoitavaksi
         setNimi: function (nimi) {
-            console.debug('setNimi()', nimi);
             for (var i = 0; i < this.muokattavaNimihistoria.length; i++) {
                 if (this.nimi === this.muokattavaNimihistoria[i]) {
                     this.muokattavaNimihistoria[i].nimi = nimi.nimi;
@@ -180,8 +175,6 @@ export default {
         // Poistetaan parent prefix nimestä
         removeParentPrefix: function (nimi) {
             if (this.toimipiste) {
-                console.log('removeParentPrefix()');
-
                 if (this.parentNimi && nimi) {
                     ['fi', 'sv', 'en'].forEach(function (key) {
                         if (nimi.nimi[key] && this.parentNimi[key]) {
@@ -208,8 +201,6 @@ export default {
             this.removeEmptyNimi(nimi);
 
             if (this.toimipiste) {
-                console.log('addParentPrefix()');
-
                 if (this.model.parentNimi && nimi) {
                     ['fi', 'sv', 'en'].forEach(function (key) {
                         if (nimi.nimi[key] && this.model.parentNimi[key]) {
@@ -235,8 +226,6 @@ export default {
             parentNimi,
             nameFormat
         ) {
-            console.log('refresh()');
-
             this.setNimihistoria(nimihistoria);
 
             this.uusinNimiOrig = Object({}, this.uusinNimi);

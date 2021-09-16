@@ -22,7 +22,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
             Header: i18n.translate('NIMIHISTORIA_NIMI'),
             Cell: ({ row }: { row: { original: { nimi: Nimi } } }) =>
                 Object.keys(row.original.nimi).map((k, i) => (
-                    <span>{`${row.original.nimi[k]} [${k}]${
+                    <span key={`nimihistoria_${k}`}>{`${row.original.nimi[k]} [${k}]${
                         Object.keys(row.original.nimi).length - 1 > i ? ', ' : ''
                     }`}</span>
                 )),

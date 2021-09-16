@@ -64,7 +64,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         handleOnChange({ name: 'nimet', value: [nimet] });
         handleOnChange({ name: 'nimi', value: nimi });
     };
-    console.log('o', organisaatio, nimi, onYunnus, opetuskielet);
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -129,7 +128,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                                 label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
                             }))}
                             onChange={(tyypit) => {
-                                console.log(tyypit);
                                 handleOnChange({ name: 'tyypit', value: tyypit });
                             }}
                         />
@@ -169,7 +167,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         )}
                         options={kaikkiKunnat}
                         onChange={(option) => {
-                            console.log('opts', option);
                             handleOnChange({
                                 name: 'muutKotipaikatUris',
                                 value: (option as iOption[]).map((o) => o.value),
