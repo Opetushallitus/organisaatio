@@ -51,6 +51,8 @@ describe('Organisaatiot Page', () => {
     });
 
     it('Can edit and save a new ryhma', () => {
+        cy.intercept('GET', '/organisaatio/config/frontproperties', { fixture: 'front.json' });
+        cy.intercept('GET', 'http://localhost:9000/kayttooikeus-service/cas/me', { fixture: 'me.json' });
         cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' });
         cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' });
         cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' });
