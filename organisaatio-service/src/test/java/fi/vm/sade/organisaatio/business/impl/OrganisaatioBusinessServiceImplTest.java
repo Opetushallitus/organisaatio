@@ -590,4 +590,14 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(oppilaitos, null)).isEqualTo("oppilaitoskoodi");
         assertThat(organisaatioBusinessServiceImpl.calculateToimipisteKoodi(koulutustoimija, oppilaitos)).isEqualTo("");
     }
+    @Test
+    public void testSetPaivittajaDataSetsCurrenUserAndPaivitysPvm() {
+        OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
+        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija1);
+        Date paivitysPvm = koulutustoimijaResult1.getOrganisaatio().getPaivitysPvm();
+        organisaatioBusinessServiceImpl.setPaivittajaData(koulutustoimijaResult1.getOrganisaatio());
+        assertThat(koulutustoimijaResult1.getOrganisaatio().getPaivittaja()).isEqualTo("ophadmin");
+        assertNotEquals(koulutustoimijaResult1.getOrganisaatio().getPaivitysPvm(), paivitysPvm);
+    }
+
 }

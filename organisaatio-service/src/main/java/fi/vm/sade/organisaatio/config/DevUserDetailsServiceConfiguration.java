@@ -1,5 +1,7 @@
-/*package fi.vm.sade.organisaatio.config;
+package fi.vm.sade.organisaatio.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,35 +14,30 @@ import java.util.Collection;
 import java.util.List;
 
 @Profile("dev")
-@Service
-public class DevUserDetailsService implements UserDetailsService {
+@Configuration
+public class DevUserDetailsServiceConfiguration {
     private static final SimpleGrantedAuthority[] AUTHORITIES = new SimpleGrantedAuthority[] {
+        new SimpleGrantedAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001"),
         new SimpleGrantedAuthority("ROLE_APP_ORGANISAATIOHALLINTA"),
-        new SimpleGrantedAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD"),
-        new SimpleGrantedAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001")
+        new SimpleGrantedAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD")
     };
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new DevUserDetailsService();
+    }
+
+    static class DevUserDetailsService implements UserDetailsService {
+
+        private DevUserDetailsService() {}
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             return User.builder()
                     .authorities(List.of(AUTHORITIES))
                     .password("Suits you, Sir!")
-                    .username("devaajienkuningas")
+                    .username(username)
                     .build();
         }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(
-            Collection<BeanDefinitionDsl.Role> roles) {
-        List<GrantedAuthority> authorities
-                = new ArrayList<>();
-        for (BeanDefinitionDsl.Role role: roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            role.getPrivileges().stream()
-                    .map(p -> new SimpleGrantedAuthority(p.getName()))
-                    .forEach(authorities::add);
-        }
-
-        return authorities;
     }
 }
-*/

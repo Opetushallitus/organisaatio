@@ -147,7 +147,7 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
             otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         }
 
-        return { lomakkeet: lomakkeet, otsikot: otsikot };
+        return { lomakkeet, otsikot };
     };
 
     return (
