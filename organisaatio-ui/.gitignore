@@ -2,3 +2,5 @@ build/
 .gradle/
 src/react-app-env.d.ts
 coverage/
+cypress/videos
+cypress/screenshots
