@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../HttpRequests';
-import { Ryhma } from '../../../../types/types';
+import { NewRyhma, Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
 import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
@@ -12,7 +12,7 @@ export type RyhmanMuokausProps = {
     oid?: string;
 };
 
-const emptyRyhma: Ryhma = {
+const emptyRyhma: NewRyhma = {
     nimi: {
         fi: '',
     },
@@ -20,7 +20,6 @@ const emptyRyhma: Ryhma = {
         'kieli_fi#1': '',
     },
     parentOid: ROOT_OID,
-    oid: undefined,
     ryhmatyypit: [],
     kayttoryhmat: [],
     status: 'AKTIIVINEN',
