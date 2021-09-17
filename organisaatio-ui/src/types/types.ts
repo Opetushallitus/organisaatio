@@ -89,7 +89,7 @@ export type OrganisaatioBase = {
 export type Organisaatio = OrganisaatioBase & {
     parentOid?: string;
     ytunnus: string;
-    nimet: Nimi[]; // TODO?
+    nimet: Nimi[];
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
     tyypit?: KoodiUri[];
