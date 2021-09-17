@@ -3,7 +3,7 @@ describe('Organisaatio Rakenne', () => {
         keystrokeDelay: 1,
     });
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
-        cy.visit('/organisaatio/');
+        cy.visit('/');
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
     });
