@@ -7,6 +7,8 @@ import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,20 +25,28 @@ public class DevUserDetailsServiceConfiguration {
     };
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public UserDetailsService userDetailsService() {
-        return new DevUserDetailsService();
+
+        return new DevUserDetailsService(passwordEncoder());
     }
 
     static class DevUserDetailsService implements UserDetailsService {
-
-        private DevUserDetailsService() {}
+        PasswordEncoder passwordEncoder;
+        private DevUserDetailsService(PasswordEncoder passwordEncoder) {
+            this.passwordEncoder = passwordEncoder;
+        }
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
             return User.builder()
                     .authorities(List.of(AUTHORITIES))
-                    .password("Suits you, Sir!")
-                    .username(username)
+                    .password(this.passwordEncoder.encode("devaaja"))
+                    .username("devaaja")
                     .build();
         }
     }

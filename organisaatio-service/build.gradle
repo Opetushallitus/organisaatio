@@ -13,11 +13,12 @@ ext {
 
 flyway {
 	url = 'jdbc:postgresql://localhost:5432/organisaatio'
-	user = 'app'
-	password = 'ophoph'
-	table = 'schema_version'
+	table = 'schema_version_history'
+	user = 'postgres'
 	locations= ['classpath:db.migration']
 }
+// we need to build classes before we can migrate
+flywayMigrate.dependsOn classes
 
 compileJava {
 	options.annotationProcessorPath = configurations.annotationProcessor
