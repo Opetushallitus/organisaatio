@@ -25,9 +25,7 @@ jobs:
         - cd ../organisaatio-ui && npm install
         - ./gradlew build -x test
       before_script:
-        - psql --version
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
-        - psql -c '\dn;' -U postgres
       script:
       - FLYWAY_USER=postgres ./gradlew flywayMigrate
       - cd mock-api && npm run mock-api &
