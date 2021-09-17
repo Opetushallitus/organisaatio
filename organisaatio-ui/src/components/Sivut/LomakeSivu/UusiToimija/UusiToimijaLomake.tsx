@@ -5,11 +5,11 @@ import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-
+import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
-import { LanguageContext } from '../../../../contexts/contexts';
-import { Organisaatio, Yhteystiedot } from '../../../../types/types';
+import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
+import { NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -17,55 +17,60 @@ import Axios from 'axios';
 import { Link } from 'react-router-dom';
 import useKoodisto from '../../../../api/useKoodisto';
 
-const tyhjaOrganisaatio: Organisaatio = {
-    ytunnus: '',
-    nimi: {},
-    status: '',
-    nimet: [],
-    alkuPvm: null,
-    yritysmuoto: '',
-    tyypit: [],
-    kotipaikkaUri: '',
-    muutKotipaikatUris: [],
-    maaUri: '',
-    kieletUris: [],
-    yhteystiedot: ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
-        .map(
-            (kieli) =>
-                [
-                    {
-                        kieli,
-                        tyyppi: 'puhelin',
-                        numero: '',
-                    },
-                    {
-                        kieli,
-                        email: '',
-                    },
-                    {
-                        kieli,
-                        www: '',
-                    },
-                    {
-                        kieli,
-                        osoiteTyyppi: 'posti',
-                        osoite: '',
-                        postinumeroUri: '',
-                        postitoimipaikka: '',
-                    },
-                    {
-                        kieli,
-                        osoiteTyyppi: 'kaynti',
-                        osoite: '',
-                        postinumeroUri: '',
-                        postitoimipaikka: '',
-                    },
-                ] as Yhteystiedot[]
-        )
-        .flat(),
+const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
+    return {
+        ...stub,
+        ...{
+            ytunnus: '',
+            nimi: {},
+            status: '',
+            nimet: [],
+            alkuPvm: null,
+            yritysmuoto: '',
+            tyypit: [],
+            kotipaikkaUri: '',
+            muutKotipaikatUris: [],
+            maaUri: '',
+            kieletUris: [],
+            yhteystiedot: ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
+                .map(
+                    (kieli) =>
+                        [
+                            {
+                                kieli,
+                                tyyppi: 'puhelin',
+                                numero: '',
+                            },
+                            {
+                                kieli,
+                                email: '',
+                            },
+                            {
+                                kieli,
+                                www: '',
+                            },
+                            {
+                                kieli,
+                                osoiteTyyppi: 'posti',
+                                osoite: '',
+                                postinumeroUri: '',
+                                postitoimipaikka: '',
+                            },
+                            {
+                                kieli,
+                                osoiteTyyppi: 'kaynti',
+                                osoite: '',
+                                postinumeroUri: '',
+                                postitoimipaikka: '',
+                            },
+                        ] as Yhteystiedot[]
+                )
+                .flat(),
+        },
+    };
 };
 
-const UusiToimijaLomake = (props: { history: string[] }) => {
+const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const { i18n } = useContext(LanguageContext);
     const {
         data: organisaatioTyypit,
@@ -75,6 +80,18 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
     const { data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError } = useKoodisto(
         'MAATJAVALTIOT1'
     );
+    const { parentOid } = queryString.parse(props.location.search);
+    const reducer = function (
+        state: NewOrganisaatio,
+        action: { type: 'edit' | 'reset'; payload?: NewOrganisaatio }
+    ): Organisaatio {
+        switch (action.type) {
+            case 'reset':
+                return { ...tyhjaOrganisaatio({ parentOid: parentOid as string }) };
+            default:
+                return { ...state, ...action.payload };
+        }
+    };
 
     const {
         data: oppilaitoksenOpetuskielet,
@@ -82,15 +99,15 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
         error: oppilaitoksenOpetuskieletError,
     } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
     const [organisaatio, setOrganisaatio] = useReducer(
-        (state: Organisaatio, newState: Organisaatio): Organisaatio => ({ ...state, ...newState }),
+        reducer,
+        { parentOid: (parentOid || ROOT_OID) as string },
         tyhjaOrganisaatio
     );
-
     async function postOrganisaatio() {
         try {
-            const response = await Axios.post(`/organisaatio/organisaatio/v4/`, organisaatio);
-            console.error('saved org response', response);
-            props.history.push('/organisaatio');
+            const { data } = await Axios.post(`/organisaatio/organisaatio/v4/`, organisaatio);
+            setOrganisaatio({ type: 'reset' });
+            props.history.push(`/lomake/${data.organisaatio.oid}`);
         } catch (error) {
             console.error('error while posting org', error);
         } finally {
@@ -98,14 +115,14 @@ const UusiToimijaLomake = (props: { history: string[] }) => {
     }
 
     function handleCancel() {
-        setOrganisaatio({ ...tyhjaOrganisaatio });
+        setOrganisaatio({ type: 'reset' });
         props.history.push('/organisaatio');
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
 
     const handleOnChange = ({ name, value }: { name: string; value: any }) => {
-        setOrganisaatio({ [name]: value } as Organisaatio);
+        setOrganisaatio({ type: 'edit', payload: { [name]: value } as Organisaatio });
     };
     if (
         organisaatioTyypitLoading ||
