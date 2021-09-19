@@ -1,21 +1,5 @@
 describe('Ryhmat Page', () => {
     beforeEach(() => {
-        cy.intercept('GET', '/organisaatio/config/frontproperties', { fixture: 'front.json' });
-        cy.intercept('GET', 'http://localhost:9000/kayttooikeus-service/cas/me', { fixture: 'me.json' });
-        cy.intercept('GET', '/organisaatio/organisaatio/v3/ryhmat*', { fixture: 'ryhmatArr.json' });
-        cy.intercept('GET', '/organisaatio/lokalisointi/kieli', { fixture: 'kieli.json' });
-        cy.intercept('GET', '/organisaatio/lokalisointi', { fixture: 'lokalisointi.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/KUNTA/koodi', { fixture: 'kunnat.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/ORGANISAATIOTYYPPI/koodi', { fixture: 'organisaatiotyypit.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/RYHMANTILA/koodi', { fixture: 'ryhmantilat.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/RYHMATYYPIT/koodi', { fixture: 'ryhmatyypit.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/KAYTTORYHMAT/koodi', { fixture: 'kayttoryhmat.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/MAATJAVALTIOT1/koodi', { fixture: 'MAATJAVALTIOT.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/POSTI/koodi*', { fixture: 'POSTI.json' });
-        cy.intercept('GET', '/organisaatio/koodisto/OPPILAITOKSENOPETUSKIELI/koodi*', {
-            fixture: 'OPPILAITOKSENOPETUSKIELI.json',
-        });
-        cy.intercept('GET', '/organisaatio/organisaatio/v4/*', { fixture: 'humakRyhma.json' });
     });
     it('Renders table of Ryhmat', () => {
         cy.visit('/ryhmat');
@@ -24,12 +8,12 @@ describe('Ryhmat Page', () => {
 
     it('Can use table filters', () => {
         cy.get('table').then(() => {
-            cy.get('#RYHMAN_TYYPPI_SELECT input').type('koulutus{enter}{enter}', { force: true });
-            expect(cy.get('a').first().value).to.have.valueOf('Avoin AMK');
+            cy.get('#RYHMAN_TYYPPI_SELECT input').type('yleinen{enter}{enter}', { force: true });
+            expect(cy.get('a').first().value).to.have.valueOf('Vielä kerran suomi');
             cy.get('#RYHMAN_TYYPPI_SELECT input').type('{backspace}{enter}', { force: true });
 
-            cy.get('#RYHMAN_KAYTTOTARKOITUS_SELECT input').type('Priorisoiva{enter}{enter}', { force: true });
-            expect(cy.get('a').first().value).to.have.valueOf('Arcada 2nd Application');
+            cy.get('#RYHMAN_KAYTTOTARKOITUS_SELECT input').type('Hakukohde{enter}{enter}', { force: true });
+            expect(cy.get('a').first().value).to.have.valueOf('Vielä kerran suomi');
             cy.get('#RYHMAN_KAYTTOTARKOITUS_SELECT input').type('{backspace}{enter}', { force: true });
 
             cy.get('#RYHMAN_TILA_SELECT input').type('Passiivinen{enter}{enter}', { force: true });
@@ -39,6 +23,8 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table pagination', () => {
+        cy.intercept('GET', '/organisaatio/organisaatio/v3/ryhmat*', { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.visit('/ryhmat');
         cy.get('table').then(() => {
             cy.get('tbody').children().should('have.length', 10);
             cy.get('button').contains('2').should('have.attr', 'color', 'secondary').click();
@@ -55,18 +41,11 @@ describe('Ryhmat Page', () => {
         });
     });
 
-    it('Finds humak from table', () => {
+    it('Finds Vielä kerran suomi from table', () => {
+        cy.visit('/ryhmat');
         cy.get('table').then(() => {
-            cy.get('input').first().type('humak, alue');
-            expect(cy.get('a').value).to.have.valueOf('Humak, alueyksikkö');
-        });
-    });
-
-    it('Can open humak organisation', () => {
-        cy.get('table').then(() => {
-            expect(cy.get('a').value).to.have.valueOf('Humak, alueyksikkö');
-            cy.get('a').click();
-            expect(cy.get('h1').value).to.have.valueOf('Humak, alueyksikkö');
+            cy.get('input').first().type('Vielä kerran s');
+            expect(cy.get('a').value).to.have.valueOf('Vielä kerran suomi');
         });
     });
     it('Can transition to create a new ryhma organisation', () => {

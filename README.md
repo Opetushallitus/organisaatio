@@ -25,6 +25,25 @@ Aja projektin juuressa
 ``` bash
    .\gradlew clean build
 ```
+
+### Testit
+
+Koonnissa ajetaan yksikkötestit, linttaus ja npm audit. CI-palvelimella ajetaan tämän lisäksi vielä integraatiotestit käyttäen Cypress:io:ta. 
+
+#### Integraatiotestaus
+
+Ci:ssä testit ajetaan käytännössä näin:
+``` bash
+    ./gradlew build -x test
+    psql -c 'CREATE DATABASE organisaatio;' -U postgres
+    FLYWAY_USER=postgres ./gradlew flywayMigrate
+    npm run mock-api 
+    java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev ./organisaatio-service/build/libs/organisaatio-service.jar &
+    npm run cypress:ci
+```
+
+Eli build -> tietokanta ja sen alustus -> mock api -> java -> cypress. kts Travis.yml
+
 ### Paikallinen tietokanta
 Paikallinen kehitys nojaa paikallisesti asennettuun tietokantaan. Aja sopiva postgres dockerissa esimeskiksi seuraavalla composella:
 ```
@@ -45,11 +64,21 @@ volumes:
   database-data:
 ```
 Tuo backup pallero ympäristöstä tai luo tyhjä kanta organisaatio sovellusta varten. Lataa backup S3:sta ja tallenna composen viereen /backup hakemistoon ja backupin palautus onnistuu:
+
 ```
-docker exec oph-postgers-db dropdb -U app organisaatio
-docker exec oph-postgers-db createdb -U app -T template0 organisaatio
-docker exec oph-postgers-db pg_restore -U app -d organisaatio /tmp/backup/organisaatio.backup
+docker exec oph-postgres-db dropdb -U app organisaatio
+docker exec oph-postgres-db createdb -U app -T template0 organisaatio
+docker exec oph-postgres-db pg_restore -U app -d organisaatio /tmp/backup/organisaatio.backup
 ```
+
+TAI alusta tyhja kanta ja aja flyway clean ja flyway migrate. Tämän jälkeen ohjelmiston voi käynnistää joko jar:sta tai esim Idean Spring boot konfiguraatiolla.
+
+```
+docker exec oph-postgres-db createdb -U postgres -T template0 organisaatio
+./gradlew flywayClean flywayMigrate
+
+```
+
 
 ### Käynnistäminen
 #### Virkailija-mock
@@ -60,17 +89,17 @@ npm install
 ```
 käynnistä sitten mock-api ajamalla:
 ``` bash
-npm run start
+npm run mock-api
 ```
-ui käynnistyy porttiin 9000. Avaa http://localhost:9000/kayttooikeus-service/cas/me selaimessa.
+ui käynnistyy porttiin 9000. Avaa http://localhost:9000/kayttooikeus-service/cas/me selaimessa testataksesi vakiovastausta.
 #### Backend
 Käynnistä backend jar:sta tai spring boot configuraatiolla ideasta.
 
-Käynnistys Jar:sta juuressa.
+Käynnistys Jar:sta juuressa (Ui vastaa myös osoitteesta http://localhost:8080/organisaatio).
 ``` bash
-java -jar -Dspring.config.location=classpath:application.properties,classpath:dev.properties -Dspring.profiles.active=dev ./organisaatio-service/build/libs/organisaatio-service.jar 
+java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev ./organisaatio-service/build/libs/organisaatio-service.jar 
 ```
-Tämän ajamiseen pitää olla dev.properties classpathissa, jossa olisi hyvä olla ainakin seuraavat avain-arvo parit (en ole ihan varma mitkä on välttämättömiä):
+Tämän ajamiseen pitää olla application propertiesissa olisi hyvä olla ainakin seuraavat avain-arvo parit (Ei ole ihan täyttä varmuutta mitkä ovat välttämättömiä) oikein täytettynä:
 ```
 organisaatio.service.username=xxx
 organisaatio.service.password=xxx
@@ -95,7 +124,7 @@ host.virkailija=localhost:9000
 ```
 
 #### Frontend
-asenna ensin riippuvuudet ajamalla organisaatio-ui hakemistossa ensin
+Asenna ensin riippuvuudet ajamalla organisaatio-ui hakemistossa ensin
 ``` bash
 npm install
 ```
@@ -103,10 +132,9 @@ käynnistä sitten ui ajamalla:
 ``` bash
 npm run start
 ```
-ui käynnistyy porttiin 3003. Avaa http://localhost:3003/organisaatio selaimessa. Tarkasta verkkokutsuista failanneet pyynnöt ja kopioi joku niistä osoiteriville niin pääset autentikoitumaan.
-Kun tämä on tehty, organisaatiopalvelu aukeaa localhostissa oikein.
+Ui käynnistyy porttiin 3003. Avaa http://localhost:3003/organisaatio selaimessa.
 ### Profiilit
-dev-profiili toimii ilman käyttöoikeuksia, ja antaa käyttäjälle cas-kirjautumisen jälkeen suoraan täydet oikat. KTS. fi.vm.sade.organisaatio.config.DevUserDetailsServiceConfiguration.
+Dev-profiili käyttää http basic authentikaatiota tunnuksilla devaaja/devaaja. KTS. fi.vm.sade.organisaatio.config.DevUserDetailsServiceConfiguration.
 
 ## IDEA Kehitys
 Git repoon on tallennettu .run hakemistoon valmiita ajokonfigurointeja backend+mockapi ja frontend+javascript-debug ajoja varten.

@@ -10,45 +10,27 @@ env:
     - secure: "PHCsorIqkSQ7IjSGEHQcRZ7rrdyNpfc72VGJAHZnPrRREfPxh+nI9n48VrSrIXrZSX5o0GpkJK8147UxON6lXbE2pLXQWBNNt9D5i73OD63JY00olDcdNuVRmy0SQ2bApqphVnAyU98c/QYxKhMx6EM2W4COmXl+q1n1NtCm+O4="
 jobs:
   include:
-    - language: node_js
-      node_js:
-        # Node 10.3+ includes npm@6 which has good "npm ci" command
-        - 11.1
-
-      # if using Ubuntu 16 need this library
-      # https://github.com/cypress-io/cypress-documentation/pull/1647
-      addons:
-        apt:
-          packages:
-            - libgconf-2-4
-
-      cache:
-        # cache both npm modules and Cypress binary
-        directories:
-         # - ~/.npm
-         # - ~/.cache
-
-      script:
-        - cd organisaatio-ui && npm ci && npm install serve -g
-        # start server in the background
-        - PUBLIC_URL=/ npm run build
-        - serve -s build -l 3003 &
-        # run all Cypress tests and record on the dashboard
-        - npm run cypress:run
-        # after all tests finish running we need
-        # to kill all background jobs (like "npm start &")
-        # this avoids flake in Travis jobs
-        - kill $(jobs -p) || true
     - language: java
       sudo: required
+      jdk:
+        - openjdk11
+      services:
+        - postgresql
       env:
         - NODE_VERSION=11.1
       install:
         - nvm install $NODE_VERSION
         - nvm use $NODE_VERSION
         - cd mock-api && npm install
+        - cd ../organisaatio-ui && npm install && cd ..
+        - ./gradlew build -x test
+      before_script:
+        - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
-      - npm run mock-api &
+      - FLYWAY_USER=postgres ./gradlew flywayMigrate
+      - cd mock-api && npm run mock-api &
+      - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev ./organisaatio-service/build/libs/organisaatio-service.jar &
+      - cd organisaatio-ui && npm run cypress:ci
       - kill $(jobs -p) || true
 
     - language: java
@@ -69,7 +51,7 @@ jobs:
 
       script:
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-        - mv organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
+        - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
         - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
