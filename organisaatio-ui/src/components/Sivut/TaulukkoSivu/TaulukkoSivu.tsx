@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import chevronUp from '@iconify/icons-fa-solid/chevron-up';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
+import { KoodistoContext, LanguageContext, ROOT_OID } from '../../../contexts/contexts';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/OrganisaatioHakuTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
@@ -22,7 +22,7 @@ const tarkastaLipunVari = (tarkastusPvm) => {
 
 const TaulukkoSivu = (props) => {
     const handleLisaaUusiToimija = () => {
-        return props.history.push('/lomake/uusi');
+        return props.history.push(`/lomake/uusi?parentOid=${ROOT_OID}`);
     };
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);

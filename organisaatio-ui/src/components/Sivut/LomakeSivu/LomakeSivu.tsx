@@ -70,7 +70,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         }
         fetch();
     }, [params.oid]);
-
+    const handleLisaaUusiToimija = () => {
+        return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
+    };
     async function putOrganisaatio() {
         try {
             if (organisaatio && organisaatio.oid) {
@@ -220,7 +222,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 </div>
                 <div className={styles.ValiNappulat}>
                     <Button>{i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}</Button>
-                    <Button>+ {i18n.translate('LOMAKE_LISAA_UUSI_OPPILAITOS')}</Button>
+                    <Button onClick={handleLisaaUusiToimija}>{i18n.translate('LOMAKE_LISAA_UUSI_TOIMIJA')}</Button>
                 </div>
             </div>
             <div className={styles.PaaOsio}>

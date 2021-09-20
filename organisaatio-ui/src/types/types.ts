@@ -87,8 +87,9 @@ export type OrganisaatioBase = {
     status: string;
 };
 export type Organisaatio = OrganisaatioBase & {
+    parentOid?: string;
     ytunnus: string;
-    nimet: Nimi[]; // TODO?
+    nimet: Nimi[];
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
     tyypit?: KoodiUri[];
@@ -98,6 +99,9 @@ export type Organisaatio = OrganisaatioBase & {
     kieletUris: KoodiUri[];
     yhteystiedot?: Yhteystiedot[];
 };
+export type NewOrganisaatio = Omit<Organisaatio, 'oid'>;
+
+export type NewRyhma = Omit<Ryhma, 'oid'>;
 
 export interface YtjOrganisaatio {
     ytunnus: string;
