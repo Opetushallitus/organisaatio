@@ -81,7 +81,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         'MAATJAVALTIOT1'
     );
     const { parentOid } = queryString.parse(props.location.search);
-    const reducer = function (
+    const organisaatioReducer = function (
         state: NewOrganisaatio,
         action: { type: 'edit' | 'reset'; payload?: NewOrganisaatio }
     ): Organisaatio {
@@ -99,7 +99,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         error: oppilaitoksenOpetuskieletError,
     } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
     const [organisaatio, setOrganisaatio] = useReducer(
-        reducer,
+        organisaatioReducer,
         { parentOid: (parentOid || ROOT_OID) as string },
         tyhjaOrganisaatio
     );
