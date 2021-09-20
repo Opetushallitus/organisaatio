@@ -70,6 +70,18 @@ const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
     };
 };
 
+const organisaatioReducer = function (
+    state: NewOrganisaatio,
+    action: { type: 'edit' | 'reset'; payload?: NewOrganisaatio }
+): Organisaatio {
+    switch (action.type) {
+        case 'reset':
+            return { ...tyhjaOrganisaatio({ parentOid: ROOT_OID }) };
+        default:
+            return { ...state, ...action.payload };
+    }
+};
+
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const { i18n } = useContext(LanguageContext);
     const {
@@ -81,17 +93,6 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         'MAATJAVALTIOT1'
     );
     const { parentOid } = queryString.parse(props.location.search);
-    const organisaatioReducer = function (
-        state: NewOrganisaatio,
-        action: { type: 'edit' | 'reset'; payload?: NewOrganisaatio }
-    ): Organisaatio {
-        switch (action.type) {
-            case 'reset':
-                return { ...tyhjaOrganisaatio({ parentOid: parentOid as string }) };
-            default:
-                return { ...state, ...action.payload };
-        }
-    };
 
     const {
         data: oppilaitoksenOpetuskielet,
@@ -116,13 +117,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
 
     function handleCancel() {
         setOrganisaatio({ type: 'reset' });
-        props.history.push('/organisaatio');
+        props.history.push('/');
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
 
     const handleOnChange = ({ name, value }: { name: string; value: any }) => {
-        setOrganisaatio({ type: 'edit', payload: { [name]: value } as Organisaatio });
+        setOrganisaatio({ type: 'edit', payload: { [name]: value } as NewOrganisaatio });
     };
     if (
         organisaatioTyypitLoading ||

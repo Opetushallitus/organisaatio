@@ -105,3 +105,7 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
     cy.selectFromList('MAA', 'Andorra');
     cy.selectFromList('OPETUSKIELI', 'ruotsi');
 });
+
+Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
+    cy.request('POST', '/organisaatio/v4/', organisaatio).as(key);
+});
