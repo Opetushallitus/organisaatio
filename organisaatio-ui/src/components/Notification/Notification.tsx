@@ -6,7 +6,7 @@ import { LanguageContext } from '../../contexts/contexts';
 const Notification = () => {
     return <ReactNotification />;
 };
-const Message = (props) => {
+const Message = (props: { message: string }) => {
     const { i18n } = useContext(LanguageContext);
     const translated = i18n.translate(props.message);
     return <div>{translated}</div>;
