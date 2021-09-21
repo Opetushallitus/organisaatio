@@ -14,11 +14,11 @@ const baseUrl = `/organisaatio/organisaatio/v4/`;
 async function createOrganisaatio(organisaatio: NewOrganisaatio) {
     try {
         const { data } = await Axios.post(`${baseUrl}`, organisaatio);
-        success('MESSAGE_TALLENNUS_ONNISTUI');
+        success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
         return data.organisaatio as Organisaatio;
     } catch (error) {
         if (error.response) {
-            warning(error.response.data.errorMessage, error.response.data.errorMessage);
+            warning({ message: error.response.data.errorMessage });
         }
     }
 }
@@ -26,11 +26,11 @@ async function createOrganisaatio(organisaatio: NewOrganisaatio) {
 async function updateOrganisaatio(organisaatio: Organisaatio) {
     try {
         const { data } = await Axios.put(`${baseUrl}${organisaatio.oid}`, organisaatio);
-        success('MESSAGE_TALLENNUS_ONNISTUI');
+        success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
         return data.organisaatio as Organisaatio;
     } catch (error) {
         if (error.response) {
-            warning(error.response.data.errorMessage, error.response.data.errorMessage);
+            warning({ message: error.response.data.errorMessage });
         }
     }
 }
@@ -49,11 +49,11 @@ async function readOrganisaatio(oid: string) {
         const organisaatio = response.data;
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
-        info('MESSAGE_LATAUS_ONNISTUI', undefined, 200);
+        info({ message: 'MESSAGE_LATAUS_ONNISTUI', timeOut: 200 });
         return { organisaatio: organisaatio, polku: polku };
     } catch (error) {
         if (error.response) {
-            warning(error.response.data.errorMessage, error.response.data.errorMessage);
+            warning({ message: error.response.data.errorMessage });
         }
     }
 }
