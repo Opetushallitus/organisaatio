@@ -85,8 +85,7 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
 });
 
 Cypress.Commands.add('clickSaveButton', () => {
-    cy.server();
-    cy.route('POST', '/organisaatio/organisaatio/v4').as('saveOrg');
+    cy.intercept('POST', '/organisaatio/organisaatio/v4').as('saveOrg');
     cy.get('button').contains('TALLENNA').click();
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });

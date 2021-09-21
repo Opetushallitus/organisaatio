@@ -5,8 +5,8 @@ import { Language } from '../types/types';
 
 export function useCASLanguage() {
     const virkailija = urls.url('urlVirkailija');
-    const url = `${virkailija}/kayttooikeus-service/cas/me`;
-    const [{ data, loading, error }] = useAxios<CASMe>(url);
+    const baseUrl = `${virkailija}/kayttooikeus-service/`;
+    const [{ data, loading, error }] = useAxios<CASMe>(`${baseUrl}cas/me`);
     if (error) {
         return { data: 'fi' as Language, loading: false, error: null };
     }

@@ -6,7 +6,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
 import { OrganisaatioBase, OrganisaatioSuhde } from '../../../../../types/types';
-import useOrganisaatioHistoria from '../../../../../api/useOrganisaatioHistoria';
+import { useOrganisaatioHistoria } from '../../../../../api/organisaatio';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],

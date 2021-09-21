@@ -21,10 +21,10 @@ import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomak
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
 import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLomake/OrganisaatioHistoriaLomake';
-import Axios from 'axios';
 import Icon from '@iconify/react';
 import { Link } from 'react-router-dom';
-import useKoodisto from '../../../api/useKoodisto';
+import useKoodisto from '../../../api/koodisto';
+import { readOrganisaatio, updateOrganisaatio } from '../../../api/organisaatio';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -50,38 +50,24 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     useEffect(() => {
-        async function fetch() {
-            try {
-                const response = await Axios.get(`/organisaatio/organisaatio/v4/${params.oid}?includeImage=true`);
-                const organisaatio = response.data;
-                if (organisaatio.parentOidPath) {
-                    const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
-                    const orgTree = await Axios.post(`/organisaatio/organisaatio/v4/findbyoids`, idArr);
-                    const organisaatioNimiPolku = idArr.map((oid: string) => ({
-                        oid,
-                        nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
-                    }));
-                    setOrganisaatioNimiPolku(organisaatioNimiPolku);
-                }
-                setOrganisaatio(Object.assign({}, organisaatio));
-            } catch (error) {
-                console.error('error fetching', error);
+        (async function () {
+            const a = await readOrganisaatio(params.oid);
+            if (a) {
+                setOrganisaatioNimiPolku(a.polku);
+                setOrganisaatio(Object.assign({}, a.organisaatio));
             }
-        }
-        fetch();
+        })();
     }, [params.oid]);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
     };
     async function putOrganisaatio() {
-        try {
-            if (organisaatio && organisaatio.oid) {
-                await Axios.put(`/organisaatio/organisaatio/v4/${organisaatio.oid}`, organisaatio);
+        if (organisaatio) {
+            const data = await updateOrganisaatio(organisaatio);
+            if (data) {
+                setOrganisaatio(data);
                 history.push(`/lomake/${organisaatio.oid}`);
             }
-        } catch (error) {
-            console.error('error while updating org', error);
-        } finally {
         }
     }
 
@@ -241,11 +227,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </div>
                 </div>
                 <div>
-                    <Button
-                        variant="outlined"
-                        className={styles.Versionappula}
-                        onClick={() => history.push('/organisaatio')}
-                    >
+                    <Button variant="outlined" className={styles.Versionappula} onClick={() => history.push('/')}>
                         {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula} onClick={putOrganisaatio}>

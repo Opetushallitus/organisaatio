@@ -11,7 +11,7 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import Axios from 'axios';
-import useKoodisto from '../../../../api/useKoodisto';
+import useKoodisto from '../../../../api/koodisto';
 
 const KAIKKIVALITTU = '1',
     RAJATUT_VALITTU = '0';

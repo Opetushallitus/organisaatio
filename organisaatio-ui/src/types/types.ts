@@ -87,7 +87,8 @@ export type OrganisaatioBase = {
     status: string;
 };
 export type Organisaatio = OrganisaatioBase & {
-    parentOid?: string;
+    parentOid: string;
+    parentOidPath: string;
     ytunnus: string;
     nimet: Nimi[];
     alkuPvm: LocalDate | null;

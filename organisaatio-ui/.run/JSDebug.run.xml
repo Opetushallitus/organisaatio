@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="JSDebug" type="JavascriptDebugType" uri="http://localhost:3003/organisaatio">
+  <configuration default="false" name="JSDebug" type="JavascriptDebugType" uri="http://devaaja:devaaja@localhost:3003/organisaatio">
     <method v="2" />
   </configuration>
 </component>

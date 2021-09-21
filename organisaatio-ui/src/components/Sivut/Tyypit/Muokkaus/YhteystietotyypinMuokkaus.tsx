@@ -16,7 +16,7 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import UOTHeader from '../../../Modaalit/UusiOsoiteTyyppi/UOTHeader';
 import UOTBody from '../../../Modaalit/UusiOsoiteTyyppi/OUTBody';
 import UOTFooter from '../../../Modaalit/UusiOsoiteTyyppi/UOTFooter';
-import useKoodisto from '../../../../api/useKoodisto';
+import useKoodisto from '../../../../api/koodisto';
 
 const KAIKKIVALITTU = '1';
 

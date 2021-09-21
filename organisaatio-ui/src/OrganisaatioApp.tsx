@@ -17,9 +17,10 @@ import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/Lisatiet
 import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
-import { useCASLanguage } from './api/useCAS';
+import { useCASLanguage } from './api/kayttooikeus';
 import Loading from './components/Loading/Loading';
-import useKoodisto from './api/useKoodisto';
+import useKoodisto from './api/koodisto';
+import Notification from './components/Notification/Notification';
 
 const theme = createTheme();
 const Error = () => {
@@ -78,6 +79,7 @@ const OrganisaatioApp: React.FC = () => {
         <Router basename="/organisaatio">
             <ThemeProvider theme={theme}>
                 <LanguageContext.Provider value={{ language: language, i18n: i18n }}>
+                    <Notification />
                     <KoodistoContext.Provider
                         value={{
                             kuntaKoodisto,
