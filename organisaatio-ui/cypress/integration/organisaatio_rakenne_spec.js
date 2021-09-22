@@ -87,7 +87,9 @@ describe('Organisaatio Rakenne', () => {
             cy.enterPerustiedot('CHILD', 'Oppilaitos');
             cy.clickButton('JATKA');
             cy.enterAllYhteystiedot('CHILD');
+            cy.intercept('POST', '/organisaatio/organisaatio/v4/findbyoids').as('findPAth');
             cy.clickSaveButton();
+            cy.wait(['@findPAth'], { timeout: 10000 });
             cy.contains('CHILD Suominimi');
         });
     });

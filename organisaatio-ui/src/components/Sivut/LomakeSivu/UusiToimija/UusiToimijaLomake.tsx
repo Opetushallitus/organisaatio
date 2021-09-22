@@ -13,9 +13,9 @@ import { NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../types/t
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import Axios from 'axios';
 import { Link } from 'react-router-dom';
-import useKoodisto from '../../../../api/useKoodisto';
+import useKoodisto from '../../../../api/koodisto';
+import { createOrganisaatio } from '../../../../api/organisaatio';
 
 const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
     return {
@@ -105,13 +105,10 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         tyhjaOrganisaatio
     );
     async function postOrganisaatio() {
-        try {
-            const { data } = await Axios.post(`/organisaatio/organisaatio/v4/`, organisaatio);
+        const data = await createOrganisaatio(organisaatio);
+        if (data) {
             setOrganisaatio({ type: 'reset' });
-            props.history.push(`/lomake/${data.organisaatio.oid}`);
-        } catch (error) {
-            console.error('error while posting org', error);
-        } finally {
+            props.history.push(`/lomake/${data.oid}`);
         }
     }
 

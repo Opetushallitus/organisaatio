@@ -232,141 +232,133 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <Component
             control={
               Object {
-                "defaultValuesRef": Object {
-                  "current": Object {},
-                },
-                "fieldArrayDefaultValuesRef": Object {
-                  "current": Object {},
-                },
-                "fieldsRef": Object {
-                  "current": Object {
-                    "kuvaus2En": Object {
-                      "_f": Object {
-                        "mount": true,
+                "_defaultValues": Object {},
+                "_fields": Object {
+                  "kuvaus2En": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "kuvaus2En",
+                      "ref": Object {
                         "name": "kuvaus2En",
-                        "ref": Object {
-                          "name": "kuvaus2En",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "kuvaus2Fi": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "kuvaus2Fi": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "kuvaus2Fi",
+                      "ref": Object {
                         "name": "kuvaus2Fi",
-                        "ref": Object {
-                          "name": "kuvaus2Fi",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "kuvaus2Sv": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "kuvaus2Sv": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "kuvaus2Sv",
+                      "ref": Object {
                         "name": "kuvaus2Sv",
-                        "ref": Object {
-                          "name": "kuvaus2Sv",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "nimiEn": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "nimiEn": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "nimiEn",
+                      "ref": Object {
                         "name": "nimiEn",
-                        "ref": Object {
-                          "name": "nimiEn",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "nimiFi": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "nimiFi": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "nimiFi",
+                      "ref": Object {
                         "name": "nimiFi",
-                        "ref": Object {
-                          "name": "nimiFi",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "nimiSv": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "nimiSv": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "nimiSv",
+                      "ref": Object {
                         "name": "nimiSv",
-                        "ref": Object {
-                          "name": "nimiSv",
-                        },
-                        "value": undefined,
                       },
                     },
                   },
                 },
-                "formStateRef": Object {
-                  "current": Object {
-                    "dirtyFields": Object {},
-                    "errors": Object {},
-                    "isDirty": false,
-                    "isSubmitSuccessful": false,
-                    "isSubmitted": false,
-                    "isSubmitting": false,
-                    "isValid": false,
-                    "isValidating": false,
-                    "submitCount": 0,
-                    "touchedFields": Object {},
+                "_formState": Object {
+                  "dirtyFields": Object {},
+                  "errors": Object {},
+                  "isDirty": false,
+                  "isSubmitSuccessful": false,
+                  "isSubmitted": false,
+                  "isSubmitting": false,
+                  "isValid": false,
+                  "isValidating": false,
+                  "submitCount": 0,
+                  "touchedFields": Object {},
+                },
+                "_formValues": Object {
+                  "kuvaus2En": undefined,
+                  "kuvaus2Fi": undefined,
+                  "kuvaus2Sv": undefined,
+                  "nimiEn": undefined,
+                  "nimiFi": undefined,
+                  "nimiSv": undefined,
+                },
+                "_getFieldArrayValue": [Function],
+                "_getIsDirty": [Function],
+                "_getWatch": [Function],
+                "_names": Object {
+                  "array": Set {},
+                  "mount": Set {
+                    "nimiFi",
+                    "nimiSv",
+                    "nimiEn",
+                    "kuvaus2Fi",
+                    "kuvaus2Sv",
+                    "kuvaus2En",
+                  },
+                  "unMount": Set {},
+                  "watch": Set {},
+                },
+                "_proxyFormState": Object {
+                  "dirtyFields": false,
+                  "errors": "all",
+                  "isDirty": false,
+                  "isValid": false,
+                  "isValidating": false,
+                  "touchedFields": false,
+                },
+                "_removeFields": [Function],
+                "_shouldUnregister": undefined,
+                "_stateFlags": Object {
+                  "action": false,
+                  "mount": false,
+                  "watch": false,
+                },
+                "_subjects": Object {
+                  "array": ye {
+                    "observers": Array [],
+                  },
+                  "control": ye {
+                    "observers": Array [],
+                  },
+                  "state": ye {
+                    "observers": Array [],
+                  },
+                  "watch": ye {
+                    "observers": Array [],
                   },
                 },
-                "getIsDirty": [Function],
-                "inFieldArrayActionRef": Object {
-                  "current": false,
-                },
-                "namesRef": Object {
-                  "current": Object {
-                    "array": Set {},
-                    "mount": Set {
-                      "nimiFi",
-                      "nimiSv",
-                      "nimiEn",
-                      "kuvaus2Fi",
-                      "kuvaus2Sv",
-                      "kuvaus2En",
-                    },
-                    "unMount": Set {},
-                    "watch": Set {},
-                    "watchAll": false,
-                  },
-                },
-                "readFormStateRef": Object {
-                  "current": Object {
-                    "dirtyFields": false,
-                    "errors": "all",
-                    "isDirty": false,
-                    "isValid": false,
-                    "isValidating": false,
-                    "touchedFields": false,
-                  },
-                },
+                "_updateFieldArray": [Function],
+                "_updateProps": [Function],
+                "_updateValid": [Function],
                 "register": [Function],
-                "shouldUnmount": undefined,
-                "subjectsRef": Object {
-                  "current": Object {
-                    "array": ke {
-                      "observers": Array [],
-                    },
-                    "control": ke {
-                      "observers": Array [],
-                    },
-                    "state": ke {
-                      "observers": Array [],
-                    },
-                    "watch": ke {
-                      "observers": Array [],
-                    },
-                  },
-                },
                 "unregister": [Function],
-                "updateIsValid": [Function],
-                "watchInternal": [Function],
               }
             }
             defaultValue={
@@ -391,141 +383,133 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           <Component
             control={
               Object {
-                "defaultValuesRef": Object {
-                  "current": Object {},
-                },
-                "fieldArrayDefaultValuesRef": Object {
-                  "current": Object {},
-                },
-                "fieldsRef": Object {
-                  "current": Object {
-                    "kuvaus2En": Object {
-                      "_f": Object {
-                        "mount": true,
+                "_defaultValues": Object {},
+                "_fields": Object {
+                  "kuvaus2En": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "kuvaus2En",
+                      "ref": Object {
                         "name": "kuvaus2En",
-                        "ref": Object {
-                          "name": "kuvaus2En",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "kuvaus2Fi": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "kuvaus2Fi": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "kuvaus2Fi",
+                      "ref": Object {
                         "name": "kuvaus2Fi",
-                        "ref": Object {
-                          "name": "kuvaus2Fi",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "kuvaus2Sv": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "kuvaus2Sv": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "kuvaus2Sv",
+                      "ref": Object {
                         "name": "kuvaus2Sv",
-                        "ref": Object {
-                          "name": "kuvaus2Sv",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "nimiEn": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "nimiEn": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "nimiEn",
+                      "ref": Object {
                         "name": "nimiEn",
-                        "ref": Object {
-                          "name": "nimiEn",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "nimiFi": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "nimiFi": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "nimiFi",
+                      "ref": Object {
                         "name": "nimiFi",
-                        "ref": Object {
-                          "name": "nimiFi",
-                        },
-                        "value": undefined,
                       },
                     },
-                    "nimiSv": Object {
-                      "_f": Object {
-                        "mount": true,
+                  },
+                  "nimiSv": Object {
+                    "_f": Object {
+                      "mount": true,
+                      "name": "nimiSv",
+                      "ref": Object {
                         "name": "nimiSv",
-                        "ref": Object {
-                          "name": "nimiSv",
-                        },
-                        "value": undefined,
                       },
                     },
                   },
                 },
-                "formStateRef": Object {
-                  "current": Object {
-                    "dirtyFields": Object {},
-                    "errors": Object {},
-                    "isDirty": false,
-                    "isSubmitSuccessful": false,
-                    "isSubmitted": false,
-                    "isSubmitting": false,
-                    "isValid": false,
-                    "isValidating": false,
-                    "submitCount": 0,
-                    "touchedFields": Object {},
+                "_formState": Object {
+                  "dirtyFields": Object {},
+                  "errors": Object {},
+                  "isDirty": false,
+                  "isSubmitSuccessful": false,
+                  "isSubmitted": false,
+                  "isSubmitting": false,
+                  "isValid": false,
+                  "isValidating": false,
+                  "submitCount": 0,
+                  "touchedFields": Object {},
+                },
+                "_formValues": Object {
+                  "kuvaus2En": undefined,
+                  "kuvaus2Fi": undefined,
+                  "kuvaus2Sv": undefined,
+                  "nimiEn": undefined,
+                  "nimiFi": undefined,
+                  "nimiSv": undefined,
+                },
+                "_getFieldArrayValue": [Function],
+                "_getIsDirty": [Function],
+                "_getWatch": [Function],
+                "_names": Object {
+                  "array": Set {},
+                  "mount": Set {
+                    "nimiFi",
+                    "nimiSv",
+                    "nimiEn",
+                    "kuvaus2Fi",
+                    "kuvaus2Sv",
+                    "kuvaus2En",
+                  },
+                  "unMount": Set {},
+                  "watch": Set {},
+                },
+                "_proxyFormState": Object {
+                  "dirtyFields": false,
+                  "errors": "all",
+                  "isDirty": false,
+                  "isValid": false,
+                  "isValidating": false,
+                  "touchedFields": false,
+                },
+                "_removeFields": [Function],
+                "_shouldUnregister": undefined,
+                "_stateFlags": Object {
+                  "action": false,
+                  "mount": false,
+                  "watch": false,
+                },
+                "_subjects": Object {
+                  "array": ye {
+                    "observers": Array [],
+                  },
+                  "control": ye {
+                    "observers": Array [],
+                  },
+                  "state": ye {
+                    "observers": Array [],
+                  },
+                  "watch": ye {
+                    "observers": Array [],
                   },
                 },
-                "getIsDirty": [Function],
-                "inFieldArrayActionRef": Object {
-                  "current": false,
-                },
-                "namesRef": Object {
-                  "current": Object {
-                    "array": Set {},
-                    "mount": Set {
-                      "nimiFi",
-                      "nimiSv",
-                      "nimiEn",
-                      "kuvaus2Fi",
-                      "kuvaus2Sv",
-                      "kuvaus2En",
-                    },
-                    "unMount": Set {},
-                    "watch": Set {},
-                    "watchAll": false,
-                  },
-                },
-                "readFormStateRef": Object {
-                  "current": Object {
-                    "dirtyFields": false,
-                    "errors": "all",
-                    "isDirty": false,
-                    "isValid": false,
-                    "isValidating": false,
-                    "touchedFields": false,
-                  },
-                },
+                "_updateFieldArray": [Function],
+                "_updateProps": [Function],
+                "_updateValid": [Function],
                 "register": [Function],
-                "shouldUnmount": undefined,
-                "subjectsRef": Object {
-                  "current": Object {
-                    "array": ke {
-                      "observers": Array [],
-                    },
-                    "control": ke {
-                      "observers": Array [],
-                    },
-                    "state": ke {
-                      "observers": Array [],
-                    },
-                    "watch": ke {
-                      "observers": Array [],
-                    },
-                  },
-                },
                 "unregister": [Function],
-                "updateIsValid": [Function],
-                "watchInternal": [Function],
               }
             }
             defaultValue={
