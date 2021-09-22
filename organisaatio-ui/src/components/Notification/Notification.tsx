@@ -50,4 +50,11 @@ export const info = (props: notification) => {
         type: 'info',
     });
 };
+export const danger = (props: notification) => {
+    store.addNotification({
+        ...messageInputs(props),
+        type: 'danger',
+    });
+};
+
 export default Notification;
