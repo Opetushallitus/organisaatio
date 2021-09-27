@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl.v4;
 
+import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -7,6 +8,7 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
@@ -206,6 +208,54 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             }
         }
         return processRows(organisaatioFindBusinessService.findDescendants(oid, globalReadAccess));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, DateParam dateParam) {
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+        }
+        try {
+            permissionChecker.checkReadOrganisation(parentOid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + parentOid);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+        }
+        Date date;
+        if (dateParam != null && dateParam.getValue() != null) {
+            date = dateParam.getValue();
+        } else {
+            date = new Date();
+        }
+
+        OrganisaatioRDTOV4 organisaatio = this.organisaatioFindBusinessService.findByIdV4(oid, false);
+        OrganisaatioRDTOV4 newParent = this.organisaatioFindBusinessService.findByIdV4(parentOid,false);
+
+        if (organisaatio == null) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+        if (newParent == null) {
+            throw new OrganisaatioNotFoundException(parentOid);
+        }
+
+        // Liitetäänkö organisaatio vai siirretäänkö organisaatio
+        try {
+            if (merge) {
+                // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
+                organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, date);
+            } else {
+                // Oppilaitos siirtyy toisen organisaation alle
+                organisaatioBusinessService.changeOrganisaatioParent(oid, parentOid, date);
+            }
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving multiple organizations", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        }
+        return organisaatio;
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

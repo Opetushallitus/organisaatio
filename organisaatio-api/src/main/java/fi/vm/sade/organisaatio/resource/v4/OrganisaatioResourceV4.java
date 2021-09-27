@@ -5,7 +5,10 @@ import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -152,4 +155,15 @@ public interface OrganisaatioResourceV4 {
 
     @GetMapping(path = "/{oid}/jalkelaiset", produces = "application/json;charset=UTF-8")
     OrganisaatioHakutulosV4 findDescendants(@ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid);
+
+    @PutMapping(path = "/{oid}/organisaatiosuhde/{parentoid}", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @ApiOperation(
+            value = "Siirtää organisaatiota puussa toisen ylemmän organisaation alle tai yhdistää kaksi samanarvoista organisaatiota")
+    OrganisaatioRDTOV4 changeOrganisationRelationship(
+            @ApiParam(value = "Organisaation oid", required = true) @PathVariable("oid") String oid,
+            @ApiParam(value = "Uusi isäntäorganisaatio", required = true) @PathVariable("parentoid") String parentoid,
+            @ApiParam(value = "Sulautus", required = true) @RequestParam("merge") boolean merge,
+            @ApiParam(value = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = false) @RequestParam("moveDate") DateParam date
+
+    );
 }

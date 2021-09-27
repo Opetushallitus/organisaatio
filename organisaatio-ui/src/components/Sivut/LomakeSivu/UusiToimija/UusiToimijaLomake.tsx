@@ -9,7 +9,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../types/types';
+import { NewOrganisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -73,7 +73,7 @@ const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
 const organisaatioReducer = function (
     state: NewOrganisaatio,
     action: { type: 'edit' | 'reset'; payload?: NewOrganisaatio }
-): Organisaatio {
+): NewOrganisaatio {
     switch (action.type) {
         case 'reset':
             return { ...tyhjaOrganisaatio({ parentOid: ROOT_OID }) };

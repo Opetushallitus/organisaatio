@@ -12,10 +12,10 @@ import TNFooter from '../../../../Modaalit/ToimipisteenNimenmuutos/TNFooter';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import TNUusiBody from '../../../../Modaalit/ToimipisteenNimenmuutos/TNUusiBody';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-import { Koodi, KoodiUri, Organisaatio, Yhteystiedot } from '../../../../../types/types';
+import { Koodi, KoodiUri, NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../../types/types';
 
 type OrganisaatioProps = {
-    organisaatio: Organisaatio;
+    organisaatio: Organisaatio | NewOrganisaatio;
     organisaatioTyypit: Koodi[];
     maatJaValtiot: Koodi[];
     opetuskielet: Koodi[];

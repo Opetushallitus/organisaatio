@@ -105,6 +105,7 @@ public interface OrganisaatioBusinessService {
      * @param date Siirto pvm
      */
     public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date);
+    public void changeOrganisaatioParent(String organisaatio, String newParent, Date date);
 
     /**
      * Yhdistää kaksi organisaatiota
@@ -113,6 +114,7 @@ public interface OrganisaatioBusinessService {
      * @param date Siirto pvm
      */
     public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
+    public void mergeOrganisaatio(String self, String newParent, Date date);
 
     /**
      *

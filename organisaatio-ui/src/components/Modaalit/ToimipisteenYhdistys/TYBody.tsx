@@ -13,12 +13,16 @@ type TYProps = {
     handleChange: (props: YhdistaOrganisaatioon) => void;
     organisaatio: Organisaatio;
 };
-
-const organisaatioSelectMapper = (organisaatiot: Organisaatio[], language) =>
-    organisaatiot.map((o: Organisaatio) => ({
-        value: `${o.oid}`,
-        label: o.nimi[language],
-    }));
+const mapOrganisaatioToSelect = (o: Organisaatio | undefined, language: string) => {
+    if (o)
+        return {
+            value: `${o.oid}`,
+            label: `${o.nimi[language]} ${o.oid}`,
+        };
+    else return { value: '', label: '' };
+};
+const organisaatioSelectMapper = (organisaatiot: Organisaatio[], language: string) =>
+    organisaatiot.map((o: Organisaatio) => mapOrganisaatioToSelect(o, language));
 
 export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio }: TYProps) {
     const { i18n, language } = useContext(LanguageContext);
@@ -30,10 +34,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
         return <Spin />;
     }
     const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent);
-    const newParentNAme = newParent && newParent.nimi[language];
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
-    console.log('inselect', organisaatiot, parentOrganisaatiot);
-    console.log('inselect', organisaatiot[0], parentOrganisaatiot[0]);
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyRivi}>
@@ -50,26 +51,24 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
             </div>
             <div className={styles.BodyRivi}>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('TOIMIPISTEEN_YHDISTYS_PVM')}</label>
-                    <DatePickerInput
-                        value={yhdistaOrganisaatio.date}
-                        onChange={(e) => {
-                            handleChange(yhdistaOrganisaatio);
-                        }}
-                    />
-                </div>
-                <div className={styles.BodyKentta}>
                     <label>{i18n.translate('TOIMIPISTEEN_YHDISTYS_TOINEN_ORGANISAATIO')}</label>
                     <Select
-                        value={{
-                            label: newParentNAme || '',
-                            value: yhdistaOrganisaatio.newParent || '',
-                        }}
+                        menuPortalTarget={document.body}
+                        value={mapOrganisaatioToSelect(newParent, language)}
                         options={parentOrganisaatiot.filter(
                             (o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value)
                         )}
                         onChange={(option) => {
                             if (option) handleChange({ ...yhdistaOrganisaatio, newParent: (option as iOption).value });
+                        }}
+                    />
+                </div>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('TOIMIPISTEEN_YHDISTYS_PVM')}</label>
+                    <DatePickerInput
+                        value={yhdistaOrganisaatio.date}
+                        onChange={(e) => {
+                            handleChange(yhdistaOrganisaatio);
                         }}
                     />
                 </div>

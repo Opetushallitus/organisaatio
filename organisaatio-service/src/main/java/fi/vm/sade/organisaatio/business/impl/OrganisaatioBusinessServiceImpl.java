@@ -985,7 +985,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         return results;
     }
-
+    @Override
+    public void mergeOrganisaatio(String organisaatio, String newParent, Date date) {
+        Organisaatio child = this.organisaatioRepository.customFindByOid(organisaatio);
+        Organisaatio parent = this.organisaatioRepository.customFindByOid(newParent);
+        mergeOrganisaatio(child,parent,date);
+    }
     @Override
     public void mergeOrganisaatio(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa liittää itseensä
@@ -1027,7 +1032,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään tiedot koodistoon.
         koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
     }
-
+    @Override
+    public void changeOrganisaatioParent(String organisaatio, String newParent, Date date) {
+        Organisaatio child = this.organisaatioRepository.customFindByOid(organisaatio);
+        Organisaatio parent = this.organisaatioRepository.customFindByOid(newParent);
+        changeOrganisaatioParent(child,parent,date);
+    }
     @Override
     public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa siirtää nykyisen parentin alle

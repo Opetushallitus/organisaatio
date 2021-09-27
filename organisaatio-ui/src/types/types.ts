@@ -82,7 +82,7 @@ export type Nimi = {
     en?: string;
 };
 export type OrganisaatioBase = {
-    oid?: string;
+    oid: string;
     nimi: Nimi;
     status: string;
 };
@@ -123,7 +123,8 @@ export interface YtjOrganisaatio {
     yritysTunnus: ytjYtunnus;
 }
 
-export type Ryhma = OrganisaatioBase & {
+export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
+    oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: any; // TODO Tuleeko nämä???
     kayntiosoite?: any;
@@ -153,6 +154,12 @@ export type OrganisaatioSuhde = {
     loppuPvm?: string;
     child: OrganisaatioBase;
     parent: OrganisaatioBase;
+};
+
+export type YhdistaOrganisaatioon = {
+    newParent?: string;
+    date: Date;
+    merge: boolean;
 };
 
 export type OrganisaatioHistoria = {
@@ -191,3 +198,8 @@ export type TranslatedInputBind = {
 export type FrontProperties = {
     urlVirkailija: string;
 };
+
+export interface iOption {
+    label: string;
+    value: string;
+}
