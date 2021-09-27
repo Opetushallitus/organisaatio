@@ -74,7 +74,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
     };
     async function handleYhdistaOrganisaatio(props: YhdistaOrganisaatioon) {
-        console.log(props);
         if (organisaatio && organisaatio.oid) {
             await mergeOrganisaatio({
                 oid: organisaatio.oid,
