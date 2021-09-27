@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,9 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     private final PermissionChecker permissionChecker;
     private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
+
+    @Value("${root.organisaatio.oid}")
+    private String rootOrganisaatioOid;
 
     @Autowired
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2,
@@ -177,6 +181,9 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+        }
+        if(oid.equals(rootOrganisaatioOid)){
+            return new OrganisaatioHistoriaRDTOV4();
         }
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
