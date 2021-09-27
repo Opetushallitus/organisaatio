@@ -82,13 +82,18 @@ function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
     };
 }
 
-function useOrganisaatioHistoria(oid) {
+function useOrganisaatioHistoria(oid: string) {
     return useErrorHandlingWrapper(function useHorse() {
-        const [{ data, loading, error }]: [
+        const [{ data, loading, error }, execute]: [
             ResponseValues<APIOrganisaatioHistoria>,
             (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<APIOrganisaatioHistoria>
         ] = useAxios(`${baseUrl}${oid}/historia`);
-        return { historia: data && transformData(data), historiaLoading: loading, historiaError: error };
+        return {
+            historia: data && transformData(data),
+            historiaLoading: loading,
+            historiaError: error,
+            executeHistoria: execute,
+        };
     });
 }
 

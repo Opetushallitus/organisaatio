@@ -25,7 +25,12 @@ import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLo
 import Icon from '@iconify/react';
 import { Link } from 'react-router-dom';
 import useKoodisto from '../../../api/koodisto';
-import { mergeOrganisaatio, readOrganisaatio, updateOrganisaatio } from '../../../api/organisaatio';
+import {
+    mergeOrganisaatio,
+    readOrganisaatio,
+    updateOrganisaatio,
+    useOrganisaatioHistoria,
+} from '../../../api/organisaatio';
 import PohjaModaali from '../../Modaalit/PohjaModaali/PohjaModaali';
 import TYFooter from '../../Modaalit/ToimipisteenYhdistys/TYFooter';
 import TYBody from '../../Modaalit/ToimipisteenYhdistys/TYBody';
@@ -70,6 +75,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             }
         })();
     }, [params.oid]);
+    const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
     };
@@ -83,6 +89,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (a) {
                 setOrganisaatioNimiPolku(a.polku);
                 setOrganisaatio(Object.assign({}, a.organisaatio));
+                executeHistoria();
             }
         }
     }
@@ -153,6 +160,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     if (
         !organisaatio ||
+        historiaLoading ||
+        historiaError ||
         organisaatioTyypitLoading ||
         organisaatioTyypitError ||
         maatJaValtiotLoading ||
@@ -199,7 +208,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
 
         if (organisaatio.oid !== ROOT_OID && organisaatio.oid) {
-            lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} oid={organisaatio.oid} />);
+            lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} historia={historia} />);
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
 

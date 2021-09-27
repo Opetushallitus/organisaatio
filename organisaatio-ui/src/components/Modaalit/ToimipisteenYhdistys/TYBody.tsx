@@ -27,7 +27,7 @@ const organisaatioSelectMapper = (organisaatiot: Organisaatio[], language: strin
 export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio }: TYProps) {
     const { i18n, language } = useContext(LanguageContext);
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
-        organisaatioTyyppi: 'organisaatiotyyppi_07',
+        organisaatioTyyppi: 'organisaatiotyyppi_01',
     });
 
     if (organisaatiotLoading || organisaatiotError) {
