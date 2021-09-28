@@ -28,20 +28,54 @@ Cypress.Commands.add('inputByName', (name, value) => {
 });
 
 Cypress.Commands.add('clickButton', (contains) => {
-    return cy.get('button').contains(contains).scrollIntoView().click();
+    return cy
+        .get('button')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${contains} button clicked`);
+        });
 });
 
 Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
-    return cy.get('div').contains(contains).scrollIntoView().click();
+    return cy
+        .get('div')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${contains} radio or checkbox clicked`);
+        });
 });
 
 Cypress.Commands.add('clickAccordion', (contains) => {
-    return cy.get('span').contains(contains).scrollIntoView().click();
+    return cy
+        .get('span')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${contains} accordion clicked`);
+        });
 });
 
-Cypress.Commands.add('selectFromList', (list, conatins) => {
-    cy.get('label').contains(list).parent().find('svg').last().scrollIntoView().click();
-    return cy.get('div').contains(conatins).scrollIntoView().click();
+Cypress.Commands.add('selectFromList', (list, contains, input) => {
+    cy.get('label')
+        .contains(list)
+        .parent()
+        .find('input')
+        .type(input || contains.substr(0, 1));
+    //debugger;
+    //cy.get('label').contains(list).parent().find('svg').last().scrollIntoView().click();
+    return cy
+        .get('div')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${list}, ${contains} select clicked`);
+        });
 });
 
 Cypress.Commands.add('enterDate', (label, date) => {
