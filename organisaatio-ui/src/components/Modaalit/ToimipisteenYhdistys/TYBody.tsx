@@ -55,9 +55,9 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                     <Select
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
-                        options={parentOrganisaatiot.filter(
-                            (o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value)
-                        )}
+                        options={parentOrganisaatiot
+                            .filter((o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value))
+                            .sort((a, b) => a.label.localeCompare(b.label))}
                         onChange={(option) => {
                             if (option) handleChange({ ...yhdistaOrganisaatio, newParent: (option as iOption).value });
                         }}
