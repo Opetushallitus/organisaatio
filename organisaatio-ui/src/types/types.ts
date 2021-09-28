@@ -12,6 +12,11 @@ export type Koodi = {
     versio: number;
 };
 
+export type KoodistoSelectOption = {
+    value: KoodiUri;
+    label: string;
+};
+
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 
@@ -56,7 +61,7 @@ type YhteystiedotEmail = YhteystiedotBase & {
     email: string;
 };
 
-type YhteystiedotPhone = YhteystiedotBase & {
+export type YhteystiedotPhone = YhteystiedotBase & {
     tyyppi: 'puhelin';
     numero: string;
 };
@@ -65,7 +70,7 @@ type YhteystiedotWww = YhteystiedotBase & {
     www: string;
 };
 
-export type OsoiteType = 'posti' | 'kaynti' | 'ulkomainern_posti' | 'ulkomainen_kaynti' | 'muu';
+export type OsoiteType = 'posti' | 'kaynti' | 'ulkomainen_posti' | 'ulkomainen_kaynti' | 'muu';
 
 export type YhteystiedotOsoite = YhteystiedotBase & {
     osoiteTyyppi: OsoiteType;
@@ -97,7 +102,7 @@ export type Organisaatio = OrganisaatioBase & {
     status: string;
     kotipaikkaUri: KoodiUri;
     muutKotipaikatUris?: KoodiUri[];
-    maaUri?: KoodiUri;
+    maaUri: KoodiUri;
     kieletUris: KoodiUri[];
     yhteystiedot?: Yhteystiedot[];
 };

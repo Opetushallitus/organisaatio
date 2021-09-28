@@ -7,6 +7,9 @@ import { useState, SyntheticEvent, useContext } from 'react';
 import type { Organisaatio, Osoite, Yhteystiedot, YhteystiedotOsoite } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { KoodiUri, Nimi } from '../../../../../types/types';
+import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { FieldValues } from 'react-hook-form/dist/types/fields';
 
 export type Props = {
     yhteystiedot: Yhteystiedot[];
@@ -17,6 +20,9 @@ export type Props = {
         name: keyof Organisaatio;
         value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
     }) => void;
+    validationErrors?: FieldErrors<FieldValues>;
+    formRegister?: UseFormRegister<FieldValues>;
+    formControl?: Control<FieldValues>;
 };
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
@@ -79,7 +85,13 @@ export const getYhteystieto = (
     return getYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
 };
 
-const YhteystietoLomake = ({ yhteystiedot, handleOnChange }: Props): React.ReactElement => {
+const YhteystietoLomake = ({
+    yhteystiedot,
+    handleOnChange,
+    validationErrors,
+    formControl,
+    formRegister,
+}: Props): React.ReactElement => {
     const { i18n } = useContext(LanguageContext);
     const [kieleksi, setKieleksi] = useState<string>(DEFAULT_LANGUAGE_CODE);
     const [postiSamakuinKaynti, setPostiSamakuinKaynti] = useState({ kieleksi: DEFAULT_LANGUAGE_CODE, onSama: false });

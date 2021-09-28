@@ -17,6 +17,9 @@ import { Link, useHistory } from 'react-router-dom';
 import useKoodisto from '../../../../api/koodisto';
 import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
 import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { ryhmatLomakeSchema } from '../../Ryhmat/Muokkaus/MuokkausLomake';
 
 const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
     return {
@@ -83,6 +86,9 @@ const organisaatioReducer = function (
     }
 };
 
+const PERUSTIEDOTUUID = 'perustietolomake';
+const YHTEYSTIEDOTUUID = 'yhteystietolomake';
+
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
@@ -125,7 +131,14 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         history.goBack();
     }
 
-    const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
+    const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
+
+    const {
+        register: yhteystiedotRegister,
+        formState: { errors: yhteystiedotValidationErrors },
+        //handleSubmit: yhteystiedotHandleSubmit,
+        control: yhteystiedotControl,
+    } = useForm({ resolver: joiResolver(ryhmatLomakeSchema) });
 
     const handleOnChange = ({ name, value }: { name: string; value: any }) => {
         setOrganisaatio({ type: 'edit', payload: { [name]: value } as NewOrganisaatio });
@@ -155,8 +168,8 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
-                key={'perustietolomake'}
-                handleJatka={() => setLomakeAvoinna(1)}
+                key={PERUSTIEDOTUUID}
+                handleJatka={() => setLomakeAvoinna(YHTEYSTIEDOTUUID)}
                 handleOnChange={handleOnChange}
                 organisaatioTyypit={resolvedTyypit}
                 organisaatio={organisaatio}
@@ -168,14 +181,16 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         if (organisaatio.yhteystiedot) {
             lomakkeet.push(
                 <YhteystietoLomake
-                    key={'yhteystietolomake'}
+                    formControl={yhteystiedotControl}
+                    validationErrors={yhteystiedotValidationErrors}
+                    formRegister={yhteystiedotRegister}
+                    key={YHTEYSTIEDOTUUID}
                     handleOnChange={handleOnChange}
                     yhteystiedot={organisaatio.yhteystiedot}
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         }
-
         return { lomakkeet, otsikot };
     };
 
@@ -199,7 +214,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 <Accordion
                     preExpanded={lomakeAvoinna}
                     handlePreExpanded={setLomakeAvoinna}
-                    handleChange={(event) => {
+                    handleItemChange={(event) => {
                         //setLomakeAvoinna(avoinnaIndex[0] + 1)
                     }}
                     {...accordionProps()}

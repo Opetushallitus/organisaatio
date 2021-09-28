@@ -9,7 +9,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
-import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../../tools/mappers';
+import { mapLocalizedKoodiToLang } from '../../../../tools/mappers';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -68,11 +68,11 @@ const MuokkausLomake = ({
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
 
-    const ryhmaTyypitOptions = mapKoodistoOptions(ryhmaTyypitKoodisto.koodit(), language);
-    const kayttoRyhmatOptions = mapKoodistoOptions(kayttoRyhmatKoodisto.koodit(), language);
+    const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
+    const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
 
-    const kayttoRyhmat = mapValuesToSelect(ryhma.kayttoryhmat, kayttoRyhmatOptions);
-    const ryhmaTyypit = mapValuesToSelect(ryhma.ryhmatyypit, ryhmaTyypitOptions);
+    const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri)); //mapValuesToSelect(ryhma.kayttoryhmat, kayttoRyhmatOptions);
+    const ryhmaTyypit = ryhma.ryhmatyypit.map((koodiUri) => ryhmaTyypitKoodisto.uri2SelectOption(koodiUri)); //mapValuesToSelect(ryhma.ryhmatyypit, ryhmaTyypitOptions);
     const isDisabled = !ryhma || ryhma.status === 'PASSIIVINEN';
     const {
         register,

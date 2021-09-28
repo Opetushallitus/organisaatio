@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import styles from './LomakeSivu.module.css';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
@@ -8,7 +8,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import homeIcon from '@iconify/icons-fa-solid/home';
 
-import { LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
+import {KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
 import {
     KoodiUri,
     Nimi,
@@ -17,6 +17,8 @@ import {
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
     Yhteystiedot,
+    YhteystiedotOsoite,
+    YhteystiedotPhone,
     YtjOrganisaatio,
 } from '../../../types/types';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
@@ -35,11 +37,44 @@ import {
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { useForm } from 'react-hook-form';
+import { joiResolver } from '@hookform/resolvers/joi';
+import Joi from 'joi';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
     history: string[];
 };
+
+const PERUSTIEDOTUUID = 'perustietolomake';
+const YHTEYSTIEDOTUUID = 'yhteystietolomake';
+
+export const PerustietoLomakeSchema = Joi.object({
+    nimiEn: Joi.string(),
+    nimiFi: Joi.string(),
+    nimiSv: Joi.string(),
+    ytunnus: Joi.string(),
+    alkuPvm: Joi.string().required(),
+    tyypit: Joi.array().min(1).required(),
+    kotipaikkaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
+    muutKotipaikatUris: Joi.array(),
+    maaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
+    kieletUris: Joi.array().min(1).required(),
+});
+
+export const yhteystietoLomakeSchema = Joi.object({
+    nimiEn: Joi.string(),
+    nimiFi: Joi.string(),
+    nimiSv: Joi.string(),
+    ytunnus: Joi.string(),
+    alkuPvm: Joi.string().required(),
+    tyypit: Joi.array().min(1).required(),
+    kotipaikkaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
+    muutKotipaikatUris: Joi.array(),
+    maaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
+    kieletUris: Joi.array().min(1).required(),
+});
+
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
@@ -62,16 +97,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         loading: organisaatioTyypitLoading,
         error: organisaatioTyypitError,
     } = useKoodisto('ORGANISAATIOTYYPPI');
-    const { data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError } = useKoodisto(
-        'MAATJAVALTIOT1'
-    );
-    const {
-        data: oppilaitoksenOpetuskielet,
-        loading: oppilaitoksenOpetuskieletLoading,
-        error: oppilaitoksenOpetuskieletError,
-    } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
-    const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
 
+    const { postinumerotKoodisto } = useContext(KoodistoContext);
+    const postinumerot = postinumerotKoodisto.koodit();
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
@@ -155,18 +183,23 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         organisaatio &&
             organisaatio.yhteystiedot &&
             organisaatio.yhteystiedot
-                .filter((yT) => yT.kieli === 'kieli_fi#1')
-                .forEach((yT: any) => {
-                    // TODO fixing type is complicated, must refactor types for yhteystiedot from ytj
-                    if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'posti') {
+                .filter((yT: Yhteystiedot) => yT.kieli === 'kieli_fi#1')
+                .forEach((yT: Yhteystiedot) => {
+                    if (
+                        (yT as YhteystiedotOsoite).osoiteTyyppi &&
+                        (yT as YhteystiedotOsoite).osoiteTyyppi === 'posti'
+                    ) {
                         const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = postiOsoite;
-                        const postinumeroKoodi = postinumerot.find((p) => p.arvo === postinumero);
+                        const postinumeroKoodi = postinumerotKoodisto.koodit().find((p) => p.arvo === postinumero);
                         yT = Object.assign(yT, {
                             osoite,
                             postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || '',
                             postitoimipaikka,
                         });
-                    } else if (yT.osoiteTyyppi && yT.osoiteTyyppi === 'kaynti') {
+                    } else if (
+                        (yT as YhteystiedotOsoite).osoiteTyyppi &&
+                        (yT as YhteystiedotOsoite).osoiteTyyppi === 'kaynti'
+                    ) {
                         const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = kayntiOsoite;
                         const postinumeroKoodi = postinumerot.find((p) => p.arvo === postinumero);
                         yT = Object.assign(yT, {
@@ -174,8 +207,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || '',
                             postitoimipaikka,
                         });
-                    } else if (yT.tyyppi && yT.tyyppi === 'puhelin') {
-                        yT.numero = ytjOrganisaatio.puhelin;
+                    } else if ((yT as YhteystiedotPhone).tyyppi && (yT as YhteystiedotPhone).tyyppi === 'puhelin') {
+                        (yT as YhteystiedotPhone).numero = ytjOrganisaatio.puhelin;
                     }
                 });
         setOrganisaatio(
@@ -191,9 +224,35 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
     }) => {
         setOrganisaatio((organisaatio) => {
-            const updatedOrg = Object.assign({}, organisaatio, { [name]: value });
-            return updatedOrg;
+            return Object.assign({}, organisaatio, { [name]: value });
         });
+    };
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
+    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypit, parentOrganisaatio);
+    const {
+        register: registerPerustiedot,
+        formState: { errors: perustiedotValidationErrors },
+        handleSubmit: perustiedotHandleSubmit,
+        control: perustiedotControl,
+    } = useForm({ resolver: joiResolver(PerustietoLomakeSchema) });
+
+    const {
+        register: yhteystiedotRegister,
+        formState: { errors: yhteystiedotValidationErrors },
+        handleSubmit: yhteystiedotHandleSubmit,
+        control: yhteystiedotControl,
+    } = useForm({ resolver: joiResolver(PerustietoLomakeSchema) });
+
+    const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
+
+    const validateChanges = (accordionUuids: string[]): void => {
+        const accordionuuid = accordionUuids[0];
+        const setAvoinnaCb = () => setLomakeAvoinna(accordionuuid);
+        if (lomakeAvoinna === PERUSTIEDOTUUID) {
+            perustiedotHandleSubmit(setAvoinnaCb)();
+        } else if (lomakeAvoinna === YHTEYSTIEDOTUUID) {
+            yhteystiedotHandleSubmit(setAvoinnaCb)();
+        }
     };
     const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypit, parentOrganisaatio);
@@ -202,13 +261,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             historiaLoading ||
             historiaError ||
             organisaatioTyypitLoading ||
-            organisaatioTyypitError ||
-            maatJaValtiotLoading ||
-            maatJaValtiotError ||
-            oppilaitoksenOpetuskieletLoading ||
-            oppilaitoksenOpetuskieletError ||
-            postinumerotLoading ||
-            postinumerotError
+            organisaatioTyypitError
         );
     }
 
@@ -225,21 +278,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
-                key={'perustietolomake'}
+                formControl={perustiedotControl}
+                validationErrors={perustiedotValidationErrors}
+                formRegister={registerPerustiedot}
+                key={PERUSTIEDOTUUID}
                 setYtjDataFetched={setYtjDataFetched}
                 handleOnChange={handleOnChange}
                 organisaatioTyypit={resolvedTyypit}
                 organisaatio={organisaatio}
                 language={language}
-                maatJaValtiot={maatJaValtiot}
-                opetuskielet={oppilaitoksenOpetuskielet}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         if (organisaatio.yhteystiedot) {
             lomakkeet.push(
                 <YhteystietoLomake
-                    key={'yhteystietolomake'}
+                    formControl={yhteystiedotControl}
+                    validationErrors={yhteystiedotValidationErrors}
+                    formRegister={yhteystiedotRegister}
+                    key={YHTEYSTIEDOTUUID}
                     handleOnChange={handleOnChange}
                     yhteystiedot={organisaatio.yhteystiedot}
                 />
@@ -254,7 +311,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
 
-        return { lomakkeet: lomakkeet, otsikot: otsikot };
+        return {
+            lomakkeet: lomakkeet,
+            otsikot: otsikot,
+            //handleItemChange: (event: FormEvent<HTMLDivElement>) => console.log('piip', event),
+            handleUuidChange: validateChanges,
+            //handlePreExpanded: setLomakeAvoinna,
+            preExpanded: lomakeAvoinna,
+        };
     };
     const thisTyyppi = organisaatioTyypit.find((a) => a.uri === organisaatio.tyypit[0]);
     return (

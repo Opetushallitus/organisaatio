@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { Koodi, KoodiArvo, KoodistoSelectOption, KoodiUri, Language, Lokalisointi, Nimi } from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
-import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Nimi } from '../types/types';
 
 export const ROOT_OID = '1.2.246.562.10.00000000001';
 export const rakenne = organisaatioRakenne;
@@ -54,15 +54,27 @@ export interface Koodisto {
     arvo2Nimi: (arvo: KoodiArvo) => string;
     nimet: () => string[];
     koodit: () => Koodi[];
+    selectOptions: () => KoodistoSelectOption[];
+    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
 }
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];
     private readonly kieli: Language;
+    private readonly KoodistoOptionValues: KoodistoSelectOption[];
 
     constructor(koodisto: Koodi[], kieli: Language) {
         this.koodisto = koodisto;
         this.kieli = kieli;
+        this.KoodistoOptionValues = koodisto.map((koodi: Koodi) => this.uri2SelectOption(koodi.uri));
+    }
+
+    uri2SelectOption(uri: KoodiUri): KoodistoSelectOption {
+        const label = this.nimi((koodi) => koodi.uri === uri);
+        return {
+            value: label === '' ? label : uri,
+            label,
+        };
     }
 
     uri2Nimi(uri: KoodiUri): string {
@@ -81,6 +93,10 @@ export class KoodistoImpl implements Koodisto {
         return [...this.koodisto];
     }
 
+    selectOptions(): KoodistoSelectOption[] {
+        return [...this.KoodistoOptionValues];
+    }
+
     private nimi(predikaatti: (koodi: Koodi) => boolean): string {
         const koodi = this.koodisto.find(predikaatti);
         let nimi = '';
@@ -93,6 +109,14 @@ export class KoodistoImpl implements Koodisto {
     private kielistettyNimi(koodi: Koodi): string {
         return koodi.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi.nimi['fi'] || '');
     }
+
+    protected dropKoodiVersionSuffix = (koodi: string) => {
+        const hasVersioningHashtag = koodi.search('#');
+        if (hasVersioningHashtag !== -1) {
+            return koodi.replace(/#.+$/, '');
+        }
+        return koodi;
+    };
 }
 
 type KoodistoContextType = {
@@ -101,6 +125,9 @@ type KoodistoContextType = {
     ryhmaTyypitKoodisto: Koodisto;
     organisaatioTyypitKoodisto: Koodisto;
     ryhmanTilaKoodisto: Koodisto;
+    oppilaitoksenOpetuskieletKoodisto: Koodisto;
+    postinumerotKoodisto: Koodisto;
+    maatJaValtiotKoodisto: Koodisto;
 };
 
 export const KoodistoContext = React.createContext<KoodistoContextType>({
@@ -109,4 +136,7 @@ export const KoodistoContext = React.createContext<KoodistoContextType>({
     ryhmaTyypitKoodisto: new KoodistoImpl([], 'fi'),
     organisaatioTyypitKoodisto: new KoodistoImpl([], 'fi'),
     ryhmanTilaKoodisto: new KoodistoImpl([], 'fi'),
+    oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl([], 'fi'),
+    postinumerotKoodisto: new KoodistoImpl([], 'fi'),
+    maatJaValtiotKoodisto: new KoodistoImpl([], 'fi'),
 });
