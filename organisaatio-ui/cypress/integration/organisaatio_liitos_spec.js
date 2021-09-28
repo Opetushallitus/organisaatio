@@ -1,4 +1,4 @@
-import { organisaatio } from './data';
+import { organisaatio } from '../support/data';
 
 describe('Organisaatioliitos', () => {
     it('Can merge organisaatio', () => {

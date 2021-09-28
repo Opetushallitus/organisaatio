@@ -1,4 +1,4 @@
-import { organisaatio } from './data';
+import { organisaatio } from '../support/data';
 
 describe('Organisaatio Rakenne', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
