@@ -5,10 +5,8 @@ import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -163,7 +161,6 @@ public interface OrganisaatioResourceV4 {
             @ApiParam(value = "Organisaation oid", required = true) @PathVariable("oid") String oid,
             @ApiParam(value = "Uusi isäntäorganisaatio", required = true) @PathVariable("parentoid") String parentoid,
             @ApiParam(value = "Sulautus", required = true) @RequestParam("merge") boolean merge,
-            @ApiParam(value = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = false) @RequestParam("moveDate") DateParam date
-
+            @ApiParam(value = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = true) @RequestParam("moveDate") DateParam moveDate
     );
 }

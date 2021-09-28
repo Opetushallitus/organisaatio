@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.resource.impl.v4;
 
-import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -8,11 +7,10 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
@@ -64,7 +62,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
 
     // POST //organisaatio/v4/findbyoids
     @Override
-    public List<OrganisaatioRDTOV4> findByOids(Set<String> oids){
+    public List<OrganisaatioRDTOV4> findByOids(Set<String> oids) {
         return organisaatioFindBusinessService.findByOidsV4(oids);
     }
 
@@ -182,7 +180,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             LOG.warn("Not authorized to read organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
-        if(oid.equals(rootOrganisaatioOid)){
+        if (oid.equals(rootOrganisaatioOid)) {
             return new OrganisaatioHistoriaRDTOV4();
         }
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
@@ -219,56 +217,21 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, DateParam dateParam) {
+    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, DateParam moveDate) {
+        Date date = moveDate.getValue();
         try {
-            permissionChecker.checkReadOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-        try {
-            permissionChecker.checkReadOrganisation(parentOid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + parentOid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-        Date date;
-        if (dateParam != null && dateParam.getValue() != null) {
-            date = dateParam.getValue();
-        } else {
-            date = new Date();
-        }
-
-        OrganisaatioRDTOV4 organisaatio = this.organisaatioFindBusinessService.findByIdV4(oid, false);
-        OrganisaatioRDTOV4 newParent = this.organisaatioFindBusinessService.findByIdV4(parentOid,false);
-
-        if (organisaatio == null) {
-            throw new OrganisaatioNotFoundException(oid);
-        }
-        if (newParent == null) {
-            throw new OrganisaatioNotFoundException(parentOid);
-        }
-
-        // Liitetäänkö organisaatio vai siirretäänkö organisaatio
-        try {
-            if (merge) {
-                // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
-                organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, date);
-            } else {
-                // Oppilaitos siirtyy toisen organisaation alle
-                organisaatioBusinessService.changeOrganisaatioParent(oid, parentOid, date);
-            }
+            organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
         } catch (SadeBusinessException sbe) {
             LOG.warn("Error saving multiple organizations", sbe);
             throw new OrganisaatioResourceException(sbe);
         }
-        return organisaatio;
+        return this.organisaatioFindBusinessService.findByIdV4(oid, false);
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
-        final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
+        final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
         Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
         for (OrganisaatioRepositoryImpl.JalkelaisetRivi row : rows) {

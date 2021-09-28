@@ -44,11 +44,12 @@ type LomakeSivuProps = {
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
-    const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>({
+    const initialYhdista = {
         merge: false,
         date: new Date(),
         newParent: undefined,
-    });
+    };
+    const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const {
         data: organisaatioTyypit,
         loading: organisaatioTyypitLoading,
@@ -85,6 +86,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 oid: organisaatio.oid,
                 ...props,
             });
+            setYhdistaOrganisaatio(initialYhdista);
             const a = await readOrganisaatio(params.oid);
             if (a) {
                 setOrganisaatioNimiPolku(a.polku);
