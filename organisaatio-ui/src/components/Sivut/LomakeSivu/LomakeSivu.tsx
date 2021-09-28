@@ -160,22 +160,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         });
     };
 
-    if (
-        !organisaatio ||
-        historiaLoading ||
-        historiaError ||
-        organisaatioTyypitLoading ||
-        organisaatioTyypitError ||
-        maatJaValtiotLoading ||
-        maatJaValtiotError ||
-        oppilaitoksenOpetuskieletLoading ||
-        oppilaitoksenOpetuskieletError ||
-        postinumerotLoading ||
-        postinumerotError
-    ) {
+    function isLoading() {
+        return (
+            historiaLoading ||
+            historiaError ||
+            organisaatioTyypitLoading ||
+            organisaatioTyypitError ||
+            maatJaValtiotLoading ||
+            maatJaValtiotError ||
+            oppilaitoksenOpetuskieletLoading ||
+            oppilaitoksenOpetuskieletError ||
+            postinumerotLoading ||
+            postinumerotError
+        );
+    }
+
+    if (!organisaatio || isLoading()) {
         return (
             <div className={styles.PaaOsio}>
-                <Spin>ladataan sivua </Spin>
+                <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
             </div>
         );
     }

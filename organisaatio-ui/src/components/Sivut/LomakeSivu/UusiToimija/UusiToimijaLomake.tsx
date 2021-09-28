@@ -122,17 +122,22 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const handleOnChange = ({ name, value }: { name: string; value: any }) => {
         setOrganisaatio({ type: 'edit', payload: { [name]: value } as NewOrganisaatio });
     };
-    if (
-        organisaatioTyypitLoading ||
-        organisaatioTyypitError ||
-        maatJaValtiotLoading ||
-        maatJaValtiotError ||
-        oppilaitoksenOpetuskieletLoading ||
-        oppilaitoksenOpetuskieletError
-    ) {
+
+    function isLoading() {
+        return (
+            organisaatioTyypitLoading ||
+            organisaatioTyypitError ||
+            maatJaValtiotLoading ||
+            maatJaValtiotError ||
+            oppilaitoksenOpetuskieletLoading ||
+            oppilaitoksenOpetuskieletError
+        );
+    }
+
+    if (isLoading()) {
         return (
             <div className={styles.PaaOsio}>
-                <Spin>ladataan sivua </Spin>
+                <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
             </div>
         );
     }

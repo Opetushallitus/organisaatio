@@ -4,7 +4,7 @@ import styles from './ToimipisteenYhdistys.module.css';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { iOption, Organisaatio, YhdistaOrganisaatioon } from '../../../types/types';
+import { Option, Organisaatio, YhdistaOrganisaatioon } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
@@ -59,7 +59,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                             .filter((o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value))
                             .sort((a, b) => a.label.localeCompare(b.label))}
                         onChange={(option) => {
-                            if (option) handleChange({ ...yhdistaOrganisaatio, newParent: (option as iOption).value });
+                            if (option) handleChange({ ...yhdistaOrganisaatio, newParent: (option as Option).value });
                         }}
                     />
                 </div>

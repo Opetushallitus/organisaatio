@@ -12,7 +12,7 @@ import TNFooter from '../../../../Modaalit/ToimipisteenNimenmuutos/TNFooter';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import TNUusiBody from '../../../../Modaalit/ToimipisteenNimenmuutos/TNUusiBody';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-import { Koodi, KoodiUri, NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../../types/types';
+import { Option, Koodi, KoodiUri, NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../../types/types';
 
 type OrganisaatioProps = {
     organisaatio: Organisaatio | NewOrganisaatio;
@@ -40,11 +40,6 @@ const tyhjaNimi: Nimi = {
     sv: '',
     en: '',
 };
-
-interface iOption {
-    label: string;
-    value: string;
-}
 
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
@@ -154,7 +149,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         value={kaikkiKunnat.find((kk) => kk.value === organisaatio.kotipaikkaUri)}
                         options={kaikkiKunnat}
                         onChange={(option) =>
-                            handleOnChange({ name: 'kotipaikkaUri', value: (option as iOption).value })
+                            handleOnChange({ name: 'kotipaikkaUri', value: (option as Option).value })
                         }
                     />
                 </div>
@@ -169,7 +164,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         onChange={(option) => {
                             handleOnChange({
                                 name: 'muutKotipaikatUris',
-                                value: (option as iOption[]).map((o) => o.value),
+                                value: (option as Option[]).map((o) => o.value),
                             });
                         }}
                     />
@@ -179,7 +174,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_MAA')}</label>
                     <Select
-                        onChange={(selected) => handleOnChange({ name: 'maaUri', value: (selected as iOption).value })}
+                        onChange={(selected) => handleOnChange({ name: 'maaUri', value: (selected as Option).value })}
                         value={maatJaValtiot
                             .map((mv) => ({
                                 value: mv.uri,
@@ -200,7 +195,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
                     <Select
                         onChange={(selected) =>
-                            handleOnChange({ name: 'kieletUris', value: (selected as iOption[]).map((o) => o.value) })
+                            handleOnChange({ name: 'kieletUris', value: (selected as Option[]).map((o) => o.value) })
                         }
                         isMulti
                         value={opetuskielet

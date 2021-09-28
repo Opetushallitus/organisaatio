@@ -199,7 +199,7 @@ export type FrontProperties = {
     urlVirkailija: string;
 };
 
-export interface iOption {
+export interface Option {
     label: string;
     value: string;
 }
