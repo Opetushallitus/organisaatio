@@ -31,9 +31,14 @@ describe('Organisaatioliitos', () => {
                         'PUT',
                         `/organisaatio/organisaatio/v4/${child.body.organisaatio.oid}/organisaatiosuhde/*`
                     ).as('merge');
+                    cy.intercept('GET', `/organisaatio/organisaatio/v4/${child.body.organisaatio.oid}/historia`).as(
+                        'historia'
+                    );
                     cy.clickButton('BUTTON_VAHVISTA');
+
                     cy.wait(['@merge'], { timeout: 10000 });
                     cy.contains('CHILD Suominimi');
+                    cy.wait(['@historia'], { timeout: 10000 });
                     cy.clickAccordion('RAKENNE');
                     cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT1 Suominimi');
                     cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT2 Suominimi');
