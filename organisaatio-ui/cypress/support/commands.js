@@ -61,13 +61,9 @@ Cypress.Commands.add('clickAccordion', (contains) => {
 });
 
 Cypress.Commands.add('selectFromList', (list, contains, input) => {
-    cy.get('label')
-        .contains(list)
-        .parent()
-        .find('input')
-        .type(input || contains.substr(0, 1));
-    //debugger;
-    //cy.get('label').contains(list).parent().find('svg').last().scrollIntoView().click();
+    if (input) {
+        cy.get('label').contains(list).parent().find('input').type(input);
+    } else cy.get('label').contains(list).parent().find('svg').last().scrollIntoView().click();
     return cy
         .get('div')
         .contains(contains)
@@ -80,6 +76,7 @@ Cypress.Commands.add('selectFromList', (list, contains, input) => {
 
 Cypress.Commands.add('enterDate', (label, date) => {
     cy.get('label').contains(label).parent().find('input').type(date);
+    cy.get('label').contains(label).click();
 });
 
 Cypress.Commands.add('enterYhteystieto', (values) => {
