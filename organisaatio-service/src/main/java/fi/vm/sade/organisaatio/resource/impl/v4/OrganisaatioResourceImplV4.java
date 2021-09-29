@@ -7,10 +7,10 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
@@ -18,6 +18,7 @@ import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,9 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
 
+    @Value("${root.organisaatio.oid}")
+    private String rootOrganisaatioOid;
+
     @Autowired
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2,
                                       OrganisaatioResourceV3 organisaatioResourceV3,
@@ -58,7 +62,7 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
 
     // POST //organisaatio/v4/findbyoids
     @Override
-    public List<OrganisaatioRDTOV4> findByOids(Set<String> oids){
+    public List<OrganisaatioRDTOV4> findByOids(Set<String> oids) {
         return organisaatioFindBusinessService.findByOidsV4(oids);
     }
 
@@ -176,6 +180,9 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
             LOG.warn("Not authorized to read organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
+        if (oid.equals(rootOrganisaatioOid)) {
+            return new OrganisaatioHistoriaRDTOV4();
+        }
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
 
@@ -208,10 +215,23 @@ public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
         return processRows(organisaatioFindBusinessService.findDescendants(oid, globalReadAccess));
     }
 
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, DateParam moveDate) {
+        Date date = moveDate.getValue();
+        try {
+            organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error saving multiple organizations", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        }
+        return this.organisaatioFindBusinessService.findByIdV4(oid, false);
+    }
+
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
-        final Map<String,OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
+        final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
         Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
         for (OrganisaatioRepositoryImpl.JalkelaisetRivi row : rows) {

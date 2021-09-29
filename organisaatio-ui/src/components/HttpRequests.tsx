@@ -1,11 +1,11 @@
-import { Ryhma } from '../types/types';
+import { NewRyhma, Ryhma } from '../types/types';
 import Axios, { AxiosResponse } from 'axios';
 
 const getResponseData = (response: AxiosResponse) => response.data;
 
 export const putRyhma = async (ryhma: Ryhma) =>
     getResponseData(await Axios.put(`/organisaatio/organisaatio/v4/${ryhma.oid}`, ryhma));
-export const postRyhma = async (ryhma: Ryhma) =>
+export const postRyhma = async (ryhma: NewRyhma) =>
     getResponseData(await Axios.post(`/organisaatio/organisaatio/v4/`, ryhma));
 export const deleteRyhma = async (ryhma: Ryhma) =>
     getResponseData(await Axios.delete(`/organisaatio/organisaatio/v4/${ryhma.oid}`));

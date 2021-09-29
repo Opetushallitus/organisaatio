@@ -113,6 +113,7 @@ public interface OrganisaatioBusinessService {
      * @param date Siirto pvm
      */
     public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
+    public void mergeOrganisaatio(String self, String newParent, Optional<Date> date, boolean merge);
 
     /**
      *

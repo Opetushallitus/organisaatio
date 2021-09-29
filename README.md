@@ -50,11 +50,12 @@ Paikallinen kehitys nojaa paikallisesti asennettuun tietokantaan. Aja sopiva pos
 version: '3'
 services:
   database:
-    container_name: oph-postgers-db
+    container_name: oph-postgres-db
     image: postgres:13.4
     environment:
-      - POSTGRES_USER=app
-      - POSTGRES_PASSWORD=ophoph
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - database-data:/var/lib/postgresql/data/
       - ./backup:/tmp/backup
@@ -66,9 +67,9 @@ volumes:
 Tuo backup pallero ympäristöstä tai luo tyhjä kanta organisaatio sovellusta varten. Lataa backup S3:sta ja tallenna composen viereen /backup hakemistoon ja backupin palautus onnistuu:
 
 ```
-docker exec oph-postgres-db dropdb -U app organisaatio
-docker exec oph-postgres-db createdb -U app -T template0 organisaatio
-docker exec oph-postgres-db pg_restore -U app -d organisaatio /tmp/backup/organisaatio.backup
+docker exec oph-postgres-db dropdb -U postgres organisaatio
+docker exec oph-postgres-db createdb -U postgres -T template0 organisaatio
+docker exec oph-postgres-db pg_restore -U postgres -d organisaatio /tmp/backup/organisaatio.backup
 ```
 
 TAI alusta tyhja kanta ja aja flyway clean ja flyway migrate. Tämän jälkeen ohjelmiston voi käynnistää joko jar:sta tai esim Idean Spring boot konfiguraatiolla.
@@ -97,30 +98,7 @@ Käynnistä backend jar:sta tai spring boot configuraatiolla ideasta.
 
 Käynnistys Jar:sta juuressa (Ui vastaa myös osoitteesta http://localhost:8080/organisaatio).
 ``` bash
-java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev ./organisaatio-service/build/libs/organisaatio-service.jar 
-```
-Tämän ajamiseen pitää olla application propertiesissa olisi hyvä olla ainakin seuraavat avain-arvo parit (Ei ole ihan täyttä varmuutta mitkä ovat välttämättömiä) oikein täytettynä:
-```
-organisaatio.service.username=xxx
-organisaatio.service.password=xxx
-organisaatio.service.username.to.koodisto=
-organisaatio.service.password.to.koodisto=
-organisaatio-service.scheduled.update.cron.expression= 0 * * * * ?
-organisaatio.service.username.to.viestinta=
-organisaatio.service.password.to.viestinta=
-organisaatio-service.postgresql.url=
-organisaatio-service.postgresql.user=
-organisaatio-service.postgresql.password=
-host.ilb=
-host.alb=
-spring.datasource.url=jdbc:postgresql://localhost:5432/organisaatio
-spring.datasource.username=app
-spring.datasource.password=ophoph
-cas.service=
-root.organisaatio.oid=1.2.246.562.10.00000000001
-ryhmasahkoposti.service.email=
-url-virkailija=http://localhost:9000
-host.virkailija=localhost:9000
+java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev  -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 ./organisaatio-service/build/libs/organisaatio-service.jar 
 ```
 
 #### Frontend

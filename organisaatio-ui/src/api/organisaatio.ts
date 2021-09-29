@@ -5,8 +5,9 @@ import {
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
     OrganisaatioSuhde,
+    YhdistaOrganisaatioon,
 } from '../types/types';
-import { info, success } from '../components/Notification/Notification';
+import { info, success, warning } from '../components/Notification/Notification';
 import { APIOrganisaatioHistoria, OrganisaatioLiitos } from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
@@ -48,6 +49,27 @@ async function readOrganisaatio(oid: string) {
     });
 }
 
+async function mergeOrganisaatio({
+    oid,
+    newParent,
+    date,
+    merge,
+}: YhdistaOrganisaatioon & {
+    oid: string;
+}) {
+    return errorHandlingWrapper(async () => {
+        if (newParent) {
+            const response = await Axios.put<any>( //?merge=false&moveDate=2021-09-05
+                `${baseUrl}${oid}/organisaatiosuhde/${newParent}?merge=${merge}&moveDate=${date.toISOString()}`
+            );
+            info({ message: 'MESSAGE_LIITOS_ONNISTUI', timeOut: 200 });
+            return response;
+        } else {
+            warning({ message: 'MESSAGE_LIITOS_UUSI_VANHEMPI_PUUTTUU' });
+        }
+    });
+}
+
 function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
     function liitosMapper(a: OrganisaatioLiitos): OrganisaatioSuhde {
         return { alkuPvm: a.alkuPvm, loppuPvm: a.loppuPvm, child: a.kohde, parent: a.organisaatio };
@@ -60,14 +82,65 @@ function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
     };
 }
 
-function useOrganisaatioHistoria(oid) {
+function useOrganisaatioHistoria(oid: string) {
     return useErrorHandlingWrapper(function useHorse() {
-        const [{ data, loading, error }]: [
+        const [{ data, loading, error }, execute]: [
             ResponseValues<APIOrganisaatioHistoria>,
             (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<APIOrganisaatioHistoria>
         ] = useAxios(`${baseUrl}${oid}/historia`);
-        return { historia: data && transformData(data), historiaLoading: loading, historiaError: error };
+        return {
+            historia: data && transformData(data),
+            historiaLoading: loading,
+            historiaError: error,
+            executeHistoria: execute,
+        };
     });
 }
 
-export { useOrganisaatioHistoria, createOrganisaatio, readOrganisaatio, updateOrganisaatio };
+function useOrganisaatioHaku({
+    aktiiviset = true,
+    lakkautetut = false,
+    oppilaitosTyyppi = '',
+    organisaatioTyyppi = '',
+    suunnitellut = true,
+}: {
+    aktiiviset?: boolean;
+    lakkautetut?: boolean;
+    oppilaitosTyyppi?: string;
+    organisaatioTyyppi?: string;
+    suunnitellut?: boolean;
+}): {
+    organisaatiot: Organisaatio[];
+    organisaatiotLoading: boolean;
+    organisaatiotError: boolean;
+} {
+    return useErrorHandlingWrapper(function useHorse() {
+        const [{ data, loading, error }]: [
+            ResponseValues<{ organisaatiot: Organisaatio[] }>,
+            (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<{ organisaatiot: Organisaatio[] }>
+        ] = useAxios({
+            url: `${baseUrl}hae`,
+            params: {
+                aktiiviset,
+                lakkautetut,
+                oppilaitosTyyppi,
+                organisaatioTyyppi,
+                suunnitellut,
+            },
+        });
+        return {
+            organisaatiot: data && data.organisaatiot.map((o) => o),
+            organisaatiotLoading: loading,
+            organisaatiotError: error,
+        };
+    });
+}
+
+export {
+    useOrganisaatioHistoria,
+    useOrganisaatioHaku,
+    createOrganisaatio,
+    readOrganisaatio,
+    updateOrganisaatio,
+    mergeOrganisaatio,
+};

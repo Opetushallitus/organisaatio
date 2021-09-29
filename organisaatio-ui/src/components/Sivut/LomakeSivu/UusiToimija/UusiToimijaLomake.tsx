@@ -9,7 +9,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
 import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../types/types';
+import { NewOrganisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -73,7 +73,7 @@ const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
 const organisaatioReducer = function (
     state: NewOrganisaatio,
     action: { type: 'edit' | 'reset'; payload?: NewOrganisaatio }
-): Organisaatio {
+): NewOrganisaatio {
     switch (action.type) {
         case 'reset':
             return { ...tyhjaOrganisaatio({ parentOid: ROOT_OID }) };
@@ -122,17 +122,22 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const handleOnChange = ({ name, value }: { name: string; value: any }) => {
         setOrganisaatio({ type: 'edit', payload: { [name]: value } as NewOrganisaatio });
     };
-    if (
-        organisaatioTyypitLoading ||
-        organisaatioTyypitError ||
-        maatJaValtiotLoading ||
-        maatJaValtiotError ||
-        oppilaitoksenOpetuskieletLoading ||
-        oppilaitoksenOpetuskieletError
-    ) {
+
+    function isLoading() {
+        return (
+            organisaatioTyypitLoading ||
+            organisaatioTyypitError ||
+            maatJaValtiotLoading ||
+            maatJaValtiotError ||
+            oppilaitoksenOpetuskieletLoading ||
+            oppilaitoksenOpetuskieletError
+        );
+    }
+
+    if (isLoading()) {
         return (
             <div className={styles.PaaOsio}>
-                <Spin>ladataan sivua </Spin>
+                <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
             </div>
         );
     }

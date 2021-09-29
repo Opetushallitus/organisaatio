@@ -14,6 +14,7 @@ import {
     Nimi,
     Organisaatio,
     OrganisaatioNimiJaOid,
+    YhdistaOrganisaatioon,
     Yhteystiedot,
     YtjOrganisaatio,
 } from '../../../types/types';
@@ -24,14 +25,31 @@ import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLo
 import Icon from '@iconify/react';
 import { Link } from 'react-router-dom';
 import useKoodisto from '../../../api/koodisto';
-import { readOrganisaatio, updateOrganisaatio } from '../../../api/organisaatio';
+import {
+    mergeOrganisaatio,
+    readOrganisaatio,
+    updateOrganisaatio,
+    useOrganisaatioHistoria,
+} from '../../../api/organisaatio';
+import PohjaModaali from '../../Modaalit/PohjaModaali/PohjaModaali';
+import TYFooter from '../../Modaalit/ToimipisteenYhdistys/TYFooter';
+import TYBody from '../../Modaalit/ToimipisteenYhdistys/TYBody';
+import TYHeader from '../../Modaalit/ToimipisteenYhdistys/TYHeader';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
     history: string[];
 };
+
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
+    const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
+    const initialYhdista = {
+        merge: false,
+        date: new Date(),
+        newParent: undefined,
+    };
+    const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const {
         data: organisaatioTyypit,
         loading: organisaatioTyypitLoading,
@@ -58,9 +76,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             }
         })();
     }, [params.oid]);
+    const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
     };
+    async function handleYhdistaOrganisaatio(props: YhdistaOrganisaatioon) {
+        if (organisaatio && organisaatio.oid) {
+            await mergeOrganisaatio({
+                oid: organisaatio.oid,
+                ...props,
+            });
+            setYhdistaOrganisaatio(initialYhdista);
+            const a = await readOrganisaatio(params.oid);
+            if (a) {
+                setOrganisaatioNimiPolku(a.polku);
+                setOrganisaatio(Object.assign({}, a.organisaatio));
+                executeHistoria();
+            }
+        }
+    }
     async function putOrganisaatio() {
         if (organisaatio) {
             const data = await updateOrganisaatio(organisaatio);
@@ -126,20 +160,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         });
     };
 
-    if (
-        !organisaatio ||
-        organisaatioTyypitLoading ||
-        organisaatioTyypitError ||
-        maatJaValtiotLoading ||
-        maatJaValtiotError ||
-        oppilaitoksenOpetuskieletLoading ||
-        oppilaitoksenOpetuskieletError ||
-        postinumerotLoading ||
-        postinumerotError
-    ) {
+    function isLoading() {
+        return (
+            historiaLoading ||
+            historiaError ||
+            organisaatioTyypitLoading ||
+            organisaatioTyypitError ||
+            maatJaValtiotLoading ||
+            maatJaValtiotError ||
+            oppilaitoksenOpetuskieletLoading ||
+            oppilaitoksenOpetuskieletError ||
+            postinumerotLoading ||
+            postinumerotError
+        );
+    }
+
+    if (!organisaatio || isLoading()) {
         return (
             <div className={styles.PaaOsio}>
-                <Spin>ladataan sivua </Spin>
+                <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
             </div>
         );
     }
@@ -174,7 +213,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
 
         if (organisaatio.oid !== ROOT_OID && organisaatio.oid) {
-            lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} oid={organisaatio.oid} />);
+            lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} historia={historia} />);
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
 
@@ -207,7 +246,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </h1>
                 </div>
                 <div className={styles.ValiNappulat}>
-                    <Button>{i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}</Button>
+                    <Button onClick={() => setYhdistaOrganisaatioModaaliAuki(true)}>
+                        {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
+                    </Button>
                     <Button onClick={handleLisaaUusiToimija}>{i18n.translate('LOMAKE_LISAA_UUSI_TOIMIJA')}</Button>
                 </div>
             </div>
@@ -235,6 +276,30 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </Button>
                 </div>
             </div>
+            {yhdistaOrganisaatioModaaliAuki && (
+                <PohjaModaali
+                    header={<TYHeader />}
+                    body={
+                        <TYBody
+                            organisaatio={organisaatio}
+                            yhdistaOrganisaatio={yhdistaOrganisaatio}
+                            handleChange={setYhdistaOrganisaatio}
+                        />
+                    }
+                    footer={
+                        <TYFooter
+                            tallennaCallback={() => {
+                                handleYhdistaOrganisaatio(yhdistaOrganisaatio);
+                                setYhdistaOrganisaatioModaaliAuki(false);
+                            }}
+                            peruutaCallback={() => {
+                                setYhdistaOrganisaatioModaaliAuki(false);
+                            }}
+                        />
+                    }
+                    suljeCallback={() => setYhdistaOrganisaatioModaaliAuki(false)}
+                />
+            )}
         </PohjaSivu>
     );
 };

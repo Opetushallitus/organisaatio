@@ -28,24 +28,55 @@ Cypress.Commands.add('inputByName', (name, value) => {
 });
 
 Cypress.Commands.add('clickButton', (contains) => {
-    return cy.get('button').contains(contains).click();
+    return cy
+        .get('button')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${contains} button clicked`);
+        });
 });
 
 Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
-    return cy.get('div').contains(contains).click();
+    return cy
+        .get('div')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${contains} radio or checkbox clicked`);
+        });
 });
 
 Cypress.Commands.add('clickAccordion', (contains) => {
-    return cy.get('span').contains(contains).click();
+    return cy
+        .get('span')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${contains} accordion clicked`);
+        });
 });
 
-Cypress.Commands.add('selectFromList', (list, conatins) => {
-    cy.get('label').contains(list).parent().find('svg').last().click();
-    return cy.get('div').contains(conatins).click();
+Cypress.Commands.add('selectFromList', (list, contains, input) => {
+    if (input) {
+        cy.get('label').contains(list).parent().find('input').type(input);
+    } else cy.get('label').contains(list).parent().find('svg').last().scrollIntoView().click();
+    return cy
+        .get('div')
+        .contains(contains)
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${list}, ${contains} select clicked`);
+        });
 });
 
 Cypress.Commands.add('enterDate', (label, date) => {
     cy.get('label').contains(label).parent().find('input').type(date);
+    cy.get('label').contains(label).click();
 });
 
 Cypress.Commands.add('enterYhteystieto', (values) => {
@@ -86,7 +117,7 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
 
 Cypress.Commands.add('clickSaveButton', () => {
     cy.intercept('POST', '/organisaatio/organisaatio/v4').as('saveOrg');
-    cy.get('button').contains('TALLENNA').click();
+    cy.get('button').contains('TALLENNA').scrollIntoView().click();
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });
 

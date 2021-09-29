@@ -2,11 +2,9 @@ import * as React from 'react';
 import { useContext } from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
-import { OrganisaatioBase, OrganisaatioSuhde } from '../../../../../types/types';
-import { useOrganisaatioHistoria } from '../../../../../api/organisaatio';
+import { OrganisaatioBase, OrganisaatioHistoria, OrganisaatioSuhde } from '../../../../../types/types';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],
@@ -55,16 +53,8 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
     };
 };
 
-export default function OrganisaatioHistoriaLomake(props: { oid: string }) {
+export default function OrganisaatioHistoriaLomake({ historia }: { historia: OrganisaatioHistoria }) {
     const { i18n } = useContext(LanguageContext);
-    const { historia, historiaLoading, historiaError } = useOrganisaatioHistoria(props.oid);
-
-    const loading = () => {
-        return !historia || historiaLoading || historiaError;
-    };
-    if (loading()) {
-        return <Spin />;
-    }
 
     const columnMapper = (column: string[]) => ({ Header: i18n.translate(column[0]), accessor: column[1] });
 
