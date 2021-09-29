@@ -747,11 +747,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) {
-        Organisaatio orgEntity = this.organisaatioRepository.customFindByOid(oid);
-
-        if (orgEntity == null) {
-            throw new OrganisaatioNotFoundException(oid);
-        }
+        Organisaatio orgEntity = getOrganisaatio(oid);
 
         // Luodaan tallennettava entity objekti
         OrganisaatioNimi nimiEntity = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
@@ -781,11 +777,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date alkuPvm, OrganisaatioNimiDTOV2 nimidto) {
-        Organisaatio orgEntity = this.organisaatioRepository.customFindByOid(oid);
-
-        if (orgEntity == null) {
-            throw new OrganisaatioNotFoundException(oid);
-        }
+        Organisaatio orgEntity = getOrganisaatio(oid);
 
         LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
 
@@ -823,11 +815,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public void deleteOrganisaatioNimi(String oid, Date alkuPvm) {
-        Organisaatio orgEntity = this.organisaatioRepository.customFindByOid(oid);
-
-        if (orgEntity == null) {
-            throw new OrganisaatioNotFoundException(oid);
-        }
+        Organisaatio orgEntity = getOrganisaatio(oid);
 
         // Haetaan poistettava entity objecti
         OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
@@ -990,14 +978,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Override
     public void mergeOrganisaatio(String organisaatio, String newParent, Optional<Date> inputDate, boolean merge) {
         Date date = inputDate.orElseGet(()->new Date());
-        Organisaatio child = this.organisaatioRepository.customFindByOid(organisaatio);
-        Organisaatio parent = this.organisaatioRepository.customFindByOid(newParent);
-        if (organisaatio == null) {
-            throw new OrganisaatioNotFoundException(organisaatio);
-        }
-        if (newParent == null) {
-            throw new OrganisaatioNotFoundException(newParent);
-        }
+        Organisaatio child = getOrganisaatio(organisaatio);
+        Organisaatio parent = getOrganisaatio(newParent);
         if (merge)
             mergeOrganisaatio(child, parent, date);
         else
@@ -1299,5 +1281,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             LOG.error("Could not set updater for organisation!", t);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
         }
+    }
+
+
+    Organisaatio getOrganisaatio(String organisaatio) {
+        Organisaatio child = this.organisaatioRepository.customFindByOid(organisaatio);
+        if (organisaatio == null) {
+            throw new OrganisaatioNotFoundException(organisaatio);
+        }
+        return child;
     }
 }
