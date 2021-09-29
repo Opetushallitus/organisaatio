@@ -141,8 +141,8 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                                 control={formControl}
                                 name={'tyypit'}
                                 defaultValue={[...organisaatio.tyypit]}
-                                render={({ field }) => (
-                                    <CheckboxGroup {...field} options={organisaatioTyypitKoodisto.selectOptions()} />
+                                render={({ field: { ref, ...rest } }) => (
+                                    <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
                                 )}
                             />
                         )}
@@ -159,7 +159,9 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         control={formControl}
                         name={'alkuPvm'}
                         defaultValue={organisaatio.alkuPvm}
-                        render={({ field }) => <DatePickerInput {...field} error={!!validationErrors['alkuPvm']} />}
+                        render={({ field: { ref, ...rest } }) => (
+                            <DatePickerInput {...rest} error={!!validationErrors['alkuPvm']} />
+                        )}
                     />
                 </div>
                 <Button className={styles.Nappi} variant="outlined" onClick={() => setLakkautusModaaliAuki(true)}>
@@ -184,6 +186,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                             <Select
                                 id="PERUSTIETO_PAASIJAINTIKUNTA_SELECT"
                                 {...field}
+                                ref={undefined}
                                 error={!!validationErrors['kotipaikkaUri']}
                                 options={kunnatOptions}
                             />
@@ -211,10 +214,10 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         defaultValue={(organisaatio.muutKotipaikatUris || []).map((muuKotipaikkaUri) =>
                             kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)
                         )}
-                        render={({ field }) => (
+                        render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MUUT_KUNNAT_SELECT"
-                                {...field}
+                                {...rest}
                                 error={!!validationErrors['muutKotipaikatUris']}
                                 isMulti
                                 options={kunnatOptions}
@@ -235,10 +238,10 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         control={formControl}
                         name={'maaUri'}
                         defaultValue={maatJaValtiotKoodisto.uri2SelectOption(organisaatio.maaUri)}
-                        render={({ field }) => (
+                        render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MAA_SELECT"
-                                {...field}
+                                {...rest}
                                 error={!!validationErrors['maaUri']}
                                 options={maatJaValtiotKoodisto.selectOptions()}
                             />
@@ -271,11 +274,11 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         defaultValue={organisaatio.kieletUris.map((kieliUri) =>
                             oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
                         )}
-                        render={({ field }) => (
+                        render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti
                                 id="PERUSTIETO_OPETUSKIELI_SELECT"
-                                {...field}
+                                {...rest}
                                 error={!!validationErrors['kieletUris']}
                                 options={oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                             />

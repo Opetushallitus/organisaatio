@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormEvent, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './LomakeSivu.module.css';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
@@ -63,17 +63,14 @@ export const PerustietoLomakeSchema = Joi.object({
 });
 
 export const yhteystietoLomakeSchema = Joi.object({
-    nimiEn: Joi.string(),
-    nimiFi: Joi.string(),
-    nimiSv: Joi.string(),
-    ytunnus: Joi.string(),
-    alkuPvm: Joi.string().required(),
-    tyypit: Joi.array().min(1).required(),
-    kotipaikkaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
-    muutKotipaikatUris: Joi.array(),
-    maaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
-    kieletUris: Joi.array().min(1).required(),
-});
+        postiOsoite: Joi.string().required(),
+        postiOsoitePostiNro: Joi.string().required(),
+        kayntiOsoite: Joi.string().required(),
+        kayntiOsoitePostiNro: Joi.string().required(),
+        puhelinnumero: Joi.string().required(),
+        email: Joi.string().required(),
+        www: Joi.string().required(),
+    });
 
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
@@ -241,7 +238,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
-    } = useForm({ resolver: joiResolver(PerustietoLomakeSchema) });
+    } = useForm({ resolver: joiResolver(yhteystietoLomakeSchema) });
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
