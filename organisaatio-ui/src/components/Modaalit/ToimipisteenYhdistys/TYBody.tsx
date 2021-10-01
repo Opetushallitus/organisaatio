@@ -34,7 +34,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
         <div className={styles.BodyKehys}>
             <div className={styles.BodyRivi}>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATION_YHDISTYS_TOINEN_ORGANISAATIO')}</label>
+                    <label>{i18n.translate('ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO')}</label>
                     <Select
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
@@ -47,7 +47,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                     />
                 </div>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATION_YHDISTYS_PVM')}</label>
+                    <label>{i18n.translate('ORGANISAATIO_YHDISTYS_PVM')}</label>
                     <DatePickerInput
                         value={yhdistaOrganisaatio.date}
                         onChange={(e) => {
