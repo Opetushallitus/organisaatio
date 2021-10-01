@@ -26,11 +26,11 @@ describe('Organisaatioliitos', () => {
                 cy.visit(`/lomake/${child.body.organisaatio.oid}`);
                 cy.wait(['@getCurrent'], { timeout: 10000 });
                 cy.intercept('GET', '/organisaatio/organisaatio/v4/hae*').as('getParents');
-                cy.clickButton('LOMAKE_YHDISTA_ORGANISAATIO_FI');
+                cy.clickButton('LOMAKE_SIIRRA_ORGANISAATIO');
                 cy.wait(['@getParents'], { timeout: 10000 });
 
                 cy.selectFromList(
-                    'TOIMIPISTEEN_YHDISTYS_TOINEN_ORGANISAATIO',
+                    'ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO',
                     parentOrganisaatio3.body.organisaatio.oid,
                     'PARENT'
                 );
@@ -41,6 +41,7 @@ describe('Organisaatioliitos', () => {
                 cy.intercept('GET', `/organisaatio/organisaatio/v4/${child.body.organisaatio.oid}/historia`).as(
                     'historia'
                 );
+                cy.clickButton('BUTTON_VAHVISTA');
                 cy.clickButton('BUTTON_VAHVISTA');
 
                 cy.wait(['@merge'], { timeout: 10000 });
