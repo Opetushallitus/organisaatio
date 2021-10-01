@@ -1,4 +1,4 @@
-import Axios, { AxiosError } from 'axios';
+import Axios, { AxiosError, AxiosResponse } from 'axios';
 import { danger, warning } from '../components/Notification/Notification';
 type OrganisaatioVirhe = {
     errorKey: string;
@@ -21,11 +21,12 @@ function handleError(error) {
         console.error(error);
     }
 }
-async function errorHandlingWrapper(workhorse) {
+async function errorHandlingWrapper<A = never, B = AxiosResponse<A>>(workhorse: () => Promise<B>): Promise<B> {
     try {
         return await workhorse();
     } catch (error) {
         handleError(error);
+        return new Promise(() => {});
     }
 }
 function useErrorHandlingWrapper(workhorse) {

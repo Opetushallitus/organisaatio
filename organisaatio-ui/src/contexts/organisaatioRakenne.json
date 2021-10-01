@@ -1,0 +1,96 @@
+[
+  {
+    "description": "Opetushallitus",
+    "type": "opetushallitus",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_01",
+      "organisaatiotyyppi_05",
+      "organisaatiotyyppi_06",
+      "organisaatiotyyppi_07",
+      "organisaatiotyyppi_09"
+    ]
+  },
+  {
+    "description": "Koulutustoimija",
+    "type": "organisaatiotyyppi_01",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_02",
+      "organisaatiotyyppi_04"
+    ]
+  },
+  {
+    "description": "Oppilaitos",
+    "type": "organisaatiotyyppi_02",
+    "moveTargetType": "organisaatiotyyppi_01",
+    "mergeTargetType": "organisaatiotyyppi_02",
+    "childTypes": [
+      "organisaatiotyyppi_03"
+    ]
+  },
+  {
+    "description": "Toimipiste",
+    "type": "organisaatiotyyppi_03",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_03"
+    ]
+  },
+  {
+    "description": "Oppisopimustoimipiste",
+    "type": "organisaatiotyyppi_04",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+    ]
+  },
+  {
+    "description": "Muu organisaatio",
+    "type": "organisaatiotyyppi_05",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_03",
+      "organisaatiotyyppi_05"
+    ]
+  },
+  {
+    "description": "Tyoelamajarjesto",
+    "type": "organisaatiotyyppi_06",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_06"
+    ]
+  },
+  {
+    "description": "Varhaiskasvatuksen jarjestaja",
+    "type": "organisaatiotyyppi_07",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_08"
+    ]
+  },
+  {
+    "description": "Varhaiskasvatuksen toimipaikka",
+    "type": "organisaatiotyyppi_08",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+      "organisaatiotyyppi_08"
+    ]
+  },
+  {
+    "description": "Kunta",
+    "type": "organisaatiotyyppi_09",
+    "moveTargetType": null,
+    "mergeTargetType": null,
+    "childTypes": [
+    ]
+  }
+]

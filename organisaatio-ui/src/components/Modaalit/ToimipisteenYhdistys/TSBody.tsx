@@ -3,23 +3,23 @@ import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenYhdistys.module.css';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { Option, Organisaatio, ResolvedRakenne, YhdistaOrganisaatioon } from '../../../types/types';
+import { Option, Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { warning } from '../../Notification/Notification';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
 
-type TYProps = {
-    yhdistaOrganisaatio: YhdistaOrganisaatioon;
-    handleChange: (props: YhdistaOrganisaatioon) => void;
+type TSProps = {
+    siirraOrganisaatio: SiirraOrganisaatioon;
+    handleChange: (props: SiirraOrganisaatioon) => void;
     organisaatio: Organisaatio;
     organisaatioRakenne: ResolvedRakenne;
 };
 
-export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio, organisaatioRakenne }: TYProps) {
+export default function TSBody({ siirraOrganisaatio, handleChange, organisaatio, organisaatioRakenne }: TSProps) {
     const { i18n, language } = useContext(LanguageContext);
     const targetType =
-        organisaatioRakenne && organisaatioRakenne.mergeTargetType ? organisaatioRakenne.mergeTargetType[0] : undefined;
+        organisaatioRakenne && organisaatioRakenne.moveTargetType ? organisaatioRakenne.moveTargetType[0] : undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
         organisaatioTyyppi: targetType,
     });
@@ -28,13 +28,13 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
         return <Spin />;
     }
     if (!organisaatioRakenne || !organisaatioRakenne.mergeTargetType) warning({ message: 'PARENT_TYPE_NOT_AVAILABLE' });
-    const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent);
+    const newParent = organisaatiot.find((o) => o.oid === siirraOrganisaatio.newParent);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyRivi}>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATION_YHDISTYS_TOINEN_ORGANISAATIO')}</label>
+                    <label>{i18n.translate('ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO')}</label>
                     <Select
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
@@ -42,16 +42,16 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                             .filter((o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value))
                             .sort((a, b) => a.label.localeCompare(b.label))}
                         onChange={(option) => {
-                            if (option) handleChange({ ...yhdistaOrganisaatio, newParent: (option as Option).value });
+                            if (option) handleChange({ ...siirraOrganisaatio, newParent: (option as Option).value });
                         }}
                     />
                 </div>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATION_YHDISTYS_PVM')}</label>
+                    <label>{i18n.translate('ORGANISAATIO_SIIRTO_PVM')}</label>
                     <DatePickerInput
-                        value={yhdistaOrganisaatio.date}
+                        value={siirraOrganisaatio.date}
                         onChange={(e) => {
-                            handleChange(yhdistaOrganisaatio);
+                            handleChange(siirraOrganisaatio);
                         }}
                     />
                 </div>

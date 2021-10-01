@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import styles from './UusiToimijaLomake.module.css';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
@@ -8,14 +8,15 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 
-import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Yhteystiedot } from '../../../../types/types';
+import { LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
+import { NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import useKoodisto from '../../../../api/koodisto';
-import { createOrganisaatio } from '../../../../api/organisaatio';
+import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
+import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
 
 const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
     return {
@@ -83,6 +84,7 @@ const organisaatioReducer = function (
 };
 
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
+    const history = useHistory();
     const { i18n } = useContext(LanguageContext);
     const {
         data: organisaatioTyypit,
@@ -92,8 +94,14 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const { data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError } = useKoodisto(
         'MAATJAVALTIOT1'
     );
+    const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const { parentOid } = queryString.parse(props.location.search);
-
+    useEffect(() => {
+        (async function () {
+            const parent = await readOrganisaatio((parentOid || ROOT_OID) as string);
+            setParentOrganisaatio(Object.assign({}, parent.organisaatio));
+        })();
+    }, [parentOid]);
     const {
         data: oppilaitoksenOpetuskielet,
         loading: oppilaitoksenOpetuskieletLoading,
@@ -114,7 +122,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
 
     function handleCancel() {
         setOrganisaatio({ type: 'reset' });
-        props.history.push('/');
+        history.goBack();
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState(0);
@@ -122,7 +130,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const handleOnChange = ({ name, value }: { name: string; value: any }) => {
         setOrganisaatio({ type: 'edit', payload: { [name]: value } as NewOrganisaatio });
     };
-
+    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypit, parentOrganisaatio);
     function isLoading() {
         return (
             organisaatioTyypitLoading ||
@@ -134,13 +142,14 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         );
     }
 
-    if (isLoading()) {
+    if (!resolvedTyypit || isLoading()) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
             </div>
         );
     }
+
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -149,7 +158,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 key={'perustietolomake'}
                 handleJatka={() => setLomakeAvoinna(1)}
                 handleOnChange={handleOnChange}
-                organisaatioTyypit={organisaatioTyypit}
+                organisaatioTyypit={resolvedTyypit}
                 organisaatio={organisaatio}
                 maatJaValtiot={maatJaValtiot}
                 opetuskielet={oppilaitoksenOpetuskielet}
