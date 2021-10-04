@@ -12,19 +12,19 @@ jobs:
   include:
     - language: java
       stage: "Build"
-      name: "Production build"
+      name: "Production"
       jdk:
         - openjdk11
       cache:
         directories:
           - $HOME/.gradle
-          - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
       script:
+        - ls -l organisaatio-service/
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
     - language: java
@@ -37,7 +37,6 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
-          - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
       install:
         - export NODE_VERSION=11.1
@@ -48,13 +47,14 @@ jobs:
       before_script:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
+        - ls -l organisaatio-service/
         - cd mock-api && npm run mock-api &
         - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 ./organisaatio-service/build/libs/organisaatio-service.jar &
         - cd organisaatio-ui && npm run cypress:ci
         - kill $(jobs -p) || true
 
     - stage: "Deploy"
-      name: "deploy to artifactory"
+      name: "to artifactory"
       language: java
       jdk:
         - openjdk11
@@ -72,7 +72,7 @@ jobs:
         ##  skip_cleanup: true
         ##  on:
         ##    branch: master TODO deploy gradlella?
-    - name: "push to ecr"
+    - name: "to ecr"
       language: java
       jdk:
         - openjdk11
@@ -86,6 +86,7 @@ jobs:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - export ARTIFACT_NAME="organisaatio2"
       script:
+        - ls -l organisaatio-service/
         - source ci-tools/common/setup-tools.sh
       before_deploy:
         - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
@@ -99,8 +100,8 @@ jobs:
           script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
           on:
             all_branches: true
-    - stage: "Clean up cache"
-      name: "Clean up cache"
+    - stage: "Clean up"
+      name: "cache"
       language: java
       jdk:
         - openjdk11
@@ -111,7 +112,6 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
-          - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       before_cache:
