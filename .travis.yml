@@ -18,17 +18,16 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/
+          - $HOME/.cache/Cypress
+          - $TRAVIS_BUILD_DIR/mock-api
+          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui
+          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
       script:
-        - pwd
-        - ls -l
-        - echo $HOME
-        - echo $TRAVIS_BUILD_DIR
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-
     - language: java
       stage: "Test"
       name: "Cypress"
@@ -39,13 +38,17 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/
+          - $HOME/.cache/Cypress
+          - $TRAVIS_BUILD_DIR/mock-api
+          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui
+          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
+        - pwd
+        - ls -l
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
         - nvm use $NODE_VERSION
-        - cd mock-api && npm install
-        - cd ../organisaatio-ui && npm install && cd ..
       before_script:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
@@ -55,15 +58,8 @@ jobs:
         - cd organisaatio-ui && npm run cypress:ci
         - kill $(jobs -p) || true
 
-
     - stage: "Deploy"
       name: "deploy to artifactory"
-      services:
-        - docker
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/
       deploy:
         - provider: script
           script: echo "should deploy $ARTIFACT_NAME"
@@ -75,15 +71,20 @@ jobs:
         ##  on:
         ##    branch: master TODO deploy gradlella?
     - name: "push to ecr"
+      services:
+        - docker
       cache:
         directories:
           - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/
+          - $HOME/.cache/Cypress
+          - $TRAVIS_BUILD_DIR/mock-api
+          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui
+          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - source ci-tools/common/setup-tools.sh
         - export ARTIFACT_NAME="organisaatio2"
-        - export TZ=Europe/Helsinki # TODO: fix tests
       before_deploy:
         - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
         - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
