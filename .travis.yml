@@ -20,7 +20,7 @@ jobs:
         - docker
       cache:
         directories:
-          - $HOME/
+          - $HOME/.gradle
       script:
         - pwd
         - ls -l
@@ -38,7 +38,7 @@ jobs:
         - postgresql
       cache:
         directories:
-          - $HOME/
+          - $HOME/.gradle
       install:
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
@@ -59,7 +59,7 @@ jobs:
       name: "upload-image"
       cache:
         directories:
-          - $HOME/
+          - $HOME/.gradle
       deploy:
         - provider: script
           script: echo "should deploy $ARTIFACT_NAME"
@@ -73,7 +73,7 @@ jobs:
     - name: "upload-image"
       cache:
         directories:
-          - $HOME/
+          - $HOME/.gradle
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - source ci-tools/common/setup-tools.sh
