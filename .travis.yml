@@ -54,7 +54,6 @@ jobs:
         - nvm use $NODE_VERSION
         - cd mock-api && npm install
         - cd ../organisaatio-ui && npm install && cd ..
-        - ./gradlew build -x test
       before_script:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
