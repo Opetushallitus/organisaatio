@@ -7,12 +7,14 @@ node {
 	version = '14.16.1'
 	download = true
 }
+/*
 task audit(type: NpmTask, dependsOn: npmInstall) {
 	inputs.files(file('package.json'))
 	outputs.dir("${buildDir}/node_modules/")
 	args = ['run', 'audit']
 }
-task lint(type: NpmTask, dependsOn: audit) {
+*/
+task lint(type: NpmTask, dependsOn: npmInstall) {
 	inputs.files(files('src'))
 	outputs.dir('src')
 	args = ['run', 'lint']
