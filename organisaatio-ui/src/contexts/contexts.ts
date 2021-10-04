@@ -1,8 +1,9 @@
 import * as React from 'react';
+import organisaatioRakenne from './organisaatioRakenne.json';
 import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi } from '../types/types';
 
 export const ROOT_OID = '1.2.246.562.10.00000000001';
-
+export const rakenne = organisaatioRakenne;
 export interface I18n {
     translate: (key: string) => string;
     translateWithLang: (key: string, language: Language) => string;

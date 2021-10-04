@@ -75,6 +75,10 @@
     flex-direction: column;
 }
 
+.ValiOtsikko > .Passivoitu {
+    text-decoration: line-through;
+}
+
 .ValiOtsikko > h3 {
     color: #666666
 }
@@ -86,11 +90,12 @@
     align-items: center;
 }
 
-.ValiNappulat > button:first-child {
-    margin-right: 1rem;
+.ValiNappulat > button:last-child {
+    margin-right: 0rem;
 }
 
 .ValiNappulat > button {
+    margin-right: 1rem;
     height: 3rem;
 }
 

@@ -93,7 +93,8 @@ export type Organisaatio = OrganisaatioBase & {
     nimet: Nimi[];
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
-    tyypit?: KoodiUri[];
+    tyypit: KoodiUri[];
+    status: string;
     kotipaikkaUri: KoodiUri;
     muutKotipaikatUris?: KoodiUri[];
     maaUri?: KoodiUri;
@@ -161,7 +162,11 @@ export type YhdistaOrganisaatioon = {
     date: Date;
     merge: boolean;
 };
-
+export type SiirraOrganisaatioon = {
+    newParent?: string;
+    date: Date;
+    merge: boolean;
+};
 export type OrganisaatioHistoria = {
     childSuhteet: OrganisaatioSuhde[];
     parentSuhteet: OrganisaatioSuhde[];
@@ -203,3 +208,16 @@ export interface Option {
     label: string;
     value: string;
 }
+export type ResolvedRakenne = {
+    type: string[];
+    moveTargetType: string[];
+    mergeTargetType: string[];
+    childTypes: string[];
+};
+export type Rakenne = {
+    description: string;
+    type: string;
+    moveTargetType: string | null;
+    mergeTargetType: string | null;
+    childTypes: string[];
+};

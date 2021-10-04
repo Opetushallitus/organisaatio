@@ -1,9 +1,9 @@
 import { organisaatio } from '../support/data';
 
-describe('Organisaatioyhdistys', () => {
+describe('Organisaatiosiirto', () => {
     beforeEach(() => {});
 
-    it('Can merge organisaatio', () => {
+    it('Can move organisaatio', () => {
         // persist parents
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
         cy.persistOrganisaatio(organisaatio('PARENT2', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio2');
@@ -20,53 +20,38 @@ describe('Organisaatioyhdistys', () => {
                 'child'
             );
         });
-        cy.get('@parentOrganisaatio2').then((parentOrganisaatio) => {
-            cy.persistOrganisaatio(
-                organisaatio('CHILD2', {
-                    parentOid: parentOrganisaatio.body.organisaatio.oid,
-                    tyypit: [`organisaatiotyyppi_02`],
-                }),
-                'child2'
-            );
-        });
-        cy.get('@parentOrganisaatio3').then((parentOrganisaatio) => {
-            cy.persistOrganisaatio(
-                organisaatio('CHILD3', {
-                    parentOid: parentOrganisaatio.body.organisaatio.oid,
-                    tyypit: [`organisaatiotyyppi_02`],
-                }),
-                'child3'
-            );
-        });
 
-        cy.get('@child2').then((child2) => {
-            cy.get('@child3').then((child3) => {
+        cy.get('@child').then((child) => {
+            cy.get('@parentOrganisaatio3').then((parentOrganisaatio3) => {
                 cy.intercept('GET', '/organisaatio/organisaatio/v4/*').as('getCurrent');
-                cy.visit(`/lomake/${child2.body.organisaatio.oid}`);
+                cy.visit(`/lomake/${child.body.organisaatio.oid}`);
                 cy.wait(['@getCurrent'], { timeout: 10000 });
-
                 cy.intercept('GET', '/organisaatio/organisaatio/v4/hae*').as('getParents');
-                cy.clickButton('LOMAKE_YHDISTA_ORGANISAATIO');
+                cy.clickButton('LOMAKE_SIIRRA_ORGANISAATIO');
                 cy.wait(['@getParents'], { timeout: 10000 });
 
-                cy.selectFromList('ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO', child3.body.organisaatio.oid, 'CHILD');
-
+                cy.selectFromList(
+                    'ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO',
+                    parentOrganisaatio3.body.organisaatio.oid,
+                    'PARENT'
+                );
                 cy.intercept(
                     'PUT',
-                    `/organisaatio/organisaatio/v4/${child2.body.organisaatio.oid}/organisaatiosuhde/*`
+                    `/organisaatio/organisaatio/v4/${child.body.organisaatio.oid}/organisaatiosuhde/*`
                 ).as('merge');
-                cy.intercept('GET', `/organisaatio/organisaatio/v4/${child2.body.organisaatio.oid}/historia`).as(
+                cy.intercept('GET', `/organisaatio/organisaatio/v4/${child.body.organisaatio.oid}/historia`).as(
                     'historia'
                 );
                 cy.clickButton('BUTTON_VAHVISTA');
-                cy.contains('TOIMIPISTEEN_YHDISTYS_VAHVISTUS');
+                cy.contains('TOIMIPISTEEN_SIIRTO_VAHVISTUS');
                 cy.clickButton('BUTTON_VAHVISTA');
+
                 cy.wait(['@merge'], { timeout: 10000 });
+                cy.contains('CHILD Suominimi');
                 cy.wait(['@historia'], { timeout: 10000 });
-                cy.contains('CHILD2 Suominimi');
                 cy.clickAccordion('RAKENNE');
-                cy.get('h2').contains('RAKENNE_LIITOKSET_OTSIKKO').parent().contains('CHILD3 Suominimi');
-                cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT2 Suominimi');
+                cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT1 Suominimi');
+                cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT3 Suominimi');
             });
         });
     });

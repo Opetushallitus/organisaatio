@@ -8,12 +8,13 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import homeIcon from '@iconify/icons-fa-solid/home';
 
-import { LanguageContext, ROOT_OID } from '../../../contexts/contexts';
+import { LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
 import {
     KoodiUri,
     Nimi,
     Organisaatio,
     OrganisaatioNimiJaOid,
+    SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
     Yhteystiedot,
     YtjOrganisaatio,
@@ -31,10 +32,9 @@ import {
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
-import PohjaModaali from '../../Modaalit/PohjaModaali/PohjaModaali';
-import TYFooter from '../../Modaalit/ToimipisteenYhdistys/TYFooter';
-import TYBody from '../../Modaalit/ToimipisteenYhdistys/TYBody';
-import TYHeader from '../../Modaalit/ToimipisteenYhdistys/TYHeader';
+import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
+import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -44,12 +44,19 @@ type LomakeSivuProps = {
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
+    const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
     const initialYhdista = {
+        merge: true,
+        date: new Date(),
+        newParent: undefined,
+    };
+    const initialSiirra = {
         merge: false,
         date: new Date(),
         newParent: undefined,
     };
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
+    const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<YhdistaOrganisaatioon>(initialSiirra);
     const {
         data: organisaatioTyypit,
         loading: organisaatioTyypitLoading,
@@ -66,13 +73,20 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
 
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
+    const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     useEffect(() => {
         (async function () {
-            const a = await readOrganisaatio(params.oid);
-            if (a) {
-                setOrganisaatioNimiPolku(a.polku);
-                setOrganisaatio(Object.assign({}, a.organisaatio));
+            const o = await readOrganisaatio(params.oid);
+            if (o) {
+                setOrganisaatioNimiPolku(o.polku);
+                setOrganisaatio(Object.assign({}, o.organisaatio));
+                if (o.organisaatio.oid === ROOT_OID) {
+                    setParentOrganisaatio(Object.assign({}, o.organisaatio));
+                } else {
+                    const parent = await readOrganisaatio(o.organisaatio.parentOid);
+                    setParentOrganisaatio(Object.assign({}, parent.organisaatio));
+                }
             }
         })();
     }, [params.oid]);
@@ -80,21 +94,43 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
     };
-    async function handleYhdistaOrganisaatio(props: YhdistaOrganisaatioon) {
+
+    async function handleOrganisationMerge(props: SiirraOrganisaatioon | YhdistaOrganisaatioon) {
         if (organisaatio && organisaatio.oid) {
-            await mergeOrganisaatio({
+            const mergeOrganisaatioResult = await mergeOrganisaatio({
                 oid: organisaatio.oid,
                 ...props,
             });
-            setYhdistaOrganisaatio(initialYhdista);
-            const a = await readOrganisaatio(params.oid);
-            if (a) {
-                setOrganisaatioNimiPolku(a.polku);
-                setOrganisaatio(Object.assign({}, a.organisaatio));
-                executeHistoria();
+            if (mergeOrganisaatioResult) {
+                const organisaatioAfterMerge = await readOrganisaatio(params.oid);
+                if (organisaatioAfterMerge) {
+                    setOrganisaatioNimiPolku(organisaatioAfterMerge.polku);
+                    setOrganisaatio(Object.assign({}, organisaatioAfterMerge.organisaatio));
+                    executeHistoria();
+                }
             }
         }
     }
+
+    async function handleSiirraOrganisaatio(props: SiirraOrganisaatioon) {
+        setSiirraOrganisaatioModaaliAuki(false);
+        setSiirraOrganisaatio(initialSiirra);
+        await handleOrganisationMerge(props);
+    }
+    async function cancelSiirraOrganisaatio() {
+        setSiirraOrganisaatioModaaliAuki(false);
+        setSiirraOrganisaatio(initialSiirra);
+    }
+    async function handleYhdistaOrganisaatio(props: YhdistaOrganisaatioon) {
+        setYhdistaOrganisaatioModaaliAuki(false);
+        setYhdistaOrganisaatio(initialYhdista);
+        await handleOrganisationMerge(props);
+    }
+    async function cancelYhdistaOrganisaatio() {
+        setYhdistaOrganisaatioModaaliAuki(false);
+        setYhdistaOrganisaatio(initialYhdista);
+    }
+
     async function putOrganisaatio() {
         if (organisaatio) {
             const data = await updateOrganisaatio(organisaatio);
@@ -159,7 +195,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             return updatedOrg;
         });
     };
-
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
+    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypit, parentOrganisaatio);
     function isLoading() {
         return (
             historiaLoading ||
@@ -175,7 +212,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
     }
 
-    if (!organisaatio || isLoading()) {
+    if (!organisaatioRakenne || !resolvedTyypit || !organisaatio || isLoading()) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
@@ -191,7 +228,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 key={'perustietolomake'}
                 setYtjDataFetched={setYtjDataFetched}
                 handleOnChange={handleOnChange}
-                organisaatioTyypit={organisaatioTyypit}
+                organisaatioTyypit={resolvedTyypit}
                 organisaatio={organisaatio}
                 language={language}
                 maatJaValtiot={maatJaValtiot}
@@ -219,7 +256,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
         return { lomakkeet: lomakkeet, otsikot: otsikot };
     };
-
+    const thisTyyppi = organisaatioTyypit.find((a) => a.uri === organisaatio.tyypit[0]);
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
@@ -237,8 +274,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </div>
             <div className={styles.ValiContainer}>
                 <div className={styles.ValiOtsikko}>
-                    <h3>{organisaatio.tyypit ? organisaatio.tyypit[0] : i18n.translate('LABEL_NOT_AVAILABLE')}</h3>
-                    <h1>
+                    <h3>
+                        {organisaatio.tyypit
+                            ? `${thisTyyppi ? thisTyyppi.nimi[language] : ''} (${organisaatio.tyypit[0]})`
+                            : i18n.translate('LABEL_NOT_AVAILABLE')}
+                    </h3>
+                    <h1 className={organisaatio.status === 'AKTIIVINEN' ? '' : styles.Passivoitu}>
                         {organisaatio.nimi[language] ||
                             organisaatio.nimi['fi'] ||
                             organisaatio.nimi['sv'] ||
@@ -246,9 +287,26 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </h1>
                 </div>
                 <div className={styles.ValiNappulat}>
-                    <Button onClick={() => setYhdistaOrganisaatioModaaliAuki(true)}>
-                        {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
-                    </Button>
+                    {organisaatioRakenne.moveTargetType.length > 0 && (
+                        <Button
+                            onClick={() => {
+                                setSiirraOrganisaatio({ ...siirraOrganisaatio });
+                                setSiirraOrganisaatioModaaliAuki(true);
+                            }}
+                        >
+                            {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
+                        </Button>
+                    )}
+                    {organisaatioRakenne.mergeTargetType.length > 0 && (
+                        <Button
+                            onClick={() => {
+                                setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
+                                setYhdistaOrganisaatioModaaliAuki(true);
+                            }}
+                        >
+                            {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
+                        </Button>
+                    )}
                     <Button onClick={handleLisaaUusiToimija}>{i18n.translate('LOMAKE_LISAA_UUSI_TOIMIJA')}</Button>
                 </div>
             </div>
@@ -258,10 +316,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </div>
             <div className={styles.AlaBanneri}>
                 <div className={styles.VersioContainer}>
-                    <Button variant="outlined" className={styles.Versionappula}>
-                        <span className="material-icons">timeline</span>
-                        <span className={styles.VersionappulanTeksti}>{i18n.translate('BUTTON_VERSIOHISTORIA')}</span>
-                    </Button>
                     <div className={styles.MuokattuKolumni}>
                         <span>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
                         <span>01.01.2020 16:39 ngo Schimpff</span>
@@ -277,27 +331,33 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 </div>
             </div>
             {yhdistaOrganisaatioModaaliAuki && (
-                <PohjaModaali
-                    header={<TYHeader />}
-                    body={
-                        <TYBody
-                            organisaatio={organisaatio}
-                            yhdistaOrganisaatio={yhdistaOrganisaatio}
-                            handleChange={setYhdistaOrganisaatio}
-                        />
-                    }
-                    footer={
-                        <TYFooter
-                            tallennaCallback={() => {
-                                handleYhdistaOrganisaatio(yhdistaOrganisaatio);
-                                setYhdistaOrganisaatioModaaliAuki(false);
-                            }}
-                            peruutaCallback={() => {
-                                setYhdistaOrganisaatioModaaliAuki(false);
-                            }}
-                        />
-                    }
-                    suljeCallback={() => setYhdistaOrganisaatioModaaliAuki(false)}
+                <YhdistaOrganisaatio
+                    yhdistaOrganisaatio={yhdistaOrganisaatio}
+                    organisaatio={organisaatio}
+                    handleChange={setYhdistaOrganisaatio}
+                    organisaatioRakenne={organisaatioRakenne}
+                    tallennaCallback={() => {
+                        handleYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
+                    }}
+                    peruutaCallback={() => {
+                        cancelYhdistaOrganisaatio();
+                    }}
+                    suljeCallback={() => cancelYhdistaOrganisaatio()}
+                />
+            )}
+            {siirraOrganisaatioModaaliAuki && (
+                <SiirraOrganisaatio
+                    siirraOrganisaatio={siirraOrganisaatio}
+                    organisaatio={organisaatio}
+                    handleChange={setSiirraOrganisaatio}
+                    organisaatioRakenne={organisaatioRakenne}
+                    tallennaCallback={() => {
+                        handleSiirraOrganisaatio({ ...siirraOrganisaatio });
+                    }}
+                    peruutaCallback={() => {
+                        cancelSiirraOrganisaatio();
+                    }}
+                    suljeCallback={() => cancelSiirraOrganisaatio()}
                 />
             )}
         </PohjaSivu>
