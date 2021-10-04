@@ -13,14 +13,12 @@ jobs:
     - language: java
       stage: "Build"
       name: "Production build"
-      sudo: required
       jdk:
         - openjdk11
-      services:
-        - docker
       cache:
         directories:
           - $HOME/.gradle
+          - $TRAVIS_BUILD_DIR/
       script:
         - pwd
         - ls -l
@@ -31,7 +29,6 @@ jobs:
     - language: java
       stage: "Test"
       name: "Cypress"
-      sudo: required
       jdk:
         - openjdk11
       services:
@@ -39,6 +36,7 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
+          - $TRAVIS_BUILD_DIR/
       install:
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
@@ -57,9 +55,12 @@ jobs:
 
     - stage: "Deploy"
       name: "deploy to artifactory"
+      services:
+        - docker
       cache:
         directories:
           - $HOME/.gradle
+          - $TRAVIS_BUILD_DIR/
       deploy:
         - provider: script
           script: echo "should deploy $ARTIFACT_NAME"
@@ -74,6 +75,7 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
+          - $TRAVIS_BUILD_DIR/
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - source ci-tools/common/setup-tools.sh
@@ -91,3 +93,5 @@ jobs:
           script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
           on:
             all_branches: true
+      before_cache:
+        - rm -rf $TRAVIS_BUILD_DIR/*
