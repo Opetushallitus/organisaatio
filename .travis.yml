@@ -56,7 +56,7 @@ jobs:
 
 
     - stage: "Deploy"
-      name: "upload-image"
+      name: "deploy to artifactory"
       cache:
         directories:
           - $HOME/.gradle
@@ -70,7 +70,7 @@ jobs:
         ##  skip_cleanup: true
         ##  on:
         ##    branch: master TODO deploy gradlella?
-    - name: "upload-image"
+    - name: "push to ecr"
       cache:
         directories:
           - $HOME/.gradle
