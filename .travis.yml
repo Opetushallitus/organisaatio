@@ -19,9 +19,7 @@ jobs:
         directories:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
-          - $TRAVIS_BUILD_DIR/mock-api
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/organisaatio-ui
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
@@ -39,14 +37,14 @@ jobs:
         directories:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
-          - $TRAVIS_BUILD_DIR/mock-api
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/organisaatio-ui
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
         - nvm use $NODE_VERSION
+        - cd mock-api && npm install
+        - cd ../organisaatio-ui && npm install && cd ..
       before_script:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
@@ -75,9 +73,7 @@ jobs:
         directories:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
-          - $TRAVIS_BUILD_DIR/mock-api
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/organisaatio-ui
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
