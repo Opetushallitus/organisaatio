@@ -20,7 +20,6 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
@@ -82,7 +81,6 @@ jobs:
       cache:
         directories:
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
@@ -90,8 +88,7 @@ jobs:
       script:
         - source ci-tools/common/setup-tools.sh
       before_deploy:
-        - mv organisaatio-service/build/libs/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
-        - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
+        - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
         - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
@@ -116,7 +113,6 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       before_cache:
         - rm -rf $TRAVIS_BUILD_DIR/*
