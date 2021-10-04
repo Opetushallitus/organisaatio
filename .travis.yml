@@ -44,8 +44,8 @@ jobs:
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
         - nvm use $NODE_VERSION
-        - cd mock-api && npm install
-        - cd ../organisaatio-ui && npm install && cd ..
+        - cd mock-api && npm install && cd -
+        - cd organisaatio-ui && npm install && cd -
       before_script:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
@@ -90,7 +90,7 @@ jobs:
       script:
         - source ci-tools/common/setup-tools.sh
       before_deploy:
-        - mv organisaatio-service/target/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
+        - mv organisaatio-service/build/libs/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
         - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
         - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
 
@@ -104,12 +104,19 @@ jobs:
             all_branches: true
     - stage: "Clean up cache"
       name: "Clean up cache"
-      language: minimal
-      directories:
-        - $HOME/.gradle
-        - $HOME/.cache/Cypress
-        - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-        - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
-        - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
+      language: java
+      jdk:
+        - openjdk11
+      install:
+        - echo 'override install to skip default gradle call'
+      script:
+        - echo 'override script to skip default gradle call'
+      cache:
+        directories:
+          - $HOME/.gradle
+          - $HOME/.cache/Cypress
+          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
+          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       before_cache:
         - rm -rf $TRAVIS_BUILD_DIR/*
