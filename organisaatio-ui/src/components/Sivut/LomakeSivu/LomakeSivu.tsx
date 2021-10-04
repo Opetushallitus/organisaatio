@@ -46,7 +46,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
     const initialYhdista = {
-        merge: false,
+        merge: true,
         date: new Date(),
         newParent: undefined,
     };
@@ -94,23 +94,28 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatio ? organisaatio.oid : ROOT_OID}`);
     };
-    async function handleSiirraOrganisaatio(props: SiirraOrganisaatioon) {
-        setSiirraOrganisaatioModaaliAuki(false);
-        setSiirraOrganisaatio(initialSiirra);
+
+    async function handleOrganisationMerge(props: SiirraOrganisaatioon | YhdistaOrganisaatioon) {
         if (organisaatio && organisaatio.oid) {
-            const y = await mergeOrganisaatio({
+            const mergeOrganisaatioResult = await mergeOrganisaatio({
                 oid: organisaatio.oid,
                 ...props,
             });
-            if (y) {
-                const a = await readOrganisaatio(params.oid);
-                if (a) {
-                    setOrganisaatioNimiPolku(a.polku);
-                    setOrganisaatio(Object.assign({}, a.organisaatio));
+            if (mergeOrganisaatioResult) {
+                const organisaatioAfterMerge = await readOrganisaatio(params.oid);
+                if (organisaatioAfterMerge) {
+                    setOrganisaatioNimiPolku(organisaatioAfterMerge.polku);
+                    setOrganisaatio(Object.assign({}, organisaatioAfterMerge.organisaatio));
                     executeHistoria();
                 }
             }
         }
+    }
+
+    async function handleSiirraOrganisaatio(props: SiirraOrganisaatioon) {
+        setSiirraOrganisaatioModaaliAuki(false);
+        setSiirraOrganisaatio(initialSiirra);
+        await handleOrganisationMerge(props);
     }
     async function cancelSiirraOrganisaatio() {
         setSiirraOrganisaatioModaaliAuki(false);
@@ -119,20 +124,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     async function handleYhdistaOrganisaatio(props: YhdistaOrganisaatioon) {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
-        if (organisaatio && organisaatio.oid) {
-            const y = await mergeOrganisaatio({
-                oid: organisaatio.oid,
-                ...props,
-            });
-            if (y) {
-                const a = await readOrganisaatio(params.oid);
-                if (a) {
-                    setOrganisaatioNimiPolku(a.polku);
-                    setOrganisaatio(Object.assign({}, a.organisaatio));
-                    executeHistoria();
-                }
-            }
-        }
+        await handleOrganisationMerge(props);
     }
     async function cancelYhdistaOrganisaatio() {
         setYhdistaOrganisaatioModaaliAuki(false);
@@ -298,7 +290,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     {organisaatioRakenne.moveTargetType.length > 0 && (
                         <Button
                             onClick={() => {
-                                setSiirraOrganisaatio({ ...siirraOrganisaatio, merge: false });
+                                setSiirraOrganisaatio({ ...siirraOrganisaatio });
                                 setSiirraOrganisaatioModaaliAuki(true);
                             }}
                         >
@@ -308,7 +300,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     {organisaatioRakenne.mergeTargetType.length > 0 && (
                         <Button
                             onClick={() => {
-                                setYhdistaOrganisaatio({ ...yhdistaOrganisaatio, merge: true });
+                                setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
                                 setYhdistaOrganisaatioModaaliAuki(true);
                             }}
                         >

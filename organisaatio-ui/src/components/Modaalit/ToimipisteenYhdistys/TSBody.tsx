@@ -18,8 +18,7 @@ type TSProps = {
 
 export default function TSBody({ siirraOrganisaatio, handleChange, organisaatio, organisaatioRakenne }: TSProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const targetType =
-        organisaatioRakenne && organisaatioRakenne.moveTargetType ? organisaatioRakenne.moveTargetType[0] : undefined;
+    const targetType = organisaatioRakenne.moveTargetType[0] || undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
         organisaatioTyyppi: targetType,
     });
