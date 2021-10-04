@@ -19,6 +19,8 @@ jobs:
         directories:
           - $HOME/.gradle
           - $TRAVIS_BUILD_DIR/
+      install:
+        - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
       script:
         - pwd
         - ls -l
@@ -80,7 +82,6 @@ jobs:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - source ci-tools/common/setup-tools.sh
         - export ARTIFACT_NAME="organisaatio2"
-        - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
       before_deploy:
         - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
