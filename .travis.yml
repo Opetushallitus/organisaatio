@@ -24,6 +24,8 @@ jobs:
       script:
         - pwd
         - ls -l
+        - echo $HOME
+        - echo $TRAVIS_BUILD_DIR
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
 
     - language: java
