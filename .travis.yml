@@ -20,11 +20,13 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
       script:
+        - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
     - language: java
       stage: "Test"
@@ -38,6 +40,7 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - export NODE_VERSION=11.1
@@ -56,6 +59,7 @@ jobs:
 
     - stage: "Deploy"
       name: "deploy to artifactory"
+      language: java
       deploy:
         - provider: script
           script: echo "should deploy $ARTIFACT_NAME"
@@ -67,6 +71,7 @@ jobs:
         ##  on:
         ##    branch: master TODO deploy gradlella?
     - name: "push to ecr"
+      language: java
       services:
         - docker
       cache:
@@ -74,14 +79,17 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache/Cypress
           - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+          - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - source ci-tools/common/setup-tools.sh
         - export ARTIFACT_NAME="organisaatio2"
       before_deploy:
-        - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
+        - mv organisaatio-service/target/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
+        - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
         - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
         - ./ci-tools/common/pull-image.sh
         - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
@@ -90,5 +98,13 @@ jobs:
           script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
           on:
             all_branches: true
+    - stage: "Clean up cache"
+      language: minimal
+      directories:
+        - $HOME/.gradle
+        - $HOME/.cache/Cypress
+        - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
+        - $TRAVIS_BUILD_DIR/organisaatio-ui/target/
+        - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       before_cache:
         - rm -rf $TRAVIS_BUILD_DIR/*
