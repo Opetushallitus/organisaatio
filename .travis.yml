@@ -44,8 +44,6 @@ jobs:
           - $TRAVIS_BUILD_DIR/organisaatio-ui
           - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
-        - pwd
-        - ls -l
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
         - nvm use $NODE_VERSION
