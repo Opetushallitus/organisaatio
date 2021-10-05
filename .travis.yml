@@ -88,8 +88,6 @@ jobs:
         ##- provider: script
         ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
         ##  skip_cleanup: true
-        ##  on:
-        ##    branch: master TODO deploy gradlella?
     - name: "to ecr"
       language:  java
       services:
