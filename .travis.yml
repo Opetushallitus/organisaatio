@@ -16,6 +16,8 @@ before_install:
   - pip install awscli
   - mkdir -p ~/$TRAVIS_BUILD_NUMBER
   - aws s3 sync s3://$s3bucket/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
+  - touch ~/$TRAVIS_BUILD_NUMBER/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
     - stage: "Build"
@@ -33,7 +35,6 @@ jobs:
         - ls -l organisaatio-service/
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-      after_script:
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-service ~/$TRAVIS_BUILD_NUMBER
         - cp -R $TRAVIS_BUILD_DIR/src ~/$TRAVIS_BUILD_NUMBER
     - stage: "Test"
