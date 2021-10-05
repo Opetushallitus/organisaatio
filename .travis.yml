@@ -70,7 +70,7 @@ jobs:
       install:
         - echo 'override install to skip default gradle call'
       script:
-        - echo 'override script to skip default gradle call'
+        -  ./gradlew publish -PversionSuffix=.RELEASE -sadeRepositoryUsername=$ARTIFACTORY_USERNAME -sadeRepositoryPassword=$ARTIFACTORY_PASSWORD
       deploy:
         - provider: script
           script: echo "should deploy RELEASE $ARTIFACT_NAME"
@@ -80,7 +80,7 @@ jobs:
       install:
         - echo 'override install to skip default gradle call'
       script:
-        - echo 'override script to skip default gradle call'
+        -  ./gradlew publish -sadeRepositoryUsername=$ARTIFACTORY_USERNAME -sadeRepositoryPassword=$ARTIFACTORY_PASSWORD
       deploy:
         - provider: script
           script: echo "should deploy SNAPSHOT $ARTIFACT_NAME"

@@ -1,7 +1,7 @@
 plugins {
 	id 'groovy'
 }
-
+compileJava.options.encoding = 'UTF-8'
 def getDate() {
 	def date = new Date()
 	def formattedDate = date.format(versionDateFormat)
