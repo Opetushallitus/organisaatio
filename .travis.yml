@@ -37,6 +37,8 @@ jobs:
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-service ~/$TRAVIS_BUILD_NUMBER
         - cp -R $TRAVIS_BUILD_DIR/src ~/$TRAVIS_BUILD_NUMBER
+      after_success:
+        - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
     - stage: "Test"
       name: "Cypress"
       language: java
@@ -46,6 +48,7 @@ jobs:
         - postgresql
       cache:
         directories:
+          - $HOME/.gradle
           - $HOME/.gradle
       install:
         - export NODE_VERSION=11.1
@@ -63,13 +66,7 @@ jobs:
         - kill $(jobs -p) || true
     - stage: "Deploy"
       name: "to artifactory"
-      language: java
-      jdk:
-        - openjdk11
-      install:
-        - echo 'override install to skip default gradle call'
-      script:
-        - echo 'override script to skip default gradle call'
+      language: minimal
       deploy:
         - provider: script
           script: echo "should deploy $ARTIFACT_NAME"
@@ -81,9 +78,7 @@ jobs:
         ##  on:
         ##    branch: master TODO deploy gradlella?
     - name: "to ecr"
-      language: java
-      jdk:
-        - openjdk11
+      language: minimal
       services:
         - docker
       install:
@@ -103,7 +98,8 @@ jobs:
           script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
           on:
             all_branches: true
+      after_success:
+        - aws s3 rm --recursive s3://$s3bucket/$TRAVIS_BUILD_NUMBER # clean up after ourselves
 
-after_success:
-  - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
+
 
