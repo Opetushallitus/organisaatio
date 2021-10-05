@@ -66,13 +66,21 @@ jobs:
         - kill $(jobs -p) || true
     - stage: "Deploy"
       name: "release to artifactory"
-      language: python
+      language:  java
+      install:
+        - echo 'override install to skip default gradle call'
+      script:
+        - echo 'override script to skip default gradle call'
       deploy:
         - provider: script
           script: echo "should deploy RELEASE $ARTIFACT_NAME"
       if: branch = master
     - name: "snapshot to artifactory"
-      language: python
+      language:  java
+      install:
+        - echo 'override install to skip default gradle call'
+      script:
+        - echo 'override script to skip default gradle call'
       deploy:
         - provider: script
           script: echo "should deploy SNAPSHOT $ARTIFACT_NAME"
@@ -83,7 +91,7 @@ jobs:
         ##  on:
         ##    branch: master TODO deploy gradlella?
     - name: "to ecr"
-      language: python
+      language:  java
       services:
         - docker
       install:
