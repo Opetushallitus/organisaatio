@@ -15,7 +15,7 @@ dependencies {
 publishing {
 	publications {
 		OrganisaatioApi(MavenPublication) {
-			version = getDate()+"."+version
+			version = getDate()+versionSuffix
 			from components.java
 		}
 	}
