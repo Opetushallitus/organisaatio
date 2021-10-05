@@ -8,7 +8,7 @@ env:
     - secure: "Adnofgj5/fkiL8j7/fRk/3UHOazWn5oT82OdVPUZB1P9Ei9Fbw/HLS1UTrkIYzBjT6aBku7IRV+Y9K69uyBFFWmklkKkLQd/542QtdftGSkjFw4bnraXJu3hOD4m6uJMhYXywGbgCFtriahQJigtjxU3lYmw3TRDmu2v2pp8Zko="
     # AWS_SECRET_ACCESS_KEY
     - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
-
+    # S3 bucket used to share build files between jobs
     - s3bucket: "opintopolku-utility-travis-artifacts/artifacts/Opetushallitus/organisaatio2"
 before_install:
   - pyenv global 3.7.1
@@ -85,9 +85,6 @@ jobs:
       deploy:
         - provider: script
           script: echo "should deploy SNAPSHOT $ARTIFACT_NAME"
-        ##- provider: script
-        ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
-        ##  skip_cleanup: true
     - name: "to ecr"
       language:  java
       services:
