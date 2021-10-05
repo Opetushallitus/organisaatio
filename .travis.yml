@@ -9,7 +9,7 @@ env:
     # AWS_SECRET_ACCESS_KEY
     - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
 
-    - s3bucket: "opintopolku-utility-travis-artifacts"
+    - s3bucket: "opintopolku-utility-travis-artifacts/artifacts/Opetushallitus/organisaatio2"
 before_install:
   - pyenv global 3.7.1
   - pip install -U pip
