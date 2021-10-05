@@ -66,6 +66,7 @@ jobs:
         - kill $(jobs -p) || true
     - stage: "Deploy"
       name: "release to artifactory"
+      if: branch = master
       language:  java
       install:
         - echo 'override install to skip default gradle call'
@@ -74,8 +75,8 @@ jobs:
       deploy:
         - provider: script
           script: echo "should deploy RELEASE $ARTIFACT_NAME"
-      if: branch = master
     - name: "snapshot to artifactory"
+      if: branch != master
       language:  java
       install:
         - echo 'override install to skip default gradle call'
@@ -84,7 +85,6 @@ jobs:
       deploy:
         - provider: script
           script: echo "should deploy SNAPSHOT $ARTIFACT_NAME"
-        if: branch != master
         ##- provider: script
         ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
         ##  skip_cleanup: true
