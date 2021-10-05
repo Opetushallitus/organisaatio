@@ -65,13 +65,18 @@ jobs:
         - cd organisaatio-ui && npm run cypress:ci
         - kill $(jobs -p) || true
     - stage: "Deploy"
-      name: "to artifactory"
+      name: "release to artifactory"
       language: minimal
       deploy:
         - provider: script
-          script: echo "should deploy $ARTIFACT_NAME"
-          on:
-            branch: master
+          script: echo "should deploy RELEASE $ARTIFACT_NAME"
+      if: branch = master
+    - name: "snapshot to artifactory"
+      language: minimal
+      deploy:
+        - provider: script
+          script: echo "should deploy SNAPSHOT $ARTIFACT_NAME"
+        if: branch != master
         ##- provider: script
         ##  script: mvn deploy -pl organisaatio-api -am -DskipTests --settings ci-tools/common/maven-settings.xml
         ##  skip_cleanup: true

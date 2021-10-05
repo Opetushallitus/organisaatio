@@ -21,6 +21,8 @@ publishing {
 	}
 	repositories {
 		maven {
+			name = 'sadeRepository'
+			credentials(PasswordCredentials)
 			if(version.endsWith('-SNAPSHOT')) {
 				url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
 			} else {
