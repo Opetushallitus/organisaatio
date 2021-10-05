@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'maven-publish'
 }
 
 dependencies {
@@ -9,4 +10,22 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.3'
 	compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'
 	compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+}
+
+publishing {
+	publications {
+		OrganisaatioApi(MavenPublication) {
+			version = getDate()+"."+version
+			from components.java
+		}
+	}
+	repositories {
+		maven {
+			if(version.endsWith('-SNAPSHOT')) {
+				url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+			} else {
+				url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+			}
+		}
+	}
 }

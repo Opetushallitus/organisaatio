@@ -8,24 +8,16 @@ env:
     - secure: "Adnofgj5/fkiL8j7/fRk/3UHOazWn5oT82OdVPUZB1P9Ei9Fbw/HLS1UTrkIYzBjT6aBku7IRV+Y9K69uyBFFWmklkKkLQd/542QtdftGSkjFw4bnraXJu3hOD4m6uJMhYXywGbgCFtriahQJigtjxU3lYmw3TRDmu2v2pp8Zko="
     # AWS_SECRET_ACCESS_KEY
     - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
+
+    - s3bucket: "opintopolku-utility-travis-artifacts"
+before_install:
+  - pyenv global 3.7.1
+  - pip install -U pip
+  - pip install awscli
+  - mkdir -p ~/$TRAVIS_BUILD_NUMBER
+  - aws s3 sync s3://$s3bucket/$TRAVIS_BUILD_NUMBER ~/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
-    - stage: "Clean up"
-      name: "cache"
-      language: java
-      jdk:
-        - openjdk11
-      install:
-        - echo 'override install to skip default gradle call'
-      script:
-        - echo 'override script to skip default gradle call'
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
-      before_cache:
-        - rm -rf $TRAVIS_BUILD_DIR/*
     - stage: "Build"
       name: "Production"
       language: java
@@ -34,8 +26,6 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
@@ -43,6 +33,9 @@ jobs:
         - ls -l organisaatio-service/
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+      after_script:
+        - cp -R $TRAVIS_BUILD_DIR/organisaatio-service ~/$TRAVIS_BUILD_NUMBER
+        - cp -R $TRAVIS_BUILD_DIR/src ~/$TRAVIS_BUILD_NUMBER
     - stage: "Test"
       name: "Cypress"
       language: java
@@ -53,7 +46,6 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
-          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
       install:
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
@@ -65,7 +57,7 @@ jobs:
       script:
         - ls -l organisaatio-service/
         - cd mock-api && npm run mock-api &
-        - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 ./organisaatio-service/build/libs/organisaatio-service.jar &
+        - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar &
         - cd organisaatio-ui && npm run cypress:ci
         - kill $(jobs -p) || true
     - stage: "Deploy"
@@ -93,10 +85,6 @@ jobs:
         - openjdk11
       services:
         - docker
-      cache:
-        directories:
-          - $TRAVIS_BUILD_DIR/organisaatio-service/build/libs
-          - $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - export ARTIFACT_NAME="organisaatio2"
@@ -104,8 +92,8 @@ jobs:
         - ls -l organisaatio-service/
         - source ci-tools/common/setup-tools.sh
       before_deploy:
-        - cp organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
-        - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+        - cp ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
+        - cp -vr ~/$TRAVIS_BUILD_NUMBER/src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
         - ./ci-tools/common/pull-image.sh
         - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
@@ -114,4 +102,7 @@ jobs:
           script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
           on:
             all_branches: true
+
+after_success:
+  - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
 
