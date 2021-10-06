@@ -9,6 +9,8 @@
     <envs>
       <env name="url-virkailija" value="http://localhost:9000" />
       <env name="host.virkailija" value="localhost:9000" />
+      <env name="url-ytj" value="http://localhost:9000/ytj" />
+      <env name="url-oidservice" value="http://localhost:9000/oidservice" />
     </envs>
     <method v="2" />
   </configuration>

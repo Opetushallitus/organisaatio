@@ -1,10 +1,12 @@
 plugins {
 	id 'groovy'
 }
-
-group = 'fi.vm.sade.organisaatio'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+compileJava.options.encoding = 'UTF-8'
+def getDate() {
+	def date = new Date()
+	def formattedDate = date.format(versionDateFormat)
+	return formattedDate
+}
 
 allprojects {
 	repositories {
