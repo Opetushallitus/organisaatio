@@ -12,7 +12,7 @@ import searchIcon from '@iconify/icons-fa-solid/search';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { Organisaatio } from '../../../types/types';
 import { searchOrganisation } from '../../../api/organisaatio';
-
+const SEARCH_MIN_LENGTH = 3;
 const mapPaginationSelectors = (index) => {
     if (index < 3) return [0, 5];
     return [index - 2, index + 3];
@@ -148,12 +148,7 @@ export default function OrganisaatioHakuTaulukko({
         useExpanded,
         usePagination
     );
-    const dostuff = (a) => {
-        if (a?.length >= 3) {
-            setInput(a.substr(0, 3));
-        }
-        setGlobalFilter(a);
-    };
+
     return (
         <div>
             <Hakufiltterit
@@ -162,7 +157,12 @@ export default function OrganisaatioHakuTaulukko({
                 isOPHVirkailija={isOPHVirkailija}
                 i18n={i18n}
                 globalFilter={globalFilter}
-                setGlobalFilter={dostuff}
+                setGlobalFilter={(searchString) => {
+                    if (searchString?.length >= SEARCH_MIN_LENGTH) {
+                        setInput(searchString.substr(0, SEARCH_MIN_LENGTH));
+                    }
+                    setGlobalFilter(searchString);
+                }}
                 naytaPassivoidut={naytaPassivoidut}
                 setNaytaPassivoidut={setNaytaPassivoidut}
             />
