@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './TaulukkoSivu.module.css';
 import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
@@ -23,32 +23,7 @@ const TaulukkoSivu = (props) => {
     };
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
-
-    // const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
-    // const [isLoading, setIsLoading] = useState(true);
-    const [isOPHVirkailija, setIsOPHVirkailija] = React.useState(true);
-    // useEffect(() => {
-    //     async function fetch() {
-    //         // TODO tämä on vielä auki että mistä osoitteesta haetaan, kun haetaan omia organisaatioita?
-    //         try {
-    //             setIsLoading(true);
-    //             const response =
-    //                 isOPHVirkailija || (!isOPHVirkailija && !omatOrganisaatiotSelected)
-    //                     ? await Axios.get(
-    //                           `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`
-    //                       )
-    //                     : await Axios.get(
-    //                           `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
-    //                       );
-    //             const data = response.data;
-    //             setOrganisaatiot([...data.organisaatiot]);
-    //             setIsLoading(false);
-    //         } catch (error) {
-    //             console.error('error fetching', error);
-    //         }
-    //     }
-    //     fetch();
-    // }, [naytaPassivoidut, isOPHVirkailija, omatOrganisaatiotSelected]);
+    const [isOPHVirkailija, setIsOPHVirkailija] = useState(true);
 
     const columns: any = [
         {
