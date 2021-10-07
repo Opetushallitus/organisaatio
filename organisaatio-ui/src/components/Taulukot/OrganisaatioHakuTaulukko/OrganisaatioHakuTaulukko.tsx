@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
 import { Column, useExpanded, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -11,6 +11,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import searchIcon from '@iconify/icons-fa-solid/search';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { Organisaatio } from '../../../types/types';
+import { searchOrganisation } from '../../../api/organisaatio';
 
 const mapPaginationSelectors = (index) => {
     if (index < 3) return [0, 5];
@@ -19,12 +20,7 @@ const mapPaginationSelectors = (index) => {
 
 type OrganisaatioHakuTaulukkoProps = {
     isOPHVirkailija: boolean;
-    data: Organisaatio[];
     tableColumns: Column<Organisaatio>[];
-    naytaPassivoidut: boolean;
-    setNaytaPassivoidut: (value: boolean) => void;
-    omatOrganisaatiotSelected: boolean;
-    setOmatOrganisaatiotSelected: (value: boolean) => void;
 };
 
 function Hakufiltterit({
@@ -89,34 +85,32 @@ function Hakufiltterit({
 
 export default function OrganisaatioHakuTaulukko({
     isOPHVirkailija,
-    data: inputData = [],
     tableColumns = [],
-    naytaPassivoidut = false,
-    setNaytaPassivoidut,
-    omatOrganisaatiotSelected,
-    setOmatOrganisaatiotSelected,
 }: OrganisaatioHakuTaulukkoProps) {
     const { i18n } = useContext(LanguageContext);
+
+    const [omatOrganisaatiotSelected, setOmatOrganisaatiotSelected] = React.useState(true);
+    const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
+    const [input, setInput] = useState<string>('');
+    const [result, setResult] = useState<Organisaatio[]>([]);
+    useEffect(() => {
+        let active = true;
+        load();
+        return () => {
+            active = false;
+        };
+
+        async function load() {
+            setResult([]); // this is optional
+            const res = await searchOrganisation({ search: input, naytaPassivoidut: naytaPassivoidut });
+            if (!active) {
+                return;
+            }
+            setResult(res);
+        }
+    }, [input, naytaPassivoidut]);
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
-    const data = React.useMemo(() => inputData, [inputData]);
-
-    /*const filterTypes = React.useMemo(
-    () => ({
-      text: (rows, id, filterValue) => {
-        return rows.filter(row => {
-          const rowValue = row.values[id];
-          return rowValue !== undefined
-            ? String(rowValue)
-              .toLowerCase()
-              .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
-      }
-    }),
-    []
-  );
-
-   */
+    const data = React.useMemo(() => result, [result]);
     const {
         getTableProps,
         getTableBodyProps,
@@ -155,6 +149,12 @@ export default function OrganisaatioHakuTaulukko({
         useExpanded,
         usePagination
     );
+    const dostuff = (a) => {
+        if (a?.length >= 3) {
+            setInput(a.substr(0, 3));
+        }
+        setGlobalFilter(a);
+    };
     return (
         <div>
             <Hakufiltterit
@@ -163,7 +163,7 @@ export default function OrganisaatioHakuTaulukko({
                 isOPHVirkailija={isOPHVirkailija}
                 i18n={i18n}
                 globalFilter={globalFilter}
-                setGlobalFilter={setGlobalFilter}
+                setGlobalFilter={dostuff}
                 naytaPassivoidut={naytaPassivoidut}
                 setNaytaPassivoidut={setNaytaPassivoidut}
             />

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Axios from 'axios';
+import React, { useContext } from 'react';
 import styles from './TaulukkoSivu.module.css';
 import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
@@ -8,10 +7,8 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { KoodistoContext, LanguageContext, ROOT_OID } from '../../../contexts/contexts';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/OrganisaatioHakuTaulukko';
-import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
-import { Organisaatio } from '../../../types/types';
 import { Link } from 'react-router-dom';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
@@ -27,33 +24,31 @@ const TaulukkoSivu = (props) => {
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
 
-    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
+    // const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
+    // const [isLoading, setIsLoading] = useState(true);
     const [isOPHVirkailija, setIsOPHVirkailija] = React.useState(true);
-    const [omatOrganisaatiotSelected, setOmatOrganisaatiotSelected] = React.useState(true);
-    useEffect(() => {
-        async function fetch() {
-            // TODO tämä on vielä auki että mistä osoitteesta haetaan, kun haetaan omia organisaatioita?
-            try {
-                setIsLoading(true);
-                const response =
-                    isOPHVirkailija || (!isOPHVirkailija && !omatOrganisaatiotSelected)
-                        ? await Axios.get(
-                              `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`
-                          )
-                        : await Axios.get(
-                              `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
-                          );
-                const data = response.data;
-                setOrganisaatiot([...data.organisaatiot]);
-                setIsLoading(false);
-            } catch (error) {
-                console.error('error fetching', error);
-            }
-        }
-        fetch();
-    }, [naytaPassivoidut, isOPHVirkailija, omatOrganisaatiotSelected]);
+    // useEffect(() => {
+    //     async function fetch() {
+    //         // TODO tämä on vielä auki että mistä osoitteesta haetaan, kun haetaan omia organisaatioita?
+    //         try {
+    //             setIsLoading(true);
+    //             const response =
+    //                 isOPHVirkailija || (!isOPHVirkailija && !omatOrganisaatiotSelected)
+    //                     ? await Axios.get(
+    //                           `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true`
+    //                       )
+    //                     : await Axios.get(
+    //                           `/organisaatio/organisaatio/v4/hierarkia/hae?&aktiiviset=true&lakkautetut=${naytaPassivoidut}&searchstr=&suunnitellut=true&oid=1.2.246.562.10.59347432821`
+    //                       );
+    //             const data = response.data;
+    //             setOrganisaatiot([...data.organisaatiot]);
+    //             setIsLoading(false);
+    //         } catch (error) {
+    //             console.error('error fetching', error);
+    //         }
+    //     }
+    //     fetch();
+    // }, [naytaPassivoidut, isOPHVirkailija, omatOrganisaatiotSelected]);
 
     const columns: any = [
         {
@@ -139,7 +134,6 @@ const TaulukkoSivu = (props) => {
         },
     ];
 
-    const data = organisaatiot;
     return (
         <PohjaSivu>
             <Button color={isOPHVirkailija ? 'success' : 'danger'} onClick={() => setIsOPHVirkailija(!isOPHVirkailija)}>
@@ -157,19 +151,7 @@ const TaulukkoSivu = (props) => {
                     )}
                 </div>
                 <div className={styles.TaulukkoContainer}>
-                    {isLoading ? (
-                        <Spin />
-                    ) : (
-                        <OrganisaatioHakuTaulukko
-                            omatOrganisaatiotSelected={omatOrganisaatiotSelected}
-                            setOmatOrganisaatiotSelected={setOmatOrganisaatiotSelected}
-                            isOPHVirkailija={isOPHVirkailija}
-                            data={data}
-                            tableColumns={columns}
-                            naytaPassivoidut={naytaPassivoidut}
-                            setNaytaPassivoidut={setNaytaPassivoidut}
-                        />
-                    )}
+                    <OrganisaatioHakuTaulukko isOPHVirkailija={isOPHVirkailija} tableColumns={columns} />
                 </div>
             </div>
         </PohjaSivu>
