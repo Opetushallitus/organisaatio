@@ -58,10 +58,15 @@ public class VardaOrganisaatioFinalizer {
         if (!dto.tyypit.contains(VARDA_ORGANISAATIOTYYPPI)) {
             dto.tyypit = new HashSet<>(dto.tyypit);
             dto.tyypit.add(VARDA_ORGANISAATIOTYYPPI);
+            dto.lakkautusPvm = null;
             organisaatioClient.save(dto);
             LOGGER.info("Lisätty varhaiskasvatuksen organisaatiotyyppi organisaatiolle, oid: {}", organisaatioOid);
+        } else if (dto.lakkautusPvm != null) {
+            dto.lakkautusPvm = null;
+            organisaatioClient.save(dto);
+            LOGGER.info("Organisaation lakkautuspäivämäärä poistettu, oid: {}", organisaatioOid);
         } else {
-            LOGGER.debug("Organisaatiolla {} on jo ennestään varhaiskasvatuksen organisaatiotyyppi.", organisaatioOid);
+            LOGGER.debug("Organisaatioon ei tarvittu muutoksia, oid: {}", organisaatioOid);
         }
     }
 
