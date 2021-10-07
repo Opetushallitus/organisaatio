@@ -13,6 +13,10 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import TNUusiBody from '../../../../Modaalit/ToimipisteenNimenmuutos/TNUusiBody';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import { Option, Koodi, KoodiUri, NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../../types/types';
+import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
+import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
+import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
+import { YtjOrganisaatio } from '../../../../../types/apiTypes';
 
 type OrganisaatioProps = {
     organisaatio: Organisaatio | NewOrganisaatio;
@@ -27,6 +31,7 @@ type OrganisaatioProps = {
         value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
     }) => void;
     handleJatka: () => void;
+    setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
 };
 type Nimi = {
     fi: string;
@@ -44,8 +49,17 @@ const tyhjaNimi: Nimi = {
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const { organisaatio, organisaatioTyypit, maatJaValtiot, opetuskielet, handleOnChange, handleJatka } = props;
+    const {
+        organisaatio,
+        organisaatioTyypit,
+        maatJaValtiot,
+        opetuskielet,
+        handleOnChange,
+        handleJatka,
+        setYtjDataFetched,
+    } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     const { kuntaKoodisto } = useContext(KoodistoContext);
     const kaikkiKunnat = kuntaKoodisto.koodit().map((k) => ({
@@ -58,6 +72,10 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         const nimet = { nimi: Object.assign({}, nimi), alkuPvm: new Date().toISOString().split('T')[0] };
         handleOnChange({ name: 'nimet', value: [nimet] });
         handleOnChange({ name: 'nimi', value: nimi });
+    };
+    const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
+        setYtjDataFetched(ytjOrg);
+        setYTJModaaliAuki(false);
     };
     return (
         <div className={styles.UloinKehys}>
@@ -83,7 +101,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                             value={organisaatio.ytunnus}
                         />
                     </div>
-                    <Button className={styles.Nappi} variant="outlined">
+                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
                         {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
                     </Button>
                 </div>
@@ -234,6 +252,20 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         />
                     }
                     suljeCallback={() => setNimenmuutosModaaliAuki(false)}
+                />
+            )}
+            {YTJModaaliAuki && (
+                <PohjaModaali
+                    header={<YTJHeader />}
+                    body={<YTJBody ytunnus={organisaatio.ytunnus} korvaaOrganisaatio={handleKorvaaOrganisaatio} />}
+                    footer={
+                        <YTJFooter
+                            peruutaCallback={() => {
+                                setYTJModaaliAuki(false);
+                            }}
+                        />
+                    }
+                    suljeCallback={() => setYTJModaaliAuki(false)}
                 />
             )}
         </div>

@@ -17,7 +17,8 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { Koodi, KoodiUri, Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
+import { Koodi, KoodiUri, Nimi, Organisaatio } from '../../../../../types/types';
+import { YtjOrganisaatio } from '../../../../../types/apiTypes';
 
 type OrganisaatioProps = {
     organisaatio: Organisaatio;
@@ -256,7 +257,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                     suljeCallback={() => setLakkautusModaaliAuki(false)}
                 />
             )}
-            {YTJModaaliAuki && organisaatio && organisaatio.ytunnus && (
+            {YTJModaaliAuki && (
                 <PohjaModaali
                     header={<YTJHeader />}
                     body={<YTJBody ytunnus={organisaatio.ytunnus} korvaaOrganisaatio={handleKorvaaOrganisaatio} />}

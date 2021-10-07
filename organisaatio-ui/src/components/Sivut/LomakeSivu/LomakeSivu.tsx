@@ -17,7 +17,6 @@ import {
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
     Yhteystiedot,
-    YtjOrganisaatio,
 } from '../../../types/types';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
@@ -35,6 +34,7 @@ import {
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { YtjOrganisaatio } from '../../../types/apiTypes';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };

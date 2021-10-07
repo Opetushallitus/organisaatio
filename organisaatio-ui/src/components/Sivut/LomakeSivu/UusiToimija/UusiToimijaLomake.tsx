@@ -162,6 +162,9 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 organisaatio={organisaatio}
                 maatJaValtiot={maatJaValtiot}
                 opetuskielet={oppilaitoksenOpetuskielet}
+                setYtjDataFetched={(a) => {
+                    console.log(a);
+                }}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));

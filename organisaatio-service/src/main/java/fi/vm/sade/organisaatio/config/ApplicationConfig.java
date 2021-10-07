@@ -21,6 +21,9 @@ public class ApplicationConfig {
     @Value("${rajapinnat.ytj.avain}")
     private String ytjAvain;
 
+    @Value("${url-ytj}")
+    private String ytjUrl;
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
@@ -33,7 +36,7 @@ public class ApplicationConfig {
 
     @Bean
     public YTJService ytjService() {
-        return new YTJServiceImpl(ytjAsiakastunnus, ytjAvain);
+        return new YTJServiceImpl(ytjAsiakastunnus, ytjAvain, ytjUrl);
     }
 
     @Bean
