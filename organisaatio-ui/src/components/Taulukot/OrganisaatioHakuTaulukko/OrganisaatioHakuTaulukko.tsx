@@ -92,25 +92,24 @@ export default function OrganisaatioHakuTaulukko({
     const [omatOrganisaatiotSelected, setOmatOrganisaatiotSelected] = React.useState(true);
     const [naytaPassivoidut, setNaytaPassivoidut] = React.useState(false);
     const [input, setInput] = useState<string>('');
-    const [result, setResult] = useState<Organisaatio[]>([]);
+    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
     useEffect(() => {
         let active = true;
         load();
         return () => {
             active = false;
         };
-
         async function load() {
-            setResult([]); // this is optional
-            const res = await searchOrganisation({ search: input, naytaPassivoidut: naytaPassivoidut });
+            setOrganisaatiot([]);
+            const searchResult = await searchOrganisation({ searchStr: input, lakkautetut: naytaPassivoidut });
             if (!active) {
                 return;
             }
-            setResult(res);
+            setOrganisaatiot(searchResult);
         }
     }, [input, naytaPassivoidut]);
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
-    const data = React.useMemo(() => result, [result]);
+    const data = React.useMemo(() => organisaatiot, [organisaatiot]);
     const {
         getTableProps,
         getTableBodyProps,

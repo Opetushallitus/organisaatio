@@ -39,21 +39,23 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     return polku;
 }
 async function searchOrganisation({
-    search,
+    searchStr,
     aktiiviset = true,
-    naytaPassivoidut = false,
+    lakkautetut = false,
+    suunnitellut = true,
 }: {
-    search: string;
+    searchStr: string;
     aktiiviset?: boolean;
-    naytaPassivoidut?: boolean;
+    lakkautetut?: boolean;
+    suunnitellut?: boolean;
 }): Promise<Organisaatio[]> {
-    if (search.length < 3) return [];
+    if (searchStr.length < 3) return [];
     const { data } = await Axios.get<{ organisaatiot: Organisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
-            aktiiviset: aktiiviset,
-            lakkautetut: naytaPassivoidut,
-            searchStr: search,
-            suunnitellut: true,
+            aktiiviset,
+            lakkautetut,
+            searchStr,
+            suunnitellut,
         },
     });
 
