@@ -1,4 +1,11 @@
-import { Koodi, Ryhma } from '../types/types';
+import { Koodi, Ryhma, Yhteystiedot } from '../types/types';
+import {
+    ApiYhteystiedot,
+    YhteystiedotEmail,
+    YhteystiedotOsoite,
+    YhteystiedotPhone,
+    YhteystiedotWww
+} from '../types/apiTypes';
 
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
@@ -11,13 +18,119 @@ export const dropKoodiVersionSuffix = (koodi: string) => {
 export const mapLocalizedKoodiToLang = (lang: string, property: string, value: Koodi | Ryhma) =>
     value[property][lang] || value[property].fi || value[property].sv || value[property].en || '';
 
-export const mapKoodistoOptions = (koodit: Koodi[], language) =>
-    koodit.map((koodi: Koodi) => ({
-        value: `${dropKoodiVersionSuffix(koodi.uri)}#${koodi.versio}`,
-        label: mapLocalizedKoodiToLang(language, 'nimi', koodi),
-    }));
+type SupportedOsoiteType = 'kaynti' | 'posti';
+type SupportedYhteystietoType = 'www' | 'email' | 'numero';
 
-export const mapValuesToSelect = (KoodiUriValues: string[], selectOptions) =>
-    KoodiUriValues.map((koodiUriWithVersion: string) =>
-        selectOptions.find((koodiSelectOption) => koodiUriWithVersion === koodiSelectOption.value)
+const NAME_WWW = 'www';
+const NAME_EMAIL = 'email';
+const NAME_PHONE = 'numero';
+
+const initializeOsoite = (kieli: string, osoiteTyyppi: SupportedOsoiteType): YhteystiedotOsoite => ({
+    kieli,
+    osoiteTyyppi,
+    postinumeroUri: '',
+    postitoimipaikka: '',
+    osoite: '',
+    isNew: true,
+});
+
+const isOsoite = (yhteystieto: ApiYhteystiedot): yhteystieto is YhteystiedotOsoite =>
+    yhteystieto.hasOwnProperty('osoiteTyyppi');
+
+export const getOsoite = (
+    yhteystiedot: ApiYhteystiedot[],
+    kieli: string,
+    osoiteTyyppi: SupportedOsoiteType
+): YhteystiedotOsoite => {
+    const found = yhteystiedot.find(
+        (yhteystieto: ApiYhteystiedot) =>
+            isOsoite(yhteystieto) && yhteystieto.kieli === kieli && yhteystieto.osoiteTyyppi === osoiteTyyppi
     );
+    if (found) {
+        return found as YhteystiedotOsoite;
+    }
+    yhteystiedot.push(initializeOsoite(kieli, osoiteTyyppi));
+    return getOsoite(yhteystiedot, kieli, osoiteTyyppi);
+};
+
+export const getYhteystieto = (
+    yhteystiedot: ApiYhteystiedot[],
+    kieli: string,
+    osoiteTyyppi: SupportedYhteystietoType
+): ApiYhteystiedot => {
+    const found = yhteystiedot.find(
+        (yhteystieto: ApiYhteystiedot) => yhteystieto.kieli === kieli && yhteystieto.hasOwnProperty(osoiteTyyppi)
+    );
+    if (found) {
+        return found as ApiYhteystiedot;
+    }
+    yhteystiedot.push({ kieli, [osoiteTyyppi]: '' , isNew: true} as ApiYhteystiedot);
+    return getYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
+};
+
+export const mapApiYhteystiedotToUi = (
+    yhteystiedot: ApiYhteystiedot[],
+    kielet = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
+): Yhteystiedot => {
+    return kielet.reduce(
+        (uiYhteystiedot, kieli) => (
+            (uiYhteystiedot[kieli] =
+                {
+                    postiOsoite: getOsoite(yhteystiedot, kieli, 'posti').osoite,
+                    postiOsoitePostiNro: getOsoite(yhteystiedot, kieli, 'posti').postinumeroUri,
+                    kayntiOsoite: getOsoite(yhteystiedot, kieli, 'kaynti').osoite,
+                    kayntiOsoitePostiNro: getOsoite(yhteystiedot, kieli, 'kaynti').postinumeroUri,
+                    puhelinnumero: getYhteystieto(yhteystiedot, kieli, NAME_PHONE)[NAME_PHONE],
+                    email: getYhteystieto(yhteystiedot, kieli, NAME_EMAIL)[NAME_EMAIL],
+                    www: getYhteystieto(yhteystiedot, kieli, NAME_WWW)[NAME_WWW],
+                }),
+                uiYhteystiedot
+        ),
+        {} as Yhteystiedot
+    );
+};
+
+export const mapUiYhteystiedotToApi = (
+    apiYhteystiedot: ApiYhteystiedot[] = [],
+    uiYhteystiedot: Yhteystiedot,
+): ApiYhteystiedot[] => {
+    const {osoitteetOnEri, ...rest} = uiYhteystiedot;
+    return Object.keys(rest).map((kieli) => {
+        const postiosoite = getOsoite(apiYhteystiedot, kieli, 'posti');
+        postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
+        postiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+        const kayntiosoite = getOsoite(apiYhteystiedot, kieli, 'kaynti');
+        if(!!uiYhteystiedot[kieli].kayntiOsoite && uiYhteystiedot[kieli].kayntiOsoitePostiNro) {
+            kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
+            kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].kayntiOsoitePostiNro;
+        } else {
+            kayntiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
+            kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+        }
+        const puhelinnumero = getYhteystieto(apiYhteystiedot, kieli, NAME_PHONE);
+        if(!!uiYhteystiedot[kieli].puhelinnumero) {
+            puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero
+        }
+        const email =  getYhteystieto(apiYhteystiedot, kieli, NAME_EMAIL);
+        if(!!uiYhteystiedot[kieli].email) {
+            email[NAME_EMAIL] = uiYhteystiedot[kieli].email
+        }
+        const www =  getYhteystieto(apiYhteystiedot, kieli, NAME_WWW);
+        if(!!uiYhteystiedot[kieli].email) {
+            www[NAME_WWW] = uiYhteystiedot[kieli].www
+        }
+        return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
+    }).reduce((a, b) => a.concat(b)) as ApiYhteystiedot[];
+};
+
+
+const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYhteystiedot[]) => {
+    return yhteystiedotObjectsArray.map(yhteystieto => {
+        const {isNew, ...rest} = yhteystieto;
+        if (isNew && (!!(yhteystieto as YhteystiedotOsoite).osoite || (!!(yhteystieto as YhteystiedotPhone)[NAME_PHONE] || !!(yhteystieto as YhteystiedotEmail)[NAME_EMAIL] || !!(yhteystieto as YhteystiedotWww)[NAME_WWW])))
+        {
+            return {...rest};
+        }
+        return undefined;
+    }).filter(Boolean);
+};

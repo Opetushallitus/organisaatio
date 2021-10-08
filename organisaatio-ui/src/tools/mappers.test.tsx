@@ -1,5 +1,13 @@
-import { dropKoodiVersionSuffix, mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from './mappers';
-import { Koodi } from '../types/types';
+import {
+    dropKoodiVersionSuffix,
+    getOsoite,
+    getYhteystieto,
+    mapApiYhteystiedotToUi,
+    mapLocalizedKoodiToLang,
+} from './mappers';
+import { ApiYhteystiedot, YhteystiedotOsoite } from '../types/apiTypes';
+
+const kieli = 'kieli_fi#1';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -46,41 +54,74 @@ describe('mappers', () => {
         });
     });
 
-    describe('mapKoodistoOptions', () => {
-        const koodit: Koodi[] = [
-            {
-                uri: 'koodi_1',
-                nimi: {
-                    fi: 'Koodi',
-                    sv: 'Kod',
-                    en: 'Code',
-                },
-                arvo: '1',
-                versio: 2,
-            },
-        ];
+    describe('getYhteystieto', () => {
+        const yhteystieto = { kieli, www: 'foo' };
 
-        it('Maps koodit to options array with value and label', () => {
-            const options = mapKoodistoOptions(koodit, 'fi');
-            expect(options.length).toBe(1);
-            expect(options[0].value).toBe('koodi_1#2');
-            expect(options[0].label).toBe('Koodi');
+        it('Finds correct element', () => {
+            expect(getYhteystieto([yhteystieto], kieli, 'www')).toEqual(yhteystieto);
+        });
+
+        it('Creates correct element on demand', () => {
+            expect(getYhteystieto([], kieli, 'www')).toEqual({ ...yhteystieto, www: '' });
         });
     });
-    describe('mapValuesToSelect', () => {
-        const kooditUrit: string[] = ['koodi_2#1'];
-        const kooditSelectOptions = [
-            {
-                label: 'Koodi2',
-                value: 'koodi_2#1',
-            },
-        ];
 
-        it('Maps ', () => {
-            const selectValues = mapValuesToSelect(kooditUrit, kooditSelectOptions);
-            expect(selectValues.length).toBe(1);
-            expect(selectValues[0].value).toBe('koodi_2#1');
-            expect(selectValues[0].label).toBe('Koodi2');
+    describe('getOsoite', () => {
+        const osoiteTyyppi = 'posti';
+
+        const yhteystieto = {
+            kieli,
+            osoiteTyyppi,
+            osoite: 'testi',
+        } as YhteystiedotOsoite;
+
+        it('Finds correct element', () => {
+            expect(getOsoite([yhteystieto], kieli, osoiteTyyppi)).toEqual(yhteystieto);
+        });
+
+        it('Creates correct element on demand', () => {
+            expect(getOsoite([], kieli, osoiteTyyppi)).toEqual({
+                ...yhteystieto,
+                osoite: '',
+                postinumeroUri: '',
+                postitoimipaikka: '',
+            });
+        });
+    });
+    describe('mapUiYhteystiedotToApi', () => {
+
+
+    });
+
+    describe('mapApiYhteystiedotToUi', () => {
+        it('Maps api yhteystiedot to ui object format ({ lang: { ...values },...})', () => {
+            const apiYhteystiedot = [
+                {
+                    kieli,
+                    osoiteTyyppi: 'posti',
+                    osoite: 'testiosoite',
+                    postinumeroUri: '22222',
+                },
+                {
+                    kieli: 'kieli_sv#1',
+                    numero: '12345',
+                },
+                {
+                    kieli,
+                    email: 'arpa@kuutio.fi',
+                },
+            ] as ApiYhteystiedot[];
+
+            expect(mapApiYhteystiedotToUi(apiYhteystiedot)).toEqual({
+                'kieli_fi#1': {
+                    postiOsoite: 'testiosoite',
+                    postiOsoitePostiNro: '22222',
+                    email: 'arpa@kuutio.fi',
+                },
+                'kieli_sv#1': {
+                    puhelin: '12345',
+                },
+            });
         });
     });
 });

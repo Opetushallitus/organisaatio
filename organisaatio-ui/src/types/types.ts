@@ -1,3 +1,5 @@
+import { ApiYhteystiedot } from './apiTypes';
+
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
 export type LocalizableText = Partial<Record<Language, string>>;
@@ -52,34 +54,21 @@ export type ytjYtunnus = {
 };
 
 type YhteystiedotBase = {
-    id?: string;
-    yhteystietoOid?: string;
-    kieli: string;
-};
-
-type YhteystiedotEmail = YhteystiedotBase & {
+    postiOsoite: string;
+    postiOsoitePostiNro: string;
+    kayntiOsoite: string;
+    kayntiOsoitePostiNro: string;
+    puhelinnumero: string;
     email: string;
-};
-
-export type YhteystiedotPhone = YhteystiedotBase & {
-    tyyppi: 'puhelin';
-    numero: string;
-};
-
-type YhteystiedotWww = YhteystiedotBase & {
     www: string;
 };
 
-export type OsoiteType = 'posti' | 'kaynti' | 'ulkomainen_posti' | 'ulkomainen_kaynti' | 'muu';
-
-export type YhteystiedotOsoite = YhteystiedotBase & {
-    osoiteTyyppi: OsoiteType;
-    postinumeroUri: KoodiUri;
-    postitoimipaikka: string;
-    osoite: string;
+export type Yhteystiedot = {
+    'kieli_fi#1': YhteystiedotBase;
+    'kieli_sv#1': YhteystiedotBase;
+    'kieli_en#1': YhteystiedotBase;
+    osoitteetOnEri?: boolean;
 };
-
-export type Yhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
 
 export type Nimi = {
     fi?: string;
@@ -104,7 +93,7 @@ export type Organisaatio = OrganisaatioBase & {
     muutKotipaikatUris?: KoodiUri[];
     maaUri: KoodiUri;
     kieletUris: KoodiUri[];
-    yhteystiedot?: Yhteystiedot[];
+    yhteystiedot?: ApiYhteystiedot[];
 };
 export type NewOrganisaatio = Omit<Organisaatio, 'oid'>;
 

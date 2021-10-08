@@ -58,7 +58,6 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                     validationErrors={validationErrors}
                     register={register}
                     nimi={props.nimi}
-                    //handleChange={setNimi}
                 />
             }
             footer={<TNFooter tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}

@@ -8,7 +8,6 @@ import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { UseFormRegister } from 'react-hook-form/dist/types/form';
 
 type TNProps = {
-    handleChange?: (nimi: Nimi) => void;
     nimi: Nimi;
     validationErrors: FieldErrors<FieldValues>;
     register: UseFormRegister<FieldValues>;
@@ -27,7 +26,7 @@ export default function TNBody(props: TNProps) {
                         error={!!validationErrors['nimiFi']}
                         id={'organisaation_nimiFi'}
                         {...register('nimiFi')}
-                        defaultValue={nimi.fi}
+                        defaultValue={nimi && nimi.fi}
                     />
                 </div>
                 <div className={styles.BodyKentta}>
@@ -36,7 +35,7 @@ export default function TNBody(props: TNProps) {
                         error={!!validationErrors['nimiSv']}
                         id={'organisaation_nimiSv'}
                         {...register('nimiSv')}
-                        defaultValue={nimi.sv}
+                        defaultValue={nimi && nimi.sv}
                     />
                 </div>
                 <div className={styles.BodyKentta}>
@@ -45,7 +44,7 @@ export default function TNBody(props: TNProps) {
                         error={!!validationErrors['nimiEn']}
                         id={'organisaation_nimiEn'}
                         {...register('nimiEn')}
-                        defaultValue={nimi.en}
+                        defaultValue={nimi && nimi.en}
                     />
                 </div>
             </div>

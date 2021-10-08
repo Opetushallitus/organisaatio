@@ -14,7 +14,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { KoodiUri, Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
+import { Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
@@ -24,35 +24,24 @@ import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNim
 type OrganisaatioProps = {
     organisaatio: Organisaatio;
     language: string;
-    handleOnChange: ({
-        name,
-        value,
-    }: {
-        name: keyof Organisaatio;
-        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri;
-    }) => void;
     setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
     validationErrors: FieldErrors<FieldValues>;
     formRegister: UseFormRegister<FieldValues>;
     formControl: Control<FieldValues>;
+    handleNimiUpdate: (nimi: Nimi) => void
 };
-
-interface iOption {
-    label: string;
-    value: string;
-}
 
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
     const { i18n } = useContext(LanguageContext);
     const {
         organisaatio,
-        handleOnChange,
         language,
         setYtjDataFetched,
         validationErrors,
         formRegister,
         formControl,
+        handleNimiUpdate,
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
@@ -65,16 +54,13 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         oppilaitoksenOpetuskieletKoodisto,
     } = useContext(KoodistoContext);
     const kunnatOptions = kuntaKoodisto.selectOptions();
-    const handleNimiTallennus = (nimi) => {
-        const nimet = { nimi: Object.assign({}, nimi), alkuPvm: new Date().toISOString().split('T')[0] };
-        handleOnChange({ name: 'nimet', value: [nimet] });
-        handleOnChange({ name: 'nimi', value: nimi });
-    };
 
     const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
         setYtjDataFetched(ytjOrg);
         setYTJModaaliAuki(false);
     };
+
+    formRegister('nimi');
 
     return (
         <div className={styles.UloinKehys}>
@@ -110,11 +96,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
                     <Input
-                        name="ytunnus"
-                        value={organisaatio.ytunnus || ''}
-                        onChange={(e) => handleOnChange({ name: e.target.name, value: e.target.value })}
-                    />
-                    <Input
                         error={!!validationErrors['ytunnus']}
                         id={'ytunnus'}
                         {...formRegister('ytunnus')}
@@ -128,33 +109,21 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>
-                    {organisaatio.tyypit && (
-                            <CheckboxGroup
-                                value={[...organisaatio.tyypit]}
-                                options={organisaatioTyypitKoodisto.selectOptions()}
-                                onChange={(tyypit) => {
-                                    handleOnChange({ name: 'tyypit', value: tyypit });
-                                }}
-                            />
-                        ) && (
-                            <Controller
-                                control={formControl}
-                                name={'tyypit'}
-                                defaultValue={[...organisaatio.tyypit]}
-                                render={({ field: { ref, ...rest } }) => (
-                                    <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
-                                )}
-                            />
-                        )}
+                    {organisaatio.tyypit  && (
+                        <Controller
+                            control={formControl}
+                            name={'tyypit'}
+                            defaultValue={[...organisaatio.tyypit]}
+                            render={({ field: { ref, ...rest } }) => (
+                                <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
+                            )}
+                        />
+                    )}
                 </div>
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
-                    <DatePickerInput
-                        value={organisaatio.alkuPvm || ''}
-                        onChange={(date: Date) => handleOnChange({ name: 'alkuPvm', value: date })}
-                    />
                     <Controller
                         control={formControl}
                         name={'alkuPvm'}
@@ -171,13 +140,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PAASIJAINTIKUNTA')}</label>
-                    <Select
-                        value={kuntaKoodisto.uri2SelectOption(organisaatio.kotipaikkaUri)}
-                        options={kunnatOptions}
-                        onChange={(option) =>
-                            handleOnChange({ name: 'kotipaikkaUri', value: (option as iOption).value })
-                        }
-                    />
                     <Controller
                         control={formControl}
                         name={'kotipaikkaUri'}
@@ -195,19 +157,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                 </div>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_MUUT_KUNNAT')}</label>
-                    <Select
-                        isMulti
-                        value={(organisaatio.muutKotipaikatUris || []).map((muuKotipaikkaUri) =>
-                            kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)
-                        )}
-                        options={kunnatOptions}
-                        onChange={(option = []) => {
-                            handleOnChange({
-                                name: 'muutKotipaikatUris',
-                                value: option ? (option as iOption[]).map((o) => o.value) : [],
-                            });
-                        }}
-                    />
                     <Controller
                         control={formControl}
                         name={'muutKotipaikatUris'}
@@ -229,11 +178,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_MAA')}</label>
-                    <Select
-                        onChange={(selected) => handleOnChange({ name: 'maaUri', value: (selected as iOption).value })}
-                        value={maatJaValtiotKoodisto.uri2SelectOption(organisaatio.maaUri)}
-                        options={maatJaValtiotKoodisto.selectOptions()}
-                    />
                     <Controller
                         control={formControl}
                         name={'maaUri'}
@@ -252,22 +196,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
-                    <Select
-                        onChange={(selected = []) =>
-                            handleOnChange({
-                                name: 'kieletUris',
-                                value: selected ? (selected as iOption[]).map((o) => o.value) : [],
-                            })
-                        }
-                        isMulti
-                        value={
-                            organisaatio.kieletUris &&
-                            organisaatio.kieletUris.map((kieliUri) =>
-                                oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
-                            )
-                        }
-                        options={oppilaitoksenOpetuskieletKoodisto.selectOptions()}
-                    />
                     <Controller
                         control={formControl}
                         name={'kieletUris'}
@@ -289,7 +217,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
                     setNimenmuutosModaaliAuki={setNimenmuutosModaaliAuki}
-                    handleNimiTallennus={handleNimiTallennus}
+                    handleNimiTallennus={handleNimiUpdate}
                     nimi={organisaatio.nimi}
                 />
             )}

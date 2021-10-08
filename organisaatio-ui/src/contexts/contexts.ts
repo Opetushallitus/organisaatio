@@ -109,14 +109,6 @@ export class KoodistoImpl implements Koodisto {
     private kielistettyNimi(koodi: Koodi): string {
         return koodi.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi.nimi['fi'] || '');
     }
-
-    protected dropKoodiVersionSuffix = (koodi: string) => {
-        const hasVersioningHashtag = koodi.search('#');
-        if (hasVersioningHashtag !== -1) {
-            return koodi.replace(/#.+$/, '');
-        }
-        return koodi;
-    };
 }
 
 type KoodistoContextType = {

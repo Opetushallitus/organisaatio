@@ -1,4 +1,4 @@
-import { Language, OrganisaatioBase, OrganisaatioSuhde } from './types';
+import { KoodiUri, Language, OrganisaatioBase, OrganisaatioSuhde } from './types';
 
 export type CASMe = {
     uid: string;
@@ -22,3 +22,34 @@ export type APIOrganisaatioHistoria = {
     liitokset: OrganisaatioLiitos[];
     liittymiset: OrganisaatioLiitos[];
 };
+
+type YhteystiedotBase = {
+    id?: string;
+    yhteystietoOid?: string;
+    kieli: string;
+    isNew?: boolean;
+};
+
+export type YhteystiedotEmail = YhteystiedotBase & {
+    email: string;
+};
+
+export type YhteystiedotPhone = YhteystiedotBase & {
+    tyyppi: 'puhelin';
+    numero: string;
+};
+
+export type YhteystiedotWww = YhteystiedotBase & {
+    www: string;
+};
+
+type OsoiteType = 'posti' | 'kaynti' | 'ulkomainen_posti' | 'ulkomainen_kaynti' | 'muu';
+
+export type YhteystiedotOsoite = YhteystiedotBase & {
+    osoiteTyyppi: OsoiteType;
+    postinumeroUri: KoodiUri;
+    postitoimipaikka: string;
+    osoite: string;
+};
+
+export type ApiYhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;

@@ -10,17 +10,14 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 
 import {KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
 import {
-    KoodiUri,
-    Nimi,
     Organisaatio,
     OrganisaatioNimiJaOid,
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
-    Yhteystiedot,
-    YhteystiedotOsoite,
-    YhteystiedotPhone,
     YtjOrganisaatio,
 } from '../../../types/types';
+import {YhteystiedotPhone, YhteystiedotOsoite} from '../../../types/apiTypes';
+
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
@@ -39,7 +36,9 @@ import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOr
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Joi from 'joi';
+import {mapApiYhteystiedotToUi, mapUiYhteystiedotToApi} from '../../../tools/mappers';
+import PerustietolomakeSchema from "../../../ValidationSchemas/PerustietolomakeSchema";
+import YhteystietoLomakeSchema from "../../../ValidationSchemas/YhteystietoLomakeSchema";
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -48,30 +47,6 @@ type LomakeSivuProps = {
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
-
-export const PerustietoLomakeSchema = Joi.object({
-    nimiEn: Joi.string(),
-    nimiFi: Joi.string(),
-    nimiSv: Joi.string(),
-    ytunnus: Joi.string(),
-    alkuPvm: Joi.string().required(),
-    tyypit: Joi.array().min(1).required(),
-    kotipaikkaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
-    muutKotipaikatUris: Joi.array(),
-    maaUri: Joi.object({ label: Joi.string().required(), value: Joi.string().required() }).required(),
-    kieletUris: Joi.array().min(1).required(),
-});
-
-export const yhteystietoLomakeSchema = Joi.object({
-        postiOsoite: Joi.string().required(),
-        postiOsoitePostiNro: Joi.string().required(),
-        kayntiOsoite: Joi.string().required(),
-        kayntiOsoitePostiNro: Joi.string().required(),
-        puhelinnumero: Joi.string().required(),
-        email: Joi.string().required(),
-        www: Joi.string().required(),
-    });
-
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
@@ -136,7 +111,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             }
         }
     }
-
     async function handleSiirraOrganisaatio(props: SiirraOrganisaatioon) {
         setSiirraOrganisaatioModaaliAuki(false);
         setSiirraOrganisaatio(initialSiirra);
@@ -156,13 +130,19 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setYhdistaOrganisaatio(initialYhdista);
     }
 
-    async function putOrganisaatio() {
+    function saveOrganisaatio() {
         if (organisaatio) {
-            const data = await updateOrganisaatio(organisaatio);
-            if (data) {
-                setOrganisaatio(data);
-                history.push(`/lomake/${organisaatio.oid}`);
-            }
+           perustiedotHandleSubmit((perustiedotFormValues) => {
+                yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
+                        const yhteystiedot = mapUiYhteystiedotToApi(organisaatio.yhteystiedot, yhteystiedotFormValues);
+                        const orgToBeUpdated = {...organisaatio, yhteystiedot, ...perustiedotFormValues };
+                        const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
+                        if (updatedOrganisaatio) {
+                           setOrganisaatio(updatedOrganisaatio);
+                           history.push(`/lomake/${organisaatio.oid}`);
+                         }
+                })()
+            })();
         }
     }
 
@@ -180,8 +160,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         organisaatio &&
             organisaatio.yhteystiedot &&
             organisaatio.yhteystiedot
-                .filter((yT: Yhteystiedot) => yT.kieli === 'kieli_fi#1')
-                .forEach((yT: Yhteystiedot) => {
+                .filter((yT) => yT.kieli === 'kieli_fi#1')
+                .forEach((yT) => {
                     if (
                         (yT as YhteystiedotOsoite).osoiteTyyppi &&
                         (yT as YhteystiedotOsoite).osoiteTyyppi === 'posti'
@@ -212,43 +192,42 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             Object.assign({}, organisaatio, { nimi: { fi: nimi }, alkuPvm: alkuPvm.join('-'), ytunnus, yritysmuoto })
         ); // TODO nimet?
     };
-
-    const handleOnChange = ({
-        name,
-        value,
-    }: {
-        name: keyof Organisaatio;
-        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
-    }) => {
-        setOrganisaatio((organisaatio) => {
-            return Object.assign({}, organisaatio, { [name]: value });
-        });
-    };
-    const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
-    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypit, parentOrganisaatio);
     const {
+        setValue: setPerustiedotValue,
         register: registerPerustiedot,
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
-    } = useForm({ resolver: joiResolver(PerustietoLomakeSchema) });
+    } = useForm({ resolver: joiResolver(PerustietolomakeSchema) });
 
     const {
+        watch,
         register: yhteystiedotRegister,
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
-    } = useForm({ resolver: joiResolver(yhteystietoLomakeSchema) });
+    } = useForm({
+        defaultValues: mapApiYhteystiedotToUi((organisaatio && organisaatio.yhteystiedot) || []),
+        resolver: joiResolver(YhteystietoLomakeSchema),
+    });
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
     const validateChanges = (accordionUuids: string[]): void => {
         const accordionuuid = accordionUuids[0];
-        const setAvoinnaCb = () => setLomakeAvoinna(accordionuuid);
-        if (lomakeAvoinna === PERUSTIEDOTUUID) {
-            perustiedotHandleSubmit(setAvoinnaCb)();
-        } else if (lomakeAvoinna === YHTEYSTIEDOTUUID) {
-            yhteystiedotHandleSubmit(setAvoinnaCb)();
+        const setAvoinnaCb = () => {
+            setLomakeAvoinna(accordionuuid);
+        };
+        switch (lomakeAvoinna) {
+            case PERUSTIEDOTUUID:
+                perustiedotHandleSubmit(setAvoinnaCb)();
+                break;
+            case YHTEYSTIEDOTUUID:
+                yhteystiedotHandleSubmit(setAvoinnaCb)();
+                break;
+            default:
+                return setAvoinnaCb();
+
         }
     };
     const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
@@ -270,17 +249,22 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
     }
 
+    registerPerustiedot('nimi');
+
+    const handleNimiUpdate = (nimi) => {
+        setPerustiedotValue('nimi', nimi)
+    };
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                handleNimiUpdate={handleNimiUpdate}
                 formControl={perustiedotControl}
                 validationErrors={perustiedotValidationErrors}
                 formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
                 setYtjDataFetched={setYtjDataFetched}
-                handleOnChange={handleOnChange}
                 organisaatioTyypit={resolvedTyypit}
                 organisaatio={organisaatio}
                 language={language}
@@ -290,12 +274,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatio.yhteystiedot) {
             lomakkeet.push(
                 <YhteystietoLomake
+                    watch={watch}
                     formControl={yhteystiedotControl}
                     validationErrors={yhteystiedotValidationErrors}
                     formRegister={yhteystiedotRegister}
                     key={YHTEYSTIEDOTUUID}
-                    handleOnChange={handleOnChange}
-                    yhteystiedot={organisaatio.yhteystiedot}
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
@@ -309,15 +292,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         }
 
         return {
-            lomakkeet: lomakkeet,
-            otsikot: otsikot,
-            //handleItemChange: (event: FormEvent<HTMLDivElement>) => console.log('piip', event),
+            lomakkeet,
+            otsikot,
             handleUuidChange: validateChanges,
-            //handlePreExpanded: setLomakeAvoinna,
             preExpanded: lomakeAvoinna,
         };
     };
     const thisTyyppi = organisaatioTyypit.find((a) => a.uri === organisaatio.tyypit[0]);
+
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
@@ -386,7 +368,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <Button variant="outlined" className={styles.Versionappula} onClick={() => history.push('/')}>
                         {i18n.translate('BUTTON_SULJE')}
                     </Button>
-                    <Button className={styles.Versionappula} onClick={putOrganisaatio}>
+                    <Button className={styles.Versionappula} onClick={saveOrganisaatio}>
                         {i18n.translate('BUTTON_TALLENNA')}
                     </Button>
                 </div>
