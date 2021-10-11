@@ -24,9 +24,9 @@ async function createOrganisaatio(organisaatio: NewOrganisaatio) {
 
 async function updateOrganisaatio(organisaatio: Organisaatio) {
     return errorHandlingWrapper(async () => {
-        const { data } = await Axios.put(`${baseUrl}${organisaatio.oid}`, organisaatio);
+        const { data } = await Axios.put<{ organisaatio: Organisaatio }>(`${baseUrl}${organisaatio.oid}`, organisaatio);
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
-        return data.organisaatio as Organisaatio;
+        return data.organisaatio;
     });
 }
 async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaOid[]> {
@@ -37,6 +37,29 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
         nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
     }));
     return polku;
+}
+async function searchOrganisation({
+    searchStr,
+    aktiiviset = true,
+    lakkautetut = false,
+    suunnitellut = true,
+}: {
+    searchStr: string;
+    aktiiviset?: boolean;
+    lakkautetut?: boolean;
+    suunnitellut?: boolean;
+}): Promise<Organisaatio[]> {
+    if (searchStr.length < 3) return [];
+    const { data } = await Axios.get<{ organisaatiot: Organisaatio[] }>(`${baseUrl}hierarkia/hae`, {
+        params: {
+            aktiiviset,
+            lakkautetut,
+            searchStr,
+            suunnitellut,
+        },
+    });
+
+    return data.organisaatiot;
 }
 async function readOrganisaatio(oid: string) {
     return errorHandlingWrapper(async () => {
@@ -143,4 +166,5 @@ export {
     readOrganisaatio,
     updateOrganisaatio,
     mergeOrganisaatio,
+    searchOrganisation,
 };
