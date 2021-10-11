@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Organisaatio, Nimi} from '../../../../types/types';
+import { NewOrganisaatio, Organisaatio, Nimi } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -18,65 +18,10 @@ import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaat
 import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import {mapApiYhteystiedotToUi, mapUiYhteystiedotToApi} from '../../../../tools/mappers';
+
+import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
-/*
-const tyhjaOrganisaatio = (stub): NewOrganisaatio => {
-    return {
-        ...stub,
-        ...{
-            ytunnus: '',
-            nimi: {},
-            status: '',
-            nimet: [],
-            alkuPvm: null,
-            yritysmuoto: '',
-            tyypit: [],
-            kotipaikkaUri: '',
-            muutKotipaikatUris: [],
-            maaUri: '',
-            kieletUris: [],
-            yhteystiedot: ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
-                .map(
-                    (kieli) =>
-                        [
-                            {
-                                kieli,
-                                tyyppi: 'puhelin',
-                                numero: '',
-                            },
-                            {
-                                kieli,
-                                email: '',
-                            },
-                            {
-                                kieli,
-                                www: '',
-                            },
-                            {
-                                kieli,
-                                osoiteTyyppi: 'posti',
-                                osoite: '',
-                                postinumeroUri: '',
-                                postitoimipaikka: '',
-                            },
-                            {
-                                kieli,
-                                osoiteTyyppi: 'kaynti',
-                                osoite: '',
-                                postinumeroUri: '',
-                                postitoimipaikka: '',
-                            },
-                        ] as ApiYhteystiedot[]
-                )
-                .flat(),
-        },
-    };
-};
-
- */
-
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
@@ -92,16 +37,29 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const { parentOid } = queryString.parse(props.location.search);
 
     async function saveOrganisaatio() {
+        const mapValueFromObj = (obj) => obj.value;
         perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                 const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const orgToBeUpdated = {...perustiedotFormValues, yhteystiedot, parentOid: (parentOid || ROOT_OID) as string, nimet: [perustiedotFormValues.nimi]} as NewOrganisaatio;
+                const { kotipaikkaUri, maaUri, kieletUris } = perustiedotFormValues;
+                const orgToBeUpdated = {
+                    ...{
+                        ...perustiedotFormValues,
+                        kotipaikkaUri: mapValueFromObj(kotipaikkaUri),
+                        maaUri: mapValueFromObj(maaUri),
+                        kieletUris: mapValueFromObj(kieletUris),
+                    },
+                    yhteystiedot,
+                    parentOid: (parentOid || ROOT_OID) as string,
+                    nimet: [perustiedotFormValues.nimi],
+                } as NewOrganisaatio;
                 const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
-                if(savedOrganisaatio) {
+                if (savedOrganisaatio) {
                     props.history.push(`/lomake/${savedOrganisaatio.oid}`);
                 }
-            })()
-        })();}
+            })();
+        })();
+    }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
@@ -119,7 +77,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
-    } = useForm({ resolver: joiResolver(PerustietolomakeSchema)});
+    } = useForm({ resolver: joiResolver(PerustietolomakeSchema) });
 
     const {
         reset: resetYhteystiedot,
@@ -186,9 +144,9 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 formRegister={yhteystiedotRegister}
                 key={YHTEYSTIEDOTUUID}
             />
-            );
-            otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
-        return {lomakkeet, otsikot, handleUuidChange: validateChanges, preExpanded: lomakeAvoinna};
+        );
+        otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        return { lomakkeet, otsikot, handleUuidChange: validateChanges, preExpanded: lomakeAvoinna };
     };
 
     function handleCancel() {

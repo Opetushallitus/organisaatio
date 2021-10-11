@@ -53,13 +53,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     return (
         <PohjaModaali
             header={<TNHeader />}
-            body={
-                <TNBody
-                    validationErrors={validationErrors}
-                    register={register}
-                    nimi={props.nimi}
-                />
-            }
+            body={<TNBody validationErrors={validationErrors} register={register} nimi={props.nimi} />}
             footer={<TNFooter tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}
             suljeCallback={handlePeruuta}
         />

@@ -14,7 +14,7 @@ import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
-import RyhmatLomakeSchema from "../../../../ValidationSchemas/RyhmatLomakeSchema";
+import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;

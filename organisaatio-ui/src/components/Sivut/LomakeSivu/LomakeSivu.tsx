@@ -8,15 +8,9 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 import homeIcon from '@iconify/icons-fa-solid/home';
 
-import {KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
-import {
-    Organisaatio,
-    OrganisaatioNimiJaOid,
-    SiirraOrganisaatioon,
-    YhdistaOrganisaatioon,
-    YtjOrganisaatio,
-} from '../../../types/types';
-import {YhteystiedotPhone, YhteystiedotOsoite} from '../../../types/apiTypes';
+import {KoodistoContext, LanguageContext, rakenne,ROOT_OID } from '../../../contexts/contexts';
+import { Organisaatio, OrganisaatioNimiJaOid,SiirraOrganisaatioon, YhdistaOrganisaatioon, YtjOrganisaatio } from '../../../types/types';
+import { YhteystiedotPhone, YhteystiedotOsoite } from '../../../types/apiTypes';
 
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
@@ -31,14 +25,14 @@ import {
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
+import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../tools/mappers';
+import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
+import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import {mapApiYhteystiedotToUi, mapUiYhteystiedotToApi} from '../../../tools/mappers';
-import PerustietolomakeSchema from "../../../ValidationSchemas/PerustietolomakeSchema";
-import YhteystietoLomakeSchema from "../../../ValidationSchemas/YhteystietoLomakeSchema";
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -132,16 +126,16 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     function saveOrganisaatio() {
         if (organisaatio) {
-           perustiedotHandleSubmit((perustiedotFormValues) => {
+            perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                        const yhteystiedot = mapUiYhteystiedotToApi(organisaatio.yhteystiedot, yhteystiedotFormValues);
-                        const orgToBeUpdated = {...organisaatio, yhteystiedot, ...perustiedotFormValues };
-                        const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
-                        if (updatedOrganisaatio) {
-                           setOrganisaatio(updatedOrganisaatio);
-                           history.push(`/lomake/${organisaatio.oid}`);
-                         }
-                })()
+                    const yhteystiedot = mapUiYhteystiedotToApi(organisaatio.yhteystiedot, yhteystiedotFormValues);
+                    const orgToBeUpdated = { ...organisaatio, yhteystiedot, ...perustiedotFormValues };
+                    const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
+                    if (updatedOrganisaatio) {
+                        setOrganisaatio(updatedOrganisaatio);
+                        history.push(`/lomake/${organisaatio.oid}`);
+                    }
+                })();
             })();
         }
     }
@@ -227,7 +221,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 break;
             default:
                 return setAvoinnaCb();
-
         }
     };
     const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
@@ -249,20 +242,22 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
     }
 
-    registerPerustiedot('nimi');
-
     const handleNimiUpdate = (nimi) => {
-        setPerustiedotValue('nimi', nimi)
+        setPerustiedotValue('nimi', nimi);
     };
+
+    registerPerustiedot('nimi');
+    handleNimiUpdate(organisaatio.nimi);
+
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                formRegister={registerPerustiedot}
                 handleNimiUpdate={handleNimiUpdate}
                 formControl={perustiedotControl}
                 validationErrors={perustiedotValidationErrors}
-                formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
                 setYtjDataFetched={setYtjDataFetched}
                 organisaatioTyypit={resolvedTyypit}

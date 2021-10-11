@@ -2,7 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
 
-import MuokkausLomake, { MuokkausLomakeProps, ryhmatLomakeSchema } from './MuokkausLomake';
+import MuokkausLomake, { MuokkausLomakeProps } from './MuokkausLomake';
+
+import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
 
 const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     handlePeruuta: jest.fn(),
@@ -80,7 +82,7 @@ describe('MuokkausLomake', () => {
                 ryhmatyypit: ['testi'],
                 kayttoryhmat: ['testi'],
             };
-            expect(ryhmatLomakeSchema.validate(nonameData)).toHaveProperty('error');
+            expect(RyhmatLomakeSchema.validate(nonameData)).toHaveProperty('error');
         });
 
         it('will NOT pass pass if empty kuvaus is given', () => {
@@ -90,7 +92,7 @@ describe('MuokkausLomake', () => {
                 ryhmatyypit: ['testi'],
                 kayttoryhmat: ['testi'],
             };
-            expect(ryhmatLomakeSchema.validate(nokuvausData)).toHaveProperty('error');
+            expect(RyhmatLomakeSchema.validate(nokuvausData)).toHaveProperty('error');
         });
 
         it('will NOT pass pass if no ryhmatyypit is given', () => {
@@ -100,7 +102,7 @@ describe('MuokkausLomake', () => {
                 ryhmatyypit: [],
                 kayttoryhmat: ['testi'],
             };
-            expect(ryhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
+            expect(RyhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
         });
 
         it('will NOT pass pass if no kayttoryhmat is given', () => {
@@ -110,7 +112,7 @@ describe('MuokkausLomake', () => {
                 ryhmatyypit: ['testi'],
                 kayttoryhmat: [],
             };
-            expect(ryhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
+            expect(RyhmatLomakeSchema.validate(noryhmatyypitData)).toHaveProperty('error');
         });
 
         it('will pass if one nimi and one kuvaus is filled and ryhmatyypit and kayttoryhmat are not empty', () => {
@@ -120,7 +122,7 @@ describe('MuokkausLomake', () => {
                 ryhmatyypit: ['testi'],
                 kayttoryhmat: ['testi'],
             };
-            expect(ryhmatLomakeSchema.validate(validData).error).toBeUndefined();
+            expect(RyhmatLomakeSchema.validate(validData).error).toBeUndefined();
         });
     });
 });

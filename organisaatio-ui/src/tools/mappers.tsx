@@ -4,7 +4,7 @@ import {
     YhteystiedotEmail,
     YhteystiedotOsoite,
     YhteystiedotPhone,
-    YhteystiedotWww
+    YhteystiedotWww,
 } from '../types/apiTypes';
 
 export const dropKoodiVersionSuffix = (koodi: string) => {
@@ -64,7 +64,7 @@ export const getYhteystieto = (
     if (found) {
         return found as ApiYhteystiedot;
     }
-    yhteystiedot.push({ kieli, [osoiteTyyppi]: '' , isNew: true} as ApiYhteystiedot);
+    yhteystiedot.push({ kieli, [osoiteTyyppi]: '', isNew: true } as ApiYhteystiedot);
     return getYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
 };
 
@@ -72,10 +72,10 @@ export const mapApiYhteystiedotToUi = (
     yhteystiedot: ApiYhteystiedot[],
     kielet = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
 ): Yhteystiedot => {
-    return kielet.reduce(
-        (uiYhteystiedot, kieli) => (
-            (uiYhteystiedot[kieli] =
-                {
+    return {
+        ...kielet.reduce(
+            (uiYhteystiedot, kieli) => (
+                (uiYhteystiedot[kieli] = {
                     postiOsoite: getOsoite(yhteystiedot, kieli, 'posti').osoite,
                     postiOsoitePostiNro: getOsoite(yhteystiedot, kieli, 'posti').postinumeroUri,
                     kayntiOsoite: getOsoite(yhteystiedot, kieli, 'kaynti').osoite,
@@ -85,52 +85,69 @@ export const mapApiYhteystiedotToUi = (
                     www: getYhteystieto(yhteystiedot, kieli, NAME_WWW)[NAME_WWW],
                 }),
                 uiYhteystiedot
+            ),
+            {} as Yhteystiedot
         ),
-        {} as Yhteystiedot
-    );
+        osoitteetOnEri: false,
+    };
 };
 
 export const mapUiYhteystiedotToApi = (
     apiYhteystiedot: ApiYhteystiedot[] = [],
-    uiYhteystiedot: Yhteystiedot,
+    uiYhteystiedot: Yhteystiedot
 ): ApiYhteystiedot[] => {
-    const {osoitteetOnEri, ...rest} = uiYhteystiedot;
-    return Object.keys(rest).map((kieli) => {
-        const postiosoite = getOsoite(apiYhteystiedot, kieli, 'posti');
-        postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
-        postiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
-        const kayntiosoite = getOsoite(apiYhteystiedot, kieli, 'kaynti');
-        if(!!uiYhteystiedot[kieli].kayntiOsoite && uiYhteystiedot[kieli].kayntiOsoitePostiNro) {
-            kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
-            kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].kayntiOsoitePostiNro;
-        } else {
-            kayntiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
-            kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
-        }
-        const puhelinnumero = getYhteystieto(apiYhteystiedot, kieli, NAME_PHONE);
-        if(!!uiYhteystiedot[kieli].puhelinnumero) {
-            puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero
-        }
-        const email =  getYhteystieto(apiYhteystiedot, kieli, NAME_EMAIL);
-        if(!!uiYhteystiedot[kieli].email) {
-            email[NAME_EMAIL] = uiYhteystiedot[kieli].email
-        }
-        const www =  getYhteystieto(apiYhteystiedot, kieli, NAME_WWW);
-        if(!!uiYhteystiedot[kieli].email) {
-            www[NAME_WWW] = uiYhteystiedot[kieli].www
-        }
-        return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
-    }).reduce((a, b) => a.concat(b)) as ApiYhteystiedot[];
+    const { osoitteetOnEri, ...rest } = uiYhteystiedot;
+    return Object.keys(rest)
+        .map((kieli) => {
+            const postiosoite = getOsoite(apiYhteystiedot, kieli, 'posti');
+            postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
+            postiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+            const kayntiosoite = getOsoite(apiYhteystiedot, kieli, 'kaynti');
+            if (
+                uiYhteystiedot.osoitteetOnEri === true &&
+                !!uiYhteystiedot[kieli].kayntiOsoite &&
+                !!uiYhteystiedot[kieli].kayntiOsoitePostiNro
+            ) {
+                kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
+                kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].kayntiOsoitePostiNro;
+            } else if (uiYhteystiedot.osoitteetOnEri === false) {
+                kayntiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
+                kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+            }
+            const puhelinnumero = getYhteystieto(apiYhteystiedot, kieli, NAME_PHONE) as YhteystiedotPhone;
+            if (!!uiYhteystiedot[kieli].puhelinnumero) {
+                puhelinnumero.tyyppi = 'puhelin';
+                puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero;
+            }
+            const email = getYhteystieto(apiYhteystiedot, kieli, NAME_EMAIL);
+            if (!!uiYhteystiedot[kieli].email) {
+                email[NAME_EMAIL] = uiYhteystiedot[kieli].email;
+            }
+            const www = getYhteystieto(apiYhteystiedot, kieli, NAME_WWW);
+            if (!!uiYhteystiedot[kieli].www) {
+                www[NAME_WWW] = uiYhteystiedot[kieli].www;
+            }
+            console.log('www', www);
+            return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
+        })
+        .reduce((a, b) => a.concat(b)) as ApiYhteystiedot[];
 };
 
-
 const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYhteystiedot[]) => {
-    return yhteystiedotObjectsArray.map(yhteystieto => {
-        const {isNew, ...rest} = yhteystieto;
-        if (isNew && (!!(yhteystieto as YhteystiedotOsoite).osoite || (!!(yhteystieto as YhteystiedotPhone)[NAME_PHONE] || !!(yhteystieto as YhteystiedotEmail)[NAME_EMAIL] || !!(yhteystieto as YhteystiedotWww)[NAME_WWW])))
-        {
-            return {...rest};
-        }
-        return undefined;
-    }).filter(Boolean);
+    return yhteystiedotObjectsArray
+        .map((yhteystieto) => {
+            const { isNew, ...rest } = yhteystieto;
+            if (
+                !isNew ||
+                (isNew &&
+                    (!!(yhteystieto as YhteystiedotOsoite).osoite ||
+                        !!(yhteystieto as YhteystiedotPhone)[NAME_PHONE] ||
+                        !!(yhteystieto as YhteystiedotEmail)[NAME_EMAIL] ||
+                        !!(yhteystieto as YhteystiedotWww)[NAME_WWW]))
+            ) {
+                return { ...rest };
+            }
+            return undefined;
+        })
+        .filter(Boolean);
 };

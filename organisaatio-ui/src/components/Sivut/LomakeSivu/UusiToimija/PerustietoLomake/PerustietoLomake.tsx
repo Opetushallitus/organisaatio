@@ -8,12 +8,11 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-import {FieldErrors} from "react-hook-form/dist/types/errors";
-import {FieldValues} from "react-hook-form/dist/types/fields";
-import {Control, UseFormRegister, UseFormWatch} from "react-hook-form/dist/types/form";
-import {Controller} from "react-hook-form";
-import ToimipisteenNimenmuutosModaali
-    from "../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali";
+import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { FieldValues } from 'react-hook-form/dist/types/fields';
+import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
+import { Controller } from 'react-hook-form';
+import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 
 type OrganisaatioProps = {
     validationErrors: FieldErrors<FieldValues>;
@@ -34,7 +33,7 @@ type Nimi = {
 // TODO optionsmapper ja paranna logiikkaa
 export default function PerustietoLomake(props: OrganisaatioProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const { handleJatka, validationErrors, formControl, formRegister, handleNimiUpdate,  watchPerustiedot } = props;
+    const { handleJatka, validationErrors, formControl, formRegister, handleNimiUpdate, watchPerustiedot } = props;
     const {
         kuntaKoodisto,
         organisaatioTyypitKoodisto,
@@ -47,7 +46,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const fi = watchPerustiedot('nimi.fi');
     const sv = watchPerustiedot('nimi.sv');
     const en = watchPerustiedot('nimi.en');
-    const nimi = {fi, sv, en};
+    const nimi = { fi, sv, en };
     console.log('ve', validationErrors);
     return (
         <div className={styles.UloinKehys}>
@@ -85,17 +84,14 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         <span key="PERUSTIETO_ORGANISAATIO_TYYPPI" className={styles.AvainKevyestiBoldattu}>
                             {i18n.translate('PERUSTIETO_ORGANISAATIO_TYYPPI')}
                         </span>,
-                        <span key="PERUSTIETO_ORGANISAATIO_TODO" className={styles.ReadOnly}>{i18n.translate('PERUSTIETO_TODO')}</span>,
+                        <span key="PERUSTIETO_ORGANISAATIO_TODO" className={styles.ReadOnly}>
+                            {i18n.translate('PERUSTIETO_TODO')}
+                        </span>,
                     ]}
                     <span className={styles.AvainKevyestiBoldattu}>
                         {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
                     </span>
-                    <span className={styles.ReadOnly}>
-                        {(nimi[language] ||
-                            nimi['fi'] ||
-                            nimi['sv'] ||
-                            nimi['en'])}
-                    </span>
+                    <span className={styles.ReadOnly}>{nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en']}</span>
                 </div>
                 <div className={styles.Kentta}>
                     <Button className={styles.Nappi} variant="outlined" onClick={() => setNimenmuutosModaaliAuki(true)}>
@@ -106,14 +102,14 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
-                        <Controller
-                            control={formControl}
-                            name={'tyypit'}
-                            defaultValue={[]}
-                            render={({ field: { ref, ...rest } }) => (
-                                <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
-                            )}
-                        />
+                    <Controller
+                        control={formControl}
+                        name={'tyypit'}
+                        defaultValue={[]}
+                        render={({ field: { ref, ...rest } }) => (
+                            <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
+                        )}
+                    />
                 </div>
             </div>
             <div className={styles.Rivi}>
@@ -123,7 +119,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         control={formControl}
                         name={'alkuPvm'}
                         render={({ field: { ref, ...rest } }) => (
-                            <DatePickerInput error={!!validationErrors['alkuPvm']} {...rest}/>
+                            <DatePickerInput error={!!validationErrors['alkuPvm']} {...rest} />
                         )}
                     />
                 </div>

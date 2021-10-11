@@ -1,7 +1,7 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export default Joi.object({
-    nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string()}).required(),
+    nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).required(),
     ytunnus: Joi.string(),
     alkuPvm: Joi.date().required(),
     tyypit: Joi.array().min(1).required(),

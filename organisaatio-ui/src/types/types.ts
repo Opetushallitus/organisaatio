@@ -22,12 +22,6 @@ export type KoodistoSelectOption = {
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 
-export type KielistettyNimi = {
-    nimi: string;
-    kieli: Language; // ytj-kieli
-    alkuPvm: LocalDate | null;
-};
-
 export type Osoite = {
     osoite?: string;
     postinumeroUri?: KoodiUri;

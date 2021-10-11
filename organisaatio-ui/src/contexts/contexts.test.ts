@@ -1,6 +1,5 @@
 import { KoodistoImpl } from './contexts';
 import { Koodi } from '../types/types';
-import {dropKoodiVersionSuffix} from "../components/mappers";
 
 const koodit: Koodi[] = [
     {

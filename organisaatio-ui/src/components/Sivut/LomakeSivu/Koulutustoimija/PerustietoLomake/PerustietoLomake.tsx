@@ -28,7 +28,7 @@ type OrganisaatioProps = {
     validationErrors: FieldErrors<FieldValues>;
     formRegister: UseFormRegister<FieldValues>;
     formControl: Control<FieldValues>;
-    handleNimiUpdate: (nimi: Nimi) => void
+    handleNimiUpdate: (nimi: Nimi) => void;
 };
 
 // TODO optionsmapper ja paranna logiikkaa
@@ -109,7 +109,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>
-                    {organisaatio.tyypit  && (
+                    {organisaatio.tyypit && (
                         <Controller
                             control={formControl}
                             name={'tyypit'}
