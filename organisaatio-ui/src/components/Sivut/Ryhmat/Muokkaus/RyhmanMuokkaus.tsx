@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../HttpRequests';
+import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../../api/ryhma';
 import { NewRyhma, Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
 import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';

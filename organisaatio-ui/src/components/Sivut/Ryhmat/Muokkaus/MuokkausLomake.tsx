@@ -9,7 +9,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { useContext } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
-import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../mappers';
+import { mapKoodistoOptions, mapLocalizedKoodiToLang, mapValuesToSelect } from '../../../../tools/mappers';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';

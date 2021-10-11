@@ -6,8 +6,6 @@ import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
 import { I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Lokalisointi } from './types/types';
-import useAxios from 'axios-hooks';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
@@ -21,6 +19,7 @@ import { useCASLanguage } from './api/kayttooikeus';
 import Loading from './components/Loading/Loading';
 import useKoodisto from './api/koodisto';
 import Notification from './components/Notification/Notification';
+import useLokalisaatio from './api/lokalisaatio';
 
 const theme = createTheme();
 const Error = () => {
@@ -33,9 +32,7 @@ const OrganisaatioApp: React.FC = () => {
     registerLocale('en', enGB);
 
     const { data: language, loading: languageLoading, error: languageError } = useCASLanguage();
-    const [{ data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError }] = useAxios<Lokalisointi>(
-        `/organisaatio/lokalisointi`
-    );
+    const { data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError } = useLokalisaatio();
     const { data: kunnat, loading: kunnatLoading, error: kunnatError } = useKoodisto('KUNTA');
     const { data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError } = useKoodisto('RYHMATYYPIT');
 
