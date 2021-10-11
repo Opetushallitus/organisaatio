@@ -6,7 +6,6 @@ import { useContext, useState } from 'react';
 import TSBody from './TSBody';
 import { Confirmation } from '../Confirmation/Confirmation';
 import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
-import { organisaatioNimiByLanguage } from '../../../tools/organisaatio';
 import { LanguageContext } from '../../../contexts/contexts';
 
 export function SiirraOrganisaatio(props: {
@@ -19,7 +18,7 @@ export function SiirraOrganisaatio(props: {
     peruutaCallback: () => void;
     suljeCallback: () => void;
 }) {
-    const { language } = useContext(LanguageContext);
+    const { i18n } = useContext(LanguageContext);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
     return (
         <>
@@ -50,13 +49,11 @@ export function SiirraOrganisaatio(props: {
                     replacements={[
                         {
                             key: 'from',
-                            value: `${organisaatioNimiByLanguage(props.organisaatio, language)} (${
-                                props.organisaatio.oid
-                            })`,
+                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
                         },
                         {
                             key: 'to',
-                            value: `${organisaatioNimiByLanguage(props.siirraOrganisaatio.newParent, language)} (${
+                            value: `${i18n.translateNimi(props.siirraOrganisaatio.newParent?.nimi)} (${
                                 props.siirraOrganisaatio.newParent?.oid || ''
                             })`,
                         },

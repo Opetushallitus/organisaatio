@@ -1,12 +1,13 @@
 import * as React from 'react';
 import organisaatioRakenne from './organisaatioRakenne.json';
-import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi } from '../types/types';
+import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Nimi } from '../types/types';
 
 export const ROOT_OID = '1.2.246.562.10.00000000001';
 export const rakenne = organisaatioRakenne;
 export interface I18n {
     translate: (key: string) => string;
     translateWithLang: (key: string, language: Language) => string;
+    translateNimi: (nimi: Nimi | undefined) => string;
 }
 
 export class I18nImpl implements I18n {
@@ -25,6 +26,10 @@ export class I18nImpl implements I18n {
     translateWithLang(key: string, language: Language): string {
         return this._data[language][key] || key;
     }
+
+    translateNimi = (nimi: Nimi | undefined) => {
+        return (nimi && (nimi[this._language] || nimi['fi'] || nimi['sv'] || nimi['en'])) || '';
+    };
 }
 
 type LanguageContextType = {

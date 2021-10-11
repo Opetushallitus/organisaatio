@@ -58,13 +58,3 @@ export const mapOrganisaatioToSelect = (o: Organisaatio | undefined, language: s
 };
 export const organisaatioSelectMapper = (organisaatiot: Organisaatio[], language: string) =>
     organisaatiot.map((o: Organisaatio) => mapOrganisaatioToSelect(o, language));
-
-export const organisaatioNimiByLanguage = (organisaatio: Organisaatio | undefined, language: string) => {
-    return (
-        organisaatio?.nimi[language] ||
-        organisaatio?.nimi['fi'] ||
-        organisaatio?.nimi['sv'] ||
-        organisaatio?.nimi['en'] ||
-        ''
-    );
-};

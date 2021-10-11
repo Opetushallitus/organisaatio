@@ -7,7 +7,6 @@ import * as React from 'react';
 import { Confirmation } from '../Confirmation/Confirmation';
 import { useContext, useState } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
-import { organisaatioNimiByLanguage } from '../../../tools/organisaatio';
 
 export function YhdistaOrganisaatio(props: {
     yhdistaOrganisaatio: YhdistaOrganisaatioon;
@@ -21,7 +20,7 @@ export function YhdistaOrganisaatio(props: {
     peruutaCallback: () => void;
     suljeCallback: () => void;
 }) {
-    const { language } = useContext(LanguageContext);
+    const { i18n } = useContext(LanguageContext);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
     return (
         <>
@@ -52,13 +51,11 @@ export function YhdistaOrganisaatio(props: {
                     replacements={[
                         {
                             key: 'from',
-                            value: `${organisaatioNimiByLanguage(props.organisaatio, language)} (${
-                                props.organisaatio.oid
-                            })`,
+                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
                         },
                         {
                             key: 'to',
-                            value: `${organisaatioNimiByLanguage(props.yhdistaOrganisaatio.newParent, language)} (${
+                            value: `${i18n.translateNimi(props.yhdistaOrganisaatio.newParent?.nimi)} (${
                                 props.yhdistaOrganisaatio.newParent?.oid || ''
                             })`,
                         },
