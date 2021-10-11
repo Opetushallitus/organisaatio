@@ -56,7 +56,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         newParent: undefined,
     };
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
-    const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<YhdistaOrganisaatioon>(initialSiirra);
+    const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<SiirraOrganisaatioon>(initialSiirra);
     const {
         data: organisaatioTyypit,
         loading: organisaatioTyypitLoading,
@@ -96,7 +96,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     };
 
     async function handleOrganisationMerge(props: SiirraOrganisaatioon | YhdistaOrganisaatioon) {
-        if (organisaatio && organisaatio.oid) {
+        if (organisaatio?.oid) {
             const mergeOrganisaatioResult = await mergeOrganisaatio({
                 oid: organisaatio.oid,
                 ...props,

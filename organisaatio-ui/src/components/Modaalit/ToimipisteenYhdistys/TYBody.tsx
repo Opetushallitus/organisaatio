@@ -28,7 +28,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
         return <Spin />;
     }
     if (!organisaatioRakenne || !organisaatioRakenne.mergeTargetType) warning({ message: 'PARENT_TYPE_NOT_AVAILABLE' });
-    const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent);
+    const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
         <div className={styles.BodyKehys}>
@@ -42,7 +42,13 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                             .filter((o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value))
                             .sort((a, b) => a.label.localeCompare(b.label))}
                         onChange={(option) => {
-                            if (option) handleChange({ ...yhdistaOrganisaatio, newParent: (option as Option).value });
+                            if (option)
+                                handleChange({
+                                    ...yhdistaOrganisaatio,
+                                    newParent: organisaatiot.find((a) => {
+                                        return (option as Option).value === a.oid;
+                                    }),
+                                });
                         }}
                     />
                 </div>

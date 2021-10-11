@@ -45,7 +45,11 @@ export function YhdistaOrganisaatio(props: {
             {confirmationModaaliAuki && (
                 <Confirmation
                     header={'TOIMIPISTEEN_YHDISTYS_TITLE'}
-                    message={'TOIMIPISTEEN_YHDISTYS_VAHVISTUS'}
+                    message={'TOIMIPISTEEN_YHDISTYS_VAHVISTUS_{from}_TO_{to}'}
+                    replacements={[
+                        { key: 'from', value: props.organisaatio.oid },
+                        { key: 'to', value: props.yhdistaOrganisaatio.newParent?.oid || '' },
+                    ]}
                     tallennaCallback={() => {
                         setConfirmationModaaliAuki(false);
                         props.tallennaCallback();

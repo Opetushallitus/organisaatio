@@ -5,15 +5,13 @@ import * as React from 'react';
 import { useState } from 'react';
 import TSBody from './TSBody';
 import { Confirmation } from '../Confirmation/Confirmation';
-import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon, YhdistaOrganisaatioon } from '../../../types/types';
+import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
 
 export function SiirraOrganisaatio(props: {
     siirraOrganisaatio: SiirraOrganisaatioon;
     organisaatio: Organisaatio;
 
-    handleChange: (
-        value: ((prevState: YhdistaOrganisaatioon) => YhdistaOrganisaatioon) | YhdistaOrganisaatioon
-    ) => void;
+    handleChange: (value: ((prevState: SiirraOrganisaatioon) => SiirraOrganisaatioon) | SiirraOrganisaatioon) => void;
     organisaatioRakenne: ResolvedRakenne;
     tallennaCallback: () => void;
     peruutaCallback: () => void;
@@ -45,7 +43,11 @@ export function SiirraOrganisaatio(props: {
             {confirmationModaaliAuki && (
                 <Confirmation
                     header={'TOIMIPISTEEN_SIIRTO_TITLE'}
-                    message={'TOIMIPISTEEN_SIIRTO_VAHVISTUS'}
+                    message={'TOIMIPISTEEN_SIIRTO_VAHVISTUS_{from}_TO_{to}'}
+                    replacements={[
+                        { key: 'from', value: props.organisaatio.oid },
+                        { key: 'to', value: props.siirraOrganisaatio.newParent?.oid || '' },
+                    ]}
                     tallennaCallback={() => {
                         setConfirmationModaaliAuki(false);
                         props.tallennaCallback();
