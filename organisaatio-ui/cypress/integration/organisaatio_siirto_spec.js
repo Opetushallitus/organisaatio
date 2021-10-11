@@ -43,7 +43,7 @@ describe('Organisaatiosiirto', () => {
                     'historia'
                 );
                 cy.clickButton('BUTTON_VAHVISTA');
-                cy.contains('TOIMIPISTEEN_SIIRTO_VAHVISTUS');
+                cy.contains('Siirretäänkö CHILD Suominimi');
                 cy.clickButton('BUTTON_VAHVISTA');
 
                 cy.wait(['@merge'], { timeout: 10000 });
