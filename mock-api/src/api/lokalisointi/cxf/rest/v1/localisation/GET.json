@@ -3025,6 +3025,20 @@
     },
     {
         "accesscount": 0,
+        "accessed": 1633954904659,
+        "category": "organisaatio2",
+        "created": 1633954904659,
+        "createdBy": "1.2.246.562.24.69633009338",
+        "force": false,
+        "id": 29459,
+        "key": "TOIMIPISTEEN_SIIRTO_VAHVISTUS_{from}_TO_{to}",
+        "locale": "fi",
+        "modified": 1633954904659,
+        "modifiedBy": "1.2.246.562.24.69633009338",
+        "value": "Siirret\u00e4\u00e4nk\u00f6 {from} >> {to}"
+    },
+    {
+        "accesscount": 0,
         "accessed": 1630991213594,
         "category": "organisaatio2",
         "created": 1630991213594,
