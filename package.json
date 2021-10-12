@@ -8,12 +8,12 @@
     "url": "https://github.com/Opetushallitus/organisaatio.git"
   },
   "dependencies": {
-    "angular": "1.5.11",
-    "angular-cookies": "1.5.11",
-    "angular-mocks": "1.5.11",
-    "angular-resource": "1.5.11",
-    "angular-route": "1.5.11",
-    "angular-sanitize": "1.5.11",
+    "angular": "1.8.2",
+    "angular-cookies": "1.8.2",
+    "angular-mocks": "1.8.2",
+    "angular-resource": "1.8.2",
+    "angular-route": "1.8.2",
+    "angular-sanitize": "1.8.2",
     "angular-ui-bootstrap": "0.14.3",
     "angular-ui-tinymce": "0.0.15",
     "blueimp-file-upload": "9.22.1",
