@@ -8,6 +8,7 @@ export interface I18n {
     translate: (key: string) => string;
     translateWithLang: (key: string, language: Language) => string;
     translateNimi: (nimi: Nimi | undefined) => string;
+    enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
 }
 
 export class I18nImpl implements I18n {
@@ -29,6 +30,12 @@ export class I18nImpl implements I18n {
 
     translateNimi = (nimi: Nimi | undefined) => {
         return (nimi && (nimi[this._language] || nimi['fi'] || nimi['sv'] || nimi['en'])) || '';
+    };
+
+    enrichMessage = (key: string, replacements: { key: string; value: string }[]) => {
+        return replacements.reduce((previous, current) => {
+            return previous.replace(`{${current.key}}`, current.value);
+        }, this.translate(key));
     };
 }
 
