@@ -48,7 +48,6 @@ describe('Organisaatioyhdistys', () => {
                 cy.intercept('GET', '/organisaatio/organisaatio/v4/hae*').as('getParents');
                 cy.clickButton('LOMAKE_YHDISTA_ORGANISAATIO');
                 cy.wait(['@getParents'], { timeout: 10000 });
-
                 cy.selectFromList('ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO', child3.body.organisaatio.oid, 'CHILD');
 
                 cy.intercept(

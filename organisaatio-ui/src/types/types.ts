@@ -158,12 +158,12 @@ export type OrganisaatioSuhde = {
 };
 
 export type YhdistaOrganisaatioon = {
-    newParent?: string;
+    newParent?: Organisaatio;
     date: Date;
     merge: boolean;
 };
 export type SiirraOrganisaatioon = {
-    newParent?: string;
+    newParent?: Organisaatio;
     date: Date;
     merge: boolean;
 };

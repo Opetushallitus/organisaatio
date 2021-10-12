@@ -5,7 +5,8 @@ import TYBody from './TYBody';
 import TYFooter from './TYFooter';
 import * as React from 'react';
 import { Confirmation } from '../Confirmation/Confirmation';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { LanguageContext } from '../../../contexts/contexts';
 
 export function YhdistaOrganisaatio(props: {
     yhdistaOrganisaatio: YhdistaOrganisaatioon;
@@ -19,6 +20,7 @@ export function YhdistaOrganisaatio(props: {
     peruutaCallback: () => void;
     suljeCallback: () => void;
 }) {
+    const { i18n } = useContext(LanguageContext);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
     return (
         <>
@@ -45,7 +47,19 @@ export function YhdistaOrganisaatio(props: {
             {confirmationModaaliAuki && (
                 <Confirmation
                     header={'TOIMIPISTEEN_YHDISTYS_TITLE'}
-                    message={'TOIMIPISTEEN_YHDISTYS_VAHVISTUS'}
+                    message={'TOIMIPISTEEN_YHDISTYS_VAHVISTUS_{from}_TO_{to}'}
+                    replacements={[
+                        {
+                            key: 'from',
+                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
+                        },
+                        {
+                            key: 'to',
+                            value: `${i18n.translateNimi(props.yhdistaOrganisaatio.newParent?.nimi)} (${
+                                props.yhdistaOrganisaatio.newParent?.oid || ''
+                            })`,
+                        },
+                    ]}
                     tallennaCallback={() => {
                         setConfirmationModaaliAuki(false);
                         props.tallennaCallback();

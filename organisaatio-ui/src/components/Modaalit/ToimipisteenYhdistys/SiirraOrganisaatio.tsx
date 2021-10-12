@@ -2,23 +2,23 @@ import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import TYHeader from './TYHeader';
 import TYFooter from './TYFooter';
 import * as React from 'react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import TSBody from './TSBody';
 import { Confirmation } from '../Confirmation/Confirmation';
-import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon, YhdistaOrganisaatioon } from '../../../types/types';
+import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
+import { LanguageContext } from '../../../contexts/contexts';
 
 export function SiirraOrganisaatio(props: {
     siirraOrganisaatio: SiirraOrganisaatioon;
     organisaatio: Organisaatio;
 
-    handleChange: (
-        value: ((prevState: YhdistaOrganisaatioon) => YhdistaOrganisaatioon) | YhdistaOrganisaatioon
-    ) => void;
+    handleChange: (value: ((prevState: SiirraOrganisaatioon) => SiirraOrganisaatioon) | SiirraOrganisaatioon) => void;
     organisaatioRakenne: ResolvedRakenne;
     tallennaCallback: () => void;
     peruutaCallback: () => void;
     suljeCallback: () => void;
 }) {
+    const { i18n } = useContext(LanguageContext);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
     return (
         <>
@@ -45,7 +45,19 @@ export function SiirraOrganisaatio(props: {
             {confirmationModaaliAuki && (
                 <Confirmation
                     header={'TOIMIPISTEEN_SIIRTO_TITLE'}
-                    message={'TOIMIPISTEEN_SIIRTO_VAHVISTUS'}
+                    message={'TOIMIPISTEEN_SIIRTO_VAHVISTUS_{from}_TO_{to}'}
+                    replacements={[
+                        {
+                            key: 'from',
+                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
+                        },
+                        {
+                            key: 'to',
+                            value: `${i18n.translateNimi(props.siirraOrganisaatio.newParent?.nimi)} (${
+                                props.siirraOrganisaatio.newParent?.oid || ''
+                            })`,
+                        },
+                    ]}
                     tallennaCallback={() => {
                         setConfirmationModaaliAuki(false);
                         props.tallennaCallback();

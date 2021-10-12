@@ -5,6 +5,7 @@ import {
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
     OrganisaatioSuhde,
+    SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
 } from '../types/types';
 import { info, success, warning } from '../components/Notification/Notification';
@@ -77,13 +78,13 @@ async function mergeOrganisaatio({
     newParent,
     date,
     merge,
-}: YhdistaOrganisaatioon & {
+}: (YhdistaOrganisaatioon | SiirraOrganisaatioon) & {
     oid: string;
 }) {
     return errorHandlingWrapper(async () => {
         if (newParent) {
             const response = await Axios.put<any>( //?merge=false&moveDate=2021-09-05
-                `${baseUrl}${oid}/organisaatiosuhde/${newParent}?merge=${merge}&moveDate=${date.toISOString()}`
+                `${baseUrl}${oid}/organisaatiosuhde/${newParent.oid}?merge=${merge}&moveDate=${date.toISOString()}`
             );
             info({ message: 'MESSAGE_LIITOS_ONNISTUI', timeOut: 200 });
             return response;
