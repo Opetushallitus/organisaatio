@@ -39,8 +39,8 @@ const MuokkausLomake = ({
     const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
 
-    const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri)); //mapValuesToSelect(ryhma.kayttoryhmat, kayttoRyhmatOptions);
-    const ryhmaTyypit = ryhma.ryhmatyypit.map((koodiUri) => ryhmaTyypitKoodisto.uri2SelectOption(koodiUri)); //mapValuesToSelect(ryhma.ryhmatyypit, ryhmaTyypitOptions);
+    const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri));
+    const ryhmaTyypit = ryhma.ryhmatyypit.map((koodiUri) => ryhmaTyypitKoodisto.uri2SelectOption(koodiUri));
     const isDisabled = !ryhma || ryhma.status === 'PASSIIVINEN';
     const {
         register,
@@ -48,7 +48,6 @@ const MuokkausLomake = ({
         handleSubmit,
         control,
     } = useForm({ resolver: joiResolver(RyhmatLomakeSchema) });
-
     return (
         <PohjaSivu>
             <div className={styles.YlaBanneri}>

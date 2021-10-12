@@ -1,6 +1,5 @@
 describe('Ryhmat Page', () => {
-    beforeEach(() => {
-    });
+    beforeEach(() => {});
     it('Renders table of Ryhmat', () => {
         cy.visit('/ryhmat');
         cy.get('table', { timeout: 30000 });
@@ -41,13 +40,6 @@ describe('Ryhmat Page', () => {
         });
     });
 
-    it('Finds Vielä kerran suomi from table', () => {
-        cy.visit('/ryhmat');
-        cy.get('table').then(() => {
-            cy.get('input').first().type('Vielä kerran s');
-            expect(cy.get('a').value).to.have.valueOf('Vielä kerran suomi');
-        });
-    });
     it('Can transition to create a new ryhma organisation', () => {
         cy.visit('/ryhmat');
         cy.get('table', { timeout: 30000 }).then(() => {
