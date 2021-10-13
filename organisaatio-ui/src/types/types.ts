@@ -69,6 +69,12 @@ export type Nimi = {
     sv?: string;
     en?: string;
 };
+//TODO tyypitystä?
+export type OrganisaationNimetNimi = {
+    nimi: Nimi;
+    alkuPvm?: string;
+};
+
 export type OrganisaatioBase = {
     oid: string;
     nimi: Nimi;
@@ -77,8 +83,8 @@ export type OrganisaatioBase = {
 export type Organisaatio = OrganisaatioBase & {
     parentOid: string;
     parentOidPath: string;
-    ytunnus: string;
-    nimet: Nimi[];
+    ytunnus?: string;
+    nimet: OrganisaationNimetNimi[];
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
     tyypit: KoodiUri[];
@@ -115,7 +121,7 @@ export interface YtjOrganisaatio {
 export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
     oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???
-    kuvaus?: any; // TODO Tuleeko nämä???
+    kuvaus?: string; // TODO Tuleeko nämä???
     kayntiosoite?: any;
     kayttoryhmat: string[];
     kieletUris?: any[];
@@ -130,7 +136,6 @@ export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
     piilotettu?: boolean;
     postiosoite?: any;
     ryhmatyypit: string[];
-
     toimipistekoodi?: string;
     tyypit: string[];
     version?: number;

@@ -5,32 +5,14 @@ import TNFooter from './TNFooter';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Joi from 'joi';
 import { Nimi } from '../../../types/types';
-import { Dispatch, SetStateAction } from 'react';
+import ToimipisteenNimenmuutosModaaliSchema from '../../../ValidationSchemas/ToimipisteenNimenmuutosModaaliSchema';
 
 type ModaaliProps = {
     nimi: Nimi;
-    setNimenmuutosModaaliAuki: Dispatch<SetStateAction<boolean>>;
+    closeNimenmuutosModaali: () => void;
     handleNimiTallennus: (Nimi) => void;
 };
-
-export const nimiModaaliSchema = Joi.object({
-    nimiEn: Joi.string(),
-    nimiFi: Joi.string(),
-    nimiSv: Joi.string(),
-})
-    .when(Joi.object({ nimiFi: Joi.string().required() }).unknown(), {
-        then: Joi.object({ nimiSv: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
-    })
-    .when(Joi.object({ nimiSv: Joi.string().required() }).unknown(), {
-        then: Joi.object({ nimiFi: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
-    })
-    .when(Joi.object({ nimiEn: Joi.string().required() }).unknown(), {
-        then: Joi.object({ nimiFi: Joi.string().allow(''), nimiSv: Joi.string().allow('') }),
-    })
-    .or('nimiFi', 'nimiSv', 'nimiEn');
-
 export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     const {
         reset,
@@ -38,16 +20,16 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         register,
         formState: { errors: validationErrors },
         handleSubmit,
-    } = useForm({ resolver: joiResolver(nimiModaaliSchema) });
+    } = useForm({ resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema) });
 
     const handleTallenna = () => {
         const { nimiFi: fi, nimiSv: sv, nimiEn: en } = getValues();
         props.handleNimiTallennus({ fi, sv, en });
-        return props.setNimenmuutosModaaliAuki(false);
+        return props.closeNimenmuutosModaali();
     };
     const handlePeruuta = () => {
         reset();
-        props.setNimenmuutosModaaliAuki(false);
+        props.closeNimenmuutosModaali();
     };
 
     return (

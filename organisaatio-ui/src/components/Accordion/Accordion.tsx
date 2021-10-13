@@ -12,7 +12,7 @@ import {
 type props = {
     lomakkeet: ReactElement[];
     otsikot: string[];
-    preExpanded?: number | string;
+    preExpanded?: string;
     handlePreExpanded?: (lomakeuuid: string) => void;
     handleItemChange?: (event: FormEvent<HTMLDivElement>) => void;
     handleUuidChange?: (Uuids: string[]) => void;
@@ -31,18 +31,18 @@ export default function OrganisaatioMuokkausAccordion(props: props) {
     return (
         <Accordion onChange={handleUuidChange} className={styles.Accordion}>
             {lomakkeet.map((lomake, index) => {
-                const uuid = (lomake.key as string) || `${index}`;
+                const id = (lomake.key as string) || `${index}`;
                 return (
                     <AccordionItem
                         key={lomake.key}
-                        {...(isPreExpandedInUse ? { dangerouslySetExpanded: preExpanded === uuid } : {})}
+                        {...(isPreExpandedInUse ? { dangerouslySetExpanded: preExpanded === id } : {})}
                         onChange={handleItemChange}
-                        uuid={uuid}
+                        uuid={id}
                         className={styles.AccordionItem}
                     >
                         <AccordionItemHeading
                             className={styles.AccordionHeadingItem}
-                            {...(isPreExpandedInUse ? { onClick: () => handlePreExpanded(uuid) } : {})}
+                            {...(isPreExpandedInUse ? { onClick: () => handlePreExpanded(id) } : {})}
                         >
                             <AccordionItemButton className={styles.AccordionButton}>
                                 <span className={styles.OtsikkoTeksti}>{`${index + 1}. ${otsikot[index]}`}</span>

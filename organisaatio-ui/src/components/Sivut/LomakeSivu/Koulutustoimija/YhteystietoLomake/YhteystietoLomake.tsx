@@ -9,7 +9,6 @@ import { LanguageContext } from '../../../../../contexts/contexts';
 import { KoodiUri, Nimi } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
-//import { useWatch } from 'react-hook-form';
 
 export type Props = {
     yhteystiedot?: Yhteystiedot[];
@@ -28,7 +27,6 @@ export type Props = {
 type SupportedKieli = 'finnishAndSwedish' | 'english';
 
 const DEFAULT_LANGUAGE_CODE = 'finnishAndSwedish';
-// this should be defined in some common place relating to localization
 
 const YhteystietoLomake = ({ formRegister, validationErrors, watch }: Props): React.ReactElement => {
     const { i18n } = useContext(LanguageContext);

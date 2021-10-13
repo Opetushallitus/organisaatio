@@ -14,14 +14,15 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
+import { Koodi, Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 
-type OrganisaatioProps = {
+type PerustietoLomakeProps = {
+    organisaatioTyypit: Koodi[];
     organisaatio: Organisaatio;
     language: string;
     setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
@@ -31,8 +32,7 @@ type OrganisaatioProps = {
     handleNimiUpdate: (nimi: Nimi) => void;
 };
 
-// TODO optionsmapper ja paranna logiikkaa
-export default function PerustietoLomake(props: OrganisaatioProps) {
+export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const { i18n } = useContext(LanguageContext);
     const {
         organisaatio,
@@ -42,17 +42,13 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
         formRegister,
         formControl,
         handleNimiUpdate,
+        organisaatioTyypit,
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
 
-    const {
-        kuntaKoodisto,
-        organisaatioTyypitKoodisto,
-        maatJaValtiotKoodisto,
-        oppilaitoksenOpetuskieletKoodisto,
-    } = useContext(KoodistoContext);
+    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const kunnatOptions = kuntaKoodisto.selectOptions();
 
     const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
@@ -115,7 +111,13 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                             name={'tyypit'}
                             defaultValue={[...organisaatio.tyypit]}
                             render={({ field: { ref, ...rest } }) => (
-                                <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
+                                <CheckboxGroup
+                                    {...rest}
+                                    options={organisaatioTyypit.map((oT) => ({
+                                        value: oT.uri,
+                                        label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'],
+                                    }))}
+                                />
                             )}
                         />
                     )}
@@ -216,7 +218,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             </div>
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
-                    setNimenmuutosModaaliAuki={setNimenmuutosModaaliAuki}
+                    closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
                     handleNimiTallennus={handleNimiUpdate}
                     nimi={organisaatio.nimi}
                 />

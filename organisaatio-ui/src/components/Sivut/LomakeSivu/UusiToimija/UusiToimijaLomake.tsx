@@ -7,60 +7,30 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
+import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
 import { NewOrganisaatio, Organisaatio, Nimi } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import useKoodisto from '../../../../api/koodisto';
 import { Link, useHistory } from 'react-router-dom';
-import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
-import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-
+import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
+import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
 import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
+
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
-    const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
-    const {
-        data: organisaatioTyypit,
-        loading: organisaatioTyypitLoading,
-        error: organisaatioTyypitError,
-    } = useKoodisto('ORGANISAATIOTYYPPI');
     const { parentOid } = queryString.parse(props.location.search);
 
-    async function saveOrganisaatio() {
-        const mapValueFromObj = (obj) => obj.value;
-        perustiedotHandleSubmit((perustiedotFormValues) => {
-            yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const { kotipaikkaUri, maaUri, kieletUris } = perustiedotFormValues;
-                const orgToBeUpdated = {
-                    ...{
-                        ...perustiedotFormValues,
-                        kotipaikkaUri: mapValueFromObj(kotipaikkaUri),
-                        maaUri: mapValueFromObj(maaUri),
-                        kieletUris: mapValueFromObj(kieletUris),
-                    },
-                    yhteystiedot,
-                    parentOid: (parentOid || ROOT_OID) as string,
-                    nimet: [perustiedotFormValues.nimi],
-                } as NewOrganisaatio;
-                const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
-                if (savedOrganisaatio) {
-                    props.history.push(`/lomake/${savedOrganisaatio.oid}`);
-                }
-            })();
-        })();
-    }
-
+    const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
     useEffect(() => {
@@ -69,6 +39,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             setParentOrganisaatio(Object.assign({}, parent.organisaatio));
         })();
     }, [parentOid]);
+
     const {
         reset: resetPerustiedot,
         watch: watchPerustiedot,
@@ -107,12 +78,43 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 return setAvoinnaCb();
         }
     };
-    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypit, parentOrganisaatio);
+
     const handleNimiUpdate = (nimi: Nimi) => {
         setPerustiedotValue('nimi', nimi);
     };
-    if (organisaatioTyypitLoading ||
-        organisaatioTyypitError || !resolvedTyypit) {
+
+    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
+
+    async function saveOrganisaatio() {
+        await perustiedotHandleSubmit((perustiedotFormValues) => {
+            yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
+                const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
+                const { kotipaikkaUri, maaUri, kieletUris } = perustiedotFormValues;
+                const nimet = [
+                    {
+                        nimi: Object.assign({}, perustiedotFormValues.nimi),
+                        alkuPvm: new Date().toISOString().split('T')[0],
+                    },
+                ];
+                const orgToBeUpdated = {
+                    ...{
+                        ...perustiedotFormValues,
+                        kotipaikkaUri: kotipaikkaUri?.value,
+                        maaUri: maaUri?.value,
+                        kieletUris: kieletUris?.value,
+                    },
+                    yhteystiedot,
+                    parentOid: (parentOid || ROOT_OID) as string,
+                    nimet,
+                } as NewOrganisaatio;
+                const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
+                if (savedOrganisaatio) {
+                    props.history.push(`/lomake/${savedOrganisaatio.oid}`);
+                }
+            })();
+        })();
+    }
+    if (!resolvedTyypit) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
@@ -125,6 +127,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                organisaatioTyypit={resolvedTyypit}
                 watchPerustiedot={watchPerustiedot}
                 handleNimiUpdate={handleNimiUpdate}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
@@ -132,7 +135,6 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 formControl={perustiedotControl}
                 formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
-                organisaatioTyypit={resolvedTyypit}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));

@@ -127,7 +127,6 @@ export const mapUiYhteystiedotToApi = (
             if (!!uiYhteystiedot[kieli].www) {
                 www[NAME_WWW] = uiYhteystiedot[kieli].www;
             }
-            console.log('www', www);
             return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
         })
         .reduce((a, b) => a.concat(b)) as ApiYhteystiedot[];

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useContext } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import { Nimi } from '../../../../../types/types';
+import { Nimi, OrganisaationNimetNimi } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
 
 type nimiHistoriaProps = {
-    nimet: Nimi[];
+    nimet: OrganisaationNimetNimi[];
 };
 
 export default function NimiHistoriaLomake(props: nimiHistoriaProps) {

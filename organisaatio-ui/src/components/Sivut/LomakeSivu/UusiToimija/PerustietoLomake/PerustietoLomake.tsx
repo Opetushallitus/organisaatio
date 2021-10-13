@@ -13,8 +13,10 @@ import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
+import { Koodi } from '../../../../../types/types';
 
-type OrganisaatioProps = {
+type UusiOrgPerustiedotProps = {
+    organisaatioTyypit: Koodi[];
     validationErrors: FieldErrors<FieldValues>;
     formRegister: UseFormRegister<FieldValues>;
     formControl: Control<FieldValues>;
@@ -30,16 +32,18 @@ type Nimi = {
     alkuPvm?: string;
 };
 
-// TODO optionsmapper ja paranna logiikkaa
-export default function PerustietoLomake(props: OrganisaatioProps) {
+export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const { handleJatka, validationErrors, formControl, formRegister, handleNimiUpdate, watchPerustiedot } = props;
     const {
-        kuntaKoodisto,
-        organisaatioTyypitKoodisto,
-        maatJaValtiotKoodisto,
-        oppilaitoksenOpetuskieletKoodisto,
-    } = useContext(KoodistoContext);
+        handleJatka,
+        validationErrors,
+        formControl,
+        formRegister,
+        handleNimiUpdate,
+        watchPerustiedot,
+        organisaatioTyypit,
+    } = props;
+    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
 
@@ -47,7 +51,6 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
     const sv = watchPerustiedot('nimi.sv');
     const en = watchPerustiedot('nimi.en');
     const nimi = { fi, sv, en };
-    console.log('ve', validationErrors);
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -107,7 +110,13 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
                         name={'tyypit'}
                         defaultValue={[]}
                         render={({ field: { ref, ...rest } }) => (
-                            <CheckboxGroup {...rest} options={organisaatioTyypitKoodisto.selectOptions()} />
+                            <CheckboxGroup
+                                {...rest}
+                                options={organisaatioTyypit.map((oT) => ({
+                                    value: oT.uri,
+                                    label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'], //TODO make better
+                                }))}
+                            />
                         )}
                     />
                 </div>
@@ -198,7 +207,7 @@ export default function PerustietoLomake(props: OrganisaatioProps) {
             </div>
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
-                    setNimenmuutosModaaliAuki={setNimenmuutosModaaliAuki}
+                    closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
                     handleNimiTallennus={handleNimiUpdate}
                     nimi={nimi}
                 />
