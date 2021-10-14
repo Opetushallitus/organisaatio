@@ -56,7 +56,7 @@ export default function TSBody({ siirraOrganisaatio, handleChange, organisaatio,
                     <DatePickerInput
                         value={siirraOrganisaatio.date}
                         onChange={(e) => {
-                            handleChange(siirraOrganisaatio);
+                            handleChange({ ...siirraOrganisaatio, date: e });
                         }}
                     />
                 </div>

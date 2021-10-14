@@ -57,7 +57,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                     <DatePickerInput
                         value={yhdistaOrganisaatio.date}
                         onChange={(e) => {
-                            handleChange(yhdistaOrganisaatio);
+                            handleChange({ ...yhdistaOrganisaatio, date: e });
                         }}
                     />
                 </div>
