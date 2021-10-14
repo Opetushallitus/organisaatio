@@ -17,35 +17,41 @@ const koodit: Koodi[] = [
 describe('KoodistoImpl', () => {
     const impl = new KoodistoImpl(koodit, 'fi');
 
-    it('löytää nimen uri:lla', () => {
+    it('Finds name using a uri', () => {
         const nimi = impl.uri2Nimi(koodit[0].uri);
         expect(nimi).toEqual(koodit[0].nimi.fi);
     });
 
-    it('palauttaa tyhjän olemattomalla uri:lla', () => {
+    it('Returns empty nimi when uri doesnt exist', () => {
         const nimi = impl.uri2Nimi('eioo_1#1');
         expect(nimi).toEqual('');
     });
 
-    it('löytää nimen arvolla', () => {
+    it('Finds nimi using koodiarvo', () => {
         const nimi = impl.arvo2Nimi(koodit[0].arvo);
         expect(nimi).toEqual(koodit[0].nimi.fi);
     });
 
-    it('palauttaa tyhjän olemattomalla arvolla', () => {
+    it('Returns empty nimi when arvo doesnt exist', () => {
         const nimi = impl.arvo2Nimi('0');
         expect(nimi).toEqual('');
     });
 
-    it('palauttaa kaikki nimet', () => {
+    it('Returns all names', () => {
         const nimet = impl.nimet();
         expect(nimet.length).toEqual(1);
         expect(nimet[0]).toEqual('Koodi');
     });
 
-    it('palauttaa kaikki koodit', () => {
+    it('Returns all koodis', () => {
         const koodit = impl.koodit();
         expect(koodit.length).toEqual(1);
         expect(koodit[0].uri).toEqual('koodi_1#1');
+    });
+
+    it('Returns all selectOptions', () => {
+        const options = impl.selectOptions();
+        expect(options.length).toEqual(1);
+        expect(options[0].label).toEqual('Koodi');
     });
 });

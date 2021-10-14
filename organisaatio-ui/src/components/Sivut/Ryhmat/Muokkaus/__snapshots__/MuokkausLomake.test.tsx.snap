@@ -363,7 +363,10 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             }
             defaultValue={
               Array [
-                undefined,
+                Object {
+                  "label": "",
+                  "value": "",
+                },
               ]
             }
             name="ryhmatyypit"
@@ -514,7 +517,10 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             }
             defaultValue={
               Array [
-                undefined,
+                Object {
+                  "label": "",
+                  "value": "",
+                },
               ]
             }
             name="kayttoryhmat"

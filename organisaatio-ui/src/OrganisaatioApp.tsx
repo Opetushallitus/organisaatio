@@ -37,31 +37,49 @@ const OrganisaatioApp: React.FC = () => {
     const { data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError } = useKoodisto('RYHMATYYPIT');
 
     const { data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError } = useKoodisto('KAYTTORYHMAT');
+    const { data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError } = useKoodisto('RYHMANTILA');
     const {
         data: organisaatioTyypit,
         loading: organisaatioTyypitLoading,
         error: organisaatioTyypitError,
     } = useKoodisto('ORGANISAATIOTYYPPI');
-    const { data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError } = useKoodisto('RYHMANTILA');
+    const { data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError } = useKoodisto(
+        'MAATJAVALTIOT1'
+    );
+
+    const {
+        data: oppilaitoksenOpetuskielet,
+        loading: oppilaitoksenOpetuskieletLoading,
+        error: oppilaitoksenOpetuskieletError,
+    } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
+    const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
     if (
+        oppilaitoksenOpetuskieletLoading ||
+        maatJaValtiotLoading ||
         languageLoading ||
         lokalisointiLoading ||
         kunnatLoading ||
         ryhmaTyypitLoading ||
         kayttoRyhmatLoading ||
         organisaatioTyypitLoading ||
-        ryhmanTilatLoading
+        ryhmanTilatLoading ||
+        organisaatioTyypitLoading ||
+        postinumerotLoading
     ) {
         return <Loading />;
     }
     if (
+        oppilaitoksenOpetuskieletError ||
         languageError ||
         lokalisointiError ||
         kunnatError ||
         ryhmaTyypitError ||
         kayttoRyhmatError ||
         organisaatioTyypitError ||
-        ryhmanTilatError
+        ryhmanTilatError ||
+        maatJaValtiotError ||
+        organisaatioTyypitError ||
+        postinumerotError
     ) {
         return <Error />;
     }
@@ -71,7 +89,9 @@ const OrganisaatioApp: React.FC = () => {
     const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
     const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, language);
     const ryhmanTilaKoodisto = new KoodistoImpl(ryhmanTilat, language);
-
+    const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
+    const oppilaitoksenOpetuskieletKoodisto = new KoodistoImpl(oppilaitoksenOpetuskielet, language);
+    const postinumerotKoodisto = new KoodistoImpl(postinumerot, language);
     return (
         <Router basename="/organisaatio">
             <ThemeProvider theme={theme}>
@@ -79,6 +99,9 @@ const OrganisaatioApp: React.FC = () => {
                     <Notification />
                     <KoodistoContext.Provider
                         value={{
+                            postinumerotKoodisto,
+                            oppilaitoksenOpetuskieletKoodisto,
+                            maatJaValtiotKoodisto,
                             kuntaKoodisto,
                             ryhmaTyypitKoodisto,
                             kayttoRyhmatKoodisto,

@@ -9,8 +9,8 @@ describe('Ryhma view Page', () => {
         cy.get('#kuvaus2En').type('Enkku kuvaus');
         cy.get('#RYHMALOMAKE_RYHMAN_TYYPPI_SELECT input').first().type('Hakukohde{enter}{enter}', { force: true });
         cy.get('#RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT input')
-          .first()
-          .type('Yleinen{enter}{enter}', { force: true });
+            .first()
+            .type('Yleinen{enter}{enter}', { force: true });
         cy.get('button').contains('BUTTON_TALLENNA').click();
         cy.location('pathname').should('include', '/ryhmat');
     });
@@ -18,8 +18,8 @@ describe('Ryhma view Page', () => {
     it('Finds just saved Suominimi from table', () => {
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('input').first().type('Suominimi');
-            expect(cy.get('a').value).to.have.valueOf('Suominimi');
-            cy.get('a').click();
+            expect(cy.get('a').first().value).to.have.valueOf('Suominimi');
+            cy.get('a').first().click();
         });
     });
 
@@ -33,9 +33,9 @@ describe('Ryhma view Page', () => {
         cy.get('#nimiEn').clear();
         cy.get('button').last().click();
         cy.get('#nimiFi')
-          .should('be.visible')
-          .should('have.css', 'border-color')
-          .and('match', /228, 78, 78/);
+            .should('be.visible')
+            .should('have.css', 'border-color')
+            .and('match', /228, 78, 78/);
     });
 
     it('Can edit Swedish name', () => {
@@ -47,7 +47,7 @@ describe('Ryhma view Page', () => {
         expect(cy.get('#kuvaus2Sv').value).to.have.valueOf('paremmin ruotsiksi');
     });
 
-    it('Can save edited organisation', () => {
+    it('Can save edited Ryhma', () => {
         cy.get('#nimiFi').type('Vielä kerran suomi');
         cy.get('#RYHMALOMAKE_RYHMAN_TYYPPI_SELECT input').first().type('Hakukohde{enter}{enter}', { force: true });
         cy.get('#RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT input')

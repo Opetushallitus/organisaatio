@@ -1,5 +1,5 @@
 import { Koodi, KoodiUri, Organisaatio, Rakenne, ResolvedRakenne } from '../types/types';
-import { ROOT_OID } from '../contexts/contexts';
+import { Koodisto, ROOT_OID } from '../contexts/contexts';
 
 export const resolveOrganisaatio = (
     rakenne: Rakenne[],
@@ -34,13 +34,14 @@ export const resolveOrganisaatio = (
 };
 export const resolveOrganisaatioTyypit = (
     rakenne: Rakenne[],
-    tyypit: Koodi[] | undefined,
+    koodisto: Koodisto,
     organisaatio: { tyypit: KoodiUri[]; oid: string } | undefined
 ): Koodi[] | undefined => {
-    if (tyypit === undefined || organisaatio === undefined) return undefined;
+    if (koodisto === undefined || organisaatio === undefined) return undefined;
     const parentRakenne = resolveOrganisaatio(rakenne, organisaatio);
     if (parentRakenne) {
-        return tyypit
+        return koodisto
+            .koodit()
             .filter((t) => {
                 return parentRakenne.childTypes.includes(t.uri);
             })

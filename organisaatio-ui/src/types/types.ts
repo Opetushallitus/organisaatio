@@ -1,3 +1,5 @@
+import { ApiYhteystiedot } from './apiTypes';
+
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
 export type LocalizableText = Partial<Record<Language, string>>;
@@ -12,14 +14,13 @@ export type Koodi = {
     versio: number;
 };
 
+export type KoodistoSelectOption = {
+    value: KoodiUri;
+    label: string;
+};
+
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
-
-export type KielistettyNimi = {
-    nimi: string;
-    kieli: Language; // ytj-kieli
-    alkuPvm: LocalDate | null;
-};
 
 export type Osoite = {
     osoite?: string;
@@ -47,40 +48,33 @@ export type ytjYtunnus = {
 };
 
 type YhteystiedotBase = {
-    id?: string;
-    yhteystietoOid?: string;
-    kieli: string;
-};
-
-type YhteystiedotEmail = YhteystiedotBase & {
+    postiOsoite: string;
+    postiOsoitePostiNro: string;
+    kayntiOsoite: string;
+    kayntiOsoitePostiNro: string;
+    puhelinnumero: string;
     email: string;
-};
-
-type YhteystiedotPhone = YhteystiedotBase & {
-    tyyppi: 'puhelin';
-    numero: string;
-};
-
-type YhteystiedotWww = YhteystiedotBase & {
     www: string;
 };
 
-export type OsoiteType = 'posti' | 'kaynti' | 'ulkomainern_posti' | 'ulkomainen_kaynti' | 'muu';
-
-export type YhteystiedotOsoite = YhteystiedotBase & {
-    osoiteTyyppi: OsoiteType;
-    postinumeroUri: KoodiUri;
-    postitoimipaikka: string;
-    osoite: string;
+export type Yhteystiedot = {
+    'kieli_fi#1': YhteystiedotBase;
+    'kieli_sv#1': YhteystiedotBase;
+    'kieli_en#1': YhteystiedotBase;
+    osoitteetOnEri?: boolean;
 };
-
-export type Yhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
 
 export type Nimi = {
     fi?: string;
     sv?: string;
     en?: string;
 };
+//TODO tyypitystä?
+export type OrganisaationNimetNimi = {
+    nimi: Nimi;
+    alkuPvm?: string;
+};
+
 export type OrganisaatioBase = {
     oid: string;
     nimi: Nimi;
@@ -89,17 +83,17 @@ export type OrganisaatioBase = {
 export type Organisaatio = OrganisaatioBase & {
     parentOid: string;
     parentOidPath: string;
-    ytunnus: string;
-    nimet: Nimi[];
+    ytunnus?: string;
+    nimet: OrganisaationNimetNimi[];
     alkuPvm: LocalDate | null;
     yritysmuoto?: string;
     tyypit: KoodiUri[];
     status: string;
     kotipaikkaUri: KoodiUri;
     muutKotipaikatUris?: KoodiUri[];
-    maaUri?: KoodiUri;
+    maaUri: KoodiUri;
     kieletUris: KoodiUri[];
-    yhteystiedot?: Yhteystiedot[];
+    yhteystiedot?: ApiYhteystiedot[];
 };
 export type NewOrganisaatio = Omit<Organisaatio, 'oid'>;
 
@@ -127,7 +121,7 @@ export interface YtjOrganisaatio {
 export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
     oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???
-    kuvaus?: any; // TODO Tuleeko nämä???
+    kuvaus?: string; // TODO Tuleeko nämä???
     kayntiosoite?: any;
     kayttoryhmat: string[];
     kieletUris?: any[];
@@ -142,7 +136,6 @@ export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
     piilotettu?: boolean;
     postiosoite?: any;
     ryhmatyypit: string[];
-
     toimipistekoodi?: string;
     tyypit: string[];
     version?: number;

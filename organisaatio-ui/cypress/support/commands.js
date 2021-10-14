@@ -1,3 +1,4 @@
+const { FinnishBusinessIds } = require('finnish-business-ids');
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -79,36 +80,30 @@ Cypress.Commands.add('enterDate', (label, date) => {
     cy.get('label').contains(label).click();
 });
 
-Cypress.Commands.add('enterYhteystieto', (values) => {
-    cy.inputByName('posti.osoite', values.posti.osoite);
-    cy.inputByName('posti.postinumeroUri', values.posti.postinumeroUri);
-    cy.inputByName('kaynti.osoite', values.kaynti.osoite);
-    cy.inputByName('kaynti.postinumeroUri', values.kaynti.postinumeroUri);
-    cy.inputByName('email', values.email);
-    cy.inputByName('www', values.www);
-    return cy.inputByName('numero', values.numero);
+Cypress.Commands.add('enterYhteystieto', (kieli, values) => {
+    cy.inputByName(`${kieli}.postiOsoite`, values.posti.osoite);
+    kieli !== 'kieli_en#1' && cy.inputByName(`${kieli}.postiOsoitePostiNro`, values.posti.postinumeroUri);
+    kieli !== 'kieli_en#1' && cy.inputByName(`${kieli}.puhelinnumero`, values.numero);
+    cy.inputByName(`${kieli}.email`, values.email);
+    return cy.inputByName(`${kieli}.www`, values.www);
 });
 
 Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
-    cy.enterYhteystieto({
+    cy.enterYhteystieto('kieli_fi#1', {
         posti: { osoite: `${prefix} FI Osoite 1 a 3`, postinumeroUri: '00100' },
-        kaynti: { osoite: `${prefix} Osoite 1 a 3`, postinumeroUri: '00100' },
         email: `${prefix}-FI.noreply@test.com`,
         www: 'http://test.com',
         numero: '09123456',
     });
-    cy.clickRadioOrCheckbox('Ruotsiksi');
-    cy.enterYhteystieto({
+    cy.enterYhteystieto('kieli_sv#1', {
         posti: { osoite: `${prefix} SV Osoite 1 a 3`, postinumeroUri: '00100' },
-        kaynti: { osoite: 'Osoite 1 a 3', postinumeroUri: '00100' },
         email: `${prefix}-SV.noreply@test.com`,
         www: 'http://test.com',
         numero: '09123456',
     });
-    cy.clickRadioOrCheckbox('Englanniksi');
-    cy.enterYhteystieto({
+    cy.clickRadioOrCheckbox('ENGLANNIKSI');
+    cy.enterYhteystieto('kieli_en#1', {
         posti: { osoite: `${prefix} EN Osoite 1 a 3`, postinumeroUri: '00100' },
-        kaynti: { osoite: 'Osoite 1 a 3', postinumeroUri: '00100' },
         email: `${prefix}-EN.noreply@test.com`,
         www: 'http://test.com',
         numero: '09123456',
@@ -123,11 +118,12 @@ Cypress.Commands.add('clickSaveButton', () => {
 
 Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
     cy.clickAccordion('PERUSTIEDOT');
-    cy.clickRadioOrCheckbox('EI_YTUNNUS');
+    //cy.clickRadioOrCheckbox('EI_YTUNNUS');
+    cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
     cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
-    cy.inputByName('fi', `${prefix} Suominimi`);
-    cy.inputByName('sv', `${prefix} Ruotsi`);
-    cy.inputByName('en', `${prefix} Enkku`);
+    cy.inputByName('nimiFi', `${prefix} Suominimi`);
+    cy.inputByName('nimiSv', `${prefix} Ruotsi`);
+    cy.inputByName('nimiEn', `${prefix} Enkku`);
     cy.clickButton('VAHVISTA');
     cy.clickRadioOrCheckbox(tyyppi);
     cy.enterDate('PERUSTAMISPAIVA', '2.9.2021');

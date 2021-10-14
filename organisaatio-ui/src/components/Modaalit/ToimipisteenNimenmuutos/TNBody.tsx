@@ -3,36 +3,49 @@ import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenNimenmuutos.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import { Nimi } from '../../../types/types';
+import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { FieldValues } from 'react-hook-form/dist/types/fields';
+import { UseFormRegister } from 'react-hook-form/dist/types/form';
 
 type TNProps = {
-    handleChange: (nimi: Nimi) => void;
     nimi: Nimi;
+    validationErrors: FieldErrors<FieldValues>;
+    register: UseFormRegister<FieldValues>;
 };
 
 export default function TNBody(props: TNProps) {
     const { i18n } = useContext(LanguageContext);
-    const { handleChange, nimi } = props;
-    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const input = e.target as HTMLInputElement;
-        const inputinNimi = input.name as keyof Nimi;
-        const uusiNimi = Object.assign({}, nimi);
-        uusiNimi[inputinNimi] = input.value;
-        return handleChange(uusiNimi);
-    };
+    const { nimi, validationErrors, register } = props;
+
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyKentta}>
                 <div className={styles.BodyKentta}>
                     <label>{i18n.translate('LABEL_SUOMEKSI')}</label>
-                    <Input name="fi" value={nimi.fi || ''} onChange={handleOnChange} />
+                    <Input
+                        error={!!validationErrors['nimiFi']}
+                        id={'organisaation_nimiFi'}
+                        {...register('nimiFi')}
+                        defaultValue={nimi && nimi.fi}
+                    />
                 </div>
                 <div className={styles.BodyKentta}>
                     <label>{i18n.translate('LABEL_RUOTSIKSI')}</label>
-                    <Input name="sv" value={nimi.sv || ''} onChange={handleOnChange} />
+                    <Input
+                        error={!!validationErrors['nimiSv']}
+                        id={'organisaation_nimiSv'}
+                        {...register('nimiSv')}
+                        defaultValue={nimi && nimi.sv}
+                    />
                 </div>
                 <div className={styles.BodyKentta}>
                     <label>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
-                    <Input name="en" value={nimi.en || ''} onChange={handleOnChange} />
+                    <Input
+                        error={!!validationErrors['nimiEn']}
+                        id={'organisaation_nimiEn'}
+                        {...register('nimiEn')}
+                        defaultValue={nimi && nimi.en}
+                    />
                 </div>
             </div>
         </div>
