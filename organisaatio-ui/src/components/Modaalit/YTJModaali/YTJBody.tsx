@@ -9,7 +9,7 @@ import { YtjHaku, YtjOrganisaatio } from '../../../types/apiTypes';
 import { getByYTunnus, searchByName } from '../../../api/ytj';
 
 type Props = {
-    ytunnus: string;
+    ytunnus?: string;
     korvaaOrganisaatio: (ytiedot: YtjOrganisaatio) => void;
 };
 const isYtjOrganisaatio = (input: YtjHaku | YtjOrganisaatio): input is YtjOrganisaatio => {

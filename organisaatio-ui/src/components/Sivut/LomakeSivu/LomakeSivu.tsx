@@ -14,7 +14,7 @@ import {
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
 } from '../../../types/types';
-import { YhteystiedotOsoite, YhteystiedotPhone, YtjOrganisaatio } from '../../../types/apiTypes';
+import { YtjOrganisaatio } from '../../../types/apiTypes';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
@@ -34,7 +34,7 @@ import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeS
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
-import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { mapYtjToAPIOrganisaatio, resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -61,7 +61,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<SiirraOrganisaatioon>(initialSiirra);
     const { postinumerotKoodisto } = useContext(KoodistoContext);
-    const postinumerot = postinumerotKoodisto.koodit();
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
@@ -144,49 +143,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     // TODO täytyy tarkastaa mitä kaikkea tietoa tuolta Ytj:ltä tuleekaan? esim yrityksen lopetuksesta.
     const setYtjDataFetched = (ytjOrganisaatio: YtjOrganisaatio) => {
-        const {
-            nimi,
-            postiOsoite,
-            kayntiOsoite,
-            yritysmuoto,
-            yritysTunnus: { alkupvm, ytunnus },
-        } = ytjOrganisaatio;
-        const alkuPvm = alkupvm.split('.');
-        [alkuPvm[0], alkuPvm[2]] = [alkuPvm[2], alkuPvm[0]]; // reverse date to YYYY-MM-DD format
-        organisaatio &&
-            organisaatio.yhteystiedot &&
-            organisaatio.yhteystiedot
-                .filter((yT) => yT.kieli === 'kieli_fi#1')
-                .forEach((yT) => {
-                    if (
-                        (yT as YhteystiedotOsoite).osoiteTyyppi &&
-                        (yT as YhteystiedotOsoite).osoiteTyyppi === 'posti'
-                    ) {
-                        const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = postiOsoite;
-                        const postinumeroKoodi = postinumerotKoodisto.koodit().find((p) => p.arvo === postinumero);
-                        yT = Object.assign(yT, {
-                            osoite,
-                            postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || '',
-                            postitoimipaikka,
-                        });
-                    } else if (
-                        (yT as YhteystiedotOsoite).osoiteTyyppi &&
-                        (yT as YhteystiedotOsoite).osoiteTyyppi === 'kaynti'
-                    ) {
-                        const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = kayntiOsoite;
-                        const postinumeroKoodi = postinumerot.find((p) => p.arvo === postinumero);
-                        yT = Object.assign(yT, {
-                            osoite,
-                            postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || '',
-                            postitoimipaikka,
-                        });
-                    } else if ((yT as YhteystiedotPhone).tyyppi && (yT as YhteystiedotPhone).tyyppi === 'puhelin') {
-                        (yT as YhteystiedotPhone).numero = ytjOrganisaatio.puhelin;
-                    }
-                });
-        setOrganisaatio(
-            Object.assign({}, organisaatio, { nimi: { fi: nimi }, alkuPvm: alkuPvm.join('-'), ytunnus, yritysmuoto })
-        ); // TODO nimet?
+        const newOganisaatio = mapYtjToAPIOrganisaatio({ ytjOrganisaatio, organisaatio, postinumerotKoodisto });
+        setOrganisaatio(newOganisaatio); // TODO nimet?
     };
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);

@@ -8,20 +8,16 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-<<<<<<< HEAD
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import { Koodi } from '../../../../../types/types';
-=======
-import { Option, Koodi, KoodiUri, NewOrganisaatio, Organisaatio, Yhteystiedot } from '../../../../../types/types';
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
 import { YtjOrganisaatio } from '../../../../../types/apiTypes';
->>>>>>> 2d1984e1 (implement ytj for uusilomake)
+import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
@@ -29,64 +25,26 @@ type UusiOrgPerustiedotProps = {
     formRegister: UseFormRegister<FieldValues>;
     formControl: Control<FieldValues>;
     handleJatka: () => void;
-<<<<<<< HEAD
-    handleNimiUpdate: (nimi: Nimi) => void;
+    setPerustiedotValue;
     watchPerustiedot: UseFormWatch<FieldValues>;
-=======
-    setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
->>>>>>> 2d1984e1 (implement ytj for uusilomake)
-};
-
-type Nimi = {
-    fi: string;
-    sv: string;
-    en: string;
-    alkuPvm?: string;
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const {
-<<<<<<< HEAD
-        handleJatka,
-        validationErrors,
-        formControl,
-        formRegister,
-        handleNimiUpdate,
-        watchPerustiedot,
-        organisaatioTyypit,
-    } = props;
+    const { handleJatka, validationErrors, formControl, formRegister, setPerustiedotValue, organisaatioTyypit } = props;
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
-=======
-        organisaatio,
-        organisaatioTyypit,
-        maatJaValtiot,
-        opetuskielet,
-        handleOnChange,
-        handleJatka,
-        setYtjDataFetched,
-    } = props;
->>>>>>> 2d1984e1 (implement ytj for uusilomake)
-    const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
 
-<<<<<<< HEAD
-    const fi = watchPerustiedot('nimi.fi');
-    const sv = watchPerustiedot('nimi.sv');
-    const en = watchPerustiedot('nimi.en');
-    const nimi = { fi, sv, en };
-=======
-    const handleNimiTallennus = () => {
-        const nimet = { nimi: Object.assign({}, nimi), alkuPvm: new Date().toISOString().split('T')[0] };
-        handleOnChange({ name: 'nimet', value: [nimet] });
-        handleOnChange({ name: 'nimi', value: nimi });
-    };
-    const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
-        setYtjDataFetched(ytjOrg);
+    const handleYtjData = (ytjOrg: YtjOrganisaatio) => {
+        setPerustiedotValue('ytunnus', ytjOrg.ytunnus);
+
+        setPerustiedotValue('nimi.fi', ytjOrg.nimi);
+        setPerustiedotValue('nimi.sv', ytjOrg.nimi);
+        setPerustiedotValue('nimi.en', ytjOrg.nimi);
+
         setYTJModaaliAuki(false);
     };
->>>>>>> 2d1984e1 (implement ytj for uusilomake)
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -118,24 +76,36 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                 </div>
             )}
             <div className={styles.Rivi}>
-                <div className={styles.Ruudukko}>
-                    {onYunnus && [
-                        <span key="PERUSTIETO_ORGANISAATIO_TYYPPI" className={styles.AvainKevyestiBoldattu}>
-                            {i18n.translate('PERUSTIETO_ORGANISAATIO_TYYPPI')}
-                        </span>,
-                        <span key="PERUSTIETO_ORGANISAATIO_TODO" className={styles.ReadOnly}>
-                            {i18n.translate('PERUSTIETO_TODO')}
-                        </span>,
-                    ]}
-                    <span className={styles.AvainKevyestiBoldattu}>
-                        {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
-                    </span>
-                    <span className={styles.ReadOnly}>{nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en']}</span>
-                </div>
-                <div className={styles.Kentta}>
-                    <Button className={styles.Nappi} variant="outlined" onClick={() => setNimenmuutosModaaliAuki(true)}>
-                        {i18n.translate('BUTTON_MUOKKAA_ORGANISAATION_NIMEA')}
-                    </Button>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('PERUSTIETO_NIMI_SUOMEKSI')}</label>
+                    <Input
+                        error={!!validationErrors['nimiFi']}
+                        id={'organisaation_nimiFi'}
+                        {...formRegister('nimi.fi')}
+                        defaultValue={''}
+                    />
+                </div>{' '}
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('PERUSTIETO_NIMI_RUOTSIKSI')}</label>
+                    <Input
+                        error={!!validationErrors['nimiSv']}
+                        id={'organisaation_nimiSv'}
+                        {...formRegister('nimi.sv')}
+                        defaultValue={''}
+                    />
+                </div>{' '}
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('PERUSTIETO_NIMI_ENGLANNIKSI')}</label>
+                    <Input
+                        error={!!validationErrors['nimiEn']}
+                        id={'organisaation_nimiEn'}
+                        {...formRegister('nimi.en')}
+                        defaultValue={''}
+                    />
                 </div>
             </div>
             <div className={styles.Rivi}>
@@ -241,17 +211,10 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
             <div>
                 <Button onClick={handleJatka}>{i18n.translate('BUTTON_JATKA')}</Button>
             </div>
-            {nimenmuutosModaaliAuki && (
-                <ToimipisteenNimenmuutosModaali
-                    closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={handleNimiUpdate}
-                    nimi={nimi}
-                />
-            )}
             {YTJModaaliAuki && (
                 <PohjaModaali
                     header={<YTJHeader />}
-                    body={<YTJBody ytunnus={organisaatio.ytunnus} korvaaOrganisaatio={handleKorvaaOrganisaatio} />}
+                    body={<YTJBody ytunnus={''} korvaaOrganisaatio={handleYtjData} />}
                     footer={
                         <YTJFooter
                             peruutaCallback={() => {

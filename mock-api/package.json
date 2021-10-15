@@ -11,12 +11,9 @@
     "connect-api-mocker": "^1.10.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-<<<<<<< HEAD
     "morgan": "^1.10.0",
-    "prettier": "^2.4.1"
-=======
+    "prettier": "^2.4.1",
     "express-xml-bodyparser": "^0.3.0",
     "morgan-body": "^2.6.6"
->>>>>>> 2d1984e1 (implement ytj for uusilomake)
   }
 }

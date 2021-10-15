@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Organisaatio, Nimi } from '../../../../types/types';
+import { NewOrganisaatio, Organisaatio } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -79,10 +79,6 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         }
     };
 
-    const handleNimiUpdate = (nimi: Nimi) => {
-        setPerustiedotValue('nimi', nimi);
-    };
-
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
     async function saveOrganisaatio() {
@@ -128,22 +124,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         lomakkeet.push(
             <PerustietoLomake
                 organisaatioTyypit={resolvedTyypit}
-<<<<<<< HEAD
                 watchPerustiedot={watchPerustiedot}
-                handleNimiUpdate={handleNimiUpdate}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
                 validationErrors={perustiedotValidationErrors}
                 formControl={perustiedotControl}
+                setPerustiedotValue={setPerustiedotValue}
                 formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
-=======
-                organisaatio={organisaatio}
-                maatJaValtiot={maatJaValtiot}
-                opetuskielet={oppilaitoksenOpetuskielet}
-                setYtjDataFetched={(a) => {
-                    console.log(a);
-                }}
->>>>>>> 2d1984e1 (implement ytj for uusilomake)
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));

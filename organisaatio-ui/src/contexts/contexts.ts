@@ -64,7 +64,7 @@ export class KoodistoImpl implements Koodisto {
     private readonly KoodistoOptionValues: KoodistoSelectOption[];
 
     constructor(koodisto: Koodi[], kieli: Language) {
-        this.koodisto = koodisto;
+        this.koodisto = koodisto.sort((a, b) => a.uri.localeCompare(b.uri));
         this.kieli = kieli;
         this.KoodistoOptionValues = koodisto.map((koodi: Koodi) => this.uri2SelectOption(koodi.uri, koodi.versio));
     }
