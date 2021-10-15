@@ -99,25 +99,6 @@ export type NewOrganisaatio = Omit<Organisaatio, 'oid'>;
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
 
-export interface YtjOrganisaatio {
-    ytunnus: string;
-    nimi: string;
-    aloitusPvm: LocalDate | null;
-    yritysmuoto: string;
-    yritysmuotoKoodi: string;
-    yritystunnusHistoria: any; // TODO?
-    kayntiOsoite: ytjOsoite;
-    kotiPaikka: string;
-    kotiPaikkaKoodi?: string;
-    postiOsoite: ytjOsoite;
-    puhelin: string;
-    toimiala: string;
-    toimialaKoodi?: string;
-    versio?: boolean;
-    yrityksenKieli?: string;
-    yritysTunnus: ytjYtunnus;
-}
-
 export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
     oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???

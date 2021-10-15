@@ -128,6 +128,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         lomakkeet.push(
             <PerustietoLomake
                 organisaatioTyypit={resolvedTyypit}
+<<<<<<< HEAD
                 watchPerustiedot={watchPerustiedot}
                 handleNimiUpdate={handleNimiUpdate}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
@@ -135,6 +136,14 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 formControl={perustiedotControl}
                 formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
+=======
+                organisaatio={organisaatio}
+                maatJaValtiot={maatJaValtiot}
+                opetuskielet={oppilaitoksenOpetuskielet}
+                setYtjDataFetched={(a) => {
+                    console.log(a);
+                }}
+>>>>>>> 2d1984e1 (implement ytj for uusilomake)
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));

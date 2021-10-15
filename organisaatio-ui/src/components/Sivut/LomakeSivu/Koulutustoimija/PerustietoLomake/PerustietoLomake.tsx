@@ -14,12 +14,17 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
+<<<<<<< HEAD
 import { Koodi, Nimi, Organisaatio, YtjOrganisaatio } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
+=======
+import { Koodi, KoodiUri, Nimi, Organisaatio } from '../../../../../types/types';
+import { YtjOrganisaatio } from '../../../../../types/apiTypes';
+>>>>>>> 2d1984e1 (implement ytj for uusilomake)
 
 type PerustietoLomakeProps = {
     organisaatioTyypit: Koodi[];
@@ -237,7 +242,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     suljeCallback={() => setLakkautusModaaliAuki(false)}
                 />
             )}
-            {YTJModaaliAuki && organisaatio && organisaatio.ytunnus && (
+            {YTJModaaliAuki && (
                 <PohjaModaali
                     header={<YTJHeader />}
                     body={<YTJBody ytunnus={organisaatio.ytunnus} korvaaOrganisaatio={handleKorvaaOrganisaatio} />}

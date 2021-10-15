@@ -13,9 +13,8 @@ import {
     OrganisaationNimetNimi,
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
-    YtjOrganisaatio,
 } from '../../../types/types';
-import { YhteystiedotPhone, YhteystiedotOsoite } from '../../../types/apiTypes';
+import { YhteystiedotOsoite, YhteystiedotPhone, YtjOrganisaatio } from '../../../types/apiTypes';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
