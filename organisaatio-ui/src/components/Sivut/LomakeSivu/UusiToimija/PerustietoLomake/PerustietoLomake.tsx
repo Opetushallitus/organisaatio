@@ -17,6 +17,7 @@ import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
 import { YtjOrganisaatio } from '../../../../../types/apiTypes';
 import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
+import { warning } from '../../../../Notification/Notification';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
@@ -30,7 +31,6 @@ type UusiOrgPerustiedotProps = {
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const { i18n, language } = useContext(LanguageContext);
     const {
         handleJatka,
         validationErrors,
@@ -40,6 +40,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
         setYhteystiedotValue,
         organisaatioTyypit,
     } = props;
+    const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
@@ -48,8 +49,17 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
         setPerustiedotValue('ytunnus', ytjOrg.ytunnus);
         setPerustiedotValue('nimi', { fi: ytjOrg.nimi, sv: ytjOrg.nimi, en: ytjOrg.nimi });
         setPerustiedotValue('alkuPvm', ytjOrg.aloitusPvm);
-        setPerustiedotValue('kotipaikkaUri', { value: ytjOrg.kotiPaikkaKoodi, label: ytjOrg.kotiPaikka });
-
+        const selectedKunta = kuntaKoodisto.koodit().find((a) => a.arvo === ytjOrg.kotiPaikkaKoodi);
+        const selectedKuntaSelector = kuntaKoodisto
+            .selectOptions()
+            .find((a) => a.value.startsWith(selectedKunta?.uri || ''));
+        if (selectedKunta && selectedKuntaSelector) setPerustiedotValue('kotipaikkaUri', selectedKuntaSelector);
+        else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
+        const selectedKieli = oppilaitoksenOpetuskieletKoodisto
+            .selectOptions()
+            .find((a) => a.label === ytjOrg.yrityksenKieli?.toLowerCase());
+        if (selectedKieli) setPerustiedotValue('kieletUris', [selectedKieli]);
+        else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
         setYhteystiedotValue('kieli_fi#1', {
             postiOsoite: ytjOrg.postiOsoite.katu,
             postiOsoitePostiNro: ytjOrg.postiOsoite.postinumero,
@@ -64,6 +74,25 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
     };
     return (
         <div className={styles.UloinKehys}>
+            <div className={styles.Rivi}>
+                <div className={styles.Kentta}>
+                    <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
+                    <Controller
+                        control={formControl}
+                        name={'tyypit'}
+                        defaultValue={[]}
+                        render={({ field: { ref, ...rest } }) => (
+                            <CheckboxGroup
+                                {...rest}
+                                options={organisaatioTyypit.map((oT) => ({
+                                    value: oT.uri,
+                                    label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'], //TODO make better
+                                }))}
+                            />
+                        )}
+                    />
+                </div>
+            </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <RadioGroup
@@ -125,25 +154,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     />
                 </div>
             </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
-                    <Controller
-                        control={formControl}
-                        name={'tyypit'}
-                        defaultValue={[]}
-                        render={({ field: { ref, ...rest } }) => (
-                            <CheckboxGroup
-                                {...rest}
-                                options={organisaatioTyypit.map((oT) => ({
-                                    value: oT.uri,
-                                    label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'], //TODO make better
-                                }))}
-                            />
-                        )}
-                    />
-                </div>
-            </div>
+
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
@@ -196,6 +207,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <Controller
                         control={formControl}
                         name={'maaUri'}
+                        defaultValue={maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MAA_SELECT"

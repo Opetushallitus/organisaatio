@@ -115,6 +115,35 @@ Cypress.Commands.add('clickSaveButton', () => {
     cy.get('button').contains('TALLENNA').scrollIntoView().click();
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });
+Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
+    cy.searchOrganisaatio(ytunnus, 'oldOrg');
+    cy.get('@oldOrg').then((response) => {
+        if (response.body.organisaatiot[0]) {
+            const old = response.body.organisaatiot[0];
+            const oid = old.oid;
+            const mod = {
+                oid: old.oid,
+                tyypit: old.organisaatiotyypit,
+                nimi: old.nimi,
+                parentOid: old.parentOid,
+                parentOidPath: `|${old.parentOid}|`,
+                alkuPvm: '2020-10-10',
+                status: 'AKTIIVINEN',
+                version: 1,
+                //ytunnus: Math.floor(Math.random() * 10000000) + '-1',
+                nimet: [{ nimi: old.nimi, alkuPvm: '2020-10-10', version: 0 }],
+                kotipaikkaUri: old.kotipaikkaUri.substr(0, old.kotipaikkaUri.indexOf('#')),
+            };
+            cy.request('PUT', `/organisaatio/v4/${oid}`, mod).as('edit');
+            cy.get('@edit').then((response) => {
+                cy.request('DELETE', `/organisaatio/v4/${response.body.organisaatio.oid}`).as('delete');
+                cy.get('@delete').then((response) => {
+                    console.log('RESPONSE', response.body);
+                });
+            });
+        }
+    });
+});
 
 Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
     cy.clickAccordion('PERUSTIEDOT');
@@ -140,4 +169,10 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
 
 Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
     cy.request('POST', '/organisaatio/v4/', organisaatio).as(key);
+});
+Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {
+    cy.request(
+        'GET',
+        `/organisaatio/v4/hae?searchStr=${ytunnus}&aktiiviset=true&suunnitellut=true&lakkautetut=false`
+    ).as(key);
 });

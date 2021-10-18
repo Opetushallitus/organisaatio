@@ -51,14 +51,15 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
 
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const kunnatOptions = kuntaKoodisto.selectOptions();
-
     const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
         setYtjDataFetched(ytjOrg);
         setYTJModaaliAuki(false);
     };
 
     formRegister('nimi');
-
+    const preselected = organisaatio.kieletUris.map((kieliUri) =>
+        oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
+    );
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -197,9 +198,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Controller
                         control={formControl}
                         name={'kieletUris'}
-                        defaultValue={organisaatio.kieletUris.map((kieliUri) =>
-                            oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
-                        )}
+                        defaultValue={preselected}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti

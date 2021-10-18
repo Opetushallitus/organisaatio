@@ -192,12 +192,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             ...perustiedotFormValues,
                             kotipaikkaUri: kotipaikkaUri?.value,
                             maaUri: maaUri?.value,
-                            kieletUris: kieletUris?.value,
+                            kieletUris: kieletUris.map((a) => a.value),
                         },
                         yhteystiedot,
                         nimet,
                     } as Organisaatio;
-
                     const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
                     if (updatedOrganisaatio) {
                         setOrganisaatio(updatedOrganisaatio);

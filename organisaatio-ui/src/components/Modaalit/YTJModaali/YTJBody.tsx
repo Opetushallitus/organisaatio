@@ -46,7 +46,7 @@ export default function YTJBody({ ytunnus = '', korvaaOrganisaatio }: Props) {
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyRivi}>
-                <Input onChange={(e) => setInput(e.target.value)} value={input} />
+                <Input name={'ytjinput'} onChange={(e) => setInput(e.target.value)} value={input} />
                 <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
             </div>
             <div className={styles.BodyKentta}>
