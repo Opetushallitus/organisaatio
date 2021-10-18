@@ -17,7 +17,7 @@ done
 #  echo fetching $endpoint from $url
 #  rm -rf koodisto-service/rest/codeelement/$endpoint
 #  mkdir -p koodisto-service/rest/codeelement/$endpoint/1
-#  curl -X GET $url -H "accept: application/json;charset=UTF-8" -H "Caller-Id: local-dev" > koodisto-service/rest/codeelement/$endpoint/1/GET.json
+#  curl -X GET $url -H "accept: application/json;charset=UTF-8" -H "Caller-Id: local-dev" > koodisto-service/rest/codeelement/$endpoint/1/GET.js
 #  curl -X GET $url -H "accept: application/json;charset=UTF-8" -H "Caller-Id: local-dev" > koodisto-service/rest/codeelement/$endpoint/POST.json
 #done
 
