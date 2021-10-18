@@ -146,9 +146,12 @@ Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
 });
 
 Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
+    cy.clickRadioOrCheckbox(tyyppi);
     cy.clickAccordion('PERUSTIEDOT');
     //cy.clickRadioOrCheckbox('EI_YTUNNUS');
-    cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
+    if (['Koulutustoimija'].includes(tyyppi)) {
+        cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
+    }
     if (isNew) {
         cy.inputByName('nimi.fi', `${prefix} Suominimi`);
         cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
@@ -160,7 +163,7 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
         cy.inputByName('nimi.en', `${prefix} Enkku`);
         cy.clickButton('VAHVISTA');
     }
-    cy.clickRadioOrCheckbox(tyyppi);
+
     cy.enterDate('PERUSTAMISPAIVA', '2.9.2021');
     cy.selectFromList('PAASIJAINTIKUNTA', 'Ranua');
     cy.selectFromList('MAA', 'Andorra');
