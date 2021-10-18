@@ -70,7 +70,7 @@ export class KoodistoImpl implements Koodisto {
     }
 
     uri2SelectOption(uri: KoodiUri, versio?: number): KoodistoSelectOption {
-        const label = this.nimi((koodi) => uri.startsWith(koodi.uri));
+        const label = this.nimi((koodi) => uri?.startsWith(koodi.uri));
         return {
             value: label === '' ? label : `${uri}${versio ? `#${versio}` : ''}`,
             label,

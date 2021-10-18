@@ -198,6 +198,7 @@ export type ResolvedRakenne = {
     moveTargetType: string[];
     mergeTargetType: string[];
     childTypes: string[];
+    showYtj: boolean;
 };
 export type Rakenne = {
     description: string;
@@ -205,4 +206,5 @@ export type Rakenne = {
     moveTargetType: string | null;
     mergeTargetType: string | null;
     childTypes: string[];
+    showYtj: boolean;
 };

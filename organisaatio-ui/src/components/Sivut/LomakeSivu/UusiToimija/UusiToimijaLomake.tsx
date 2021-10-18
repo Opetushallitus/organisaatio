@@ -16,7 +16,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
-import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
 import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
@@ -80,6 +80,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         }
     };
 
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot().tyypit || [] });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
     async function saveOrganisaatio() {
@@ -112,7 +113,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             })();
         })();
     }
-    if (!resolvedTyypit) {
+    if (!organisaatioRakenne || !resolvedTyypit) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
@@ -126,6 +127,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         lomakkeet.push(
             <PerustietoLomake
                 organisaatioTyypit={resolvedTyypit}
+                rakenne={organisaatioRakenne}
                 watchPerustiedot={watchPerustiedot}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
                 validationErrors={perustiedotValidationErrors}

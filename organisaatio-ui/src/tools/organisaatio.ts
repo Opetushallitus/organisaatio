@@ -4,13 +4,10 @@ import { YhteystiedotOsoite, YhteystiedotPhone, YtjOrganisaatio } from '../types
 
 export const resolveOrganisaatio = (
     rakenne: Rakenne[],
-    organisaatio: { tyypit: KoodiUri[]; oid: string } | undefined
+    organisaatio: { tyypit: KoodiUri[]; oid?: string } | undefined
 ): ResolvedRakenne | undefined => {
     if (organisaatio === undefined) return undefined;
-    let tyypit = [...organisaatio.tyypit];
-    if (organisaatio.oid === ROOT_OID) {
-        tyypit = ['opetushallitus'];
-    }
+    const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.tyypit];
     return rakenne
         .filter((a) => {
             return tyypit.includes(a.type);
@@ -28,9 +25,10 @@ export const resolveOrganisaatio = (
                     mergeTargetType: mergeTarget,
                     moveTargetType: moveTarget,
                     childTypes: [...previous.childTypes, ...current.childTypes],
+                    showYtj: current.showYtj || previous.showYtj,
                 };
             },
-            { type: [], mergeTargetType: [], moveTargetType: [], childTypes: [] }
+            { type: [], mergeTargetType: [], moveTargetType: [], childTypes: [], showYtj: false }
         );
 };
 export const resolveOrganisaatioTyypit = (

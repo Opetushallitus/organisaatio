@@ -2,6 +2,7 @@
   {
     "description": "Opetushallitus",
     "type": "opetushallitus",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -15,6 +16,7 @@
   {
     "description": "Koulutustoimija",
     "type": "organisaatiotyyppi_01",
+    "showYtj": true,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -25,6 +27,7 @@
   {
     "description": "Oppilaitos",
     "type": "organisaatiotyyppi_02",
+    "showYtj": false,
     "moveTargetType": "organisaatiotyyppi_01",
     "mergeTargetType": "organisaatiotyyppi_02",
     "childTypes": [
@@ -34,6 +37,7 @@
   {
     "description": "Toimipiste",
     "type": "organisaatiotyyppi_03",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -43,6 +47,7 @@
   {
     "description": "Oppisopimustoimipiste",
     "type": "organisaatiotyyppi_04",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -51,6 +56,7 @@
   {
     "description": "Muu organisaatio",
     "type": "organisaatiotyyppi_05",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -61,6 +67,7 @@
   {
     "description": "Tyoelamajarjesto",
     "type": "organisaatiotyyppi_06",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -70,6 +77,7 @@
   {
     "description": "Varhaiskasvatuksen jarjestaja",
     "type": "organisaatiotyyppi_07",
+    "showYtj": true,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -79,6 +87,7 @@
   {
     "description": "Varhaiskasvatuksen toimipaikka",
     "type": "organisaatiotyyppi_08",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -88,6 +97,7 @@
   {
     "description": "Kunta",
     "type": "organisaatiotyyppi_09",
+    "showYtj": false,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [

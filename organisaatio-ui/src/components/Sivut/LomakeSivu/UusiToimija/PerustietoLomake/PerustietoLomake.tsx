@@ -11,7 +11,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import { Koodi, Perustiedot, Yhteystiedot } from '../../../../../types/types';
+import { Koodi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
@@ -21,6 +21,7 @@ import { warning } from '../../../../Notification/Notification';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
+    rakenne: ResolvedRakenne;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
@@ -39,6 +40,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
         setPerustiedotValue,
         setYhteystiedotValue,
         organisaatioTyypit,
+        rakenne,
     } = props;
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
@@ -93,33 +95,37 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     />
                 </div>
             </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <RadioGroup
-                        value={onYunnus.toString()}
-                        options={[
-                            { value: 'true', label: i18n.translate('PERUSTIETO_ON_YTUNNUS') },
-                            { value: 'false', label: i18n.translate('PERUSTIETO_EI_YTUNNUS') },
-                        ]}
-                        onChange={(e) => setOnYtunnus(!onYunnus)}
-                    />
-                </div>
-            </div>
-            {onYunnus && (
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>Y-tunnus</label>
-                        <Input
-                            error={!!validationErrors['ytunnus']}
-                            id={'ytunnus'}
-                            {...formRegister('ytunnus')}
-                            defaultValue={''}
-                        />
+            {rakenne.showYtj && (
+                <>
+                    <div className={styles.Rivi}>
+                        <div className={styles.Kentta}>
+                            <RadioGroup
+                                value={onYunnus.toString()}
+                                options={[
+                                    { value: 'true', label: i18n.translate('PERUSTIETO_ON_YTUNNUS') },
+                                    { value: 'false', label: i18n.translate('PERUSTIETO_EI_YTUNNUS') },
+                                ]}
+                                onChange={(e) => setOnYtunnus(!onYunnus)}
+                            />
+                        </div>
                     </div>
-                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
-                        {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
-                    </Button>
-                </div>
+                    {onYunnus && (
+                        <div className={styles.Rivi}>
+                            <div className={styles.Kentta}>
+                                <label>Y-tunnus</label>
+                                <Input
+                                    error={!!validationErrors['ytunnus']}
+                                    id={'ytunnus'}
+                                    {...formRegister('ytunnus')}
+                                    defaultValue={''}
+                                />
+                            </div>
+                            <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
+                                {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
+                            </Button>
+                        </div>
+                    )}
+                </>
             )}
             <div className={styles.Rivi}>
                 <div className={styles.BodyKentta}>

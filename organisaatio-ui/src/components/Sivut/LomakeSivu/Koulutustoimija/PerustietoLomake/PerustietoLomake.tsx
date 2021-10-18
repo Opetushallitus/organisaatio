@@ -14,7 +14,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { Koodi, Nimi, Organisaatio } from '../../../../../types/types';
+import { Koodi, Nimi, Organisaatio, ResolvedRakenne } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
@@ -24,6 +24,7 @@ import { YtjOrganisaatio } from '../../../../../types/apiTypes';
 
 type PerustietoLomakeProps = {
     organisaatioTyypit: Koodi[];
+    rakenne: ResolvedRakenne;
     organisaatio: Organisaatio;
     language: string;
     setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
@@ -44,6 +45,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         formControl,
         handleNimiUpdate,
         organisaatioTyypit,
+        rakenne,
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
@@ -55,7 +57,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         setYtjDataFetched(ytjOrg);
         setYTJModaaliAuki(false);
     };
-
     formRegister('nimi');
     const preselected = organisaatio.kieletUris.map((kieliUri) =>
         oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
@@ -85,20 +86,22 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     </Button>
                 </div>
             </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
-                    <Input
-                        error={!!validationErrors['ytunnus']}
-                        id={'ytunnus'}
-                        {...formRegister('ytunnus')}
-                        defaultValue={organisaatio.ytunnus}
-                    />
+            {rakenne.showYtj && (
+                <div className={styles.Rivi}>
+                    <div className={styles.Kentta}>
+                        <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
+                        <Input
+                            error={!!validationErrors['ytunnus']}
+                            id={'ytunnus'}
+                            {...formRegister('ytunnus')}
+                            defaultValue={organisaatio.ytunnus}
+                        />
+                    </div>
+                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
+                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
+                    </Button>
                 </div>
-                <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
-                    {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
-                </Button>
-            </div>
+            )}
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>

@@ -74,7 +74,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     } = useForm({ resolver: joiResolver(PerustietolomakeSchema) });
     const {
         reset: yhteystiedotReset,
-        watch,
+        watch: watchYhteystiedot,
         register: yhteystiedotRegister,
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
@@ -234,6 +234,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 key={PERUSTIEDOTID}
                 setYtjDataFetched={setYtjDataFetched}
                 organisaatioTyypit={resolvedTyypit}
+                rakenne={organisaatioRakenne}
                 organisaatio={organisaatio}
                 language={language}
             />
@@ -242,7 +243,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatio.yhteystiedot) {
             lomakkeet.push(
                 <YhteystietoLomake
-                    watch={watch}
+                    watch={watchYhteystiedot}
                     formControl={yhteystiedotControl}
                     validationErrors={yhteystiedotValidationErrors}
                     formRegister={yhteystiedotRegister}
