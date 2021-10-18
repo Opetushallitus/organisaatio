@@ -11,13 +11,13 @@ async function getByYTunnus(yTunnus: string): Promise<YtjOrganisaatio | undefine
             console.error('Function should only be called with valid y-tunnus.');
             return undefined;
         }
-        const { data } = await Axios.get<YtjOrganisaatio>(`${baseUrl}/${yTunnus}`);
+        const { data } = await Axios.get<YtjOrganisaatio>(`${baseUrl}${yTunnus}`);
         return data;
     });
 }
 async function searchByName(name: string): Promise<YtjHaku[]> {
     return errorHandlingWrapper(async () => {
-        const { data } = await Axios.get<YtjOrganisaatio[]>(`${baseUrl}/hae`, { params: { nimi: name } });
+        const { data } = await Axios.get<YtjOrganisaatio[]>(`${baseUrl}hae`, { params: { nimi: name } });
         return data;
     });
 }
