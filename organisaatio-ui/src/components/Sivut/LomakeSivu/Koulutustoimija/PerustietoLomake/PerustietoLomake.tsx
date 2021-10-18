@@ -58,9 +58,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         setYTJModaaliAuki(false);
     };
     formRegister('nimi');
-    const preselected = organisaatio.kieletUris.map((kieliUri) =>
-        oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
-    );
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -201,7 +198,9 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Controller
                         control={formControl}
                         name={'kieletUris'}
-                        defaultValue={preselected}
+                        defaultValue={organisaatio.kieletUris.map((kieliUri) =>
+                            oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri)
+                        )}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti
