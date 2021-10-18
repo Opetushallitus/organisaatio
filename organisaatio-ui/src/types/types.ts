@@ -106,7 +106,7 @@ export type Organisaatio = OrganisaatioBase & {
     kieletUris: KoodiUri[];
     yhteystiedot?: ApiYhteystiedot[];
 };
-export type NewOrganisaatio = Omit<Organisaatio, 'oid'>;
+export type NewOrganisaatio = Omit<Organisaatio, 'oid' | 'status' | 'parentOidPath'>;
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
 

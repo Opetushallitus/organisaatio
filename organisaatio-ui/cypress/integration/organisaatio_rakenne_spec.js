@@ -14,7 +14,7 @@ describe('Organisaatio Rakenne', () => {
             cy.visit(`/lomake/${response.body.organisaatio.oid}`);
             cy.clickButton('LISAA_UUSI_TOIMIJA');
             cy.contains('UUDEN_TOIMIJAN_LISAAMINEN');
-            cy.enterPerustiedot('CHILD', 'Oppilaitos');
+            cy.enterPerustiedot('CHILD', 'Oppilaitos', true);
             cy.clickButton('JATKA');
             cy.enterAllYhteystiedot('CHILD');
             cy.intercept('POST', '/organisaatio/organisaatio/v4/findbyoids').as('findPAth');

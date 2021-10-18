@@ -101,13 +101,13 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
         www: 'http://test.com',
         numero: '09123456',
     });
-    cy.clickRadioOrCheckbox('ENGLANNIKSI');
-    cy.enterYhteystieto('kieli_en#1', {
-        posti: { osoite: `${prefix} EN Osoite 1 a 3`, postinumeroUri: '00100' },
-        email: `${prefix}-EN.noreply@test.com`,
-        www: 'http://test.com',
-        numero: '09123456',
-    });
+    // cy.clickRadioOrCheckbox('ENGLANNIKSI');
+    // cy.enterYhteystieto('kieli_en#1', {
+    //     posti: { osoite: `${prefix} EN Osoite 1 a 3`, postinumeroUri: '00100' },
+    //     email: `${prefix}-EN.noreply@test.com`,
+    //     www: 'http://test.com',
+    //     numero: '09123456',
+    // });
 });
 
 Cypress.Commands.add('clickSaveButton', () => {
@@ -116,15 +116,21 @@ Cypress.Commands.add('clickSaveButton', () => {
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });
 
-Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
+Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
     cy.clickAccordion('PERUSTIEDOT');
     //cy.clickRadioOrCheckbox('EI_YTUNNUS');
     cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
-    cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
-    cy.inputByName('nimiFi', `${prefix} Suominimi`);
-    cy.inputByName('nimiSv', `${prefix} Ruotsi`);
-    cy.inputByName('nimiEn', `${prefix} Enkku`);
-    cy.clickButton('VAHVISTA');
+    if (isNew) {
+        cy.inputByName('nimi.fi', `${prefix} Suominimi`);
+        cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
+        cy.inputByName('nimi.en', `${prefix} Enkku`);
+    } else {
+        cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
+        cy.inputByName('nimi.fi', `${prefix} Suominimi`);
+        cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
+        cy.inputByName('nimi.en', `${prefix} Enkku`);
+        cy.clickButton('VAHVISTA');
+    }
     cy.clickRadioOrCheckbox(tyyppi);
     cy.enterDate('PERUSTAMISPAIVA', '2.9.2021');
     cy.selectFromList('PAASIJAINTIKUNTA', 'Ranua');

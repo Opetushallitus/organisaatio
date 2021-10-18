@@ -86,7 +86,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                 const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const { kotipaikkaUri, maaUri, kieletUris } = perustiedotFormValues;
+                const { kotipaikkaUri, maaUri, kieletUris, muutKotipaikatUris } = perustiedotFormValues;
                 const nimet = [
                     {
                         nimi: Object.assign({}, perustiedotFormValues.nimi),
@@ -98,12 +98,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                         ...perustiedotFormValues,
                         kotipaikkaUri: kotipaikkaUri?.value,
                         maaUri: maaUri?.value,
-                        kieletUris: kieletUris,
+                        kieletUris: kieletUris?.map((a) => a.value),
+                        muutKotipaikatUris: muutKotipaikatUris?.map((a) => a.value),
                     },
                     yhteystiedot,
                     parentOid: (parentOid || ROOT_OID) as string,
                     nimet,
-                } as any;
+                };
                 const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
                 if (savedOrganisaatio) {
                     props.history.push(`/lomake/${savedOrganisaatio.oid}`);
