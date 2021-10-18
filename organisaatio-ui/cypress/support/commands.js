@@ -130,16 +130,13 @@ Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
                 alkuPvm: '2020-10-10',
                 status: 'AKTIIVINEN',
                 version: 1,
-                //ytunnus: Math.floor(Math.random() * 10000000) + '-1',
+                ytunnus: FinnishBusinessIds.generateBusinessId(),
                 nimet: [{ nimi: old.nimi, alkuPvm: '2020-10-10', version: 0 }],
                 kotipaikkaUri: old.kotipaikkaUri.substr(0, old.kotipaikkaUri.indexOf('#')),
             };
             cy.request('PUT', `/organisaatio/v4/${oid}`, mod).as('edit');
             cy.get('@edit').then((response) => {
-                cy.request('DELETE', `/organisaatio/v4/${response.body.organisaatio.oid}`).as('delete');
-                cy.get('@delete').then((response) => {
-                    console.log('RESPONSE', response.body);
-                });
+                console.log('RESPONSE', response.body);
             });
         }
     });
