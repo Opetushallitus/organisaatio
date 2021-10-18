@@ -9,10 +9,9 @@ import { KoodistoContext, LanguageContext } from '../../../../../contexts/contex
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
-import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
+import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import { Koodi } from '../../../../../types/types';
+import { Koodi, Perustiedot, Yhteystiedot } from '../../../../../types/types';
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
@@ -21,28 +20,46 @@ import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
-    validationErrors: FieldErrors<FieldValues>;
-    formRegister: UseFormRegister<FieldValues>;
-    formControl: Control<FieldValues>;
+    validationErrors: FieldErrors<Perustiedot>;
+    formRegister: UseFormRegister<Perustiedot>;
+    formControl: Control<Perustiedot>;
     handleJatka: () => void;
-    setPerustiedotValue;
-    watchPerustiedot: UseFormWatch<FieldValues>;
+    setPerustiedotValue: UseFormSetValue<Perustiedot>;
+    setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
+    watchPerustiedot: UseFormWatch<Perustiedot>;
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
     const { i18n, language } = useContext(LanguageContext);
-    const { handleJatka, validationErrors, formControl, formRegister, setPerustiedotValue, organisaatioTyypit } = props;
+    const {
+        handleJatka,
+        validationErrors,
+        formControl,
+        formRegister,
+        setPerustiedotValue,
+        setYhteystiedotValue,
+        organisaatioTyypit,
+    } = props;
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
 
     const handleYtjData = (ytjOrg: YtjOrganisaatio) => {
         setPerustiedotValue('ytunnus', ytjOrg.ytunnus);
+        setPerustiedotValue('nimi', { fi: ytjOrg.nimi, sv: ytjOrg.nimi, en: ytjOrg.nimi });
+        setPerustiedotValue('alkuPvm', ytjOrg.aloitusPvm);
+        setPerustiedotValue('kotipaikkaUri', { value: ytjOrg.kotiPaikkaKoodi, label: ytjOrg.kotiPaikka });
 
-        setPerustiedotValue('nimi.fi', ytjOrg.nimi);
-        setPerustiedotValue('nimi.sv', ytjOrg.nimi);
-        setPerustiedotValue('nimi.en', ytjOrg.nimi);
-
+        setYhteystiedotValue('kieli_fi#1', {
+            postiOsoite: ytjOrg.postiOsoite.katu,
+            postiOsoitePostiNro: ytjOrg.postiOsoite.postinumero,
+            kayntiOsoite: ytjOrg.kayntiOsoite?.katu,
+            kayntiOsoitePostiNro: ytjOrg.kayntiOsoite?.postinumero,
+            puhelinnumero: ytjOrg.puhelin,
+            email: ytjOrg.sahkoposti,
+            www: ytjOrg.www,
+        });
+        setYhteystiedotValue('osoitteetOnEri', !!ytjOrg.kayntiOsoite);
         setYTJModaaliAuki(false);
     };
     return (

@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Organisaatio } from '../../../../types/types';
+import { Organisaatio, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -48,12 +48,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
-    } = useForm({ resolver: joiResolver(PerustietolomakeSchema) });
+    } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
 
     const {
         reset: resetYhteystiedot,
         watch,
-        register: yhteystiedotRegister,
+        setValue: setYhteystiedotValue,
+        register: registerYhteystiedot,
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
@@ -97,12 +98,12 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                         ...perustiedotFormValues,
                         kotipaikkaUri: kotipaikkaUri?.value,
                         maaUri: maaUri?.value,
-                        kieletUris: kieletUris?.value,
+                        kieletUris: kieletUris,
                     },
                     yhteystiedot,
                     parentOid: (parentOid || ROOT_OID) as string,
                     nimet,
-                } as NewOrganisaatio;
+                } as any;
                 const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
                 if (savedOrganisaatio) {
                     props.history.push(`/lomake/${savedOrganisaatio.oid}`);
@@ -129,6 +130,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 validationErrors={perustiedotValidationErrors}
                 formControl={perustiedotControl}
                 setPerustiedotValue={setPerustiedotValue}
+                setYhteystiedotValue={setYhteystiedotValue}
                 formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
             />
@@ -139,7 +141,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 watch={watch}
                 formControl={yhteystiedotControl}
                 validationErrors={yhteystiedotValidationErrors}
-                formRegister={yhteystiedotRegister}
+                formRegister={registerYhteystiedot}
                 key={YHTEYSTIEDOTUUID}
             />
         );

@@ -58,14 +58,16 @@ export type YtjHaku = {
     nimi: string;
 };
 export type YtjOrganisaatio = YtjHaku & {
-    aloitusPvm: LocalDate | null;
+    aloitusPvm: LocalDate;
     yritysmuoto: string;
     yritysmuotoKoodi: string;
-    kayntiOsoite: ytjOsoite;
+    kayntiOsoite?: ytjOsoite;
     kotiPaikka: string;
-    kotiPaikkaKoodi?: string;
+    kotiPaikkaKoodi: string;
     postiOsoite: ytjOsoite;
     puhelin: string;
+    sahkoposti: string;
+    www: string;
     toimiala: string;
     toimialaKoodi?: string;
     versio?: boolean;

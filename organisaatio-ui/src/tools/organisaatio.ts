@@ -95,13 +95,15 @@ export const mapYtjToAPIOrganisaatio = ({
                     (yT as YhteystiedotOsoite).osoiteTyyppi &&
                     (yT as YhteystiedotOsoite).osoiteTyyppi === 'kaynti'
                 ) {
-                    const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = kayntiOsoite;
-                    const postinumeroKoodi = postinumerotKoodisto?.koodit().find((p) => p.arvo === postinumero);
-                    yT = Object.assign(yT, {
-                        osoite,
-                        postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || '',
-                        postitoimipaikka,
-                    });
+                    if (kayntiOsoite) {
+                        const { katu: osoite, postinumero, toimipaikka: postitoimipaikka } = kayntiOsoite;
+                        const postinumeroKoodi = postinumerotKoodisto?.koodit().find((p) => p.arvo === postinumero);
+                        yT = Object.assign(yT, {
+                            osoite,
+                            postinumeroUri: (postinumeroKoodi && postinumeroKoodi.uri) || '',
+                            postitoimipaikka,
+                        });
+                    }
                 } else if ((yT as YhteystiedotPhone).tyyppi && (yT as YhteystiedotPhone).tyyppi === 'puhelin') {
                     (yT as YhteystiedotPhone).numero = ytjOrganisaatio.puhelin;
                 }

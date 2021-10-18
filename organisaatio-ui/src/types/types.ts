@@ -50,8 +50,8 @@ export type ytjYtunnus = {
 type YhteystiedotBase = {
     postiOsoite: string;
     postiOsoitePostiNro: string;
-    kayntiOsoite: string;
-    kayntiOsoitePostiNro: string;
+    kayntiOsoite?: string;
+    kayntiOsoitePostiNro?: string;
     puhelinnumero: string;
     email: string;
     www: string;
@@ -64,12 +64,23 @@ export type Yhteystiedot = {
     osoitteetOnEri?: boolean;
 };
 
+export type Perustiedot = {
+    ytunnus?: string;
+    nimi: Nimi;
+    tyypit: KoodiUri[];
+    alkuPvm: LocalDate;
+    kotipaikkaUri: KoodistoSelectOption;
+    maaUri: KoodistoSelectOption;
+    muutKotipaikatUris: KoodistoSelectOption[];
+    kieletUris: KoodistoSelectOption[];
+};
+
 export type Nimi = {
     fi?: string;
     sv?: string;
     en?: string;
 };
-//TODO tyypitystä?
+
 export type OrganisaationNimetNimi = {
     nimi: Nimi;
     alkuPvm?: string;
