@@ -196,7 +196,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         },
                         yhteystiedot,
                         nimet,
-                    } as Organisaatio;
+                    };
                     const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
                     if (updatedOrganisaatio) {
                         setOrganisaatio(updatedOrganisaatio);
