@@ -11,15 +11,13 @@ import TLHeader from '../../../../Modaalit/ToimipisteenLakkautus/TLHeader';
 import TLBody from '../../../../Modaalit/ToimipisteenLakkautus/TLBody';
 import TLFooter from '../../../../Modaalit/ToimipisteenLakkautus/TLFooter';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
-import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
-import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
 import { Koodi, Nimi, Organisaatio, Perustiedot, ResolvedRakenne } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import { YtjOrganisaatio } from '../../../../../types/apiTypes';
+import YTJModaali from '../../../../Modaalit/YTJModaali/YTJModaali';
 
 type PerustietoLomakeProps = {
     organisaatioTyypit: Koodi[];
@@ -234,17 +232,10 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 />
             )}
             {YTJModaaliAuki && (
-                <PohjaModaali
-                    header={<YTJHeader />}
-                    body={<YTJBody ytunnus={organisaatio.ytunnus} korvaaOrganisaatio={handleKorvaaOrganisaatio} />}
-                    footer={
-                        <YTJFooter
-                            peruutaCallback={() => {
-                                setYTJModaaliAuki(false);
-                            }}
-                        />
-                    }
-                    suljeCallback={() => setYTJModaaliAuki(false)}
+                <YTJModaali
+                    ytunnus={organisaatio.ytunnus}
+                    korvaaOrganisaatio={handleKorvaaOrganisaatio}
+                    suljeModaali={() => setYTJModaaliAuki(false)}
                 />
             )}
         </div>

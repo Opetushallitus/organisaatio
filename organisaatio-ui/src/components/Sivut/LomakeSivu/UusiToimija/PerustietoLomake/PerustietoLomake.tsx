@@ -12,12 +12,9 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import { Koodi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
-import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
-import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
-import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
 import { YtjOrganisaatio } from '../../../../../types/apiTypes';
-import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
 import { warning } from '../../../../Notification/Notification';
+import YTJModaali from '../../../../Modaalit/YTJModaali/YTJModaali';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
@@ -247,18 +244,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                 <Button onClick={handleJatka}>{i18n.translate('BUTTON_JATKA')}</Button>
             </div>
             {YTJModaaliAuki && (
-                <PohjaModaali
-                    header={<YTJHeader />}
-                    body={<YTJBody ytunnus={''} korvaaOrganisaatio={handleYtjData} />}
-                    footer={
-                        <YTJFooter
-                            peruutaCallback={() => {
-                                setYTJModaaliAuki(false);
-                            }}
-                        />
-                    }
-                    suljeCallback={() => setYTJModaaliAuki(false)}
-                />
+                <YTJModaali korvaaOrganisaatio={handleYtjData} suljeModaali={() => setYTJModaaliAuki(false)} />
             )}
         </div>
     );

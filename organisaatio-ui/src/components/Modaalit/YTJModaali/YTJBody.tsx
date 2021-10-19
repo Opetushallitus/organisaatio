@@ -22,18 +22,14 @@ export default function YTJBody({ ytunnus = '', korvaaOrganisaatio }: Props) {
     const [input, setInput] = useState(ytunnus);
     const [ytjTiedot, setYtjTiedot] = useState<YtjHaku[]>([]);
     async function haeYtjTiedot() {
-        try {
-            if (input) {
-                if (isYTunnus(input)) {
-                    const data = await getByYTunnus(input);
-                    if (data) setYtjTiedot([data]);
-                } else {
-                    const data = await searchByName(input);
-                    setYtjTiedot(data);
-                }
+        if (input) {
+            if (isYTunnus(input)) {
+                const data = await getByYTunnus(input);
+                if (data) setYtjTiedot([data]);
+            } else {
+                const data = await searchByName(input);
+                setYtjTiedot(data);
             }
-        } catch (error) {
-            console.error('error while getting ytjtieto', error);
         }
     }
     async function handleClick(ytjHaku: YtjHaku) {

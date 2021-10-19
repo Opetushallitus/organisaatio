@@ -146,7 +146,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     // TODO täytyy tarkastaa mitä kaikkea tietoa tuolta Ytj:ltä tuleekaan? esim yrityksen lopetuksesta.
     const setYtjDataFetched = (ytjOrganisaatio: YtjOrganisaatio) => {
         const newOganisaatio = mapYtjToAPIOrganisaatio({ ytjOrganisaatio, organisaatio, postinumerotKoodisto });
-        setOrganisaatio(newOganisaatio); // TODO nimet?
+        setOrganisaatio(newOganisaatio);
     };
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);

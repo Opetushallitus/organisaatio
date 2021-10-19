@@ -38,9 +38,6 @@ public class YTJServiceImpl implements YTJService {
         this.ytjUrl = ytjUrl;
     }
 
-    YTJServiceImpl() {
-        this("", "", ""); // testeille
-    }
 
     public String createHashHex(String strToHash) {
         try {
@@ -50,7 +47,6 @@ public class YTJServiceImpl implements YTJService {
 
             return Hex.encodeHexString(digestBytes).toUpperCase();
         } catch (Exception exp) {
-            //DEBUGSAWAY:LOG.debug("Exception when creating hashHex : " + exp.toString());
             return null;
         }
     }
