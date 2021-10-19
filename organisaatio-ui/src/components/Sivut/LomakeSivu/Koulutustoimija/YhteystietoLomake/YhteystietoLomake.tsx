@@ -9,6 +9,7 @@ import { KoodistoContext, LanguageContext } from '../../../../../contexts/contex
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { useWatch } from 'react-hook-form';
+import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 
 export type Props = {
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
@@ -65,7 +66,7 @@ const YhteystietoLomake = ({
         const kieli = toimipaikkaName.substr(toimipaikkaName.indexOf('_') + 1, 2) as 'fi' | 'sv';
         const onChange = (e) => {
             const postinumero = e.target.value;
-            if (!isNaN(postinumero) && postinumero.length === 5) {
+            if (postinumeroSchema.validate(postinumero)) {
                 const postinumeroKoodi = koodit.find((koodi) => koodi.arvo === postinumero);
                 if (postinumeroKoodi) {
                     const {
