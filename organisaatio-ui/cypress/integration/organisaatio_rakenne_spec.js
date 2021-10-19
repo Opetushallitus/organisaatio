@@ -14,6 +14,7 @@ describe('Organisaatio Rakenne', () => {
             cy.visit(`/lomake/${response.body.organisaatio.oid}`);
             cy.clickButton('LISAA_UUSI_TOIMIJA');
             cy.contains('UUDEN_TOIMIJAN_LISAAMINEN');
+            cy.clickAccordion('PERUSTIEDOT');
             cy.enterPerustiedot('CHILD', 'Oppilaitos');
             cy.clickButton('JATKA');
             cy.enterAllYhteystiedot('CHILD');

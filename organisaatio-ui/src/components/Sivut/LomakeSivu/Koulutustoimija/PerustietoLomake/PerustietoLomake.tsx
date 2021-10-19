@@ -57,7 +57,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     };
 
     formRegister('nimi');
-
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>

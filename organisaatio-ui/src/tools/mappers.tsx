@@ -78,8 +78,10 @@ export const mapApiYhteystiedotToUi = (
                 (uiYhteystiedot[kieli] = {
                     postiOsoite: getOsoite(yhteystiedot, kieli, 'posti').osoite,
                     postiOsoitePostiNro: getOsoite(yhteystiedot, kieli, 'posti').postinumeroUri,
+                    postiOsoiteToimipaikka: getOsoite(yhteystiedot, kieli, 'posti').postitoimipaikka,
                     kayntiOsoite: getOsoite(yhteystiedot, kieli, 'kaynti').osoite,
                     kayntiOsoitePostiNro: getOsoite(yhteystiedot, kieli, 'kaynti').postinumeroUri,
+                    kayntiOsoiteToimipaikka: getOsoite(yhteystiedot, kieli, 'kaynti').postitoimipaikka,
                     puhelinnumero: getYhteystieto(yhteystiedot, kieli, NAME_PHONE)[NAME_PHONE],
                     email: getYhteystieto(yhteystiedot, kieli, NAME_EMAIL)[NAME_EMAIL],
                     www: getYhteystieto(yhteystiedot, kieli, NAME_WWW)[NAME_WWW],
@@ -102,6 +104,7 @@ export const mapUiYhteystiedotToApi = (
             const postiosoite = getOsoite(apiYhteystiedot, kieli, 'posti');
             postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
             postiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+            postiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
             const kayntiosoite = getOsoite(apiYhteystiedot, kieli, 'kaynti');
             if (
                 uiYhteystiedot.osoitteetOnEri === true &&
@@ -110,9 +113,11 @@ export const mapUiYhteystiedotToApi = (
             ) {
                 kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
                 kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].kayntiOsoitePostiNro;
+                kayntiosoite.postitoimipaikka = uiYhteystiedot[kieli].kayntiOsoiteToimipaikka;
             } else if (uiYhteystiedot.osoitteetOnEri === false) {
                 kayntiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
                 kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+                kayntiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
             }
             const puhelinnumero = getYhteystieto(apiYhteystiedot, kieli, NAME_PHONE) as YhteystiedotPhone;
             if (!!uiYhteystiedot[kieli].puhelinnumero) {

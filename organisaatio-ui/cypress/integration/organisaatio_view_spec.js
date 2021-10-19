@@ -1,23 +1,29 @@
-describe('Organisaatio View Page', () => {
-    before(() => {
-        cy.visit('/lomake/1.2.246.562.10.00000000001', { timeout: 30000 });
+//import { organisaatio } from '../support/data';
+
+describe('Organisaatio muokkaus Page', () => {
+    /* TODO tehdään seuraavassa haarassa
+    before(() => cy.persistOrganisaatio(organisaatio(), 'testiOrganisaatio'));
+    describe('Perustiedot', () => {
+        it('can be edited', () => {
+            cy.get('@testiOrganisaatio').then((response) => {
+                cy.visit(`/lomake/${response.body.organisaatio.oid}`);
+                cy.enterPerustiedot('Muokattava', 'Oppilaitos');
+                //cy.intercept('POST', '/organisaatio/organisaatio/v4/findbyoids').as('findPAth');
+                cy.clickAccordion('YHTEYSTIEDOT');
+                cy.wait(['@findPAth'], { timeout: 10000 });
+                cy.contains(' Suominimi');
+            });
+        });
     });
-    it('Shows opetushallitus organisation', () => {
-        expect(cy.get('h1').value).to.have.valueOf('Opetushallitus');
+    describe('Yhteystiedot', () => {
+        it('can be edited', () => {
+            //cy.clickAccordion('YHTEYSTIEDOT');
+            cy.enterAllYhteystiedot('testiOrganisaatio');
+            //cy.intercept('POST', '/organisaatio/organisaatio/v4/findbyoids').as('findPAth');
+            //cy.wait(['@findPAth'], { timeout: 10000 });
+            //cy.contains('CHILD Suominimi');
+        });
     });
 
-    /* TODO
-    it('Can edit perustiedot', () => {
-        cy.get('#accordion__heading-0 > span').click();
-    });
-    it('Can edit Yhteystiedot', () => {
-        cy.get('#accordion__heading-1 > span').click();
-    });
-    it('Can edit Nimihistoria', () => {
-        cy.get('#accordion__heading-2 > span').click();
-    });
-    it('Can edit Organisaatiohistoria', () => {
-        cy.get('#accordion__heading-3 > span').click();
-    });
      */
 });

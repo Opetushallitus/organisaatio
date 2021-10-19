@@ -53,6 +53,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const {
         reset: resetYhteystiedot,
         watch,
+        setValue: setYhteystiedotValue,
         register: yhteystiedotRegister,
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
@@ -140,6 +141,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}
                 validationErrors={yhteystiedotValidationErrors}

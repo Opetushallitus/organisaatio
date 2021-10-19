@@ -50,8 +50,10 @@ export type ytjYtunnus = {
 type YhteystiedotBase = {
     postiOsoite: string;
     postiOsoitePostiNro: string;
+    postiOsoiteToimipaikka: string;
     kayntiOsoite: string;
     kayntiOsoitePostiNro: string;
+    kayntiOsoiteToimipaikka: string;
     puhelinnumero: string;
     email: string;
     www: string;

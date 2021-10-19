@@ -25,7 +25,7 @@ const { FinnishBusinessIds } = require('finnish-business-ids');
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('inputByName', (name, value) => {
-    return cy.get(`input[name="${name}"]`).type(value);
+    return cy.get(`input[name="${name}"]`).clear().type(value);
 });
 
 Cypress.Commands.add('clickButton', (contains) => {
@@ -117,7 +117,6 @@ Cypress.Commands.add('clickSaveButton', () => {
 });
 
 Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
-    cy.clickAccordion('PERUSTIEDOT');
     //cy.clickRadioOrCheckbox('EI_YTUNNUS');
     cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
     cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');

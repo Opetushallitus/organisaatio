@@ -1,6 +1,6 @@
 const { FinnishBusinessIds } = require('finnish-business-ids');
 
-export const organisaatio = (prefix, override) => {
+export const organisaatio = (prefix = '', override) => {
     return {
         ...{
             parentOid: `1.2.246.562.10.00000000001`,

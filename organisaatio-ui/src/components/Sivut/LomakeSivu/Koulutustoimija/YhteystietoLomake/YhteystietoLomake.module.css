@@ -50,3 +50,7 @@
         white-space: nowrap;
     }
 }
+
+.ToimipaikkaText {
+    padding-bottom: .5rem;
+}
