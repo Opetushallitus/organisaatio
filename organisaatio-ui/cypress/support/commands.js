@@ -101,13 +101,6 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
         www: 'http://test.com',
         numero: '09123456',
     });
-    // cy.clickRadioOrCheckbox('ENGLANNIKSI');
-    // cy.enterYhteystieto('kieli_en#1', {
-    //     posti: { osoite: `${prefix} EN Osoite 1 a 3`, postinumeroUri: '00100' },
-    //     email: `${prefix}-EN.noreply@test.com`,
-    //     www: 'http://test.com',
-    //     numero: '09123456',
-    // });
 });
 
 Cypress.Commands.add('clickSaveButton', () => {
