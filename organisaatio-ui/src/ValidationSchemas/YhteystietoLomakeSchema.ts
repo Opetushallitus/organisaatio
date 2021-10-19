@@ -1,12 +1,14 @@
 import Joi from 'joi';
 
+export const postinumeroSchema = Joi.string().regex(/^\d{5}$/);
+
 export default Joi.object({
     'kieli_fi#1': Joi.object({
         postiOsoite: Joi.string().required(),
-        postiOsoitePostiNro: Joi.string().regex(/^\d+$/).required(),
+        postiOsoitePostiNro: postinumeroSchema.required(),
         postiOsoiteToimipaikka: Joi.string().allow(''),
         kayntiOsoite: Joi.string().allow(''),
-        kayntiOsoitePostiNro: Joi.string().regex(/^\d+$/).allow(''),
+        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
         kayntiOsoiteToimipaikka: Joi.string().allow(''),
         puhelinnumero: Joi.string().allow(''),
         email: Joi.string()
@@ -16,10 +18,10 @@ export default Joi.object({
     }),
     'kieli_sv#1': Joi.object({
         postiOsoite: Joi.string().allow(''),
-        postiOsoitePostiNro: Joi.string().regex(/^\d+$/).allow(''),
+        postiOsoitePostiNro: postinumeroSchema.allow(''),
         postiOsoiteToimipaikka: Joi.string().allow(''),
         kayntiOsoite: Joi.string().allow(''),
-        kayntiOsoitePostiNro: Joi.string().regex(/^\d+$/).allow(''),
+        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
         kayntiOsoiteToimipaikka: Joi.string().allow(''),
         puhelinnumero: Joi.string().allow(''),
         email: Joi.string()
@@ -29,11 +31,11 @@ export default Joi.object({
     }),
     'kieli_en#1': Joi.object({
         postiOsoite: Joi.string().allow(''),
-        postiOsoitePostiNro: Joi.string().regex(/^\d+$/).allow(''),
+        postiOsoitePostiNro: postinumeroSchema.allow(''),
         postiOsoiteToimipaikka: Joi.string().allow(''),
         kayntiOsoite: Joi.string().allow(''),
         puhelinnumero: Joi.string().allow(''),
-        kayntiOsoitePostiNro: Joi.string().regex(/^\d+$/).allow(''),
+        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
         kayntiOsoiteToimipaikka: Joi.string().allow(''),
         email: Joi.string()
             .email({ tlds: { allow: false } })
