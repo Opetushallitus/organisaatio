@@ -9,7 +9,7 @@ describe('Organisaatiot Page', () => {
             fixture: 'opetushallitusOrgInArray.json',
         });
         cy.get('table').then(($table) => {
-            cy.get('input').first().type('Opetushallitus');
+            cy.get('input').first().type('Opetushallitus{enter}');
             expect(cy.get('a').value).to.have.valueOf('Opetushallitus');
         });
     });
