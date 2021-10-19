@@ -11,8 +11,10 @@ import {
     Organisaatio,
     OrganisaatioNimiJaOid,
     OrganisaationNimetNimi,
+    Perustiedot,
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
+    Yhteystiedot,
 } from '../../../types/types';
 import { YtjOrganisaatio } from '../../../types/apiTypes';
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
@@ -71,7 +73,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
-    } = useForm({ resolver: joiResolver(PerustietolomakeSchema) });
+    } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
     const {
         reset: yhteystiedotReset,
         watch: watchYhteystiedot,
@@ -79,7 +81,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
-    } = useForm({
+    } = useForm<Yhteystiedot>({
         defaultValues: mapApiYhteystiedotToUi([]),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
@@ -184,12 +186,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     if (sameDayNimiIdx > -1) {
                         nimet[sameDayNimiIdx].nimi = uusiNimi;
                     } else {
-                        nimet.push(uusiNimi);
+                        nimet.push({ nimi: uusiNimi });
                     }
                     const orgToBeUpdated = {
                         ...organisaatio,
                         ...{
                             ...perustiedotFormValues,
+                            muutKotipaikatUris: perustiedotFormValues.muutKotipaikatUris.map((a) => a.value),
                             kotipaikkaUri: kotipaikkaUri?.value,
                             maaUri: maaUri?.value,
                             kieletUris: kieletUris.map((a) => a.value),

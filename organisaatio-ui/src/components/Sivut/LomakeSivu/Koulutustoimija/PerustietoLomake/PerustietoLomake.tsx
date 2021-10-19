@@ -14,10 +14,9 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import YTJHeader from '../../../../Modaalit/YTJModaali/YTJHeader';
 import YTJBody from '../../../../Modaalit/YTJModaali/YTJBody';
 import YTJFooter from '../../../../Modaalit/YTJModaali/YTJFooter';
-import { Koodi, Nimi, Organisaatio, ResolvedRakenne } from '../../../../../types/types';
+import { Koodi, Nimi, Organisaatio, Perustiedot, ResolvedRakenne } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import { YtjOrganisaatio } from '../../../../../types/apiTypes';
@@ -28,9 +27,9 @@ type PerustietoLomakeProps = {
     organisaatio: Organisaatio;
     language: string;
     setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
-    validationErrors: FieldErrors<FieldValues>;
-    formRegister: UseFormRegister<FieldValues>;
-    formControl: Control<FieldValues>;
+    validationErrors: FieldErrors<Perustiedot>;
+    formRegister: UseFormRegister<Perustiedot>;
+    formControl: Control<Perustiedot>;
     handleNimiUpdate: (nimi: Nimi) => void;
 };
 

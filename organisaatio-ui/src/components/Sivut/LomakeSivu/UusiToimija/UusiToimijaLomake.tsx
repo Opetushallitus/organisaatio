@@ -80,7 +80,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         }
     };
 
-    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot().tyypit || [] });
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('tyypit') || [] });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
     async function saveOrganisaatio() {
