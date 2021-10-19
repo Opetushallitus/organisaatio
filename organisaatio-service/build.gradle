@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.0.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'jacoco'
 	id 'application'
 	id "org.flywaydb.flyway" version "6.4.4"
 }
@@ -126,5 +127,12 @@ test {
 	testLogging {
 		exceptionFormat = 'full'
 	}
+	finalizedBy jacocoTestReport
 }
-
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+	reports {
+		xml.required = true
+		csv.required = false
+	}
+}

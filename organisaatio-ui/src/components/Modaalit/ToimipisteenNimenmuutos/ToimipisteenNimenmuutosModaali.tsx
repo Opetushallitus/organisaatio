@@ -5,7 +5,7 @@ import TNFooter from './TNFooter';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { Nimi } from '../../../types/types';
+import { Nimi, Perustiedot } from '../../../types/types';
 import ToimipisteenNimenmuutosModaaliSchema from '../../../ValidationSchemas/ToimipisteenNimenmuutosModaaliSchema';
 
 type ModaaliProps = {
@@ -20,11 +20,11 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         register,
         formState: { errors: validationErrors },
         handleSubmit,
-    } = useForm({ resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema) });
+    } = useForm<Perustiedot>({ resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema) });
 
     const handleTallenna = () => {
-        const { nimiFi: fi, nimiSv: sv, nimiEn: en } = getValues();
-        props.handleNimiTallennus({ fi, sv, en });
+        const { nimi } = getValues();
+        props.handleNimiTallennus(nimi);
         return props.closeNimenmuutosModaali();
     };
     const handlePeruuta = () => {
