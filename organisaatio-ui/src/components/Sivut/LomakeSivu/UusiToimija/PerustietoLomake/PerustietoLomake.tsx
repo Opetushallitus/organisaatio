@@ -62,8 +62,10 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
         setYhteystiedotValue('kieli_fi#1', {
             postiOsoite: ytjOrg.postiOsoite.katu,
             postiOsoitePostiNro: ytjOrg.postiOsoite.postinumero,
-            kayntiOsoite: ytjOrg.kayntiOsoite?.katu,
-            kayntiOsoitePostiNro: ytjOrg.kayntiOsoite?.postinumero,
+            postiOsoiteToimipaikka: ytjOrg.postiOsoite.toimipaikka,
+            kayntiOsoite: ytjOrg.kayntiOsoite?.katu || ytjOrg.postiOsoite.katu,
+            kayntiOsoitePostiNro: ytjOrg.kayntiOsoite?.postinumero || ytjOrg.postiOsoite.postinumero,
+            kayntiOsoiteToimipaikka: ytjOrg.kayntiOsoite?.toimipaikka || ytjOrg.postiOsoite.toimipaikka,
             puhelinnumero: ytjOrg.puhelin,
             email: ytjOrg.sahkoposti,
             www: ytjOrg.www,

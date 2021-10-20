@@ -135,7 +135,6 @@ Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
     });
 });
 
-Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
 Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
     cy.clickRadioOrCheckbox(tyyppi);
     //cy.clickRadioOrCheckbox('EI_YTUNNUS');
@@ -163,6 +162,7 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
 Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
     cy.request('POST', '/organisaatio/v4/', organisaatio).as(key);
 });
+
 Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {
     cy.request(
         'GET',
