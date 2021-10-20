@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
-import { NewOrganisaatio, Organisaatio, Nimi } from '../../../../types/types';
+import { Organisaatio, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -16,7 +16,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
-import { resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
 import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
@@ -48,13 +48,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
-    } = useForm({ resolver: joiResolver(PerustietolomakeSchema) });
+    } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
 
     const {
         reset: resetYhteystiedot,
         watch,
         setValue: setYhteystiedotValue,
-        register: yhteystiedotRegister,
+        register: registerYhteystiedot,
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
@@ -80,17 +80,14 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         }
     };
 
-    const handleNimiUpdate = (nimi: Nimi) => {
-        setPerustiedotValue('nimi', nimi);
-    };
-
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('tyypit') || [] });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
     async function saveOrganisaatio() {
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                 const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const { kotipaikkaUri, maaUri, kieletUris } = perustiedotFormValues;
+                const { kotipaikkaUri, maaUri, kieletUris, muutKotipaikatUris } = perustiedotFormValues;
                 const nimet = [
                     {
                         nimi: Object.assign({}, perustiedotFormValues.nimi),
@@ -102,12 +99,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                         ...perustiedotFormValues,
                         kotipaikkaUri: kotipaikkaUri?.value,
                         maaUri: maaUri?.value,
-                        kieletUris: kieletUris?.value,
+                        kieletUris: kieletUris?.map((a) => a.value),
+                        muutKotipaikatUris: muutKotipaikatUris?.map((a) => a.value),
                     },
                     yhteystiedot,
                     parentOid: (parentOid || ROOT_OID) as string,
                     nimet,
-                } as NewOrganisaatio;
+                };
                 const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
                 if (savedOrganisaatio) {
                     props.history.push(`/lomake/${savedOrganisaatio.oid}`);
@@ -115,7 +113,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             })();
         })();
     }
-    if (!resolvedTyypit) {
+    if (!organisaatioRakenne || !resolvedTyypit) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
@@ -129,11 +127,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         lomakkeet.push(
             <PerustietoLomake
                 organisaatioTyypit={resolvedTyypit}
+                rakenne={organisaatioRakenne}
                 watchPerustiedot={watchPerustiedot}
-                handleNimiUpdate={handleNimiUpdate}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
                 validationErrors={perustiedotValidationErrors}
                 formControl={perustiedotControl}
+                setPerustiedotValue={setPerustiedotValue}
+                setYhteystiedotValue={setYhteystiedotValue}
                 formRegister={registerPerustiedot}
                 key={PERUSTIEDOTUUID}
             />
@@ -145,7 +145,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 watch={watch}
                 formControl={yhteystiedotControl}
                 validationErrors={yhteystiedotValidationErrors}
-                formRegister={yhteystiedotRegister}
+                formRegister={registerYhteystiedot}
                 key={YHTEYSTIEDOTUUID}
             />
         );

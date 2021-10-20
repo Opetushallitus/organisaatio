@@ -58,7 +58,7 @@ jobs:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
         - cd mock-api && npm run mock-api &
-        - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar &
+        - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar &
         - cd organisaatio-ui && npm run cypress:ci
         - kill $(jobs -p) || true
     - stage: "Deploy"

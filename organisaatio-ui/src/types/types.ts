@@ -66,12 +66,23 @@ export type Yhteystiedot = {
     osoitteetOnEri?: boolean;
 };
 
+export type Perustiedot = {
+    ytunnus?: string;
+    nimi: Nimi;
+    tyypit: KoodiUri[];
+    alkuPvm: LocalDate;
+    kotipaikkaUri: KoodistoSelectOption;
+    maaUri: KoodistoSelectOption;
+    muutKotipaikatUris: KoodistoSelectOption[];
+    kieletUris: KoodistoSelectOption[];
+};
+
 export type Nimi = {
     fi?: string;
     sv?: string;
     en?: string;
 };
-//TODO tyypitystä?
+
 export type OrganisaationNimetNimi = {
     nimi: Nimi;
     alkuPvm?: string;
@@ -87,7 +98,7 @@ export type Organisaatio = OrganisaatioBase & {
     parentOidPath: string;
     ytunnus?: string;
     nimet: OrganisaationNimetNimi[];
-    alkuPvm: LocalDate | null;
+    alkuPvm?: LocalDate;
     yritysmuoto?: string;
     tyypit: KoodiUri[];
     status: string;
@@ -97,28 +108,9 @@ export type Organisaatio = OrganisaatioBase & {
     kieletUris: KoodiUri[];
     yhteystiedot?: ApiYhteystiedot[];
 };
-export type NewOrganisaatio = Omit<Organisaatio, 'oid'>;
+export type NewOrganisaatio = Omit<Organisaatio, 'oid' | 'status' | 'parentOidPath'>;
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
-
-export interface YtjOrganisaatio {
-    ytunnus: string;
-    nimi: string;
-    aloitusPvm: LocalDate | null;
-    yritysmuoto: string;
-    yritysmuotoKoodi: string;
-    yritystunnusHistoria: any; // TODO?
-    kayntiOsoite: ytjOsoite;
-    kotiPaikka: string;
-    kotiPaikkaKoodi?: string;
-    postiOsoite: ytjOsoite;
-    puhelin: string;
-    toimiala: string;
-    toimialaKoodi?: string;
-    versio?: boolean;
-    yrityksenKieli?: string;
-    yritysTunnus: ytjYtunnus;
-}
 
 export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
     oid?: string;
@@ -208,6 +200,7 @@ export type ResolvedRakenne = {
     moveTargetType: string[];
     mergeTargetType: string[];
     childTypes: string[];
+    showYtj: boolean;
 };
 export type Rakenne = {
     description: string;
@@ -215,4 +208,5 @@ export type Rakenne = {
     moveTargetType: string | null;
     mergeTargetType: string | null;
     childTypes: string[];
+    showYtj: boolean;
 };

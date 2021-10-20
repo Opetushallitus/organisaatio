@@ -2,15 +2,14 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenNimenmuutos.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-import { Nimi } from '../../../types/types';
+import { Nimi, Perustiedot } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { UseFormRegister } from 'react-hook-form/dist/types/form';
 
 type TNProps = {
     nimi: Nimi;
-    validationErrors: FieldErrors<FieldValues>;
-    register: UseFormRegister<FieldValues>;
+    validationErrors: FieldErrors<Perustiedot>;
+    register: UseFormRegister<Perustiedot>;
 };
 
 export default function TNBody(props: TNProps) {
@@ -25,7 +24,7 @@ export default function TNBody(props: TNProps) {
                     <Input
                         error={!!validationErrors['nimiFi']}
                         id={'organisaation_nimiFi'}
-                        {...register('nimiFi')}
+                        {...register('nimi.fi')}
                         defaultValue={nimi && nimi.fi}
                     />
                 </div>
@@ -34,7 +33,7 @@ export default function TNBody(props: TNProps) {
                     <Input
                         error={!!validationErrors['nimiSv']}
                         id={'organisaation_nimiSv'}
-                        {...register('nimiSv')}
+                        {...register('nimi.sv')}
                         defaultValue={nimi && nimi.sv}
                     />
                 </div>
@@ -43,7 +42,7 @@ export default function TNBody(props: TNProps) {
                     <Input
                         error={!!validationErrors['nimiEn']}
                         id={'organisaation_nimiEn'}
-                        {...register('nimiEn')}
+                        {...register('nimi.en')}
                         defaultValue={nimi && nimi.en}
                     />
                 </div>

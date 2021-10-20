@@ -5,17 +5,12 @@ import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjExceptionType;
-import fi.ytj.ArrayOfYritysTiedotV2DTO;
-import fi.ytj.Kieli;
-import fi.ytj.YritysHakuDTO;
-import fi.ytj.YritysHakutulos;
-import fi.ytj.YritysTiedot;
-import fi.ytj.YritysTiedotSoap;
-import fi.ytj.YritysTiedotV2DTO;
+import fi.ytj.*;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.security.MessageDigest;
 import java.text.DateFormat;
@@ -35,15 +30,14 @@ public class YTJServiceImpl implements YTJService {
     private final YtjDtoMapperHelper mapper = new YtjDtoMapperHelper();
     private final String asiakastunnus;
     private final String salainenavain;
+    private final String ytjUrl;
 
-    public YTJServiceImpl(String asiakastunnus, String salainenavain) {
+    public YTJServiceImpl(String asiakastunnus, String salainenavain, String ytjUrl) {
         this.asiakastunnus = asiakastunnus;
         this.salainenavain = salainenavain;
+        this.ytjUrl = ytjUrl;
     }
 
-    YTJServiceImpl() {
-        this("", ""); // testeille
-    }
 
     public String createHashHex(String strToHash) {
         try {
@@ -53,7 +47,6 @@ public class YTJServiceImpl implements YTJService {
 
             return Hex.encodeHexString(digestBytes).toUpperCase();
         } catch (Exception exp) {
-            //DEBUGSAWAY:LOG.debug("Exception when creating hashHex : " + exp.toString());
             return null;
         }
     }
@@ -69,8 +62,7 @@ public class YTJServiceImpl implements YTJService {
 
     @Override
     public List<YTJDTO> findByYNimi(String nimi, boolean naytaPassiiviset, YTJKieli kieli) throws YtjConnectionException {
-        YritysTiedot yt = new YritysTiedot();
-        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
+        YritysTiedotSoap ytj = getYritysTiedotSoap();
         String aikaleima = aikaleima();
         String tarkiste = this.createHashHex(this.createHashString(aikaleima));
         YritysHakutulos vastaus;
@@ -110,7 +102,7 @@ public class YTJServiceImpl implements YTJService {
                         + " tunnistustiedot " + vastaus.getTunnistusTiedot().getTunnistusStatus().value());
             }
         }
-        List<YritysHakuDTO> ytjObjects =  vastaus.getYritysHaku().getYritysHakuDTO();
+        List<YritysHakuDTO> ytjObjects = vastaus.getYritysHaku().getYritysHakuDTO();
         return mapper.mapYritysHakuDTOListToDtoList(ytjObjects);
     }
 
@@ -127,8 +119,7 @@ public class YTJServiceImpl implements YTJService {
 
     @Override
     public YTJDTO findByYTunnus(String ytunnus, YTJKieli kieli) throws YtjConnectionException {
-        YritysTiedot yt = new YritysTiedot();
-        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
+        YritysTiedotSoap ytj = getYritysTiedotSoap();
         String aikaleima = aikaleima();
         String tarkiste = createHashHex(createHashString(aikaleima));
         YritysTiedotV2DTO vastaus;
@@ -159,8 +150,7 @@ public class YTJServiceImpl implements YTJService {
     public List<YTJDTO> findByYTunnusBatch(List<String> ytunnuses, YTJKieli ytjKieli) throws YtjConnectionException {
         String ytunnusStr = String.join(";", ytunnuses);
         Kieli kieli = getKieli(ytjKieli);
-        YritysTiedot yt = new YritysTiedot();
-        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
+        YritysTiedotSoap ytj = getYritysTiedotSoap();
         String aikaleima = aikaleima();
         String tarkiste = createHashHex(createHashString(aikaleima));
         ArrayOfYritysTiedotV2DTO vastaus;
@@ -190,6 +180,16 @@ public class YTJServiceImpl implements YTJService {
                 .stream()
                 .map(mapper::mapYritysTiedotV2DTOtoYTJDTO)
                 .collect(Collectors.toList());
+    }
+
+    private YritysTiedotSoap getYritysTiedotSoap() {
+        YritysTiedot yt = new YritysTiedot();
+        YritysTiedotSoap ytj = yt.getYritysTiedotSoap12();
+        BindingProvider bindingProvider = (BindingProvider) ytj;
+        bindingProvider.getRequestContext().put(
+                BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                ytjUrl);
+        return ytj;
     }
 
 }

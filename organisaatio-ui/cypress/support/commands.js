@@ -101,13 +101,6 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
         www: 'http://test.com',
         numero: '09123456',
     });
-    cy.clickRadioOrCheckbox('ENGLANNIKSI');
-    cy.enterYhteystieto('kieli_en#1', {
-        posti: { osoite: `${prefix} EN Osoite 1 a 3`, postinumeroUri: '00100' },
-        email: `${prefix}-EN.noreply@test.com`,
-        www: 'http://test.com',
-        numero: '09123456',
-    });
 });
 
 Cypress.Commands.add('clickSaveButton', () => {
@@ -115,16 +108,52 @@ Cypress.Commands.add('clickSaveButton', () => {
     cy.get('button').contains('TALLENNA').scrollIntoView().click();
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });
+Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
+    cy.searchOrganisaatio(ytunnus, 'oldOrg');
+    cy.get('@oldOrg').then((response) => {
+        if (response.body.organisaatiot[0]) {
+            const old = response.body.organisaatiot[0];
+            const oid = old.oid;
+            const mod = {
+                oid: old.oid,
+                tyypit: old.organisaatiotyypit,
+                nimi: old.nimi,
+                parentOid: old.parentOid,
+                parentOidPath: `|${old.parentOid}|`,
+                alkuPvm: '2020-10-10',
+                status: 'AKTIIVINEN',
+                version: 1,
+                ytunnus: FinnishBusinessIds.generateBusinessId(),
+                nimet: [{ nimi: old.nimi, alkuPvm: '2020-10-10', version: 0 }],
+                kotipaikkaUri: old.kotipaikkaUri.substr(0, old.kotipaikkaUri.indexOf('#')),
+            };
+            cy.request('PUT', `/organisaatio/v4/${oid}`, mod).as('edit');
+            cy.get('@edit').then((response) => {
+                console.log('RESPONSE', response.body);
+            });
+        }
+    });
+});
 
 Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
-    //cy.clickRadioOrCheckbox('EI_YTUNNUS');
-    cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
-    cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
-    cy.inputByName('nimiFi', `${prefix} Suominimi`);
-    cy.inputByName('nimiSv', `${prefix} Ruotsi`);
-    cy.inputByName('nimiEn', `${prefix} Enkku`);
-    cy.clickButton('VAHVISTA');
+Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
     cy.clickRadioOrCheckbox(tyyppi);
+    //cy.clickRadioOrCheckbox('EI_YTUNNUS');
+    if (['Koulutustoimija'].includes(tyyppi)) {
+        cy.inputByName('ytunnus', FinnishBusinessIds.generateBusinessId());
+    }
+    if (isNew) {
+        cy.inputByName('nimi.fi', `${prefix} Suominimi`);
+        cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
+        cy.inputByName('nimi.en', `${prefix} Enkku`);
+    } else {
+        cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
+        cy.inputByName('nimi.fi', `${prefix} Suominimi`);
+        cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
+        cy.inputByName('nimi.en', `${prefix} Enkku`);
+        cy.clickButton('VAHVISTA');
+    }
+
     cy.enterDate('PERUSTAMISPAIVA', '2.9.2021');
     cy.selectFromList('PAASIJAINTIKUNTA', 'Ranua');
     cy.selectFromList('MAA', 'Andorra');
@@ -133,4 +162,10 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi) => {
 
 Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
     cy.request('POST', '/organisaatio/v4/', organisaatio).as(key);
+});
+Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {
+    cy.request(
+        'GET',
+        `/organisaatio/v4/hae?searchStr=${ytunnus}&aktiiviset=true&suunnitellut=true&lakkautetut=false`
+    ).as(key);
 });

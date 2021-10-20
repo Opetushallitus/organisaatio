@@ -9,99 +9,70 @@ import { KoodistoContext, LanguageContext } from '../../../../../contexts/contex
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
-import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
+import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
-import { Koodi } from '../../../../../types/types';
+import { Koodi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import { YtjOrganisaatio } from '../../../../../types/apiTypes';
+import { warning } from '../../../../Notification/Notification';
+import YTJModaali from '../../../../Modaalit/YTJModaali/YTJModaali';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
-    validationErrors: FieldErrors<FieldValues>;
-    formRegister: UseFormRegister<FieldValues>;
-    formControl: Control<FieldValues>;
+    rakenne: ResolvedRakenne;
+    validationErrors: FieldErrors<Perustiedot>;
+    formRegister: UseFormRegister<Perustiedot>;
+    formControl: Control<Perustiedot>;
     handleJatka: () => void;
-    handleNimiUpdate: (nimi: Nimi) => void;
-    watchPerustiedot: UseFormWatch<FieldValues>;
-};
-
-type Nimi = {
-    fi: string;
-    sv: string;
-    en: string;
-    alkuPvm?: string;
+    setPerustiedotValue: UseFormSetValue<Perustiedot>;
+    setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
+    watchPerustiedot: UseFormWatch<Perustiedot>;
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const { i18n, language } = useContext(LanguageContext);
     const {
         handleJatka,
         validationErrors,
         formControl,
         formRegister,
-        handleNimiUpdate,
-        watchPerustiedot,
+        setPerustiedotValue,
+        setYhteystiedotValue,
         organisaatioTyypit,
+        rakenne,
     } = props;
+    const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
-    const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
 
-    const fi = watchPerustiedot('nimi.fi');
-    const sv = watchPerustiedot('nimi.sv');
-    const en = watchPerustiedot('nimi.en');
-    const nimi = { fi, sv, en };
+    const handleYtjData = (ytjOrg: YtjOrganisaatio) => {
+        setPerustiedotValue('ytunnus', ytjOrg.ytunnus);
+        setPerustiedotValue('nimi', { fi: ytjOrg.nimi, sv: ytjOrg.nimi, en: ytjOrg.nimi });
+        setPerustiedotValue('alkuPvm', ytjOrg.aloitusPvm);
+        const selectedKunta = kuntaKoodisto.koodit().find((a) => a.arvo === ytjOrg.kotiPaikkaKoodi);
+        const selectedKuntaSelector = kuntaKoodisto
+            .selectOptions()
+            .find((a) => a.value.startsWith(selectedKunta?.uri || ''));
+        if (selectedKunta && selectedKuntaSelector) setPerustiedotValue('kotipaikkaUri', selectedKuntaSelector);
+        else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
+        const selectedKieli = oppilaitoksenOpetuskieletKoodisto
+            .selectOptions()
+            .find((a) => a.label === ytjOrg.yrityksenKieli?.toLowerCase());
+        if (selectedKieli) setPerustiedotValue('kieletUris', [selectedKieli]);
+        else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
+        setYhteystiedotValue('kieli_fi#1', {
+            postiOsoite: ytjOrg.postiOsoite.katu,
+            postiOsoitePostiNro: ytjOrg.postiOsoite.postinumero,
+            kayntiOsoite: ytjOrg.kayntiOsoite?.katu,
+            kayntiOsoitePostiNro: ytjOrg.kayntiOsoite?.postinumero,
+            puhelinnumero: ytjOrg.puhelin,
+            email: ytjOrg.sahkoposti,
+            www: ytjOrg.www,
+        });
+        setYhteystiedotValue('osoitteetOnEri', !!ytjOrg.kayntiOsoite);
+        setYTJModaaliAuki(false);
+    };
     return (
         <div className={styles.UloinKehys}>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <RadioGroup
-                        value={onYunnus.toString()}
-                        options={[
-                            { value: 'true', label: i18n.translate('PERUSTIETO_ON_YTUNNUS') },
-                            { value: 'false', label: i18n.translate('PERUSTIETO_EI_YTUNNUS') },
-                        ]}
-                        onChange={(e) => setOnYtunnus(!onYunnus)}
-                    />
-                </div>
-            </div>
-            {onYunnus && (
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>Y-tunnus</label>
-                        <Input
-                            error={!!validationErrors['ytunnus']}
-                            id={'ytunnus'}
-                            {...formRegister('ytunnus')}
-                            defaultValue={''}
-                        />
-                    </div>
-                    <Button className={styles.Nappi} variant="outlined">
-                        {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
-                    </Button>
-                </div>
-            )}
-            <div className={styles.Rivi}>
-                <div className={styles.Ruudukko}>
-                    {onYunnus && [
-                        <span key="PERUSTIETO_ORGANISAATIO_TYYPPI" className={styles.AvainKevyestiBoldattu}>
-                            {i18n.translate('PERUSTIETO_ORGANISAATIO_TYYPPI')}
-                        </span>,
-                        <span key="PERUSTIETO_ORGANISAATIO_TODO" className={styles.ReadOnly}>
-                            {i18n.translate('PERUSTIETO_TODO')}
-                        </span>,
-                    ]}
-                    <span className={styles.AvainKevyestiBoldattu}>
-                        {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
-                    </span>
-                    <span className={styles.ReadOnly}>{nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en']}</span>
-                </div>
-                <div className={styles.Kentta}>
-                    <Button className={styles.Nappi} variant="outlined" onClick={() => setNimenmuutosModaaliAuki(true)}>
-                        {i18n.translate('BUTTON_MUOKKAA_ORGANISAATION_NIMEA')}
-                    </Button>
-                </div>
-            </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
@@ -121,6 +92,72 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     />
                 </div>
             </div>
+            {rakenne.showYtj && (
+                <>
+                    <div className={styles.Rivi}>
+                        <div className={styles.Kentta}>
+                            <RadioGroup
+                                value={onYunnus.toString()}
+                                options={[
+                                    { value: 'true', label: i18n.translate('PERUSTIETO_ON_YTUNNUS') },
+                                    { value: 'false', label: i18n.translate('PERUSTIETO_EI_YTUNNUS') },
+                                ]}
+                                onChange={(e) => setOnYtunnus(!onYunnus)}
+                            />
+                        </div>
+                    </div>
+                    {onYunnus && (
+                        <div className={styles.Rivi}>
+                            <div className={styles.Kentta}>
+                                <label>Y-tunnus</label>
+                                <Input
+                                    error={!!validationErrors['ytunnus']}
+                                    id={'ytunnus'}
+                                    {...formRegister('ytunnus')}
+                                    defaultValue={''}
+                                />
+                            </div>
+                            <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
+                                {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
+                            </Button>
+                        </div>
+                    )}
+                </>
+            )}
+            <div className={styles.Rivi}>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('PERUSTIETO_NIMI_SUOMEKSI')}</label>
+                    <Input
+                        error={!!validationErrors['nimiFi']}
+                        id={'organisaation_nimiFi'}
+                        {...formRegister('nimi.fi')}
+                        defaultValue={''}
+                    />
+                </div>{' '}
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('PERUSTIETO_NIMI_RUOTSIKSI')}</label>
+                    <Input
+                        error={!!validationErrors['nimiSv']}
+                        id={'organisaation_nimiSv'}
+                        {...formRegister('nimi.sv')}
+                        defaultValue={''}
+                    />
+                </div>{' '}
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.BodyKentta}>
+                    <label>{i18n.translate('PERUSTIETO_NIMI_ENGLANNIKSI')}</label>
+                    <Input
+                        error={!!validationErrors['nimiEn']}
+                        id={'organisaation_nimiEn'}
+                        {...formRegister('nimi.en')}
+                        defaultValue={''}
+                    />
+                </div>
+            </div>
+
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
@@ -173,6 +210,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <Controller
                         control={formControl}
                         name={'maaUri'}
+                        defaultValue={maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MAA_SELECT"
@@ -205,12 +243,8 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
             <div>
                 <Button onClick={handleJatka}>{i18n.translate('BUTTON_JATKA')}</Button>
             </div>
-            {nimenmuutosModaaliAuki && (
-                <ToimipisteenNimenmuutosModaali
-                    closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={handleNimiUpdate}
-                    nimi={nimi}
-                />
+            {YTJModaaliAuki && (
+                <YTJModaali korvaaOrganisaatio={handleYtjData} suljeModaali={() => setYTJModaaliAuki(false)} />
             )}
         </div>
     );

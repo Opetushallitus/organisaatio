@@ -1,11 +1,18 @@
 const express = require('express');
-const morgan = require('morgan');
+const morganBody = require('morgan-body');
+const bodyParser = require('body-parser');
 const apiMocker = require('connect-api-mocker');
+const xmlparser = require('express-xml-bodyparser');
 
 const port = 9000;
 const app = express();
 const cors = require('cors');
-app.use(morgan('combined'));
+
+app.use(xmlparser());
+app.use(bodyParser.json());
+
+// hook morganBody to express app
+morganBody(app);
 app.use(cors());
 app.use('/', apiMocker('src/api'));
 
