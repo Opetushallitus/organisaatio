@@ -17,7 +17,11 @@ env:
     - secure: "Fzy+TYEe3HNZ1gFPbvDQ+7CQLJoAU146ch1Lg62AqD6qvLOW13CN71x1opBHn87tgwbAMu+R87NHfHv1D9IsBY4pWy4rh3OE0kKdiBlsktvbOYIgGdNqugtIISniIM+VV3U9LkSHlkQk7qFHvvaI2PgmhEAOltK3qMjEcDkV2vY="
     # AWS_SECRET_ACCESS_KEY
     - secure: "PHCsorIqkSQ7IjSGEHQcRZ7rrdyNpfc72VGJAHZnPrRREfPxh+nI9n48VrSrIXrZSX5o0GpkJK8147UxON6lXbE2pLXQWBNNt9D5i73OD63JY00olDcdNuVRmy0SQ2bApqphVnAyU98c/QYxKhMx6EM2W4COmXl+q1n1NtCm+O4="
-
+addons:
+  sonarcloud:
+    organization: "opetushallitus"
+    token:
+      secure: "QpZCPf2OCCcvp27AhCM4g71+OzmtdtpcPnyhhCf60/HXZB8SOSLU00qAWcv86iNLSTIuL8AVrwo+Jw63LguZTVxQ8a5Qh8SYXUgrm9i9pj66I8c/BzfhtOXQqzYLHKzl3XYqbsdfD4AVPwB5BDE1ohF1A7bPjIVvNqyjJb/bJqo="
 install:
   - git clone https://github.com/Opetushallitus/ci-tools.git
   - source ci-tools/common/setup-tools.sh
@@ -26,8 +30,7 @@ install:
   - export TZ=Europe/Helsinki # TODO: fix tests
 
 script:
-  - mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
-
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=mikaelbarlund_organisaatio -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
   - mv organisaatio-service/target/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
   - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
   - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
