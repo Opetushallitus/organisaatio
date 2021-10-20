@@ -53,10 +53,12 @@ export type YhteystiedotOsoite = YhteystiedotBase & {
 };
 
 export type ApiYhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
+
 export type YtjHaku = {
     ytunnus: string;
     nimi: string;
 };
+
 export type YtjOrganisaatio = YtjHaku & {
     aloitusPvm: LocalDate;
     yritysmuoto: string;

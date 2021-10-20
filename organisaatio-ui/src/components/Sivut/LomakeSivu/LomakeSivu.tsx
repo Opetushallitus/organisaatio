@@ -37,6 +37,7 @@ import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomak
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
 import { mapYtjToAPIOrganisaatio, resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -48,6 +49,7 @@ const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
     const initialYhdista = {
@@ -168,7 +170,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 return setAvoinnaCb();
         }
     };
-
+    const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
+        setYtjDataFetched(ytjOrg);
+        setYTJModaaliAuki(false);
+    };
     const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
@@ -236,11 +241,15 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 formControl={perustiedotControl}
                 validationErrors={perustiedotValidationErrors}
                 key={PERUSTIEDOTID}
-                setYtjDataFetched={setYtjDataFetched}
                 organisaatioTyypit={resolvedTyypit}
                 rakenne={organisaatioRakenne}
                 organisaatio={organisaatio}
                 language={language}
+                ytjButton={
+                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
+                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
+                    </Button>
+                }
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
@@ -373,6 +382,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         cancelSiirraOrganisaatio();
                     }}
                     suljeCallback={() => cancelSiirraOrganisaatio()}
+                />
+            )}
+            {YTJModaaliAuki && (
+                <YTJModaali
+                    ytunnus={organisaatio.ytunnus}
+                    korvaaOrganisaatio={handleKorvaaOrganisaatio}
+                    suljeModaali={() => setYTJModaaliAuki(false)}
                 />
             )}
         </PohjaSivu>

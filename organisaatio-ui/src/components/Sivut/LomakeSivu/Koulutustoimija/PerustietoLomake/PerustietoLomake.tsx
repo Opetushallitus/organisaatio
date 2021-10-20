@@ -16,15 +16,13 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
-import { YtjOrganisaatio } from '../../../../../types/apiTypes';
-import YTJModaali from '../../../../Modaalit/YTJModaali/YTJModaali';
 
 type PerustietoLomakeProps = {
     organisaatioTyypit: Koodi[];
     rakenne: ResolvedRakenne;
     organisaatio: Organisaatio;
     language: string;
-    setYtjDataFetched: (organisaatio: YtjOrganisaatio) => void;
+    ytjButton;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
@@ -36,7 +34,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const {
         organisaatio,
         language,
-        setYtjDataFetched,
+        ytjButton,
         validationErrors,
         formRegister,
         formControl,
@@ -46,14 +44,10 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
-    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
 
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const kunnatOptions = kuntaKoodisto.selectOptions();
-    const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
-        setYtjDataFetched(ytjOrg);
-        setYTJModaaliAuki(false);
-    };
+
     formRegister('nimi');
     return (
         <div className={styles.UloinKehys}>
@@ -91,9 +85,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             defaultValue={organisaatio.ytunnus}
                         />
                     </div>
-                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
-                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
-                    </Button>
+                    {ytjButton}
                 </div>
             )}
             <div className={styles.Rivi}>
@@ -229,13 +221,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         />
                     }
                     suljeCallback={() => setLakkautusModaaliAuki(false)}
-                />
-            )}
-            {YTJModaaliAuki && (
-                <YTJModaali
-                    ytunnus={organisaatio.ytunnus}
-                    korvaaOrganisaatio={handleKorvaaOrganisaatio}
-                    suljeModaali={() => setYTJModaaliAuki(false)}
                 />
             )}
         </div>
