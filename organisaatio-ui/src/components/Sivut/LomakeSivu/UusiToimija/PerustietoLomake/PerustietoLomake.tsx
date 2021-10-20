@@ -12,9 +12,6 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import { Koodi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
-import { YtjOrganisaatio } from '../../../../../types/apiTypes';
-import { warning } from '../../../../Notification/Notification';
-import YTJModaali from '../../../../Modaalit/YTJModaali/YTJModaali';
 
 type UusiOrgPerustiedotProps = {
     organisaatioTyypit: Koodi[];
@@ -23,56 +20,18 @@ type UusiOrgPerustiedotProps = {
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
     handleJatka: () => void;
+    openYtjModal: () => void;
     setPerustiedotValue: UseFormSetValue<Perustiedot>;
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     watchPerustiedot: UseFormWatch<Perustiedot>;
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const {
-        handleJatka,
-        validationErrors,
-        formControl,
-        formRegister,
-        setPerustiedotValue,
-        setYhteystiedotValue,
-        organisaatioTyypit,
-        rakenne,
-    } = props;
+    const { handleJatka, validationErrors, formControl, formRegister, organisaatioTyypit, rakenne } = props;
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
-    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
 
-    const handleYtjData = (ytjOrg: YtjOrganisaatio) => {
-        setPerustiedotValue('ytunnus', ytjOrg.ytunnus);
-        setPerustiedotValue('nimi', { fi: ytjOrg.nimi, sv: ytjOrg.nimi, en: ytjOrg.nimi });
-        setPerustiedotValue('alkuPvm', ytjOrg.aloitusPvm);
-        const selectedKunta = kuntaKoodisto.koodit().find((a) => a.arvo === ytjOrg.kotiPaikkaKoodi);
-        const selectedKuntaSelector = kuntaKoodisto
-            .selectOptions()
-            .find((a) => a.value.startsWith(selectedKunta?.uri || ''));
-        if (selectedKunta && selectedKuntaSelector) setPerustiedotValue('kotipaikkaUri', selectedKuntaSelector);
-        else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
-        const selectedKieli = oppilaitoksenOpetuskieletKoodisto
-            .selectOptions()
-            .find((a) => a.label === ytjOrg.yrityksenKieli?.toLowerCase());
-        if (selectedKieli) setPerustiedotValue('kieletUris', [selectedKieli]);
-        else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
-        setYhteystiedotValue('kieli_fi#1', {
-            postiOsoite: ytjOrg.postiOsoite.katu,
-            postiOsoitePostiNro: ytjOrg.postiOsoite.postinumero,
-            postiOsoiteToimipaikka: ytjOrg.postiOsoite.toimipaikka,
-            kayntiOsoite: ytjOrg.kayntiOsoite?.katu || ytjOrg.postiOsoite.katu,
-            kayntiOsoitePostiNro: ytjOrg.kayntiOsoite?.postinumero || ytjOrg.postiOsoite.postinumero,
-            kayntiOsoiteToimipaikka: ytjOrg.kayntiOsoite?.toimipaikka || ytjOrg.postiOsoite.toimipaikka,
-            puhelinnumero: ytjOrg.puhelin,
-            email: ytjOrg.sahkoposti,
-            www: ytjOrg.www,
-        });
-        setYhteystiedotValue('osoitteetOnEri', !!ytjOrg.kayntiOsoite);
-        setYTJModaaliAuki(false);
-    };
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -119,7 +78,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                     defaultValue={''}
                                 />
                             </div>
-                            <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
+                            <Button className={styles.Nappi} variant="outlined" onClick={props.openYtjModal}>
                                 {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
                             </Button>
                         </div>
@@ -245,9 +204,6 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
             <div>
                 <Button onClick={handleJatka}>{i18n.translate('BUTTON_JATKA')}</Button>
             </div>
-            {YTJModaaliAuki && (
-                <YTJModaali korvaaOrganisaatio={handleYtjData} suljeModaali={() => setYTJModaaliAuki(false)} />
-            )}
         </div>
     );
 }

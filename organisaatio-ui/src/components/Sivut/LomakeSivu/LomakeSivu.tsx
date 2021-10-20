@@ -245,11 +245,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 rakenne={organisaatioRakenne}
                 organisaatio={organisaatio}
                 language={language}
-                ytjButton={
-                    <Button className={styles.Nappi} variant="outlined" onClick={() => setYTJModaaliAuki(true)}>
-                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
-                    </Button>
-                }
+                openYtjModal={() => setYTJModaaliAuki(true)}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));

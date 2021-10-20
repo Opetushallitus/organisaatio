@@ -20,6 +20,9 @@ import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tool
 import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
+import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
+import { YtjOrganisaatio } from '../../../../types/apiTypes';
+import { warning } from '../../../Notification/Notification';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -27,9 +30,11 @@ const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const { parentOid } = queryString.parse(props.location.search);
-
-    const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const { kuntaKoodisto, oppilaitoksenOpetuskieletKoodisto, organisaatioTyypitKoodisto } = useContext(
+        KoodistoContext
+    );
     const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
@@ -79,7 +84,35 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 return setAvoinnaCb();
         }
     };
-
+    const handleYtjData = (ytjOrg: YtjOrganisaatio) => {
+        setPerustiedotValue('ytunnus', ytjOrg.ytunnus);
+        setPerustiedotValue('nimi', { fi: ytjOrg.nimi, sv: ytjOrg.nimi, en: ytjOrg.nimi });
+        setPerustiedotValue('alkuPvm', ytjOrg.aloitusPvm);
+        const selectedKunta = kuntaKoodisto.koodit().find((a) => a.arvo === ytjOrg.kotiPaikkaKoodi);
+        const selectedKuntaSelector = kuntaKoodisto
+            .selectOptions()
+            .find((a) => a.value.startsWith(selectedKunta?.uri || ''));
+        if (selectedKunta && selectedKuntaSelector) setPerustiedotValue('kotipaikkaUri', selectedKuntaSelector);
+        else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
+        const selectedKieli = oppilaitoksenOpetuskieletKoodisto
+            .selectOptions()
+            .find((a) => a.label === ytjOrg.yrityksenKieli?.toLowerCase());
+        if (selectedKieli) setPerustiedotValue('kieletUris', [selectedKieli]);
+        else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
+        setYhteystiedotValue('kieli_fi#1', {
+            postiOsoite: ytjOrg.postiOsoite.katu,
+            postiOsoitePostiNro: ytjOrg.postiOsoite.postinumero,
+            postiOsoiteToimipaikka: ytjOrg.postiOsoite.toimipaikka,
+            kayntiOsoite: ytjOrg.kayntiOsoite?.katu || ytjOrg.postiOsoite.katu,
+            kayntiOsoitePostiNro: ytjOrg.kayntiOsoite?.postinumero || ytjOrg.postiOsoite.postinumero,
+            kayntiOsoiteToimipaikka: ytjOrg.kayntiOsoite?.toimipaikka || ytjOrg.postiOsoite.toimipaikka,
+            puhelinnumero: ytjOrg.puhelin,
+            email: ytjOrg.sahkoposti,
+            www: ytjOrg.www,
+        });
+        setYhteystiedotValue('osoitteetOnEri', !!ytjOrg.kayntiOsoite);
+        setYTJModaaliAuki(false);
+    };
     const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('tyypit') || [] });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
@@ -130,6 +163,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 rakenne={organisaatioRakenne}
                 watchPerustiedot={watchPerustiedot}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
+                openYtjModal={() => setYTJModaaliAuki(true)}
                 validationErrors={perustiedotValidationErrors}
                 formControl={perustiedotControl}
                 setPerustiedotValue={setPerustiedotValue}
@@ -188,6 +222,9 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                     </Button>
                 </div>
             </div>
+            {YTJModaaliAuki && (
+                <YTJModaali korvaaOrganisaatio={handleYtjData} suljeModaali={() => setYTJModaaliAuki(false)} />
+            )}
         </PohjaSivu>
     );
 };

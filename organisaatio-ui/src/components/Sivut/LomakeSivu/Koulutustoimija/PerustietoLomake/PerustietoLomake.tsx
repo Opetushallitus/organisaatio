@@ -22,7 +22,7 @@ type PerustietoLomakeProps = {
     rakenne: ResolvedRakenne;
     organisaatio: Organisaatio;
     language: string;
-    ytjButton;
+    openYtjModal: () => void;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
@@ -34,7 +34,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const {
         organisaatio,
         language,
-        ytjButton,
+        openYtjModal,
         validationErrors,
         formRegister,
         formControl,
@@ -85,7 +85,9 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             defaultValue={organisaatio.ytunnus}
                         />
                     </div>
-                    {ytjButton}
+                    <Button className={styles.Nappi} variant="outlined" onClick={openYtjModal}>
+                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
+                    </Button>
                 </div>
             )}
             <div className={styles.Rivi}>
