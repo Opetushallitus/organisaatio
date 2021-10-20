@@ -4,21 +4,16 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { useState, useContext } from 'react';
-import type { Organisaatio, Yhteystiedot } from '../../../../../types/types';
-import { LanguageContext } from '../../../../../contexts/contexts';
-import { KoodiUri, Nimi } from '../../../../../types/types';
+import type { Yhteystiedot } from '../../../../../types/types';
+import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form';
+import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
+import { useWatch } from 'react-hook-form';
+import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 
 export type Props = {
+    setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     yhteystiedot?: Yhteystiedot[];
-    handleOnChange?: ({
-        name,
-        value,
-    }: {
-        name: keyof Organisaatio;
-        value: { nimi: Nimi; alkuPvm: string }[] | Nimi | KoodiUri[] | Date | KoodiUri | Yhteystiedot[];
-    }) => void;
     validationErrors: FieldErrors<Yhteystiedot>;
     formRegister: UseFormRegister<Yhteystiedot>;
     formControl: Control<Yhteystiedot>;
@@ -26,16 +21,65 @@ export type Props = {
 };
 type SupportedKieli = 'finnishAndSwedish' | 'english';
 
+const postiOsoiteToimipaikkaFiName = 'kieli_fi#1.postiOsoiteToimipaikka';
+const postiOsoiteToimipaikkaSvName = 'kieli_sv#1.postiOsoiteToimipaikka';
+const kayntiOsoiteToimipaikkaSvName = 'kieli_sv#1.kayntiOsoiteToimipaikka';
+const kayntiOsoiteToimipaikkaFiName = 'kieli_fi#1.kayntiOsoiteToimipaikka';
+
 const DEFAULT_LANGUAGE_CODE = 'finnishAndSwedish';
 
-const YhteystietoLomake = ({ formRegister, validationErrors, watch }: Props): React.ReactElement => {
+const OsoitteenToimipaikkaKentta = ({
+    name,
+    control,
+}: {
+    name:
+        | typeof postiOsoiteToimipaikkaFiName
+        | typeof postiOsoiteToimipaikkaSvName
+        | typeof kayntiOsoiteToimipaikkaSvName
+        | typeof kayntiOsoiteToimipaikkaFiName;
+    labelTxt: string;
+    control: Control<Yhteystiedot>;
+}) => {
+    const toimipaikka = useWatch({ control, name });
+    return <span className={styles.ToimipaikkaText}>{toimipaikka}</span>;
+};
+
+const YhteystietoLomake = ({
+    formRegister,
+    validationErrors,
+    watch,
+    formControl,
+    setYhteystiedotValue,
+}: Props): React.ReactElement => {
     const { i18n } = useContext(LanguageContext);
+    const { postinumerotKoodisto } = useContext(KoodistoContext);
     const [kieleksi, setKieleksi] = useState<SupportedKieli>(DEFAULT_LANGUAGE_CODE);
     const languageTabs = [
         { value: 'finnishAndSwedish', label: i18n.translate('YHTEYSTIEDOT_KIELIVALINNAT_SUOMEKSI_JA_RUOTSIKSI') },
         { value: 'english', label: i18n.translate('YHTEYSTIEDOT_KIELIVALINNAT_ENGLANNIKSI') },
     ];
+
     const osoitteetOnEri = watch('osoitteetOnEri', false);
+
+    const registerToimipaikkaUpdate = (toimipaikkaName, { onChange: originalOnchange, ...rest }) => {
+        const koodit = postinumerotKoodisto.koodit();
+        const kieli = toimipaikkaName.substr(toimipaikkaName.indexOf('_') + 1, 2) as 'fi' | 'sv';
+        const onChange = (e) => {
+            const postinumero = e.target.value;
+            if (postinumeroSchema.required().validate(postinumero)) {
+                const postinumeroKoodi = koodit.find((koodi) => koodi.arvo === postinumero);
+                if (postinumeroKoodi) {
+                    const {
+                        nimi: { [kieli]: toimipaikka },
+                    } = postinumeroKoodi;
+                    setYhteystiedotValue(toimipaikkaName, toimipaikka);
+                } else setYhteystiedotValue(toimipaikkaName, '');
+            } else setYhteystiedotValue(toimipaikkaName, '');
+            originalOnchange(e);
+        };
+        return { onChange, ...rest };
+    };
+
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -61,13 +105,21 @@ const YhteystietoLomake = ({ formRegister, validationErrors, watch }: Props): Re
                         <div className={styles.KenttaLyhyt}>
                             <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO_SUOMI')}</label>
                             <Input
-                                {...formRegister(`kieli_fi#1.postiOsoitePostiNro`)}
+                                {...registerToimipaikkaUpdate(
+                                    postiOsoiteToimipaikkaFiName,
+                                    formRegister(`kieli_fi#1.postiOsoitePostiNro`)
+                                )}
                                 error={
                                     validationErrors['kieli_fi#1'] &&
                                     !!validationErrors['kieli_fi#1'].postiOsoitePostiNro
                                 }
                             />
                         </div>
+                        <OsoitteenToimipaikkaKentta
+                            name={postiOsoiteToimipaikkaFiName}
+                            labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA_SUOMI')}
+                            control={formControl}
+                        />
                     </div>
                     <div className={styles.Rivi}>
                         <div className={styles.Kentta}>
@@ -80,13 +132,21 @@ const YhteystietoLomake = ({ formRegister, validationErrors, watch }: Props): Re
                         <div className={styles.KenttaLyhyt}>
                             <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO_RUOTSI')}</label>
                             <Input
-                                {...formRegister(`kieli_sv#1.postiOsoitePostiNro`)}
+                                {...registerToimipaikkaUpdate(
+                                    postiOsoiteToimipaikkaSvName,
+                                    formRegister(`kieli_sv#1.postiOsoitePostiNro`)
+                                )}
                                 error={
                                     validationErrors['kieli_sv#1'] &&
                                     !!validationErrors['kieli_sv#1'].postiOsoitePostiNro
                                 }
                             />
                         </div>
+                        <OsoitteenToimipaikkaKentta
+                            name={postiOsoiteToimipaikkaSvName}
+                            labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA_RUOTSI')}
+                            control={formControl}
+                        />
                     </div>
                     {osoitteetOnEri && [
                         <div key={'osoiteOnEri_suomi'} className={styles.Rivi}>
@@ -96,8 +156,18 @@ const YhteystietoLomake = ({ formRegister, validationErrors, watch }: Props): Re
                             </div>
                             <div key={`kieli_fi#1.kayntiOsoitePostiNro`} className={styles.KenttaLyhyt}>
                                 <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO_SUOMI')}</label>
-                                <Input {...formRegister('kieli_fi#1.kayntiOsoitePostiNro')} />
+                                <Input
+                                    {...registerToimipaikkaUpdate(
+                                        kayntiOsoiteToimipaikkaFiName,
+                                        formRegister('kieli_fi#1.kayntiOsoitePostiNro')
+                                    )}
+                                />
                             </div>
+                            <OsoitteenToimipaikkaKentta
+                                name={kayntiOsoiteToimipaikkaFiName}
+                                labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA_SUOMI')}
+                                control={formControl}
+                            />
                         </div>,
                         <div key={'osoiteOnEri_ruotsi'} className={styles.Rivi}>
                             <div key={'kieli_sv#1.kayntiOsoite'} className={styles.Kentta}>
@@ -106,8 +176,18 @@ const YhteystietoLomake = ({ formRegister, validationErrors, watch }: Props): Re
                             </div>
                             <div key={`kieli_fi#1.kayntiOsoitePostiNro`} className={styles.KenttaLyhyt}>
                                 <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO_RUOTSI')}</label>
-                                <Input {...formRegister('kieli_sv#1.kayntiOsoitePostiNro')} />
+                                <Input
+                                    {...registerToimipaikkaUpdate(
+                                        kayntiOsoiteToimipaikkaSvName,
+                                        formRegister('kieli_sv#1.kayntiOsoitePostiNro')
+                                    )}
+                                />
                             </div>
+                            <OsoitteenToimipaikkaKentta
+                                name={kayntiOsoiteToimipaikkaSvName}
+                                labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA_SUOMI')}
+                                control={formControl}
+                            />
                         </div>,
                     ]}
                     <div className={styles.Rivi}>

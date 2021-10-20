@@ -141,6 +141,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}
                 validationErrors={yhteystiedotValidationErrors}

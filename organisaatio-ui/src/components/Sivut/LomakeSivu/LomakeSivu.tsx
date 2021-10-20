@@ -77,6 +77,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const {
         reset: yhteystiedotReset,
         watch: watchYhteystiedot,
+        setValue: setYhteystiedotValue,
         register: yhteystiedotRegister,
         formState: { errors: yhteystiedotValidationErrors },
         handleSubmit: yhteystiedotHandleSubmit,
@@ -247,6 +248,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             lomakkeet.push(
                 <YhteystietoLomake
                     watch={watchYhteystiedot}
+                    setYhteystiedotValue={setYhteystiedotValue}
                     formControl={yhteystiedotControl}
                     validationErrors={yhteystiedotValidationErrors}
                     formRegister={yhteystiedotRegister}

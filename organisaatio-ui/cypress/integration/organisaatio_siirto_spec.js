@@ -1,8 +1,6 @@
 import { organisaatio } from '../support/data';
 
 describe('Organisaatiosiirto', () => {
-    beforeEach(() => {});
-
     it('Can move organisaatio', () => {
         // persist parents
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
@@ -10,7 +8,7 @@ describe('Organisaatiosiirto', () => {
         cy.persistOrganisaatio(organisaatio('PARENT3', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio3');
         cy.persistOrganisaatio(organisaatio('PARENT4', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio4');
 
-        //persis child
+        //persist child
         cy.get('@parentOrganisaatio1').then((parentOrganisaatio) => {
             cy.persistOrganisaatio(
                 organisaatio('CHILD', {

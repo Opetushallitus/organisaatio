@@ -20,6 +20,8 @@ const uiYhteystiedot: Yhteystiedot = {
         postiOsoitePostiNro: '',
         puhelinnumero: '',
         www: '',
+        postiOsoiteToimipaikka: '',
+        kayntiOsoiteToimipaikka: '',
     },
     'kieli_fi#1': {
         email: 'arpa@kuutio.fi',
@@ -29,6 +31,8 @@ const uiYhteystiedot: Yhteystiedot = {
         postiOsoitePostiNro: '22222',
         puhelinnumero: '',
         www: '',
+        postiOsoiteToimipaikka: '',
+        kayntiOsoiteToimipaikka: '',
     },
     'kieli_sv#1': {
         puhelinnumero: '12345',
@@ -38,6 +42,8 @@ const uiYhteystiedot: Yhteystiedot = {
         postiOsoite: '',
         postiOsoitePostiNro: '',
         www: '',
+        postiOsoiteToimipaikka: '',
+        kayntiOsoiteToimipaikka: '',
     },
     osoitteetOnEri: false,
 };
