@@ -5,7 +5,7 @@ import TNFooter from './TNFooter';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { Nimi, Perustiedot } from '../../../types/types';
+import { Nimi } from '../../../types/types';
 import ToimipisteenNimenmuutosModaaliSchema from '../../../ValidationSchemas/ToimipisteenNimenmuutosModaaliSchema';
 
 type ModaaliProps = {
@@ -20,10 +20,10 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         register,
         formState: { errors: validationErrors },
         handleSubmit,
-    } = useForm<Perustiedot>({ resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema) });
+    } = useForm<Nimi>({ defaultValues: props.nimi, resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema) });
 
     const handleTallenna = () => {
-        const { nimi } = getValues();
+        const nimi = getValues();
         props.handleNimiTallennus(nimi);
         return props.closeNimenmuutosModaali();
     };
@@ -31,11 +31,10 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         reset();
         props.closeNimenmuutosModaali();
     };
-
     return (
         <PohjaModaali
             header={<TNHeader />}
-            body={<TNBody validationErrors={validationErrors} register={register} nimi={props.nimi} />}
+            body={<TNBody validationErrors={validationErrors} register={register} />}
             footer={<TNFooter tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}
             suljeCallback={handlePeruuta}
         />
