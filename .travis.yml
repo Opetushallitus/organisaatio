@@ -30,7 +30,7 @@ install:
   - export TZ=Europe/Helsinki # TODO: fix tests
 
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=mikaelbarlund_organisaatio -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=Opetushallitus_organisaatio -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
   - mv organisaatio-service/target/organisaatio-service-*.war $DOCKER_BUILD_DIR/artifact/organisaatio-service.war
   - mv organisaatio-ui/target/organisaatio-ui.war $DOCKER_BUILD_DIR/artifact/organisaatio-ui.war
   - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
