@@ -10,13 +10,13 @@ cache:
 env:
   global:
     # ARTIFACTORY_USERNAME
-    - secure: "dNrgckZN/CuutxMXsN/B2MZ+uYw4ra19xtgLvHngz20Wj5PfcTyzhX/fHVFY5jnl1hYgP7kRgohWgCziVGCBV3LhUPG0Cev5+N3lF/WfkfaHCowqc0g65EN9K08omSZUMMnsU5VmkqES4EPFl44ldoGpPc+s4kCfis2BHwA5xDA="
+    - secure: "JgVvhqXYLhggMP0teU7tWazk0Lh86u45KghTGKfpPbpeZANEx3/iN/jct7twd8IYsRm/VNq0eZoP42EB9ZT0F9ucjhtP/yLelyn/DoH5eYxb7uwPpaIT/ReyKRUaK5DYT7nz4q3uoApN6q5vG6Rw+joY2RLy2tjoWjoesC5rdQw="
     # ARTIFACTORY_PASSWORD
-    - secure: "J0u6Oow9jD+I+heRT7HlbBIocPNPkKnlw6z5k1pmPvYNSPHc+f7x6tg0wn5YoyPnMSu80thhcRUbbDnBu+FqwBI19WC73zdXLiTFOGkfvhykzoU5hoeq2SRK2fHd1RyQYtRlEJqc2fElPGjroUZQ2FZfVk9myQ73I2HF5NM1BvQ="
+    - secure: "scvmjQm0bAg0j++hewkvHqwDzM8JBnZV4K3IML/zeuDU64TUdEgm3n5Oq1Wk3Fw4kEAAlxCAoKBBg36rRtZvfVyxbEQNN01Ye7KxKFkuqc04s+QJ0IIEq9cglU0R6JVvokGkDsByjRdyjFAgWDqK4/abkXzD4cGzFccHy46ZLLQ="
     # AWS_ACCESS_KEY_ID
-    - secure: "Fzy+TYEe3HNZ1gFPbvDQ+7CQLJoAU146ch1Lg62AqD6qvLOW13CN71x1opBHn87tgwbAMu+R87NHfHv1D9IsBY4pWy4rh3OE0kKdiBlsktvbOYIgGdNqugtIISniIM+VV3U9LkSHlkQk7qFHvvaI2PgmhEAOltK3qMjEcDkV2vY="
+    - secure: "Adnofgj5/fkiL8j7/fRk/3UHOazWn5oT82OdVPUZB1P9Ei9Fbw/HLS1UTrkIYzBjT6aBku7IRV+Y9K69uyBFFWmklkKkLQd/542QtdftGSkjFw4bnraXJu3hOD4m6uJMhYXywGbgCFtriahQJigtjxU3lYmw3TRDmu2v2pp8Zko="
     # AWS_SECRET_ACCESS_KEY
-    - secure: "PHCsorIqkSQ7IjSGEHQcRZ7rrdyNpfc72VGJAHZnPrRREfPxh+nI9n48VrSrIXrZSX5o0GpkJK8147UxON6lXbE2pLXQWBNNt9D5i73OD63JY00olDcdNuVRmy0SQ2bApqphVnAyU98c/QYxKhMx6EM2W4COmXl+q1n1NtCm+O4="
+    - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
 addons:
   sonarcloud:
     organization: "opetushallitus"
