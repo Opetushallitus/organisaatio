@@ -10,6 +10,11 @@ env:
     - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
     # S3 bucket used to share build files between jobs
     - s3bucket: "opintopolku-utility-travis-artifacts/artifacts/Opetushallitus/organisaatio2"
+addons:
+  sonarcloud:
+    organization: "opetushallitus"
+    token:
+      secure: "QpZCPf2OCCcvp27AhCM4g71+OzmtdtpcPnyhhCf60/HXZB8SOSLU00qAWcv86iNLSTIuL8AVrwo+Jw63LguZTVxQ8a5Qh8SYXUgrm9i9pj66I8c/BzfhtOXQqzYLHKzl3XYqbsdfD4AVPwB5BDE1ohF1A7bPjIVvNqyjJb/bJqo="
 before_install:
   - pyenv global 3.7.1
   - pip install -U pip
@@ -34,6 +39,7 @@ jobs:
       script:
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+        - ./gradlew sonarqube
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-service ~/$TRAVIS_BUILD_NUMBER
         - cp -R $TRAVIS_BUILD_DIR/src ~/$TRAVIS_BUILD_NUMBER
       after_success:
