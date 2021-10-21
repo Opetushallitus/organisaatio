@@ -16,7 +16,7 @@ import {
     YhdistaOrganisaatioon,
     Yhteystiedot,
 } from '../../../types/types';
-import { YtjOrganisaatio } from '../../../types/apiTypes';
+
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
@@ -36,7 +36,8 @@ import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeS
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
-import { mapYtjToAPIOrganisaatio, resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -48,6 +49,7 @@ const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
     const initialYhdista = {
@@ -62,7 +64,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     };
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<SiirraOrganisaatioon>(initialSiirra);
-    const { postinumerotKoodisto } = useContext(KoodistoContext);
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
@@ -144,12 +145,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
     }
-
-    // TODO täytyy tarkastaa mitä kaikkea tietoa tuolta Ytj:ltä tuleekaan? esim yrityksen lopetuksesta.
-    const setYtjDataFetched = (ytjOrganisaatio: YtjOrganisaatio) => {
-        const newOganisaatio = mapYtjToAPIOrganisaatio({ ytjOrganisaatio, organisaatio, postinumerotKoodisto });
-        setOrganisaatio(newOganisaatio);
-    };
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);
 
@@ -236,11 +231,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 formControl={perustiedotControl}
                 validationErrors={perustiedotValidationErrors}
                 key={PERUSTIEDOTID}
-                setYtjDataFetched={setYtjDataFetched}
                 organisaatioTyypit={resolvedTyypit}
                 rakenne={organisaatioRakenne}
                 organisaatio={organisaatio}
                 language={language}
+                openYtjModal={() => setYTJModaaliAuki(true)}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
@@ -373,6 +368,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         cancelSiirraOrganisaatio();
                     }}
                     suljeCallback={() => cancelSiirraOrganisaatio()}
+                />
+            )}
+            {YTJModaaliAuki && (
+                <YTJModaali
+                    setters={{ setPerustiedotValue, setYhteystiedotValue }}
+                    ytunnus={organisaatio.ytunnus || ''}
+                    suljeModaali={() => setYTJModaaliAuki(false)}
                 />
             )}
         </PohjaSivu>

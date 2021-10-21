@@ -20,6 +20,7 @@ import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tool
 import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
+import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -27,8 +28,8 @@ const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
+    const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const { parentOid } = queryString.parse(props.location.search);
-
     const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
     const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
@@ -130,6 +131,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 rakenne={organisaatioRakenne}
                 watchPerustiedot={watchPerustiedot}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}
+                openYtjModal={() => setYTJModaaliAuki(true)}
                 validationErrors={perustiedotValidationErrors}
                 formControl={perustiedotControl}
                 setPerustiedotValue={setPerustiedotValue}
@@ -188,6 +190,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                     </Button>
                 </div>
             </div>
+            {YTJModaaliAuki && (
+                <YTJModaali
+                    ytunnus={watchPerustiedot('ytunnus') || ''}
+                    setters={{ setPerustiedotValue, setYhteystiedotValue }}
+                    suljeModaali={() => setYTJModaaliAuki(false)}
+                />
+            )}
         </PohjaSivu>
     );
 };

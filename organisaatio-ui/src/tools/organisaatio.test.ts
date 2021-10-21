@@ -1,6 +1,6 @@
 import { resolveOrganisaatioTyypit } from './organisaatio';
-import { Koodisto, rakenne, ROOT_OID } from '../contexts/contexts';
-import { Koodi } from '../types/types';
+import { rakenne, ROOT_OID } from '../contexts/contexts';
+import { Koodi, Koodisto } from '../types/types';
 const koodisto: Partial<Koodisto> = {
     koodit: () =>
         [

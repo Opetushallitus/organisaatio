@@ -1,15 +1,20 @@
 import * as React from 'react';
-import { Koodi, KoodiArvo, KoodistoSelectOption, KoodiUri, Language, Lokalisointi, Nimi } from '../types/types';
+import {
+    I18n,
+    Koodi,
+    KoodiArvo,
+    Koodisto,
+    KoodistoContextType,
+    KoodistoSelectOption,
+    KoodiUri,
+    Language,
+    Lokalisointi,
+    Nimi,
+} from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
 
 export const ROOT_OID = '1.2.246.562.10.00000000001';
 export const rakenne = organisaatioRakenne;
-export interface I18n {
-    translate: (key: string) => string;
-    translateWithLang: (key: string, language: Language) => string;
-    translateNimi: (nimi: Nimi | undefined) => string;
-    enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
-}
 
 export class I18nImpl implements I18n {
     _data: Lokalisointi;
@@ -48,15 +53,6 @@ export const LanguageContext = React.createContext<LanguageContextType>({
     language: 'fi',
     i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
 });
-
-export interface Koodisto {
-    uri2Nimi: (uri: KoodiUri) => string;
-    arvo2Nimi: (arvo: KoodiArvo) => string;
-    nimet: () => string[];
-    koodit: () => Koodi[];
-    selectOptions: () => KoodistoSelectOption[];
-    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
-}
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];
@@ -110,17 +106,6 @@ export class KoodistoImpl implements Koodisto {
         return koodi.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi.nimi['fi'] || '');
     }
 }
-
-type KoodistoContextType = {
-    kuntaKoodisto: Koodisto;
-    kayttoRyhmatKoodisto: Koodisto;
-    ryhmaTyypitKoodisto: Koodisto;
-    organisaatioTyypitKoodisto: Koodisto;
-    ryhmanTilaKoodisto: Koodisto;
-    oppilaitoksenOpetuskieletKoodisto: Koodisto;
-    postinumerotKoodisto: Koodisto;
-    maatJaValtiotKoodisto: Koodisto;
-};
 
 export const KoodistoContext = React.createContext<KoodistoContextType>({
     kuntaKoodisto: new KoodistoImpl([], 'fi'),

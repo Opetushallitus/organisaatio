@@ -31,23 +31,7 @@ export type Osoite = {
     numero?: string;
 };
 
-export type ytjOsoite = {
-    katu: string;
-    postinumero: string;
-    toimipaikka: string;
-    maa: string;
-    kieli: boolean;
-};
-
-export type ytjYtunnus = {
-    status?: string;
-    alkupvm: LocalDate;
-    loppupvm: LocalDate;
-    yritysLopetettu: boolean;
-    ytunnus: string;
-};
-
-type YhteystiedotBase = {
+export type YhteystiedotBase = {
     postiOsoite: string;
     postiOsoitePostiNro: string;
     postiOsoiteToimipaikka: string;
@@ -209,4 +193,31 @@ export type Rakenne = {
     mergeTargetType: string | null;
     childTypes: string[];
     showYtj: boolean;
+};
+
+export type I18n = {
+    translate: (key: string) => string;
+    translateWithLang: (key: string, language: Language) => string;
+    translateNimi: (nimi: Nimi | undefined) => string;
+    enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
+};
+
+export type Koodisto = {
+    uri2Nimi: (uri: KoodiUri) => string;
+    arvo2Nimi: (arvo: KoodiArvo) => string;
+    nimet: () => string[];
+    koodit: () => Koodi[];
+    selectOptions: () => KoodistoSelectOption[];
+    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
+};
+
+export type KoodistoContextType = {
+    kuntaKoodisto: Koodisto;
+    kayttoRyhmatKoodisto: Koodisto;
+    ryhmaTyypitKoodisto: Koodisto;
+    organisaatioTyypitKoodisto: Koodisto;
+    ryhmanTilaKoodisto: Koodisto;
+    oppilaitoksenOpetuskieletKoodisto: Koodisto;
+    postinumerotKoodisto: Koodisto;
+    maatJaValtiotKoodisto: Koodisto;
 };
