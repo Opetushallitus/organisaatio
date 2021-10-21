@@ -14,7 +14,7 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import { Koodi, Nimi, Organisaatio, Perustiedot, ResolvedRakenne } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 
 type PerustietoLomakeProps = {
@@ -27,11 +27,19 @@ type PerustietoLomakeProps = {
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
     handleNimiUpdate: (nimi: Nimi) => void;
+    getPerustiedotValues: () => Perustiedot;
+};
+
+const OrganisaationNimi = ({ defaultNimi, control }) => {
+    const { i18n } = useContext(LanguageContext);
+    const nimi = useWatch({ control, name: 'nimi', defaultValue: defaultNimi });
+    return <span className={styles.ReadOnly}>{i18n.translateNimi(nimi)}</span>;
 };
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const { i18n } = useContext(LanguageContext);
     const {
+        getPerustiedotValues,
         organisaatio,
         language,
         openYtjModal,
@@ -49,6 +57,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
+    const { nimi } = getPerustiedotValues();
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -66,7 +75,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <span className={styles.AvainKevyestiBoldattu}>
                         {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
                     </span>
-                    <span className={styles.ReadOnly}>{i18n.translateNimi(organisaatio.nimi)}</span>
+                    <OrganisaationNimi control={formControl} defaultNimi={organisaatio.nimi} />
                 </div>
                 <div>
                     <Button className={styles.Nappi} variant="outlined" onClick={() => setNimenmuutosModaaliAuki(true)}>
@@ -208,7 +217,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 <ToimipisteenNimenmuutosModaali
                     closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
                     handleNimiTallennus={handleNimiUpdate}
-                    nimi={organisaatio.nimi}
+                    nimi={nimi}
                 />
             )}
             {lakkautusModaaliAuki && (

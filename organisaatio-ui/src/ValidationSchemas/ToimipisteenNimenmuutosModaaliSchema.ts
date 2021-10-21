@@ -1,17 +1,17 @@
 import Joi from 'joi';
 
 export default Joi.object({
-    nimiEn: Joi.string(),
-    nimiFi: Joi.string(),
-    nimiSv: Joi.string(),
+    fi: Joi.string(),
+    en: Joi.string(),
+    sv: Joi.string(),
 })
-    .when(Joi.object({ nimiFi: Joi.string().required() }).unknown(), {
-        then: Joi.object({ nimiSv: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
+    .when(Joi.object({ fi: Joi.string().required() }).unknown(), {
+        then: Joi.object({ sv: Joi.string().allow(''), en: Joi.string().allow('') }),
     })
-    .when(Joi.object({ nimiSv: Joi.string().required() }).unknown(), {
-        then: Joi.object({ nimiFi: Joi.string().allow(''), nimiEn: Joi.string().allow('') }),
+    .when(Joi.object({ sv: Joi.string().required() }).unknown(), {
+        then: Joi.object({ fi: Joi.string().allow(''), en: Joi.string().allow('') }),
     })
-    .when(Joi.object({ nimiEn: Joi.string().required() }).unknown(), {
-        then: Joi.object({ nimiFi: Joi.string().allow(''), nimiSv: Joi.string().allow('') }),
+    .when(Joi.object({ en: Joi.string().required() }).unknown(), {
+        then: Joi.object({ fi: Joi.string().allow(''), sv: Joi.string().allow('') }),
     })
-    .or('nimiFi', 'nimiSv', 'nimiEn');
+    .or('fi', 'sv', 'en');
