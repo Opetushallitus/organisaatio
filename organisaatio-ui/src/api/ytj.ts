@@ -1,16 +1,25 @@
 import Axios from 'axios';
 import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
-import {
-    KoodistoContextType,
-    KoodistoSelectOption,
-    LocalDate,
-    YhteystiedotBase,
-    ytjOsoite,
-    ytjYtunnus,
-} from '../types/types';
+import { KoodistoContextType, KoodistoSelectOption, LocalDate, YhteystiedotBase } from '../types/types';
 
 const baseUrl = `/organisaatio/ytj/`;
+
+type ytjOsoite = {
+    katu: string;
+    postinumero: string;
+    toimipaikka: string;
+    maa: string;
+    kieli: boolean;
+};
+
+type ytjYtunnus = {
+    status?: string;
+    alkupvm: LocalDate;
+    loppupvm: LocalDate;
+    yritysLopetettu: boolean;
+    ytunnus: string;
+};
 
 export type YtjData = YtjAPIData & {
     kunta?: KoodistoSelectOption;

@@ -31,22 +31,6 @@ export type Osoite = {
     numero?: string;
 };
 
-export type ytjOsoite = {
-    katu: string;
-    postinumero: string;
-    toimipaikka: string;
-    maa: string;
-    kieli: boolean;
-};
-
-export type ytjYtunnus = {
-    status?: string;
-    alkupvm: LocalDate;
-    loppupvm: LocalDate;
-    yritysLopetettu: boolean;
-    ytunnus: string;
-};
-
 export type YhteystiedotBase = {
     postiOsoite: string;
     postiOsoitePostiNro: string;
