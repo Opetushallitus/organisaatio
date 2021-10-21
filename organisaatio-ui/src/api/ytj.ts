@@ -91,4 +91,10 @@ async function searchByName(name: string): Promise<YtjHaku[]> {
         return data;
     });
 }
-export { getByYTunnus, searchByName };
+
+const isYtjData = (input: YtjHaku | YtjData): input is YtjData => {
+    if ((input as YtjData).yritysTunnus) return true;
+    return false;
+};
+
+export { getByYTunnus, searchByName, isYtjData };

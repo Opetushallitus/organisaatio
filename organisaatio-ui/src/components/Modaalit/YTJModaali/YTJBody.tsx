@@ -5,7 +5,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 import { isYTunnus } from '../../../tools/ytj';
-import { getByYTunnus, searchByName, YtjData, YtjHaku } from '../../../api/ytj';
+import { getByYTunnus, isYtjData, searchByName, YtjHaku } from '../../../api/ytj';
 import { warning } from '../../Notification/Notification';
 import { Perustiedot, Yhteystiedot } from '../../../types/types';
 import { UseFormSetValue } from 'react-hook-form/dist/types/form';
@@ -15,10 +15,7 @@ type Props = {
     suljeModaali: () => void;
     setters: { setPerustiedotValue: UseFormSetValue<Perustiedot>; setYhteystiedotValue: UseFormSetValue<Yhteystiedot> };
 };
-const isYtjData = (input: YtjHaku | YtjData): input is YtjData => {
-    if ((input as YtjData).yritysTunnus) return true;
-    return false;
-};
+
 const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
     if (ytjData.kunta) setters.setPerustiedotValue('kotipaikkaUri', ytjData.kunta);
     else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
@@ -31,6 +28,7 @@ const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
     setters.setYhteystiedotValue('osoitteetOnEri', !!ytjData.kayntiOsoite);
     suljeModaali();
 };
+
 export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
     const { i18n } = useContext(LanguageContext);
     const koodistot = useContext(KoodistoContext);
