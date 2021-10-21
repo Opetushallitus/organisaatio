@@ -9,14 +9,13 @@ import { getByYTunnus, searchByName, YtjData, YtjHaku } from '../../../api/ytj';
 import { warning } from '../../Notification/Notification';
 import { Perustiedot, Yhteystiedot } from '../../../types/types';
 import { UseFormSetValue } from 'react-hook-form/dist/types/form';
-// import { warning } from '../../Notification/Notification';
 
 type Props = {
     ytunnus: string;
     suljeModaali: () => void;
     setters: { setPerustiedotValue: UseFormSetValue<Perustiedot>; setYhteystiedotValue: UseFormSetValue<Yhteystiedot> };
 };
-const isYtjOrganisaatio = (input: YtjHaku | YtjData): input is YtjData => {
+const isYtjData = (input: YtjHaku | YtjData): input is YtjData => {
     if ((input as YtjData).yritysTunnus) return true;
     return false;
 };
@@ -47,7 +46,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
         }
     }
     async function handleClick(ytjHaku: YtjHaku) {
-        if (isYtjOrganisaatio(ytjHaku)) korvaaOrganisaatio({ ytjData: ytjHaku, setters, suljeModaali });
+        if (isYtjData(ytjHaku)) korvaaOrganisaatio({ ytjData: ytjHaku, setters, suljeModaali });
         else {
             const ytj = await getByYTunnus(ytjHaku.ytunnus, koodistot);
             if (ytj) korvaaOrganisaatio({ ytjData: ytj, setters, suljeModaali });

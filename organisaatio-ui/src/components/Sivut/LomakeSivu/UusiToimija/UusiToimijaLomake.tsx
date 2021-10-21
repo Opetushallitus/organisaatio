@@ -80,19 +80,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 return setAvoinnaCb();
         }
     };
-    // const handleYtjData = (ytjData: YtjData) => {
-    //     if (ytjData.kunta) setPerustiedotValue('kotipaikkaUri', ytjData.kunta);
-    //     else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
-    //     if (ytjData.kieli) setPerustiedotValue('kieletUris', [ytjData.kieli]);
-    //     else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
-    //
-    //     setPerustiedotValue('ytunnus', ytjData.ytunnus);
-    //     setPerustiedotValue('nimi', { fi: ytjData.nimi, sv: ytjData.nimi, en: ytjData.nimi });
-    //     setPerustiedotValue('alkuPvm', ytjData.aloitusPvm);
-    //     setYhteystiedotValue('kieli_fi#1', ytjData.yhteysTiedot);
-    //     setYhteystiedotValue('osoitteetOnEri', !!ytjData.kayntiOsoite);
-    //     setYTJModaaliAuki(false);
-    // };
+
     const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('tyypit') || [] });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 

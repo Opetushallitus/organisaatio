@@ -30,6 +30,7 @@ describe('Edit organisaatio from YTJ', () => {
             cy.visit(`/lomake/${response.body.organisaatio.oid}`);
             cy.clickRadioOrCheckbox('Koulutustoimija');
             cy.clickButton('PAIVITA_YTJ_TIEDOT');
+            // TODO when muokkaus-lomake has been refactored from state to form-hooks
             // cy.inputByName('ytjinput', Y_TUNNUS);
             // cy.intercept('GET', '/organisaatio/ytj/*').as('findYtj');
             // cy.clickButton('HAE_YTJTIEDOT');

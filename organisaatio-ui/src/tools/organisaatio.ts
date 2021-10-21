@@ -1,5 +1,5 @@
-import { Koodi, KoodiUri, Organisaatio, Rakenne, ResolvedRakenne } from '../types/types';
-import { Koodisto, ROOT_OID } from '../contexts/contexts';
+import { Koodi, Koodisto, KoodiUri, Organisaatio, Rakenne, ResolvedRakenne } from '../types/types';
+import { ROOT_OID } from '../contexts/contexts';
 
 export const resolveOrganisaatio = (
     rakenne: Rakenne[],

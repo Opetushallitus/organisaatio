@@ -1,5 +1,4 @@
 import { ApiYhteystiedot } from './apiTypes';
-import { Koodisto } from '../contexts/contexts';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
@@ -211,6 +210,23 @@ export type Rakenne = {
     childTypes: string[];
     showYtj: boolean;
 };
+
+export type I18n = {
+    translate: (key: string) => string;
+    translateWithLang: (key: string, language: Language) => string;
+    translateNimi: (nimi: Nimi | undefined) => string;
+    enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
+};
+
+export type Koodisto = {
+    uri2Nimi: (uri: KoodiUri) => string;
+    arvo2Nimi: (arvo: KoodiArvo) => string;
+    nimet: () => string[];
+    koodit: () => Koodi[];
+    selectOptions: () => KoodistoSelectOption[];
+    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
+};
+
 export type KoodistoContextType = {
     kuntaKoodisto: Koodisto;
     kayttoRyhmatKoodisto: Koodisto;
