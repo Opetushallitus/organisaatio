@@ -69,6 +69,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const {
         setValue: setPerustiedotValue,
+        getValues: getPerustiedotValues,
         register: registerPerustiedot,
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
@@ -222,15 +223,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const handleNimiUpdate = (nimi) => {
         setPerustiedotValue('nimi', nimi);
     };
-
     registerPerustiedot('nimi');
     handleNimiUpdate(organisaatio.nimi);
-
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                getPerustiedotValues={getPerustiedotValues}
                 formRegister={registerPerustiedot}
                 handleNimiUpdate={handleNimiUpdate}
                 formControl={perustiedotControl}
