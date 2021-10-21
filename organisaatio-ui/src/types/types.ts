@@ -50,17 +50,6 @@ export type Yhteystiedot = {
     osoitteetOnEri?: boolean;
 };
 
-export type Perustiedot = {
-    ytunnus?: string;
-    nimi: Nimi;
-    tyypit: KoodiUri[];
-    alkuPvm: LocalDate;
-    kotipaikkaUri: KoodistoSelectOption;
-    maaUri: KoodistoSelectOption;
-    muutKotipaikatUris: KoodistoSelectOption[];
-    kieletUris: KoodistoSelectOption[];
-};
-
 export type Nimi = {
     fi?: string;
     sv?: string;
@@ -72,31 +61,39 @@ export type OrganisaationNimetNimi = {
     alkuPvm?: string;
 };
 
-export type OrganisaatioBase = {
+export type UiOrganisaatioBase = {
     oid: string;
-    nimi: Nimi;
     status: string;
-};
-export type Organisaatio = OrganisaatioBase & {
+    yritysmuoto?: string;
+    nimet: OrganisaationNimetNimi[];
     parentOid: string;
     parentOidPath: string;
-    ytunnus?: string;
-    nimet: OrganisaationNimetNimi[];
-    alkuPvm?: LocalDate;
-    yritysmuoto?: string;
-    tyypit: KoodiUri[];
-    status: string;
-    kotipaikkaUri: KoodiUri;
-    muutKotipaikatUris?: KoodiUri[];
-    maaUri: KoodiUri;
-    kieletUris: KoodiUri[];
-    yhteystiedot?: ApiYhteystiedot[];
+    apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
 };
-export type NewOrganisaatio = Omit<Organisaatio, 'oid' | 'status' | 'parentOidPath'>;
+
+export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
+
+export type NewOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
+
+export type Perustiedot = {
+    ytunnus?: string;
+    nimi: Nimi;
+    organisaatioTyypit: KoodistoSelectOption[];
+    alkuPvm: LocalDate;
+    kotipaikka: KoodistoSelectOption;
+    maa: KoodistoSelectOption;
+    muutKotipaikat: KoodistoSelectOption[];
+    kielet: KoodistoSelectOption[];
+};
+
+export type ParentTiedot = {
+    tyypit: KoodiUri[];
+    oid: string;
+};
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
 
-export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
+export type Ryhma = Omit<UiOrganisaatioBase, 'oid'> & {
     oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: string; // TODO Tuleeko nämä???
@@ -124,17 +121,17 @@ export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
 export type OrganisaatioSuhde = {
     alkuPvm: string;
     loppuPvm?: string;
-    child: OrganisaatioBase;
-    parent: OrganisaatioBase;
+    child: UiOrganisaatioBase;
+    parent: UiOrganisaatioBase;
 };
 
 export type YhdistaOrganisaatioon = {
-    newParent?: Organisaatio;
+    newParent?: UiOrganisaatio;
     date: Date;
     merge: boolean;
 };
 export type SiirraOrganisaatioon = {
-    newParent?: Organisaatio;
+    newParent?: UiOrganisaatio;
     date: Date;
     merge: boolean;
 };
@@ -147,7 +144,7 @@ export type OrganisaatioHistoria = {
 export interface YhteystietoTyyppi {
     allLisatietokenttas: any;
     oid?: string;
-    nimi: any;
+    nimi: Nimi;
     sovellettavatOppilaitostyyppis: string[];
     sovellettavatOrganisaatios: string[];
     version: number;
@@ -155,7 +152,7 @@ export interface YhteystietoTyyppi {
 
 export interface OrganisaatioNimiJaOid {
     oid: string;
-    nimi: any;
+    nimi: Nimi;
 }
 
 export type SelectOptionType = {

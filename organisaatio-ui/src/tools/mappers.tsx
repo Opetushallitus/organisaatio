@@ -1,11 +1,15 @@
-import { Koodi, Ryhma, Yhteystiedot } from '../types/types';
+import { Koodi, Perustiedot, Ryhma, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+import { KoodistoContext } from '../contexts/contexts';
 import {
+    ApiOrganisaatio,
     ApiYhteystiedot,
+    OrganisaatioBase,
     YhteystiedotEmail,
     YhteystiedotOsoite,
     YhteystiedotPhone,
     YhteystiedotWww,
 } from '../types/apiTypes';
+import { useContext } from 'react';
 
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');

@@ -11,9 +11,8 @@ import { LanguageContext } from '../../../contexts/contexts';
 export function SiirraOrganisaatio(props: {
     siirraOrganisaatio: SiirraOrganisaatioon;
     organisaatio: Organisaatio;
-
     handleChange: (value: ((prevState: SiirraOrganisaatioon) => SiirraOrganisaatioon) | SiirraOrganisaatioon) => void;
-    organisaatioRakenne: ResolvedRakenne;
+    organisaatioRakenne: ResolvedRakenne | undefined;
     tallennaCallback: () => void;
     peruutaCallback: () => void;
     suljeCallback: () => void;

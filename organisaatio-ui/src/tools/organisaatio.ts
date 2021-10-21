@@ -1,11 +1,11 @@
-import { Koodi, Koodisto, KoodiUri, Organisaatio, Rakenne, ResolvedRakenne } from '../types/types';
+import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } from '../types/types';
 import { ROOT_OID } from '../contexts/contexts';
 
+//TODO pitää tsekkaa mitä tästä tulee jos tyypit ei osu mihinkään.
 export const resolveOrganisaatio = (
     rakenne: Rakenne[],
-    organisaatio: { tyypit: KoodiUri[]; oid?: string } | undefined
-): ResolvedRakenne | undefined => {
-    if (organisaatio === undefined) return undefined;
+    organisaatio: { tyypit: KoodiUri[]; oid: string }
+): ResolvedRakenne => {
     const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.tyypit];
     return rakenne
         .filter((a) => {
@@ -33,20 +33,14 @@ export const resolveOrganisaatio = (
 export const resolveOrganisaatioTyypit = (
     rakenne: Rakenne[],
     koodisto: Koodisto,
-    organisaatio: { tyypit: KoodiUri[]; oid: string } | undefined
-): Koodi[] | undefined => {
-    if (koodisto === undefined || organisaatio === undefined) return undefined;
+    organisaatio: { tyypit: KoodiUri[]; oid: string }
+): KoodistoSelectOption[] => {
     const parentRakenne = resolveOrganisaatio(rakenne, organisaatio);
-    if (parentRakenne) {
-        return koodisto
-            .koodit()
-            .filter((t) => {
-                return parentRakenne.childTypes.includes(t.uri);
-            })
-            .sort((a, b) => a.uri.localeCompare(b.uri));
-    }
+    return parentRakenne.childTypes
+        .map((tyyppiUri) => koodisto.uri2SelectOption(tyyppiUri))
+        .sort((a, b) => a.label.localeCompare(b.label));
 };
-
+/*
 export const mapOrganisaatioToSelect = (o: Organisaatio | undefined, language: string) => {
     if (o)
         return {
@@ -57,3 +51,4 @@ export const mapOrganisaatioToSelect = (o: Organisaatio | undefined, language: s
 };
 export const organisaatioSelectMapper = (organisaatiot: Organisaatio[], language: string) =>
     organisaatiot.map((o: Organisaatio) => mapOrganisaatioToSelect(o, language));
+*/

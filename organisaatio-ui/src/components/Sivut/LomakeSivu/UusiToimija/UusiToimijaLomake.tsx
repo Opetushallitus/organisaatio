@@ -81,14 +81,14 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         }
     };
 
-    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('tyypit') || [] });
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('organisaatioTyypit') || [] });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
     async function saveOrganisaatio() {
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                 const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const { kotipaikkaUri, maaUri, kieletUris, muutKotipaikatUris } = perustiedotFormValues;
+                const { kotipaikka, maa, kielet, muutKotipaikat } = perustiedotFormValues;
                 const nimet = [
                     {
                         nimi: Object.assign({}, perustiedotFormValues.nimi),
@@ -98,10 +98,10 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 const orgToBeUpdated = {
                     ...{
                         ...perustiedotFormValues,
-                        kotipaikkaUri: kotipaikkaUri?.value,
-                        maaUri: maaUri?.value,
-                        kieletUris: kieletUris?.map((a) => a.value),
-                        muutKotipaikatUris: muutKotipaikatUris?.map((a) => a.value),
+                        kotipaikkaUri: kotipaikka?.value,
+                        maaUri: maa?.value,
+                        kieletUris: kielet?.map((a) => a.value),
+                        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value),
                     },
                     yhteystiedot,
                     parentOid: (parentOid || ROOT_OID) as string,
