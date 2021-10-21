@@ -16,7 +16,7 @@ import {
     YhdistaOrganisaatioon,
     Yhteystiedot,
 } from '../../../types/types';
-import { YtjOrganisaatio } from '../../../types/apiTypes';
+
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
@@ -36,7 +36,7 @@ import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeS
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
-import { mapYtjToAPIOrganisaatio, resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 
 type LomakeSivuProps = {
@@ -64,7 +64,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     };
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<SiirraOrganisaatioon>(initialSiirra);
-    const { postinumerotKoodisto } = useContext(KoodistoContext);
     const [organisaatio, setOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
     const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
@@ -146,12 +145,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setYhdistaOrganisaatio(initialYhdista);
     }
 
-    // TODO täytyy tarkastaa mitä kaikkea tietoa tuolta Ytj:ltä tuleekaan? esim yrityksen lopetuksesta.
-    const setYtjDataFetched = (ytjOrganisaatio: YtjOrganisaatio) => {
-        const newOganisaatio = mapYtjToAPIOrganisaatio({ ytjOrganisaatio, organisaatio, postinumerotKoodisto });
-        setOrganisaatio(newOganisaatio);
-    };
-
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);
 
     const validateChanges = (accordionUuids: string[]): void => {
@@ -170,10 +163,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 return setAvoinnaCb();
         }
     };
-    const handleKorvaaOrganisaatio = (ytjOrg: YtjOrganisaatio) => {
-        setYtjDataFetched(ytjOrg);
-        setYTJModaaliAuki(false);
-    };
+
     const organisaatioRakenne = resolveOrganisaatio(rakenne, organisaatio);
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
 
@@ -382,8 +372,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             )}
             {YTJModaaliAuki && (
                 <YTJModaali
-                    ytunnus={organisaatio.ytunnus}
-                    korvaaOrganisaatio={handleKorvaaOrganisaatio}
+                    setters={{ setPerustiedotValue, setYhteystiedotValue }}
+                    ytunnus={organisaatio.ytunnus || ''}
                     suljeModaali={() => setYTJModaaliAuki(false)}
                 />
             )}

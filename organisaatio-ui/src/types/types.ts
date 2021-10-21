@@ -1,4 +1,5 @@
 import { ApiYhteystiedot } from './apiTypes';
+import { Koodisto } from '../contexts/contexts';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
@@ -47,7 +48,7 @@ export type ytjYtunnus = {
     ytunnus: string;
 };
 
-type YhteystiedotBase = {
+export type YhteystiedotBase = {
     postiOsoite: string;
     postiOsoitePostiNro: string;
     postiOsoiteToimipaikka: string;
@@ -209,4 +210,14 @@ export type Rakenne = {
     mergeTargetType: string | null;
     childTypes: string[];
     showYtj: boolean;
+};
+export type KoodistoContextType = {
+    kuntaKoodisto: Koodisto;
+    kayttoRyhmatKoodisto: Koodisto;
+    ryhmaTyypitKoodisto: Koodisto;
+    organisaatioTyypitKoodisto: Koodisto;
+    ryhmanTilaKoodisto: Koodisto;
+    oppilaitoksenOpetuskieletKoodisto: Koodisto;
+    postinumerotKoodisto: Koodisto;
+    maatJaValtiotKoodisto: Koodisto;
 };

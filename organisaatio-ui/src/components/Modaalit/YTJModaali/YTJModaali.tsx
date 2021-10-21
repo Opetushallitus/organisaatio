@@ -3,18 +3,19 @@ import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import YTJHeader from './YTJHeader';
 import YTJBody from './YTJBody';
 import YTJFooter from './YTJFooter';
-import { YtjOrganisaatio } from '../../../types/apiTypes';
+import { UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { Perustiedot, Yhteystiedot } from '../../../types/types';
 
 type ModaaliProps = {
-    ytunnus?: string;
-    korvaaOrganisaatio: (ytiedot: YtjOrganisaatio) => void;
+    ytunnus: string;
     suljeModaali: () => void;
+    setters: { setPerustiedotValue: UseFormSetValue<Perustiedot>; setYhteystiedotValue: UseFormSetValue<Yhteystiedot> };
 };
-export default function YTJModaali({ ytunnus, korvaaOrganisaatio, suljeModaali }: ModaaliProps) {
+export default function YTJModaali({ ytunnus, suljeModaali, setters }: ModaaliProps) {
     return (
         <PohjaModaali
             header={<YTJHeader />}
-            body={<YTJBody ytunnus={ytunnus} korvaaOrganisaatio={korvaaOrganisaatio} />}
+            body={<YTJBody setters={setters} ytunnus={ytunnus} suljeModaali={suljeModaali} />}
             footer={
                 <YTJFooter
                     peruutaCallback={() => {

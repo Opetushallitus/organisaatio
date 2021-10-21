@@ -1,4 +1,4 @@
-import { KoodiUri, Language, LocalDate, OrganisaatioBase, OrganisaatioSuhde, ytjOsoite, ytjYtunnus } from './types';
+import { KoodiUri, Language, OrganisaatioBase, OrganisaatioSuhde } from './types';
 
 export type CASMe = {
     uid: string;
@@ -53,26 +53,3 @@ export type YhteystiedotOsoite = YhteystiedotBase & {
 };
 
 export type ApiYhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
-
-export type YtjHaku = {
-    ytunnus: string;
-    nimi: string;
-};
-
-export type YtjOrganisaatio = YtjHaku & {
-    aloitusPvm: LocalDate;
-    yritysmuoto: string;
-    yritysmuotoKoodi: string;
-    kayntiOsoite?: ytjOsoite;
-    kotiPaikka: string;
-    kotiPaikkaKoodi: string;
-    postiOsoite: ytjOsoite;
-    puhelin: string;
-    sahkoposti: string;
-    www: string;
-    toimiala: string;
-    toimialaKoodi?: string;
-    versio?: boolean;
-    yrityksenKieli?: string;
-    yritysTunnus: ytjYtunnus;
-};

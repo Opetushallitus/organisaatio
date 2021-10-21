@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { Koodi, KoodiArvo, KoodistoSelectOption, KoodiUri, Language, Lokalisointi, Nimi } from '../types/types';
+import {
+    Koodi,
+    KoodiArvo,
+    KoodistoContextType,
+    KoodistoSelectOption,
+    KoodiUri,
+    Language,
+    Lokalisointi,
+    Nimi,
+} from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
 
 export const ROOT_OID = '1.2.246.562.10.00000000001';
@@ -110,17 +119,6 @@ export class KoodistoImpl implements Koodisto {
         return koodi.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi.nimi['fi'] || '');
     }
 }
-
-type KoodistoContextType = {
-    kuntaKoodisto: Koodisto;
-    kayttoRyhmatKoodisto: Koodisto;
-    ryhmaTyypitKoodisto: Koodisto;
-    organisaatioTyypitKoodisto: Koodisto;
-    ryhmanTilaKoodisto: Koodisto;
-    oppilaitoksenOpetuskieletKoodisto: Koodisto;
-    postinumerotKoodisto: Koodisto;
-    maatJaValtiotKoodisto: Koodisto;
-};
 
 export const KoodistoContext = React.createContext<KoodistoContextType>({
     kuntaKoodisto: new KoodistoImpl([], 'fi'),
