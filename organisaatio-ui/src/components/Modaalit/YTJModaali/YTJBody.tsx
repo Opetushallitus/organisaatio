@@ -58,15 +58,15 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                 <Input name={'ytjinput'} onChange={(e) => setInput(e.target.value)} value={input} />
                 <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
             </div>
-            <div className={styles.BodyKentta}>
-                {ytjTiedot.map((ytj) => {
-                    return (
+            {ytjTiedot.map((ytj) => {
+                return (
+                    <div className={styles.BodyKentta}>
                         <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant="text">
                             {`${ytj.nimi} ${ytj.ytunnus}`}
                         </Button>
-                    );
-                })}
-            </div>
+                    </div>
+                );
+            })}
         </div>
     );
 }
