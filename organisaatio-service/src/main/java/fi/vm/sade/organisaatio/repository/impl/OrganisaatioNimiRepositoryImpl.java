@@ -105,17 +105,16 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
         // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
         // organisaation id:llä rivejä oli enemmän kuin 1
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatio.getId()
+                + "organisaatio_id = :id "
                 + " and "
                 + "alkupvm = :date ";
 
         TypedQuery q = em.createQuery(s, OrganisaatioNimi.class);
 
-        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("date", alkuPvm).getResultList();
+        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", alkuPvm).getResultList();
 
         LOG.info("findNimi() result size: " + organisaatioNimet.size());
 
@@ -144,22 +143,20 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         LOG.info("findCurrentNimi({})", new Object[]{organisaatio.getId()});
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatio.getId()
+                + "organisaatio_id = :id "
                 + " AND "
                 + "alkupvm = (SELECT MAX (o.alkuPvm) "
                 + "FROM OrganisaatioNimi o "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatio.getId()
+                + "organisaatio_id = :id "
                 + " AND "
                 + "alkupvm <= :date)";
 
         TypedQuery<OrganisaatioNimi> q = em.createQuery(s, OrganisaatioNimi.class);
 
-        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("date", new Date()).getResultList();
+        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", new Date()).getResultList();
 
         LOG.info("findCurrentNimi() result size: " + organisaatioNimet.size());
 
@@ -206,7 +203,6 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
      **/
     @Override
     public List<Organisaatio> findNimiNotCurrentOrganisaatiot() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         String s = "SELECT org FROM Organisaatio org "
                 + "WHERE org.nimi != "
