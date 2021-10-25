@@ -24,10 +24,10 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
-import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
+import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
 import io.swagger.annotations.Api;
@@ -37,12 +37,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@ApiIgnore
 @RestController
 @RequestMapping("/yhteystietojentyyppi")
 @Api(value = "/yhteystietojentyyppi", description = "Yhteytietojen tyyppeihin liittyvät operaatiot")

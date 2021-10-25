@@ -55,6 +55,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
@@ -64,8 +67,9 @@ import java.util.*;
 /**
  * @author simok
  */
-@Component
+@RestController
 @Transactional(readOnly = true)
+@RequestMapping("/organisaatio/v2")
 public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
@@ -627,7 +631,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/hakutoimisto
     @Override
-    public Response hakutoimisto(String organisaatioOid) {
+    public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
 
         try {
             permissionChecker.checkReadOrganisation(organisaatioOid);
@@ -638,10 +642,12 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         try {
             HakutoimistoDTO hakutoimistoDTO = hakutoimistoRec(organisaatioOid);
-            return Response.ok(hakutoimistoDTO).build();
+            return hakutoimistoDTO;
         } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
-            LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.", e);
-            return Response.status(404).build();
+            LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage()
+            );
         }
     }
 

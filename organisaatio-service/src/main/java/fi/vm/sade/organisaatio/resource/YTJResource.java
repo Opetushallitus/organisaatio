@@ -31,15 +31,17 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiIgnore
 @RestController
 @RequestMapping("/ytj")
 @Api(value = "/ytj")
+
 public class YTJResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);

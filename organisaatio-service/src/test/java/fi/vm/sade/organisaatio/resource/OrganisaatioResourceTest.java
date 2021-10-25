@@ -27,8 +27,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -194,7 +194,7 @@ public class OrganisaatioResourceTest {
 
     @Test
     public void testFetchingHakutoimisto() throws Exception {
-        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.2004.4").getEntity();
+        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.2004.4");
         assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
@@ -208,7 +208,7 @@ public class OrganisaatioResourceTest {
 
     @Test
     public void testMixedOsoitetyyppi() throws Exception {
-        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.8000.1").getEntity();
+        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.8000.1");
         assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
         HakutoimistoDTO expected = new HakutoimistoDTO(
                 ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
@@ -227,14 +227,18 @@ public class OrganisaatioResourceTest {
 
     @Test
     public void testFetchingHakutoimistoForMissingOrganisation() {
-        Response hakutoimisto = res2.hakutoimisto("non.existing.oid");
-        assertEquals(404, hakutoimisto.getStatus());
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> res2.hakutoimisto("non.existing.oid"));
+        assertEquals(404, thrown.getStatus().value());
     }
 
     @Test
     public void testFetchingMissingHakutoimisto() {
-        Response hakutoimisto = res2.hakutoimisto("1.2.2004.6");
-        assertEquals(404, hakutoimisto.getStatus());
+        ResponseStatusException thrown = assertThrows(
+                ResponseStatusException.class,
+                () -> res2.hakutoimisto("1.2.2004.6"));
+        assertEquals(404, thrown.getStatus().value());
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,
