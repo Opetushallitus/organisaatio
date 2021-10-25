@@ -37,7 +37,7 @@ public interface OrganisaatioResource {
 
     public String OID_SEPARATOR = "/";
 
-    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
         @ApiImplicitParam(dataType = "String",  name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
         @ApiImplicitParam(dataType = "boolean", name = "vainAktiiviset", value = "Palautetaanko vain aktiiviset organisaatiot", paramType = "query", required = true),
@@ -70,7 +70,7 @@ public interface OrganisaatioResource {
      * @return oid/path/form/root
      * @throws Exception
      */
-    @GetMapping(path = "/{oid}/parentoids", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/parentoids", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation vanhempien oid:t",
             notes = "Operaatio palauttaa organisaation vanhempien oid:t "
@@ -80,7 +80,7 @@ public interface OrganisaatioResource {
     public String parentoids(
             @ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid) throws Exception;
 
-    @GetMapping(path = "/{oid}/childoids", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/childoids", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation alla olevien organisaatioiden oid:t",
             notes = "Operaatio palauttaa organisaation alla olevien organisaatioiden oid:t.",
@@ -92,7 +92,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Suunnitellut") @RequestParam(defaultValue = "true") boolean suunnitellut,
             @ApiParam(value = "Lakkautetut") @RequestParam(defaultValue = "true") boolean lakkautetut) throws Exception;
 
-    @GetMapping(path = "/{oid}/children", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/children", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation alla olevat organisaatiot",
             notes = "Operaatio palauttaa organisaation alla olevat organisaatiot.",
@@ -104,7 +104,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @RequestParam(defaultValue = "false") boolean includeImage) throws Exception;
 
-    @GetMapping(path = "/{oid}/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation alla olevat ryhmät",
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
@@ -124,7 +124,7 @@ public interface OrganisaatioResource {
             response = String.class)
     public String hello();
 
-    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaatioiden oid:t annetuilla hakuehdoilla",
             notes = "Operaatio palauttaa listan organisaatioiden oid:tä annetuilla hakuehdoilla.",
@@ -135,7 +135,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Muokattu ennen", required = true) @RequestParam Date lastModifiedBefore,
             @ApiParam(value = "Muokattu jälkeen", required = true) @RequestParam Date lastModifiedSince);
 
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee yhden organisaation annetulla id:llä (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi).",
             notes = "Operaatio palauttaa id:n määrittämän organisaation tiedot.",
@@ -147,7 +147,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @RequestParam(defaultValue = "false") boolean includeImage);
 
-    @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = "application/json")
+    @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
     @ApiImplicitParams(@ApiImplicitParam(dataType = "java.io.File", name = "organisaatio",
             value = "Organisaation tiedot json muodossa", paramType = "body"))
     @ApiOperation(
@@ -159,7 +159,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid,
             @ApiParam(access = "hidden") OrganisaatioRDTO ordto);
 
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Poistaa oid:n määrittämän organisaation",
             notes = "Operaatio poistaa organisaation annetulla oid:llä.",
@@ -168,7 +168,7 @@ public interface OrganisaatioResource {
     public String deleteOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid);
 
-    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = "application/json")
+    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
     @ApiImplicitParams(@ApiImplicitParam(dataType = "java.io.File", name = "organisaatio",
             value = "Luotavan organisaation tiedot json muodossa", paramType = "body"))
     @ApiOperation(
@@ -178,7 +178,7 @@ public interface OrganisaatioResource {
     @Deprecated // käytä OrganisaatioResourceV3#newOrganisaatio
     public ResultRDTO newOrganisaatio(@ApiParam(access = "hidden") OrganisaatioRDTO ordto);
 
-    @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee sallitut yhteystietotyypit",
             notes = "Operaatio palauttaa annetuille organisaatiotyypeille sallitut yhteystietotyypit.",
@@ -187,7 +187,7 @@ public interface OrganisaatioResource {
     public Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(
             @ApiParam(value = "Organisaatiotyypit", required = true) @RequestParam Set<String> organisaatioTyyppi);
 
-    @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Testaa autentikoituneen käyttäjän",
             notes = "Operaatiota käytetään ennen ensimmäistä autenttikoitua POST-kutsua. "

@@ -43,7 +43,7 @@ public interface OrganisaatioResourceV2 {
             response = String.class)
     public String hello();
 
-    @GetMapping(path = "/hierarkia/hae", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hierarkia/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
@@ -67,7 +67,7 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulos searchOrganisaatioHierarkia(@ApiParam(access = "hidden")
                                                                      OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    @GetMapping(path = "/hierarkia/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hierarkia/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
@@ -92,7 +92,7 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(@ApiParam(access = "hidden")
                                                                                      OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    @GetMapping(path = "/hierarkia/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hierarkia/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
@@ -117,7 +117,7 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(@ApiParam(access = "hidden")
                                                                                       OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
@@ -137,7 +137,7 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulos searchOrganisaatiot(@ApiParam(access = "hidden")
                                                              OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    @GetMapping(path = "/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
@@ -158,7 +158,7 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@ApiParam(access = "hidden")
                                                                              OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    @GetMapping(path = "/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType = "String", name = "searchStr", value = "Hakuteksti", paramType = "query", required = false),
             @ApiImplicitParam(dataType = "boolean", name = "aktiiviset", value = "Aktiiviset organisaatiot mukaan hakutuloksiin", paramType = "query", required = true),
@@ -179,68 +179,68 @@ public interface OrganisaatioResourceV2 {
     public OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(@ApiParam(access = "hidden")
                                                                               OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
-    @PostMapping(path = "/yhteystiedot/hae", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/yhteystiedot/hae", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaatioita annetuilla hakukriteereillä ja palauttaa yhteystiedot",
             notes = "Operaatio palauttaa hakukriteerit täyttävien organisaatioiden yhteystiedot.")
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
 
-    @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation viimeisimmän päivittäjän tiedot.",
             notes = "Operaatio palauttaa oid:n määrittämän organisaation viimeisimmän päivittäjän.",
             response = OrganisaatioPaivittajaDTOV2.class)
     public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@ApiParam(value = "Organisaation oid", required = true) @PathVariable("oid") String oid) throws Exception;
 
-    @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation nimihistorian.",
             notes = "Operaatio palauttaa oid:n määrittämän organisaation nimihistorian.",
             response = OrganisaatioNimiDTOV2.class)
     public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(@ApiParam(value = "Organisaation oid", required = true) @PathVariable("oid") String oid) throws Exception;
 
-    @GetMapping(path = "/{id}/LOP", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{id}/LOP", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee yhden organisaation LOP tiedot.",
             notes = "Operaatio palauttaa id:n määrittämän organisaation LOP (Learning Opportunity Provider) tiedot (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi). Soveltuu käytettäväksi haun \"/{id}\" sijaan silloin kuin paluuarvossa riittää pelkät LOP tiedot.",
             response = OrganisaatioLOPTietoDTOV2.class)
     public OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@ApiParam(value = "Organisaation oid.", required = true) @PathVariable("id") String oid);
 
-    @PutMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Luo uuden nimen organisaatiolle",
             notes = "Operaatio luo uuden nimen organisaatiolle annetusta JSON:sta.",
             response = OrganisaatioNimiDTOV2.class)
     public OrganisaatioNimiDTOV2 newOrganisaatioNimi(@ApiParam(value = "Organisaation oid", required = true) @PathVariable("oid") String oid, OrganisaatioNimiDTOV2 nimidto) throws Exception;
 
-    @PostMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date",
             notes = "Operaatio päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
             response = OrganisaatioNimiDTOV2.class)
     public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date, OrganisaatioNimiDTOV2 nimidto);
 
-    @DeleteMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @DeleteMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Poistaa oid:n määrittämän organisaation nimen, jonka alkupäivämäärä on annettu date",
             notes = "Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.",
             response = String.class)
     public String deleteOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date);
 
-    @PutMapping(path = "/muokkaamonta", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/muokkaamonta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Muokkaa monta organisaatiota kerralla",
             notes = "Operaatio muokkaa annettujen organisaatioden annetut tiedot.",
             response = OrganisaatioNimiDTOV2.class)
     public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 
-    @GetMapping(path = "/muutetut/oid", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/muutetut/oid", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaatioiden OID:t, joita muutettu annetun päivämäärän jälkeen",
             response = String.class)
     public String haeMuutettujenOid(@ApiParam(value = "Muokattu jälkeen", required = true) @RequestParam("lastModifiedSince") DateParam date);
 
-    @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
             response = OrganisaatioRDTO.class,
@@ -250,14 +250,14 @@ public interface OrganisaatioResourceV2 {
                                               @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                                                       required = false, defaultValue = "false") @RequestParam(defaultValue = "false") boolean includeImage);
 
-    @GetMapping(path = "/{oid}/historia", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/{oid}/historia", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation rakennehistorian.",
             notes = "Operaatio palauttaa oid:n määrittelemän organisaation rakennehistorian.",
             response = OrganisaatioHistoriaRDTOV2.class)
     public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@ApiParam(value = "Organisaation oid", required = true) @PathVariable("oid") String oid) throws Exception;
 
-    @PostMapping(path = "/{oid}/organisaatiosuhde", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{oid}/organisaatiosuhde", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Siirtää organisaatiota puussa toisen ylemmän organisaation alle tai yhdistää kaksi samanarvoista organisaatiota")
     public void changeOrganisationRelationship(
@@ -267,14 +267,14 @@ public interface OrganisaatioResourceV2 {
             @ApiParam(value = "Uusi isäntäorganisaatio", required = true) String newParentOid
     );
 
-    @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen",
             response = OrganisaatioLiitosDTOV2.class)
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(
             @ApiParam(value = "Liitokset jälkeen", required = false) @RequestParam("liitoksetAlkaen") DateParam date);
 
-    @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+    @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation alla olevat ryhmät",
             notes = "Operaatio palauttaa organisaation alla olevat ryhmät.",
