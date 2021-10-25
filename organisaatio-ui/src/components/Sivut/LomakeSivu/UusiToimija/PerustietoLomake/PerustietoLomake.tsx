@@ -11,10 +11,10 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import { Koodi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 
 type UusiOrgPerustiedotProps = {
-    organisaatioTyypit: Koodi[];
+    organisaatioTyypit: KoodistoSelectOption[];
     rakenne: ResolvedRakenne;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
@@ -27,9 +27,14 @@ type UusiOrgPerustiedotProps = {
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const { handleJatka, validationErrors, formControl, formRegister, organisaatioTyypit, rakenne } = props;
-    const { i18n, language } = useContext(LanguageContext);
-    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
+    const { handleJatka, validationErrors, formControl, formRegister, rakenne } = props;
+    const { i18n } = useContext(LanguageContext);
+    const {
+        kuntaKoodisto,
+        maatJaValtiotKoodisto,
+        oppilaitoksenOpetuskieletKoodisto,
+        organisaatioTyypitKoodisto,
+    } = useContext(KoodistoContext);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
 
     return (
@@ -39,15 +44,13 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
                     <Controller
                         control={formControl}
-                        name={'tyypit'}
+                        name={'organisaatioTyypit'}
                         defaultValue={[]}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref, value, ...rest } }) => (
                             <CheckboxGroup
                                 {...rest}
-                                options={organisaatioTyypit.map((oT) => ({
-                                    value: oT.uri,
-                                    label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'], //TODO make better
-                                }))}
+                                value={value.map((v) => v.value)}
+                                options={organisaatioTyypitKoodisto.selectOptions()}
                             />
                         )}
                     />
@@ -136,7 +139,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_PAASIJAINTIKUNTA')}</label>
                     <Controller
                         control={formControl}
-                        name={'kotipaikkaUri'}
+                        name={'kotipaikka'}
                         render={({ field }) => (
                             <Select
                                 id="PERUSTIETO_PAASIJAINTIKUNTA_SELECT"
@@ -152,7 +155,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_MUUT_KUNNATs')}</label>
                     <Controller
                         control={formControl}
-                        name={'muutKotipaikatUris'}
+                        name={'muutKotipaikat'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MUUT_KUNNAT_SELECT"
@@ -170,7 +173,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_MAA')}</label>
                     <Controller
                         control={formControl}
-                        name={'maaUri'}
+                        name={'maa'}
                         defaultValue={maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
@@ -188,7 +191,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
                     <Controller
                         control={formControl}
-                        name={'kieletUris'}
+                        name={'kielet'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti

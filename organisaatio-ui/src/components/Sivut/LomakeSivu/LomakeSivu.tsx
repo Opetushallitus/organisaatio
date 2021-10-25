@@ -8,7 +8,6 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
 import {
-    Organisaatio,
     OrganisaatioNimiJaOid,
     OrganisaationNimetNimi,
     ParentTiedot,
@@ -41,7 +40,7 @@ import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/Yhdista
 import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOrganisaatio';
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
-import { ApiOrganisaatio, OrganisaatioBase } from '../../../types/apiTypes';
+import { ApiOrganisaatio } from '../../../types/apiTypes';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -77,8 +76,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         kuntaKoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
-    const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne | undefined>(
-        undefined
+    const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
+        resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
     );
     const {
         reset: perustiedotReset,
@@ -109,7 +108,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 resetOrganisaatio(organisaatio, polku);
             }
         })();
-    }, [params.oid, yhteystiedotReset, perustiedotReset]);
+    }, [params.oid, resetOrganisaatio]);
     const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
@@ -127,7 +126,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             yhteystiedot: apiYhteystiedot,
             ...rest
         }: ApiOrganisaatio,
-        parentTiedot: ParentTiedot
+        parentTiedot?: ParentTiedot
     ): {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
@@ -138,7 +137,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
-        const organisaatioTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
+        const organisaatioTyypit = parentTiedot
+            ? resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot)
+            : [];
         return {
             Uiperustiedot: { nimi, maa, kielet, kotipaikka, muutKotipaikat, alkuPvm, organisaatioTyypit },
             UibaseTiedot: { ...rest, apiYhteystiedot },
@@ -148,9 +149,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     async function resetOrganisaatio(organisaatio, polku) {
         const {
-            organisaatio: { tyypit, oid },
+            organisaatio: { tyypit: organisaatioTyypit, oid },
         } = await readOrganisaatio(organisaatio.parentOid || null);
-        const parentTiedot = { tyypit, oid };
+        const parentTiedot = { organisaatioTyypit, oid };
         const organisaatioRakenne = resolveOrganisaatio(rakenne, parentTiedot);
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio, parentTiedot);
         setOrganisaatioNimiPolku(polku);
@@ -222,7 +223,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         organisaatioBase.apiYhteystiedot,
                         yhteystiedotFormValues
                     );
-                    const { kotipaikka, maa, kielet } = perustiedotFormValues;
+                    const { kotipaikka, maa, kielet, organisaatioTyypit, muutKotipaikat } = perustiedotFormValues;
                     const today = new Date().toISOString().split('T')[0];
                     const nimet = organisaatioBase.nimet || [];
                     const uusiNimi = { ...perustiedotFormValues.nimi };
@@ -238,7 +239,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         ...organisaatioBase,
                         ...{
                             ...perustiedotFormValues,
-                            muutKotipaikatUris: perustiedotFormValues.muutKotipaikat.map((a) => a.value),
+                            tyypit: organisaatioTyypit.map((tyyppi) => tyyppi.value),
+                            muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
                             kotipaikkaUri: kotipaikka?.value,
                             maaUri: maa?.value,
                             kieletUris: kielet.map((a) => a.value),
@@ -256,7 +258,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         }
     }
 
-    if (historiaLoading || historiaError) {
+    if (!organisaatioBase || historiaLoading || historiaError) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
@@ -268,7 +270,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setPerustiedotValue('nimi', nimi);
     };
     registerPerustiedot('nimi');
-    const { nimi, ytunnus } = getPerustiedotValues();
+    const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -329,11 +331,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </div>
             <div className={styles.ValiContainer}>
                 <div className={styles.ValiOtsikko}>
-                    <h3>
-                        {organisaatio.tyypit
-                            ? `${thisTyyppi ? thisTyyppi : ''} (${organisaatio.tyypit[0]})`
-                            : i18n.translate('LABEL_NOT_AVAILABLE')}
-                    </h3>
+                    <h3>{organisaatioTyypit[0]?.label || i18n.translate('LABEL_NOT_AVAILABLE')}</h3>
                     <h1 className={organisaatioBase?.status === 'AKTIIVINEN' ? '' : styles.Passivoitu}>
                         {nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en']}
                     </h1>
@@ -384,7 +382,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             {yhdistaOrganisaatioModaaliAuki && (
                 <YhdistaOrganisaatio
                     yhdistaOrganisaatio={yhdistaOrganisaatio}
-                    organisaatio={organisaatio}
+                    organisaatioBase={organisaatioBase}
                     handleChange={setYhdistaOrganisaatio}
                     organisaatioRakenne={resolvedOrganisaatioRakenne}
                     tallennaCallback={() => {
@@ -399,7 +397,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             {siirraOrganisaatioModaaliAuki && (
                 <SiirraOrganisaatio
                     siirraOrganisaatio={siirraOrganisaatio}
-                    organisaatio={organisaatio}
+                    organisaatioBase={organisaatioBase}
                     handleChange={setSiirraOrganisaatio}
                     organisaatioRakenne={resolvedOrganisaatioRakenne}
                     tallennaCallback={() => {
@@ -421,5 +419,4 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         </PohjaSivu>
     );
 };
-
 export default LomakeSivu;

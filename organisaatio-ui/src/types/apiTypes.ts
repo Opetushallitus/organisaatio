@@ -75,3 +75,5 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     kieletUris: KoodiUri[];
     yhteystiedot: ApiYhteystiedot[];
 };
+
+export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

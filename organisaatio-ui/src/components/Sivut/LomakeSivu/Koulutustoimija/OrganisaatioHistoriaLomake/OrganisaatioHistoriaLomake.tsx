@@ -4,7 +4,8 @@ import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
-import { OrganisaatioBase, OrganisaatioHistoria, OrganisaatioSuhde } from '../../../../../types/types';
+import { OrganisaatioHistoria, OrganisaatioSuhde } from '../../../../../types/types';
+import { OrganisaatioBase } from '../../../../../types/apiTypes';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],

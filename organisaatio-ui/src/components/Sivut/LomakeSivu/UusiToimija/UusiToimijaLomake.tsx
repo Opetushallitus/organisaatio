@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
-import { Organisaatio, Perustiedot } from '../../../../types/types';
+import { Perustiedot, ParentTiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
@@ -31,13 +31,15 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const { parentOid } = queryString.parse(props.location.search);
     const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
-    const [parentOrganisaatio, setParentOrganisaatio] = useState<Organisaatio | undefined>(undefined);
+    const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: '' });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
     useEffect(() => {
         (async function () {
-            const parent = await readOrganisaatio((parentOid || ROOT_OID) as string);
-            setParentOrganisaatio(Object.assign({}, parent.organisaatio));
+            const {
+                organisaatio: { tyypit, oid },
+            } = await readOrganisaatio((parentOid || ROOT_OID) as string);
+            setParentTiedot({ organisaatioTyypit: tyypit, oid });
         })();
     }, [parentOid]);
 
@@ -81,14 +83,16 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         }
     };
 
-    const organisaatioRakenne = resolveOrganisaatio(rakenne, { tyypit: watchPerustiedot('organisaatioTyypit') || [] });
-    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentOrganisaatio);
+    const organisaatioRakenne = resolveOrganisaatio(rakenne, {
+        organisaatioTyypit: watchPerustiedot('organisaatioTyypit').map((tyyppi) => tyyppi.value),
+    });
+    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
 
     async function saveOrganisaatio() {
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                 const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const { kotipaikka, maa, kielet, muutKotipaikat } = perustiedotFormValues;
+                const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit } = perustiedotFormValues;
                 const nimet = [
                     {
                         nimi: Object.assign({}, perustiedotFormValues.nimi),
@@ -98,10 +102,11 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 const orgToBeUpdated = {
                     ...{
                         ...perustiedotFormValues,
+                        tyypit: organisaatioTyypit.map((a) => a.value),
                         kotipaikkaUri: kotipaikka?.value,
                         maaUri: maa?.value,
-                        kieletUris: kielet?.map((a) => a.value),
-                        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value),
+                        kieletUris: kielet.map((a) => a.value),
+                        muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
                     },
                     yhteystiedot,
                     parentOid: (parentOid || ROOT_OID) as string,

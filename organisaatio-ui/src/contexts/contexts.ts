@@ -10,6 +10,7 @@ import {
     Language,
     Lokalisointi,
     Nimi,
+    OrganisaationNimetNimi,
 } from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
 
@@ -33,7 +34,7 @@ export class I18nImpl implements I18n {
         return this._data[language][key] || key;
     }
 
-    translateNimi = (nimi: Nimi | undefined) => {
+    translateNimi = (nimi: Nimi | OrganisaationNimetNimi | undefined) => {
         return (nimi && (nimi[this._language] || nimi['fi'] || nimi['sv'] || nimi['en'])) || '';
     };
 

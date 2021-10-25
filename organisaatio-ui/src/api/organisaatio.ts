@@ -1,31 +1,37 @@
 import Axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
 import {
-    NewOrganisaatio,
-    Organisaatio,
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
-    OrganisaatioSuhde,
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
 } from '../types/types';
 import { info, success, warning } from '../components/Notification/Notification';
-import { APIOrganisaatioHistoria, OrganisaatioLiitos } from '../types/apiTypes';
+import {
+    ApiOrganisaatio,
+    APIOrganisaatioHistoria,
+    NewApiOrganisaatio,
+    OrganisaatioBase,
+    OrganisaatioLiitos,
+} from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
 
 const baseUrl = `/organisaatio/organisaatio/v4/`;
 
-async function createOrganisaatio(organisaatio: NewOrganisaatio) {
+async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
     return errorHandlingWrapper(async () => {
         const { data } = await Axios.post(`${baseUrl}`, organisaatio);
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
-        return data.organisaatio as Organisaatio;
+        return data.organisaatio as ApiOrganisaatio;
     });
 }
 
-async function updateOrganisaatio(organisaatio: Organisaatio) {
+async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
     return errorHandlingWrapper(async () => {
-        const { data } = await Axios.put<{ organisaatio: Organisaatio }>(`${baseUrl}${organisaatio.oid}`, organisaatio);
+        const { data } = await Axios.put<{ organisaatio: ApiOrganisaatio }>(
+            `${baseUrl}${organisaatio.oid}`,
+            organisaatio
+        );
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
         return data.organisaatio;
     });
@@ -35,7 +41,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
     const polku = oids.map((oid: string) => ({
         oid,
-        nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
+        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).nimi,
     }));
     return polku;
 }
@@ -49,9 +55,9 @@ async function searchOrganisation({
     aktiiviset?: boolean;
     lakkautetut?: boolean;
     suunnitellut?: boolean;
-}): Promise<Organisaatio[]> {
+}): Promise<ApiOrganisaatio[]> {
     if (searchStr.length < 3) return [];
-    const { data } = await Axios.get<{ organisaatiot: Organisaatio[] }>(`${baseUrl}hierarkia/hae`, {
+    const { data } = await Axios.get<{ organisaatiot: ApiOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
             aktiiviset,
             lakkautetut,
@@ -64,7 +70,7 @@ async function searchOrganisation({
 }
 async function readOrganisaatio(oid: string) {
     return errorHandlingWrapper(async () => {
-        const response = await Axios.get<Organisaatio>(`${baseUrl}${oid}?includeImage=true`);
+        const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
         const organisaatio = response.data;
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
@@ -95,7 +101,9 @@ async function mergeOrganisaatio({
 }
 
 function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
-    function liitosMapper(a: OrganisaatioLiitos): OrganisaatioSuhde {
+    function liitosMapper(
+        a: OrganisaatioLiitos
+    ): { alkuPvm: string; parent: OrganisaatioBase; loppuPvm: string | undefined; child: OrganisaatioBase } {
         return { alkuPvm: a.alkuPvm, loppuPvm: a.loppuPvm, child: a.kohde, parent: a.organisaatio };
     }
     return {
@@ -134,14 +142,17 @@ function useOrganisaatioHaku({
     organisaatioTyyppi?: string;
     suunnitellut?: boolean;
 }): {
-    organisaatiot: Organisaatio[];
+    organisaatiot: ApiOrganisaatio[];
     organisaatiotLoading: boolean;
     organisaatiotError: boolean;
 } {
     return useErrorHandlingWrapper(function useHorse() {
         const [{ data, loading, error }]: [
-            ResponseValues<{ organisaatiot: Organisaatio[] }>,
-            (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<{ organisaatiot: Organisaatio[] }>
+            ResponseValues<{ organisaatiot: ApiOrganisaatio[] }>,
+            (
+                config?: AxiosRequestConfig,
+                options?: RefetchOptions
+            ) => AxiosPromise<{ organisaatiot: ApiOrganisaatio[] }>
         ] = useAxios({
             url: `${baseUrl}hae`,
             params: {

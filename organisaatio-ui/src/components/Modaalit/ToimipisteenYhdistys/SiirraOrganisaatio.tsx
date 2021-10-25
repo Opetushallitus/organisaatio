@@ -5,14 +5,14 @@ import * as React from 'react';
 import { useContext, useState } from 'react';
 import TSBody from './TSBody';
 import { Confirmation } from '../Confirmation/Confirmation';
-import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
+import { ResolvedRakenne, SiirraOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/contexts';
 
 export function SiirraOrganisaatio(props: {
     siirraOrganisaatio: SiirraOrganisaatioon;
-    organisaatio: Organisaatio;
+    organisaatioBase: UiOrganisaatioBase;
     handleChange: (value: ((prevState: SiirraOrganisaatioon) => SiirraOrganisaatioon) | SiirraOrganisaatioon) => void;
-    organisaatioRakenne: ResolvedRakenne | undefined;
+    organisaatioRakenne: ResolvedRakenne;
     tallennaCallback: () => void;
     peruutaCallback: () => void;
     suljeCallback: () => void;
@@ -26,7 +26,7 @@ export function SiirraOrganisaatio(props: {
                     header={<TYHeader titleKey={'TOIMIPISTEEN_SIIRTO_TITLE'} />}
                     body={
                         <TSBody
-                            organisaatio={props.organisaatio}
+                            organisaatioBase={props.organisaatioBase}
                             siirraOrganisaatio={props.siirraOrganisaatio}
                             handleChange={props.handleChange}
                             organisaatioRakenne={props.organisaatioRakenne}
@@ -48,11 +48,13 @@ export function SiirraOrganisaatio(props: {
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
+                            value: `${i18n.translateNimi(props.organisaatioBase.nimet[0])} (${
+                                props.organisaatioBase.oid
+                            })`,
                         },
                         {
                             key: 'to',
-                            value: `${i18n.translateNimi(props.siirraOrganisaatio.newParent?.nimi)} (${
+                            value: `${i18n.translateNimi(props.siirraOrganisaatio.newParent?.nimet[0])} (${
                                 props.siirraOrganisaatio.newParent?.oid || ''
                             })`,
                         },

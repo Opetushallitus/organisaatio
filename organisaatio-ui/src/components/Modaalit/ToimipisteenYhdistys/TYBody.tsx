@@ -3,7 +3,7 @@ import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenYhdistys.module.css';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { Option, Organisaatio, ResolvedRakenne, YhdistaOrganisaatioon } from '../../../types/types';
+import { Option, ResolvedRakenne, UiOrganisaatioBase, YhdistaOrganisaatioon } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { warning } from '../../Notification/Notification';
@@ -12,11 +12,11 @@ import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tool
 type TYProps = {
     yhdistaOrganisaatio: YhdistaOrganisaatioon;
     handleChange: (props: YhdistaOrganisaatioon) => void;
-    organisaatio: Organisaatio;
+    organisaatioBase: UiOrganisaatioBase;
     organisaatioRakenne: ResolvedRakenne;
 };
 
-export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio, organisaatioRakenne }: TYProps) {
+export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatioBase, organisaatioRakenne }: TYProps) {
     const { i18n, language } = useContext(LanguageContext);
     const targetType =
         organisaatioRakenne && organisaatioRakenne.mergeTargetType ? organisaatioRakenne.mergeTargetType[0] : undefined;
@@ -39,7 +39,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
                         options={parentOrganisaatiot
-                            .filter((o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value))
+                            .filter((o) => ![organisaatioBase.oid, organisaatioBase.parentOid].includes(o.value))
                             .sort((a, b) => a.label.localeCompare(b.label))}
                         onChange={(option) => {
                             if (option)

@@ -1,4 +1,4 @@
-import { ApiYhteystiedot } from './apiTypes';
+import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
@@ -73,7 +73,7 @@ export type UiOrganisaatioBase = {
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
 
-export type NewOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
+export type NewUiOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
 
 export type Perustiedot = {
     ytunnus?: string;
@@ -87,51 +87,59 @@ export type Perustiedot = {
 };
 
 export type ParentTiedot = {
-    tyypit: KoodiUri[];
+    organisaatioTyypit: KoodiUri[];
     oid: string;
 };
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
 
-export type Ryhma = Omit<UiOrganisaatioBase, 'oid'> & {
+export type Ryhma = {
     oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: string; // TODO Tuleeko nämä???
-    kayntiosoite?: any;
-    kayttoryhmat: string[];
-    kieletUris?: any[];
-    kuvaus2: any;
+    kayntiosoite?: Osoite;
+    kayttoryhmat: KoodiUri[];
+    kieletUris?: KoodiUri[];
+    kuvaus2: RyhmanKuvaus;
     lisatiedot?: string[];
     lakkautusPvm?: string;
     muutKotipaikatUris?: string[];
     muutOppilaitosTyyppiUris?: string[];
-    nimet?: any[];
+    nimi: Nimi;
+    nimet: OrganisaationNimetNimi[];
     parentOid?: string;
     parentOidPath?: string;
     piilotettu?: boolean;
-    postiosoite?: any;
-    ryhmatyypit: string[];
+    postiosoite?: Osoite;
+    ryhmatyypit: KoodiUri[];
     toimipistekoodi?: string;
     tyypit: string[];
     version?: number;
     vuosiluokat?: any[];
     yhteystiedot?: Yhteystiedot[];
     yhteystietoArvos?: any[];
+    status: string;
+};
+
+export type RyhmanKuvaus = {
+    'kieli_fi#1'?: string;
+    'kieli_sv#1'?: string;
+    'kieli_en#1'?: string;
 };
 export type OrganisaatioSuhde = {
     alkuPvm: string;
     loppuPvm?: string;
-    child: UiOrganisaatioBase;
-    parent: UiOrganisaatioBase;
+    child: OrganisaatioBase;
+    parent: OrganisaatioBase;
 };
 
 export type YhdistaOrganisaatioon = {
-    newParent?: UiOrganisaatio;
+    newParent?: ApiOrganisaatio;
     date: Date;
     merge: boolean;
 };
 export type SiirraOrganisaatioon = {
-    newParent?: UiOrganisaatio;
+    newParent?: ApiOrganisaatio;
     date: Date;
     merge: boolean;
 };
@@ -195,7 +203,7 @@ export type Rakenne = {
 export type I18n = {
     translate: (key: string) => string;
     translateWithLang: (key: string, language: Language) => string;
-    translateNimi: (nimi: Nimi | undefined) => string;
+    translateNimi: (nimi: Nimi | OrganisaationNimetNimi | undefined) => string;
     enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
 };
 

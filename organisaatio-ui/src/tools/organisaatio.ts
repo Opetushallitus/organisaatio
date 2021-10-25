@@ -1,12 +1,13 @@
 import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } from '../types/types';
 import { ROOT_OID } from '../contexts/contexts';
+import { ApiOrganisaatio } from '../types/apiTypes';
 
 //TODO pitää tsekkaa mitä tästä tulee jos tyypit ei osu mihinkään.
 export const resolveOrganisaatio = (
     rakenne: Rakenne[],
-    organisaatio: { tyypit: KoodiUri[]; oid: string }
+    organisaatio: { organisaatioTyypit: KoodiUri[]; oid?: string }
 ): ResolvedRakenne => {
-    const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.tyypit];
+    const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.organisaatioTyypit];
     return rakenne
         .filter((a) => {
             return tyypit.includes(a.type);
@@ -33,22 +34,21 @@ export const resolveOrganisaatio = (
 export const resolveOrganisaatioTyypit = (
     rakenne: Rakenne[],
     koodisto: Koodisto,
-    organisaatio: { tyypit: KoodiUri[]; oid: string }
+    organisaatio: { organisaatioTyypit: KoodiUri[]; oid: string }
 ): KoodistoSelectOption[] => {
     const parentRakenne = resolveOrganisaatio(rakenne, organisaatio);
     return parentRakenne.childTypes
         .map((tyyppiUri) => koodisto.uri2SelectOption(tyyppiUri))
         .sort((a, b) => a.label.localeCompare(b.label));
 };
-/*
-export const mapOrganisaatioToSelect = (o: Organisaatio | undefined, language: string) => {
+
+export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language: string) => {
     if (o)
         return {
             value: `${o.oid}`,
-            label: `${o.nimi[language]} ${o.oid}`,
+            label: `${o.nimet[0][language]} ${o.oid}`,
         };
     else return { value: '', label: '' };
 };
-export const organisaatioSelectMapper = (organisaatiot: Organisaatio[], language: string) =>
-    organisaatiot.map((o: Organisaatio) => mapOrganisaatioToSelect(o, language));
-*/
+export const organisaatioSelectMapper = (organisaatiot: ApiOrganisaatio[], language: string) =>
+    organisaatiot.map((o: ApiOrganisaatio) => mapOrganisaatioToSelect(o, language));
