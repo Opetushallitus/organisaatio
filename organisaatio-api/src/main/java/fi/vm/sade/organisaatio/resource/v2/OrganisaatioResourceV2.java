@@ -282,7 +282,7 @@ public interface OrganisaatioResourceV2 {
     @Deprecated // käytä OrganisaatioResourceV3#groups
     public List<OrganisaatioGroupDTOV2> groups(RyhmaCriteriaDtoV2 criteria) throws Exception;
 
-    @GetMapping(path = "/{oid}/hakutoimisto", produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF8")
+    @GetMapping(path = "/{oid}/hakutoimisto", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Hakee organisaation hakutoimiston ",
             notes = "Hakutoimisto haetaan tarvittaessa rekursiivisesti",

@@ -117,7 +117,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @RequestParam(defaultValue = "false") boolean includeImage) throws Exception;
 
-    @GetMapping(path = "/hello", produces = "text/plain")
+    @GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
     @ApiOperation(
             value = "Testioperaatio, jolla voi kokeilla onko organisaatiopalvelu pystyssä.",
             notes = "Operaatio vastaa tervehdykseen ja palauttaa palvelun aikaleiman.",
@@ -147,7 +147,7 @@ public interface OrganisaatioResource {
             @ApiParam(value = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).",
                     required = false, defaultValue = "false") @RequestParam(defaultValue = "false") boolean includeImage);
 
-    @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
+    @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams(@ApiImplicitParam(dataType = "java.io.File", name = "organisaatio",
             value = "Organisaation tiedot json muodossa", paramType = "body"))
     @ApiOperation(
@@ -168,7 +168,7 @@ public interface OrganisaatioResource {
     public String deleteOrganisaatio(
             @ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid);
 
-    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
+    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams(@ApiImplicitParam(dataType = "java.io.File", name = "organisaatio",
             value = "Luotavan organisaation tiedot json muodossa", paramType = "body"))
     @ApiOperation(

@@ -86,7 +86,7 @@ public class YhteystietojenTyyppiResource {
         return tyypit;
     }
 
-    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Muokkaa yhteystietotyyppiä", notes = "Muokkaa yhteystietotyyppiä",
             response = YhteystietojenTyyppiDTO.class)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
