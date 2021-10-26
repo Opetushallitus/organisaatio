@@ -1,28 +1,26 @@
 /*
-* Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
-*
-* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-* soon as they will be approved by the European Commission - subsequent versions
-* of the EUPL (the "Licence");
-*
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*/
+ * Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ */
 
 package fi.vm.sade.organisaatio.repository.impl;
 
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
-import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepositoryCustom;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
-import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepository;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepositoryCustom;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +28,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositoryCustom {
@@ -113,17 +105,16 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
         // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
         // organisaation id:llä rivejä oli enemmän kuin 1
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatio.getId()
+                + "organisaatio_id = :id "
                 + " and "
-                + "alkupvm = '" + df.format(alkuPvm) + "'";
+                + "alkupvm = :date ";
 
-        Query q = em.createQuery(s);
+        TypedQuery q = em.createQuery(s, OrganisaatioNimi.class);
 
-        List<OrganisaatioNimi> organisaatioNimet = (List<OrganisaatioNimi>) q.getResultList();
+        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", alkuPvm).getResultList();
 
         LOG.info("findNimi() result size: " + organisaatioNimet.size());
 
@@ -152,22 +143,20 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         LOG.info("findCurrentNimi({})", new Object[]{organisaatio.getId()});
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatio.getId()
+                + "organisaatio_id = :id "
                 + " AND "
                 + "alkupvm = (SELECT MAX (o.alkuPvm) "
                 + "FROM OrganisaatioNimi o "
                 + "WHERE "
-                + "organisaatio_id = " + organisaatio.getId()
+                + "organisaatio_id = :id "
                 + " AND "
-                + "alkupvm <= '" + df.format(new Date()) + "')";
+                + "alkupvm <= :date)";
 
-        Query q = em.createQuery(s);
+        TypedQuery<OrganisaatioNimi> q = em.createQuery(s, OrganisaatioNimi.class);
 
-        List<OrganisaatioNimi> organisaatioNimet = (List<OrganisaatioNimi>) q.getResultList();
+        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", new Date()).getResultList();
 
         LOG.info("findCurrentNimi() result size: " + organisaatioNimet.size());
 
@@ -207,14 +196,13 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
      * )
      * AND org.id = org_nimi.organisaatio_id
      * )
-     *
+     * <p>
      * Ylläoleva SQL lauseke on alla kirjoitettu HQL muotoon.
      *
      * @return
      **/
     @Override
     public List<Organisaatio> findNimiNotCurrentOrganisaatiot() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         String s = "SELECT org FROM Organisaatio org "
                 + "WHERE org.nimi != "
@@ -224,16 +212,14 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
                 + "( "
                 + "SELECT MAX (org_nimi2.alkuPvm) FROM OrganisaatioNimi org_nimi2 "
                 + "WHERE org_nimi.organisaatio = org_nimi2.organisaatio "
-                + "AND org_nimi2.alkuPvm <= '" + df.format(new Date()) + "' "
+                + "AND org_nimi2.alkuPvm <= :date "
                 + ") "
                 + "AND org = org_nimi.organisaatio "
                 + ")";
 
-        Query q = em.createQuery(s);
+        TypedQuery<Organisaatio> q = em.createQuery(s, Organisaatio.class);
 
-        List<Organisaatio> organisaatiot = (List<Organisaatio>) q.getResultList();
-
-        return organisaatiot;
+        return q.setParameter("date", new Date()).getResultList();
     }
 
 }
