@@ -56,7 +56,7 @@
   {
     "description": "Muu organisaatio",
     "type": "organisaatiotyyppi_05",
-    "showYtj": false,
+    "showYtj": true,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
@@ -67,7 +67,7 @@
   {
     "description": "Tyoelamajarjesto",
     "type": "organisaatiotyyppi_06",
-    "showYtj": false,
+    "showYtj": true,
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
