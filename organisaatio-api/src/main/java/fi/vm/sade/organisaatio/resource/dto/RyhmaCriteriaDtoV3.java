@@ -1,10 +1,8 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import javax.ws.rs.QueryParam;
 
 public class RyhmaCriteriaDtoV3 {
 

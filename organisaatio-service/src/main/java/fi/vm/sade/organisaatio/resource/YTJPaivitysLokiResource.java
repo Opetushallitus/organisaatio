@@ -47,7 +47,7 @@ public class YTJPaivitysLokiResource {
 
     @GET
     @Path("/aikavali")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee annetulta aikaväliltä", notes = "Operaatio palauttaa päivityksen statuksen ja virhelistan annetulle aikaväliltä (syötteet millisekunteja).")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "alkupvm", required = true) @QueryParam("alkupvm") long alkupvm,
@@ -63,7 +63,7 @@ public class YTJPaivitysLokiResource {
 
     @GET
     @Path("/uusimmat")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee viimeisimmät", notes = "Operaatio palauttaa viimeisimpien päivityksen statuksen ja virheet.")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "limit", required = true) @QueryParam("limit") int limit) {

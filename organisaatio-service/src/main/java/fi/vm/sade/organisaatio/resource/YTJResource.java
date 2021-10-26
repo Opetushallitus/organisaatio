@@ -31,49 +31,50 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiIgnore
 @RestController
 @RequestMapping("/ytj")
 @Api(value = "/ytj")
+
 public class YTJResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
-        
+
     @Autowired(required = true)
     private YTJService ytjService;
 
     @Autowired
     private ConversionService conversionService;
-    
+
     /**
      * YTJ DTO as JSON.
-     * 
+     *
      * @param ytunnus
      * @return
      */
-    @GetMapping(path= "/{ytunnus}", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = YTJDTO.class)
     public YTJDTO findByYTunnus(@ApiParam(value = "Y Tunnus", required = true) @PathVariable String ytunnus) {
         YTJDTO ytj = new YTJDTO();
         try {
             ytj = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
-        } 
-        catch (YtjConnectionException ex) {
+        } catch (YtjConnectionException ex) {
             ex.printStackTrace();
             LOG.error("YtjConnectionException : " + ex.toString());
-            
+
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
         }
-        
-        return ytj; 
+
+        return ytj;
     }
 
-    @GetMapping(path= "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = OrganisaatioRDTOV4.class)
     public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathVariable String ytunnus) {
         return conversionService.convert(getOrganisaatioByYTunnus(ytunnus), OrganisaatioRDTOV4.class);
@@ -87,7 +88,7 @@ public class YTJResource {
         return conversionService.convert(ytjdto, Organisaatio.class);
     }
 
-    @GetMapping(path= "/hae", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee yritysten tiedot nimen perusteella", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden nimessä esiintyy annettu nimi.")
     public List<YTJDTO> findByYNimi(@ApiParam(value = "nimi", required = true) @RequestParam(required = true) String nimi) {
         List<YTJDTO> ytjList = new ArrayList<YTJDTO>();
@@ -106,11 +107,11 @@ public class YTJResource {
 
     // Api for batch searches by y-tunnuses
 
-    @GetMapping(path= "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
     public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)
-                                               @PathVariable List<String> ytunnuses) {
+                                           @PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);
     }
 
@@ -118,8 +119,7 @@ public class YTJResource {
         List<YTJDTO> ytjListResult;
         try {
             ytjListResult = ytjService.findByYTunnusBatch(ytunnuses, YTJKieli.FI);
-        }
-        catch (YtjConnectionException ex) {
+        } catch (YtjConnectionException ex) {
             ex.printStackTrace();
             LOG.error("YtjConnectionException : " + ex.toString());
 

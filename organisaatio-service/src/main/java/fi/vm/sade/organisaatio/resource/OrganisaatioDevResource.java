@@ -50,11 +50,12 @@ public class OrganisaatioDevResource {
 
     /**
      * Hakee autentikoituneen käyttäjän roolit
+     *
      * @return Operaatio palauttaa samat kuin /cas/myroles. HUOM! Testikäyttöön tarkoitettu.
      */
     @GET
     @Path("/myroles")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
             notes = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
             response = String.class)
@@ -78,7 +79,7 @@ public class OrganisaatioDevResource {
 
     @GET
     @Path("/ytjbatchupdate")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Hakee autentikoituneen käyttäjän roolit. Tarkoitettu vain kehityskäyttöön.",
             notes = "Hakee autentikoituneen käyttäjän roolit. Palauttaa montako organisaatiota päivitettiin. Tarkoitettu vain kehityskäyttöön.",
             response = YtjPaivitysLoki.class,

@@ -9,7 +9,6 @@ package fi.vm.sade.organisaatio.api;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.ws.rs.WebApplicationException;
 
 import fi.vm.sade.organisaatio.resource.ApiException;
 import org.apache.commons.lang.StringUtils;
@@ -18,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 public class DateParam extends AbstractParam<Date> {
 
-    public DateParam(String param) throws WebApplicationException {
+    public DateParam(String param) throws ApiException {
         super(param);
     }
 

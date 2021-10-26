@@ -2,20 +2,14 @@ package fi.vm.sade.organisaatio.resource.dto;
 
 import io.swagger.annotations.ApiParam;
 import java.time.LocalDate;
-import javax.ws.rs.QueryParam;
 
 public class RyhmaCriteriaDtoV2 {
 
-    @QueryParam("q")
     private String q;
-    @QueryParam("aktiivinen")
     private Boolean aktiivinen;
-    @QueryParam("lakkautusPvm")
     private LocalDate lakkautusPvm;
-    @QueryParam("ryhmatyyppi")
     @ApiParam(allowableValues = "organisaatio, hakukohde, perustetyoryhma, koulutus")
     private String ryhmatyyppi;
-    @QueryParam("kayttoryhma")
     @ApiParam(allowableValues = "yleinen, hakukohde_rajaava, hakukohde_priorisoiva, hakukohde_liiteosoite, perusteiden_laadinta, kayttooikeus")
     private String kayttoryhma;
 

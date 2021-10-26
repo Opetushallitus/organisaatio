@@ -22,6 +22,8 @@
       <env name="url-ytj" value="http://localhost:9000/ytj" />
       <env name="url-oidservice" value="http://localhost:9000/oidservice" />
     </envs>
-    <method v="2" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="-x test" />
+    </method>
   </configuration>
 </component>
