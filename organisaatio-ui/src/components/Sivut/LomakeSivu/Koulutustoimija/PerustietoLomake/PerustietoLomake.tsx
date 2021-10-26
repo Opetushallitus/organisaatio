@@ -11,13 +11,20 @@ import TLHeader from '../../../../Modaalit/ToimipisteenLakkautus/TLHeader';
 import TLBody from '../../../../Modaalit/ToimipisteenLakkautus/TLBody';
 import TLFooter from '../../../../Modaalit/ToimipisteenLakkautus/TLFooter';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-import { Nimi, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
+import {
+    KoodistoSelectOption,
+    Nimi,
+    Perustiedot,
+    ResolvedRakenne,
+    UiOrganisaatioBase,
+} from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 
 type PerustietoLomakeProps = {
+    resolvedTyypit: KoodistoSelectOption[];
     rakenne: ResolvedRakenne | undefined;
     language: string;
     openYtjModal: () => void;
@@ -46,16 +53,12 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         formControl,
         handleNimiUpdate,
         rakenne,
+        resolvedTyypit,
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
 
-    const {
-        kuntaKoodisto,
-        maatJaValtiotKoodisto,
-        oppilaitoksenOpetuskieletKoodisto,
-        organisaatioTyypitKoodisto,
-    } = useContext(KoodistoContext);
+    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const kunnatOptions = kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
@@ -103,12 +106,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <Controller
                             control={formControl}
                             name={'organisaatioTyypit'}
-                            render={({ field: { ref, value, ...rest } }) => (
-                                <CheckboxGroup
-                                    {...rest}
-                                    value={value.map((v) => v.value)}
-                                    options={organisaatioTyypitKoodisto.selectOptions()}
-                                />
+                            render={({ field: { ref, ...rest } }) => (
+                                <CheckboxGroup {...rest} options={resolvedTyypit} />
                             )}
                         />
                     )}

@@ -82,9 +82,8 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 return setAvoinnaCb();
         }
     };
-
     const organisaatioRakenne = resolveOrganisaatio(rakenne, {
-        organisaatioTyypit: watchPerustiedot('organisaatioTyypit').map((tyyppi) => tyyppi.value),
+        organisaatioTyypit: watchPerustiedot('organisaatioTyypit', []),
     });
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
 
@@ -102,7 +101,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 const orgToBeUpdated = {
                     ...{
                         ...perustiedotFormValues,
-                        tyypit: organisaatioTyypit.map((a) => a.value),
+                        tyypit: organisaatioTyypit,
                         kotipaikkaUri: kotipaikka?.value,
                         maaUri: maa?.value,
                         kieletUris: kielet.map((a) => a.value),
@@ -132,7 +131,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
-                organisaatioTyypit={resolvedTyypit}
+                resolvedTyypit={resolvedTyypit}
                 rakenne={organisaatioRakenne}
                 watchPerustiedot={watchPerustiedot}
                 handleJatka={() => validateChanges([YHTEYSTIEDOTUUID])}

@@ -30,6 +30,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
     if (!organisaatioRakenne || !organisaatioRakenne.mergeTargetType) warning({ message: 'PARENT_TYPE_NOT_AVAILABLE' });
     const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
+    console.log('newparent', newParent, parentOrganisaatiot);
     return (
         <div className={styles.BodyKehys}>
             <div className={styles.BodyRivi}>

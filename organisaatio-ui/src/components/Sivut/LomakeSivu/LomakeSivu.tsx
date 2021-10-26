@@ -68,7 +68,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<SiirraOrganisaatioon>(initialSiirra);
     const [organisaatioBase, setOrganisaatioBase] = useState<UiOrganisaatioBase | undefined>(undefined);
-    //const [parentTiedot, setParentTiedot] = useState<ParentTiedot | undefined>(undefined);
+    const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: ROOT_OID });
     const {
         organisaatioTyypitKoodisto,
         maatJaValtiotKoodisto,
@@ -105,29 +105,27 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         (async function () {
             const { organisaatio, polku } = await readOrganisaatio(params.oid);
             if (organisaatio && polku) {
-                resetOrganisaatio(organisaatio, polku);
+                await resetOrganisaatio(organisaatio, polku);
             }
         })();
-    }, [params.oid, resetOrganisaatio]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [params.oid]);
     const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
     };
 
-    const mapOrganisaatioToUi = (
-        {
-            nimi,
-            maaUri,
-            kieletUris,
-            kotipaikkaUri,
-            muutKotipaikatUris,
-            alkuPvm,
-            tyypit,
-            yhteystiedot: apiYhteystiedot,
-            ...rest
-        }: ApiOrganisaatio,
-        parentTiedot?: ParentTiedot
-    ): {
+    const mapOrganisaatioToUi = ({
+        nimi,
+        maaUri,
+        kieletUris,
+        kotipaikkaUri,
+        muutKotipaikatUris,
+        alkuPvm,
+        tyypit,
+        yhteystiedot: apiYhteystiedot,
+        ...rest
+    }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
         Uiyhteystiedot: Yhteystiedot;
@@ -137,28 +135,33 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
-        const organisaatioTyypit = parentTiedot
-            ? resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot)
-            : [];
         return {
-            Uiperustiedot: { nimi, maa, kielet, kotipaikka, muutKotipaikat, alkuPvm, organisaatioTyypit },
-            UibaseTiedot: { ...rest, apiYhteystiedot },
+            Uiperustiedot: { nimi, maa, kielet, kotipaikka, muutKotipaikat, alkuPvm, organisaatioTyypit: tyypit },
+            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: nimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(apiYhteystiedot),
         };
     };
 
     async function resetOrganisaatio(organisaatio, polku) {
-        const {
-            organisaatio: { tyypit: organisaatioTyypit, oid },
-        } = await readOrganisaatio(organisaatio.parentOid || null);
-        const parentTiedot = { organisaatioTyypit, oid };
-        const organisaatioRakenne = resolveOrganisaatio(rakenne, parentTiedot);
-        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio, parentTiedot);
+        resolveOrganisaatioRakenne(organisaatio.tyypit, organisaatio.oid);
+        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
-        setResolvedOrganisaatioRakenne(organisaatioRakenne);
+        const {
+            organisaatio: { tyypit: organisaatioTyypit, oid },
+        } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID);
+        const parentTiedot = { organisaatioTyypit, oid };
+        setParentTiedot(parentTiedot);
         perustiedotReset(Uiperustiedot);
         yhteystiedotReset(Uiyhteystiedot);
+    }
+
+    function resolveOrganisaatioRakenne(organisaatioTyypit, oid) {
+        const organisaatioRakenne = resolveOrganisaatio(rakenne, {
+            organisaatioTyypit,
+            oid,
+        });
+        setResolvedOrganisaatioRakenne(organisaatioRakenne);
     }
 
     async function handleOrganisationMerge(props: SiirraOrganisaatioon | YhdistaOrganisaatioon) {
@@ -239,7 +242,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         ...organisaatioBase,
                         ...{
                             ...perustiedotFormValues,
-                            tyypit: organisaatioTyypit.map((tyyppi) => tyyppi.value),
+                            tyypit: organisaatioTyypit,
                             muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
                             kotipaikkaUri: kotipaikka?.value,
                             maaUri: maa?.value,
@@ -271,11 +274,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     };
     registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
+    const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                resolvedTyypit={resolvedTyypit}
                 getPerustiedotValues={getPerustiedotValues}
                 formRegister={registerPerustiedot}
                 handleNimiUpdate={handleNimiUpdate}
@@ -331,9 +336,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </div>
             <div className={styles.ValiContainer}>
                 <div className={styles.ValiOtsikko}>
-                    <h3>{organisaatioTyypit[0]?.label || i18n.translate('LABEL_NOT_AVAILABLE')}</h3>
+                    <h3>{(organisaatioTyypit && organisaatioTyypit[0]) || i18n.translate('LABEL_NOT_AVAILABLE')}</h3>
                     <h1 className={organisaatioBase?.status === 'AKTIIVINEN' ? '' : styles.Passivoitu}>
-                        {nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en']}
+                        {nimi && (nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en'])}
                     </h1>
                 </div>
                 <div className={styles.ValiNappulat}>

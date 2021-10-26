@@ -50,13 +50,13 @@ export function YhdistaOrganisaatio(props: {
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(props.organisaatioBase.nimet[0])} (${
+                            value: `${i18n.translateNimi(props.organisaatioBase.currentNimi)} (${
                                 props.organisaatioBase.oid
                             })`,
                         },
                         {
                             key: 'to',
-                            value: `${i18n.translateNimi(props.yhdistaOrganisaatio.newParent?.nimet[0])} (${
+                            value: `${i18n.translateNimi(props.yhdistaOrganisaatio.newParent?.nimi)} (${
                                 props.yhdistaOrganisaatio.newParent?.oid || ''
                             })`,
                         },

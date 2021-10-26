@@ -69,6 +69,7 @@ export type UiOrganisaatioBase = {
     parentOid: string;
     parentOidPath: string;
     apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
+    currentNimi: Nimi; //  needed for merging and combining orgs
 };
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
@@ -78,7 +79,7 @@ export type NewUiOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentO
 export type Perustiedot = {
     ytunnus?: string;
     nimi: Nimi;
-    organisaatioTyypit: KoodistoSelectOption[];
+    organisaatioTyypit: KoodiUri[];
     alkuPvm: LocalDate;
     kotipaikka: KoodistoSelectOption;
     maa: KoodistoSelectOption;

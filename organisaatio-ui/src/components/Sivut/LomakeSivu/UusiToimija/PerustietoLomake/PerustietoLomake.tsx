@@ -14,7 +14,7 @@ import { Controller } from 'react-hook-form';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 
 type UusiOrgPerustiedotProps = {
-    organisaatioTyypit: KoodistoSelectOption[];
+    resolvedTyypit: KoodistoSelectOption[];
     rakenne: ResolvedRakenne;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
@@ -27,16 +27,10 @@ type UusiOrgPerustiedotProps = {
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const { handleJatka, validationErrors, formControl, formRegister, rakenne } = props;
+    const { handleJatka, validationErrors, formControl, formRegister, rakenne, resolvedTyypit } = props;
     const { i18n } = useContext(LanguageContext);
-    const {
-        kuntaKoodisto,
-        maatJaValtiotKoodisto,
-        oppilaitoksenOpetuskieletKoodisto,
-        organisaatioTyypitKoodisto,
-    } = useContext(KoodistoContext);
+    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
-
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -46,13 +40,9 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                         control={formControl}
                         name={'organisaatioTyypit'}
                         defaultValue={[]}
-                        render={({ field: { ref, value, ...rest } }) => (
-                            <CheckboxGroup
-                                {...rest}
-                                value={value.map((v) => v.value)}
-                                options={organisaatioTyypitKoodisto.selectOptions()}
-                            />
-                        )}
+                        render={({ field: { ref, ...rest } }) => {
+                            return <CheckboxGroup {...rest} options={resolvedTyypit} />;
+                        }}
                     />
                 </div>
             </div>
