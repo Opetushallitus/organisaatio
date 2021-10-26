@@ -231,22 +231,22 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     const nimet = organisaatioBase.nimet || [];
                     const uusiNimi = { ...perustiedotFormValues.nimi };
                     const sameDayNimiIdx = organisaatioBase.nimet.findIndex(
-                        (nimi: OrganisaationNimetNimi) => nimi.alkuPvm && today === nimi.alkuPvm
+                        (nimi: OrganisaationNimetNimi) => nimi?.alkuPvm === today
                     );
                     if (sameDayNimiIdx > -1) {
                         nimet[sameDayNimiIdx].nimi = uusiNimi;
                     } else {
-                        nimet.push({ nimi: uusiNimi });
+                        nimet.push({ nimi: uusiNimi, alkuPvm: today });
                     }
                     const orgToBeUpdated = {
                         ...organisaatioBase,
                         ...{
                             ...perustiedotFormValues,
                             tyypit: organisaatioTyypit,
-                            muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
+                            muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
                             kotipaikkaUri: kotipaikka?.value,
                             maaUri: maa?.value,
-                            kieletUris: kielet.map((a) => a.value),
+                            kieletUris: kielet?.map((a) => a.value) || [],
                         },
                         yhteystiedot,
                         nimet,

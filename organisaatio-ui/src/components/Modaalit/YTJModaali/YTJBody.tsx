@@ -17,9 +17,9 @@ type Props = {
 };
 
 const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
-    if (ytjData.kunta) setters.setPerustiedotValue('kotipaikkaUri', ytjData.kunta);
+    if (ytjData.kunta) setters.setPerustiedotValue('kotipaikka', ytjData.kunta);
     else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
-    if (ytjData.kieli) setters.setPerustiedotValue('kieletUris', [ytjData.kieli]);
+    if (ytjData.kieli) setters.setPerustiedotValue('kielet', [ytjData.kieli]);
     else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
     setters.setPerustiedotValue('ytunnus', ytjData.ytunnus);
     setters.setPerustiedotValue('nimi', { fi: ytjData.nimi, sv: ytjData.nimi, en: ytjData.nimi });
@@ -58,7 +58,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
             </div>
             {ytjTiedot.map((ytj) => {
                 return (
-                    <div className={styles.BodyKentta}>
+                    <div key={ytj.ytunnus} className={styles.BodyKentta}>
                         <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant="text">
                             {`${ytj.nimi} ${ytj.ytunnus}`}
                         </Button>

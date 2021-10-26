@@ -102,10 +102,10 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                     ...{
                         ...perustiedotFormValues,
                         tyypit: organisaatioTyypit,
-                        kotipaikkaUri: kotipaikka?.value,
-                        maaUri: maa?.value,
+                        kotipaikkaUri: kotipaikka.value,
+                        maaUri: maa.value,
                         kieletUris: kielet.map((a) => a.value),
-                        muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
+                        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
                     },
                     yhteystiedot,
                     parentOid: (parentOid || ROOT_OID) as string,

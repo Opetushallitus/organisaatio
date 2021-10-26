@@ -135,7 +135,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                 id="PERUSTIETO_PAASIJAINTIKUNTA_SELECT"
                                 {...field}
                                 ref={undefined}
-                                error={!!validationErrors['kotipaikkaUri']}
+                                error={!!validationErrors['kotipaikka']}
                                 options={kuntaKoodisto.selectOptions()}
                             />
                         )}
@@ -150,7 +150,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                             <Select
                                 id="PERUSTIETO_MUUT_KUNNAT_SELECT"
                                 {...rest}
-                                error={!!validationErrors['muutKotipaikatUris']}
+                                error={!!validationErrors['muutKotipaikat']}
                                 isMulti
                                 options={kuntaKoodisto.selectOptions()}
                             />
@@ -169,7 +169,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                             <Select
                                 id="PERUSTIETO_MAA_SELECT"
                                 {...rest}
-                                error={!!validationErrors['maaUri']}
+                                error={!!validationErrors['maa']}
                                 options={maatJaValtiotKoodisto.selectOptions()}
                             />
                         )}
@@ -187,7 +187,7 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                 isMulti
                                 id="PERUSTIETO_OPETUSKIELI_SELECT"
                                 {...rest}
-                                error={!!validationErrors['kieletUris']}
+                                error={!!validationErrors['kielet']}
                                 options={oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                             />
                         )}
