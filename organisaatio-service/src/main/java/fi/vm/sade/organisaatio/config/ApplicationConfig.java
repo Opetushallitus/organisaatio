@@ -1,8 +1,8 @@
 package fi.vm.sade.organisaatio.config;
 
-import fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl;
+import fi.vm.sade.oid.service.OIDService;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
-
+import fi.vm.sade.organisaatio.service.oid.OrganisaatioOIDServiceImpl;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.service.YTJServiceImpl;
 import fi.vm.sade.security.OidProvider;
@@ -30,8 +30,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public OIDServiceSimpleImpl oidService() {
-        return new OIDServiceSimpleImpl();
+    public OIDService oidService() {
+        return new OrganisaatioOIDServiceImpl();
     }
 
     @Bean
