@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
 
 const Y_TUNNUS = '2627679-5';
 beforeEach(() => {
@@ -7,7 +7,7 @@ beforeEach(() => {
 });
 describe('New organisaatio from YTJ', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
-        cy.visit('/');
+        cy.visit(`${BASE_PATH}/`);
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
     });
@@ -28,7 +28,7 @@ describe('Edit organisaatio from YTJ', () => {
     it('Can fetch from YTJ', () => {
         cy.persistOrganisaatio(organisaatio('BERFORE_FETCH'), 'parentOrganisaatio');
         cy.get('@parentOrganisaatio').then((response) => {
-            cy.visit(`/lomake/${response.body.organisaatio.oid}`);
+            cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
             cy.clickRadioOrCheckbox('Koulutustoimija');
             cy.clickButton('PAIVITA_YTJ_TIEDOT');
             // TODO when muokkaus-lomake has been refactored from state to form-hooks

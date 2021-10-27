@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
 
 describe('Organisaatioyhdistys', () => {
     beforeEach(() => {});
@@ -43,7 +43,7 @@ describe('Organisaatioyhdistys', () => {
         cy.get('@child2').then((child2) => {
             cy.get('@child3').then((child3) => {
                 cy.intercept('GET', `${API_CONTEXT}/organisaatio/v4/*`).as('getCurrent');
-                cy.visit(`/lomake/${child2.body.organisaatio.oid}`);
+                cy.visit(`${BASE_PATH}/lomake/${child2.body.organisaatio.oid}`);
                 cy.wait(['@getCurrent'], { timeout: 10000 });
 
                 cy.intercept('GET', `${API_CONTEXT}/organisaatio/v4/hae*`).as('getParents');

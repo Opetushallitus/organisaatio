@@ -1,9 +1,9 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
 
 describe('Organisaatio Rakenne', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
-        cy.visit('/');
+        cy.visit(`${BASE_PATH}/`);
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
     });
@@ -11,7 +11,7 @@ describe('Organisaatio Rakenne', () => {
     it('Can add CHILD organisaatio', () => {
         cy.persistOrganisaatio(organisaatio('PARENT'), 'parentOrganisaatio');
         cy.get('@parentOrganisaatio').then((response) => {
-            cy.visit(`/lomake/${response.body.organisaatio.oid}`);
+            cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
             cy.clickButton('LISAA_UUSI_TOIMIJA');
             cy.contains('UUDEN_TOIMIJAN_LISAAMINEN');
             cy.clickAccordion('PERUSTIEDOT');

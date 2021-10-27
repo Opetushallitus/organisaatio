@@ -1,8 +1,8 @@
-import { API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
 
 describe('Organisaatiot Page', () => {
     it('Renders table of organisations', () => {
-        cy.visit('/');
+        cy.visit(`${BASE_PATH}/`);
         cy.get('table', { timeout: 30000 });
     });
 

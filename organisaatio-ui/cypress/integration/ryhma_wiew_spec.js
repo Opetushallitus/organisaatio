@@ -1,6 +1,8 @@
+import { BASE_PATH } from '../../src/contexts/contexts';
+
 describe('Ryhma view Page', () => {
     it('Can save a new ryhma', () => {
-        cy.visit('/ryhmat/uusi');
+        cy.visit(`${BASE_PATH}/ryhmat/uusi`);
         cy.get('#nimiFi').type('Suominimi');
         cy.get('#nimiSv').type('Ruotsinimi');
         cy.get('#nimiEn').type('Enkkunimi');
