@@ -79,7 +79,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     private Set<OrganisaatioPerustietoV4> subRows = new HashSet<>();
 
     public Set<OrganisaatioPerustietoV4> getSubRows() {
-        return children;
+        return subRows;
     }
 
     public void setChildren(Set<OrganisaatioPerustietoV4> children) {

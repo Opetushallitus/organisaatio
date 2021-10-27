@@ -17,8 +17,6 @@
 
 package fi.vm.sade.organisaatio.repository.impl;
 
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
-import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
@@ -39,61 +37,56 @@ public class YhteystietoArvoRepositoryImpl implements YhteystietoArvoRepositoryC
 
     @Autowired
     EntityManager em;
-    
+
     @SuppressWarnings("unchecked")
     @Override
-	public List<YhteystietoArvo> findByOrganisaatio(Organisaatio org) {
-    	if (org.getId()==null) {
-    		return Collections.emptyList();
-    	}
-    	return em.createQuery("FROM "+ YhteystietoArvo.class.getName()+" WHERE organisaatio=:organisaatio")
-    		.setParameter("organisaatio", org)
-    		.getResultList();
+    public List<YhteystietoArvo> findByOrganisaatio(Organisaatio org) {
+        if (org.getId() == null) {
+            return Collections.emptyList();
+        }
+        return em.createQuery("FROM YhteystietoArvo WHERE organisaatio=:organisaatio")
+                .setParameter("organisaatio", org)
+                .getResultList();
     }
-    
+
     @Override
     public YhteystietoArvo findByOrganisaatioAndNimi(String organisaatioOid, String nimi) {
-        
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<YhteystietoArvo> query = cb.createQuery(YhteystietoArvo.class);
-        
+
         Root<YhteystietoArvo> root = query.from(YhteystietoArvo.class);
         query.select(root);
-        
+
         Predicate organisaatioEquals = cb.equal(root.get("organisaatio").get("oid"), organisaatioOid);
         Predicate nameEquals = cb.equal(root.get("kentta").get("nimi"), nimi);
-        
+
         Predicate whereClause = cb.and(organisaatioEquals, nameEquals);
         query.where(whereClause);
-        
+
         return em.createQuery(query).getSingleResult();
-        
-//        Organisaatio org = organisaatioDAO.findBy("oid", organisaatioOid).get(0);
-//        Query query = getEntityManager().createQuery("SELECT x FROM YhteystietoArvo x " +
-//                "WHERE x.kentta.nimi = :nimi AND x.organisaatio.id = :organisaatioId");
-//        query.setParameter("nimi", nimi);
-//        query.setParameter("organisaatioId", org.getId());
-//        return (YhteystietoArvo) query.getSingleResult();
+
     }
 
     /**
      * Returns yhteystietoarvos for a given yhteystietojen tyyppi
+     *
      * @param yhteystietojenTyyppi the yhteystietojen tyyppi given
      * @return the yhteystietoarvo objects matching the given yhteystietojen tyyppi
      */
     @Override
-	public List<YhteystietoArvo> findByYhteystietojenTyyppi(
-			YhteystietojenTyyppi yhteystietojenTyyppi) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
+    public List<YhteystietoArvo> findByYhteystietojenTyyppi(
+            YhteystietojenTyyppi yhteystietojenTyyppi) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<YhteystietoArvo> query = cb.createQuery(YhteystietoArvo.class);
-        
+
         Root<YhteystietoArvo> root = query.from(YhteystietoArvo.class);
         query.select(root);
-        
+
         Predicate yhteystietojenTyyppiEquals = cb.equal(root.get("kentta").get("yhteystietojenTyyppi").get("oid"), yhteystietojenTyyppi.getOid());
-		query.where(yhteystietojenTyyppiEquals);
-		
-		return em.createQuery(query).getResultList();
-	}
+        query.where(yhteystietojenTyyppiEquals);
+
+        return em.createQuery(query).getResultList();
+    }
 
 }

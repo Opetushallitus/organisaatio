@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ import java.util.Map;
 /**
  * "Tilapäistiedostojen käsittely (IE9:lle)"
  */
+@ApiIgnore
 @Path("/tempfile")
 @Api(value = "/tempfile", description = "Tilapäistiedostojen käsittely (IE9:lle)")
 @Component("tempfileResource")

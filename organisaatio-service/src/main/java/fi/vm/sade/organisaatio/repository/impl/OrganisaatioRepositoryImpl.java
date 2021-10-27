@@ -300,7 +300,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     @Override
     public boolean isYtunnusAvailable(String ytunnus) {
         return ((Number) em
-                .createQuery("SELECT COUNT(*) FROM " + Organisaatio.class.getName() + " WHERE ytunnus=:ytunnus AND organisaatiopoistettu = FALSE")
+                .createQuery("SELECT COUNT(ytunnus) FROM Organisaatio WHERE ytunnus=:ytunnus AND organisaatioPoistettu = FALSE")
                 .setParameter("ytunnus", ytunnus.trim())
                 .getSingleResult()).intValue() == 0;
     }

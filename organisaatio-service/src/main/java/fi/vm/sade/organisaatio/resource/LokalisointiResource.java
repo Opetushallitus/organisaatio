@@ -3,15 +3,18 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.client.LokalisointiClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Locale;
 import java.util.Map;
 
+@ApiIgnore
 @RestController
 @RequestMapping(value = "/lokalisointi")
 @Api(value = "/lokalisointi")
@@ -23,14 +26,14 @@ public class LokalisointiResource {
         this.lokalisointiClient = lokalisointiClient;
     }
 
-    @GetMapping(path= "", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Tuo Lokalisoinnit")
     public Map<String, Map<String, String>> getLokalisointi() {
         return lokalisointiClient.getByCategory("organisaatio2");
     }
 
-    @GetMapping(path= "/kieli", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/kieli", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     @ApiOperation("Palauttaa kielen")
     public String getLocale(Locale locale) {
