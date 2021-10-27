@@ -41,4 +41,3 @@ describe('Edit organisaatio from YTJ', () => {
         });
     });
 });
-});
