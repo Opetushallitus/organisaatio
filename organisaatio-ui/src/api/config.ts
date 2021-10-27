@@ -1,7 +1,8 @@
 import useAxios from 'axios-hooks';
 import { urls } from 'oph-urls-js';
 import { FrontProperties } from '../types/types';
-const baseUrl = '/organisaatio/config/';
+import { API_CONTEXT } from '../contexts/contexts';
+const baseUrl = `${API_CONTEXT}/config/`;
 
 export default function useFrontProperties() {
     const [{ data, loading, error }] = useAxios<FrontProperties>(`${baseUrl}frontproperties`);

@@ -1,7 +1,9 @@
+import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
+
 describe('Ryhmat Page', () => {
     beforeEach(() => {});
     it('Renders table of Ryhmat', () => {
-        cy.visit('/ryhmat');
+        cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table', { timeout: 30000 });
     });
 
@@ -22,8 +24,8 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table pagination', () => {
-        cy.intercept('GET', '/organisaatio/organisaatio/v3/ryhmat*', { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
-        cy.visit('/ryhmat');
+        cy.intercept('GET', `${API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table').then(() => {
             cy.get('tbody').children().should('have.length', 10);
             cy.get('button').contains('2').should('have.attr', 'color', 'secondary').click();
@@ -41,7 +43,7 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can transition to create a new ryhma organisation', () => {
-        cy.visit('/ryhmat');
+        cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('button').first().click();
             expect(cy.get('h1').value).to.have.valueOf('');

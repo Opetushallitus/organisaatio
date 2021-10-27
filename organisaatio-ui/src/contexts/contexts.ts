@@ -12,8 +12,11 @@ import {
     Nimi,
 } from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
-
+import { homepage } from '../../package.json';
 export const ROOT_OID = '1.2.246.562.10.00000000001';
+
+export const BASE_PATH = homepage;
+export const API_CONTEXT = `${BASE_PATH}/rest`;
 export const rakenne = organisaatioRakenne;
 
 export class I18nImpl implements I18n {

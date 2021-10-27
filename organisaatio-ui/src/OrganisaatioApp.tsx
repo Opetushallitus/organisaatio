@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
+import { BASE_PATH, I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
@@ -93,7 +93,7 @@ const OrganisaatioApp: React.FC = () => {
     const oppilaitoksenOpetuskieletKoodisto = new KoodistoImpl(oppilaitoksenOpetuskielet, language);
     const postinumerotKoodisto = new KoodistoImpl(postinumerot, language);
     return (
-        <Router basename="/organisaatio">
+        <Router basename={BASE_PATH}>
             <ThemeProvider theme={theme}>
                 <LanguageContext.Provider value={{ language: language, i18n: i18n }}>
                     <Notification />

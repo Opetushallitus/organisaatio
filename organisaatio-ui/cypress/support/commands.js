@@ -1,4 +1,5 @@
 const { FinnishBusinessIds } = require('finnish-business-ids');
+const { API_CONTEXT } = require('../../src/contexts/contexts');
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -104,7 +105,7 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
 });
 
 Cypress.Commands.add('clickSaveButton', () => {
-    cy.intercept('POST', '/organisaatio/organisaatio/v4').as('saveOrg');
+    cy.intercept('POST', `${API_CONTEXT}/organisaatio/v4`).as('saveOrg');
     cy.get('button').contains('TALLENNA').scrollIntoView().click();
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });
@@ -127,7 +128,7 @@ Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
                 nimet: [{ nimi: old.nimi, alkuPvm: '2020-10-10', version: 0 }],
                 kotipaikkaUri: old.kotipaikkaUri.substr(0, old.kotipaikkaUri.indexOf('#')),
             };
-            cy.request('PUT', `/organisaatio/v4/${oid}`, mod).as('edit');
+            cy.request('PUT', `${API_CONTEXT}/organisaatio/v4/${oid}`, mod).as('edit');
             cy.get('@edit').then((response) => {
                 console.log('RESPONSE', response.body);
             });
@@ -160,12 +161,12 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
 });
 
 Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
-    cy.request('POST', '/organisaatio/v4/', organisaatio).as(key);
+    cy.request('POST', `${API_CONTEXT}/organisaatio/v4/`, organisaatio).as(key);
 });
 
 Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {
     cy.request(
         'GET',
-        `/organisaatio/v4/hae?searchStr=${ytunnus}&aktiiviset=true&suunnitellut=true&lakkautetut=false`
+        `${API_CONTEXT}/organisaatio/v4/hae?searchStr=${ytunnus}&aktiiviset=true&suunnitellut=true&lakkautetut=false`
     ).as(key);
 });

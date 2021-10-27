@@ -10,7 +10,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @ApiIgnore
 @RestController
-@RequestMapping(value = "/config")
+@RequestMapping("${server.rest.context-path}/config")
 public class ConfigurationResource {
 
     @Autowired

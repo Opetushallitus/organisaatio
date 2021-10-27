@@ -15,13 +15,13 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -49,7 +49,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.joining;
 
 @RestController
-@RequestMapping("/organisaatio")
+@RequestMapping("${server.rest.context-path}/organisaatio")
 public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);

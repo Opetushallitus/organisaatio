@@ -2,8 +2,9 @@ import Axios from 'axios';
 import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
 import { KoodistoContextType, KoodistoSelectOption, LocalDate, YhteystiedotBase } from '../types/types';
+import { API_CONTEXT } from '../contexts/contexts';
 
-const baseUrl = `/organisaatio/ytj/`;
+const baseUrl = `${API_CONTEXT}/ytj/`;
 
 type ytjOsoite = {
     katu: string;

@@ -1,4 +1,5 @@
 import { organisaatio } from '../support/data';
+import { API_CONTEXT } from '../../src/contexts/contexts';
 
 const Y_TUNNUS = '2627679-5';
 beforeEach(() => {
@@ -14,7 +15,7 @@ describe('New organisaatio from YTJ', () => {
         cy.clickRadioOrCheckbox('Koulutustoimija');
         cy.clickButton('HAE_YTJ_TIEDOT');
         cy.inputByName('ytjinput', Y_TUNNUS);
-        cy.intercept('GET', '/organisaatio/ytj/*').as('findYtj');
+        cy.intercept('GET', `${API_CONTEXT}/ytj/*`).as('findYtj');
         cy.clickButton('HAE_YTJTIEDOT');
         cy.wait(['@findYtj'], { timeout: 10000 });
         cy.clickButton('Hameen ammatti');

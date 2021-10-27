@@ -1,3 +1,5 @@
+import { API_CONTEXT } from '../../src/contexts/contexts';
+
 describe('Organisaatiot Page', () => {
     it('Renders table of organisations', () => {
         cy.visit('/');
@@ -5,7 +7,7 @@ describe('Organisaatiot Page', () => {
     });
 
     it('Finds opetushallitus from table', () => {
-        cy.intercept('GET', '/organisaatio/organisaatio/v4/hierarkia/hae*', {
+        cy.intercept('GET', `${API_CONTEXT}/organisaatio/v4/hierarkia/hae*`, {
             fixture: 'opetushallitusOrgInArray.json',
         });
         cy.get('table').then(($table) => {

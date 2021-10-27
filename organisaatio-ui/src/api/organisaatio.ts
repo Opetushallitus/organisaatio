@@ -12,8 +12,9 @@ import { info, success, warning } from '../components/Notification/Notification'
 import { APIOrganisaatioHistoria, OrganisaatioLiitos } from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
+import { API_CONTEXT } from '../contexts/contexts';
 
-const baseUrl = `/organisaatio/organisaatio/v4/`;
+const baseUrl = `${API_CONTEXT}/organisaatio/v4/`;
 
 async function createOrganisaatio(organisaatio: NewOrganisaatio) {
     return errorHandlingWrapper(async () => {

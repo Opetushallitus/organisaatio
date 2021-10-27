@@ -30,7 +30,6 @@ import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
 import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,8 +45,7 @@ import java.util.List;
 
 @ApiIgnore
 @RestController
-@RequestMapping("/yhteystietojentyyppi")
-@Api(value = "/yhteystietojentyyppi", description = "Yhteytietojen tyyppeihin liittyvät operaatiot")
+@RequestMapping("${server.rest.context-path}/yhteystietojentyyppi")
 public class YhteystietojenTyyppiResource {
     @Autowired
     private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;

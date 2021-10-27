@@ -4,7 +4,6 @@ import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
 import fi.vm.sade.organisaatio.service.KoodistoService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +16,7 @@ import java.util.Optional;
 
 @ApiIgnore
 @RestController
-@RequestMapping("/koodisto")
-@Api(value = "/koodisto")
+@RequestMapping("${server.rest.context-path}/koodisto")
 public class KoodistoResource {
 
     private final KoodistoService koodistoService;
