@@ -173,7 +173,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (mergeOrganisaatioResult) {
                 const organisaatioAfterMerge = await readOrganisaatio(params.oid);
                 if (organisaatioAfterMerge) {
-                    resetOrganisaatio(organisaatioAfterMerge.organisaatio, organisaatioAfterMerge.polku);
+                    await resetOrganisaatio(organisaatioAfterMerge.organisaatio, organisaatioAfterMerge.polku);
                     executeHistoria();
                 }
             }
@@ -253,8 +253,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     };
                     const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
                     if (updatedOrganisaatio) {
-                        const organisaatioAfterUpdate = await readOrganisaatio(params.oid);
-                        resetOrganisaatio(organisaatioAfterUpdate.organisaatio, organisaatioAfterUpdate.polku);
+                        await resetOrganisaatio(updatedOrganisaatio, organisaatioNimiPolku);
                     }
                 })();
             })();

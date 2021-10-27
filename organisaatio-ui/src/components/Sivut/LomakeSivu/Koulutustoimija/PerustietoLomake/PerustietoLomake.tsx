@@ -33,7 +33,7 @@ type PerustietoLomakeProps = {
     formControl: Control<Perustiedot>;
     handleNimiUpdate: (nimi: Nimi) => void;
     getPerustiedotValues: () => Perustiedot;
-    organisaatioBase: UiOrganisaatioBase | undefined;
+    organisaatioBase: UiOrganisaatioBase;
 };
 
 const OrganisaationNimi = ({ defaultNimi, control }) => {
