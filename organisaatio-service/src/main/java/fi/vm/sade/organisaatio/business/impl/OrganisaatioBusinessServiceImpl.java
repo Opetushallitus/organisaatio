@@ -177,6 +177,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public OrganisaatioResult saveOrUpdate(OrganisaatioRDTO model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+        if (entity == null) {
+            throw new ValidationException("validation.organisaatio.convert.error");
+        }
         if (entity.getOid() != null) {
             return update(entity, model.getParentOid());
         }
@@ -197,6 +200,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+        if(entity == null) {
+            throw new ValidationException("validation.organisaatio.convert.error");
+        }
         OrganisaatioResult organisaatioResult;
         if (entity.getOid() != null) {
             organisaatioResult = update(entity, model.getParentOid());
@@ -270,7 +276,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         generateToimipistekoodi(entity, oldOrg, parentOrg);
 
-        LOG.debug("updating " + entity);
         try {
             entity = organisaatioRepository.saveAndFlush(entity);
         } catch (OptimisticLockException ole) {
