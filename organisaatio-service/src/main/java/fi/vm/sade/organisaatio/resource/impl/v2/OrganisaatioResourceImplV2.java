@@ -67,7 +67,7 @@ import java.util.*;
  */
 @RestController
 @Transactional(readOnly = true)
-@RequestMapping("/rest/organisaatio/v2")
+@RequestMapping("${server.rest.context-path}/organisaatio/v2")
 public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);

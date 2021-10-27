@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/organisaatio/v3")
+@RequestMapping("${server.rest.context-path}/organisaatio/v3")
 public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV3.class);
