@@ -33,7 +33,7 @@ import {
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
-import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../tools/mappers';
+import {mapApiYhteystiedotToUi, mapUiOrganisaatioToApiToUpdate, mapUiYhteystiedotToApi} from '../../../tools/mappers';
 import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
@@ -222,36 +222,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    const yhteystiedot = mapUiYhteystiedotToApi(
-                        organisaatioBase.apiYhteystiedot,
-                        yhteystiedotFormValues
-                    );
-                    const { kotipaikka, maa, kielet, organisaatioTyypit, muutKotipaikat } = perustiedotFormValues;
-                    const today = new Date().toISOString().split('T')[0];
-                    const nimet = organisaatioBase.nimet || [];
-                    const uusiNimi = { ...perustiedotFormValues.nimi };
-                    const sameDayNimiIdx = organisaatioBase.nimet.findIndex(
-                        (nimi: OrganisaationNimetNimi) => nimi?.alkuPvm === today
-                    );
-                    if (sameDayNimiIdx > -1) {
-                        nimet[sameDayNimiIdx].nimi = uusiNimi;
-                    } else {
-                        nimet.push({ nimi: uusiNimi, alkuPvm: today });
-                    }
-                    const orgToBeUpdated = {
-                        ...organisaatioBase,
-                        ...{
-                            ...perustiedotFormValues,
-                            tyypit: organisaatioTyypit,
-                            muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
-                            kotipaikkaUri: kotipaikka?.value,
-                            maaUri: maa?.value,
-                            kieletUris: kielet?.map((a) => a.value) || [],
-                        },
-                        yhteystiedot,
-                        nimet,
-                    };
-                    const updatedOrganisaatio = await updateOrganisaatio(orgToBeUpdated);
+                    const organisaatioToBeUpdated = mapUiOrganisaatioToApiToUpdate(organisaatioBase, yhteystiedotFormValues, perustiedotFormValues)
+                    const updatedOrganisaatio = await updateOrganisaatio(organisaatioToBeUpdated);
                     if (updatedOrganisaatio) {
                         await resetOrganisaatio(updatedOrganisaatio, organisaatioNimiPolku);
                     }

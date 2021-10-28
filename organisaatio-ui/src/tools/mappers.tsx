@@ -1,4 +1,4 @@
-import { Koodi, Ryhma, Yhteystiedot } from '../types/types';
+import { Koodi, OrganisaationNimetNimi, Ryhma, Yhteystiedot } from '../types/types';
 import {
     ApiYhteystiedot,
     YhteystiedotEmail,
@@ -6,6 +6,8 @@ import {
     YhteystiedotPhone,
     YhteystiedotWww,
 } from '../types/apiTypes';
+import { ROOT_OID } from '../contexts/contexts';
+import { updateOrganisaatio } from '../api/organisaatio';
 
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
@@ -154,4 +156,53 @@ const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYhteystied
             return undefined;
         })
         .filter(Boolean);
+};
+export const mapUiOrganisaatioToApiToSave = (yhteystiedotFormValues, perustiedotFormValues, parentOid) => {
+    const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
+    const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit } = perustiedotFormValues;
+    const nimet = [
+        {
+            nimi: Object.assign({}, perustiedotFormValues.nimi),
+            alkuPvm: new Date().toISOString().split('T')[0],
+        },
+    ];
+    return {
+        ...{
+            ...perustiedotFormValues,
+            tyypit: organisaatioTyypit,
+            kotipaikkaUri: kotipaikka.value,
+            maaUri: maa.value,
+            kieletUris: kielet.map((a) => a.value),
+            muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
+        },
+        yhteystiedot,
+        parentOid: (parentOid || ROOT_OID) as string,
+        nimet,
+    };
+};
+export const mapUiOrganisaatioToApiToUpdate = (organisaatioBase, yhteystiedotFormValues, perustiedotFormValues) => {
+    const yhteystiedot = mapUiYhteystiedotToApi(organisaatioBase.apiYhteystiedot, yhteystiedotFormValues);
+    const { kotipaikka, maa, kielet, organisaatioTyypit, muutKotipaikat } = perustiedotFormValues;
+    const today = new Date().toISOString().split('T')[0];
+    const nimet = organisaatioBase.nimet || [];
+    const uusiNimi = { ...perustiedotFormValues.nimi };
+    const sameDayNimiIdx = organisaatioBase.nimet.findIndex((nimi: OrganisaationNimetNimi) => nimi?.alkuPvm === today);
+    if (sameDayNimiIdx > -1) {
+        nimet[sameDayNimiIdx].nimi = uusiNimi;
+    } else {
+        nimet.push({ nimi: uusiNimi, alkuPvm: today });
+    }
+    return {
+        ...organisaatioBase,
+        ...{
+            ...perustiedotFormValues,
+            tyypit: organisaatioTyypit,
+            muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
+            kotipaikkaUri: kotipaikka?.value,
+            maaUri: maa?.value,
+            kieletUris: kielet?.map((a) => a.value) || [],
+        },
+        yhteystiedot,
+        nimet,
+    };
 };

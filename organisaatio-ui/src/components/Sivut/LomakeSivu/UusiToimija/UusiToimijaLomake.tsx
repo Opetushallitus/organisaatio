@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
-import { mapApiYhteystiedotToUi, mapUiYhteystiedotToApi } from '../../../../tools/mappers';
+import {mapApiYhteystiedotToUi, mapUiOrganisaatioToApiToSave, mapUiYhteystiedotToApi} from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
 import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
@@ -90,28 +90,8 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     async function saveOrganisaatio() {
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
-                const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit } = perustiedotFormValues;
-                const nimet = [
-                    {
-                        nimi: Object.assign({}, perustiedotFormValues.nimi),
-                        alkuPvm: new Date().toISOString().split('T')[0],
-                    },
-                ];
-                const orgToBeUpdated = {
-                    ...{
-                        ...perustiedotFormValues,
-                        tyypit: organisaatioTyypit,
-                        kotipaikkaUri: kotipaikka.value,
-                        maaUri: maa.value,
-                        kieletUris: kielet.map((a) => a.value),
-                        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
-                    },
-                    yhteystiedot,
-                    parentOid: (parentOid || ROOT_OID) as string,
-                    nimet,
-                };
-                const savedOrganisaatio = await createOrganisaatio(orgToBeUpdated);
+                const organisaatioToBeSaved = mapUiOrganisaatioToApiToSave(yhteystiedotFormValues, perustiedotFormValues, parentOid)
+                const savedOrganisaatio = await createOrganisaatio(organisaatioToBeSaved);
                 if (savedOrganisaatio) {
                     props.history.push(`/lomake/${savedOrganisaatio.oid}`);
                 }
