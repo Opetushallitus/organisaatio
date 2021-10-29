@@ -12,15 +12,15 @@ import { info, success, warning } from '../components/Notification/Notification'
 import { APIOrganisaatioHistoria, OrganisaatioLiitos } from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
-import { API_CONTEXT } from '../contexts/contexts';
+import { PUBLIC_API_CONTEXT } from '../contexts/contexts';
 
-const baseUrl = `${API_CONTEXT}/organisaatio/v4/`;
+const baseUrl = `${PUBLIC_API_CONTEXT}/`;
 
 async function createOrganisaatio(organisaatio: NewOrganisaatio) {
     return errorHandlingWrapper(async () => {
-        const { data } = await Axios.post(`${baseUrl}`, organisaatio);
+        const { data } = await Axios.post<{ organisaatio: Organisaatio }>(`${baseUrl}`, organisaatio);
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
-        return data.organisaatio as Organisaatio;
+        return data.organisaatio;
     });
 }
 

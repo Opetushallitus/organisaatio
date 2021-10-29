@@ -15,7 +15,7 @@ import java.util.Map;
 
 @ApiIgnore
 @RestController
-@RequestMapping("${server.rest.context-path}/lokalisointi")
+@RequestMapping("${server.internal.context-path}/lokalisointi")
 public class LokalisointiResource {
 
     private final LokalisointiClient lokalisointiClient;

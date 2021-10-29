@@ -1,4 +1,4 @@
-import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/contexts';
 
 describe('Ryhmat Page', () => {
     beforeEach(() => {});
@@ -24,7 +24,7 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table pagination', () => {
-        cy.intercept('GET', `${API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table').then(() => {
             cy.get('tbody').children().should('have.length', 10);

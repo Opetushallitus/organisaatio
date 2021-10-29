@@ -1,3 +1,9 @@
+git:
+  depth: false
+branches:
+  only:
+    - master
+    - organisaatio-2
 env:
   global:
     # ARTIFACTORY_USERNAME

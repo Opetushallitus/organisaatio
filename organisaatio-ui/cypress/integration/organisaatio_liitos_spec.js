@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/contexts';
 
 describe('Organisaatioyhdistys', () => {
     beforeEach(() => {});
@@ -42,22 +42,19 @@ describe('Organisaatioyhdistys', () => {
 
         cy.get('@child2').then((child2) => {
             cy.get('@child3').then((child3) => {
-                cy.intercept('GET', `${API_CONTEXT}/organisaatio/v4/*`).as('getCurrent');
+                cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
                 cy.visit(`${BASE_PATH}/lomake/${child2.body.organisaatio.oid}`);
                 cy.wait(['@getCurrent'], { timeout: 10000 });
 
-                cy.intercept('GET', `${API_CONTEXT}/organisaatio/v4/hae*`).as('getParents');
+                cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
                 cy.clickButton('LOMAKE_YHDISTA_ORGANISAATIO');
                 cy.wait(['@getParents'], { timeout: 10000 });
                 cy.selectFromList('ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO', child3.body.organisaatio.oid, 'CHILD');
 
-                cy.intercept(
-                    'PUT',
-                    `${API_CONTEXT}/organisaatio/v4/${child2.body.organisaatio.oid}/organisaatiosuhde/*`
-                ).as('merge');
-                cy.intercept('GET', `${API_CONTEXT}/organisaatio/v4/${child2.body.organisaatio.oid}/historia`).as(
-                    'historia'
+                cy.intercept('PUT', `${PUBLIC_API_CONTEXT}/${child2.body.organisaatio.oid}/organisaatiosuhde/*`).as(
+                    'merge'
                 );
+                cy.intercept('GET', `${PUBLIC_API_CONTEXT}/${child2.body.organisaatio.oid}/historia`).as('historia');
                 cy.clickButton('BUTTON_VAHVISTA');
                 cy.contains('TOIMIPISTEEN_YHDISTYS_VAHVISTUS');
                 cy.clickButton('BUTTON_VAHVISTA');

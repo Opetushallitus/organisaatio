@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/contexts';
 
 describe('Organisaatio Rakenne', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
@@ -18,7 +18,7 @@ describe('Organisaatio Rakenne', () => {
             cy.enterPerustiedot('CHILD', 'Oppilaitos', true);
             cy.clickButton('JATKA');
             cy.enterAllYhteystiedot('CHILD');
-            cy.intercept('POST', `${API_CONTEXT}/organisaatio/v4/findbyoids`).as('findPAth');
+            cy.intercept('POST', `${PUBLIC_API_CONTEXT}/findbyoids`).as('findPAth');
             cy.clickSaveButton();
             cy.wait(['@findPAth'], { timeout: 10000 });
             cy.contains('CHILD Suominimi');

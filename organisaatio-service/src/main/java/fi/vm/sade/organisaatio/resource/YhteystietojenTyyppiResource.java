@@ -45,7 +45,7 @@ import java.util.List;
 
 @ApiIgnore
 @RestController
-@RequestMapping("${server.rest.context-path}/yhteystietojentyyppi")
+@RequestMapping("${server.internal.context-path}/yhteystietojentyyppi")
 public class YhteystietojenTyyppiResource {
     @Autowired
     private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
