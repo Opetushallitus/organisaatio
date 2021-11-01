@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.client.LokalisointiClient;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +15,7 @@ import java.util.Map;
 
 @ApiIgnore
 @RestController
-@RequestMapping(value = "/lokalisointi")
-@Api(value = "/lokalisointi")
+@RequestMapping("${server.internal.context-path}/lokalisointi")
 public class LokalisointiResource {
 
     private final LokalisointiClient lokalisointiClient;

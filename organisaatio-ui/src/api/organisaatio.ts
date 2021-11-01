@@ -22,7 +22,7 @@ import {
 } from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
-import { ROOT_OID } from '../contexts/contexts';
+import { ROOT_OID, PUBLIC_API_CONTEXT } from '../contexts/contexts';
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
 type SupportedYhteystietoType = 'www' | 'email' | 'numero';
@@ -31,7 +31,7 @@ const NAME_WWW = 'www';
 const NAME_EMAIL = 'email';
 const NAME_PHONE = 'numero';
 
-const baseUrl = `/organisaatio/organisaatio/v4/`;
+const baseUrl = `${PUBLIC_API_CONTEXT}/`;
 
 async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
     return errorHandlingWrapper(async () => {
