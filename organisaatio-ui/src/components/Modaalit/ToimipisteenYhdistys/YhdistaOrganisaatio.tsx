@@ -1,4 +1,4 @@
-import { Organisaatio, ResolvedRakenne, YhdistaOrganisaatioon } from '../../../types/types';
+import { ResolvedRakenne, UiOrganisaatioBase, YhdistaOrganisaatioon } from '../../../types/types';
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import TYHeader from './TYHeader';
 import TYBody from './TYBody';
@@ -10,8 +10,7 @@ import { LanguageContext } from '../../../contexts/contexts';
 
 export function YhdistaOrganisaatio(props: {
     yhdistaOrganisaatio: YhdistaOrganisaatioon;
-    organisaatio: Organisaatio;
-
+    organisaatioBase: UiOrganisaatioBase;
     handleChange: (
         value: ((prevState: YhdistaOrganisaatioon) => YhdistaOrganisaatioon) | YhdistaOrganisaatioon
     ) => void;
@@ -29,7 +28,7 @@ export function YhdistaOrganisaatio(props: {
                     header={<TYHeader titleKey={'TOIMIPISTEEN_YHDISTYS_TITLE'} />}
                     body={
                         <TYBody
-                            organisaatio={props.organisaatio}
+                            organisaatioBase={props.organisaatioBase}
                             yhdistaOrganisaatio={props.yhdistaOrganisaatio}
                             handleChange={props.handleChange}
                             organisaatioRakenne={props.organisaatioRakenne}
@@ -51,7 +50,9 @@ export function YhdistaOrganisaatio(props: {
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
+                            value: `${i18n.translateNimi(props.organisaatioBase.currentNimi)} (${
+                                props.organisaatioBase.oid
+                            })`,
                         },
                         {
                             key: 'to',

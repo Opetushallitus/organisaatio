@@ -10,7 +10,7 @@ import { LanguageContext } from '../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import searchIcon from '@iconify/icons-fa-solid/search';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
-import { Organisaatio } from '../../../types/types';
+import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { searchOrganisation } from '../../../api/organisaatio';
 
 const SEARCH_LENGTH = 3;
@@ -21,7 +21,7 @@ const mapPaginationSelectors = (index) => {
 
 type OrganisaatioHakuTaulukkoProps = {
     isOPHVirkailija: boolean;
-    tableColumns: Column<Organisaatio>[];
+    tableColumns: Column<ApiOrganisaatio>[];
 };
 type Filters = {
     searchString: string;
@@ -32,7 +32,7 @@ type Filters = {
 
 type HakufiltteritProps = {
     isOPHVirkailija: boolean;
-    setOrganisaatiot: (data: Organisaatio[]) => void;
+    setOrganisaatiot: (data: ApiOrganisaatio[]) => void;
 };
 
 function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps) {
@@ -115,7 +115,7 @@ export default function OrganisaatioHakuTaulukko({
 }: OrganisaatioHakuTaulukkoProps) {
     const { i18n } = useContext(LanguageContext);
 
-    const [organisaatiot, setOrganisaatiot] = useState<Organisaatio[]>([]);
+    const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
 
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => organisaatiot, [organisaatiot]);
@@ -135,7 +135,7 @@ export default function OrganisaatioHakuTaulukko({
         previousPage,
         setPageSize,
         state: { pageIndex, pageSize },
-    } = useTable<Organisaatio>(
+    } = useTable<ApiOrganisaatio>(
         {
             columns,
             data,

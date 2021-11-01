@@ -12,7 +12,7 @@ export type RyhmanMuokausProps = {
     oid?: string;
 };
 
-const emptyRyhma: NewRyhma = {
+const emptyRyhma: Partial<NewRyhma> = {
     nimi: {
         fi: '',
     },
@@ -45,7 +45,7 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
         if (match.params.oid && !onUusi) {
             fetch(match.params.oid);
         } else {
-            setRyhma({ ...emptyRyhma });
+            setRyhma({ ...(emptyRyhma as Ryhma) });
         }
     }, [onUusi, match.params.oid]);
 

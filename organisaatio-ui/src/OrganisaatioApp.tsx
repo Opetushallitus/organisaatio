@@ -95,7 +95,7 @@ const OrganisaatioApp: React.FC = () => {
     return (
         <Router basename="/organisaatio">
             <ThemeProvider theme={theme}>
-                <LanguageContext.Provider value={{ language: language, i18n: i18n }}>
+                <LanguageContext.Provider value={{ language, i18n }}>
                     <Notification />
                     <KoodistoContext.Provider
                         value={{

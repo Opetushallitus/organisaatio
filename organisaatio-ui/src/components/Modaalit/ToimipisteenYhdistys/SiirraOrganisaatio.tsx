@@ -5,13 +5,12 @@ import * as React from 'react';
 import { useContext, useState } from 'react';
 import TSBody from './TSBody';
 import { Confirmation } from '../Confirmation/Confirmation';
-import { Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
+import { ResolvedRakenne, SiirraOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/contexts';
 
 export function SiirraOrganisaatio(props: {
     siirraOrganisaatio: SiirraOrganisaatioon;
-    organisaatio: Organisaatio;
-
+    organisaatioBase: UiOrganisaatioBase;
     handleChange: (value: ((prevState: SiirraOrganisaatioon) => SiirraOrganisaatioon) | SiirraOrganisaatioon) => void;
     organisaatioRakenne: ResolvedRakenne;
     tallennaCallback: () => void;
@@ -27,7 +26,7 @@ export function SiirraOrganisaatio(props: {
                     header={<TYHeader titleKey={'TOIMIPISTEEN_SIIRTO_TITLE'} />}
                     body={
                         <TSBody
-                            organisaatio={props.organisaatio}
+                            organisaatioBase={props.organisaatioBase}
                             siirraOrganisaatio={props.siirraOrganisaatio}
                             handleChange={props.handleChange}
                             organisaatioRakenne={props.organisaatioRakenne}
@@ -49,7 +48,9 @@ export function SiirraOrganisaatio(props: {
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(props.organisaatio.nimi)} (${props.organisaatio.oid})`,
+                            value: `${i18n.translateNimi(props.organisaatioBase.currentNimi)} (${
+                                props.organisaatioBase.oid
+                            })`,
                         },
                         {
                             key: 'to',

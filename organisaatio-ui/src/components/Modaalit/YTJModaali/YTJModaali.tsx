@@ -16,14 +16,8 @@ export default function YTJModaali({ ytunnus, suljeModaali, setters }: ModaaliPr
         <PohjaModaali
             header={<YTJHeader />}
             body={<YTJBody setters={setters} ytunnus={ytunnus} suljeModaali={suljeModaali} />}
-            footer={
-                <YTJFooter
-                    peruutaCallback={() => {
-                        suljeModaali();
-                    }}
-                />
-            }
-            suljeCallback={() => suljeModaali()}
+            footer={<YTJFooter peruutaCallback={suljeModaali} />}
+            suljeCallback={suljeModaali}
         />
     );
 }
