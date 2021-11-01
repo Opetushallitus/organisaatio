@@ -21,7 +21,6 @@ import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -39,9 +38,7 @@ import java.util.List;
 
 @ApiIgnore
 @RestController
-@RequestMapping("/ytj")
-@Api(value = "/ytj")
-
+@RequestMapping("${server.internal.context-path}/ytj")
 public class YTJResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);

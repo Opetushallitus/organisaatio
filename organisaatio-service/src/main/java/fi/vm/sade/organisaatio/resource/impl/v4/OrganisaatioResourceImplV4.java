@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/organisaatio/v4")
+@RequestMapping("${server.api.context-path}")
 public class OrganisaatioResourceImplV4 implements OrganisaatioResourceV4 {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV4.class);
 

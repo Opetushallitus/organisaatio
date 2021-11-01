@@ -3,7 +3,6 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.business.LisatietoService;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiDto;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
@@ -16,8 +15,7 @@ import java.util.Set;
 
 @ApiIgnore
 @RestController
-@RequestMapping("/lisatieto")
-@Api(value = "/lisatieto")
+@RequestMapping("${server.internal.context-path}/lisatieto")
 public class LisatietoResource {
     private LisatietoService lisatietoService;
 
