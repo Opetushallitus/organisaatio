@@ -3,7 +3,8 @@ git:
 branches:
   only:
     - master
-    - organisaatio-2sudo: required
+    - organisaatio-2
+sudo: required
 language: java
 jdk:
   - openjdk11
