@@ -22,6 +22,8 @@ addons:
     token:
       secure: "QpZCPf2OCCcvp27AhCM4g71+OzmtdtpcPnyhhCf60/HXZB8SOSLU00qAWcv86iNLSTIuL8AVrwo+Jw63LguZTVxQ8a5Qh8SYXUgrm9i9pj66I8c/BzfhtOXQqzYLHKzl3XYqbsdfD4AVPwB5BDE1ohF1A7bPjIVvNqyjJb/bJqo="
 before_install:
+  - nvm install 12.18.1
+  - nvm use 12.18.1
   - pyenv global 3.7.1
   - pip install -U pip
   - pip install awscli
