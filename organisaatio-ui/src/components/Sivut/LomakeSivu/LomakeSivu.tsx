@@ -9,7 +9,6 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
 import {
     OrganisaatioNimiJaOid,
-    OrganisaationNimetNimi,
     ParentTiedot,
     Perustiedot,
     ResolvedRakenne,
@@ -33,7 +32,7 @@ import {
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
-import {mapApiYhteystiedotToUi, mapUiOrganisaatioToApiToUpdate, mapUiYhteystiedotToApi} from '../../../tools/mappers';
+import { mapApiYhteystiedotToUi, mapUiOrganisaatioToApiToUpdate } from '../../../api/organisaatio';
 import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { YhdistaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/YhdistaOrganisaatio';
@@ -222,8 +221,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    const organisaatioToBeUpdated = mapUiOrganisaatioToApiToUpdate(organisaatioBase, yhteystiedotFormValues, perustiedotFormValues)
-                    const updatedOrganisaatio = await updateOrganisaatio(organisaatioToBeUpdated);
+                    const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                        organisaatioBase,
+                        yhteystiedotFormValues,
+                        perustiedotFormValues
+                    );
+                    const updatedOrganisaatio = await updateOrganisaatio(apiOrganisaatio);
                     if (updatedOrganisaatio) {
                         await resetOrganisaatio(updatedOrganisaatio, organisaatioNimiPolku);
                     }
@@ -395,4 +398,5 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         </PohjaSivu>
     );
 };
+
 export default LomakeSivu;

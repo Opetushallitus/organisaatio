@@ -15,9 +15,13 @@ import Icon from '@iconify/react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
+import {
+    createOrganisaatio,
+    mapApiYhteystiedotToUi,
+    mapUiOrganisaatioToApiToSave,
+    readOrganisaatio,
+} from '../../../../api/organisaatio';
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
-import {mapApiYhteystiedotToUi, mapUiOrganisaatioToApiToSave, mapUiYhteystiedotToApi} from '../../../../tools/mappers';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
 import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
@@ -90,8 +94,12 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     async function saveOrganisaatio() {
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                const organisaatioToBeSaved = mapUiOrganisaatioToApiToSave(yhteystiedotFormValues, perustiedotFormValues, parentOid)
-                const savedOrganisaatio = await createOrganisaatio(organisaatioToBeSaved);
+                const apiOrganisaatio = mapUiOrganisaatioToApiToSave(
+                    yhteystiedotFormValues,
+                    perustiedotFormValues,
+                    parentOid
+                );
+                const savedOrganisaatio = await createOrganisaatio(apiOrganisaatio);
                 if (savedOrganisaatio) {
                     props.history.push(`/lomake/${savedOrganisaatio.oid}`);
                 }

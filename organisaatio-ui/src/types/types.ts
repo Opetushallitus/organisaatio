@@ -204,7 +204,7 @@ export type Rakenne = {
 export type I18n = {
     translate: (key: string) => string;
     translateWithLang: (key: string, language: Language) => string;
-    translateNimi: (nimi: Nimi | OrganisaationNimetNimi | undefined) => string;
+    translateNimi: (nimi: Nimi | undefined) => string;
     enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
 };
 
