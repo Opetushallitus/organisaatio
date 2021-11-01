@@ -11,10 +11,10 @@ import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePicker
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import { Koodi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 
 type UusiOrgPerustiedotProps = {
-    organisaatioTyypit: Koodi[];
+    resolvedTyypit: KoodistoSelectOption[];
     rakenne: ResolvedRakenne;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
@@ -27,11 +27,10 @@ type UusiOrgPerustiedotProps = {
 };
 
 export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const { handleJatka, validationErrors, formControl, formRegister, organisaatioTyypit, rakenne } = props;
-    const { i18n, language } = useContext(LanguageContext);
+    const { handleJatka, validationErrors, formControl, formRegister, rakenne, resolvedTyypit } = props;
+    const { i18n } = useContext(LanguageContext);
     const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
-
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -39,17 +38,11 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
                     <Controller
                         control={formControl}
-                        name={'tyypit'}
+                        name={'organisaatioTyypit'}
                         defaultValue={[]}
-                        render={({ field: { ref, ...rest } }) => (
-                            <CheckboxGroup
-                                {...rest}
-                                options={organisaatioTyypit.map((oT) => ({
-                                    value: oT.uri,
-                                    label: oT.nimi[language] || oT.nimi['fi'] || oT.nimi['sv'] || oT.nimi['en'], //TODO make better
-                                }))}
-                            />
-                        )}
+                        render={({ field: { ref, ...rest } }) => {
+                            return <CheckboxGroup {...rest} options={resolvedTyypit} />;
+                        }}
                     />
                 </div>
             </div>
@@ -136,13 +129,13 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_PAASIJAINTIKUNTA')}</label>
                     <Controller
                         control={formControl}
-                        name={'kotipaikkaUri'}
+                        name={'kotipaikka'}
                         render={({ field }) => (
                             <Select
                                 id="PERUSTIETO_PAASIJAINTIKUNTA_SELECT"
                                 {...field}
                                 ref={undefined}
-                                error={!!validationErrors['kotipaikkaUri']}
+                                error={!!validationErrors['kotipaikka']}
                                 options={kuntaKoodisto.selectOptions()}
                             />
                         )}
@@ -152,12 +145,12 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_MUUT_KUNNATs')}</label>
                     <Controller
                         control={formControl}
-                        name={'muutKotipaikatUris'}
+                        name={'muutKotipaikat'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MUUT_KUNNAT_SELECT"
                                 {...rest}
-                                error={!!validationErrors['muutKotipaikatUris']}
+                                error={!!validationErrors['muutKotipaikat']}
                                 isMulti
                                 options={kuntaKoodisto.selectOptions()}
                             />
@@ -170,13 +163,13 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_MAA')}</label>
                     <Controller
                         control={formControl}
-                        name={'maaUri'}
+                        name={'maa'}
                         defaultValue={maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MAA_SELECT"
                                 {...rest}
-                                error={!!validationErrors['maaUri']}
+                                error={!!validationErrors['maa']}
                                 options={maatJaValtiotKoodisto.selectOptions()}
                             />
                         )}
@@ -188,13 +181,13 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                     <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
                     <Controller
                         control={formControl}
-                        name={'kieletUris'}
+                        name={'kielet'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti
                                 id="PERUSTIETO_OPETUSKIELI_SELECT"
                                 {...rest}
-                                error={!!validationErrors['kieletUris']}
+                                error={!!validationErrors['kielet']}
                                 options={oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                             />
                         )}

@@ -108,6 +108,7 @@ Cypress.Commands.add('clickSaveButton', () => {
     cy.get('button').contains('TALLENNA').scrollIntoView().click();
     return cy.wait(['@saveOrg'], { timeout: 10000 });
 });
+
 Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
     cy.searchOrganisaatio(ytunnus, 'oldOrg');
     cy.get('@oldOrg').then((response) => {

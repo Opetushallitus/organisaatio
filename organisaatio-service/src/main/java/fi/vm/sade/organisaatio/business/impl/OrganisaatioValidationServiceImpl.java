@@ -47,17 +47,17 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
     public void validateOrganisation(Organisaatio model, String parentOid, Organisaatio parentOrg) {
         // Validointi: Tarkistetaan, että parent ei ole ryhmä
         if (parentOrg != null && OrganisaatioUtil.isRyhma(parentOrg)) {
-            throw new ValidationException("Parent cannot be group");
+            throw new ValidationException("validation.organisaatio.parent.can.not.be.ryhma");
         }
 
         // Validointi: Tarkistetaan, että ryhmää ei olla lisäämässä muulle kuin oph organisaatiolle
         if (OrganisaatioUtil.isRyhma(model) && !parentOid.equalsIgnoreCase(rootOrganisaatioOid)) {
-            throw new ValidationException("Ryhmiä ei voi luoda muille kuin oph organisaatiolle");
+            throw new ValidationException("validation.organisaatio.ryhma.parent.is.not.root");
         }
 
         // Validointi: Jos organisaatio on ryhmä, tarkistetaan ettei muita ryhmiä
         if (OrganisaatioUtil.isRyhma(model) && model.getTyypit().size() != 1) {
-            throw new ValidationException("Rymällä ei voi olla muita tyyppejä");
+            throw new ValidationException("validation.organisaatio.ryhma.one.organisaatiotyyppi.allowed");
         }
 
         // Validointi: Jos y-tunnus on annettu, sen täytyy olla oikeassa muodossa
@@ -65,7 +65,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
             model.setYtunnus(null);
         }
         if (model.getYtunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYtunnus())) {
-            throw new ValidationException("validation.Organisaatio.ytunnus");
+            throw new ValidationException("validation.organisaatio.ytunnus");
         }
 
         // Validointi: Jos virastotunnus on annettu, sen täytyy olla oikeassa muodossa
@@ -73,7 +73,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
             model.setVirastoTunnus(null);
         }
         if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
-            throw new ValidationException("validation.Organisaatio.virastotunnus");
+            throw new ValidationException("validation.organisaatio.virastotunnus");
         }
 
         List<Koodi> kieliKoodit = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, Optional.ofNullable(1), null);

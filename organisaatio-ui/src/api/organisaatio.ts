@@ -1,31 +1,52 @@
 import Axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
 import {
-    NewOrganisaatio,
-    Organisaatio,
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
-    OrganisaatioSuhde,
+    OrganisaationNimetNimi,
     SiirraOrganisaatioon,
     YhdistaOrganisaatioon,
+    Yhteystiedot,
 } from '../types/types';
 import { info, success, warning } from '../components/Notification/Notification';
-import { APIOrganisaatioHistoria, OrganisaatioLiitos } from '../types/apiTypes';
+import {
+    ApiOrganisaatio,
+    APIOrganisaatioHistoria,
+    ApiYhteystiedot,
+    NewApiOrganisaatio,
+    OrganisaatioBase,
+    OrganisaatioLiitos,
+    YhteystiedotEmail,
+    YhteystiedotOsoite,
+    YhteystiedotPhone,
+    YhteystiedotWww,
+} from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
+import { ROOT_OID } from '../contexts/contexts';
+
+type SupportedOsoiteType = 'kaynti' | 'posti';
+type SupportedYhteystietoType = 'www' | 'email' | 'numero';
+
+const NAME_WWW = 'www';
+const NAME_EMAIL = 'email';
+const NAME_PHONE = 'numero';
 
 const baseUrl = `/organisaatio/organisaatio/v4/`;
 
-async function createOrganisaatio(organisaatio: NewOrganisaatio) {
+async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
     return errorHandlingWrapper(async () => {
-        const { data } = await Axios.post(`${baseUrl}`, organisaatio);
+        const { data } = await Axios.post<{ organisaatio: ApiOrganisaatio }>(`${baseUrl}`, organisaatio);
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
-        return data.organisaatio as Organisaatio;
+        return data.organisaatio;
     });
 }
 
-async function updateOrganisaatio(organisaatio: Organisaatio) {
+async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
     return errorHandlingWrapper(async () => {
-        const { data } = await Axios.put<{ organisaatio: Organisaatio }>(`${baseUrl}${organisaatio.oid}`, organisaatio);
+        const { data } = await Axios.put<{ organisaatio: ApiOrganisaatio }>(
+            `${baseUrl}${organisaatio.oid}`,
+            organisaatio
+        );
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
         return data.organisaatio;
     });
@@ -35,7 +56,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
     const polku = oids.map((oid: string) => ({
         oid,
-        nimi: orgTree.data.find((o: Organisaatio) => o.oid === oid).nimi,
+        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).nimi,
     }));
     return polku;
 }
@@ -49,9 +70,9 @@ async function searchOrganisation({
     aktiiviset?: boolean;
     lakkautetut?: boolean;
     suunnitellut?: boolean;
-}): Promise<Organisaatio[]> {
+}): Promise<ApiOrganisaatio[]> {
     if (searchStr.length < 3) return [];
-    const { data } = await Axios.get<{ organisaatiot: Organisaatio[] }>(`${baseUrl}hierarkia/hae`, {
+    const { data } = await Axios.get<{ organisaatiot: ApiOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
             aktiiviset,
             lakkautetut,
@@ -64,7 +85,7 @@ async function searchOrganisation({
 }
 async function readOrganisaatio(oid: string) {
     return errorHandlingWrapper(async () => {
-        const response = await Axios.get<Organisaatio>(`${baseUrl}${oid}?includeImage=true`);
+        const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
         const organisaatio = response.data;
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
@@ -94,8 +115,194 @@ async function mergeOrganisaatio({
     });
 }
 
+const initializeApiOsoite = (kieli: string, osoiteTyyppi: SupportedOsoiteType): YhteystiedotOsoite => ({
+    kieli,
+    osoiteTyyppi,
+    postinumeroUri: '',
+    postitoimipaikka: '',
+    osoite: '',
+    isNew: true,
+});
+
+const isApiOsoite = (yhteystieto: ApiYhteystiedot): yhteystieto is YhteystiedotOsoite =>
+    yhteystieto.hasOwnProperty('osoiteTyyppi');
+
+function getApiOsoite(
+    yhteystiedot: ApiYhteystiedot[],
+    kieli: string,
+    osoiteTyyppi: SupportedOsoiteType
+): YhteystiedotOsoite {
+    const found = yhteystiedot.find(
+        (yhteystieto: ApiYhteystiedot) =>
+            isApiOsoite(yhteystieto) && yhteystieto.kieli === kieli && yhteystieto.osoiteTyyppi === osoiteTyyppi
+    );
+    if (found) {
+        return found as YhteystiedotOsoite;
+    }
+    yhteystiedot.push(initializeApiOsoite(kieli, osoiteTyyppi));
+    return getApiOsoite(yhteystiedot, kieli, osoiteTyyppi);
+}
+
+function getApiYhteystieto(
+    yhteystiedot: ApiYhteystiedot[],
+    kieli: string,
+    osoiteTyyppi: SupportedYhteystietoType
+): ApiYhteystiedot {
+    const found = yhteystiedot.find(
+        (yhteystieto: ApiYhteystiedot) => yhteystieto.kieli === kieli && yhteystieto.hasOwnProperty(osoiteTyyppi)
+    );
+    if (found) {
+        return found as ApiYhteystiedot;
+    }
+    yhteystiedot.push({ kieli, [osoiteTyyppi]: '', isNew: true } as ApiYhteystiedot);
+    return getApiYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
+}
+
+function mapUiOrganisaatioToApiToSave(yhteystiedotFormValues, perustiedotFormValues, parentOid?) {
+    const yhteystiedot = mapUiYhteystiedotToApi([], yhteystiedotFormValues);
+    const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit, alkuPvm, nimi } = perustiedotFormValues;
+    const nimet = [
+        {
+            nimi,
+            alkuPvm: new Date().toISOString().split('T')[0],
+        },
+    ];
+    return {
+        alkuPvm,
+        tyypit: organisaatioTyypit,
+        kotipaikkaUri: kotipaikka.value,
+        maaUri: maa.value,
+        kieletUris: kielet.map((a) => a.value),
+        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
+        yhteystiedot,
+        parentOid: parentOid || ROOT_OID,
+        nimet,
+        nimi,
+    };
+}
+
+function mapUiOrganisaatioToApiToUpdate(organisaatioBase, yhteystiedotFormValues, perustiedotFormValues) {
+    const { oid, parentOid, parentOidPath, status } = organisaatioBase;
+    const yhteystiedot = mapUiYhteystiedotToApi(organisaatioBase.apiYhteystiedot, yhteystiedotFormValues);
+    const { kotipaikka, maa, kielet, organisaatioTyypit, muutKotipaikat, alkuPvm } = perustiedotFormValues;
+    const today = new Date().toISOString().split('T')[0];
+    const nimet = organisaatioBase.nimet || [];
+    const uusiNimi = { ...perustiedotFormValues.nimi };
+    const sameDayNimiIdx = organisaatioBase.nimet.findIndex((nimi: OrganisaationNimetNimi) => nimi?.alkuPvm === today);
+    if (sameDayNimiIdx > -1) {
+        nimet[sameDayNimiIdx].nimi = uusiNimi;
+    } else {
+        nimet.push({ nimi: uusiNimi, alkuPvm: today });
+    }
+    return {
+        alkuPvm,
+        oid,
+        parentOid,
+        parentOidPath,
+        status,
+        yhteystiedot,
+        nimet,
+        nimi: uusiNimi,
+        tyypit: organisaatioTyypit,
+        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
+        kotipaikkaUri: kotipaikka?.value,
+        maaUri: maa?.value,
+        kieletUris: kielet?.map((a) => a.value) || [],
+    };
+}
+
+function mapApiYhteystiedotToUi(
+    yhteystiedot: ApiYhteystiedot[],
+    kielet = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
+): Yhteystiedot {
+    return {
+        ...kielet.reduce(
+            (uiYhteystiedot, kieli) => (
+                (uiYhteystiedot[kieli] = {
+                    postiOsoite: getApiOsoite(yhteystiedot, kieli, 'posti').osoite,
+                    postiOsoitePostiNro: getApiOsoite(yhteystiedot, kieli, 'posti').postinumeroUri,
+                    postiOsoiteToimipaikka: getApiOsoite(yhteystiedot, kieli, 'posti').postitoimipaikka,
+                    kayntiOsoite: getApiOsoite(yhteystiedot, kieli, 'kaynti').osoite,
+                    kayntiOsoitePostiNro: getApiOsoite(yhteystiedot, kieli, 'kaynti').postinumeroUri,
+                    kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, kieli, 'kaynti').postitoimipaikka,
+                    puhelinnumero: getApiYhteystieto(yhteystiedot, kieli, NAME_PHONE)[NAME_PHONE],
+                    email: getApiYhteystieto(yhteystiedot, kieli, NAME_EMAIL)[NAME_EMAIL],
+                    www: getApiYhteystieto(yhteystiedot, kieli, NAME_WWW)[NAME_WWW],
+                }),
+                uiYhteystiedot
+            ),
+            {} as Yhteystiedot
+        ),
+        osoitteetOnEri: false,
+    };
+}
+
+function mapUiYhteystiedotToApi(
+    apiYhteystiedot: ApiYhteystiedot[] = [],
+    uiYhteystiedot: Yhteystiedot
+): ApiYhteystiedot[] {
+    const { osoitteetOnEri, ...rest } = uiYhteystiedot;
+    return Object.keys(rest)
+        .map((kieli) => {
+            const postiosoite = getApiOsoite(apiYhteystiedot, kieli, 'posti');
+            postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
+            postiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+            postiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
+            const kayntiosoite = getApiOsoite(apiYhteystiedot, kieli, 'kaynti');
+            if (
+                uiYhteystiedot.osoitteetOnEri === true &&
+                !!uiYhteystiedot[kieli].kayntiOsoite &&
+                !!uiYhteystiedot[kieli].kayntiOsoitePostiNro
+            ) {
+                kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
+                kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].kayntiOsoitePostiNro;
+                kayntiosoite.postitoimipaikka = uiYhteystiedot[kieli].kayntiOsoiteToimipaikka;
+            } else if (uiYhteystiedot.osoitteetOnEri === false) {
+                kayntiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
+                kayntiosoite.postinumeroUri = uiYhteystiedot[kieli].postiOsoitePostiNro;
+                kayntiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
+            }
+            const puhelinnumero = getApiYhteystieto(apiYhteystiedot, kieli, NAME_PHONE) as YhteystiedotPhone;
+            if (!!uiYhteystiedot[kieli].puhelinnumero) {
+                puhelinnumero.tyyppi = 'puhelin';
+                puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero;
+            }
+            const email = getApiYhteystieto(apiYhteystiedot, kieli, NAME_EMAIL);
+            if (!!uiYhteystiedot[kieli].email) {
+                email[NAME_EMAIL] = uiYhteystiedot[kieli].email;
+            }
+            const www = getApiYhteystieto(apiYhteystiedot, kieli, NAME_WWW);
+            if (!!uiYhteystiedot[kieli].www) {
+                www[NAME_WWW] = uiYhteystiedot[kieli].www;
+            }
+            return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
+        })
+        .reduce((a, b) => a.concat(b)) as ApiYhteystiedot[];
+}
+
+const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYhteystiedot[]) => {
+    return yhteystiedotObjectsArray
+        .map((yhteystieto) => {
+            const { isNew, ...rest } = yhteystieto;
+            if (
+                !isNew ||
+                (isNew &&
+                    (!!(yhteystieto as YhteystiedotOsoite).osoite ||
+                        !!(yhteystieto as YhteystiedotPhone)[NAME_PHONE] ||
+                        !!(yhteystieto as YhteystiedotEmail)[NAME_EMAIL] ||
+                        !!(yhteystieto as YhteystiedotWww)[NAME_WWW]))
+            ) {
+                return { ...rest };
+            }
+            return undefined;
+        })
+        .filter(Boolean);
+};
+
 function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
-    function liitosMapper(a: OrganisaatioLiitos): OrganisaatioSuhde {
+    function liitosMapper(
+        a: OrganisaatioLiitos
+    ): { alkuPvm: string; parent: OrganisaatioBase; loppuPvm: string | undefined; child: OrganisaatioBase } {
         return { alkuPvm: a.alkuPvm, loppuPvm: a.loppuPvm, child: a.kohde, parent: a.organisaatio };
     }
     return {
@@ -134,14 +341,17 @@ function useOrganisaatioHaku({
     organisaatioTyyppi?: string;
     suunnitellut?: boolean;
 }): {
-    organisaatiot: Organisaatio[];
+    organisaatiot: ApiOrganisaatio[];
     organisaatiotLoading: boolean;
     organisaatiotError: boolean;
 } {
     return useErrorHandlingWrapper(function useHorse() {
         const [{ data, loading, error }]: [
-            ResponseValues<{ organisaatiot: Organisaatio[] }>,
-            (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<{ organisaatiot: Organisaatio[] }>
+            ResponseValues<{ organisaatiot: ApiOrganisaatio[] }>,
+            (
+                config?: AxiosRequestConfig,
+                options?: RefetchOptions
+            ) => AxiosPromise<{ organisaatiot: ApiOrganisaatio[] }>
         ] = useAxios({
             url: `${baseUrl}hae`,
             params: {
@@ -161,6 +371,12 @@ function useOrganisaatioHaku({
 }
 
 export {
+    getApiOsoite,
+    getApiYhteystieto,
+    mapApiYhteystiedotToUi,
+    mapUiYhteystiedotToApi,
+    mapUiOrganisaatioToApiToSave,
+    mapUiOrganisaatioToApiToUpdate,
     useOrganisaatioHistoria,
     useOrganisaatioHaku,
     createOrganisaatio,
