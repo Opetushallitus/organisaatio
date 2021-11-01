@@ -1,4 +1,9 @@
-sudo: required
+git:
+  depth: false
+branches:
+  only:
+    - master
+    - organisaatio-2sudo: required
 language: java
 jdk:
   - openjdk11
