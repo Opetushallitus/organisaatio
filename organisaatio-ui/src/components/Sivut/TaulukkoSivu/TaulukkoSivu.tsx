@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import styles from './TaulukkoSivu.module.css';
 import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
-import chevronUp from '@iconify/icons-fa-solid/chevron-up';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { KoodistoContext, LanguageContext, ROOT_OID } from '../../../contexts/contexts';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
@@ -10,6 +9,7 @@ import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/Or
 
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
 import { Link } from 'react-router-dom';
+import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -45,7 +45,7 @@ const TaulukkoSivu = (props) => {
                             },
                         })}
                     >
-                        {row.isExpanded ? <Icon icon={chevronUp} /> : <Icon icon={chevronDown} />}
+                        {row.isExpanded ? <Icon icon={chevronDown} /> : <Icon icon={chevronRight} />}
                     </span>
                 ) : null,
         },
