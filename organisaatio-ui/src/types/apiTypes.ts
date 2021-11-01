@@ -1,4 +1,4 @@
-import { KoodiUri, Language, OrganisaatioBase, OrganisaatioSuhde } from './types';
+import { KoodiUri, Language, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde } from './types';
 
 export type CASMe = {
     uid: string;
@@ -53,3 +53,27 @@ export type YhteystiedotOsoite = YhteystiedotBase & {
 };
 
 export type ApiYhteystiedot = YhteystiedotEmail | YhteystiedotPhone | YhteystiedotWww | YhteystiedotOsoite;
+
+export type OrganisaatioBase = {
+    oid: string;
+    status: string;
+    nimi: Nimi;
+    parentOid: string;
+    parentOidPath: string;
+};
+export type ApiOrganisaatio = OrganisaatioBase & {
+    alkuPvm: LocalDate;
+    parentOid: string;
+    parentOidPath: string;
+    yritysmuoto?: string;
+    tyypit: KoodiUri[];
+    status: string;
+    nimet: OrganisaationNimetNimi[];
+    kotipaikkaUri: KoodiUri;
+    muutKotipaikatUris?: KoodiUri[];
+    maaUri: KoodiUri;
+    kieletUris: KoodiUri[];
+    yhteystiedot: ApiYhteystiedot[];
+};
+
+export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

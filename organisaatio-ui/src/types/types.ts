@@ -1,4 +1,4 @@
-import { ApiYhteystiedot } from './apiTypes';
+import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
@@ -50,17 +50,6 @@ export type Yhteystiedot = {
     osoitteetOnEri?: boolean;
 };
 
-export type Perustiedot = {
-    ytunnus?: string;
-    nimi: Nimi;
-    tyypit: KoodiUri[];
-    alkuPvm: LocalDate;
-    kotipaikkaUri: KoodistoSelectOption;
-    maaUri: KoodistoSelectOption;
-    muutKotipaikatUris: KoodistoSelectOption[];
-    kieletUris: KoodistoSelectOption[];
-};
-
 export type Nimi = {
     fi?: string;
     sv?: string;
@@ -72,54 +61,71 @@ export type OrganisaationNimetNimi = {
     alkuPvm?: string;
 };
 
-export type OrganisaatioBase = {
+export type UiOrganisaatioBase = {
     oid: string;
-    nimi: Nimi;
     status: string;
-};
-export type Organisaatio = OrganisaatioBase & {
+    yritysmuoto?: string;
+    nimet: OrganisaationNimetNimi[];
     parentOid: string;
     parentOidPath: string;
-    ytunnus?: string;
-    nimet: OrganisaationNimetNimi[];
-    alkuPvm?: LocalDate;
-    yritysmuoto?: string;
-    tyypit: KoodiUri[];
-    status: string;
-    kotipaikkaUri: KoodiUri;
-    muutKotipaikatUris?: KoodiUri[];
-    maaUri: KoodiUri;
-    kieletUris: KoodiUri[];
-    yhteystiedot?: ApiYhteystiedot[];
+    apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
+    currentNimi: Nimi; //  needed for merging and combining orgs
 };
-export type NewOrganisaatio = Omit<Organisaatio, 'oid' | 'status' | 'parentOidPath'>;
+
+export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
+
+export type NewUiOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
+
+export type Perustiedot = {
+    ytunnus?: string;
+    nimi: Nimi;
+    organisaatioTyypit: KoodiUri[];
+    alkuPvm: LocalDate;
+    kotipaikka: KoodistoSelectOption;
+    maa: KoodistoSelectOption;
+    muutKotipaikat: KoodistoSelectOption[];
+    kielet: KoodistoSelectOption[];
+};
+
+export type ParentTiedot = {
+    organisaatioTyypit: KoodiUri[];
+    oid: string;
+};
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
 
-export type Ryhma = Omit<OrganisaatioBase, 'oid'> & {
+export type Ryhma = {
     oid?: string;
     yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: string; // TODO Tuleeko nämä???
-    kayntiosoite?: any;
-    kayttoryhmat: string[];
-    kieletUris?: any[];
-    kuvaus2: any;
+    kayntiosoite?: Osoite;
+    kayttoryhmat: KoodiUri[];
+    kieletUris?: KoodiUri[];
+    kuvaus2: RyhmanKuvaus;
     lisatiedot?: string[];
     lakkautusPvm?: string;
     muutKotipaikatUris?: string[];
     muutOppilaitosTyyppiUris?: string[];
-    nimet?: any[];
+    nimi: Nimi;
+    nimet: OrganisaationNimetNimi[];
     parentOid?: string;
     parentOidPath?: string;
     piilotettu?: boolean;
-    postiosoite?: any;
-    ryhmatyypit: string[];
+    postiosoite?: Osoite;
+    ryhmatyypit: KoodiUri[];
     toimipistekoodi?: string;
     tyypit: string[];
     version?: number;
     vuosiluokat?: any[];
     yhteystiedot?: Yhteystiedot[];
     yhteystietoArvos?: any[];
+    status: string;
+};
+
+export type RyhmanKuvaus = {
+    'kieli_fi#1'?: string;
+    'kieli_sv#1'?: string;
+    'kieli_en#1'?: string;
 };
 export type OrganisaatioSuhde = {
     alkuPvm: string;
@@ -129,12 +135,12 @@ export type OrganisaatioSuhde = {
 };
 
 export type YhdistaOrganisaatioon = {
-    newParent?: Organisaatio;
+    newParent?: ApiOrganisaatio;
     date: Date;
     merge: boolean;
 };
 export type SiirraOrganisaatioon = {
-    newParent?: Organisaatio;
+    newParent?: ApiOrganisaatio;
     date: Date;
     merge: boolean;
 };
@@ -147,7 +153,7 @@ export type OrganisaatioHistoria = {
 export interface YhteystietoTyyppi {
     allLisatietokenttas: any;
     oid?: string;
-    nimi: any;
+    nimi: Nimi;
     sovellettavatOppilaitostyyppis: string[];
     sovellettavatOrganisaatios: string[];
     version: number;
@@ -155,7 +161,7 @@ export interface YhteystietoTyyppi {
 
 export interface OrganisaatioNimiJaOid {
     oid: string;
-    nimi: any;
+    nimi: Nimi;
 }
 
 export type SelectOptionType = {

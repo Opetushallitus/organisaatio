@@ -3,7 +3,7 @@ import { LanguageContext } from '../../../contexts/contexts';
 import styles from './ToimipisteenYhdistys.module.css';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { Option, Organisaatio, ResolvedRakenne, SiirraOrganisaatioon } from '../../../types/types';
+import { Option, ResolvedRakenne, SiirraOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { warning } from '../../Notification/Notification';
@@ -12,11 +12,11 @@ import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tool
 type TSProps = {
     siirraOrganisaatio: SiirraOrganisaatioon;
     handleChange: (props: SiirraOrganisaatioon) => void;
-    organisaatio: Organisaatio;
+    organisaatioBase: UiOrganisaatioBase;
     organisaatioRakenne: ResolvedRakenne;
 };
 
-export default function TSBody({ siirraOrganisaatio, handleChange, organisaatio, organisaatioRakenne }: TSProps) {
+export default function TSBody({ siirraOrganisaatio, handleChange, organisaatioBase, organisaatioRakenne }: TSProps) {
     const { i18n, language } = useContext(LanguageContext);
     const targetType = organisaatioRakenne.moveTargetType[0] || undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
@@ -38,7 +38,7 @@ export default function TSBody({ siirraOrganisaatio, handleChange, organisaatio,
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
                         options={parentOrganisaatiot
-                            .filter((o) => ![organisaatio.oid, organisaatio.parentOid].includes(o.value))
+                            .filter((o) => ![organisaatioBase.oid, organisaatioBase.parentOid].includes(o.value))
                             .sort((a, b) => a.label.localeCompare(b.label))}
                         onChange={(option) => {
                             if (option)
