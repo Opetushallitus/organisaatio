@@ -148,6 +148,7 @@ export default function OrganisaatioHakuTaulukko({
                     },
                 ],
             },
+            paginateExpandedRows: false,
         },
         useGlobalFilter,
         useSortBy,
