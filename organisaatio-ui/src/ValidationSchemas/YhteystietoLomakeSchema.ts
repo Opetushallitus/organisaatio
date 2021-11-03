@@ -18,10 +18,11 @@ export default Joi.object({
     }).when('osoitteetOnEri', {
         is: true,
         then: Joi.object({
-                kayntiOsoite: Joi.string(),
-                kayntiOsoitePostiNro: postinumeroSchema.required(),
-                kayntiOsoiteToimipaikka: Joi.string().allow(''),
-        })}),
+            kayntiOsoite: Joi.string(),
+            kayntiOsoitePostiNro: postinumeroSchema.required(),
+            kayntiOsoiteToimipaikka: Joi.string().allow(''),
+        }),
+    }),
     'kieli_sv#1': Joi.object({
         postiOsoite: Joi.string().allow(''),
         postiOsoitePostiNro: postinumeroSchema.allow(''),
