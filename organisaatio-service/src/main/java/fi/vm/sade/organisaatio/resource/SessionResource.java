@@ -15,8 +15,7 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Component("sessionResource")
 @Path("/session")
-@Api(value = "/session", description = "Selainkäyttöliittymän sessionhallinta")
+@Hidden
 public class SessionResource {
 
     /**
@@ -44,8 +43,6 @@ public class SessionResource {
     @GET
     @Path("/maxinactiveinterval")
     @PreAuthorize("isAuthenticated()")
-    @ApiOperation(value = "Palauttaa session erääntymisen aikarajan sekunteina. Vain kehityskäyttöön.",
-            notes = "Palauttaa session erääntymisen aikarajan sekunteina. Vain kehityskäyttöön.", response = String.class)
     @Produces(MediaType.TEXT_PLAIN)
     public String maxInactiveInterval(@Context HttpServletRequest req) {
         return Integer.toString(req.getSession().getMaxInactiveInterval());

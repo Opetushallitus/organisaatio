@@ -21,8 +21,7 @@ import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +29,12 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApiIgnore
+@Hidden
 @RestController
 @RequestMapping("${server.internal.context-path}/ytj")
 public class YTJResource {
@@ -56,8 +54,7 @@ public class YTJResource {
      * @return
      */
     @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = YTJDTO.class)
-    public YTJDTO findByYTunnus(@ApiParam(value = "Y Tunnus", required = true) @PathVariable String ytunnus) {
+    public YTJDTO findByYTunnus(@PathVariable String ytunnus) {
         YTJDTO ytj = new YTJDTO();
         try {
             ytj = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
@@ -72,8 +69,7 @@ public class YTJResource {
     }
 
     @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = OrganisaatioRDTOV4.class)
-    public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathVariable String ytunnus) {
+    public OrganisaatioRDTOV4 findByYTunnusV4(@PathVariable String ytunnus) {
         return conversionService.convert(getOrganisaatioByYTunnus(ytunnus), OrganisaatioRDTOV4.class);
     }
 
@@ -86,8 +82,7 @@ public class YTJResource {
     }
 
     @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Hakee yritysten tiedot nimen perusteella", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden nimessä esiintyy annettu nimi.")
-    public List<YTJDTO> findByYNimi(@ApiParam(value = "nimi", required = true) @RequestParam(required = true) String nimi) {
+    public List<YTJDTO> findByYNimi(@RequestParam(required = true) String nimi) {
         List<YTJDTO> ytjList = new ArrayList<YTJDTO>();
         if (nimi != null && nimi.length() > 0) {
             try {
@@ -106,9 +101,8 @@ public class YTJResource {
 
     @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
-    public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)
-                                           @PathVariable List<String> ytunnuses) {
+    public List<YTJDTO> findByYTunnusBatch(
+            @PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);
     }
 

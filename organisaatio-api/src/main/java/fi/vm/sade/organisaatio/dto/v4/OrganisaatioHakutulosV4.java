@@ -1,18 +1,17 @@
 package fi.vm.sade.organisaatio.dto.v4;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "Organisaation hakutulos v4")
+@Schema(description = "Organisaation hakutulos v4")
 public class OrganisaatioHakutulosV4 {
 
-    @ApiModelProperty(value = "Tulosjoukon koko", required = true)
+    @Schema(description = "Tulosjoukon koko", required = true)
     private int numHits;
 
-    @ApiModelProperty(value = "Organisaatiot", required = true)
+    @Schema(description = "Organisaatiot", required = true)
     private Set<OrganisaatioPerustietoV4> organisaatiot = new HashSet<>();
 
     public int getNumHits() {

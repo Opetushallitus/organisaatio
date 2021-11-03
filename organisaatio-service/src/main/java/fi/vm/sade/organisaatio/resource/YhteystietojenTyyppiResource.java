@@ -30,20 +30,19 @@ import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
 import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApiIgnore
+@Hidden
 @RestController
 @RequestMapping("${server.internal.context-path}/yhteystietojentyyppi")
 public class YhteystietojenTyyppiResource {
@@ -74,8 +73,6 @@ public class YhteystietojenTyyppiResource {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Palauttaa yhteystietotyypit", notes = "Palauttaa yhteystietotyypit",
-            response = YhteystietojenTyyppiDTO.class, responseContainer = "List")
     public List<YhteystietojenTyyppiDTO> getYhteystietoTyypit() {
         List<YhteystietojenTyyppiDTO> tyypit = new ArrayList<>();
         for (YhteystietojenTyyppi t : yhteystietojenTyyppiRepository.findAll()) {
@@ -85,8 +82,6 @@ public class YhteystietojenTyyppiResource {
     }
 
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Muokkaa yhteystietotyyppiä", notes = "Muokkaa yhteystietotyyppiä",
-            response = YhteystietojenTyyppiDTO.class)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     @Transactional(readOnly = false)
     public YhteystietojenTyyppiDTO updateYhteystietoTyyppi(YhteystietojenTyyppiDTO dto) {
@@ -109,7 +104,6 @@ public class YhteystietojenTyyppiResource {
     }
 
     @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Luo yhteystietotyyppi", notes = "Luo uusi yhteystietotyyppi", response = YhteystietojenTyyppiDTO.class)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     @Transactional(rollbackFor = Throwable.class, readOnly = false)
     public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(YhteystietojenTyyppiDTO yhteystietojenTyyppi) {
@@ -143,7 +137,6 @@ public class YhteystietojenTyyppiResource {
     }
 
     @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Poista oidin yhteystietotyyppi", notes = "Poista oidin yhteystietotyyppi")
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
     @Transactional(readOnly = false)
     public String deleteYhteystietottyypi(@PathVariable String oid, @RequestParam(defaultValue = "false") boolean force) {

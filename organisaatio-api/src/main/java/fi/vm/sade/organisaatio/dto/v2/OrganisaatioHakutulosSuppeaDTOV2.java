@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -10,13 +9,13 @@ import java.util.HashSet;
  *
  * @author hpy
  */
-@ApiModel(value = "Organisaation hakutulos suppea")
+@Schema(description = "Organisaation hakutulos suppea")
 public class OrganisaatioHakutulosSuppeaDTOV2 {
 
-    @ApiModelProperty(value = "Tulosjoukon koko", required = true)
+    @Schema(description = "Tulosjoukon koko", required = true)
     private int numHits;
 
-    @ApiModelProperty(value = "Organisaatiot", required = true)
+    @Schema(description = "Organisaatiot", required = true)
     private Collection<OrganisaatioPerustietoSuppea> organisaatiot = new HashSet<>();
 
     public int getNumHits() {

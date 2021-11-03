@@ -1,11 +1,11 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Map;
 import java.util.Set;
 
-@ApiModel(value = "Yhteystiedon tyyppi")
+@Schema(description = "Yhteystiedon tyyppi")
 public class YhteystietojenTyyppiRDTO {
 
     private Map<String, String> nimi;

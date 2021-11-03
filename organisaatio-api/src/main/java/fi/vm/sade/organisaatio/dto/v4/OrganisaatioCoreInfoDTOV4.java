@@ -1,13 +1,12 @@
 package fi.vm.sade.organisaatio.dto.v4;
 
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioGroupDTOV2;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Map;
 import java.util.Set;
 
-@ApiModel(value = "Organisaation ydintiedot",
+@Schema(description = "Organisaation ydintiedot",
           subTypes={OrganisaatioGroupDTOV2.class})
 public class OrganisaatioCoreInfoDTOV4 {
     private String oid;
@@ -18,7 +17,7 @@ public class OrganisaatioCoreInfoDTOV4 {
     /**
      * @return the oid
      */
-    @ApiModelProperty(value = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", required = true)
     public String getOid() {
         return oid;
     }
@@ -33,7 +32,7 @@ public class OrganisaatioCoreInfoDTOV4 {
     /**
      * @return the status
      */
-    @ApiModelProperty(value = "Organisaation tila", required = true)
+    @Schema(description = "Organisaation tila", required = true)
     public String getStatus() {
         return status;
     }
@@ -49,7 +48,7 @@ public class OrganisaatioCoreInfoDTOV4 {
      * Tyypit koodiarvona
      * @return the _tyypit
      */
-    @ApiModelProperty(value = "Organisaation tyypit", required = true)
+    @Schema(description = "Organisaation tyypit", required = true)
     public Set<String> getTyypit() {
         return _tyypit;
     }
@@ -64,7 +63,7 @@ public class OrganisaatioCoreInfoDTOV4 {
     /**
      * @return the nimi
      */
-    @ApiModelProperty(value = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", required = true)
     public Map<String, String> getNimi() {
         return nimi;
     }

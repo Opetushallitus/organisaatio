@@ -3,8 +3,7 @@ package fi.vm.sade.organisaatio.dto.v4;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -25,7 +24,7 @@ import java.util.*;
  * sekä yhkoulukoodi</li>
  * </ul>
  */
-@ApiModel(value = "Organisaation tiedot")
+@Schema(description = "Organisaation tiedot")
 public class OrganisaatioRDTOV4 implements Serializable {
 
     private static final long serialVersionUID = -5019270750950297893L;
@@ -122,7 +121,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     private VarhaiskasvatuksenToimipaikkaTiedotDto _varhaiskasvatuksenToimipaikkaTiedot;
 
-    @ApiModelProperty(value = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", required = true)
     public String getOid() {
         return _oid;
     }
@@ -131,7 +130,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._oid = _oid;
     }
 
-    @ApiModelProperty(value = "Versio", required = true)
+    @Schema(description = "Versio", required = true)
     public int getVersion() {
         return _version;
     }
@@ -140,7 +139,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._version = _version;
     }
 
-    @ApiModelProperty(value = "Alkamispäivämäärä", required = true)
+    @Schema(description = "Alkamispäivämäärä", required = true)
     public Date getAlkuPvm() {
         return _alkuPvm;
     }
@@ -149,7 +148,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._alkuPvm = _alkuPvm;
     }
 
-    @ApiModelProperty(value = "Lakkautuspäivämäärä", required = true)
+    @Schema(description = "Lakkautuspäivämäärä", required = true)
     public Date getLakkautusPvm() {
         return _lakkautusPvm;
     }
@@ -158,7 +157,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._lakkautusPvm = _lakkautusPvm;
     }
 
-    @ApiModelProperty(value = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", required = true)
+    @Schema(description = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", required = true)
     public String getYTJKieli() {
         return _ytjKieli;
     }
@@ -167,7 +166,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._ytjKieli = _ytjKieli;
     }
 
-    @ApiModelProperty(value = "YTJ:n päivityspäivämäärä", required = true)
+    @Schema(description = "YTJ:n päivityspäivämäärä", required = true)
     public Date getYTJPaivitysPvm() {
         return _ytjPaivitysPvm;
     }
@@ -176,7 +175,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._ytjPaivitysPvm = _ytjPaivitysPvm;
     }
 
-    @ApiModelProperty(value = "Kielten URIt", required = true)
+    @Schema(description = "Kielten URIt", required = true)
     public Set<String> getKieletUris() {
         if (_kieletUris == null) {
             _kieletUris = new HashSet<>();
@@ -188,7 +187,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._kieletUris = _kieletUris;
     }
 
-    @ApiModelProperty(value = "Maan URI", required = true)
+    @Schema(description = "Maan URI", required = true)
     public String getMaaUri() {
         return _maaUri;
     }
@@ -197,7 +196,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._maaUri = _maaUri;
     }
 
-    @ApiModelProperty(value = "Domain", required = true)
+    @Schema(description = "Domain", required = true)
     public String getDomainNimi() {
         return _domainNimi;
     }
@@ -206,7 +205,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._domainNimi = _domainNimi;
     }
 
-    @ApiModelProperty(value = "Kotipaikan URI", required = true)
+    @Schema(description = "Kotipaikan URI", required = true)
     public String getKotipaikkaUri() {
         return _kotipaikkaUri;
     }
@@ -215,14 +214,14 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._kotipaikkaUri = _kotipaikkaUri;
     }
 
-    @ApiModelProperty(value = "Organisaation muiden kotipaikkojen URIt", required = true)
+    @Schema(description = "Organisaation muiden kotipaikkojen URIt", required = true)
     public Set<String> getMuutKotipaikatUris(){ return _muutKotipaikatUris; }
 
     public void setMuutKotipaikatUris(Set<String> _muutKotipaikatUris){
         this._muutKotipaikatUris = _muutKotipaikatUris;
     }
 
-    @ApiModelProperty(value = "Nimi", required = true)
+    @Schema(description = "Nimi", required = true)
     public Map<String, String> getNimi() {
         if (_nimi == null) {
             _nimi = new HashMap<>();
@@ -234,7 +233,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._nimi = _nimi;
     }
 
-    @ApiModelProperty(value = "Organisaation nimihistoria", required = true)
+    @Schema(description = "Organisaation nimihistoria", required = true)
     public List<OrganisaatioNimiRDTO> getNimet() {
         if (_nimet == null) {
             _nimet = new ArrayList<>();
@@ -246,7 +245,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._nimet = _nimet;
     }
 
-    @ApiModelProperty(value = "Oppilaitoksen koodi", required = true)
+    @Schema(description = "Oppilaitoksen koodi", required = true)
     public String getOppilaitosKoodi() {
         return _oppilaitosKoodi;
     }
@@ -255,7 +254,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._oppilaitosKoodi = _oppilaitosKoodi;
     }
 
-    @ApiModelProperty(value = "Oppilaitoksen tyypin URI", required = true)
+    @Schema(description = "Oppilaitoksen tyypin URI", required = true)
     public String getOppilaitosTyyppiUri() {
         return _oppilaitosTyyppiUri;
     }
@@ -264,7 +263,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._oppilaitosTyyppiUri = _oppilaitosTyyppiUri;
     }
 
-    @ApiModelProperty(value = "Oppilaitoksen muut tyypit", required = true)
+    @Schema(description = "Oppilaitoksen muut tyypit", required = true)
     public Set<String> getMuutOppilaitosTyyppiUris() {
         return _muutOppilaitosTyyppiUris;
     }
@@ -273,7 +272,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._muutOppilaitosTyyppiUris = _muutOppilaitosTyyppiUris;
     }
 
-    @ApiModelProperty(value = "Y-tunnus", required = true)
+    @Schema(description = "Y-tunnus", required = true)
     public String getYTunnus() {
         return _yTunnus;
     }
@@ -282,7 +281,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._yTunnus = _yTunnus;
     }
 
-    @ApiModelProperty(value = "Tyypit koodiarvoina. Kts. organisaatiotyypit koodisto", required = true)
+    @Schema(description = "Tyypit koodiarvoina. Kts. organisaatiotyypit koodisto", required = true)
     public Set<String> getTyypit() {
         if (_tyypit == null) {
             _tyypit = new HashSet<>();
@@ -294,7 +293,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._tyypit = _tyypit;
     }
 
-    @ApiModelProperty(value = "Toimipisteen koodi", required = true)
+    @Schema(description = "Toimipisteen koodi", required = true)
     public String getToimipistekoodi() {
         return _toimipistekoodi;
     }
@@ -303,7 +302,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._toimipistekoodi = _toimipistekoodi;
     }
 
-    @ApiModelProperty(value = "Yritysmuoto", required = true)
+    @Schema(description = "Yritysmuoto", required = true)
     public String getYritysmuoto() {
         return _yritysmuoto;
     }
@@ -312,7 +311,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._yritysmuoto = _yritysmuoto;
     }
 
-    @ApiModelProperty(value = "Vuosiluokat", required = true)
+    @Schema(description = "Vuosiluokat", required = true)
     public Set<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
             _vuosiluokat = new HashSet<>();
@@ -324,7 +323,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._vuosiluokat = _vuosiluokat;
     }
 
-    @ApiModelProperty(value = "Ryhmatyypit", required = true)
+    @Schema(description = "Ryhmatyypit", required = true)
     public Set<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
             _ryhmatyypit = new HashSet<>();
@@ -336,7 +335,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._ryhmatyypit = _ryhmatyypit;
     }
 
-    @ApiModelProperty(value = "Kayttoryhmat", required = true)
+    @Schema(description = "Kayttoryhmat", required = true)
     public Set<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
             _kayttoryhmat = new HashSet<>();
@@ -348,7 +347,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._kayttoryhmat = _kayttoryhmat;
     }
 
-    @ApiModelProperty(value = "Käyntiosoite", required = true)
+    @Schema(description = "Käyntiosoite", required = true)
     public Map<String, String> getKayntiosoite() {
         if (_kayntiosoite == null) {
             _kayntiosoite = new HashMap<>();
@@ -360,7 +359,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._kayntiosoite = _kayntiosoite;
     }
 
-    @ApiModelProperty(value = "Postiosoite", required = true)
+    @Schema(description = "Postiosoite", required = true)
     public Map<String, String> getPostiosoite() {
         if (_postiosoite == null) {
             _postiosoite = new HashMap<>();
@@ -372,7 +371,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._postiosoite = _postiosoite;
     }
 
-    @ApiModelProperty(value = "Kuvaus", required = true)
+    @Schema(description = "Kuvaus", required = true)
     public String getKuvaus() {
         return _kuvaus;
     }
@@ -381,7 +380,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._kuvaus = _kuvaus;
     }
 
-    @ApiModelProperty(value = "Toinen kuvaus", required = true)
+    @Schema(description = "Toinen kuvaus", required = true)
     public Map<String, String> getKuvaus2() {
         if (_kuvaus2 == null) {
             _kuvaus2 = new HashMap<>();
@@ -393,7 +392,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._kuvaus2 = _kuvaus2;
     }
 
-    @ApiModelProperty(value = "Yläorganisaation oid", required = true)
+    @Schema(description = "Yläorganisaation oid", required = true)
     public String getParentOid() {
         return _parentOid;
     }
@@ -402,7 +401,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._parentOid = _parentOid;
     }
 
-    @ApiModelProperty(value = "Yläorganisaation oid-polku", required = true)
+    @Schema(description = "Yläorganisaation oid-polku", required = true)
     public String getParentOidPath() {
         return _parentOidPath;
     }
@@ -411,7 +410,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._parentOidPath = _parentOidPath;
     }
 
-    @ApiModelProperty(value = "Metatiedot", required = true)
+    @Schema(description = "Metatiedot", required = true)
     public OrganisaatioMetaDataRDTO getMetadata() {
         return _metadata;
     }
@@ -425,7 +424,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @ApiModelProperty(value = "Sähköpostiosoite", required = true)
+    @Schema(description = "Sähköpostiosoite", required = true)
     public String getEmailOsoite() {
         return _emailOsoite;
     }
@@ -444,7 +443,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @ApiModelProperty(value = "Puhelinnumero", required = true)
+    @Schema(description = "Puhelinnumero", required = true)
     public String getPuhelinnumero() {
         return _puhelinnumero;
     }
@@ -463,7 +462,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @ApiModelProperty(value = "WWW-osoite", required = true)
+    @Schema(description = "WWW-osoite", required = true)
     public String getWwwOsoite() {
         return _wwwOsoite;
     }
@@ -477,7 +476,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._wwwOsoite = _wwwOsoite;
     }
 
-    @ApiModelProperty(value = "Yhteishaun koulukoodi", required = true)
+    @Schema(description = "Yhteishaun koulukoodi", required = true)
     @Deprecated
     public String getYhteishaunKoulukoodi() {
         return yhteishaunKoulukoodi;
@@ -488,7 +487,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this.yhteishaunKoulukoodi = yhteishaunKoulukoodi;
     }
 
-    @ApiModelProperty(value = "Yhteystiedot", required = true)
+    @Schema(description = "Yhteystiedot", required = true)
     public Set<Map<String, String>> getYhteystietoArvos() {
         return _yhteystietoArvos;
     }
@@ -550,7 +549,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._status = _status;
     }
 
-    @ApiModelProperty(value = "Lisatiedot", required = true)
+    @Schema(description = "Lisatiedot", required = true)
     public Set<String> getLisatiedot() {
         if (_lisatiedot == null) {
             return new HashSet<>();
@@ -562,7 +561,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._lisatiedot = _lisatiedot;
     }
 
-    @ApiModelProperty(value = "Lisatiedot", required = true)
+    @Schema(description = "Lisatiedot", required = true)
     public VarhaiskasvatuksenToimipaikkaTiedotDto getVarhaiskasvatuksenToimipaikkaTiedot() {
         return _varhaiskasvatuksenToimipaikkaTiedot;
     }
