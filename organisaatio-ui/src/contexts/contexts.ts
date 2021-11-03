@@ -86,8 +86,8 @@ export class KoodistoImpl implements Koodisto {
         return this.nimi((koodi) => koodi.arvo === arvo);
     }
 
-    arvo2Uri(arvo: string): string | undefined {
-        return this.koodit().find((koodi) => koodi.arvo == arvo)?.uri;
+    arvo2Uri(arvo: string): string {
+        return this.koodit().find((koodi) => koodi.arvo == arvo)?.uri || '';
     }
 
     nimet(): string[] {

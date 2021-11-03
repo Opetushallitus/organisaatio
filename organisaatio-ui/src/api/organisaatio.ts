@@ -164,7 +164,7 @@ function mapUiOrganisaatioToApiToSave(
     postinumerotKoodisto: Koodisto,
     yhteystiedotFormValues: Yhteystiedot,
     perustiedotFormValues: Perustiedot,
-    parentOid: string | undefined
+    parentOid?: string
 ): NewApiOrganisaatio {
     const yhteystiedot = mapUiYhteystiedotToApi(postinumerotKoodisto, [], yhteystiedotFormValues);
     const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit, alkuPvm, nimi } = perustiedotFormValues;
