@@ -4,7 +4,6 @@ import styles from './UusiToimijaLomake.module.css';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
@@ -12,7 +11,7 @@ import { Perustiedot, ParentTiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
@@ -29,12 +28,12 @@ import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
-const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
+const UusiToimijaLomake = (props: RouteComponentProps<{ parentOid?: string }>) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
-    const { parentOid } = queryString.parse(props.location.search);
-    const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const { parentOid } = props.match.params;
+    const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: '' });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
@@ -66,7 +65,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
     } = useForm({
-        defaultValues: mapApiYhteystiedotToUi([]),
+        defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto, []),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
 
@@ -95,6 +94,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                 const apiOrganisaatio = mapUiOrganisaatioToApiToSave(
+                    postinumerotKoodisto,
                     yhteystiedotFormValues,
                     perustiedotFormValues,
                     parentOid
@@ -106,7 +106,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             })();
         })();
     }
-    if (!organisaatioRakenne || !resolvedTyypit) {
+    if (!parentOid || !organisaatioRakenne || !resolvedTyypit) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>

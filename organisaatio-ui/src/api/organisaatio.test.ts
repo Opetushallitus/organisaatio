@@ -1,4 +1,4 @@
-import { Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+import { Koodi, Koodisto, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
 import { ApiOrganisaatio, ApiYhteystiedot, NewApiOrganisaatio, YhteystiedotOsoite } from '../types/apiTypes';
 import {
     getApiOsoite,
@@ -7,10 +7,19 @@ import {
     mapUiYhteystiedotToApi,
     mapUiOrganisaatioToApiToUpdate,
     mapUiOrganisaatioToApiToSave,
+    checkAndMapValuesToYhteystiedot,
 } from './organisaatio';
 import { ROOT_OID } from '../contexts/contexts';
 
 const kieli = 'kieli_fi#1';
+
+const postinumerotKoodisto: Partial<Koodisto> = {
+    uri2Nimi: (uri) => {
+        if (uri === 'postinumeroUri_00530') return '00530';
+        return '';
+    },
+    arvo2Uri: (uri) => 'postinumeroUri_00530',
+};
 
 const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 const today = new Date().toISOString().split('T')[0];
@@ -68,7 +77,7 @@ const apiYhteystiedot: ApiYhteystiedot[] = [
         kieli,
         osoiteTyyppi: 'posti',
         osoite: 'testiosoite',
-        postinumeroUri: '00530',
+        postinumeroUri: 'postinumeroUri_00530',
         postitoimipaikka: 'HELSINKI',
     },
     {
@@ -112,7 +121,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
             kieli: 'kieli_fi#1',
             osoite: 'testiosoite',
             osoiteTyyppi: 'kaynti',
-            postinumeroUri: '00530',
+            postinumeroUri: 'postinumeroUri_00530',
             postitoimipaikka: 'HELSINKI',
         },
     ],
@@ -122,7 +131,7 @@ const kayntiosoite = {
     kieli,
     osoiteTyyppi: 'kaynti',
     osoite: 'testiosoite',
-    postinumeroUri: '00530',
+    postinumeroUri: 'postinumeroUri_00530',
     postitoimipaikka: 'HELSINKI',
 };
 
@@ -149,22 +158,27 @@ const uiPerustiedot: Perustiedot = {
 describe('mapUiYhteystiedotToApi', () => {
     it('Maps api yhteystiedot to Api array format ([yhteystieto, ...]) and removes empty attributes', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
-        expect(mapUiYhteystiedotToApi([...oldApiyhteystiedot], { ...uiYhteystiedot, osoitteetOnEri: true })).toEqual(
-            expect.arrayContaining(expected)
-        );
+        expect(
+            mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], {
+                ...uiYhteystiedot,
+                osoitteetOnEri: true,
+            })
+        ).toEqual(expect.arrayContaining(expected));
     });
 
     it('creates kayntiOsoite from postiOsoite when osoitteetOnEri is false', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite];
-        expect(mapUiYhteystiedotToApi([...oldApiyhteystiedot], { ...uiYhteystiedot })).toEqual(
-            expect.arrayContaining(expected)
-        );
+        expect(
+            mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], { ...uiYhteystiedot })
+        ).toEqual(expect.arrayContaining(expected));
     });
 });
 
 describe('mapApiYhteystiedotToUi', () => {
     it('Maps api yhteystiedot to ui object format ({ lang: { ...values },...}) and generates empty attributes', () => {
-        expect(mapApiYhteystiedotToUi([...apiYhteystiedot])).toEqual({ ...uiYhteystiedot });
+        expect(mapApiYhteystiedotToUi(postinumerotKoodisto as Koodisto, [...apiYhteystiedot])).toEqual({
+            ...uiYhteystiedot,
+        });
     });
 });
 
@@ -187,7 +201,12 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
         const expectedYhteystiedot = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite].sort(YhteystiedotsortCb);
         const expectedNimet = [...apiOrganisaatio.nimet];
         expectedNimet.push({ nimi: { fi: 'uusinimi' }, alkuPvm: today });
-        const mappedApiOrganisaatio = mapUiOrganisaatioToApiToUpdate(uiBaseTiedot, uiYhteystiedot, uiPerustiedot);
+        const mappedApiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+            postinumerotKoodisto as Koodisto,
+            uiBaseTiedot,
+            uiYhteystiedot,
+            uiPerustiedot
+        );
         mappedApiOrganisaatio.yhteystiedot = mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
         expect(mappedApiOrganisaatio).toEqual({
             ...apiOrganisaatio,
@@ -205,6 +224,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
         const { nimet, ...rest } = uiBaseTiedot;
         uiPerustiedot.nimi = { fi: 'nimenvaihto' };
         const { nimet: mappedNimet } = mapUiOrganisaatioToApiToUpdate(
+            postinumerotKoodisto as Koodisto,
             { nimet, ...rest },
             uiYhteystiedot,
             uiPerustiedot
@@ -230,7 +250,12 @@ describe('mapUiOrganisaatioToApiToSave', () => {
                 ? 1
                 : 0 || a.kieli.localeCompare(b.kieli);
         uiBaseTiedot.nimet = [];
-        const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(uiYhteystiedot, uiPerustiedot, '1.2.11.2');
+        const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(
+            postinumerotKoodisto as Koodisto,
+            uiYhteystiedot,
+            uiPerustiedot,
+            '1.2.11.2'
+        );
         mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
         expect(mappedApiOrganisaatio.nimet[0].alkuPvm).toEqual(today);
         expect(mappedApiOrganisaatio).toEqual({
@@ -239,8 +264,30 @@ describe('mapUiOrganisaatioToApiToSave', () => {
         });
     });
     it('Assigns Parent Oid to root if none is provided', () => {
-        const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(uiYhteystiedot, uiPerustiedot);
+        const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(
+            postinumerotKoodisto as Koodisto,
+            uiYhteystiedot,
+            uiPerustiedot
+        );
         expect(mappedApiOrganisaatio.parentOid).toEqual(ROOT_OID);
+    });
+});
+
+describe('checkAndMapValuesToYhteystiedot', () => {
+    const yhteystiedot = [...apiYhteystiedot];
+    yhteystiedot.unshift({ kieli: 'kieli_fi#1', tyyppi: 'puhelin', numero: '12345', isNew: true });
+    const faultyYhteystiedot = [
+        { kieli: 'kieli_fi#1', osoiteTyyppi: '', isNew: true },
+        { kieli: 'kieli_fi#1', email: '', isNew: true },
+        { kieli: 'kieli_fi#1', email: '', isNew: true },
+    ];
+    const yhteystiedotWithFaulty = yhteystiedot.concat(faultyYhteystiedot as ApiYhteystiedot[]);
+    const mappedYhteystiedot = checkAndMapValuesToYhteystiedot(yhteystiedotWithFaulty);
+    it('Removes yhteystiedot with empty properties when new', () => {
+        expect(mappedYhteystiedot.length).toEqual(yhteystiedot.length);
+    });
+    it('Assigns new objects without isNew Property', () => {
+        expect(mappedYhteystiedot[0]).not.toHaveProperty('isNew');
     });
 });
 
