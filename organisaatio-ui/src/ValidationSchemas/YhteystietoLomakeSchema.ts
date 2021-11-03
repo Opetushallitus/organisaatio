@@ -7,15 +7,21 @@ export default Joi.object({
         postiOsoite: Joi.string().required(),
         postiOsoitePostiNro: postinumeroSchema.required(),
         postiOsoiteToimipaikka: Joi.string().allow(''),
-        kayntiOsoite: Joi.string().allow(''),
-        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
-        kayntiOsoiteToimipaikka: Joi.string().allow(''),
+        kayntiOsoite: Joi.any(),
+        kayntiOsoitePostiNro: Joi.any(),
+        kayntiOsoiteToimipaikka: Joi.any(),
         puhelinnumero: Joi.string().allow(''),
         email: Joi.string()
             .email({ tlds: { allow: false } })
             .required(),
         www: Joi.string().allow(''),
-    }),
+    }).when('osoitteetOnEri', {
+        is: true,
+        then: Joi.object({
+                kayntiOsoite: Joi.string(),
+                kayntiOsoitePostiNro: postinumeroSchema.required(),
+                kayntiOsoiteToimipaikka: Joi.string().allow(''),
+        })}),
     'kieli_sv#1': Joi.object({
         postiOsoite: Joi.string().allow(''),
         postiOsoitePostiNro: postinumeroSchema.allow(''),
@@ -34,9 +40,9 @@ export default Joi.object({
         postiOsoitePostiNro: postinumeroSchema.allow(''),
         postiOsoiteToimipaikka: Joi.string().allow(''),
         kayntiOsoite: Joi.string().allow(''),
-        puhelinnumero: Joi.string().allow(''),
         kayntiOsoitePostiNro: postinumeroSchema.allow(''),
         kayntiOsoiteToimipaikka: Joi.string().allow(''),
+        puhelinnumero: Joi.string().allow(''),
         email: Joi.string()
             .email({ tlds: { allow: false } })
             .allow(''),
