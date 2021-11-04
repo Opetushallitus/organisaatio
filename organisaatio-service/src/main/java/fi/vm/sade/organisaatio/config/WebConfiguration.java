@@ -23,20 +23,10 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .setViewName("forward:/index.html");
         registry.addViewController(String.format("%s/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}", uiPath))
                 .setViewName("forward:/index.html");
-
-//        // Provide swagger documentation
-//        registry.addViewController(String.format("%s", swaggerPath))
-//                .setViewName("forward:/swagger-ui/index.html");
-//        registry.addViewController(String.format("%s/", swaggerPath))
-//                .setViewName("forward:/swagger-ui/index.html");
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(String.format("%s/static/**", uiPath)).addResourceLocations("/static/");
-//
-//        registry.addResourceHandler(String.format("%s/**", swaggerPath))
-//                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-//                .resourceChain(false);
     }
 }
