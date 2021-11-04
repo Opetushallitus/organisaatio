@@ -103,19 +103,14 @@ jobs:
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
         - export ARTIFACT_NAME="organisaatio2"
-      script:
+      before_script:
         - source ci-tools/common/setup-tools.sh
-      before_deploy:
         - cp ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
         - cp -vr ~/$TRAVIS_BUILD_NUMBER/src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
         - ./ci-tools/common/pull-image.sh
         - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
-      deploy:
-        - provider: script
-          script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
-          on:
-            all_branches: true
+        - ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
       after_success:
         - aws s3 rm --recursive s3://$s3bucket/$TRAVIS_BUILD_NUMBER # clean up after ourselves
 
