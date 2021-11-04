@@ -260,7 +260,7 @@ function mapApiYhteystiedotToUi(
 
 function mapUiYhteystiedotToApi(
     postinumerotKoodisto: Koodisto,
-    apiYhteystiedot: ApiYhteystiedot[] = [],
+    apiYhteystiedot: ApiYhteystiedot[],
     uiYhteystiedot: Yhteystiedot
 ): ApiYhteystiedot[] {
     const { osoitteetOnEri, ...rest } = uiYhteystiedot;

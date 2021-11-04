@@ -113,7 +113,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     maaUri: 'maa_1#1',
     nimet: [{ nimi: { fi: 'nimenvaihto' }, alkuPvm: today }],
     nimi: { fi: 'nimenvaihto' },
-    parentOid: '1.2.11.2',
+    parentOid: '123.321',
     tyypit: [],
     yhteystiedot: [
         ...apiYhteystiedot,
@@ -254,7 +254,7 @@ describe('mapUiOrganisaatioToApiToSave', () => {
             postinumerotKoodisto as Koodisto,
             uiYhteystiedot,
             uiPerustiedot,
-            '1.2.11.2'
+            '123.321'
         );
         mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
         expect(mappedApiOrganisaatio.nimet[0].alkuPvm).toEqual(today);

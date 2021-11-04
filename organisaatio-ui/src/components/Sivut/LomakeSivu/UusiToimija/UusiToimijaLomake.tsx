@@ -41,7 +41,7 @@ const UusiToimijaLomake = (props: RouteComponentProps<{ parentOid?: string }>) =
         (async function () {
             const {
                 organisaatio: { tyypit, oid },
-            } = await readOrganisaatio((parentOid || ROOT_OID) as string);
+            } = await readOrganisaatio((parentOid || ROOT_OID));
             setParentTiedot({ organisaatioTyypit: tyypit, oid });
         })();
     }, [parentOid]);
