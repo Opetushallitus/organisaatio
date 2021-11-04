@@ -1,4 +1,4 @@
-import { Koodisto, Osoite, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+import { Koodisto, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
 import { ApiOrganisaatio, ApiYhteystiedot, NewApiOrganisaatio, YhteystiedotOsoite } from '../types/apiTypes';
 import {
     getApiOsoite,

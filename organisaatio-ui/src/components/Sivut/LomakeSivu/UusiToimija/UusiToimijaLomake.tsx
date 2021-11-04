@@ -6,12 +6,13 @@ import Accordion from '../../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import queryString from 'query-string';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
 import { Perustiedot, ParentTiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import Icon from '@iconify/react';
-import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
@@ -28,11 +29,11 @@ import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
-const UusiToimijaLomake = (props: RouteComponentProps<{ parentOid?: string }>) => {
+const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
-    const { parentOid } = props.match.params;
+    const { parentOid } = queryString.parse(props.location.search);
     const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: '' });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
@@ -41,7 +42,7 @@ const UusiToimijaLomake = (props: RouteComponentProps<{ parentOid?: string }>) =
         (async function () {
             const {
                 organisaatio: { tyypit, oid },
-            } = await readOrganisaatio(parentOid || ROOT_OID);
+            } = await readOrganisaatio((parentOid as string) || ROOT_OID);
             setParentTiedot({ organisaatioTyypit: tyypit, oid });
         })();
     }, [parentOid]);
@@ -97,7 +98,7 @@ const UusiToimijaLomake = (props: RouteComponentProps<{ parentOid?: string }>) =
                     postinumerotKoodisto,
                     yhteystiedotFormValues,
                     perustiedotFormValues,
-                    parentOid
+                    parentOid as string
                 );
                 const savedOrganisaatio = await createOrganisaatio(apiOrganisaatio);
                 if (savedOrganisaatio) {
