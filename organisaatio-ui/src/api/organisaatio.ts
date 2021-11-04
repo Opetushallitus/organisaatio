@@ -202,9 +202,9 @@ function mapUiOrganisaatioToApiToUpdate(
     );
     const { kotipaikka, maa, kielet, organisaatioTyypit, muutKotipaikat, alkuPvm } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
-    const nimet = organisaatioBase.nimet || [];
+    const nimet = organisaatioBase.nimet;
     const uusiNimi = { ...perustiedotFormValues.nimi };
-    const sameDayNimiIdx = organisaatioBase.nimet.findIndex((nimi: OrganisaationNimetNimi) => nimi?.alkuPvm === today);
+    const sameDayNimiIdx = organisaatioBase.nimet.findIndex((nimi: OrganisaationNimetNimi) => nimi.alkuPvm === today);
     if (sameDayNimiIdx > -1) {
         nimet[sameDayNimiIdx].nimi = uusiNimi;
     } else {
@@ -220,10 +220,10 @@ function mapUiOrganisaatioToApiToUpdate(
         nimet,
         nimi: uusiNimi,
         tyypit: organisaatioTyypit,
-        muutKotipaikatUris: muutKotipaikat?.map((a) => a.value) || [],
-        kotipaikkaUri: kotipaikka?.value,
-        maaUri: maa?.value,
-        kieletUris: kielet?.map((a) => a.value) || [],
+        muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
+        kotipaikkaUri: kotipaikka.value,
+        maaUri: maa.value,
+        kieletUris: kielet.map((a) => a.value),
     };
 }
 
@@ -260,7 +260,7 @@ function mapApiYhteystiedotToUi(
 
 function mapUiYhteystiedotToApi(
     postinumerotKoodisto: Koodisto,
-    apiYhteystiedot: ApiYhteystiedot[],
+    apiYhteystiedot: ApiYhteystiedot[] = [],
     uiYhteystiedot: Yhteystiedot
 ): ApiYhteystiedot[] {
     const { osoitteetOnEri, ...rest } = uiYhteystiedot;
@@ -299,7 +299,7 @@ function mapUiYhteystiedotToApi(
             }
             return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
         })
-        .reduce((a, b) => a.concat(b)) as ApiYhteystiedot[];
+        .reduce((a, b) => a.concat(b));
 }
 
 export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYhteystiedot[]): ApiYhteystiedot[] => {

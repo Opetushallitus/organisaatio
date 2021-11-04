@@ -1,4 +1,4 @@
-import { Koodisto, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+import { Koodisto, Osoite, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
 import { ApiOrganisaatio, ApiYhteystiedot, NewApiOrganisaatio, YhteystiedotOsoite } from '../types/apiTypes';
 import {
     getApiOsoite,
@@ -171,6 +171,18 @@ describe('mapUiYhteystiedotToApi', () => {
         expect(
             mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], { ...uiYhteystiedot })
         ).toEqual(expect.arrayContaining(expected));
+    });
+
+    it('does not create kayntiosoite if osoitteetOnEri is true and osoite or postinumero is missing for kayntiosoita for a language', () => {
+        const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
+        const yhteystiedot = {
+            ...uiYhteystiedot,
+            'kieli_sv#1': { ...uiYhteystiedot['kieli_sv#1'], kayntiOsoite: '', kayntiOsoitePostiNro: '' },
+            osoitteetOnEri: true,
+        };
+        expect(mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], yhteystiedot)).toEqual(
+            expect.arrayContaining(expected)
+        );
     });
 });
 
