@@ -33,7 +33,7 @@ before_install:
   - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
 jobs:
   include:
-    - stage: "Build"
+    - stage: "Build & Test"
       name: "Production"
       language: java
       jdk:
@@ -48,12 +48,11 @@ jobs:
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew sonarqube
-        - cp -R $TRAVIS_BUILD_DIR/organisaatio-service ~/$TRAVIS_BUILD_NUMBER
-        - cp -R $TRAVIS_BUILD_DIR/src ~/$TRAVIS_BUILD_NUMBER
+        - cp -R $TRAVIS_BUILD_DIR/organisaatio-service/build/libs/organisaatio-service.jar ~/$TRAVIS_BUILD_NUMBER/
+        - cp -R $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration ~/$TRAVIS_BUILD_NUMBER/
       after_success:
         - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
-    - stage: "Test"
-      name: "Cypress"
+    - name: "Cypress"
       language: java
       jdk:
         - openjdk11
@@ -71,8 +70,9 @@ jobs:
       before_script:
         - psql -c 'CREATE DATABASE organisaatio;' -U postgres
       script:
+        - ./gradlew clean build -x test -x uiTest -x lint -x checkFormatting -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - cd mock-api && npm run mock-api &
-        - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar &
+        - java -jar -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice organisaatio-service/build/libs/organisaatio-service.jar &
         - cd organisaatio-ui && npm run cypress:ci
         - kill $(jobs -p) || true
     - stage: "Deploy"
@@ -106,8 +106,8 @@ jobs:
       script:
         - source ci-tools/common/setup-tools.sh
       before_deploy:
-        - cp ~/$TRAVIS_BUILD_NUMBER/organisaatio-service/build/libs/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
-        - cp -vr ~/$TRAVIS_BUILD_NUMBER/src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+        - cp ~/$TRAVIS_BUILD_NUMBER/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
+        - cp -vr ~/$TRAVIS_BUILD_NUMBER/oph-configuration $DOCKER_BUILD_DIR/config/
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
         - ./ci-tools/common/pull-image.sh
         - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
