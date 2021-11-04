@@ -28,7 +28,7 @@ task lint(type: NpmTask, dependsOn: npmInstall) {
 task checkFormatting(type: NpmTask, dependsOn: lint) {
     inputs.files(files('src'))
     outputs.dir('src')
-    args = ['run', 'prettier']
+    args = ['run', 'prettier:fix']
 }
 task uiTest(type: NpmTask, dependsOn: checkFormatting) {
     inputs.files(files('src'))
