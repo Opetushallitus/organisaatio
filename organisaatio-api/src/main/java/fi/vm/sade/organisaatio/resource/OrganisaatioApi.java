@@ -35,7 +35,7 @@ public interface OrganisaatioApi {
             description = "Operaatio palauttaa organisaation alla olevat organisaatiot.")
     List<OrganisaatioRDTOV4> children(
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid,
-            @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).") @RequestParam(defaultValue = "false") boolean includeImage) throws Exception;
+            @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).") @RequestParam(defaultValue = "false") boolean includeImage);
 
 
     @GetMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -91,7 +91,7 @@ public interface OrganisaatioApi {
     @Operation(
             summary = "Hakee organisaation rakennehistorian.",
             description = "Operaatio palauttaa oid:n määrittelemän organisaation rakennehistorian.")
-    OrganisaatioHistoriaRDTOV4 getOrganizationHistory(@Parameter(description = "Organisaation oid", required = true) @PathVariable String oid) throws Exception;
+    OrganisaatioHistoriaRDTOV4 getOrganizationHistory(@Parameter(description = "Organisaation oid", required = true) @PathVariable String oid);
 
     @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @Parameters({

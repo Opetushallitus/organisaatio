@@ -62,101 +62,111 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         this.organisaatioFindBusinessService = organisaatioFindBusinessService;
     }
 
-    // POST //organisaatio/v4/findbyoids
+    /**
+     * POST /api/findbyoids
+     */
     @Override
     public List<OrganisaatioRDTOV4> findByOids(Set<String> oids) {
         return organisaatioFindBusinessService.findByOidsV4(oids);
     }
 
-    // GET /organisaatio/v4/{oid}/children
+    /**
+     * GET /api/{oid}/children
+     */
     @Override
     public List<OrganisaatioRDTOV4> children(String oid, boolean includeImage) {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, String.format("Not authorized to read organisation: %s", oid));
         }
         return this.organisaatioFindBusinessService.findChildrenById(oid, includeImage);
     }
 
-    // GET /organisaatio/v4/{oid}
+    /**
+     * GET /api/{oid}
+     */
     @Override
     public OrganisaatioRDTOV4 getOrganisaatioByOID(String oid, boolean includeImage) {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, String.format("Not authorized to read organisation: %s", oid));
         }
         return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
     }
 
-    // PUT /organisaatio/v4/{oid}
+    /**
+     * PUT /api/{oid}
+     */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV4 updateOrganisaatio(String oid, OrganisaatioRDTOV4 ordto) {
-        LOG.info("Saving " + oid);
+        LOG.info("Saving {}", oid);
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to update organisation: " + oid);
+            LOG.warn("NotAuthorizedException for {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            LOG.warn("Error saving " + oid, ex);
+            LOG.warn("ValidationException while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving " + oid, sbe);
-            throw new OrganisaatioResourceException(sbe);
-        } catch (OrganisaatioResourceException ore) {
-            LOG.warn("Error saving " + oid, ore);
-            throw ore;
+            LOG.warn("SadeBusinessException while saving {}", oid);
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    sbe.getMessage(), "organisaatio.business.virhe");
         } catch (Throwable t) {
-            LOG.error("Error saving " + oid, t);
+            LOG.warn("Throwable while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
     }
 
-    // DELETE /organisaatio/v4/{oid}
+    /**
+     * DELETE /api/{oid}
+     */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatio(String oid) {
         return this.organisaatioResourceV3.deleteOrganisaatio(oid);
     }
 
-    // POST /organisaatio/v4/
+    /**
+     * POST /api/
+     */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
+            LOG.warn("Not authorized to create child organisation for {}", ordto.getParentOid());
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            LOG.warn("Error saving new org", ex);
+            LOG.warn("ValidationException saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving new org", sbe);
+            LOG.warn("SadeBusinessException saving new org");
             throw new OrganisaatioResourceException(sbe);
         } catch (Throwable t) {
-            LOG.warn("Error saving new org", t);
+            LOG.warn("Throwable saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
     }
 
-    // GET /organisaatio/v4/muutetut
+    /**
+     * GET /api/muutetut
+     */
     @Override
     public List<OrganisaatioRDTOV4> haeMuutetut(
             DateParam lastModifiedSince,
@@ -173,13 +183,15 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         }
     }
 
-    // GET /organisaatio/v4/{oid}/historia
+    /**
+     * GET /api/{oid}/historia
+     */
     @Override
-    public OrganisaatioHistoriaRDTOV4 getOrganizationHistory(String oid) throws Exception {
+    public OrganisaatioHistoriaRDTOV4 getOrganizationHistory(String oid) {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn("Not authorized to read organisation {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         if (oid.equals(rootOrganisaatioOid)) {
@@ -188,21 +200,27 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.getOrganizationHistory(oid), OrganisaatioHistoriaRDTOV4.class);
     }
 
-    // GET /organisaatio/v4/hae
+    /**
+     * GET /api/hae
+     */
     @Override
     public OrganisaatioHakutulosV4 searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatiot(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
     }
 
-    // GET /organisaatio/v4/hierarkia/hae
+    /**
+     * GET /api/hierarkia/hae
+     */
     @Override
     public OrganisaatioHakutulosV4 searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
         return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatioHierarkia(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
     }
 
-    // GET /organisaatio/v4/{oid}/jalkelaiset
+    /**
+     * GET /api/{oid}/jalkelaiset
+     */
     @Override
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
         boolean globalReadAccess = permissionChecker.isReadAccessToAll();
@@ -210,7 +228,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             try {
                 permissionChecker.checkReadOrganisation(oid);
             } catch (NotAuthorizedException nae) {
-                LOG.warn("Not authorized to read organisation: " + oid);
+                LOG.warn("Not authorized to read organisation: {}", oid);
                 throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
             }
         }
@@ -224,7 +242,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving multiple organizations", sbe);
+            LOG.warn("Error merging organizations {}, {}, {}", oid, parentOid, merge);
             throw new OrganisaatioResourceException(sbe);
         }
         return this.organisaatioFindBusinessService.findByIdV4(oid, false);

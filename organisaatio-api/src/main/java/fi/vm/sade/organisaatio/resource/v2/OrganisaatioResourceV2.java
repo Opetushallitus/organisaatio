@@ -93,7 +93,7 @@ public interface OrganisaatioResourceV2 {
                                        @RequestParam(defaultValue = "false") boolean includeImage);
 
     @GetMapping(path = "/{oid}/historia", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable("oid") String oid) throws Exception;
+    OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable("oid") String oid);
 
     @PostMapping(path = "/{oid}/organisaatiosuhde", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     void changeOrganisationRelationship(
