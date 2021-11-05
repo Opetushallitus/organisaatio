@@ -51,7 +51,7 @@ public interface OrganisaatioResource {
      * @return oid/path/form/root
      * @throws Exception
      */
-    @GetMapping(path = "/{oid}/parentoids", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{oid}/parentoids", produces = MediaType.TEXT_PLAIN_VALUE)
     String parentoids(@PathVariable String oid) throws Exception;
 
     @GetMapping(path = "/{oid}/childoids", produces = MediaType.APPLICATION_JSON_VALUE)
