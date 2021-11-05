@@ -41,6 +41,7 @@ script:
   - export BASE_IMAGE="baseimage-war-openjdk11:master"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
+  - ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
 
 deploy:
   - provider: script
@@ -48,7 +49,3 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-  - provider: script
-    script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
-    on:
-      all_branches: true
