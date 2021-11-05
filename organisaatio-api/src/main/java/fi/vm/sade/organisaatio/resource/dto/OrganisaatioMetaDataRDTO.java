@@ -14,13 +14,12 @@
  */
 package fi.vm.sade.organisaatio.resource.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.*;
 
-@ApiModel(value = "Organisaation metatiedot")
+@Schema(description = "Organisaation metatiedot")
 public class OrganisaatioMetaDataRDTO implements Serializable {
 
     private static final long serialVersionUID = 604193749288966081L;
@@ -53,7 +52,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         _data.put(key, map);
     }
 
-    @ApiModelProperty(value = "Data", required = true)
+    @Schema(description = "Data", required = true)
     public Map<String, Map<String, String>> getData() {
         return _data;
     }
@@ -62,7 +61,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._data = _data;
     }
 
-    @ApiModelProperty(value = "Hakutoimiston ECTS sähköpostiosoite", required = true)
+    @Schema(description = "Hakutoimiston ECTS sähköpostiosoite", required = true)
     public Map<String, String> getHakutoimistoEctsEmail() {
         return _hakutoimistoEctsEmail;
     }
@@ -71,7 +70,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsEmail = _hakutoimistoEctsEmail;
     }
 
-    @ApiModelProperty(value = "Hakutoimiston ECTS nimi", required = true)
+    @Schema(description = "Hakutoimiston ECTS nimi", required = true)
     public Map<String, String> getHakutoimistoEctsNimi() {
         return _hakutoimistoEctsNimi;
     }
@@ -80,7 +79,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsNimi = _hakutoimistoEctsNimi;
     }
 
-    @ApiModelProperty(value = "Hakutoimiston ECTS puhelinnumero", required = true)
+    @Schema(description = "Hakutoimiston ECTS puhelinnumero", required = true)
     public Map<String, String> getHakutoimistoEctsPuhelin() {
         return _hakutoimistoEctsPuhelin;
     }
@@ -89,7 +88,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsPuhelin = _hakutoimistoEctsPuhelin;
     }
 
-    @ApiModelProperty(value = "Hakutoimiston ECTS tehtävänimike", required = true)
+    @Schema(description = "Hakutoimiston ECTS tehtävänimike", required = true)
     public Map<String, String> getHakutoimistoEctsTehtavanimike() {
         return _hakutoimistoEctsTehtavanimike;
     }
@@ -98,7 +97,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsTehtavanimike = _hakutoimistoEctsTehtavanimike;
     }
 
-    @ApiModelProperty(value = "Hakutoimiston nimi", required = true)
+    @Schema(description = "Hakutoimiston nimi", required = true)
     public Map<String, String> getHakutoimistonNimi() {
         return _hakutoimistonNimi;
     }
@@ -107,7 +106,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistonNimi = _hakutoimistonNimi;
     }
 
-    @ApiModelProperty(value = "Koodi", required = true)
+    @Schema(description = "Koodi", required = true)
     public String getKoodi() {
         return _koodi;
     }
@@ -116,7 +115,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._koodi = _koodi;
     }
 
-    @ApiModelProperty(value = "Enkoodattu kuva", required = true)
+    @Schema(description = "Enkoodattu kuva", required = true)
     public String getKuvaEncoded() {
         return _kuvaEncoded;
     }
@@ -125,7 +124,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._kuvaEncoded = _kuvaEncoded;
     }
 
-    @ApiModelProperty(value = "Luontipäivämäärä", required = true)
+    @Schema(description = "Luontipäivämäärä", required = true)
     public Date getLuontiPvm() {
         return _luontiPvm;
     }
@@ -134,7 +133,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._luontiPvm = _luontiPvm;
     }
 
-    @ApiModelProperty(value = "Muokkauspäivämäärä", required = true)
+    @Schema(description = "Muokkauspäivämäärä", required = true)
     public Date getMuokkausPvm() {
         return _muokkausPvm;
     }
@@ -143,7 +142,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._muokkausPvm = _muokkausPvm;
     }
 
-    @ApiModelProperty(value = "Nimi", required = true)
+    @Schema(description = "Nimi", required = true)
     public Map<String, String> getNimi() {
         return _nimi;
     }
@@ -152,7 +151,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._nimi = _nimi;
     }
 
-    @ApiModelProperty(value = "Yhteystiedot", required = true)
+    @Schema(description = "Yhteystiedot", required = true)
     public List<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
             _yhteystiedot = new ArrayList<Map<String, String>>();

@@ -15,11 +15,9 @@
  */
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,7 @@ import java.util.List;
 
 @Path("/ytjpaivitysloki")
 @Component("ytjPaivitysResource")
-@Api(value = "/ytjpaivitysloki", description = "YTJ massapäivityksen status")
+@Hidden
 public class YTJPaivitysLokiResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
@@ -48,10 +46,9 @@ public class YTJPaivitysLokiResource {
     @GET
     @Path("/aikavali")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Hakee annetulta aikaväliltä", notes = "Operaatio palauttaa päivityksen statuksen ja virhelistan annetulle aikaväliltä (syötteet millisekunteja).")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "alkupvm", required = true) @QueryParam("alkupvm") long alkupvm,
-                                                 @ApiParam(value = "loppupvm", required = true) @QueryParam("loppupvm") long loppupvm) {
+    public List<YtjPaivitysLoki> findByDateRange(@QueryParam("alkupvm") long alkupvm,
+                                                 @QueryParam("loppupvm") long loppupvm) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
         Date alkupvmDate = new Date(alkupvm);
         Date loppupvmDate = new Date(loppupvm);
@@ -64,9 +61,8 @@ public class YTJPaivitysLokiResource {
     @GET
     @Path("/uusimmat")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Hakee viimeisimmät", notes = "Operaatio palauttaa viimeisimpien päivityksen statuksen ja virheet.")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<YtjPaivitysLoki> findByDateRange(@ApiParam(value = "limit", required = true) @QueryParam("limit") int limit) {
+    public List<YtjPaivitysLoki> findByDateRange(@QueryParam("limit") int limit) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
         if (limit > 0) {
             ytjLoki = ytjPaivitysLokiRepository.findLatest(limit);

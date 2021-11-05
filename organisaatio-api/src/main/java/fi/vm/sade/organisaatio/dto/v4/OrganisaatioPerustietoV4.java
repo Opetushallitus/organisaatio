@@ -3,79 +3,78 @@ package fi.vm.sade.organisaatio.dto.v4;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 
 @XmlRootElement
-@ApiModel(value = "Organisaation perustiedot v4")
+@Schema(description = "Organisaation perustiedot v4")
 public class OrganisaatioPerustietoV4 implements Serializable {
 
     private final static long serialVersionUID = 100L;
 
-    @ApiModelProperty(value = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", required = true)
     private String oid;
 
-    @ApiModelProperty(value = "Aloituspäivämäärä", required = true)
+    @Schema(description = "Aloituspäivämäärä", required = true)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date alkuPvm;
 
-    @ApiModelProperty(value = "Lakkautuspäivämäärä", required = true)
+    @Schema(description = "Lakkautuspäivämäärä", required = true)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date lakkautusPvm;
 
-    @ApiModelProperty(value = "TarkastusPäivämäärä", required = true)
+    @Schema(description = "TarkastusPäivämäärä", required = true)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date tarkastusPvm;
 
-    @ApiModelProperty(value = "Yläorganisaation oid", required = true)
+    @Schema(description = "Yläorganisaation oid", required = true)
     private String parentOid;
 
-    @ApiModelProperty(value = "Yläorganisaation oid-polku", required = true)
+    @Schema(description = "Yläorganisaation oid-polku", required = true)
     private String parentOidPath;
 
-    @ApiModelProperty(value = "Y-tunnus", required = true)
+    @Schema(description = "Y-tunnus", required = true)
     private String ytunnus;
 
     private String virastotunnus;
 
     private int aliorganisaatioMaara;
 
-    @ApiModelProperty(value = "Oppilaitoksen koodi", required = true)
+    @Schema(description = "Oppilaitoksen koodi", required = true)
     private String oppilaitosKoodi;
 
-    @ApiModelProperty(value = "Oppilaitoksen tyyppi", required = true)
+    @Schema(description = "Oppilaitoksen tyyppi", required = true)
     private String oppilaitostyyppi;
 
-    @ApiModelProperty(value = "Toimipisteen koodi", required = true)
+    @Schema(description = "Toimipisteen koodi", required = true)
     private String toimipistekoodi;
 
-    @ApiModelProperty(value = "Osuiko hakutuloksiin", required = true)
+    @Schema(description = "Osuiko hakutuloksiin", required = true)
     private boolean match = false;
 
-    @ApiModelProperty(value = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", required = true)
     private Map<String, String> nimi = new HashMap<>();
 
     // Tyypit koodiarvoina
     private Set<String> tyypit = new HashSet<>();
 
-    @ApiModelProperty(value = "Kielten URIt", required = true)
+    @Schema(description = "Kielten URIt", required = true)
     private Set<String> kieletUris = new HashSet<>();
 
-    @ApiModelProperty(value = "Kotipaikan URI", required = true)
+    @Schema(description = "Kotipaikan URI", required = true)
     private String kotipaikkaUri;
 
-    @ApiModelProperty(value = "Organisaation alaorganisaatiot", required = true)
+    @Schema(description = "Organisaation alaorganisaatiot", required = true)
     private Set<OrganisaatioPerustietoV4> children = new HashSet<>();
 
     public Set<OrganisaatioPerustietoV4> getChildren() {
         return children;
     }
 
-    @ApiModelProperty(value = "Organisaation alaorganisaatiot react tableen", required = true)
+    @Schema(description = "Organisaation alaorganisaatiot react tableen", required = true)
     private Set<OrganisaatioPerustietoV4> subRows = new HashSet<>();
 
     public Set<OrganisaatioPerustietoV4> getSubRows() {
@@ -239,7 +238,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
      * @return possible object is {@link String }
      * 
      */
-    @ApiModelProperty(value = "Virastotunnus", required = true)
+    @Schema(description = "Virastotunnus", required = true)
     public String getVirastoTunnus() {
         return virastotunnus;
     }
@@ -259,7 +258,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
      * Gets the koodiValue of the aliOrganisaatioMaara property.
      * 
      */
-    @ApiModelProperty(value = "Aliorganisaatioiden määrä", required = true)
+    @Schema(description = "Aliorganisaatioiden määrä", required = true)
     public int getAliOrganisaatioMaara() {
         return aliorganisaatioMaara;
     }
@@ -331,7 +330,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
      */
     public void setToimipistekoodi(String value) { this.toimipistekoodi = value; }
 
-    @ApiModelProperty(value = "Organisaation tyypit koodiarvoina", required = true)
+    @Schema(description = "Organisaation tyypit koodiarvoina", required = true)
     public Set<String> getOrganisaatiotyypit() {
         if (tyypit == null) {
             tyypit = new HashSet<>();
@@ -343,7 +342,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
         this.tyypit = organisaatiotyypit;
     }
 
-    @ApiModelProperty(value = "Kielten URIt", required = true)
+    @Schema(description = "Kielten URIt", required = true)
     public Set<String> getKieletUris() {
         if (kieletUris == null) {
             kieletUris = new HashSet<>();
@@ -355,7 +354,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
         this.kieletUris = kieletUris;
     }
     
-    @ApiModelProperty(value = "Kotipaikan URI", required = true)
+    @Schema(description = "Kotipaikan URI", required = true)
     public String getKotipaikkaUri() {
         return kotipaikkaUri;
     }

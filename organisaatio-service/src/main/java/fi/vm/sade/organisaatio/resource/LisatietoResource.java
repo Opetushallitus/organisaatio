@@ -3,17 +3,15 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.business.LisatietoService;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiCreateDto;
 import fi.vm.sade.organisaatio.dto.LisatietotyyppiDto;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.ws.rs.Path;
 import java.util.Set;
 
-@ApiIgnore
+@Hidden
 @RestController
 @RequestMapping("${server.internal.context-path}/lisatieto")
 public class LisatietoResource {
@@ -24,23 +22,16 @@ public class LisatietoResource {
     }
 
     @GetMapping(path = "/lisatietotyypit", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Hakee kaikki mahdolliset lisätiedot organisaatioille",
-            response = String.class,
-            responseContainer = "Set")
     public Set<String> haeLisatietotyypit() {
         return this.lisatietoService.getLisatietotyypit();
     }
 
     @GetMapping(path = "/{oid}/lisatietotyypit", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Hakee sallitut lisätietotyypit organisaatiolle",
-            response = String.class,
-            responseContainer = "Set")
-    public Set<String> haeLisatietotyypit(@ApiParam(value = "Organisaation oid", required = true) @PathVariable String oid) {
+    public Set<String> haeLisatietotyypit(@PathVariable String oid) {
         return this.lisatietoService.getSallitutByOid(oid);
     }
 
     @PostMapping(path = "/lisatietotyyppi", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Luo uuden lisätietotyypin")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String createLisatietotyyppi(LisatietotyyppiCreateDto lisatietotyyppiCreateDto) {
         return this.lisatietoService.create(lisatietotyyppiCreateDto);
@@ -48,15 +39,13 @@ public class LisatietoResource {
 
     @DeleteMapping(path = "/lisatietotyyppi/{nimi}")
     @Path("/lisatietotyyppi/{nimi}")
-    @ApiOperation(value = "Poistaa lisätietotyypin")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public void poistaLisatietotyyppi(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathVariable String nimi) {
+    public void poistaLisatietotyyppi(@PathVariable String nimi) {
         this.lisatietoService.delete(nimi);
     }
 
     @GetMapping(path = "/lisatietotyyppi/{nimi}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Hakee lisätietotyypin tiedot nimellä")
-    public LisatietotyyppiDto lisatietotyyppiNimella(@ApiParam(value = "Lisätietotyypin nimi", required = true) @PathVariable String nimi) {
+    public LisatietotyyppiDto lisatietotyyppiNimella(@PathVariable String nimi) {
         return this.lisatietoService.findByName(nimi);
     }
 }

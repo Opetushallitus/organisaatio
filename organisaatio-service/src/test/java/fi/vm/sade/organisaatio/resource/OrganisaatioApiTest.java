@@ -7,7 +7,6 @@ import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
-import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
@@ -36,7 +35,7 @@ import static org.mockito.Mockito.mock;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
+public class OrganisaatioApiTest extends SecurityAwareTestBase {
 
 
     @TestConfiguration
@@ -67,7 +66,7 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
         }
     }
     @Autowired
-    private OrganisaatioResourceV4 resource;
+    private OrganisaatioApi resource;
 
     @BeforeEach
     public void setup() {
@@ -100,7 +99,7 @@ public class OrganisaatioResourceV4Test extends SecurityAwareTestBase {
         OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
         assertThat(results.getNumHits()).isEqualTo(10);
         List<String> resultOids = results.getOrganisaatiot().stream()
-                .map(OrganisaatioResourceV4Test::collectOids)
+                .map(OrganisaatioApiTest::collectOids)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         assertThat(resultOids).containsExactlyInAnyOrder(allDescendants);

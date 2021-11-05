@@ -555,7 +555,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/historia
     @Override
-    public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) throws Exception {
+    public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) {
         Preconditions.checkNotNull(oid);
 
         try {

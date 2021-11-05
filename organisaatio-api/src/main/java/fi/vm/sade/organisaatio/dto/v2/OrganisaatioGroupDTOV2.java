@@ -1,13 +1,13 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-@ApiModel(value = "Ryhmän tiedot", parent=OrganisaatioCoreInfoDTOV2.class)
+@Schema(description = "Ryhmän tiedot")
 public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     private int version;
     private String parentOid;
@@ -21,7 +21,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the version
      */
-    @ApiModelProperty(value = "Versio", required = true)
+    @Schema(description = "Versio", required = true)
     public int getVersion() {
         return version;
     }
@@ -36,7 +36,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the alkuPvm
      */
-    @ApiModelProperty(value = "Ryhmän voimassaolon alkupäivämäärä", required = true)
+    @Schema(description = "Ryhmän voimassaolon alkupäivämäärä", required = true)
     public Date getAlkuPvm() {
         return alkuPvm;
     }
@@ -51,7 +51,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the lakkautusPvm
      */
-    @ApiModelProperty(value = "Ryhmän lakkautuspäivämäärä", required = true)
+    @Schema(description = "Ryhmän lakkautuspäivämäärä", required = true)
     public Date getLakkautusPvm() {
         return lakkautusPvm;
     }
@@ -66,7 +66,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the kuvaus
      */
-    @ApiModelProperty(value = "Ryhmän kuvaus", required = true)
+    @Schema(description = "Ryhmän kuvaus", required = true)
     public Map<String, String> getKuvaus() {
         return kuvaus;
     }
@@ -81,7 +81,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the ryhmatyypit
      */
-    @ApiModelProperty(value = "Ryhmätyypit", required = true)
+    @Schema(description = "Ryhmätyypit", required = true)
     public Set<String> getRyhmatyypit() {
         return ryhmatyypit;
     }
@@ -96,7 +96,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the kayttoryhmat
      */
-    @ApiModelProperty(value = "Ryhmän käyttöryhmät", required = true)
+    @Schema(description = "Ryhmän käyttöryhmät", required = true)
     public Set<String> getKayttoryhmat() {
         return kayttoryhmat;
     }
@@ -111,7 +111,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the parentOid
      */
-    @ApiModelProperty(value = "Parent oid", required = true)
+    @Schema(description = "Parent oid", required = true)
     public String getParentOid() {
         return parentOid;
     }
@@ -126,7 +126,7 @@ public class OrganisaatioGroupDTOV2 extends OrganisaatioCoreInfoDTOV2 {
     /**
      * @return the parentOidPath
      */
-    @ApiModelProperty(value = "Parent oid polkuna", required = true)
+    @Schema(description = "Parent oid polkuna", required = true)
     public String getParentOidPath() {
         return parentOidPath;
     }

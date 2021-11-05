@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import java.time.LocalDate;
 
@@ -9,9 +9,9 @@ public class RyhmaCriteriaDtoV3 {
     private String q;
     private Boolean aktiivinen;
     private LocalDate lakkautusPvm;
-    @ApiParam("Koodisto 'ryhmatyypit'")
+    @Parameter(description = "Koodisto 'ryhmatyypit'")
     private String ryhmatyyppi;
-    @ApiParam("Koodisto 'kayttoryhmat'")
+    @Parameter(description = "Koodisto 'kayttoryhmat'")
     private String kayttoryhma;
 
     public String getQ() {
