@@ -131,7 +131,7 @@ app.controller('OrganisaatioMoveController', function OrganisaatioMoveController
                 $scope.options.organisaatio.tyypit);
         }
 
-        var parametrit = {"searchstr": "",
+        var parametrit = {"searchStr": "",
                           "organisaatiotyyppi": organizationType,
                           "aktiiviset": true,
                           "suunnitellut": true,
