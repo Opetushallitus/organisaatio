@@ -89,7 +89,7 @@ public interface OrganisaatioResource {
     @Deprecated
         // käytä OrganisaatioResourceV3#getOrganisaatioByOID
     OrganisaatioRDTO getOrganisaatioByOID(
-            @PathVariable String id,
+            @PathVariable("id") String oid,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
     @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
