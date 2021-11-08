@@ -79,11 +79,11 @@ public interface OrganisaatioResource {
     String hello();
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<String> search(@RequestParam String searchTerms,
-                        @RequestParam int count,
-                        @RequestParam int startIndex,
-                        @RequestParam Date lastModifiedBefore,
-                        @RequestParam Date lastModifiedSince);
+    List<String> search(@RequestParam(required = false) String searchTerms,
+                        @RequestParam(defaultValue = "0") int count,
+                        @RequestParam(defaultValue = "0") int startIndex,
+                        @RequestParam(required = false) Date lastModifiedBefore,
+                        @RequestParam(required = false) Date lastModifiedSince);
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated
