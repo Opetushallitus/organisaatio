@@ -116,6 +116,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/organisaatio/actuator/health").permitAll()
                 .antMatchers("/organisaatio/swagger-ui/**").permitAll()
                 .antMatchers("/organisaatio/api-docs/**").permitAll()
+                .antMatchers("/organisaatio/rest/**").permitAll()
+                .antMatchers("/organisaatio/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())
