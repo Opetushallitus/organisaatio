@@ -101,7 +101,7 @@ jobs:
       services:
         - docker
       install:
-        - git clone https://github.com/Opetushallitus/ci-tools.git
+        - git clone --branch allow_upload_of_pr_image https://github.com/Opetushallitus/ci-tools.git
         - export ARTIFACT_NAME="organisaatio2"
       before_script:
         - source ci-tools/common/setup-tools.sh
