@@ -80,20 +80,20 @@ public class OrganisaatioSearchCriteriaDTOV2 {
     }
 
     @Schema(description = "Haettavan organisaation tyyppi", required = true)
-    public String getOrganisaatioTyyppi() {
+    public String getOrganisaatiotyyppi() {
         return organisaatiotyyppi;
     }
 
-    public void setOrganisaatioTyyppi(String value) {
+    public void setOrganisaatiotyyppi(String value) {
         this.organisaatiotyyppi = value;
     }
 
     @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
-    public Set<String> getOppilaitosTyyppi() {
+    public Set<String> getOppilaitostyyppi() {
         return oppilaitostyyppi;
     }
 
-    public void setOppilaitosTyyppi(Set<String> oppilaitostyyppi) {
+    public void setOppilaitostyyppi(Set<String> oppilaitostyyppi) {
         if (oppilaitostyyppi != null) {
             this.oppilaitostyyppi.addAll(oppilaitostyyppi);
         }

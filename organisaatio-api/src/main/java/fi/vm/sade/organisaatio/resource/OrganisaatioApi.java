@@ -4,7 +4,6 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,14 +42,11 @@ public interface OrganisaatioApi {
             summary = "Hakee yhden organisaation annetulla id:llä (id voi olla oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi).",
             description = "Operaatio palauttaa id:n määrittämän organisaation tiedot.")
     OrganisaatioRDTOV4 getOrganisaatioByOID(
-            @Parameter(description = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.",
-                    required = true) @PathVariable String oid,
+            @Parameter(description = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.", required = true) @PathVariable String oid,
             @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).") @RequestParam(defaultValue = "false") boolean includeImage);
 
     @PutMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Parameters(
-            @Parameter( name = "organisaatio",
-                    description = "Organisaation tiedot json muodossa"))
+    @Parameter(name = "organisaatio", description = "Organisaation tiedot json muodossa")
     @Operation(
             summary = "Päivittää oid:n määrittämän organisaation tiedot",
             description = "Operaatio päivittää oid:n määrittämän organisaation tiedot.")
@@ -66,9 +62,7 @@ public interface OrganisaatioApi {
 
 
     @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Parameters(
-            @Parameter( name = "organisaatio",
-                    description = "Luotavan organisaation tiedot json muodossa"))
+    @Parameter(name = "organisaatio", description = "Luotavan organisaation tiedot json muodossa")
     @Operation(
             summary = "Luo uuden organisaation",
             description = "Operaatio luo uuden organisaation annetusta JSON:sta.")
@@ -94,19 +88,18 @@ public interface OrganisaatioApi {
     OrganisaatioHistoriaRDTOV4 getOrganizationHistory(@Parameter(description = "Organisaation oid", required = true) @PathVariable String oid);
 
     @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Parameters({
-            @Parameter( name = "searchStr", description = "Hakuteksti"),
-            @Parameter( name = "aktiiviset", description = "Aktiiviset organisaatiot mukaan hakutuloksiin",  required = true),
-            @Parameter( name = "suunnitellut", description = "Suunnitellut organisaatiot mukaan hakutuloksiin",  required = true),
-            @Parameter( name = "lakkautetut", description = "Lakkautetut organisaatiot mukaan hakutuloksiin",  required = true),
-            @Parameter( name = "yritysmuoto", description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista"),
-            @Parameter( name = "kunta", description = "Haettavan organisaation kunta tai lista kunnista"),
-            @Parameter( name = "organisaatiotyyppi", description = "Haettavan organisaation tyyppi koodiarvona"),
-            @Parameter( name = "oppilaitostyyppi", description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä"),
-            @Parameter( name = "kieli", description = "Haettavan organisaation kieli tai lista kielistä"),
-            @Parameter( name = "oidResctrictionList", description = "Lista sallituista organisaatioiden oid:stä"),
-            @Parameter( name = "oid", description = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu."),
-            @Parameter( name = "skipParents", description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")})
+    @Parameter(name = "searchStr", description = "Hakuteksti")
+    @Parameter(name = "aktiiviset", description = "Aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    @Parameter(name = "suunnitellut", description = "Suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    @Parameter(name = "lakkautetut", description = "Lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    @Parameter(name = "yritysmuoto", description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista")
+    @Parameter(name = "kunta", description = "Haettavan organisaation kunta tai lista kunnista")
+    @Parameter(name = "organisaatiotyyppi", description = "Haettavan organisaation tyyppi koodiarvona")
+    @Parameter(name = "oppilaitostyyppi", description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä")
+    @Parameter(name = "kieli", description = "Haettavan organisaation kieli tai lista kielistä")
+    @Parameter(name = "oidResctrictionList", description = "Lista sallituista organisaatioiden oid:stä")
+    @Parameter(name = "oid", description = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.")
+    @Parameter(name = "skipParents", description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")
     @Operation(
             summary = "Hakee organisaatiot, jotka osuvat annetuihin hakuehtoihin",
             description = "Operaatio palauttaa vain hakuehtoja vastaavat organisaatiot.")
@@ -114,18 +107,17 @@ public interface OrganisaatioApi {
                                                         OrganisaatioSearchCriteriaDTOV4 hakuEhdot);
 
     @GetMapping(path = "/hierarkia/hae", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Parameters({
-            @Parameter( name = "searchStr", description = "Hakuteksti"),
-            @Parameter( name = "aktiiviset", description = "Aktiiviset organisaatiot mukaan hakutuloksiin",  required = true),
-            @Parameter( name = "suunnitellut", description = "Suunnitellut organisaatiot mukaan hakutuloksiin",  required = true),
-            @Parameter( name = "lakkautetut", description = "Lakkautetut organisaatiot mukaan hakutuloksiin",  required = true),
-            @Parameter( name = "kunta", description = "Haettavan organisaation kunta tai lista kunnista"),
-            @Parameter( name = "organisaatiotyyppi", description = "Haettavan organisaation tyyppi koodiarvona"),
-            @Parameter( name = "oppilaitostyyppi", description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä"),
-            @Parameter( name = "kieli", description = "Haettavan organisaation kieli tai lista kielistä"),
-            @Parameter( name = "oidResctrictionList", description = "Lista sallituista organisaatioiden oid:stä"),
-            @Parameter( name = "oid", description = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu."),
-            @Parameter( name = "skipParents", description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")})
+    @Parameter(name = "searchStr", description = "Hakuteksti")
+    @Parameter(name = "aktiiviset", description = "Aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    @Parameter(name = "suunnitellut", description = "Suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    @Parameter(name = "lakkautetut", description = "Lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    @Parameter(name = "kunta", description = "Haettavan organisaation kunta tai lista kunnista")
+    @Parameter(name = "organisaatiotyyppi", description = "Haettavan organisaation tyyppi koodiarvona")
+    @Parameter(name = "oppilaitostyyppi", description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä")
+    @Parameter(name = "kieli", description = "Haettavan organisaation kieli tai lista kielistä")
+    @Parameter(name = "oidResctrictionList", description = "Lista sallituista organisaatioiden oid:stä")
+    @Parameter(name = "oid", description = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu.")
+    @Parameter(name = "skipParents", description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")
     @Operation(
             summary = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
             description = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "
