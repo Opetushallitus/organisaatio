@@ -110,7 +110,7 @@ public interface OrganisaatioResource {
     ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam Set<String> organisaatioTyyppi);
+    Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam(defaultValue = "") Set<String> organisaatioTyyppi);
 
     @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     String authHello();

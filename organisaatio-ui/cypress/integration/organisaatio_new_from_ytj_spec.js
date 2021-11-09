@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT } from '../../src/contexts/contexts';
 
 const Y_TUNNUS = '2627679-5';
 beforeEach(() => {
@@ -15,7 +15,7 @@ describe('New organisaatio from YTJ', () => {
         cy.clickRadioOrCheckbox('Koulutustoimija');
         cy.clickButton('HAE_YTJ_TIEDOT');
         cy.inputByName('ytjinput', Y_TUNNUS);
-        cy.intercept('GET', `${API_CONTEXT}/ytj/*`).as('findYtj');
+        cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/*`).as('findYtj');
         cy.clickButton('HAE_YTJTIEDOT');
         cy.wait(['@findYtj'], { timeout: 10000 });
         cy.clickButton('Hameen ammatti');
@@ -32,7 +32,7 @@ describe('Edit organisaatio from YTJ', () => {
             cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
             cy.clickButton('PAIVITA_YTJ_TIEDOT');
             cy.inputByName('ytjinput', Y_TUNNUS);
-            cy.intercept('GET', `${API_CONTEXT}/ytj/*`).as('findYtj');
+            cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/*`).as('findYtj');
             cy.clickButton('HAE_YTJTIEDOT');
             cy.wait(['@findYtj'], { timeout: 10000 });
             cy.clickButton('Hameen ammatti');
