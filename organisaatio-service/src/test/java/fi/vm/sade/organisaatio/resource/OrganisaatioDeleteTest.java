@@ -1,20 +1,21 @@
 /*
-* Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
-*
-* This program is free software:  Licensed under the EUPL, Version 1.1 or - as
-* soon as they will be approved by the European Commission - subsequent versions
-* of the EUPL (the "Licence");
-*
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*/
+ * Copyright (c) 2014 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software:  Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ */
 
 package fi.vm.sade.organisaatio.resource;
 
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,23 +45,25 @@ import static org.mockito.Mockito.when;
 @AutoConfigureTestDatabase
 public class OrganisaatioDeleteTest {
 
-    private OrganisaatioRDTO a, ab, abc, ad;
+    private OrganisaatioRDTOV4 a, ab, abc, ad;
 
     @TestConfiguration
     public static class TestConfig {
         @Bean
         @Primary
-        public OrganisaatioTarjonta tarjontaMock(){
+        public OrganisaatioTarjonta tarjontaMock() {
             OrganisaatioTarjonta tarjonta = Mockito.mock(OrganisaatioTarjonta.class);
             return tarjonta;
         }
 
     }
-    @Autowired
-    OrganisaatioTarjonta tarjontaMock;
 
     @Autowired
-    OrganisaatioResource res;
+    OrganisaatioTarjonta tarjontaMock;
+    @Autowired
+    private ConversionService conversionService;
+    @Autowired
+    OrganisaatioApi res;
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioDeleteTest.class);
 
@@ -75,10 +79,10 @@ public class OrganisaatioDeleteTest {
         //   /
         // ABC
 
-        a   = createOrganisaatio("A", null);
-        ab  = createOrganisaatio("AB", a);
+        a = createOrganisaatio("A", null);
+        ab = createOrganisaatio("AB", a);
         abc = createOrganisaatio("ABC", ab);
-        ad  = createOrganisaatio("AD", a);
+        ad = createOrganisaatio("AD", a);
 
         //MockitoAnnotations.initMocks(this);
 
@@ -108,10 +112,10 @@ public class OrganisaatioDeleteTest {
         //   /
         // ABC
 
-        a   = createOrganisaatio("A", null);
-        ab  = createOrganisaatio("AB", a);
+        a = createOrganisaatio("A", null);
+        ab = createOrganisaatio("AB", a);
         abc = createOrganisaatio("ABC", ab);
-        ad  = createOrganisaatio("AD", a);
+        ad = createOrganisaatio("AD", a);
 
         //MockitoAnnotations.initMocks(this);
 
@@ -142,10 +146,10 @@ public class OrganisaatioDeleteTest {
         //   /
         // ABC
 
-        a   = createOrganisaatio("A", null);
-        ab  = createOrganisaatio("AB", a);
+        a = createOrganisaatio("A", null);
+        ab = createOrganisaatio("AB", a);
         abc = createOrganisaatio("ABC", ab);
-        ad  = createOrganisaatio("AD", a);
+        ad = createOrganisaatio("AD", a);
 
         //MockitoAnnotations.initMocks(this);
 
@@ -159,10 +163,10 @@ public class OrganisaatioDeleteTest {
         res.deleteOrganisaatio(abc.getOid());
     }
 
-    private OrganisaatioRDTO createOrganisaatio(String nimi, OrganisaatioRDTO parent) {
+    private OrganisaatioRDTOV4 createOrganisaatio(String nimi, OrganisaatioRDTOV4 parent) {
         LOG.info("createOrganisaatio({})", nimi);
 
-        OrganisaatioRDTO o = OrganisaatioRDTOTestUtil.createOrganisaatio(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), parent, true);
+        OrganisaatioRDTOV4 o = OrganisaatioRDTOTestUtil.createOrganisaatioV4(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue(), parent, true);
 
         return res.newOrganisaatio(o).getOrganisaatio();
     }

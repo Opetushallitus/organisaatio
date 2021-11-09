@@ -7,6 +7,8 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -52,9 +55,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OrganisaatioResourceTest {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+    @Autowired
+    private ConversionService conversionService;
     @Autowired
     private OrganisaatioResource res;
+    @Autowired
+    private OrganisaatioApi api;
     @Autowired
     private OrganisaatioRepository organisaatioRepository;
 
@@ -103,9 +109,9 @@ public class OrganisaatioResourceTest {
         String parentOid = "1.2.2004.5";
 
         // Change parent from root -> root2
-        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
+        OrganisaatioRDTOV4 node2foo = api.getOrganisaatioByOID("1.2.2004.3", false);
         node2foo.setParentOid(parentOid);
-        ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
+        ResultRDTOV4 updated = api.updateOrganisaatio(node2foo.getOid(), node2foo);
         assertEquals(parentOid, updated.getOrganisaatio().getParentOid(), "Parent oid should match!");
         LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
         List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid(), false);
