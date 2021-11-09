@@ -12,6 +12,7 @@ import { useWatch } from 'react-hook-form';
 import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { YhteystiedotKortit } from './YhteystiedotKortit';
+import { Kortti } from './Kortti';
 
 export type Props = {
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
@@ -94,6 +95,11 @@ const YhteystietoLomake = ({
                 </div>
                 <Button>Lisää uusi osoite</Button>
                 <YhteystiedotKortit osoitteet={[]} />
+            </div>
+            <div>
+                {['kieli_fi#1', 'kieli_sv#1'].map((kieli) => (
+                    <Kortti />
+                ))}
             </div>
             {kieleksi === 'finnishAndSwedish' ? (
                 <div>
