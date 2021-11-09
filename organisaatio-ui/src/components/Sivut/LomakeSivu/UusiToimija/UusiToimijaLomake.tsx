@@ -21,7 +21,7 @@ import {
     mapUiOrganisaatioToApiToSave,
     readOrganisaatio,
 } from '../../../../api/organisaatio';
-import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../../tools/organisaatio';
+import {resolveOrganisaatio, resolveOrganisaatioTyypit, resolveParentOidByQuery} from '../../../../tools/organisaatio';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
 import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
@@ -29,16 +29,11 @@ import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
-const resolveParentOid = (searchStr): string => {
-    const { parentOid } = queryString.parse(searchStr);
-    return (parentOid as string) || ROOT_OID;
-};
-
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
-    const parentOid = resolveParentOid(props.location.search);
+    const parentOid = resolveParentOidByQuery(props.location.search);
     const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: '' });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
