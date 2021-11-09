@@ -478,10 +478,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/liitokset
     @Override
-    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam dateParam) {
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam liitoksetAlkaen) {
         Date date = null;
-        if (dateParam != null && dateParam.getValue() != null) {
-            date = dateParam.getValue();
+        if (liitoksetAlkaen != null && liitoksetAlkaen.getValue() != null) {
+            date = liitoksetAlkaen.getValue();
         }
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);

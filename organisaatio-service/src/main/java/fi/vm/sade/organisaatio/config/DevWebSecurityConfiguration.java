@@ -51,6 +51,13 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
+                .antMatchers("/buildversion.txt").permitAll()
+                .antMatchers("/actuator/health").permitAll()
+                .antMatchers("/organisaatio/actuator/health").permitAll()
+                .antMatchers("/organisaatio/swagger-ui/**").permitAll()
+                .antMatchers("/organisaatio/api-docs/**").permitAll()
+                .antMatchers("/organisaatio-service/rest/**").permitAll()
+                .antMatchers("/organisaatio/api/**").permitAll()
                 .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and().httpBasic();
         ;

@@ -83,7 +83,7 @@ public interface OrganisaatioApi {
             @Parameter(
                     description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).") @RequestParam(defaultValue = "false") boolean includeImage,
             @Parameter(
-                    description = "Halutut organisaatiotyypit") @RequestParam List<String> organizationType,
+                    description = "Halutut organisaatiotyypit") @RequestParam(defaultValue = "") List<String> organizationTypes,
             @Parameter(
                     description = "Rajataanko lakkautetut organisaatiot pois") @RequestParam(defaultValue = "false") boolean excludeDiscontinued);
 
