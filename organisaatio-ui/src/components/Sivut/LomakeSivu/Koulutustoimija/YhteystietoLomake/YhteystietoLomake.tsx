@@ -10,6 +10,8 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { useWatch } from 'react-hook-form';
 import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+import { YhteystiedotKortit } from './YhteystiedotKortit';
 
 export type Props = {
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
@@ -80,12 +82,18 @@ const YhteystietoLomake = ({
         return { onChange, ...rest };
     };
 
+    const handleAddOsoite = () => {};
+
+    const handleRemoveOsoite = () => {};
+
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <RadioGroup value={kieleksi} options={languageTabs} onChange={(e) => setKieleksi(e.target.value)} />
                 </div>
+                <Button>Lisää uusi osoite</Button>
+                <YhteystiedotKortit osoitteet={[]} />
             </div>
             {kieleksi === 'finnishAndSwedish' ? (
                 <div>
