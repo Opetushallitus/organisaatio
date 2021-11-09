@@ -4,9 +4,9 @@ import styles from './UusiToimijaLomake.module.css';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import queryString from 'query-string';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
 import { Perustiedot, ParentTiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
@@ -29,11 +29,16 @@ import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
+const resolveParentOid = (searchStr): string => {
+    const { parentOid } = queryString.parse(searchStr);
+    return (parentOid as string) || ROOT_OID;
+};
+
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
-    const { parentOid } = queryString.parse(props.location.search);
+    const parentOid = resolveParentOid(props.location.search);
     const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: '' });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
@@ -42,7 +47,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         (async function () {
             const {
                 organisaatio: { tyypit, oid },
-            } = await readOrganisaatio((parentOid as string) || ROOT_OID);
+            } = await readOrganisaatio(parentOid);
             setParentTiedot({ organisaatioTyypit: tyypit, oid });
         })();
     }, [parentOid]);
@@ -98,7 +103,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                     postinumerotKoodisto,
                     yhteystiedotFormValues,
                     perustiedotFormValues,
-                    parentOid as string
+                    parentOid
                 );
                 const savedOrganisaatio = await createOrganisaatio(apiOrganisaatio);
                 if (savedOrganisaatio) {
@@ -107,7 +112,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             })();
         })();
     }
-    if (!parentOid || !organisaatioRakenne || !resolvedTyypit) {
+    if (!organisaatioRakenne || !resolvedTyypit) {
         return (
             <div className={styles.PaaOsio}>
                 <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
