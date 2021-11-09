@@ -77,7 +77,7 @@ public class SearchCriteriaModelMapper  extends ModelMapper {
         final Converter<OrganisaatioSearchCriteriaDTOV2, List<String>> organisaatiotyyppiConverterV2 = new Converter<OrganisaatioSearchCriteriaDTOV2, List<String>>() {
             @Override
             public List<String> convert(MappingContext<OrganisaatioSearchCriteriaDTOV2, List<String>> context) {
-                return context.getSource().getOrganisaatioTyyppi() != null ? filterRyhma(OrganisaatioTyyppi.fromValue(context.getSource().getOrganisaatioTyyppi()).koodiValue()) : null;
+                return context.getSource().getOrganisaatiotyyppi() != null ? filterRyhma(OrganisaatioTyyppi.fromValue(context.getSource().getOrganisaatiotyyppi()).koodiValue()) : null;
             }
         };
 
