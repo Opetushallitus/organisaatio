@@ -38,7 +38,7 @@ public interface OrganisaatioResourceV3 {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioRDTOV3 getOrganisaatioByOID(
-            @PathVariable String oid,
+            @PathVariable("id") String oid,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
     @PutMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

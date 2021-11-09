@@ -2,9 +2,9 @@ import Axios from 'axios';
 import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
 import { KoodistoContextType, KoodistoSelectOption, LocalDate, YhteystiedotBase } from '../types/types';
-import { API_CONTEXT } from '../contexts/contexts';
+import { LEGACY_API_CONTEXT } from '../contexts/contexts';
 
-const baseUrl = `${API_CONTEXT}/ytj/`;
+const baseUrl = `${LEGACY_API_CONTEXT}/ytj/`;
 
 type ytjOsoite = {
     katu: string;
@@ -86,6 +86,7 @@ async function getByYTunnus(yTunnus: string, koodistot: KoodistoContextType): Pr
         return mapApiToUI(data, koodistot);
     });
 }
+
 async function searchByName(name: string): Promise<YtjHaku[]> {
     return errorHandlingWrapper(async () => {
         const { data } = await Axios.get<YtjHaku[]>(`${baseUrl}hae`, { params: { nimi: name } });

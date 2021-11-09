@@ -79,17 +79,17 @@ public interface OrganisaatioResource {
     String hello();
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<String> search(@RequestParam String searchTerms,
-                        @RequestParam int count,
-                        @RequestParam int startIndex,
-                        @RequestParam Date lastModifiedBefore,
-                        @RequestParam Date lastModifiedSince);
+    List<String> search(@RequestParam(required = false) String searchTerms,
+                        @RequestParam(defaultValue = "0") int count,
+                        @RequestParam(defaultValue = "0") int startIndex,
+                        @RequestParam(required = false) Date lastModifiedBefore,
+                        @RequestParam(required = false) Date lastModifiedSince);
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated
         // käytä OrganisaatioResourceV3#getOrganisaatioByOID
     OrganisaatioRDTO getOrganisaatioByOID(
-            @PathVariable String id,
+            @PathVariable("id") String oid,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
     @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -110,7 +110,7 @@ public interface OrganisaatioResource {
     ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE)
-    Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam Set<String> organisaatioTyyppi);
+    Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam(defaultValue = "") Set<String> organisaatioTyyppi);
 
     @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     String authHello();

@@ -515,15 +515,15 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     // POST /organisaatio/v2/{oid}/organisaatiosuhde
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid) {
+    public void changeOrganisationRelationship(String oid, boolean merge, DateParam moveDate, String newParentOid) {
 
         Preconditions.checkNotNull(oid);
         Preconditions.checkNotNull(newParentOid);
         Preconditions.checkNotNull(merge);
 
         Date date;
-        if (dateParam != null && dateParam.getValue() != null) {
-            date = dateParam.getValue();
+        if (moveDate != null && moveDate.getValue() != null) {
+            date = moveDate.getValue();
         } else {
             date = new Date();
         }
@@ -595,10 +595,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/liitokset
     @Override
-    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam dateParam) {
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam liitoksetAlkaen) {
         Date date = null;
-        if (dateParam != null && dateParam.getValue() != null) {
-            date = dateParam.getValue();
+        if (liitoksetAlkaen != null && liitoksetAlkaen.getValue() != null) {
+            date = liitoksetAlkaen.getValue();
         }
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);

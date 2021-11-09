@@ -36,7 +36,7 @@ import java.util.List;
 
 @Hidden
 @RestController
-@RequestMapping("${server.internal.context-path}/ytj")
+@RequestMapping("${server.rest.context-path}/ytj")
 public class YTJResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
@@ -82,7 +82,7 @@ public class YTJResource {
     }
 
     @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON)
-    public List<YTJDTO> findByYNimi(@RequestParam(required = true) String nimi) {
+    public List<YTJDTO> findByYNimi(@RequestParam String nimi) {
         List<YTJDTO> ytjList = new ArrayList<YTJDTO>();
         if (nimi != null && nimi.length() > 0) {
             try {
