@@ -4,7 +4,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
 import fi.vm.sade.generic.common.I18N;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -18,12 +17,10 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -41,7 +38,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
@@ -236,91 +232,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
         LOG.debug("  result={}", result);
         return result;
-    }
-
-    // POST /organisaatio/{oid}
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    @Transactional
-    public ResultRDTO updateOrganisaatio(String oid, OrganisaatioRDTO ordto) {
-        LOG.info("Saving " + oid);
-
-        try {
-            permissionChecker.checkSaveOrganisation(ordto, true);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to update organisation: " + oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-
-        try {
-            OrganisaatioResult result = organisaatioBusinessService.saveOrUpdate(ordto);
-            return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
-                    result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
-        } catch (ValidationException ex) {
-            LOG.warn("Error saving " + oid, ex);
-            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage(), "organisaatio.validointi.virhe");
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving " + oid, sbe);
-            throw new OrganisaatioResourceException(sbe);
-        } catch (OrganisaatioResourceException ore) {
-            LOG.warn("Error saving " + oid, ore);
-            throw ore;
-        } catch (Throwable t) {
-            LOG.error("Error saving " + oid, t);
-            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    t.getMessage(), "generic.error");
-        }
-    }
-
-    // DELETE /organisaatio/{oid}
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
-    public String deleteOrganisaatio(String oid) {
-        try {
-            permissionChecker.checkRemoveOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to delete organisation: " + oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-
-        try {
-            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            LOG.info("Deleted organisaatio: " + oid +" under parent: " + parent.getOid());
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error deleting org", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        }
-
-        return "{\"message\": \"deleted\"}";
-    }
-
-    // PUT /organisaatio/
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto) {
-        try {
-            permissionChecker.checkSaveOrganisation(ordto, false);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-        try {
-            OrganisaatioResult result = organisaatioBusinessService.saveOrUpdate(ordto);
-            return new ResultRDTO(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTO.class),
-                    result.getInfo()==null ? ResultRDTO.ResultStatus.OK : ResultRDTO.ResultStatus.WARNING, result.getInfo());
-        } catch (ValidationException ex) {
-            LOG.warn("Error saving new org", ex);
-            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    ex.getMessage(), "organisaatio.validointi.virhe");
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving new org", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        } catch (Throwable t) {
-            LOG.warn("Error saving new org", t);
-            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    t.getMessage(), "generic.error");
-        }
     }
 
     // GET /organisaatio/yhteystietometadata

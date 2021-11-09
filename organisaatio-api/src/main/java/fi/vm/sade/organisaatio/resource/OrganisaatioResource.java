@@ -92,22 +92,6 @@ public interface OrganisaatioResource {
             @PathVariable String id,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
-    @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
-        // käytä OrganisaatioResourceV3#updateOrganisaatio
-    ResultRDTO updateOrganisaatio(
-            @PathVariable String oid,
-            OrganisaatioRDTO ordto);
-
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
-        // käytä OrganisaatioResourceV3#deleteOrganisaatio
-    String deleteOrganisaatio(@PathVariable String oid);
-
-    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
-        // käytä OrganisaatioResourceV3#newOrganisaatio
-    ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE)
     Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam Set<String> organisaatioTyyppi);
