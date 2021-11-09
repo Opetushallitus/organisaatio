@@ -4,10 +4,9 @@ import styles from './UusiToimijaLomake.module.css';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import queryString from 'query-string';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../../contexts/contexts';
+import { KoodistoContext, LanguageContext, rakenne } from '../../../../contexts/contexts';
 import { Perustiedot, ParentTiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
@@ -21,7 +20,11 @@ import {
     mapUiOrganisaatioToApiToSave,
     readOrganisaatio,
 } from '../../../../api/organisaatio';
-import {resolveOrganisaatio, resolveOrganisaatioTyypit, resolveParentOidByQuery} from '../../../../tools/organisaatio';
+import {
+    resolveOrganisaatio,
+    resolveOrganisaatioTyypit,
+    resolveParentOidByQuery,
+} from '../../../../tools/organisaatio';
 import YhteystietoLomakeSchema from '../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import PerustietolomakeSchema from '../../../../ValidationSchemas/PerustietolomakeSchema';
 import YTJModaali from '../../../Modaalit/YTJModaali/YTJModaali';
