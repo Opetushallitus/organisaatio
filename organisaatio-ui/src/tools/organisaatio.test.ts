@@ -138,7 +138,7 @@ describe('resolveOrganisaatioTyypit', () => {
 
 describe('resolveParentOidByQuery', () => {
     it('Maps root oid to parent if there is no parentOid', () => {
-        expect(resolveParentOidByQuery('http://virkailija.testiopintopolku.fi/organisaatio/lomake/uusi')).toBe(
+        expect(resolveParentOidByQuery('testiQueryString=testi')).toBe(
             ROOT_OID
         );
     });
