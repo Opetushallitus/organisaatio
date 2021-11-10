@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    {% raw %}
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Append>true</Append>
+        <File>${user.home}/logs/organisaatio.log</File>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} %-5p {%X{user}} [%t] %-5p %c: %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>20</maxIndex>
+            <FileNamePattern>${user.home}/logs/organisaatio.log.%i</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/logs/auditlog_organisaatio.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${user.home}/logs/auditlog_organisaatio.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>10</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    {% endraw %}
+
+    <!-- Standard logging -->
+    <root level="info">
+        <appender-ref ref="FILE"/>
+    </root>
+    <logger name="org.springframework" level="warn"/>
+    <logger name="org.springframework.security" level="warn"/>
+    <logger name="org.springframework.boot.autoconfigure.security.AuthenticationManagerConfiguration" level="info"/>
+    <logger name="fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter" level="error"/>
+    <logger name="org.hibernate.SQL" level="error"/>
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="error"/>
+
+    <!-- Auditlog  -->
+    <logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="INFO" additivity="false">
+        <appender-ref ref="ROLLING"/>
+    </logger>
+
+</configuration>

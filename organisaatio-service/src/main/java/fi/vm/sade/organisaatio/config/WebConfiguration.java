@@ -15,6 +15,8 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController(String.format("%s/j_spring_cas_security_check", uiPath))
+                .setViewName("forward:/j_spring_cas_security_check");
         registry.addViewController(String.format("%s/actuator/health", uiPath))
                 .setViewName("forward:/actuator/health");
         registry.addViewController(String.format("%s/actuator/health/", uiPath))
