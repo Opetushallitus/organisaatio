@@ -49,7 +49,7 @@ jobs:
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew sonarqube
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-service/build/libs/organisaatio-service.jar ~/$TRAVIS_BUILD_NUMBER/
-        - cp -R $TRAVIS_BUILD_DIR/src/main/resources/oph-configuration ~/$TRAVIS_BUILD_NUMBER/
+        - cp -R $TRAVIS_BUILD_DIR/src/main/resources/* ~/$TRAVIS_BUILD_NUMBER/
       after_success:
         - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
     - name: "Cypress"
