@@ -107,6 +107,7 @@ jobs:
         - source ci-tools/common/setup-tools.sh
         - cp ~/$TRAVIS_BUILD_NUMBER/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
         - cp -vr ~/$TRAVIS_BUILD_NUMBER/oph-configuration $DOCKER_BUILD_DIR/config/
+        - cp -vr ~/$TRAVIS_BUILD_NUMBER/oph-environment $DOCKER_BUILD_DIR/config/
         - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
       script:
         - ./ci-tools/common/pull-image.sh
