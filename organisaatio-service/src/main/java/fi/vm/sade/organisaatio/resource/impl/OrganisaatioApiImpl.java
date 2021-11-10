@@ -132,32 +132,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     /**
-     * DELETE /api/{oid}
-     */
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String deleteOrganisaatio(String oid) {
-
-        try {
-            permissionChecker.checkRemoveOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to delete organisation: {}", oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-
-        try {
-            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            LOG.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error deleting org", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        }
-
-        return "{\"message\": \"deleted\"}";
-    }
-
-
-    /**
      * POST /api/
      */
     @Override

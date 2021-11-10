@@ -54,13 +54,6 @@ public interface OrganisaatioApi {
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid,
             @Parameter(description = "hidden") @RequestBody OrganisaatioRDTOV4 ordto);
 
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(
-            summary = "Poistaa oid:n määrittämän organisaation",
-            description = "Operaatio poistaa organisaation annetulla oid:llä.")
-    String deleteOrganisaatio(@Parameter(description = "Organisaation oid", required = true) @PathVariable String oid);
-
-
     @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Parameter(name = "organisaatio", description = "Luotavan organisaation tiedot json muodossa")
     @Operation(

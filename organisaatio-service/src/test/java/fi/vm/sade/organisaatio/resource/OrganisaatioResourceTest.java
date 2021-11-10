@@ -56,14 +56,7 @@ public class OrganisaatioResourceTest {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
-    private ConversionService conversionService;
-    @Autowired
     private OrganisaatioResource res;
-    @Autowired
-    private OrganisaatioApi api;
-    @Autowired
-    private OrganisaatioRepository organisaatioRepository;
-
     @Autowired
     private OrganisaatioResourceV2 res2;
 
@@ -102,26 +95,7 @@ public class OrganisaatioResourceTest {
         assertEquals(reference, s);
     }
 
-    @Test
-    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
-    public void testChangeParentOid() throws Exception {
-        String oldParentOid = "1.2.2004.1";
-        String parentOid = "1.2.2004.5";
 
-        // Change parent from root -> root2
-        OrganisaatioRDTOV4 node2foo = api.getOrganisaatioByOID("1.2.2004.3", false);
-        node2foo.setParentOid(parentOid);
-        ResultRDTOV4 updated = api.updateOrganisaatio(node2foo.getOid(), node2foo);
-        assertEquals(parentOid, updated.getOrganisaatio().getParentOid(), "Parent oid should match!");
-        LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
-        List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid(), false);
-        assertEquals(2, children.size(), "Children count should match!");
-        for (OrganisaatioRDTO child : children) {
-            LOG.info("Child oid path: {}, id path: {}", child.getParentOidPath());
-            assertEquals(updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|",
-                    child.getParentOidPath(), "Child parent oid path should match!");
-        }
-    }
 
     @Test
     @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
