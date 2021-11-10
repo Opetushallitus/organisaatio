@@ -226,7 +226,7 @@ app.factory('OrganisaatioTreeModel', function($q, $filter, $log, $injector,
             var hakuParametrit = {};
 
             // Lisää hakuun käyttäjän kirjoittama osa organisaation nimest' / tunnuksesta
-            hakuParametrit.searchstr = hakuehdot.nimiTaiTunnus;
+            hakuParametrit.searchStr = hakuehdot.nimiTaiTunnus;
 
             // Lisää hakuun mahdollinen paikkakunta
             if (hakuehdot.kunta) {
