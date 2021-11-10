@@ -58,6 +58,7 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/organisaatio/api-docs/**").permitAll()
                 .antMatchers("/organisaatio-service/rest/**").permitAll()
                 .antMatchers("/organisaatio/api/**").permitAll()
+                .antMatchers("/organisaatio/").permitAll()
                 .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and().httpBasic();
         ;
