@@ -2,6 +2,7 @@ package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
+import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
@@ -65,9 +66,13 @@ public class VirkailijaController {
             response = Organisaatio.class
     )
     public Organisaatio getOrganisaatioByYtunnus(@ApiParam("y-tunnus") @PathVariable String ytunnus) {
-        return organisaatioService.muunnaV4Dto(organisaatioClient.getV4ByYtunnus(ytunnus)
+        Organisaatio organisaatio = organisaatioService.muunnaV4Dto(organisaatioClient.getV4ByYtunnus(ytunnus)
                 .or(exceptionToEmptySupplier(() -> organisaatioClient.getV4ByYtunnusFromYtj(ytunnus)))
                 .orElseGet(() -> OrganisaatioV4Dto.of(ytunnus, "")));
+        if ( organisaatio.isKunta() ) {
+            throw new InvalidInputException("ERROR_MUNICIPALITY");
+        }
+        return organisaatio;
     }
 
     /**

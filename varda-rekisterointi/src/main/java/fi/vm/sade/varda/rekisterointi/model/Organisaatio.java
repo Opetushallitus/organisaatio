@@ -48,4 +48,8 @@ public class Organisaatio {
     @Setter
     @NotNull
     public boolean uudelleenRekisterointi;
+
+    public boolean isKunta() {
+        return tyypit != null && tyypit.contains("organisaatiotyyppi_09"); // kts. koodisto: organisaatiotyyppi
+    }
 }
