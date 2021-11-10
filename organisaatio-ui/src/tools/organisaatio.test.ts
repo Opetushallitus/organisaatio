@@ -138,9 +138,7 @@ describe('resolveOrganisaatioTyypit', () => {
 
 describe('resolveParentOidByQuery', () => {
     it('Maps root oid to parent if there is no parentOid', () => {
-        expect(resolveParentOidByQuery('testiQueryString=testi')).toBe(
-            ROOT_OID
-        );
+        expect(resolveParentOidByQuery('testiQueryString=testi')).toBe(ROOT_OID);
     });
     it('Gets parentOid from query string if it exists', () => {
         const parentOid = '1.23.1.21111000';
