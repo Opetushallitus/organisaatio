@@ -97,8 +97,13 @@ const YhteystietoLomake = ({
                 <YhteystiedotKortit osoitteet={[]} />
             </div>
             <div>
-                {['kieli_fi#1', 'kieli_sv#1'].map((kieli) => (
-                    <Kortti />
+                {['fi', 'sv', 'en'].map((kieli) => (
+                    <Kortti
+                        kieli={kieli as 'fi' | 'sv' | 'en'}
+                        setYhteystiedotValue={setYhteystiedotValue}
+                        validationErrors={validationErrors}
+                        formControl={formControl}
+                    />
                 ))}
             </div>
             {kieleksi === 'finnishAndSwedish' ? (
