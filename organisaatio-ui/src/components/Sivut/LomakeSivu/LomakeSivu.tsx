@@ -72,6 +72,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         organisaatioTyypitKoodisto,
         maatJaValtiotKoodisto,
         oppilaitoksenOpetuskieletKoodisto,
+        postinumerotKoodisto,
         kuntaKoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
@@ -96,7 +97,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         handleSubmit: yhteystiedotHandleSubmit,
         control: yhteystiedotControl,
     } = useForm<Yhteystiedot>({
-        defaultValues: mapApiYhteystiedotToUi([]),
+        defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
 
@@ -137,7 +138,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         return {
             Uiperustiedot: { nimi, maa, kielet, kotipaikka, muutKotipaikat, alkuPvm, organisaatioTyypit: tyypit },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: nimi },
-            Uiyhteystiedot: mapApiYhteystiedotToUi(apiYhteystiedot),
+            Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
         };
     };
 
@@ -222,6 +223,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
                     const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                        postinumerotKoodisto,
                         organisaatioBase,
                         yhteystiedotFormValues,
                         perustiedotFormValues
