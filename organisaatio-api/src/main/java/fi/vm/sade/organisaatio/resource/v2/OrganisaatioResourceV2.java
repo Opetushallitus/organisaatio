@@ -84,27 +84,27 @@ public interface OrganisaatioResourceV2 {
     OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 
     @GetMapping(path = "/muutetut/oid", produces = MediaType.APPLICATION_JSON_VALUE)
-    String haeMuutettujenOid(@RequestParam("lastModifiedSince") DateParam date);
+    String haeMuutettujenOid(@RequestParam DateParam lastModifiedSince);
 
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated
         // käytä OrganisaatioResourceV3#haeMuutetut
-    List<OrganisaatioRDTO> haeMuutetut(@RequestParam("lastModifiedSince") DateParam date,
+    List<OrganisaatioRDTO> haeMuutetut(@RequestParam DateParam lastModifiedSince,
                                        @RequestParam(defaultValue = "false") boolean includeImage);
 
     @GetMapping(path = "/{oid}/historia", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable("oid") String oid);
+    OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable String oid);
 
     @PostMapping(path = "/{oid}/organisaatiosuhde", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     void changeOrganisationRelationship(
-            @PathVariable("oid") String oid,
-            @RequestParam("merge") boolean merge,
-            @RequestParam("moveDate") DateParam date,
+            @PathVariable String oid,
+            @RequestParam boolean merge,
+            @RequestParam DateParam moveDate,
             String newParentOid
     );
 
     @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam("liitoksetAlkaen") DateParam date);
+    List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam DateParam liitoksetAlkaen);
 
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated

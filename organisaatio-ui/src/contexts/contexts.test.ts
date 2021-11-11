@@ -22,6 +22,16 @@ describe('KoodistoImpl', () => {
         expect(nimi).toEqual(koodit[0].nimi.fi);
     });
 
+    it('Finds uri using a arvo', () => {
+        const uri = impl.arvo2Uri(koodit[0].arvo);
+        expect(uri).toEqual(koodit[0].uri);
+    });
+
+    it('Returns empty string if uri is not found by arvo', () => {
+        const uri = impl.arvo2Uri('2');
+        expect(uri).toEqual('');
+    });
+
     it('Returns empty nimi when uri doesnt exist', () => {
         const nimi = impl.uri2Nimi('eioo_1#1');
         expect(nimi).toEqual('');

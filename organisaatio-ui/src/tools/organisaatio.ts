@@ -1,6 +1,7 @@
 import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } from '../types/types';
 import { ROOT_OID } from '../contexts/contexts';
 import { ApiOrganisaatio } from '../types/apiTypes';
+import queryString from 'query-string';
 
 //TODO pitää tsekkaa mitä tästä tulee jos tyypit ei osu mihinkään.
 export const resolveOrganisaatio = (
@@ -52,3 +53,8 @@ export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language
 };
 export const organisaatioSelectMapper = (organisaatiot: ApiOrganisaatio[], language: string) =>
     organisaatiot.map((o: ApiOrganisaatio) => mapOrganisaatioToSelect(o, language));
+
+export const resolveParentOidByQuery = (searchStr): string => {
+    const { parentOid } = queryString.parse(searchStr);
+    return (parentOid as string) || ROOT_OID;
+};
