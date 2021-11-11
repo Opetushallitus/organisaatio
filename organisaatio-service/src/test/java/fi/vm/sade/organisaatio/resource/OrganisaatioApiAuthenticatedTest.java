@@ -24,12 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class OrganisaatioApiAuthenticatedTest {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private OrganisaatioApi resource;
 
     @Test
     @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001", "APP_ORGANISAATIOHALLINTA_CRUD"})
-    void testChangeParentOid() throws Exception {
+    void testChangeParentOid() {
 
         // Change parent from root -> root2
         OrganisaatioRDTOV4 oldParent = createOrganisaatio("ChangeParentOid-OldParent", null);
@@ -52,9 +53,7 @@ class OrganisaatioApiAuthenticatedTest {
 
     @Test
     void testChangeParentOidNoAuth() {
-        Assertions.assertThrows(AccessDeniedException.class, () -> {
-            resource.updateOrganisaatio("123", null);
-        }, "AccessDeniedException was expected");
+        Assertions.assertThrows(AccessDeniedException.class, () -> resource.updateOrganisaatio("123", null), "Exception was expected");
     }
 
     private OrganisaatioRDTOV4 createOrganisaatio(String nimi, OrganisaatioRDTOV4 parent) {
