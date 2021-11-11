@@ -13,15 +13,11 @@ public class AccessLogConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "logback.access")
-    public WebServerFactoryCustomizer containerCustomizer() {
-        return container -> {
-            if (container instanceof TomcatServletWebServerFactory) {
-                ((TomcatServletWebServerFactory) container).addContextCustomizers((TomcatContextCustomizer) context -> {
-                    LogbackValve logbackValve = new LogbackValve();
-                    logbackValve.setFilename("logback-access.xml");
-                    context.getPipeline().addValve(logbackValve);
-                });
-            }
-        };
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> containerCustomizer() {
+        return container -> container.addContextCustomizers(context -> {
+            LogbackValve logbackValve = new LogbackValve();
+            logbackValve.setFilename("logback-access.xml");
+            context.getPipeline().addValve(logbackValve);
+        });
     }
 }
