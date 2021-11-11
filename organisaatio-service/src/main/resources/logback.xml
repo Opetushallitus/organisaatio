@@ -4,7 +4,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Append>true</Append>
-        <File>${user.home}/logs/oph-organisaatio2.log</File>
+        <File>${user.home}/logs/oph-${NAME}.log</File>
         <encoder>
             <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} %-5p {%X{user}} [%t] %-5p %c: %m%n</pattern>
         </encoder>
@@ -13,11 +13,27 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <maxIndex>20</maxIndex>
-            <FileNamePattern>${user.home}/logs/oph-organisaatio2.log.%i</FileNamePattern>
+            <FileNamePattern>${user.home}/logs/oph-${NAME}.log.%i</FileNamePattern>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
             <MaxFileSize>10MB</MaxFileSize>
         </triggeringPolicy>
+    </appender>
+    <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/logs/oph-${NAME}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${user.home}/logs/oph-${NAME}.cloud.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>20MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>%d{ISO8601} %-5p { %X{user}} [%t] %-5p %c: %m%n</pattern>
+        </encoder>
     </appender>
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/logs/auditlog_organisaatio2.log</file>
@@ -39,6 +55,9 @@
     <root level="info">
         <appender-ref ref="FILE"/>
     </root>
+    <logger name="fi.vm" level="INFO" additivity="false">
+        <appender-ref ref="APP"/>
+    </logger>
     <logger name="org.springframework" level="warn"/>
     <logger name="org.springframework.security" level="warn"/>
     <logger name="org.springframework.boot.autoconfigure.security.AuthenticationManagerConfiguration" level="info"/>
