@@ -21,13 +21,12 @@
 }
 
 .Kentta {
-    margin-right: 2rem;
-    width: 26rem;
+    width: 20rem;
 }
 
 .KenttaLyhyt {
     margin-right: 2rem;
-    width: 13rem;
+    width: 5rem;
 }
 
 
@@ -53,4 +52,18 @@
 
 .ToimipaikkaText {
     padding-bottom: .5rem;
+}
+
+.KorttiKehys {
+    border: 1px solid lightgrey;
+    padding: 1rem;
+    margin: 1rem
+}
+
+.KortitContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 2rem;
+    flex-wrap: wrap;
 }

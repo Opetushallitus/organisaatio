@@ -8,6 +8,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
 import {
+    Opetuskielet,
     OrganisaatioNimiJaOid,
     ParentTiedot,
     Perustiedot,
@@ -246,6 +247,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const handleNimiUpdate = (nimi) => {
         setPerustiedotValue('nimi', nimi);
     };
+
     registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
@@ -270,6 +272,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                kielet={getPerustiedotValues('kielet')}
                 watch={watchYhteystiedot}
                 setYhteystiedotValue={setYhteystiedotValue}
                 formControl={yhteystiedotControl}

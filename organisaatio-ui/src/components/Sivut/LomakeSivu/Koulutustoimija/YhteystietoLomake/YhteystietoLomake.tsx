@@ -4,17 +4,17 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { useState, useContext } from 'react';
-import type { Yhteystiedot } from '../../../../../types/types';
+import type { KoodistoSelectOption, Opetuskielet, Opetuskieli, Yhteystiedot } from '../../../../../types/types';
 import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { useWatch } from 'react-hook-form';
 import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
-import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { YhteystiedotKortit } from './YhteystiedotKortit';
 import { Kortti } from './Kortti';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 export type Props = {
+    kielet: KoodistoSelectOption[];
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     yhteystiedot?: Yhteystiedot[];
     validationErrors: FieldErrors<Yhteystiedot>;
@@ -23,6 +23,14 @@ export type Props = {
     watch: UseFormWatch<Yhteystiedot>;
 };
 type SupportedKieli = 'finnishAndSwedish' | 'english';
+
+const kielet: Opetuskielet = ['fi', 'sv'];
+
+export const mapVisibleKieletFromOpetuskielet = (opetuskieletOptions: KoodistoSelectOption[]) => {
+    const opetuskielet = opetuskieletOptions.map((kieliOption) => kieliOption.value);
+
+    return kielet.filter((kieli) => !opetuskielet.includes(kieli));
+};
 
 const postiOsoiteToimipaikkaFiName = 'kieli_fi#1.postiOsoiteToimipaikka';
 const postiOsoiteToimipaikkaSvName = 'kieli_sv#1.postiOsoiteToimipaikka';
@@ -48,6 +56,7 @@ const OsoitteenToimipaikkaKentta = ({
 };
 
 const YhteystietoLomake = ({
+    kielet,
     formRegister,
     validationErrors,
     watch,
@@ -56,6 +65,7 @@ const YhteystietoLomake = ({
 }: Props): React.ReactElement => {
     const { i18n } = useContext(LanguageContext);
     const { postinumerotKoodisto } = useContext(KoodistoContext);
+    const [naytaMuutKielet, setNaytaMuutKielet] = useState(false);
     const [kieleksi, setKieleksi] = useState<SupportedKieli>(DEFAULT_LANGUAGE_CODE);
     const languageTabs = [
         { value: 'finnishAndSwedish', label: i18n.translate('YHTEYSTIEDOT_KIELIVALINNAT_SUOMEKSI_JA_RUOTSIKSI') },
@@ -83,9 +93,9 @@ const YhteystietoLomake = ({
         return { onChange, ...rest };
     };
 
-    const handleAddOsoite = () => {};
-
-    const handleRemoveOsoite = () => {};
+    const handleShowClick = () => {
+        setNaytaMuutKielet(!naytaMuutKielet);
+    };
 
     return (
         <div className={styles.UloinKehys}>
@@ -93,18 +103,26 @@ const YhteystietoLomake = ({
                 <div className={styles.Kentta}>
                     <RadioGroup value={kieleksi} options={languageTabs} onChange={(e) => setKieleksi(e.target.value)} />
                 </div>
-                <Button>Lisää uusi osoite</Button>
-                <YhteystiedotKortit osoitteet={[]} />
             </div>
-            <div>
-                {['fi', 'sv', 'en'].map((kieli) => (
-                    <Kortti
-                        kieli={kieli as 'fi' | 'sv' | 'en'}
-                        setYhteystiedotValue={setYhteystiedotValue}
-                        validationErrors={validationErrors}
-                        formControl={formControl}
-                    />
-                ))}
+            <div className={styles.KortitContainer}>
+                <Kortti
+                    kieli={opetuskieli}
+                    setYhteystiedotValue={setYhteystiedotValue}
+                    validationErrors={validationErrors}
+                    formControl={formControl}
+                />
+                {naytaMuutKielet &&
+                    removeOpetuskieletFromKielet([opetuskieli]).map((kieli) => (
+                        <Kortti
+                            kieli={opetuskieli}
+                            setYhteystiedotValue={setYhteystiedotValue}
+                            validationErrors={validationErrors}
+                            formControl={formControl}
+                        />
+                    ))}
+                <Button onClick={handleShowClick}>
+                    {naytaMuutKielet ? 'Piilota muun kieliset' : 'Näytä muun kieliset'}
+                </Button>
             </div>
             {kieleksi === 'finnishAndSwedish' ? (
                 <div>

@@ -56,12 +56,14 @@ export const Kortti = ({ kieli, setYhteystiedotValue, validationErrors, formCont
         } else setYhteystiedotValue(toimipaikkaName, '');
     };
     return (
-        <div>
+        <div className={styles.KorttiKehys}>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')} *</label>
                     <Input name={`${kieli}.postiOsoite`} error={!!validationErrors[kieli]?.postiOsoite} />
                 </div>
+            </div>
+            <div className={styles.Rivi}>
                 <div className={styles.KenttaLyhyt}>
                     <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}</label>
                     <Input
@@ -75,6 +77,45 @@ export const Kortti = ({ kieli, setYhteystiedotValue, validationErrors, formCont
                     labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA')}
                     control={formControl}
                 />
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.Kentta}>
+                    <label>{i18n.translate('YHTEYSTIEDOT_KAYNTIOSOITE')}</label>
+                    <Input name={`${kieli}.kayntiOsoite`} />
+                </div>
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.KenttaLyhyt}>
+                    <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}</label>
+                    <Input
+                        name={`${kieli}.kayntiOsoitePostiNro`}
+                        onChange={toimipaikkaOnChange}
+                        error={!!validationErrors[kieli]?.postiOsoitePostiNro}
+                    />
+                </div>
+                <OsoitteenToimipaikkaKentta
+                    name={`${kieli}.kayntiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
+                    labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA')}
+                    control={formControl}
+                />
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.Kentta}>
+                    <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO_SUOMI')}</label>
+                    <Input name={`${kieli}.puhelinnumero`} />
+                </div>
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.Kentta}>
+                    <label>{i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')} *</label>
+                    <Input name={`${kieli}.email`} error={!!validationErrors[kieli]?.email} />
+                </div>
+            </div>
+            <div className={styles.Rivi}>
+                <div className={styles.Kentta}>
+                    <label>{i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}</label>
+                    <Input name={`${kieli}.www`} error={!!validationErrors[kieli]?.www} />
+                </div>
             </div>
         </div>
     );

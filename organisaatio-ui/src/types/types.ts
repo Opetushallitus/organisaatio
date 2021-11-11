@@ -227,3 +227,7 @@ export type KoodistoContextType = {
     postinumerotKoodisto: Koodisto;
     maatJaValtiotKoodisto: Koodisto;
 };
+
+export type Opetuskieli = 'fi' | 'sv' | 'en';
+
+export type Opetuskielet = Opetuskieli[];
