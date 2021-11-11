@@ -58,7 +58,7 @@ public class AuditLogAspect {
 
     // POST /organisaatio/{oid}
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatio(..))")
-    private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+    private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
@@ -86,7 +86,7 @@ public class AuditLogAspect {
 
     // PUT /organisaatio/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.updateOrganisaatio(..))")
-    private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+    private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
@@ -95,6 +95,20 @@ public class AuditLogAspect {
             throw e;
         }
         logEvent(result, OrganisaatioOperation.ORG_UPDATE);
+        return result;
+    }
+
+    // DELETE /organisaatio/{oid}
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
+    private Object deletergAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch (Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_DELETE);
+            throw e;
+        }
+        logEvent(result, OrganisaatioOperation.ORG_DELETE);
         return result;
     }
 

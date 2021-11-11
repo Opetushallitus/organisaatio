@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    {% raw %}
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Append>true</Append>
         <File>${user.home}/logs/organisaatio.log</File>
@@ -34,7 +34,6 @@
             <pattern>%msg%n</pattern>
         </encoder>
     </appender>
-    {% endraw %}
 
     <!-- Standard logging -->
     <root level="info">
@@ -53,3 +52,4 @@
     </logger>
 
 </configuration>
+

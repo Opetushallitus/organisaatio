@@ -8,6 +8,8 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteParentException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
@@ -26,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ValidationException;
 import java.util.*;
@@ -243,6 +246,31 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         return this.organisaatioFindBusinessService.findByIdV4(oid, false);
     }
 
+    /**
+     * DELETE /api/{oid}
+     */
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public void deleteOrganisaatio(String oid) {
+        try {
+            permissionChecker.checkRemoveOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to delete organisation: {}", oid);
+            throw new OrganisaatioResourceException(HttpStatus.UNAUTHORIZED, nae);
+        }
+        try {
+            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
+            LOG.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
+        } catch (OrganisaatioNotFoundException e) {
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, e);
+        } catch (OrganisaatioDeleteParentException e) {
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, e);
+        } catch (SadeBusinessException sbe) {
+            LOG.warn("Error deleting org", sbe);
+            throw new OrganisaatioResourceException(sbe);
+        }
+    }
+
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
@@ -315,5 +343,4 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         Collections.reverse(parentOidsList);
         return String.join("/", parentOidsList);
     }
-
 }

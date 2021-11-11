@@ -1,4 +1,3 @@
-{% raw %}
 <configuration>
     <appender name="AccessLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
@@ -19,7 +18,5 @@
             <maxHistory>7</maxHistory>
         </rollingPolicy>
     </appender>
-
     <appender-ref ref="AccessLog"/>
 </configuration>
-{% endraw %}
