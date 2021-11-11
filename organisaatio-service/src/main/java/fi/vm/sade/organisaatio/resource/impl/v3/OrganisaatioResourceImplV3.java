@@ -3,8 +3,6 @@ package fi.vm.sade.organisaatio.resource.impl.v3;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3;
@@ -66,7 +64,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn("Not authorized to read organisation: {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
@@ -106,7 +104,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         return groupList;
     }
 
-    // GET /organisaatio/v3/{oid}
+    // GET /organisaatio/v3/<oid>
     @Override
     public OrganisaatioRDTOV3 getOrganisaatioByOID(String oid, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
@@ -114,14 +112,14 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn("Not authorized to read organisation: {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
         if (o == null) {
-            LOG.info("Failed to find organisaatio by: " + oid);
+            LOG.info("Failed to find organisaatio by: {}", oid);
             throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
         }
 
@@ -141,7 +139,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     public List<OrganisaatioRDTOV3> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
         Preconditions.checkNotNull(lastModifiedSince);
 
-        LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        LOG.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(

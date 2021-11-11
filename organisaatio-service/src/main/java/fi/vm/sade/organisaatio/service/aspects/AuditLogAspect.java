@@ -53,10 +53,10 @@ public class AuditLogAspect {
 
     protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
-    public static final String serviceName = "organisaatio";
-    public Audit audit = new Audit(LOG::info, serviceName, ApplicationType.VIRKAILIJA);
+    public static final String SERVICE_NAME = "organisaatio";
+    public static final Audit audit = new Audit(LOG::info, SERVICE_NAME, ApplicationType.VIRKAILIJA);
 
-    // POST /organisaatio/{oid}
+    // POST /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatio(..))")
     private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
@@ -70,7 +70,7 @@ public class AuditLogAspect {
         return result;
     }
 
-    // DELETE /organisaatio/{oid}
+    // DELETE /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
@@ -98,7 +98,7 @@ public class AuditLogAspect {
         return result;
     }
 
-    // DELETE /organisaatio/{oid}
+    // DELETE /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
     private Object deletergAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
@@ -140,7 +140,7 @@ public class AuditLogAspect {
         return result;
     }
 
-    // DELETE /yhteystietojentyyppi/{oid}
+    // DELETE /yhteystietojentyyppi/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
     private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
@@ -199,11 +199,7 @@ public class AuditLogAspect {
         String session = getSession(request).orElse(null);
         String userAgent = getUserAgent(request).orElse(null);
 
-        if (oid.isPresent()) {
-            return new User(oid.get(), ip, session, userAgent);
-        } else {
-            return new User(ip, session, userAgent);
-        }
+        return oid.map(value -> new User(value, ip, session, userAgent)).orElseGet(() -> new User(ip, session, userAgent));
     }
 
     static Optional<Oid> getOid(HttpServletRequest request) {
