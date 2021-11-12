@@ -22,6 +22,8 @@ import fi.vm.sade.organisaatio.OrganisaatioOperation;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -30,6 +32,7 @@ import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -44,74 +47,92 @@ import java.util.Optional;
 /**
  * @author: Tuomas Katva Date: 9.8.2013
  */
+@Component
 @Aspect
 public class AuditLogAspect {
 
     protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
 
-    public static final String serviceName = "organisaatio";
-    public Audit audit = new Audit(LOG::info, serviceName, ApplicationType.VIRKAILIJA);
+    public static final String SERVICE_NAME = "organisaatio";
+    public static final Audit audit = new Audit(LOG::info, SERVICE_NAME, ApplicationType.VIRKAILIJA);
 
-    // POST /organisaatio/{oid}
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.updateOrganisaatio(..))")
-    private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+    // POST /organisaatio/<oid>
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatio(..))")
+    private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_UPDATE);
+        } catch (Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_CREATE);
             throw e;
         }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_UPDATE);
+        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_CREATE);
         return result;
     }
 
-    // DELETE /organisaatio/{oid}
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.deleteOrganisaatio(..))")
+    // DELETE /organisaatio/<oid>
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logEvent(null, OrganisaatioOperation.ORG_DELETE);
             throw e;
         }
         logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_DELETE);
         return result;
     }
+
     // PUT /organisaatio/
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl.newOrganisaatio(..))")
-    private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.updateOrganisaatio(..))")
+    private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_CREATE);
+        } catch (Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_UPDATE);
             throw e;
         }
-        logEvent(result, OrganisaatioOperation.ORG_CREATE);
+        logEvent(result, OrganisaatioOperation.ORG_UPDATE);
         return result;
     }
+
+    // DELETE /organisaatio/<oid>
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
+    private Object deletergAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        Object result;
+        try {
+            result = pjp.proceed();
+        } catch (Exception e) {
+            logEvent(null, OrganisaatioOperation.ORG_DELETE);
+            throw e;
+        }
+        logEvent(result, OrganisaatioOperation.ORG_DELETE);
+        return result;
+    }
+
     // POST /yhteystietojentyyppi/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.updateYhteystietoTyyppi(..))")
     private Object updateYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logEvent(null, OrganisaatioOperation.YHTEYSTIETO_UPDATE);
             throw e;
         }
         logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_UPDATE);
         return result;
     }
+
     // PUT /yhteystietojentyyppi/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.createYhteystietojenTyyppi(..))")
     private Object newYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logEvent(null, OrganisaatioOperation.YHTEYSTIETO_CREATE);
             throw e;
         }
@@ -119,13 +140,13 @@ public class AuditLogAspect {
         return result;
     }
 
-    // DELETE /yhteystietojentyyppi/{oid}
+    // DELETE /yhteystietojentyyppi/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
     private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
-        } catch(Exception e) {
+        } catch (Exception e) {
             logEvent(null, OrganisaatioOperation.YHTEYSTIETO_DELETE);
             throw e;
         }
@@ -133,128 +154,30 @@ public class AuditLogAspect {
         return result;
     }
 
-    // PUT /organisaatio/v2/{oid}/nimet
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.newOrganisaatioNimi(..))")
-    private Object createOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_NIMI_CREATE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_CREATE);
-        return result;
-    }
-
-    // PUT /organisaatio/v2/muokkaamonta
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.muokkaaMontaOrganisaatiota(..))")
-    private Object updateOrgManyAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_UPDATE_MANY);
-            throw e;
-        }
-        logEvent(result, OrganisaatioOperation.ORG_UPDATE_MANY);
-        return result;
-    }
-
-    // POST /organisaatio/v2/{oid}/organisaatiosuhde
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.changeOrganisationRelationship(..))")
-    private Object updateOrgSuhdeAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_SUHDE_UPDATE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_SUHDE_UPDATE);
-        return result;
-    }
-
-    // POST /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.updateOrganisaatioNimi(..))")
-    private Object updateOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_NIMI_UPDATE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_UPDATE);
-        return result;
-    }
-
-    // DELETE /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.impl.v2.OrganisaatioResourceImplV2.deleteOrganisaatioNimi(..))")
-    private Object deleteOrgNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_NIMI_DELETE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_NIMI_DELETE);
-        return result;
-    }
-
-    // POST /tempfile/
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.addImage(..))")
-    private Object newImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.IMG_CREATE);
-            throw e;
-        }
-        logEvent(null, OrganisaatioOperation.IMG_CREATE);
-        return result;
-    }
-
-    // DELETE /tempfile/{img}
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.TempFileResource.deleteImage(..))")
-    private Object deleteImgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch(Exception e) {
-            logEvent(null, OrganisaatioOperation.IMG_DELETE);
-            throw e;
-        }
-        logEvent(null, OrganisaatioOperation.IMG_DELETE);
-        return result;
-    }
 
     // Helper function to handle the logging.
     private void logEvent(Object result, OrganisaatioOperation type) {
         String oid = "";
-        if(result == null) {
+        if (result == null) {
             oid = null;
-        }
-        else if (result instanceof String) {
+        } else if (result instanceof String) {
             oid = (String) result;
-        }
-        else if(result instanceof OrganisaatioMuokkausTulosListaDTO) {
-            for(OrganisaatioMuokkausTulosDTO organisaatioMuokkausTulosDTO
-                    : ((OrganisaatioMuokkausTulosListaDTO)result).getTulokset()) {
-                oid+= organisaatioMuokkausTulosDTO.getOid();
+        } else if (result instanceof OrganisaatioMuokkausTulosListaDTO) {
+            for (OrganisaatioMuokkausTulosDTO organisaatioMuokkausTulosDTO
+                    : ((OrganisaatioMuokkausTulosListaDTO) result).getTulokset()) {
+                oid += organisaatioMuokkausTulosDTO.getOid();
             }
-        }
-        else if(result instanceof YhteystietojenTyyppiDTO) {
+        } else if (result instanceof YhteystietojenTyyppiDTO) {
             oid = ((YhteystietojenTyyppiDTO) result).getOid();
-        }
-        else if(result instanceof ResultRDTO) {
+        } else if (result instanceof ResultRDTO) {
             oid = ((ResultRDTO) result).getOrganisaatio().getOid();
-        }
-        else {
+        } else if (result instanceof ResultRDTOV4) {
+            oid = ((ResultRDTOV4) result).getOrganisaatio().getOid();
+        } else if (result instanceof OrganisaatioRDTOV4) {
+            oid = ((OrganisaatioRDTOV4) result).getOid();
+        } else {
             oid = null;
-            LOG.warn("UNKNOWN PARAMETER IN AuditLogAspect {}", type.toString());
+            LOG.error("UNKNOWN PARAMETER IN AuditLogAspect {} {}", type, result);
         }
 
         Target target = new Target.Builder().setField("oid", oid).build();
@@ -262,7 +185,7 @@ public class AuditLogAspect {
         audit.log(getUser(), type, target, changes);
     }
 
-    public static User getUser() {
+    static User getUser() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes instanceof ServletRequestAttributes) {
             return getUser(((ServletRequestAttributes) requestAttributes).getRequest());
@@ -270,24 +193,20 @@ public class AuditLogAspect {
         return new User(getIp(), null, null);
     }
 
-    public static User getUser(HttpServletRequest request) {
+    static User getUser(HttpServletRequest request) {
         Optional<Oid> oid = getOid(request);
         InetAddress ip = getIp(request);
         String session = getSession(request).orElse(null);
         String userAgent = getUserAgent(request).orElse(null);
 
-        if (oid.isPresent()) {
-            return new User(oid.get(), ip, session, userAgent);
-        } else {
-            return new User(ip, session, userAgent);
-        }
+        return oid.map(value -> new User(value, ip, session, userAgent)).orElseGet(() -> new User(ip, session, userAgent));
     }
 
-    public static Optional<Oid> getOid(HttpServletRequest request) {
+    static Optional<Oid> getOid(HttpServletRequest request) {
         return Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName).flatMap(AuditLogAspect::createOid);
     }
 
-    private static Optional<Oid> createOid(String oid) {
+    static Optional<Oid> createOid(String oid) {
         try {
             return Optional.of(new Oid(oid));
         } catch (GSSException e) {
@@ -295,7 +214,7 @@ public class AuditLogAspect {
         }
     }
 
-    public static InetAddress getIp(HttpServletRequest request) {
+    static InetAddress getIp(HttpServletRequest request) {
         try {
             return InetAddress.getByName(HttpServletRequestUtils.getRemoteAddress(request));
         } catch (UnknownHostException e) {
@@ -303,7 +222,7 @@ public class AuditLogAspect {
         }
     }
 
-    public static InetAddress getIp() {
+    static InetAddress getIp() {
         try {
             return InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
@@ -311,11 +230,11 @@ public class AuditLogAspect {
         }
     }
 
-    public static Optional<String> getSession(HttpServletRequest request) {
+    static Optional<String> getSession(HttpServletRequest request) {
         return Optional.ofNullable(request.getSession(false)).map(HttpSession::getId);
     }
 
-    public static Optional<String> getUserAgent(HttpServletRequest request) {
+    static Optional<String> getUserAgent(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("User-Agent"));
     }
 

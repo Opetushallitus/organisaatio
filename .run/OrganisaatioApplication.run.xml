@@ -13,7 +13,7 @@
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="fi.vm.sade.organisaatio.OrganisaatioApplication" />
     <option name="ACTIVE_PROFILES" value="dev" />
-    <option name="VM_PARAMETERS" value="-Dspring.config.location=classpath:application.properties" />
+    <option name="VM_PARAMETERS" value="-Dspring.config.location=classpath:application.properties -Dlogback.access=true" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <envs>

@@ -7,6 +7,8 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -52,12 +55,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OrganisaatioResourceTest {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private OrganisaatioResource res;
-    @Autowired
-    private OrganisaatioRepository organisaatioRepository;
-
     @Autowired
     private OrganisaatioResourceV2 res2;
 
@@ -96,26 +95,7 @@ public class OrganisaatioResourceTest {
         assertEquals(reference, s);
     }
 
-    @Test
-    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
-    public void testChangeParentOid() throws Exception {
-        String oldParentOid = "1.2.2004.1";
-        String parentOid = "1.2.2004.5";
 
-        // Change parent from root -> root2
-        OrganisaatioRDTO node2foo = res.getOrganisaatioByOID("1.2.2004.3", false);
-        node2foo.setParentOid(parentOid);
-        ResultRDTO updated = res.updateOrganisaatio(node2foo.getOid(), node2foo);
-        assertEquals(parentOid, updated.getOrganisaatio().getParentOid(), "Parent oid should match!");
-        LOG.info("Path: {}", updated.getOrganisaatio().getParentOidPath());
-        List<OrganisaatioRDTO> children = res.children(updated.getOrganisaatio().getOid(), false);
-        assertEquals(2, children.size(), "Children count should match!");
-        for (OrganisaatioRDTO child : children) {
-            LOG.info("Child oid path: {}, id path: {}", child.getParentOidPath());
-            assertEquals(updated.getOrganisaatio().getParentOidPath() + child.getParentOid() + "|",
-                    child.getParentOidPath(), "Child parent oid path should match!");
-        }
-    }
 
     @Test
     @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ_UPDATE_1.2.246.562.24.00000000001"})
