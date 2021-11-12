@@ -724,6 +724,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
                             }
                         }
+                        // child must be dirty in order to update paivitysPvm by @UpdateTimestamp
+                        child.setPaivitysPvm(new Date());
                         child = organisaatioRepository.save(child);
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
                     } else {
