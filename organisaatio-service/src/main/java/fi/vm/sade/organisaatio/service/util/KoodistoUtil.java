@@ -24,6 +24,7 @@ public final class KoodistoUtil {
         tmp.put("ryhmatyypit_2#1", "hakukohde");
         tmp.put("ryhmatyypit_3#1", "perustetyoryhma");
         tmp.put("ryhmatyypit_4#1", "koulutus");
+        tmp.put("ryhmatyypit_6#1", "hakukohderyhma");
         RYHMATYYPIT = HashBiMap.create(tmp);
     }
 
