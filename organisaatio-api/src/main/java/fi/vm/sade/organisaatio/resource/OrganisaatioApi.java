@@ -104,7 +104,7 @@ public interface OrganisaatioApi {
             @Parameter( name = "organisaatiotyyppi", description = "Haettavan organisaation tyyppi koodiarvona"),
             @Parameter( name = "oppilaitostyyppi", description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä"),
             @Parameter( name = "kieli", description = "Haettavan organisaation kieli tai lista kielistä"),
-            @Parameter( name = "oidResctrictionList", description = "Lista sallituista organisaatioiden oid:stä"),
+            @Parameter( name = "oidRestrictionList", description = "Lista sallituista organisaatioiden oid:stä"),
             @Parameter( name = "oid", description = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu."),
             @Parameter( name = "skipParents", description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")})
     @Operation(
@@ -123,7 +123,7 @@ public interface OrganisaatioApi {
             @Parameter( name = "organisaatiotyyppi", description = "Haettavan organisaation tyyppi koodiarvona"),
             @Parameter( name = "oppilaitostyyppi", description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä"),
             @Parameter( name = "kieli", description = "Haettavan organisaation kieli tai lista kielistä"),
-            @Parameter( name = "oidResctrictionList", description = "Lista sallituista organisaatioiden oid:stä"),
+            @Parameter( name = "oidRestrictionList", description = "Lista sallituista organisaatioiden oid:stä"),
             @Parameter( name = "oid", description = "Haku oid:lla. Hakuteksti jätetään huomioimatta jos oid on annettu."),
             @Parameter( name = "skipParents", description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")})
     @Operation(

@@ -596,7 +596,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Kokeillaan aina seuraavaa numeroa kunnes vapaa toimipistekoodi löytyy
         String jarjNro;
-        int nextVal = parentOppilaitos.getChildCount(new Date()) + 1;
+        int nextVal = parentOppilaitos.getChildCount(null) + 1;
         for (int i = nextVal; i < 100; i++) {
             jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
             if (checker.checkToimipistekoodiIsUniqueAndNotUsed(parentOppilaitos.getOppilaitosKoodi() + jarjNro)) {
@@ -724,6 +724,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
                             }
                         }
+                        // child must be dirty in order to update paivitysPvm by @UpdateTimestamp
                         child.setPaivitysPvm(new Date());
                         child = organisaatioRepository.save(child);
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
@@ -1141,8 +1142,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään organisaation nimi
         organisaatio.setNimi(nimiEntity.getNimi());
 
-        organisaatio.setPaivitysPvm(new Date());
-
         LOG.info("updating " + organisaatio);
         try {
             // Päivitetään nimi
@@ -1168,10 +1167,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             Map<String, String> oldName;
             oldName = new HashMap<>(organisaatio.getNimi().getValues());
 
-            LOG.info("Orgnisaation nimen update tarve: " + organisaatio);
+            LOG.info("Organisaation nimen update tarve: " + organisaatio);
 
             // Päiviteään organisaatiolle nimihistorian current nimi
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
+            organisaatio.setNimihaku(OrganisaatioNimiUtil.createNimihaku(organisaatio.getNimi()));
 
             // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
             if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {

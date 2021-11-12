@@ -450,7 +450,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             // keep the existing name in the other lang
             newNimi.addString(anotherlang, organisaatio.getNimi().getValues().get(anotherlang));
         }
-        organisaatio.setNimihaku(name);
+        organisaatio.setNimihaku(OrganisaatioNimiUtil.createNimihaku(newNimi));
         organisaatioNimi.setAlkuPvm(ytjNameAlkupvm);
         organisaatioNimi.setNimi(newNimi);
         organisaatio.setNimi(newNimi);
@@ -460,7 +460,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     private void updateNimiWithNewKieli(String nimi, String kieli, Organisaatio organisaatio, Date ytjNameAlkupvm) {
         organisaatio.getNimi().addString(kieli, nimi);
-        organisaatio.setNimihaku(nimi);
+        organisaatio.setNimihaku(OrganisaatioNimiUtil.createNimihaku(organisaatio.getNimi()));
         organisaatio.getCurrentNimi().setAlkuPvm(ytjNameAlkupvm);
     }
 
