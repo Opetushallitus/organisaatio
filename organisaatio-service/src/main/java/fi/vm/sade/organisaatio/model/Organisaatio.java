@@ -5,6 +5,7 @@ import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.persistence.UniqueConstraint;
@@ -219,6 +220,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     // OVT-7684
     @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
     private Date paivitysPvm;
 
     // OVT-7684

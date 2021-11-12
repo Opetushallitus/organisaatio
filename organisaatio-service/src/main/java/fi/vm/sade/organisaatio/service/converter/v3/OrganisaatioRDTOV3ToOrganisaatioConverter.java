@@ -72,9 +72,7 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter implements Converter<Orga
 
         // Asetetaan nimihakuun nimeksi nimihistorian current nimi, tai uusin nimi
         MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(s.getNimet());
-        if (nimi != null) {
-            s.setNimihaku(convertNimiMapToNimihaku(nimi.getValues()));
-        }
+        s.setNimihaku(OrganisaatioNimiUtil.createNimihaku(nimi));
 
         // t.set(s.getNimiLyhenne());
         s.setOpetuspisteenJarjNro(t.getOpetuspisteenJarjNro());
@@ -134,14 +132,5 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter implements Converter<Orga
 
     private Set<String> convertSetToSet(Set<String> s) {
         return new HashSet<>(s);
-    }
-
-    private String convertNimiMapToNimihaku(Map<String, String> nimiMap) {
-        StringBuilder sb = new StringBuilder();
-        for (String nimi : nimiMap.values()) {
-                sb.append(",");
-                sb.append(nimi);
-        }
-        return sb.toString();
     }
 }
