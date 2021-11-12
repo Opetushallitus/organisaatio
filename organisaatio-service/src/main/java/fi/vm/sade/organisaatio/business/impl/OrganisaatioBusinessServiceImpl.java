@@ -724,7 +724,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                                 throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
                             }
                         }
-                        child.setPaivitysPvm(new Date()); //TODO: päivittääkö save (vanha DAO.update) aikaleiman
                         child = organisaatioRepository.save(child);
                         LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
                     } else {
