@@ -56,7 +56,7 @@ public interface OrganisaatioResource {
     String parentoids(@PathVariable String oid) throws Exception;
 
     @GetMapping(path = "/{oid}/childoids", produces = MediaType.APPLICATION_JSON_VALUE)
-    String childoids(String oid,
+    String childoids(@PathVariable String oid,
                      @RequestParam(defaultValue = "false") boolean rekursiivisesti,
                      @RequestParam(defaultValue = "true") boolean aktiiviset,
                      @RequestParam(defaultValue = "true") boolean suunnitellut,
