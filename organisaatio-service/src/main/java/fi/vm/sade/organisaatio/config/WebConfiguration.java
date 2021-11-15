@@ -15,10 +15,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController(String.format("%s/actuator/health", uiPath))
-                .setViewName("forward:/actuator/health");
-        registry.addViewController(String.format("%s/actuator/health/", uiPath))
-                .setViewName("forward:/actuator/health");
         registry.addViewController(String.format("%s", uiPath))
                 .setViewName("forward:/index.html");
         registry.addViewController(String.format("%s/", uiPath))
