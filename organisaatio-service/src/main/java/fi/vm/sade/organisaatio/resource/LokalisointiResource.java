@@ -24,21 +24,8 @@ public class LokalisointiResource {
     }
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     public Map<String, Map<String, String>> getLokalisointi() {
         return lokalisointiClient.getByCategory("organisaatio2");
-    }
-
-    @GetMapping(path = "/kieli", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
-    public String getLocale(Locale locale) {
-        return locale.getLanguage();
-    }
-
-    @PutMapping("/kieli")
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
-    public void setLocale() {
-        // nop (kts. LocaleConfiguration#localeChangeInterceptor)
     }
 
 }
