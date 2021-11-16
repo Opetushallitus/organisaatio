@@ -55,7 +55,7 @@ activeMq.targetDestination.organisaatio=fi.vm.sade.organisaatio.service
 activeMq.targetDestinationAdmin.tarjonta=fi.vm.sade.tarjonta.admin.service
 activeMq.targetDestinationPublic.tarjonta=fi.vm.sade.tarjonta.public.service
 cas.callback.organisaatio-app=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
-cas.callback.organisaatio-service=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
+cas.callback.organisaatio-service=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio-service
 cas.callback.organisaatio-ui=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
 cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
@@ -65,7 +65,7 @@ cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 cas.callback.tarjonta-service=http://{{ cluster_tarjonta_host | default("${server.name}") }}:{{ cluster_tarjonta_port | default("8302") }}/tarjonta-service
 cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio
-cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio
+cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
 cas.service.tarjonta-service=https\://${host.virkailija}/tarjonta-service
 flyway.initOnMigrate=true
 flyway.validateOnMigrate=false
