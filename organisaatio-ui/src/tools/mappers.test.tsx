@@ -1,4 +1,4 @@
-import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from './mappers';
+import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang, mapVisibleKieletFromOpetuskielet } from './mappers';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -42,6 +42,36 @@ describe('mappers', () => {
         });
         it('Maps koodi to empty string if there are no language props', () => {
             expect(mapLocalizedKoodiToLang('', 'emptyprop', esimerkkiMonikielinenObjekti)).toBe('');
+        });
+    });
+    describe('mapVisibleKieletFromOpetuskielet', () => {
+        it('maps suomi only opetuskieli to [fi] visible based on label', () => {
+            const opetuskeleletOptions = [{ label: 'suomi', value: 'testi' }];
+            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi']);
+        });
+        it('maps ruotsi only opetuskieli to [sv] visible based on label', () => {
+            const opetuskeleletOptions = [{ label: 'ruotsi', value: 'testi' }];
+            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['sv']);
+        });
+        it('maps muu only opetuskieli to [en] visible based on label', () => {
+            const opetuskeleletOptions = [{ label: 'muu', value: 'testi' }];
+            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['en']);
+        });
+
+        it('maps suomi/ruotsi only opetuskieli to [fi, sv] visible based on label', () => {
+            const opetuskeleletOptions = [{ label: 'suomi/ruotsi', value: 'testi' }];
+            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi', 'sv']);
+        });
+        it('maps suomi/ruotsi and muu opetuskieli to [fi, sv, en] visible based on label', () => {
+            const opetuskeleletOptions = [
+                { label: 'suomi/ruotsi', value: 'testi' },
+                { label: 'muu', value: 'muutesti' },
+            ];
+            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi', 'sv', 'en']);
+        });
+        it('maps none opetuskieli to [fi] visible based on label', () => {
+            const opetuskeleletOptions = [];
+            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi']);
         });
     });
 });

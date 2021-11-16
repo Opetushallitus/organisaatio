@@ -44,9 +44,9 @@ export type YhteystiedotBase = {
 };
 
 export type Yhteystiedot = {
-    'kieli_fi#1': YhteystiedotBase;
-    'kieli_sv#1': YhteystiedotBase;
-    'kieli_en#1': YhteystiedotBase;
+    fi: YhteystiedotBase;
+    sv: YhteystiedotBase;
+    en: YhteystiedotBase;
     osoitteetOnEri?: boolean;
 };
 
@@ -229,6 +229,6 @@ export type KoodistoContextType = {
     maatJaValtiotKoodisto: Koodisto;
 };
 
-export type Opetuskieli = 'fi' | 'sv' | 'en';
+export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
 
-export type Opetuskielet = Opetuskieli[];
+export type SupportedKieli = 'fi' | 'sv' | 'en';

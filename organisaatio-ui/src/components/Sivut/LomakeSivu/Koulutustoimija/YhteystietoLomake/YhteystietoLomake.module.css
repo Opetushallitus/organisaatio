@@ -5,6 +5,17 @@
     flex-wrap: nowrap;
 }
 
+.EnsimmainenRivi {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.EnsimmainenRivi > h3 {
+    font-weight: bolder;
+    padding-bottom: 1rem;
+    color: #0a789c
+}
+
 .Rivi {
     display: flex;
     flex-direction: row;
@@ -55,7 +66,7 @@
 }
 
 .KorttiKehys {
-    border: 1px solid lightgrey;
+    border: 1px solid #ccc;
     padding: 1rem;
     margin: 1rem
 }

@@ -54,6 +54,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         reset: resetPerustiedot,
         watch: watchPerustiedot,
         setValue: setPerustiedotValue,
+        getValues: getPerustiedotValues,
         register: registerPerustiedot,
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
@@ -139,7 +140,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
-                opetuskieli={'fi'}
+                kielet={getPerustiedotValues('kielet') || []}
                 setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}

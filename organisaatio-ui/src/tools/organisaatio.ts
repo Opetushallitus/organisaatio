@@ -3,7 +3,6 @@ import { ROOT_OID } from '../contexts/contexts';
 import { ApiOrganisaatio } from '../types/apiTypes';
 import queryString from 'query-string';
 
-//TODO pitää tsekkaa mitä tästä tulee jos tyypit ei osu mihinkään.
 export const resolveOrganisaatio = (
     rakenne: Rakenne[],
     organisaatio: { organisaatioTyypit: KoodiUri[]; oid?: string }
