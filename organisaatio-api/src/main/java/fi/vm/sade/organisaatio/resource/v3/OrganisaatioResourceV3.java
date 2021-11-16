@@ -3,7 +3,6 @@ package fi.vm.sade.organisaatio.resource.v3;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
-import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
@@ -40,20 +39,6 @@ public interface OrganisaatioResourceV3 {
     OrganisaatioRDTOV3 getOrganisaatioByOID(
             @PathVariable("id") String oid,
             @RequestParam(defaultValue = "false") boolean includeImage);
-
-    @PutMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResultRDTOV3 updateOrganisaatio(
-
-            @PathVariable String oid,
-            OrganisaatioRDTOV3 ordto);
-
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    String deleteOrganisaatio(
-
-            @PathVariable String oid);
-
-    @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResultRDTOV3 newOrganisaatio(OrganisaatioRDTOV3 ordto);
 
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioRDTOV3> haeMuutetut(

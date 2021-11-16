@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.util;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
@@ -142,6 +143,15 @@ public final class OrganisaatioRDTOTestUtil {
         }
         return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
     }
+    public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
+                                                      String organisaatioTyyppi,
+                                                      OrganisaatioRDTOV4 parent, boolean nullifyOid) {
+        String parentOid = OPH_OID;
+        if (parent != null) {
+            parentOid = parent.getOid();
+        }
+        return createOrganisaatioV4(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
+    }
 
     /**
      * Luodaan organisaatio, jolla on asetettu kaikki organisaatiolle pakolliset kentät.
@@ -159,6 +169,47 @@ public final class OrganisaatioRDTOTestUtil {
                                                       String oid,
                                                       String parentOid, boolean nullifyOid) {
         OrganisaatioRDTO organisaatio = new OrganisaatioRDTO();
+        OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
+
+        organisaatio.setNimi(nimiRDTO.getNimi());
+        List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
+        nimet.add(nimiRDTO);
+        organisaatio.setNimet(nimet);
+
+        if (nullifyOid) {
+            organisaatio.setOid(null);
+        }
+        else if (isNullOrEmpty(oid)) {
+            organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
+        }
+        else {
+            organisaatio.setOid(oid);
+        }
+
+        organisaatio.setParentOid(parentOid);
+
+        if (organisaatioTyyppi != null) {
+            organisaatio.getTyypit().add(organisaatioTyyppi);
+        }
+
+        organisaatio.setAlkuPvm(DEFAULT_VOIMASSAOLO_ALKU);
+        organisaatio.setKotipaikkaUri(DEFAULT_KOTIPAIKKA);
+        organisaatio.setMaaUri(DEFAULT_MAA);
+        organisaatio.setKieletUris(DEFAULT_KIELET);
+
+        organisaatio.getYhteystiedot().add(DEFAULT_POSTIOSOITE);
+        organisaatio.getYhteystiedot().add(DEFAULT_KAYNTIOSOITE);
+        organisaatio.getYhteystiedot().add(DEFAULT_PUHELIN);
+        organisaatio.getYhteystiedot().add(DEFAULT_WWW);
+        organisaatio.getYhteystiedot().add(DEFAULT_EMAIL);
+
+        return organisaatio;
+    }
+    public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
+                                                      String organisaatioTyyppi,
+                                                      String oid,
+                                                      String parentOid, boolean nullifyOid) {
+        OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
 
         organisaatio.setNimi(nimiRDTO.getNimi());

@@ -23,7 +23,10 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -71,18 +74,6 @@ public interface OrganisaatioResourceV2 {
     @GetMapping(path = "/{id}/LOP", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@PathVariable("id") String oid);
 
-    @PutMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioNimiDTOV2 newOrganisaatioNimi(@PathVariable("oid") String oid, OrganisaatioNimiDTOV2 nimidto) throws Exception;
-
-    @PostMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioNimiDTOV2 updateOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date, OrganisaatioNimiDTOV2 nimidto);
-
-    @DeleteMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE)
-    String deleteOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date);
-
-    @PutMapping(path = "/muokkaamonta", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot);
-
     @GetMapping(path = "/muutetut/oid", produces = MediaType.APPLICATION_JSON_VALUE)
     String haeMuutettujenOid(@RequestParam DateParam lastModifiedSince);
 
@@ -94,14 +85,6 @@ public interface OrganisaatioResourceV2 {
 
     @GetMapping(path = "/{oid}/historia", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable String oid);
-
-    @PostMapping(path = "/{oid}/organisaatiosuhde", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    void changeOrganisationRelationship(
-            @PathVariable String oid,
-            @RequestParam boolean merge,
-            @RequestParam DateParam moveDate,
-            String newParentOid
-    );
 
     @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam DateParam liitoksetAlkaen);

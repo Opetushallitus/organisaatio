@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
+@ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class OrganisaatioApiTest extends SecurityAwareTestBase {
+class OrganisaatioApiTest extends SecurityAwareTestBase {
 
 
     @TestConfiguration
@@ -65,6 +67,7 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
             return new OIDServiceMock();
         }
     }
+
     @Autowired
     private OrganisaatioApi resource;
 
@@ -79,7 +82,7 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void findByOids() {
+    void findByOids() {
         Set<String> oids = singleton("1.2.8000.1");
 
         List<OrganisaatioRDTOV4> organisaatiot = resource.findByOids(oids);
@@ -88,9 +91,9 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void findDescendantsReturnsAllDescendants() {
+    void findDescendantsReturnsAllDescendants() {
         String parentOid = "1.2.246.562.24.00000000001";
-        String[] allDescendants = new String[] {
+        String[] allDescendants = new String[]{
                 "1.2.2004.1", "1.2.2004.2", "1.2.2004.3",
                 "1.2.2004.4", "1.2.2004.5", "1.2.2004.6",
                 "1.2.2005.4", "1.2.2005.5", "1.2.8000.1",
@@ -106,7 +109,7 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void findDescendantsReturnsPublicDescendantsOnly() {
+    void findDescendantsReturnsPublicDescendantsOnly() {
         String parentOid = "1.2.8000.1";
         setCurrentUser("1.2.3.4.5", getAuthority(
                 "APP_" + OrganisaatioPermissionServiceImpl.ORGANISAATIOHALLINTA + "_CRUD",
@@ -123,7 +126,7 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void findDescendantsReturnsCorrectHierarchy() {
+    void findDescendantsReturnsCorrectHierarchy() {
         String parentOid = "1.2.246.562.24.00000000001";
         String childOid = "1.2.2004.1";
         String grandChildOid = "1.2.2004.2";
@@ -141,7 +144,7 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void findDescendantsReturnsCorrectParentOidPath() {
+    void findDescendantsReturnsCorrectParentOidPath() {
         String parentOid = "1.2.2004.1";
         String childOid = "1.2.2004.2";
         String expectedParentPath = "1.2.246.562.24.00000000001/1.2.2004.1";
@@ -151,5 +154,4 @@ public class OrganisaatioApiTest extends SecurityAwareTestBase {
         ).findFirst().orElseThrow(() -> new IllegalStateException("Organisaatiota ei löydy: " + childOid));
         assertThat(childOrg.getParentOidPath()).isEqualTo(expectedParentPath);
     }
-
 }

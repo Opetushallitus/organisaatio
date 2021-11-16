@@ -79,13 +79,13 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV2, OrganisaatioSearchCriteriaDTOV4>() {
             @Override
             protected void configure() {
-                using(organisaatioTyyppiV3ToV4).map(source.getOrganisaatioTyyppi()).setOrganisaatioTyyppi(null);
+                using(organisaatioTyyppiV3ToV4).map(source.getOrganisaatiotyyppi()).setOrganisaatiotyyppi(null);
             }
         });
         this.addMappings(new PropertyMap<OrganisaatioSearchCriteriaDTOV4, OrganisaatioSearchCriteriaDTOV2>() {
             @Override
             protected void configure() {
-                using(organisaatioTyyppiV4ToV3).map(source.getOrganisaatioTyyppi()).setOrganisaatioTyyppi(null);
+                using(organisaatioTyyppiV4ToV3).map(source.getOrganisaatiotyyppi()).setOrganisaatiotyyppi(null);
             }
         });
 

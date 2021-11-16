@@ -17,11 +17,12 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,7 @@ public interface OrganisaatioResource {
     String parentoids(@PathVariable String oid) throws Exception;
 
     @GetMapping(path = "/{oid}/childoids", produces = MediaType.APPLICATION_JSON_VALUE)
-    String childoids(String oid,
+    String childoids(@PathVariable String oid,
                      @RequestParam(defaultValue = "false") boolean rekursiivisesti,
                      @RequestParam(defaultValue = "true") boolean aktiiviset,
                      @RequestParam(defaultValue = "true") boolean suunnitellut,
@@ -92,22 +93,6 @@ public interface OrganisaatioResource {
             @PathVariable("id") String oid,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
-    @PostMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
-        // käytä OrganisaatioResourceV3#updateOrganisaatio
-    ResultRDTO updateOrganisaatio(
-            @PathVariable String oid,
-            OrganisaatioRDTO ordto);
-
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
-        // käytä OrganisaatioResourceV3#deleteOrganisaatio
-    String deleteOrganisaatio(@PathVariable String oid);
-
-    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Deprecated
-        // käytä OrganisaatioResourceV3#newOrganisaatio
-    ResultRDTO newOrganisaatio(OrganisaatioRDTO ordto);
 
     @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE)
     Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam(defaultValue = "") Set<String> organisaatioTyyppi);

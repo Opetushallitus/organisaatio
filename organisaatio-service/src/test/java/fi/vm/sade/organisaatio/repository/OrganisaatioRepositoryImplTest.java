@@ -172,7 +172,7 @@ public class OrganisaatioRepositoryImplTest {
         assertFalse(organisaatiotContain(children, f));
 
         children = organisaatioRepository.findChildren(c.getOid(), false, true);
-        assertEquals(1,children.size());
+        assertEquals(1, children.size());
         assertTrue(organisaatiotContain(children, e));
 
         children = organisaatioRepository.findChildren(e.getOid(), false, true);
@@ -189,14 +189,19 @@ public class OrganisaatioRepositoryImplTest {
 
     @Test
     public void findModifedSinceLimitsByModificationTime() {
-        Date now = new Date();
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        a.setPaivitysPvm(new Date(0L));
-        organisaatioRepository.save(a);
+        organisaatioRepository.saveAndFlush(a);
+
+        try {
+            Thread.sleep(100L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+        Date before = new Date();
         Organisaatio b = createOrganisaatio("B", null, false, null, null);
-        b.setPaivitysPvm((new Date(now.getTime() + 100)));
         organisaatioRepository.save(b);
-        List<Organisaatio> tulokset = organisaatioRepository.findModifiedSince(false, now);
+        List<Organisaatio> tulokset = organisaatioRepository.findModifiedSince(false, before);
         assertThat(tulokset.size()).isEqualTo(1);
         assertThat(tulokset.get(0).getOid()).isEqualTo(b.getOid());
     }
