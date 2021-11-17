@@ -1,4 +1,5 @@
 import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import * as React from 'react';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
@@ -232,3 +233,5 @@ export type KoodistoContextType = {
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
 
 export type SupportedKieli = 'fi' | 'sv' | 'en';
+
+export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };

@@ -167,7 +167,16 @@ function mapUiOrganisaatioToApiToSave(
     parentOid?: string
 ): NewApiOrganisaatio {
     const yhteystiedot = mapUiYhteystiedotToApi(postinumerotKoodisto, [], yhteystiedotFormValues);
-    const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit, alkuPvm, nimi } = perustiedotFormValues;
+    const {
+        kotipaikka,
+        maa,
+        kielet,
+        muutKotipaikat,
+        organisaatioTyypit,
+        alkuPvm,
+        nimi,
+        ytunnus,
+    } = perustiedotFormValues;
     const nimet = [
         {
             nimi,
@@ -175,6 +184,7 @@ function mapUiOrganisaatioToApiToSave(
         },
     ];
     return {
+        ytunnus,
         alkuPvm,
         tyypit: organisaatioTyypit,
         kotipaikkaUri: kotipaikka.value,
@@ -317,6 +327,7 @@ export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYht
             ) {
                 return { ...rest };
             }
+            return undefined;
         })
         .filter(Boolean) as ApiYhteystiedot[];
 };

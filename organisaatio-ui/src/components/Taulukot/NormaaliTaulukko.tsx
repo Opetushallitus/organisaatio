@@ -158,14 +158,17 @@ const NormaaliTaulukko = ({
 }: NormaaliTaulukkoProps) => {
     const { i18n } = useContext(LanguageContext);
 
-    let data = [] as any; // TODO check type casting bc i could not get | to work.
-    let columns = [] as any;
+    let data;
+    let columns;
     if (ryhmatData && ryhmatData.length > 0) {
         data = ryhmatData;
         columns = ryhmatColumns;
     } else if (yhteystietoTyypitData && yhteystietoTyypitData.length > 0) {
         data = yhteystietoTyypitData;
         columns = yhteystietotyypitColumns;
+    } else {
+        data = [];
+        columns = [];
     }
 
     const {

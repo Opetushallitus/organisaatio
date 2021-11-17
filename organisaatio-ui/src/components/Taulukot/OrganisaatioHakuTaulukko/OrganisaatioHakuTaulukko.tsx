@@ -1,7 +1,17 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
-import { Column, useExpanded, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table';
+import {
+    Cell,
+    Column,
+    HeaderGroup,
+    Row,
+    useExpanded,
+    useGlobalFilter,
+    usePagination,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
@@ -161,14 +171,15 @@ export default function OrganisaatioHakuTaulukko({
             <Hakufiltterit isOPHVirkailija={isOPHVirkailija} setOrganisaatiot={setOrganisaatiot} />
             <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
                 <thead>
-                    {headerGroups.map((
-                        headerGroup: any //TODO remove any and take care of collapse
-                    ) => (
+                    {headerGroups.map((headerGroup: HeaderGroup<ApiOrganisaatio>) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column) => (
                                 <th
                                     {...column.getHeaderProps({
-                                        className: column.collapse ? styles.collapse : '',
+                                        className: (column as HeaderGroup<ApiOrganisaatio> & { collapse: boolean })
+                                            .collapse
+                                            ? styles.collapse
+                                            : '',
                                     })}
                                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                                 >
@@ -183,12 +194,14 @@ export default function OrganisaatioHakuTaulukko({
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
-                                {row.cells.map((cell: any) => {
-                                    //TODO remove any and take care of collapse
+                                {row.cells.map((cell: Cell<ApiOrganisaatio>) => {
                                     return (
                                         <td
                                             {...cell.getCellProps({
-                                                className: cell.row.collapse ? styles.collapse : '',
+                                                className: (cell.row as Row<ApiOrganisaatio> & { collapse: boolean })
+                                                    .collapse
+                                                    ? styles.collapse
+                                                    : '',
                                             })}
                                             style={{
                                                 background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',

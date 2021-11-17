@@ -10,6 +10,8 @@ import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/Or
 import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
 import { Link } from 'react-router-dom';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
+import { Column } from 'react-table';
+import { ApiOrganisaatio } from '../../../types/apiTypes';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -25,22 +27,16 @@ const TaulukkoSivu = (props) => {
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
     const [isOPHVirkailija, setIsOPHVirkailija] = useState(true);
 
-    const columns: any = [
+    const columns: (Column<ApiOrganisaatio> & { collapse?: boolean })[] = [
         {
-            // Build our expander column
-            id: 'expander', // Make sure it has an ID
+            id: 'expander',
             collapse: true,
             Cell: ({ row }) =>
-                // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-                // to build the toggle for expanding a row
                 row.canExpand ? (
                     <span
                         className={styles.Expander}
                         {...row.getToggleRowExpandedProps({
                             style: {
-                                // We can even use the row.depth property
-                                // and paddingLeft to indicate the depth
-                                // of the row
                                 paddingLeft: `${row.depth + 1}rem`,
                             },
                         })}
@@ -96,7 +92,6 @@ const TaulukkoSivu = (props) => {
         {
             Header: i18n.translate('TAULUKKO_TARKISTUS'),
             id: 'tarkistus',
-            //   accessor: (values) => (tarkastaLipunVari(values.tarkastusPvm) ? null : 'tarkistus'),
             Cell: ({ row }) => (
                 <div
                     className={`${styles.LippuNappi} ${

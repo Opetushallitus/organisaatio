@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useContext } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import { Nimi, OrganisaationNimetNimi } from '../../../../../types/types';
+import { HistoriaTaulukkoData, Nimi, OrganisaationNimetNimi } from '../../../../../types/types';
 import { LanguageContext } from '../../../../../contexts/contexts';
+import { Column } from 'react-table';
 
 type nimiHistoriaProps = {
     nimet: OrganisaationNimetNimi[];
@@ -27,7 +28,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
                     }`}</span>
                 )),
         },
-    ];
+    ] as Column<OrganisaationNimetNimi | HistoriaTaulukkoData>[];
     return (
         <div className={styles.UloinKehys}>
             <YksinkertainenTaulukko data={nimet} tableColumns={columns} />
