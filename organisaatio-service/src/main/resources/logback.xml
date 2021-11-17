@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="STDOUT-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>CONSOLE: %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="STDOUT-APP" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>APP:     %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="STDOUT-AUDIT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>AUDIT:   %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="CONSOLE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/logs/${NAME}-console.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>${user.home}/logs/${NAME}-console.cloud.%i.log</fileNamePattern>
@@ -14,7 +28,7 @@
         </triggeringPolicy>
         <encoder>
             <charset>utf-8</charset>
-            <pattern>%d{ISO8601} %-5p { %X{user}} [%t] %-5p %c: %m%n</pattern>
+            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
     <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -30,10 +44,10 @@
         </triggeringPolicy>
         <encoder>
             <charset>utf-8</charset>
-            <pattern>%d{ISO8601} %-5p { %X{user}} [%t] %-5p %c: %m%n</pattern>
+            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
-    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/logs/auditlog_organisaatio2.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -51,12 +65,15 @@
 
     <logger name="fi.vm" level="INFO" additivity="false">
         <appender-ref ref="APP"/>
+        <appender-ref ref="STDOUT-APP"/>
     </logger>
     <root level="INFO">
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="STDOUT-CONSOLE"/>
     </root>
     <logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="INFO" additivity="false">
-        <appender-ref ref="ROLLING"/>
+        <appender-ref ref="AUDIT"/>
+        <appender-ref ref="STDOUT-AUDIT"/>
     </logger>
 
 </configuration>
