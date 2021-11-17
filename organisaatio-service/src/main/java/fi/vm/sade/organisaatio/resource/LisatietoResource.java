@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Hidden
 @RestController
-@RequestMapping("${server.internal.context-path}/lisatieto")
+@RequestMapping({"${server.internal.context-path}/lisatieto", "${server.rest.context-path}/lisatieto"})
 public class LisatietoResource {
     private LisatietoService lisatietoService;
 
