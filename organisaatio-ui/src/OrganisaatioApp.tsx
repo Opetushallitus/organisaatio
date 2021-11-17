@@ -128,7 +128,7 @@ const OrganisaatioApp: React.FC = () => {
                             />
                             <Route path="/ryhmat/:oid" component={RyhmanMuokkaus} />
                             <Route path="*">
-                                <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
+                                <ErrorPage>{'ERROR_404'}</ErrorPage>
                             </Route>
                         </Switch>
                     </KoodistoContext.Provider>
