@@ -109,6 +109,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .headers().disable()
+                .addFilter(casAuthenticationFilter())
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/buildversion.txt").permitAll()
@@ -119,7 +120,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/organisaatio/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(casAuthenticationFilter())
                 .exceptionHandling()
                 .authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
