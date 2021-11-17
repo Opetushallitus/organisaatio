@@ -3,63 +3,22 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <appender name="STDOUT-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>CONSOLE: %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
+            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
     <appender name="STDOUT-APP" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>APP:     %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
+            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
     <appender name="STDOUT-APP-NO-EX" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>APPNOEX:   %d{ISO8601} %-5p [%t] %c: %m%nopex%n</pattern>
+            <pattern>%d{ISO8601} %-5p [%t] %c: %m%nopex%n</pattern>
         </encoder>
     </appender>
     <appender name="STDOUT-AUDIT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>AUDIT:   %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="CONSOLE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/logs/${NAME}-console.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>${user.home}/logs/${NAME}-console.cloud.%i.log</fileNamePattern>
-            <minIndex>1</minIndex>
-            <maxIndex>5</maxIndex>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <maxFileSize>20MB</maxFileSize>
-        </triggeringPolicy>
-        <encoder>
-            <charset>utf-8</charset>
-            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <prudent>true</prudent>
-        <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${user.home}/logs/oph-${NAME}.cloud.%d.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
-            <totalSizeCap>100</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <charset>utf-8</charset>
-            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="APP-NO-EX" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <prudent>true</prudent>
-        <append>true</append>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${user.home}/logs/oph-${NAME}.cloud.x%d.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
-            <totalSizeCap>100</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <charset>utf-8</charset>
-            <pattern>NOEX %d{ISO8601} %-5p [%t] %c: %m%nopex%n</pattern>
         </encoder>
     </appender>
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -79,15 +38,12 @@
     </appender>
 
     <logger name="fi.vm" level="INFO" additivity="false">
-        <appender-ref ref="APP"/>
         <appender-ref ref="STDOUT-APP"/>
     </logger>
     <logger name="fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl" additivity="false">
-        <appender-ref ref="APP-NO-EX"/>
         <appender-ref ref="STDOUT-APP-NO-EX"/>
     </logger>
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="STDOUT-CONSOLE"/>
     </root>
     <logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="INFO" additivity="false">
