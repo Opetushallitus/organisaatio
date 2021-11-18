@@ -35,7 +35,7 @@ export const mapVisibleKieletFromOpetuskielet = (opetuskieletOptions: KoodistoSe
     return Array.from(visibleKielet);
 };
 
-export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[SupportedKieli], kieli): boolean => {
+export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[SupportedKieli]): boolean => {
     return (
         Object.keys(KielisetYhteystiedot).filter((yhteystietokentta) => KielisetYhteystiedot[yhteystietokentta])
             .length > 0

@@ -4,7 +4,7 @@ import {
     mapLocalizedKoodiToLang,
     mapVisibleKieletFromOpetuskielet,
 } from './mappers';
-import { SupportedKieli, Yhteystiedot } from '../types/types';
+import { SupportedKieli, Yhteystiedot, YhteystiedotBase } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -74,35 +74,36 @@ describe('mappers', () => {
 
     describe('checkHasSomeValueByKieli', () => {
         test.each([
-            {
-                email: '',
-                kayntiOsoitePostiNro: '',
-                kayntiOsoiteToimipaikka: '',
-                puhelinnumero: '',
-                www: '',
-                postiOsoite: 'asetettu',
-                postiOsoitePostiNro: '',
-                postiOsoiteToimipaikka: '',
-                kayntiOsoite: '',
-            },
-            {
-                email: '',
-                kayntiOsoitePostiNro: '',
-                kayntiOsoiteToimipaikka: '',
-                puhelinnumero: '',
-                www: '',
-                postiOsoite: '',
-                postiOsoitePostiNro: '',
-                postiOsoiteToimipaikka: '',
-                kayntiOsoite: '',
-            },
-            'fi',
-            false,
-        ])(
-            'Returns true if some field of yhteystiedot object is set and false if not set',
-            (values, kieli, expected) => {
-                expect(checkHasSomeValueByKieli(values as Yhteystiedot[SupportedKieli], kieli)).toEqual(expected);
-            }
-        );
+            [
+                {
+                    email: '',
+                    kayntiOsoitePostiNro: '',
+                    kayntiOsoiteToimipaikka: '',
+                    puhelinnumero: '',
+                    www: '',
+                    postiOsoite: 'asetettu',
+                    postiOsoitePostiNro: '',
+                    postiOsoiteToimipaikka: '',
+                    kayntiOsoite: '',
+                },
+                true,
+            ],
+            [
+                {
+                    email: '',
+                    kayntiOsoitePostiNro: '',
+                    kayntiOsoiteToimipaikka: '',
+                    puhelinnumero: '',
+                    www: '',
+                    postiOsoite: '',
+                    postiOsoitePostiNro: '',
+                    postiOsoiteToimipaikka: '',
+                    kayntiOsoite: '',
+                },
+                false,
+            ],
+        ])('Returns true if some field of yhteystiedot object is set and false if not set', (values, expected) => {
+            expect(checkHasSomeValueByKieli(values as YhteystiedotBase)).toEqual(expected);
+        });
     });
 });
