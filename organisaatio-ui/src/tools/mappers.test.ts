@@ -4,6 +4,7 @@ import {
     mapLocalizedKoodiToLang,
     mapVisibleKieletFromOpetuskielet,
 } from './mappers';
+import { SupportedKieli, Yhteystiedot } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -50,72 +51,58 @@ describe('mappers', () => {
         });
     });
     describe('mapVisibleKieletFromOpetuskielet', () => {
-        it('maps suomi only opetuskieli to [fi] visible based on label', () => {
-            const opetuskeleletOptions = [{ label: 'suomi', value: 'testi' }];
-            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi']);
-        });
-        it('maps ruotsi only opetuskieli to [sv] visible based on label', () => {
-            const opetuskeleletOptions = [{ label: 'ruotsi', value: 'testi' }];
-            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['sv']);
-        });
-        it('maps muu only opetuskieli to [en] visible based on label', () => {
-            const opetuskeleletOptions = [{ label: 'muu', value: 'testi' }];
-            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['en']);
-        });
-
-        it('maps suomi/ruotsi only opetuskieli to [fi, sv] visible based on label', () => {
-            const opetuskeleletOptions = [{ label: 'suomi/ruotsi', value: 'testi' }];
-            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi', 'sv']);
-        });
-        it('maps suomi/ruotsi and muu opetuskieli to [fi, sv, en] visible based on label', () => {
-            const opetuskeleletOptions = [
-                { label: 'suomi/ruotsi', value: 'testi' },
-                { label: 'muu', value: 'muutesti' },
-            ];
-            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi', 'sv', 'en']);
-        });
-        it('maps none opetuskieli to [fi] visible based on label', () => {
-            const opetuskeleletOptions = [];
-            expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi']);
-        });
+        test.each([
+            [[{ label: 'suomi', value: 'testi' }], ['fi']],
+            [[{ label: 'ruotsi', value: 'testi' }], ['sv']],
+            [[{ label: 'muu', value: 'testi' }], ['en']],
+            [[{ label: 'suomi/ruotsi', value: 'testi' }], ['fi', 'sv']],
+            [
+                [
+                    { label: 'suomi/ruotsi', value: 'testi' },
+                    { label: 'muu', value: 'muutesti' },
+                ],
+                ['fi', 'sv', 'en'],
+            ],
+            [[], ['fi']],
+        ])(
+            'Should map visible kielet based on opetuskielivalinta and defaults to fi.',
+            (opetuskeleletOptions, expectedResult) => {
+                expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(expectedResult);
+            }
+        );
     });
 
     describe('checkHasSomeValueByKieli', () => {
-        it('Returns true if some field of yhteystiedot object is set', () => {
-            expect(
-                checkHasSomeValueByKieli(
-                    {
-                        email: '',
-                        kayntiOsoitePostiNro: '',
-                        kayntiOsoiteToimipaikka: '',
-                        puhelinnumero: '',
-                        www: '',
-                        postiOsoite: 'asetettu',
-                        postiOsoitePostiNro: '',
-                        postiOsoiteToimipaikka: '',
-                        kayntiOsoite: '',
-                    },
-                    'fi'
-                )
-            ).toEqual(true);
-        });
-    });
-    it('Returns false if no fields of yhteystiedot object is set', () => {
-        expect(
-            checkHasSomeValueByKieli(
-                {
-                    email: '',
-                    kayntiOsoitePostiNro: '',
-                    kayntiOsoiteToimipaikka: '',
-                    puhelinnumero: '',
-                    www: '',
-                    postiOsoite: '',
-                    postiOsoitePostiNro: '',
-                    postiOsoiteToimipaikka: '',
-                    kayntiOsoite: '',
-                },
-                'fi'
-            )
-        ).toEqual(false);
+        test.each([
+            {
+                email: '',
+                kayntiOsoitePostiNro: '',
+                kayntiOsoiteToimipaikka: '',
+                puhelinnumero: '',
+                www: '',
+                postiOsoite: 'asetettu',
+                postiOsoitePostiNro: '',
+                postiOsoiteToimipaikka: '',
+                kayntiOsoite: '',
+            },
+            {
+                email: '',
+                kayntiOsoitePostiNro: '',
+                kayntiOsoiteToimipaikka: '',
+                puhelinnumero: '',
+                www: '',
+                postiOsoite: '',
+                postiOsoitePostiNro: '',
+                postiOsoiteToimipaikka: '',
+                kayntiOsoite: '',
+            },
+            'fi',
+            false,
+        ])(
+            'Returns true if some field of yhteystiedot object is set and false if not set',
+            (values, kieli, expected) => {
+                expect(checkHasSomeValueByKieli(values as Yhteystiedot[SupportedKieli], kieli)).toEqual(expected);
+            }
+        );
     });
 });

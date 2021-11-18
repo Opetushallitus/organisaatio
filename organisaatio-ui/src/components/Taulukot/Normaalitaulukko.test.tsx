@@ -1,7 +1,14 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
-import NormaaliTaulukko, { NormaaliTaulukkoProps, FiltteritProps, Hakufiltterit } from './NormaaliTaulukko';
+import NormaaliTaulukko, {
+    NormaaliTaulukkoProps,
+    FiltteritProps,
+    Hakufiltterit,
+    chooseTaulukkoData,
+} from './NormaaliTaulukko';
+import { Ryhma, YhteystietoTyyppi } from '../../types/types';
+import { Column } from 'react-table';
 
 const MINIMAL_PROPS: NormaaliTaulukkoProps = {
     ryhmatData: [],
@@ -46,5 +53,70 @@ describe('Normaalitaulukko', () => {
             const element = shallow(<NormaaliTaulukko {...{ ...MINIMAL_PROPS, useHakuFiltteri: true }} />);
             expect(element.find(Hakufiltterit)).toHaveLength(1);
         });
+    });
+    describe('chooseTaulukkoData', () => {
+        const ryhma = {
+            kayntiosoite: undefined,
+            kayttoryhmat: [],
+            kieletUris: [],
+            kuvaus: '',
+            kuvaus2: undefined,
+            lakkautusPvm: '',
+            lisatiedot: [],
+            muutKotipaikatUris: [],
+            muutOppilaitosTyyppiUris: [],
+            nimet: [],
+            nimi: undefined,
+            oid: '',
+            parentOid: '',
+            parentOidPath: '',
+            piilotettu: false,
+            postiosoite: undefined,
+            ryhmatyypit: [],
+            status: '',
+            toimipistekoodi: '',
+            tyypit: [],
+            version: 0,
+            vuosiluokat: [],
+            yhteystiedot: [],
+            yhteystietoArvos: [],
+            yritysmuoto: '',
+        };
+        const yhteystietoTyyppi = {
+            allLisatietokenttas: undefined,
+            nimi: undefined,
+            oid: '',
+            sovellettavatOppilaitostyyppis: [],
+            sovellettavatOrganisaatios: [],
+            version: 0,
+        };
+        const ryhmatColumn = {
+            Header: 'nimi',
+        } as Column<Ryhma>;
+        const yhteystietoTyypitColumn = {
+            Header: 'ytnimi',
+        } as Column<YhteystietoTyyppi>;
+        test.each([
+            [[ryhma], [ryhmatColumn], [], [], { data: [ryhma], columns: [ryhmatColumn] }],
+            [
+                [],
+                [],
+                [yhteystietoTyyppi],
+                [yhteystietoTyypitColumn],
+                { data: [yhteystietoTyyppi], columns: [yhteystietoTyypitColumn] },
+            ],
+            [[], [], [], [], { data: [], columns: [] }],
+        ])(
+            'Returns ryhmatData and ryhmatColumns or yhteystietotyypitData and yhteystietotyypitColumns based on which one has data',
+            (ryhmatData, ryhmatColumns, yhteystietotyypitData, yhteystietotyypitColumns, expectedResult) => {
+                const result = chooseTaulukkoData(
+                    ryhmatData,
+                    ryhmatColumns,
+                    yhteystietotyypitData,
+                    yhteystietotyypitColumns
+                );
+                expect(result).toEqual(expectedResult);
+            }
+        );
     });
 });

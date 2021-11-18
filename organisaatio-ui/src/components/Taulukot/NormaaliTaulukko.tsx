@@ -44,6 +44,15 @@ export type FiltteritProps = {
     globalFilter: string;
 };
 
+export const chooseTaulukkoData = (ryhmatData, ryhmatColumns, yhteystietoTyypitData, yhteystietotyypitColumns) => {
+    if (ryhmatData && ryhmatData.length > 0) {
+        return { data: ryhmatData, columns: ryhmatColumns };
+    } else if (yhteystietoTyypitData && yhteystietoTyypitData.length > 0) {
+        return { data: yhteystietoTyypitData, columns: yhteystietotyypitColumns };
+    }
+    return { data: [], columns: [] };
+};
+
 export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: FiltteritProps) => {
     const { i18n } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto, ryhmanTilaKoodisto } = useContext(KoodistoContext);
@@ -158,19 +167,12 @@ const NormaaliTaulukko = ({
 }: NormaaliTaulukkoProps) => {
     const { i18n } = useContext(LanguageContext);
 
-    let data;
-    let columns;
-    if (ryhmatData && ryhmatData.length > 0) {
-        data = ryhmatData;
-        columns = ryhmatColumns;
-    } else if (yhteystietoTyypitData && yhteystietoTyypitData.length > 0) {
-        data = yhteystietoTyypitData;
-        columns = yhteystietotyypitColumns;
-    } else {
-        data = [];
-        columns = [];
-    }
-
+    const { data, columns } = chooseTaulukkoData(
+        ryhmatData,
+        ryhmatColumns,
+        yhteystietoTyypitData,
+        yhteystietotyypitColumns
+    );
     const {
         getTableProps,
         getTableBodyProps,
