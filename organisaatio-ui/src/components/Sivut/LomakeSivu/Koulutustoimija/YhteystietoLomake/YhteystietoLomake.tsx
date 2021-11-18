@@ -56,7 +56,9 @@ const YhteystietoLomake = ({
             <div className={styles.Rivi}>
                 <div className={styles.PiilotaNappiKentta}>
                     <Button onClick={handleShowClick}>
-                        {naytaMuutKielet ? 'Piilota muun kieliset' : 'Näytä muun kieliset'}
+                        {naytaMuutKielet
+                            ? i18n.translate('YHTEYSTIEDOT_PIILOTA_MUUT_KIELET')
+                            : i18n.translate('YHTEYSTIEDOT_NAYTA_MUUT_KIELET')}
                     </Button>
                 </div>
                 <Checkbox {...formRegister('osoitteetOnEri')} checked={osoitteetOnEri}>
