@@ -61,8 +61,8 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
 };
 
 export const mapColumnsToTableFormat = (
+    i18n,
     orginalColumns: string[][] = [],
-    i18n
 ): Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[] => {
     const columnMapper = (column: string[]) => ({
         Header: i18n.translate(column[0]),
@@ -91,13 +91,13 @@ export default function OrganisaatioHistoriaLomake({ historia }: { historia: Org
                         {liittyneetData.length > 0 && (
                             <YksinkertainenTaulukko
                                 data={liittyneetData}
-                                tableColumns={mapColumnsToTableFormat(liittyneetColumns, i18n)}
+                                tableColumns={mapColumnsToTableFormat(i18n, liittyneetColumns)}
                             />
                         )}
                         {yhdistettyData.length > 0 && (
                             <YksinkertainenTaulukko
                                 data={yhdistettyData}
-                                tableColumns={mapColumnsToTableFormat(yhdistettyColumns, i18n)}
+                                tableColumns={mapColumnsToTableFormat(i18n, yhdistettyColumns)}
                             />
                         )}
                     </div>
@@ -109,7 +109,7 @@ export default function OrganisaatioHistoriaLomake({ historia }: { historia: Org
                         <h2>{i18n.translate('RAKENNE_YLEMMAN_TASON_OTSIKKO')}</h2>
                         <YksinkertainenTaulukko
                             data={ylemmanTasonData}
-                            tableColumns={mapColumnsToTableFormat(ylemmanTasonColumns, i18n)}
+                            tableColumns={mapColumnsToTableFormat(i18n, ylemmanTasonColumns)}
                         />
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export default function OrganisaatioHistoriaLomake({ historia }: { historia: Org
                         <h2>{i18n.translate('RAKENNE_SISALTYVAT_OTSIKKO')}</h2>
                         <YksinkertainenTaulukko
                             data={sisaltyvatData}
-                            tableColumns={mapColumnsToTableFormat(sisaltyvatColumns, i18n)}
+                            tableColumns={mapColumnsToTableFormat(i18n, sisaltyvatColumns)}
                         />
                     </div>
                 </div>
