@@ -32,12 +32,18 @@
 }
 
 .Kentta {
-    width: 20rem;
+    width: 15rem;
+    padding-right: 5rem
 }
 
 .KenttaLyhyt {
     margin-right: 2rem;
     width: 5rem;
+}
+
+.PiilotaNappiKentta {
+    margin-left: 1rem;
+    margin-right: 5rem;
 }
 
 
@@ -66,8 +72,8 @@
 }
 
 .KorttiKehys {
-    border: 1px solid #ccc;
-    padding: 1rem;
+    border: 3px solid #ccc;
+    padding: 1rem 1rem 1rem 1.5rem;
     margin: 1rem
 }
 

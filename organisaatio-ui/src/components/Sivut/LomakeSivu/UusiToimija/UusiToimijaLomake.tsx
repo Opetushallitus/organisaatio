@@ -62,6 +62,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
 
     const {
+        getValues: getYhteystiedotValues,
         reset: resetYhteystiedot,
         watch,
         setValue: setYhteystiedotValue,
@@ -140,6 +141,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                getYhteystiedotValues={getYhteystiedotValues}
                 kielet={getPerustiedotValues('kielet') || []}
                 setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}

@@ -89,6 +89,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         control: perustiedotControl,
     } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
     const {
+        getValues: getYhteystiedotValues,
         reset: yhteystiedotReset,
         watch: watchYhteystiedot,
         setValue: setYhteystiedotValue,
@@ -273,6 +274,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                getYhteystiedotValues={getYhteystiedotValues}
                 kielet={getPerustiedotValues('kielet') || []}
                 watch={watchYhteystiedot}
                 setYhteystiedotValue={setYhteystiedotValue}

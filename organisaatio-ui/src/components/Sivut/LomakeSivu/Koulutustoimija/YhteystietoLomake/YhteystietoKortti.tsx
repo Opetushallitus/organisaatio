@@ -86,7 +86,7 @@ export const YhteystietoKortti = ({
                 </div>
                 <div className={styles.Rivi}>
                     <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO_SUOMI')}</label>
+                        <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}</label>
                         <Input name={`${kieli}.puhelinnumero`} />
                     </div>
                 </div>
@@ -159,7 +159,7 @@ export const YhteystietoKortti = ({
             ]}
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO_SUOMI')}</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}</label>
                     <Input name={`${kieli}.puhelinnumero`} />
                 </div>
             </div>

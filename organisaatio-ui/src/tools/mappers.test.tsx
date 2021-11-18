@@ -1,4 +1,11 @@
-import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang, mapVisibleKieletFromOpetuskielet } from './mappers';
+import {
+    checkHasSomeValueByKieli,
+    dropKoodiVersionSuffix,
+    mapLocalizedKoodiToLang,
+    mapVisibleKieletFromOpetuskielet,
+    mergeKieliArrays,
+} from './mappers';
+import { SupportedKieli, Yhteystiedot, YhteystiedotBase } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -73,5 +80,49 @@ describe('mappers', () => {
             const opetuskeleletOptions = [];
             expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi']);
         });
+    });
+    describe('mergeKieliArrays', () => {
+        it('it concats 2 kieliarrays and removes duplicates', () => {
+            expect(mergeKieliArrays(['fi', 'sv'], ['fi', 'sv', 'en'])).toStrictEqual(['fi', 'sv', 'en']);
+        });
+    });
+
+    describe('checkHasSomeValueByKieli', () => {
+        it('Returns true if some field of yhteystiedot object is set', () => {
+            expect(
+                checkHasSomeValueByKieli(
+                    {
+                        email: '',
+                        kayntiOsoitePostiNro: '',
+                        kayntiOsoiteToimipaikka: '',
+                        puhelinnumero: '',
+                        www: '',
+                        postiOsoite: 'asetettu',
+                        postiOsoitePostiNro: '',
+                        postiOsoiteToimipaikka: '',
+                        kayntiOsoite: '',
+                    },
+                    'fi'
+                )
+            ).toEqual(true);
+        });
+    });
+    it('Returns false if no fields of yhteystiedot object is set', () => {
+        expect(
+            checkHasSomeValueByKieli(
+                {
+                    email: '',
+                    kayntiOsoitePostiNro: '',
+                    kayntiOsoiteToimipaikka: '',
+                    puhelinnumero: '',
+                    www: '',
+                    postiOsoite: '',
+                    postiOsoitePostiNro: '',
+                    postiOsoiteToimipaikka: '',
+                    kayntiOsoite: '',
+                },
+                'fi'
+            )
+        ).toEqual(false);
     });
 });

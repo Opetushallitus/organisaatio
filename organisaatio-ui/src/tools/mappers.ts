@@ -1,4 +1,4 @@
-import { Koodi, KoodistoSelectOption, Ryhma, SupportedKieli } from '../types/types';
+import { Koodi, KoodistoSelectOption, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
     if (hasVersioningHashtag !== -1) {
@@ -32,4 +32,19 @@ export const mapVisibleKieletFromOpetuskielet = (opetuskieletOptions: KoodistoSe
     } else {
         return [kieliKortit[0]];
     }
+};
+
+export const mergeKieliArrays = (...arrays): SupportedKieli[] => {
+    let jointArray = [] as SupportedKieli[];
+    arrays.forEach((array) => {
+        jointArray = [...jointArray, ...array];
+    });
+    return jointArray.filter((item, index) => jointArray.indexOf(item) === index);
+};
+
+export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[SupportedKieli], kieli): boolean => {
+    return (
+        Object.keys(KielisetYhteystiedot).filter((yhteystietokentta) => KielisetYhteystiedot[yhteystietokentta])
+            .length > 0
+    );
 };
