@@ -48,7 +48,7 @@ const YhteystietoLomake = ({
 
     const visibleKieletByOpetuskielet = mapVisibleKieletFromOpetuskielet(kielet);
     const haseSomeValueKielet = kaikkiOpetuskielet.filter((kieli) =>
-        checkHasSomeValueByKieli(getYhteystiedotValues(kieli), kieli)
+        checkHasSomeValueByKieli(getYhteystiedotValues(kieli))
     );
     const visibleKielet = Array.from(new Set(visibleKieletByOpetuskielet.concat(haseSomeValueKielet)));
     return (

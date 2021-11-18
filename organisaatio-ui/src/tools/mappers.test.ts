@@ -4,7 +4,7 @@ import {
     mapLocalizedKoodiToLang,
     mapVisibleKieletFromOpetuskielet,
 } from './mappers';
-import { SupportedKieli, Yhteystiedot, YhteystiedotBase } from '../types/types';
+import { YhteystiedotBase } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
