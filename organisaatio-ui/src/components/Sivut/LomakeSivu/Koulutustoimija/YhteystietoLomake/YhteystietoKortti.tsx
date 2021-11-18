@@ -80,7 +80,7 @@ export const YhteystietoKortti = ({
                 </div>
                 <div className={styles.Rivi}>
                     <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')} *</label>
+                        <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}</label>
                         <Textarea {...yhteystiedotRegister(`${kieli}.postiOsoite` as const)} error={errorVisible} />
                     </div>
                 </div>
@@ -92,7 +92,7 @@ export const YhteystietoKortti = ({
                 </div>
                 <div className={styles.Rivi}>
                     <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')} *</label>
+                        <label>{i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}</label>
                         <Input {...yhteystiedotRegister(`${kieli}.email` as const)} error={errorVisible} />
                     </div>
                 </div>
@@ -111,7 +111,7 @@ export const YhteystietoKortti = ({
             </div>
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')} *</label>
+                    <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}</label>
                     <Input {...yhteystiedotRegister(`${kieli}.postiOsoite` as const)} error={errorVisible} />
                 </div>
             </div>

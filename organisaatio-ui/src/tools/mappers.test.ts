@@ -3,9 +3,7 @@ import {
     dropKoodiVersionSuffix,
     mapLocalizedKoodiToLang,
     mapVisibleKieletFromOpetuskielet,
-    mergeKieliArrays,
 } from './mappers';
-import { SupportedKieli, Yhteystiedot, YhteystiedotBase } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -79,11 +77,6 @@ describe('mappers', () => {
         it('maps none opetuskieli to [fi] visible based on label', () => {
             const opetuskeleletOptions = [];
             expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(['fi']);
-        });
-    });
-    describe('mergeKieliArrays', () => {
-        it('it concats 2 kieliarrays and removes duplicates', () => {
-            expect(mergeKieliArrays(['fi', 'sv'], ['fi', 'sv', 'en'])).toStrictEqual(['fi', 'sv', 'en']);
         });
     });
 

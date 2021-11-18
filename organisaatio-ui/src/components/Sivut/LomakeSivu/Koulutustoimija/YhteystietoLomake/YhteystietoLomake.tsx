@@ -14,11 +14,7 @@ import { YhteystietoKortti } from './YhteystietoKortti';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { LanguageContext } from '../../../../../contexts/contexts';
-import {
-    checkHasSomeValueByKieli,
-    mapVisibleKieletFromOpetuskielet,
-    mergeKieliArrays,
-} from '../../../../../tools/mappers';
+import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 
 export type Props = {
     kielet: KoodistoSelectOption[];
@@ -54,7 +50,7 @@ const YhteystietoLomake = ({
     const haseSomeValueKielet = kaikkiOpetuskielet.filter((kieli) =>
         checkHasSomeValueByKieli(getYhteystiedotValues(kieli), kieli)
     );
-    const visibleKielet = mergeKieliArrays(visibleKieletByOpetuskielet, haseSomeValueKielet);
+    const visibleKielet = Array.from(new Set(visibleKieletByOpetuskielet.concat(haseSomeValueKielet)));
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
