@@ -62,7 +62,7 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
 
 export const mapColumnsToTableFormat = (
     i18n,
-    orginalColumns: string[][] = [],
+    orginalColumns: string[][] = []
 ): Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[] => {
     const columnMapper = (column: string[]) => ({
         Header: i18n.translate(column[0]),
