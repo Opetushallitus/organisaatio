@@ -55,7 +55,7 @@ public class YTJPaivitysLokiResource {
     @GetMapping(path = "/uusimmat", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YtjPaivitysLoki> findByDateRange(@RequestParam("limit") int limit) {
-        List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
+        List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
         if (limit > 0) {
             ytjLoki = ytjPaivitysLokiRepository.findLatest(limit);
         }
