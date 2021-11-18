@@ -9,7 +9,7 @@ import {
     YhdistaOrganisaatioon,
     Yhteystiedot,
 } from '../types/types';
-import { info, success, warning } from '../components/Notification/Notification';
+import { success, warning } from '../components/Notification/Notification';
 import {
     ApiOrganisaatio,
     APIOrganisaatioHistoria,
@@ -24,7 +24,7 @@ import {
 } from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
-import { ROOT_OID, PUBLIC_API_CONTEXT } from '../contexts/contexts';
+import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/contexts';
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
 type SupportedYhteystietoType = 'www' | 'email' | 'numero';
@@ -91,7 +91,6 @@ async function readOrganisaatio(oid: string) {
         const organisaatio = response.data;
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
-        info({ message: 'MESSAGE_LATAUS_ONNISTUI', timeOut: 200 });
         return { organisaatio: organisaatio, polku: polku };
     });
 }
@@ -109,7 +108,7 @@ async function mergeOrganisaatio({
             const response = await Axios.put<any>( //?merge=false&moveDate=2021-09-05
                 `${baseUrl}${oid}/organisaatiosuhde/${newParent.oid}?merge=${merge}&moveDate=${date.toISOString()}`
             );
-            info({ message: 'MESSAGE_LIITOS_ONNISTUI', timeOut: 200 });
+            success({ message: 'MESSAGE_LIITOS_ONNISTUI' });
             return response;
         } else {
             warning({ message: 'MESSAGE_LIITOS_UUSI_VANHEMPI_PUUTTUU' });
@@ -352,14 +351,14 @@ function useOrganisaatioHistoria(oid: string) {
 function useOrganisaatioHaku({
     aktiiviset = true,
     lakkautetut = false,
-    oppilaitosTyyppi = '',
-    organisaatioTyyppi = '',
+    oppilaitostyyppi = '',
+    organisaatiotyyppi = '',
     suunnitellut = true,
 }: {
     aktiiviset?: boolean;
     lakkautetut?: boolean;
-    oppilaitosTyyppi?: string;
-    organisaatioTyyppi?: string;
+    oppilaitostyyppi?: string;
+    organisaatiotyyppi?: string;
     suunnitellut?: boolean;
 }): {
     organisaatiot: ApiOrganisaatio[];
@@ -378,8 +377,8 @@ function useOrganisaatioHaku({
             params: {
                 aktiiviset,
                 lakkautetut,
-                oppilaitosTyyppi,
-                organisaatioTyyppi,
+                oppilaitostyyppi,
+                organisaatiotyyppi,
                 suunnitellut,
             },
         });
