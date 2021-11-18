@@ -113,7 +113,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     if (!organisaatioRakenne || !resolvedTyypit) {
         return (
             <div className={styles.PaaOsio}>
-                <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
+                <Spin />
             </div>
         );
     }
