@@ -1,5 +1,5 @@
-import { KoodistoImpl } from './contexts';
-import { Koodi } from '../types/types';
+import { I18nImpl, KoodistoImpl } from './contexts';
+import { Koodi, Lokalisointi } from '../types/types';
 
 const koodit: Koodi[] = [
     {
@@ -63,5 +63,54 @@ describe('KoodistoImpl', () => {
         const options = impl.selectOptions();
         expect(options.length).toEqual(1);
         expect(options[0].label).toEqual('Koodi');
+    });
+});
+describe('I18nImpl', () => {
+    const lokalisointi = {
+        fi: {
+            BUTTON_HAE_YTJ_TIEDOT: 'BUTTON_HAE_YTJ_TIEDOT_FI',
+            BUTTON_JATKA: 'BUTTON_JATKA_FI',
+            ENRICH: '{key3} {key1} {key2}',
+        },
+        sv: {
+            BUTTON_HAE_YTJ_TIEDOT: 'BUTTON_HAE_YTJ_TIEDOT_SV',
+            BUTTON_JATKA: 'BUTTON_JATKA_SV',
+        },
+        en: {
+            BUTTON_HAE_YTJ_TIEDOT: 'BUTTON_HAE_YTJ_TIEDOT_EN',
+            BUTTON_JATKA: 'BUTTON_JATKA_EN',
+        },
+    };
+
+    it('translates when key found', () => {
+        const i18n = new I18nImpl(lokalisointi, 'fi');
+        expect(i18n.translate('BUTTON_JATKA')).toEqual('BUTTON_JATKA_FI');
+        expect(i18n.translateWithLang('BUTTON_JATKA', 'sv')).toEqual('BUTTON_JATKA_SV');
+        expect(i18n.translateWithLang('BUTTON_JATKA', 'en')).toEqual('BUTTON_JATKA_EN');
+    });
+    it('translateNimi translates undefined to empty string', () => {
+        const i18n = new I18nImpl(lokalisointi, 'fi');
+        expect(i18n.translateNimi(undefined)).toEqual('');
+    });
+
+    it('defaults to key', () => {
+        const i18n = new I18nImpl(lokalisointi, 'fi');
+        const trans = i18n.translate('NOT_FOUND');
+        expect(trans).toEqual('NOT_FOUND');
+    });
+    it('enriches message', () => {
+        const i18n = new I18nImpl(lokalisointi, 'fi');
+        const trans = i18n.enrichMessage('ENRICH', [
+            { key: 'key1', value: 'val1' },
+            { key: 'key2', value: 'val2' },
+            { key: 'key3', value: 'val3' },
+        ]);
+        expect(trans).toEqual('val3 val1 val2');
+    });
+
+    it('defaults to key when lokalisointi undefined', () => {
+        const i18n = new I18nImpl({} as Lokalisointi, 'fi');
+        const trans = i18n.translate('NOT_FOUND');
+        expect(trans).toEqual('NOT_FOUND');
     });
 });
