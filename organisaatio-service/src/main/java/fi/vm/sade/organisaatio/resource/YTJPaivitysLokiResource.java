@@ -18,37 +18,31 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import io.swagger.v3.oas.annotations.Hidden;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Path("/ytjpaivitysloki")
-@Component("ytjPaivitysResource")
 @Hidden
+@RestController
+@RequestMapping({"${server.internal.context-path}/ytjpaivitysloki", "${server.rest.context-path}/ytjpaivitysloki"})
 public class YTJPaivitysLokiResource {
-
-    private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
 
     @Autowired
     private YtjPaivitysLokiRepository ytjPaivitysLokiRepository;
 
-    @GET
-    @Path("/aikavali")
-    @Produces(MediaType.APPLICATION_JSON)
+
+    @GetMapping(path = "/aikavali", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<YtjPaivitysLoki> findByDateRange(@QueryParam("alkupvm") long alkupvm,
-                                                 @QueryParam("loppupvm") long loppupvm) {
+    public List<YtjPaivitysLoki> findByDateRange(@RequestParam("alkupvm") long alkupvm,
+                                                 @RequestParam("loppupvm") long loppupvm) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
         Date alkupvmDate = new Date(alkupvm);
         Date loppupvmDate = new Date(loppupvm);
@@ -58,12 +52,10 @@ public class YTJPaivitysLokiResource {
         return ytjLoki;
     }
 
-    @GET
-    @Path("/uusimmat")
-    @Produces(MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/uusimmat", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<YtjPaivitysLoki> findByDateRange(@QueryParam("limit") int limit) {
-        List<YtjPaivitysLoki> ytjLoki = new ArrayList<YtjPaivitysLoki>();
+    public List<YtjPaivitysLoki> findByDateRange(@RequestParam("limit") int limit) {
+        List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
         if (limit > 0) {
             ytjLoki = ytjPaivitysLokiRepository.findLatest(limit);
         }

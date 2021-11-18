@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Hidden
 @RestController
-@RequestMapping("${server.rest.context-path}/koodisto")
+@RequestMapping({"${server.internal.context-path}/koodisto", "${server.rest.context-path}/koodisto"})
 public class KoodistoResource {
 
     private final KoodistoService koodistoService;

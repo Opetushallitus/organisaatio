@@ -35,7 +35,7 @@ export class I18nImpl implements I18n {
     }
 
     translateWithLang(key: string, language: Language): string {
-        return this._data[language][key] || key;
+        return this._data[language]?.[key] || key;
     }
 
     translateNimi = (nimi: Nimi | undefined) => {
