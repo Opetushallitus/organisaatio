@@ -50,26 +50,16 @@ describe('mappers', () => {
             expect(mapLocalizedKoodiToLang('', 'emptyprop', esimerkkiMonikielinenObjekti)).toBe('');
         });
     });
+
     describe('mapVisibleKieletFromOpetuskielet', () => {
         test.each([
-            [[{ label: 'suomi', value: 'testi' }], ['fi']],
-            [[{ label: 'ruotsi', value: 'testi' }], ['sv']],
-            [[{ label: 'muu', value: 'testi' }], ['en']],
-            [[{ label: 'suomi/ruotsi', value: 'testi' }], ['fi', 'sv']],
-            [
-                [
-                    { label: 'suomi/ruotsi', value: 'testi' },
-                    { label: 'muu', value: 'muutesti' },
-                ],
-                ['fi', 'sv', 'en'],
-            ],
-            [[], ['fi']],
-        ])(
-            'Should map visible kielet based on opetuskielivalinta and defaults to fi.',
-            (opetuskeleletOptions, expectedResult) => {
-                expect(mapVisibleKieletFromOpetuskielet(opetuskeleletOptions)).toStrictEqual(expectedResult);
-            }
-        );
+            ['Handles invalid input', undefined, []],
+            ['Handles empty input', [], []],
+            ['Map correctly', ['suomi'], ['fi']],
+            ['Strips duplicates', ['suomi', 'suomi'], ['fi']],
+            ['Multiple values', ['suomi/ruotsi'], ['fi', 'sv']],
+            ['Sorts correctly', ['muu', 'ruotsi', 'suomi'], ['fi', 'sv', 'en']],
+        ])('%s', (_, input, expected) => expect(mapVisibleKieletFromOpetuskielet(input)).toStrictEqual(expected));
     });
 
     describe('checkHasSomeValueByKieli', () => {

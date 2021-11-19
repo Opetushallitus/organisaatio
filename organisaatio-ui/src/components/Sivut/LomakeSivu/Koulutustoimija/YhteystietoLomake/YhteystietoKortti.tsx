@@ -25,11 +25,6 @@ type OsoitteentoimipaikkaProps = {
     control: Control<Yhteystiedot>;
 };
 
-const OsoitteenToimipaikkaKentta = ({ name, control }: OsoitteentoimipaikkaProps) => {
-    const toimipaikka = useWatch({ control, name });
-    return <span className={styles.ToimipaikkaText}>{toimipaikka}</span>;
-};
-
 type props = {
     isFirst: boolean;
     kieli: 'fi' | 'sv' | 'en';
@@ -39,6 +34,35 @@ type props = {
     formControl: Control<Yhteystiedot>;
     osoitteetOnEri: boolean;
 };
+
+const Kentta = ({ label, children }) => {
+    return (
+        <div className={styles.Rivi}>
+            <div className={styles.Kentta}>
+                <label>{label}</label>
+                {children}
+            </div>
+        </div>
+    );
+};
+
+const PostinumeroKentta = ({ children, toimipaikkaName: name, control, label }) => {
+    const toimipaikka = useWatch({ control, name });
+    return (
+        <div className={styles.Rivi}>
+            <div className={styles.KenttaLyhyt}>
+                <label>{label}</label>
+                {children}
+            </div>
+            <span className={styles.ToimipaikkaText}>{toimipaikka}</span>
+        </div>
+    );
+};
+const OtsikkoRivi = ({ label }) => (
+    <div className={styles.EnsimmainenRivi}>
+        <h3>{label}</h3>
+    </div>
+);
 
 export const YhteystietoKortti = ({
     isFirst,
@@ -74,110 +98,67 @@ export const YhteystietoKortti = ({
     if (kortinKieli === 'en')
         return (
             <div key={kortinKieli} className={styles.KorttiKehys}>
-                {' '}
-                <div className={styles.EnsimmainenRivi}>
-                    <h3>{kortinKieli}</h3>
-                </div>
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}</label>
-                        <Textarea
-                            {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)}
-                            error={errorVisible}
-                        />
-                    </div>
-                </div>
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}</label>
-                        <Input name={`${kortinKieli}.puhelinnumero`} />
-                    </div>
-                </div>
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}</label>
-                        <Input {...yhteystiedotRegister(`${kortinKieli}.email` as const)} error={errorVisible} />
-                    </div>
-                </div>
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}</label>
-                        <Input {...yhteystiedotRegister(`${kortinKieli}.www` as const)} />
-                    </div>
-                </div>
+                <OtsikkoRivi label={i18n.translate(`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`)} />
+                <Kentta label={i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}>
+                    <Textarea {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)} error={errorVisible} />
+                </Kentta>
+                <Kentta label={i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}>
+                    <Input name={`${kortinKieli}.puhelinnumero`} />
+                </Kentta>
+                <Kentta label={i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}>
+                    <Input {...yhteystiedotRegister(`${kortinKieli}.email` as const)} error={errorVisible} />
+                </Kentta>
+                <Kentta label={i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}>
+                    <Input {...yhteystiedotRegister(`${kortinKieli}.www` as const)} />
+                </Kentta>
             </div>
         );
     return (
         <div key={kortinKieli} className={styles.KorttiKehys}>
-            <div className={styles.EnsimmainenRivi}>
-                <h3>{kortinKieli}</h3>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}</label>
-                    <Input {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)} error={errorVisible} />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.KenttaLyhyt}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}</label>
+            <OtsikkoRivi label={i18n.translate(`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`)} />
+            <Kentta label={i18n.translate('YHTEYSTIEDOT_POSTIOSOITE')}>
+                <Input {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)} />
+            </Kentta>
+            <PostinumeroKentta
+                label={i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}
+                toimipaikkaName={`${kortinKieli}.postiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
+                control={formControl}
+            >
+                <Input
+                    {...registerToimipaikkaUpdate(
+                        `${kortinKieli}.postiOsoiteToimipaikka`,
+                        yhteystiedotRegister(`${kortinKieli}.postiOsoitePostiNro` as const)
+                    )}
+                    error={errorVisible}
+                />
+            </PostinumeroKentta>
+            {osoitteetOnEri && [
+                <Kentta label={i18n.translate('YHTEYSTIEDOT_KAYNTIOSOITE')}>
+                    <Input {...yhteystiedotRegister(`${kortinKieli}.kayntiOsoite` as const)} />
+                </Kentta>,
+                <PostinumeroKentta
+                    label={i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}
+                    toimipaikkaName={`${kortinKieli}.kayntiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
+                    control={formControl}
+                >
                     <Input
                         {...registerToimipaikkaUpdate(
-                            `${kortinKieli}.postiOsoiteToimipaikka`,
-                            yhteystiedotRegister(`${kortinKieli}.postiOsoitePostiNro` as const)
+                            `${kortinKieli}.kayntiOsoiteToimipaikka`,
+                            yhteystiedotRegister(`${kortinKieli}.kayntiOsoitePostiNro` as const)
                         )}
                         error={errorVisible}
                     />
-                </div>
-                <OsoitteenToimipaikkaKentta
-                    name={`${kortinKieli}.postiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
-                    labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA')}
-                    control={formControl}
-                />
-            </div>
-            {osoitteetOnEri && [
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_KAYNTIOSOITE')}</label>
-                        <Input {...yhteystiedotRegister(`${kortinKieli}.kayntiOsoite` as const)} />
-                    </div>
-                </div>,
-                <div className={styles.Rivi}>
-                    <div className={styles.KenttaLyhyt}>
-                        <label>{i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}</label>
-                        <Input
-                            {...registerToimipaikkaUpdate(
-                                `${kortinKieli}.kayntiOsoiteToimipaikka`,
-                                yhteystiedotRegister(`${kortinKieli}.kayntiOsoitePostiNro` as const)
-                            )}
-                            error={errorVisible}
-                        />
-                    </div>
-                    <OsoitteenToimipaikkaKentta
-                        name={`${kortinKieli}.kayntiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
-                        labelTxt={i18n.translate('YHTEYSTIEDOT_TOIMIPAIKKA')}
-                        control={formControl}
-                    />
-                </div>,
+                </PostinumeroKentta>,
             ]}
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}</label>
-                    <Input name={`${kortinKieli}.puhelinnumero`} />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')} *</label>
-                    <Input {...yhteystiedotRegister(`${kortinKieli}.email` as const)} error={errorVisible} />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}</label>
-                    <Input {...yhteystiedotRegister(`${kortinKieli}.www` as const)} />
-                </div>
-            </div>
+            <Kentta label={i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}>
+                <Input name={`${kortinKieli}.puhelinnumero`} />
+            </Kentta>
+            <Kentta label={i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}>
+                <Input {...yhteystiedotRegister(`${kortinKieli}.email` as const)} error={errorVisible} />
+            </Kentta>
+            <Kentta label={i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}>
+                <Input {...yhteystiedotRegister(`${kortinKieli}.www` as const)} />
+            </Kentta>
         </div>
     );
 };

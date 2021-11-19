@@ -17,7 +17,7 @@ import { LanguageContext } from '../../../../../contexts/contexts';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 
 export type Props = {
-    kielet: KoodistoSelectOption[];
+    opetusKielet: string[];
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     yhteystiedot?: Yhteystiedot[];
     validationErrors: FieldErrors<Yhteystiedot>;
@@ -30,7 +30,7 @@ export type Props = {
 const kaikkiOpetuskielet: SupportedKieli[] = ['fi', 'sv', 'en'];
 
 const YhteystietoLomake = ({
-    kielet,
+    opetusKielet,
     formRegister,
     validationErrors,
     watch,
@@ -46,7 +46,7 @@ const YhteystietoLomake = ({
         setNaytaMuutKielet(!naytaMuutKielet);
     };
 
-    const visibleKieletByOpetuskielet = mapVisibleKieletFromOpetuskielet(kielet);
+    const visibleKieletByOpetuskielet = mapVisibleKieletFromOpetuskielet(opetusKielet);
     const haseSomeValueKielet = kaikkiOpetuskielet.filter((kieli) =>
         checkHasSomeValueByKieli(getYhteystiedotValues(kieli))
     );

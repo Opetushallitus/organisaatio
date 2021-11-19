@@ -253,6 +253,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
+    const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -275,7 +276,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         lomakkeet.push(
             <YhteystietoLomake
                 getYhteystiedotValues={getYhteystiedotValues}
-                kielet={getPerustiedotValues('kielet') || []}
+                opetusKielet={opetusKielet}
                 watch={watchYhteystiedot}
                 setYhteystiedotValue={setYhteystiedotValue}
                 formControl={yhteystiedotControl}

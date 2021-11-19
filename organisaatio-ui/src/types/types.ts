@@ -61,7 +61,6 @@ export type OrganisaationNimetNimi = {
     nimi: Nimi;
     alkuPvm?: string;
 };
-
 export type UiOrganisaatioBase = {
     oid: string;
     status: string;

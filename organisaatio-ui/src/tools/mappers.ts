@@ -12,27 +12,21 @@ export const mapLocalizedKoodiToLang = (lang: string, property: string, value: K
 
 //TODO tarttee katsoa ryhmissa tarvitaanko näitä vielä.
 
-export const mapVisibleKieletFromOpetuskielet = (opetuskieletOptions: KoodistoSelectOption[]): SupportedKieli[] => {
-    const opetuskielet = opetuskieletOptions.map((kieliOption) => kieliOption.label);
-    const visibleKielet = new Set<SupportedKieli>();
-    if (
-        (opetuskielet.includes('suomi/ruotsi') ||
-            (opetuskielet.includes('suomi') && opetuskielet.includes('ruotsi'))) &&
-        opetuskielet.includes('muu')
-    ) {
-        visibleKielet.add('fi').add('sv').add('en');
-    } else if (opetuskielet.includes('suomi/ruotsi')) {
-        visibleKielet.add('fi').add('sv');
-    } else if (opetuskielet.includes('suomi') && !opetuskielet.includes('ruotsi')) {
-        visibleKielet.add('fi');
-    } else if (opetuskielet.includes('ruotsi') && !opetuskielet.includes('suomi')) {
-        visibleKielet.add('sv');
-    } else if (opetuskielet.includes('muu') && !opetuskielet.includes('ruotsi') && !opetuskielet.includes('suomi')) {
-        visibleKielet.add('en');
-    } else {
-        visibleKielet.add('fi');
-    }
-    return Array.from(visibleKielet);
+export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefined): SupportedKieli[] => {
+    const priority = ['fi', 'sv', 'en'];
+    const mapping = {
+        suomi: ['fi'],
+        ruotsi: ['sv'],
+        'suomi/ruotsi': ['fi', 'sv'],
+        muu: ['en'],
+    };
+    const sort = (input: SupportedKieli[]): SupportedKieli[] =>
+        input.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
+    return sort(
+        Array.from(
+            new Set((opetuskielet || []).reduce((acc, lang) => [...acc, ...mapping[lang]], [] as SupportedKieli[]))
+        )
+    );
 };
 
 export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[SupportedKieli]): boolean => {

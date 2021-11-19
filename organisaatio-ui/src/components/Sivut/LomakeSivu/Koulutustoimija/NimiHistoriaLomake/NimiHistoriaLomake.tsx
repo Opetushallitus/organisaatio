@@ -28,7 +28,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
                     }`}</span>
                 )),
         },
-    ] as Column<OrganisaationNimetNimi | HistoriaTaulukkoData>[];
+    ] as Column<OrganisaationNimetNimi>[];
     return (
         <div className={styles.UloinKehys}>
             <YksinkertainenTaulukko data={nimet} tableColumns={columns} />
