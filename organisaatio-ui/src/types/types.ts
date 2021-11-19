@@ -209,6 +209,7 @@ export type I18n = {
 };
 
 export type Koodisto = {
+    uri2Arvo: (uri: KoodiUri) => string | number;
     arvo2Uri: (arvo: KoodiArvo) => string;
     uri2Nimi: (uri: KoodiUri) => string;
     arvo2Nimi: (arvo: KoodiArvo) => string;

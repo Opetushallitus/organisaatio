@@ -119,7 +119,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             </div>
         );
     }
-
+    const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -142,7 +142,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         lomakkeet.push(
             <YhteystietoLomake
                 getYhteystiedotValues={getYhteystiedotValues}
-                kielet={getPerustiedotValues('kielet') || []}
+                opetusKielet={opetusKielet}
                 setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}

@@ -93,8 +93,7 @@ export const YhteystietoKortti = ({
         };
         return { onChange, ...rest };
     };
-    const errorVisible: boolean = isFirst && !!Object.keys(validationErrors).length;
-
+    const errorVisible = !!Object.keys(validationErrors).length;
     if (kortinKieli === 'en')
         return (
             <div key={kortinKieli} className={styles.KorttiKehys}>
@@ -103,7 +102,7 @@ export const YhteystietoKortti = ({
                     <Textarea {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)} error={errorVisible} />
                 </Kentta>
                 <Kentta label={i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}>
-                    <Input name={`${kortinKieli}.puhelinnumero`} />
+                    <Input {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)} />
                 </Kentta>
                 <Kentta label={i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}>
                     <Input {...yhteystiedotRegister(`${kortinKieli}.email` as const)} error={errorVisible} />
@@ -151,7 +150,10 @@ export const YhteystietoKortti = ({
                 </PostinumeroKentta>,
             ]}
             <Kentta label={i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}>
-                <Input name={`${kortinKieli}.puhelinnumero`} />
+                <Input
+                    {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)}
+                    name={`${kortinKieli}.puhelinnumero`}
+                />
             </Kentta>
             <Kentta label={i18n.translate('YHTEYSTIEDOT_SAHKOPOSTIOSOITE')}>
                 <Input {...yhteystiedotRegister(`${kortinKieli}.email` as const)} error={errorVisible} />

@@ -248,12 +248,12 @@ function mapApiYhteystiedotToUi(
             return (
                 (uiYhteystiedot[kieli] = {
                     postiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'posti').osoite,
-                    postiOsoitePostiNro: postinumerotKoodisto.uri2Nimi(
+                    postiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
                         getApiOsoite(yhteystiedot, apiKieli, 'posti').postinumeroUri
                     ),
                     postiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'posti').postitoimipaikka,
                     kayntiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').osoite,
-                    kayntiOsoitePostiNro: postinumerotKoodisto.uri2Nimi(
+                    kayntiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
                         getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postinumeroUri
                     ),
                     kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postitoimipaikka,

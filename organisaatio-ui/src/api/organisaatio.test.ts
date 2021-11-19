@@ -19,6 +19,7 @@ const postinumerotKoodisto: Partial<Koodisto> = {
         return '';
     },
     arvo2Uri: (uri) => 'postinumeroUri_00530',
+    uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
 const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
