@@ -17,6 +17,7 @@ describe('Organisaatio Rakenne', () => {
             cy.clickAccordion('PERUSTIEDOT');
             cy.enterPerustiedot('CHILD', 'Oppilaitos', true);
             cy.clickButton('JATKA');
+            cy.clickButton('NAYTA_MUUT_KIELET');
             cy.enterAllYhteystiedot('CHILD');
             cy.intercept('POST', `${PUBLIC_API_CONTEXT}/findbyoids`).as('findPAth');
             cy.clickSaveButton();
