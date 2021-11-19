@@ -90,7 +90,7 @@ const apiYhteystiedot: ApiYhteystiedot[] = [
 const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday }]; // yesterday
 
 const apiOrganisaatio: ApiOrganisaatio = {
-    alkuPvm: '',
+    alkuPvm: '2000-10-10',
     kieletUris: [],
     kotipaikkaUri: 'kunta_1#1',
     muutKotipaikatUris: [],
@@ -106,7 +106,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
 };
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
-    alkuPvm: '',
+    alkuPvm: '2000-10-10',
     kieletUris: [],
     kotipaikkaUri: 'kunta_1#1',
     muutKotipaikatUris: [],
