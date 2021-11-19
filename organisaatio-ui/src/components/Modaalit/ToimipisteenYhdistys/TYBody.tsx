@@ -21,7 +21,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
     const targetType =
         organisaatioRakenne && organisaatioRakenne.mergeTargetType ? organisaatioRakenne.mergeTargetType[0] : undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
-        organisaatioTyyppi: targetType,
+        organisaatiotyyppi: targetType,
     });
 
     if (organisaatiotLoading || organisaatiotError) {
