@@ -146,7 +146,7 @@ const uiBaseTiedot: UiOrganisaatioBase = {
 };
 
 const uiPerustiedot: Perustiedot = {
-    alkuPvm: '',
+    alkuPvm: '2000-10-10',
     kielet: [],
     kotipaikka: { label: 'Helsinki', value: 'kunta_1#1' },
     maa: { label: 'Suomi', value: 'maa_1#1' },

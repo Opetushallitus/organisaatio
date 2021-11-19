@@ -1,7 +1,7 @@
 import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 
 export type Language = 'fi' | 'sv' | 'en';
-export type LocalDate = string;
+export type LocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
 export type LocalizableText = Partial<Record<Language, string>>;
 
 // koodisto

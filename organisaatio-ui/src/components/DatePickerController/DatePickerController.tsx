@@ -1,13 +1,12 @@
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, Path } from 'react-hook-form';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import moment from 'moment';
 import * as React from 'react';
-import { Perustiedot } from '../../types/types';
 
-export default function DatePickerController(props: {
-    form: Control<Perustiedot> | undefined;
+export default function DatePickerController<T>(props: {
+    form: Control<T>;
     validationErrors: { [x: string]: any };
-    name: 'alkuPvm';
+    name: Path<T>;
 }) {
     return (
         <Controller

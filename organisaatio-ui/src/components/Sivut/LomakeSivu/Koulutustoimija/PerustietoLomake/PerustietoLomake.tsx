@@ -116,7 +116,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
-                    <DatePickerController name={'alkuPvm'} form={formControl} validationErrors={validationErrors} />
+                    <DatePickerController<Perustiedot>
+                        name={'alkuPvm'}
+                        form={formControl}
+                        validationErrors={validationErrors}
+                    />
                 </div>
                 <Button className={styles.Nappi} variant="outlined" onClick={() => setLakkautusModaaliAuki(true)}>
                     {i18n.translate('PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI')}
