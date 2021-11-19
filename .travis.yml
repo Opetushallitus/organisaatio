@@ -41,6 +41,7 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
+          - $HOME/.cache
       install:
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
@@ -61,6 +62,7 @@ jobs:
       cache:
         directories:
           - $HOME/.gradle
+          - $HOME/.cache
       install:
         - export NODE_VERSION=11.1
         - nvm install $NODE_VERSION
@@ -79,6 +81,10 @@ jobs:
       name: "release to artifactory"
       if: branch = master
       language:  java
+      cache:
+        directories:
+          - $HOME/.gradle
+          - $HOME/.cache
       install:
         - echo 'override install to skip default gradle call'
       script:
@@ -89,6 +95,10 @@ jobs:
     - name: "snapshot to artifactory"
       if: branch != master
       language:  java
+      cache:
+        directories:
+          - $HOME/.gradle
+          - $HOME/.cache
       install:
         - echo 'override install to skip default gradle call'
       script:
