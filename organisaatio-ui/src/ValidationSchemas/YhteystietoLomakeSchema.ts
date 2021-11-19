@@ -8,7 +8,7 @@ const kayntiOsoiteRequiredSchema = Joi.object({
     kayntiOsoiteToimipaikka: Joi.string().allow(''),
 });
 
-const allowedLanguageSchema = Joi.object({
+const allAllowedLanguageObject = {
     postiOsoite: Joi.string().allow(''),
     postiOsoitePostiNro: postinumeroSchema.allow(''),
     postiOsoiteToimipaikka: Joi.string().allow(''),
@@ -20,67 +20,45 @@ const allowedLanguageSchema = Joi.object({
         .email({ tlds: { allow: false } })
         .allow(''),
     www: Joi.string().allow(''),
-});
+};
+
+const requiredFieldsObject = {
+    postiOsoite: Joi.string().required(),
+    postiOsoitePostiNro: postinumeroSchema.required(),
+    email: Joi.string()
+        .email({ tlds: { allow: false } })
+        .required(),
+};
 
 const fiAltSchema = Joi.object({
-    fi: Joi.object({
-        postiOsoite: Joi.string().required(),
-        postiOsoitePostiNro: postinumeroSchema.required(),
-        postiOsoiteToimipaikka: Joi.string().allow(''),
-        kayntiOsoite: Joi.string().allow(''),
-        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
-        kayntiOsoiteToimipaikka: Joi.string().allow(''),
-        puhelinnumero: Joi.string().allow(''),
-        email: Joi.string()
-            .email({ tlds: { allow: false } })
-            .required(),
-        www: Joi.string().allow(''),
-    }).when('osoitteetOnEri', {
+    fi: Joi.object({ ...allAllowedLanguageObject, ...requiredFieldsObject }).when('osoitteetOnEri', {
         is: true,
         then: kayntiOsoiteRequiredSchema,
     }),
-    sv: allowedLanguageSchema,
-    en: allowedLanguageSchema,
+    sv: Joi.object(allAllowedLanguageObject),
+    en: Joi.object(allAllowedLanguageObject),
     osoitteetOnEri: Joi.boolean(),
 });
 
 const svAltSchema = Joi.object({
-    fi: allowedLanguageSchema,
-    sv: Joi.object({
-        postiOsoite: Joi.string().required(),
-        postiOsoitePostiNro: postinumeroSchema.required(),
-        postiOsoiteToimipaikka: Joi.string().allow(''),
-        kayntiOsoite: Joi.string().allow(''),
-        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
-        kayntiOsoiteToimipaikka: Joi.string().allow(''),
-        puhelinnumero: Joi.string().allow(''),
-        email: Joi.string()
-            .email({ tlds: { allow: false } })
-            .required(),
-        www: Joi.string().allow(''),
-    }).when('osoitteetOnEri', {
+    fi: Joi.object(allAllowedLanguageObject),
+    sv: Joi.object({ ...allAllowedLanguageObject, ...requiredFieldsObject }).when('osoitteetOnEri', {
         is: true,
         then: kayntiOsoiteRequiredSchema,
     }),
-    en: allowedLanguageSchema,
+    en: Joi.object(allAllowedLanguageObject),
     osoitteetOnEri: Joi.boolean(),
 });
 
 const enAltSchema = Joi.object({
-    fi: allowedLanguageSchema,
-    sv: allowedLanguageSchema,
+    fi: Joi.object(allAllowedLanguageObject),
+    sv: Joi.object(allAllowedLanguageObject),
     en: Joi.object({
+        ...allAllowedLanguageObject,
         postiOsoite: Joi.string().required(),
-        postiOsoitePostiNro: Joi.string().allow(''),
-        postiOsoiteToimipaikka: Joi.string().allow(''),
-        kayntiOsoite: Joi.string().allow(''),
-        kayntiOsoitePostiNro: postinumeroSchema.allow(''),
-        kayntiOsoiteToimipaikka: Joi.string().allow(''),
-        puhelinnumero: Joi.string().allow(''),
         email: Joi.string()
             .email({ tlds: { allow: false } })
             .required(),
-        www: Joi.string().allow(''),
     }),
 });
 
