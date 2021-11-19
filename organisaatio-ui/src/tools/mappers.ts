@@ -1,4 +1,4 @@
-import { Koodi, KoodistoSelectOption, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import { Koodi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
     if (hasVersioningHashtag !== -1) {

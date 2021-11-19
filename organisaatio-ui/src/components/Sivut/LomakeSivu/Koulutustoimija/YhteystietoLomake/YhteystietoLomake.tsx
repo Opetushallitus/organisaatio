@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './YhteystietoLomake.module.css';
 import { useContext, useState } from 'react';
-import type { KoodistoSelectOption, SupportedKieli, Yhteystiedot } from '../../../../../types/types';
+import type { SupportedKieli, Yhteystiedot } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import {
     Control,
