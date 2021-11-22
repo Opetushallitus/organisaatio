@@ -18,7 +18,7 @@ import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { LanguageContext } from '../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-import searchIcon from '@iconify/icons-fa-solid/search';
+import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { searchOrganisation } from '../../../api/organisaatio';
@@ -99,7 +99,17 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
                                 runQuery();
                             }
                         }}
-                        suffix={<Icon color="#999999" icon={searchIcon} />}
+                        suffix={
+                            filters.searchString && (
+                                <Button
+                                    variant={'text'}
+                                    style={{ boxShadow: 'none' }}
+                                    onClick={() => setFilters({ ...filters, searchString: '' })}
+                                >
+                                    <Icon color="#999999" icon={clearIcon} />
+                                </Button>
+                            )
+                        }
                     />
                     <Checkbox
                         type="checkbox"

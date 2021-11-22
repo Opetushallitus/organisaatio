@@ -36,7 +36,7 @@ import java.util.List;
 
 @Hidden
 @RestController
-@RequestMapping("${server.rest.context-path}/ytj")
+@RequestMapping({"${server.internal.context-path}/ytj", "${server.rest.context-path}/ytj"})
 public class YTJResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);

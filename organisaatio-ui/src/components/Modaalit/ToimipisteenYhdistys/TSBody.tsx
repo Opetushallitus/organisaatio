@@ -20,7 +20,7 @@ export default function TSBody({ siirraOrganisaatio, handleChange, organisaatioB
     const { i18n, language } = useContext(LanguageContext);
     const targetType = organisaatioRakenne.moveTargetType[0] || undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
-        organisaatioTyyppi: targetType,
+        organisaatiotyyppi: targetType,
     });
 
     if (organisaatiotLoading || organisaatiotError) {

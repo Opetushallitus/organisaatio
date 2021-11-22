@@ -241,7 +241,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     if (!organisaatioBase || historiaLoading || historiaError) {
         return (
             <div className={styles.PaaOsio}>
-                <Spin>{i18n.translate('LABEL_PAGE_LOADING')}</Spin>
+                <Spin />
             </div>
         );
     }

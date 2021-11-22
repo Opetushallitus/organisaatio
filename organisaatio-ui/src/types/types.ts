@@ -2,7 +2,7 @@ import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import * as React from 'react';
 
 export type Language = 'fi' | 'sv' | 'en';
-export type LocalDate = string;
+export type LocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
 export type LocalizableText = Partial<Record<Language, string>>;
 
 // koodisto
