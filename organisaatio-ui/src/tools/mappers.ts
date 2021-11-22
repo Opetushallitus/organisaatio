@@ -24,7 +24,12 @@ export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefi
         input.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
     return sort(
         Array.from(
-            new Set((opetuskielet || []).reduce((acc, lang) => [...acc, ...mapping[lang]], [] as SupportedKieli[]))
+            new Set(
+                (opetuskielet?.length ? opetuskielet : ['suomi']).reduce(
+                    (acc, lang) => [...acc, ...mapping[lang]],
+                    [] as SupportedKieli[]
+                )
+            )
         )
     );
 };

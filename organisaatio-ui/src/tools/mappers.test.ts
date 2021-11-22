@@ -53,8 +53,8 @@ describe('mappers', () => {
 
     describe('mapVisibleKieletFromOpetuskielet', () => {
         test.each([
-            ['Handles invalid input', undefined, []],
-            ['Handles empty input', [], []],
+            ['Handles invalid input to fi', undefined, ['fi']],
+            ['Handles empty input to fi', [], ['fi']],
             ['Map correctly', ['suomi'], ['fi']],
             ['Strips duplicates', ['suomi', 'suomi'], ['fi']],
             ['Multiple values', ['suomi/ruotsi'], ['fi', 'sv']],
