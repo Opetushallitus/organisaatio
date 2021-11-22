@@ -52,6 +52,7 @@ class OrganisaatioApiAuthenticatedTest {
     }
 
     @Test
+    @WithMockUser()
     void testChangeParentOidNoAuth() {
         Assertions.assertThrows(AccessDeniedException.class, () -> resource.updateOrganisaatio("123", null), "Exception was expected");
     }
