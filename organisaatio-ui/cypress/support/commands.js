@@ -83,20 +83,20 @@ Cypress.Commands.add('enterDate', (label, date) => {
 
 Cypress.Commands.add('enterYhteystieto', (kieli, values) => {
     cy.inputByName(`${kieli}.postiOsoite`, values.posti.osoite);
-    kieli !== 'kieli_en#1' && cy.inputByName(`${kieli}.postiOsoitePostiNro`, values.posti.postinumeroUri);
-    kieli !== 'kieli_en#1' && cy.inputByName(`${kieli}.puhelinnumero`, values.numero);
+    kieli !== 'en' && cy.inputByName(`${kieli}.postiOsoitePostiNro`, values.posti.postinumeroUri);
+    kieli !== 'en' && cy.inputByName(`${kieli}.puhelinnumero`, values.numero);
     cy.inputByName(`${kieli}.email`, values.email);
     return cy.inputByName(`${kieli}.www`, values.www);
 });
 
 Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
-    cy.enterYhteystieto('kieli_fi#1', {
+    cy.enterYhteystieto('fi', {
         posti: { osoite: `${prefix} FI Osoite 1 a 3`, postinumeroUri: '00100' },
         email: `${prefix}-FI.noreply@test.com`,
         www: 'http://test.com',
         numero: '09123456',
     });
-    cy.enterYhteystieto('kieli_sv#1', {
+    cy.enterYhteystieto('sv', {
         posti: { osoite: `${prefix} SV Osoite 1 a 3`, postinumeroUri: '00100' },
         email: `${prefix}-SV.noreply@test.com`,
         www: 'http://test.com',

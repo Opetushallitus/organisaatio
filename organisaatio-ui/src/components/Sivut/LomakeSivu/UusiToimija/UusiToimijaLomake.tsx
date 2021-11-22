@@ -54,6 +54,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         reset: resetPerustiedot,
         watch: watchPerustiedot,
         setValue: setPerustiedotValue,
+        getValues: getPerustiedotValues,
         register: registerPerustiedot,
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
@@ -61,6 +62,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
 
     const {
+        getValues: getYhteystiedotValues,
         reset: resetYhteystiedot,
         watch,
         setValue: setYhteystiedotValue,
@@ -117,7 +119,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             </div>
         );
     }
-
+    const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -139,6 +141,8 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                getYhteystiedotValues={getYhteystiedotValues}
+                opetusKielet={opetusKielet}
                 setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}

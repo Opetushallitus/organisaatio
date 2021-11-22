@@ -24,7 +24,7 @@ const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
     setters.setPerustiedotValue('ytunnus', ytjData.ytunnus);
     setters.setPerustiedotValue('nimi', { fi: ytjData.nimi, sv: ytjData.nimi, en: ytjData.nimi });
     setters.setPerustiedotValue('alkuPvm', ytjData.aloitusPvm);
-    setters.setYhteystiedotValue('kieli_fi#1', ytjData.yhteysTiedot);
+    setters.setYhteystiedotValue('fi', ytjData.yhteysTiedot);
     setters.setYhteystiedotValue('osoitteetOnEri', !!ytjData.kayntiOsoite);
     suljeModaali();
 };

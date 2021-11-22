@@ -82,12 +82,16 @@ export class KoodistoImpl implements Koodisto {
         return this.nimi((koodi) => koodi.uri === uri);
     }
 
+    uri2Arvo(uri: KoodiUri): string {
+        return this.koodit().find((koodi) => koodi.uri === uri)?.arvo || '';
+    }
+
     arvo2Nimi(arvo: KoodiArvo): string {
         return this.nimi((koodi) => koodi.arvo === arvo);
     }
 
     arvo2Uri(arvo: string): string {
-        return this.koodit().find((koodi) => koodi.arvo == arvo)?.uri || '';
+        return this.koodit().find((koodi) => koodi.arvo === arvo)?.uri || '';
     }
 
     nimet(): string[] {

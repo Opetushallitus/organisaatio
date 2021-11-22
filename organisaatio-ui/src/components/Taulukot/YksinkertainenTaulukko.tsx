@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { Column, useTable } from 'react-table';
-
-type taulukkoData = any;
+import { HistoriaTaulukkoData, OrganisaationNimetNimi } from '../../types/types';
 
 export default function YksinkertainenTaulukko({
     data: inputData = [],
     tableColumns = [],
 }: {
-    data: taulukkoData[];
-    tableColumns: Column<taulukkoData>[];
+    data: (HistoriaTaulukkoData | OrganisaationNimetNimi)[];
+    tableColumns: Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[];
 }) {
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => inputData, [inputData]);
-    const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable({ columns, data });
+    const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable<
+        HistoriaTaulukkoData | OrganisaationNimetNimi
+    >({ columns, data });
     return (
         <table {...getTableProps()} style={{ borderSpacing: 0, paddingTop: 20 }}>
             <thead>

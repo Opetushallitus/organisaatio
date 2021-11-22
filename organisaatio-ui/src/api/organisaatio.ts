@@ -166,7 +166,16 @@ function mapUiOrganisaatioToApiToSave(
     parentOid?: string
 ): NewApiOrganisaatio {
     const yhteystiedot = mapUiYhteystiedotToApi(postinumerotKoodisto, [], yhteystiedotFormValues);
-    const { kotipaikka, maa, kielet, muutKotipaikat, organisaatioTyypit, alkuPvm, nimi } = perustiedotFormValues;
+    const {
+        kotipaikka,
+        maa,
+        kielet,
+        muutKotipaikat,
+        organisaatioTyypit,
+        alkuPvm,
+        nimi,
+        ytunnus,
+    } = perustiedotFormValues;
     const nimet = [
         {
             nimi,
@@ -174,6 +183,7 @@ function mapUiOrganisaatioToApiToSave(
         },
     ];
     return {
+        ytunnus,
         alkuPvm,
         tyypit: organisaatioTyypit,
         kotipaikkaUri: kotipaikka.value,
@@ -229,30 +239,30 @@ function mapUiOrganisaatioToApiToUpdate(
 function mapApiYhteystiedotToUi(
     postinumerotKoodisto: Koodisto,
     yhteystiedot: ApiYhteystiedot[] = [],
-    kielet = ['kieli_fi#1', 'kieli_sv#1', 'kieli_en#1']
+    kielet = ['fi', 'sv', 'en']
 ): Yhteystiedot {
     return {
-        ...kielet.reduce(
-            (uiYhteystiedot, kieli) => (
+        ...kielet.reduce((uiYhteystiedot, kieli) => {
+            const apiKieli = `kieli_${kieli}#1`;
+            return (
                 (uiYhteystiedot[kieli] = {
-                    postiOsoite: getApiOsoite(yhteystiedot, kieli, 'posti').osoite,
-                    postiOsoitePostiNro: postinumerotKoodisto.uri2Nimi(
-                        getApiOsoite(yhteystiedot, kieli, 'posti').postinumeroUri
+                    postiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'posti').osoite,
+                    postiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
+                        getApiOsoite(yhteystiedot, apiKieli, 'posti').postinumeroUri
                     ),
-                    postiOsoiteToimipaikka: getApiOsoite(yhteystiedot, kieli, 'posti').postitoimipaikka,
-                    kayntiOsoite: getApiOsoite(yhteystiedot, kieli, 'kaynti').osoite,
-                    kayntiOsoitePostiNro: postinumerotKoodisto.uri2Nimi(
-                        getApiOsoite(yhteystiedot, kieli, 'kaynti').postinumeroUri
+                    postiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'posti').postitoimipaikka,
+                    kayntiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').osoite,
+                    kayntiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
+                        getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postinumeroUri
                     ),
-                    kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, kieli, 'kaynti').postitoimipaikka,
-                    puhelinnumero: getApiYhteystieto(yhteystiedot, kieli, NAME_PHONE)[NAME_PHONE],
-                    email: getApiYhteystieto(yhteystiedot, kieli, NAME_EMAIL)[NAME_EMAIL],
-                    www: getApiYhteystieto(yhteystiedot, kieli, NAME_WWW)[NAME_WWW],
+                    kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postitoimipaikka,
+                    puhelinnumero: getApiYhteystieto(yhteystiedot, apiKieli, NAME_PHONE)[NAME_PHONE],
+                    email: getApiYhteystieto(yhteystiedot, apiKieli, NAME_EMAIL)[NAME_EMAIL],
+                    www: getApiYhteystieto(yhteystiedot, apiKieli, NAME_WWW)[NAME_WWW],
                 }),
                 uiYhteystiedot
-            ),
-            {} as Yhteystiedot
-        ),
+            );
+        }, {} as Yhteystiedot),
         osoitteetOnEri: false,
     };
 }
@@ -265,11 +275,12 @@ function mapUiYhteystiedotToApi(
     const { osoitteetOnEri, ...rest } = uiYhteystiedot;
     return Object.keys(rest)
         .map((kieli) => {
-            const postiosoite = getApiOsoite(apiYhteystiedot, kieli, 'posti');
+            const apikieli = `kieli_${kieli}#1`;
+            const postiosoite = getApiOsoite(apiYhteystiedot, apikieli, 'posti');
             postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
             postiosoite.postinumeroUri = postinumerotKoodisto.arvo2Uri(uiYhteystiedot[kieli].postiOsoitePostiNro);
             postiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
-            const kayntiosoite = getApiOsoite(apiYhteystiedot, kieli, 'kaynti');
+            const kayntiosoite = getApiOsoite(apiYhteystiedot, apikieli, 'kaynti');
             if (
                 uiYhteystiedot.osoitteetOnEri === true &&
                 !!uiYhteystiedot[kieli].kayntiOsoite &&
@@ -283,16 +294,16 @@ function mapUiYhteystiedotToApi(
                 kayntiosoite.postinumeroUri = postiosoite.postinumeroUri;
                 kayntiosoite.postitoimipaikka = postiosoite.postitoimipaikka;
             }
-            const puhelinnumero = getApiYhteystieto(apiYhteystiedot, kieli, NAME_PHONE) as YhteystiedotPhone;
+            const puhelinnumero = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_PHONE) as YhteystiedotPhone;
             if (!!uiYhteystiedot[kieli].puhelinnumero) {
                 puhelinnumero.tyyppi = 'puhelin';
                 puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero;
             }
-            const email = getApiYhteystieto(apiYhteystiedot, kieli, NAME_EMAIL);
+            const email = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_EMAIL);
             if (!!uiYhteystiedot[kieli].email) {
                 email[NAME_EMAIL] = uiYhteystiedot[kieli].email;
             }
-            const www = getApiYhteystieto(apiYhteystiedot, kieli, NAME_WWW);
+            const www = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_WWW);
             if (!!uiYhteystiedot[kieli].www) {
                 www[NAME_WWW] = uiYhteystiedot[kieli].www;
             }
@@ -315,6 +326,7 @@ export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYht
             ) {
                 return { ...rest };
             }
+            return undefined;
         })
         .filter(Boolean) as ApiYhteystiedot[];
 };

@@ -19,6 +19,7 @@ const postinumerotKoodisto: Partial<Koodisto> = {
         return '';
     },
     arvo2Uri: (uri) => 'postinumeroUri_00530',
+    uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
 const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
@@ -32,7 +33,7 @@ const oldApiyhteystiedot = [
 ];
 
 const uiYhteystiedot: Yhteystiedot = {
-    'kieli_en#1': {
+    en: {
         email: '',
         kayntiOsoite: '',
         kayntiOsoitePostiNro: '',
@@ -43,7 +44,7 @@ const uiYhteystiedot: Yhteystiedot = {
         postiOsoiteToimipaikka: '',
         kayntiOsoiteToimipaikka: '',
     },
-    'kieli_fi#1': {
+    fi: {
         email: 'arpa@kuutio.fi',
         kayntiOsoite: '',
         kayntiOsoitePostiNro: '',
@@ -54,7 +55,7 @@ const uiYhteystiedot: Yhteystiedot = {
         postiOsoiteToimipaikka: 'HELSINKI',
         kayntiOsoiteToimipaikka: '',
     },
-    'kieli_sv#1': {
+    sv: {
         puhelinnumero: '12345',
         email: '',
         kayntiOsoite: '',
@@ -177,7 +178,7 @@ describe('mapUiYhteystiedotToApi', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
         const yhteystiedot = {
             ...uiYhteystiedot,
-            'kieli_sv#1': { ...uiYhteystiedot['kieli_sv#1'], kayntiOsoite: '', kayntiOsoitePostiNro: '' },
+            sv: { ...uiYhteystiedot.sv, kayntiOsoite: '', kayntiOsoitePostiNro: '' },
             osoitteetOnEri: true,
         };
         expect(mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], yhteystiedot)).toEqual(

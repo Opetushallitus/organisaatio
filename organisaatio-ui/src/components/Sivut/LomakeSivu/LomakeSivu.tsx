@@ -89,6 +89,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         control: perustiedotControl,
     } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
     const {
+        getValues: getYhteystiedotValues,
         reset: yhteystiedotReset,
         watch: watchYhteystiedot,
         setValue: setYhteystiedotValue,
@@ -248,9 +249,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const handleNimiUpdate = (nimi) => {
         setPerustiedotValue('nimi', nimi);
     };
+
     registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
+    const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -272,6 +275,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                getYhteystiedotValues={getYhteystiedotValues}
+                opetusKielet={opetusKielet}
                 watch={watchYhteystiedot}
                 setYhteystiedotValue={setYhteystiedotValue}
                 formControl={yhteystiedotControl}

@@ -4,8 +4,14 @@ import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
-import { OrganisaatioHistoria, OrganisaatioSuhde } from '../../../../../types/types';
+import {
+    HistoriaTaulukkoData,
+    OrganisaatioHistoria,
+    OrganisaationNimetNimi,
+    OrganisaatioSuhde,
+} from '../../../../../types/types';
 import { OrganisaatioBase } from '../../../../../types/apiTypes';
+import { Column } from 'react-table';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],
@@ -54,10 +60,19 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
     };
 };
 
+export const mapColumnsToTableFormat = (
+    i18n,
+    orginalColumns: string[][] = []
+): Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[] => {
+    const columnMapper = (column: string[]) => ({
+        Header: i18n.translate(column[0]),
+        accessor: column[1] as 'alkuPvm' | 'loppuPvm' | 'nimiHref',
+    });
+    return orginalColumns.map(columnMapper) as Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[];
+};
+
 export default function OrganisaatioHistoriaLomake({ historia }: { historia: OrganisaatioHistoria }) {
     const { i18n } = useContext(LanguageContext);
-
-    const columnMapper = (column: string[]) => ({ Header: i18n.translate(column[0]), accessor: column[1] });
 
     const liittyneetData = historia.liitokset.sort(historiaSorter).map((a) => historiaMapper(a, 'parent'));
 
@@ -76,13 +91,13 @@ export default function OrganisaatioHistoriaLomake({ historia }: { historia: Org
                         {liittyneetData.length > 0 && (
                             <YksinkertainenTaulukko
                                 data={liittyneetData}
-                                tableColumns={liittyneetColumns.map(columnMapper)}
+                                tableColumns={mapColumnsToTableFormat(i18n, liittyneetColumns)}
                             />
                         )}
                         {yhdistettyData.length > 0 && (
                             <YksinkertainenTaulukko
                                 data={yhdistettyData}
-                                tableColumns={yhdistettyColumns.map(columnMapper)}
+                                tableColumns={mapColumnsToTableFormat(i18n, yhdistettyColumns)}
                             />
                         )}
                     </div>
@@ -94,7 +109,7 @@ export default function OrganisaatioHistoriaLomake({ historia }: { historia: Org
                         <h2>{i18n.translate('RAKENNE_YLEMMAN_TASON_OTSIKKO')}</h2>
                         <YksinkertainenTaulukko
                             data={ylemmanTasonData}
-                            tableColumns={ylemmanTasonColumns.map(columnMapper)}
+                            tableColumns={mapColumnsToTableFormat(i18n, ylemmanTasonColumns)}
                         />
                     </div>
                 </div>
@@ -105,7 +120,7 @@ export default function OrganisaatioHistoriaLomake({ historia }: { historia: Org
                         <h2>{i18n.translate('RAKENNE_SISALTYVAT_OTSIKKO')}</h2>
                         <YksinkertainenTaulukko
                             data={sisaltyvatData}
-                            tableColumns={sisaltyvatColumns.map(columnMapper)}
+                            tableColumns={mapColumnsToTableFormat(i18n, sisaltyvatColumns)}
                         />
                     </div>
                 </div>

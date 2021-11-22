@@ -1,4 +1,5 @@
 import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import * as React from 'react';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
@@ -44,9 +45,9 @@ export type YhteystiedotBase = {
 };
 
 export type Yhteystiedot = {
-    'kieli_fi#1': YhteystiedotBase;
-    'kieli_sv#1': YhteystiedotBase;
-    'kieli_en#1': YhteystiedotBase;
+    fi: YhteystiedotBase;
+    sv: YhteystiedotBase;
+    en: YhteystiedotBase;
     osoitteetOnEri?: boolean;
 };
 
@@ -60,7 +61,6 @@ export type OrganisaationNimetNimi = {
     nimi: Nimi;
     alkuPvm?: string;
 };
-
 export type UiOrganisaatioBase = {
     oid: string;
     status: string;
@@ -209,6 +209,7 @@ export type I18n = {
 };
 
 export type Koodisto = {
+    uri2Arvo: (uri: KoodiUri) => string | number;
     arvo2Uri: (arvo: KoodiArvo) => string;
     uri2Nimi: (uri: KoodiUri) => string;
     arvo2Nimi: (arvo: KoodiArvo) => string;
@@ -228,3 +229,9 @@ export type KoodistoContextType = {
     postinumerotKoodisto: Koodisto;
     maatJaValtiotKoodisto: Koodisto;
 };
+
+export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
+
+export type SupportedKieli = 'fi' | 'sv' | 'en';
+
+export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };

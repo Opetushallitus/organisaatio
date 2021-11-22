@@ -66,6 +66,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     parentOid: string;
     parentOidPath: string;
     yritysmuoto?: string;
+    ytunnus?: string;
     tyypit: KoodiUri[];
     status: string;
     nimet: OrganisaationNimetNimi[];
