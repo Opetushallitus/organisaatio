@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Controller } from 'react-hook-form';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { ValueType } from 'react-select';
 import { DynamicField, KoodistoContextType, Perustiedot } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control } from 'react-hook-form/dist/types/form';
 import { Kentta, Rivi } from '../../LomakeFields/LomakeFields';
+import InputController from '../../../../Controllers/InputController';
+import SelectController from '../../../../Controllers/SelectController';
+import MultiSelectController from '../../../../Controllers/MultiSelectController';
 
 type DynamicFieldsProps = {
     dynamicFields: DynamicField[];
@@ -37,19 +36,10 @@ export default function DynamicFields({
                         return (
                             <Rivi key={field.name}>
                                 <Kentta label={field.label}>
-                                    <Controller
-                                        control={formControl}
+                                    <InputController<Perustiedot>
+                                        form={formControl}
                                         name={field.name}
-                                        render={({ field: { ref, ...rest } }) => {
-                                            return (
-                                                <Input
-                                                    id={field.name}
-                                                    {...rest}
-                                                    error={!!validationErrors[field.name]}
-                                                    options={koodistot[field.koodisto]?.selectOptions()}
-                                                />
-                                            );
-                                        }}
+                                        validationErrors={validationErrors}
                                     />
                                 </Kentta>
                             </Rivi>
@@ -58,20 +48,11 @@ export default function DynamicFields({
                         return (
                             <Rivi key={field.name}>
                                 <Kentta label={field.label}>
-                                    <Controller
-                                        control={formControl}
+                                    <SelectController
+                                        form={formControl}
+                                        validationErrors={validationErrors}
                                         name={field.name}
-                                        render={({ field: { ref, value, ...rest } }) => {
-                                            return (
-                                                <Select
-                                                    value={value as ValueType<{ label: string; value: string }>}
-                                                    id={field.name}
-                                                    {...rest}
-                                                    error={!!validationErrors[field.name]}
-                                                    options={koodistot[field.koodisto]?.selectOptions()}
-                                                />
-                                            );
-                                        }}
+                                        koodisto={koodistot[field.koodisto]}
                                     />
                                 </Kentta>
                             </Rivi>
@@ -80,21 +61,11 @@ export default function DynamicFields({
                         return (
                             <Rivi key={field.name}>
                                 <Kentta label={field.label}>
-                                    <Controller
-                                        control={formControl}
+                                    <MultiSelectController
+                                        form={formControl}
+                                        validationErrors={validationErrors}
                                         name={field.name}
-                                        render={({ field: { ref, value, ...rest } }) => {
-                                            return (
-                                                <Select
-                                                    isMulti
-                                                    value={value as ValueType<{ label: string; value: string }>}
-                                                    id={field.name}
-                                                    {...rest}
-                                                    error={!!validationErrors[field.name]}
-                                                    options={koodistot[field.koodisto]?.selectOptions()}
-                                                />
-                                            );
-                                        }}
+                                        koodisto={koodistot[field.koodisto]}
                                     />
                                 </Kentta>
                             </Rivi>

@@ -19,7 +19,7 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
-import DatePickerController from '../../../../DatePickerController/DatePickerController';
+import DatePickerController from '../../../../Controllers/DatePickerController';
 import DynamicFields from '../DynamicFields/DynamicFields';
 import {
     AvainKevyestiBoldattu,
