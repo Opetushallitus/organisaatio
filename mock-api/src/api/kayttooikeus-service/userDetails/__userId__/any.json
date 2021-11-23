@@ -1,0 +1,13 @@
+{
+  "accountNonExpired": true,
+  "accountNonLocked": true,
+  "authorities": [
+    {
+      "authority": "APP_ORGANISAATIOHALLINTA_CRUD"
+    }
+  ],
+  "credentialsNonExpired": true,
+  "enabled": true,
+  "password": "mbarlund",
+  "username": "mbarlund"
+}

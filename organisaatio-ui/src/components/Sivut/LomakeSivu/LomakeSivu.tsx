@@ -69,7 +69,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [organisaatioBase, setOrganisaatioBase] = useState<UiOrganisaatioBase | undefined>(undefined);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
         organisaatioTyypit: [],
-        oppilaitosTyyppiUri: '',
         oid: ROOT_OID,
     });
     const {

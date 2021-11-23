@@ -1,0 +1,542 @@
+[
+    {
+        "koodiArvo": "4",
+        "koodiUri": "vuosiluokat_4",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "4. \u00e5rsklass",
+                "lyhytNimi": "4. \u00e5rsklass",
+                "nimi": "4. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "4. vuosiluokalla",
+                "lyhytNimi": "4. vuosiluokalla",
+                "nimi": "4. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_4",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-04",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "3",
+        "koodiUri": "vuosiluokat_3",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "3. vuosiluokalla",
+                "lyhytNimi": "3. vuosiluokalla",
+                "nimi": "3. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "3. \u00e5rsklass",
+                "lyhytNimi": "3. \u00e5rsklass",
+                "nimi": "3. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_3",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-03",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "8",
+        "koodiUri": "vuosiluokat_8",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "8. \u00e5rsklass",
+                "lyhytNimi": "8. \u00e5rsklass",
+                "nimi": "8. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "8. vuosiluokalla",
+                "lyhytNimi": "8. vuosiluokalla",
+                "nimi": "8. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_8",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-08",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "1",
+        "koodiUri": "vuosiluokat_1",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "1. vuosiluokalla",
+                "lyhytNimi": "1. vuosiluokalla",
+                "nimi": "1. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "1. \u00e5rsklass",
+                "lyhytNimi": "1. \u00e5rsklass",
+                "nimi": "1. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_1",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "5",
+        "koodiUri": "vuosiluokat_5",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "5. vuosiluokalla",
+                "lyhytNimi": "5. vuosiluokalla",
+                "nimi": "5. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "5. \u00e5rsklass",
+                "lyhytNimi": "5. \u00e5rsklass",
+                "nimi": "5. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_5",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-05",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "7",
+        "koodiUri": "vuosiluokat_7",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "7. vuosiluokalla",
+                "lyhytNimi": "7. vuosiluokalla",
+                "nimi": "7. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "7. \u00e5rsklass",
+                "lyhytNimi": "7. \u00e5rsklass",
+                "nimi": "7. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_7",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-07",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "2",
+        "koodiUri": "vuosiluokat_2",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "2. \u00e5rsklass",
+                "lyhytNimi": "2. \u00e5rsklass",
+                "nimi": "2. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "2. vuosiluokalla",
+                "lyhytNimi": "2. vuosiluokalla",
+                "nimi": "2. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_2",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-02",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "12",
+        "koodiUri": "vuosiluokat_12",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "Aamu- ja/tai iltap\u00e4iv\u00e4toiminnassa",
+                "lyhytNimi": "Aamu- ja/tai iltap\u00e4iv\u00e4toiminnassa",
+                "nimi": "Aamu- ja/tai iltap\u00e4iv\u00e4toiminnassa",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "Morgon- och eftermiddagsverksamhet",
+                "lyhytNimi": "Morgon- och eftermiddagsverksamhet",
+                "nimi": "Morgon- och eftermiddagsverksamhet",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_12",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-12",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "10",
+        "koodiUri": "vuosiluokat_10",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "Lis\u00e4opetuksessa",
+                "lyhytNimi": "Lis\u00e4opetuksessa",
+                "nimi": "Lis\u00e4opetuksessa",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "P\u00e5byggnadsundervisning",
+                "lyhytNimi": "P\u00e5byggnadsundervisning",
+                "nimi": "P\u00e5byggnadsundervisning",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_10",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-10",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "9",
+        "koodiUri": "vuosiluokat_9",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "9. \u00e5rsklass",
+                "lyhytNimi": "9. \u00e5rsklass",
+                "nimi": "9. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "9. vuosiluokalla",
+                "lyhytNimi": "9. vuosiluokalla",
+                "nimi": "9. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_9",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-09",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "6",
+        "koodiUri": "vuosiluokat_6",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "6. vuosiluokalla",
+                "lyhytNimi": "6. vuosiluokalla",
+                "nimi": "6. vuosiluokalla",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "6. \u00e5rsklass",
+                "lyhytNimi": "6. \u00e5rsklass",
+                "nimi": "6. \u00e5rsklass",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_6",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-06",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "11",
+        "koodiUri": "vuosiluokat_11",
+        "koodisto": {
+            "koodistoUri": "vuosiluokat",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": "Esiopetuksessa",
+                "lyhytNimi": "Esiopetuksessa",
+                "nimi": "Esiopetuksessa",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            },
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "SV",
+                "kuvaus": "F\u00f6rundervisning",
+                "lyhytNimi": "F\u00f6rundervisning",
+                "nimi": "F\u00f6rundervisning",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_11",
+        "tila": "HYVAKSYTTY",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2007-01-11",
+        "voimassaLoppuPvm": null
+    }
+]

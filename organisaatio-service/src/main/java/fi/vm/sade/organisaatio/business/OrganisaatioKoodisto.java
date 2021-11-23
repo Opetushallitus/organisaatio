@@ -48,7 +48,8 @@ public interface OrganisaatioKoodisto {
         RYHMATYYPIT("ryhmatyypit"),
         RYHMANTILA("ryhmantila"),
         KAYTTORYHMAT("kayttoryhmat"),
-        OPPILAITOSTYYPPI("oppilaitostyyppi");
+        OPPILAITOSTYYPPI("oppilaitostyyppi"),
+        VUOSILUOKAT("vuosiluokat");
         private final String uri;
 
         KoodistoUri(String koodistoUri) {

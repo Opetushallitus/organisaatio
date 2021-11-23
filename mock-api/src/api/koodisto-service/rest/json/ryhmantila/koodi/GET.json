@@ -1,7 +1,7 @@
 [
     {
-        "koodiArvo": "002",
-        "koodiUri": "ryhmantila_002",
+        "koodiArvo": "AKTIIVINEN",
+        "koodiUri": "ryhmantila_aktiivinen",
         "koodisto": {
             "koodistoUri": "ryhmantila",
             "koodistoVersios": [
@@ -11,54 +11,30 @@
         },
         "metadata": [
             {
-                "eiSisallaMerkitysta": "",
-                "huomioitavaKoodi": "",
-                "kasite": "",
-                "kayttoohje": "",
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
                 "kieli": "FI",
-                "kuvaus": "",
-                "lyhytNimi": "Passiiviset ryhm\u00e4t",
-                "nimi": "PASSIIVINEN",
-                "sisaltaaKoodiston": "",
-                "sisaltaaMerkityksen": ""
-            },
-            {
-                "eiSisallaMerkitysta": "",
-                "huomioitavaKoodi": "",
-                "kasite": "",
-                "kayttoohje": "",
-                "kieli": "SV",
-                "kuvaus": "",
-                "lyhytNimi": "Passiiviset ryhm\u00e4t",
-                "nimi": "PASSIIVINEN",
-                "sisaltaaKoodiston": "",
-                "sisaltaaMerkityksen": ""
-            },
-            {
-                "eiSisallaMerkitysta": "",
-                "huomioitavaKoodi": "",
-                "kasite": "",
-                "kayttoohje": "",
-                "kieli": "EN",
-                "kuvaus": "",
-                "lyhytNimi": "Passiiviset ryhm\u00e4t",
-                "nimi": "PASSIIVINEN",
-                "sisaltaaKoodiston": "",
-                "sisaltaaMerkityksen": ""
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "AKTIIVINEN",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": "1.2.246.562.24.39768521067",
-        "paivitysPvm": "2021-05-20",
-        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmantila_002",
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-10-25",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmantila_aktiivinen",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 1,
-        "voimassaAlkuPvm": "2021-05-11",
+        "version": 0,
+        "voimassaAlkuPvm": "2021-10-24",
         "voimassaLoppuPvm": null
     },
     {
-        "koodiArvo": "001",
-        "koodiUri": "ryhmantila_001",
+        "koodiArvo": "PASSIIVINEN",
+        "koodiUri": "ryhmantila_passiivinen",
         "koodisto": {
             "koodistoUri": "ryhmantila",
             "koodistoVersios": [
@@ -68,49 +44,25 @@
         },
         "metadata": [
             {
-                "eiSisallaMerkitysta": "",
-                "huomioitavaKoodi": "",
-                "kasite": "",
-                "kayttoohje": "",
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
                 "kieli": "FI",
-                "kuvaus": "",
-                "lyhytNimi": "Aktiiviset ryhm\u00e4t",
-                "nimi": "AKTIIVINEN",
-                "sisaltaaKoodiston": "",
-                "sisaltaaMerkityksen": ""
-            },
-            {
-                "eiSisallaMerkitysta": "",
-                "huomioitavaKoodi": "",
-                "kasite": "",
-                "kayttoohje": "",
-                "kieli": "SV",
-                "kuvaus": "",
-                "lyhytNimi": "Aktiiviset ryhm\u00e4t",
-                "nimi": "AKTIIVINEN",
-                "sisaltaaKoodiston": "",
-                "sisaltaaMerkityksen": ""
-            },
-            {
-                "eiSisallaMerkitysta": "",
-                "huomioitavaKoodi": "",
-                "kasite": "",
-                "kayttoohje": "",
-                "kieli": "EN",
-                "kuvaus": "",
-                "lyhytNimi": "Aktiiviset ryhm\u00e4t",
-                "nimi": "AKTIIVINEN",
-                "sisaltaaKoodiston": "",
-                "sisaltaaMerkityksen": ""
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "PASSIIVINEN",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": "1.2.246.562.24.39768521067",
-        "paivitysPvm": "2021-05-20",
-        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmantila_001",
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-10-25",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmantila_passiivinen",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 1,
-        "voimassaAlkuPvm": "2021-05-11",
+        "version": 0,
+        "voimassaAlkuPvm": "2021-10-24",
         "voimassaLoppuPvm": null
     }
 ]

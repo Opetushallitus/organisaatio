@@ -94,7 +94,6 @@ export type Perustiedot = {
 
 export type ParentTiedot = {
     organisaatioTyypit: KoodiUri[];
-    oppilaitosTyyppiUri: string;
     oid: string;
 };
 
