@@ -22,6 +22,7 @@ import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import DatePickerController from '../../../../DatePickerController/DatePickerController';
+import DynamicFields from '../DynamicFields/DynamicFields';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -58,8 +59,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
 
-    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
-    const kunnatOptions = kuntaKoodisto.selectOptions();
+    const koodistot = useContext(KoodistoContext);
+    const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
     const { nimi, organisaatioTyypit } = getPerustiedotValues();
@@ -88,17 +89,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     </Button>
                 </div>
             </div>
-            {rakenne?.showYtj && (
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
-                        <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
-                    </div>
-                    <Button className={styles.Nappi} variant="outlined" onClick={openYtjModal}>
-                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
-                    </Button>
-                </div>
-            )}
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>
@@ -113,6 +103,26 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     )}
                 </div>
             </div>
+            {rakenne?.showYtj && (
+                <div className={styles.Rivi}>
+                    <div className={styles.Kentta}>
+                        <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
+                        <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
+                    </div>
+                    <Button className={styles.Nappi} variant="outlined" onClick={openYtjModal}>
+                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
+                    </Button>
+                </div>
+            )}
+            {rakenne?.dynamicFields && (
+                <DynamicFields
+                    dynamicFields={rakenne.dynamicFields}
+                    getPerustiedotValues={getPerustiedotValues}
+                    formControl={formControl}
+                    validationErrors={validationErrors}
+                    koodistot={koodistot}
+                />
+            )}
             <div className={styles.Rivi}>
                 <div className={styles.Kentta}>
                     <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
@@ -171,7 +181,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 id="PERUSTIETO_MAA_SELECT"
                                 {...rest}
                                 error={!!validationErrors['maa']}
-                                options={maatJaValtiotKoodisto.selectOptions()}
+                                options={koodistot.maatJaValtiotKoodisto.selectOptions()}
                             />
                         )}
                     />
@@ -189,7 +199,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 id="PERUSTIETO_OPETUSKIELI_SELECT"
                                 {...rest}
                                 error={!!validationErrors['kielet']}
-                                options={oppilaitoksenOpetuskieletKoodisto.selectOptions()}
+                                options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                             />
                         )}
                     />

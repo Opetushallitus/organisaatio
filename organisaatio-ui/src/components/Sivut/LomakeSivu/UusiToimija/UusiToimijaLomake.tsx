@@ -38,7 +38,11 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const parentOid = resolveParentOidByQuery(props.location.search);
     const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
-    const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: '' });
+    const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
+        organisaatioTyypit: [],
+        oppilaitosTyyppiUri: '',
+        oid: '',
+    });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
 
     useEffect(() => {
@@ -46,7 +50,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             const {
                 organisaatio: { tyypit, oid },
             } = await readOrganisaatio(parentOid);
-            setParentTiedot({ organisaatioTyypit: tyypit, oid });
+            setParentTiedot({ organisaatioTyypit: tyypit, oppilaitosTyyppiUri: '', oid });
         })();
     }, [parentOid]);
 

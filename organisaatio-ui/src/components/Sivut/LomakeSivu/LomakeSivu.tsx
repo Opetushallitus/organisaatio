@@ -67,17 +67,23 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<YhdistaOrganisaatioon>(initialYhdista);
     const [siirraOrganisaatio, setSiirraOrganisaatio] = useState<SiirraOrganisaatioon>(initialSiirra);
     const [organisaatioBase, setOrganisaatioBase] = useState<UiOrganisaatioBase | undefined>(undefined);
-    const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({ organisaatioTyypit: [], oid: ROOT_OID });
+    const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
+        organisaatioTyypit: [],
+        oppilaitosTyyppiUri: '',
+        oid: ROOT_OID,
+    });
     const {
         organisaatioTyypitKoodisto,
         maatJaValtiotKoodisto,
         oppilaitoksenOpetuskieletKoodisto,
         postinumerotKoodisto,
         kuntaKoodisto,
+        vuosiluokatKoodisto,
+        oppilaitostyyppiKoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
-        resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
+        resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oppilaitosTyyppiUri: '', oid: '' })
     );
     const {
         reset: perustiedotReset,
@@ -87,6 +93,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
+        watch: perustiedotWatch,
     } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
     const {
         getValues: getYhteystiedotValues,
@@ -101,6 +108,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
+    const watchOrganisaatioTyypit = perustiedotWatch('organisaatioTyypit');
+    const watchOppilaitosTyyppiUri = perustiedotWatch('oppilaitosTyyppiUri');
 
     useEffect(() => {
         (async function () {
@@ -111,6 +120,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.oid]);
+    useEffect(() => {
+        resolveOrganisaatioRakenne(watchOrganisaatioTyypit || [], watchOppilaitosTyyppiUri?.value || '', params.oid);
+    }, [watchOrganisaatioTyypit, params.oid, watchOppilaitosTyyppiUri]);
     const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
@@ -124,6 +136,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         muutKotipaikatUris,
         alkuPvm,
         tyypit,
+        oppilaitosTyyppiUri,
+        oppilaitosKoodi,
+        muutOppilaitosTyyppiUris,
+        vuosiluokat,
         yhteystiedot: apiYhteystiedot,
         ...rest
     }: ApiOrganisaatio): {
@@ -137,29 +153,43 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
         return {
-            Uiperustiedot: { nimi, maa, kielet, kotipaikka, muutKotipaikat, alkuPvm, organisaatioTyypit: tyypit },
+            Uiperustiedot: {
+                nimi,
+                maa,
+                kielet,
+                kotipaikka,
+                muutKotipaikat,
+                alkuPvm,
+                organisaatioTyypit: tyypit,
+                oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
+                oppilaitosKoodi,
+                muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris.map((kieliUri) =>
+                    oppilaitostyyppiKoodisto.uri2SelectOption(kieliUri)
+                ),
+                vuosiluokat: vuosiluokat.map((kieliUri) => vuosiluokatKoodisto.uri2SelectOption(kieliUri)),
+            },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: nimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
         };
     };
 
     async function resetOrganisaatio(organisaatio, polku) {
-        resolveOrganisaatioRakenne(organisaatio.tyypit, organisaatio.oid);
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
         const {
             organisaatio: { tyypit: organisaatioTyypit, oid },
         } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID);
-        const parentTiedot = { organisaatioTyypit, oid };
+        const parentTiedot = { organisaatioTyypit, oid, oppilaitosTyyppiUri: '' };
         setParentTiedot(parentTiedot);
         perustiedotReset(Uiperustiedot);
         yhteystiedotReset(Uiyhteystiedot);
     }
 
-    function resolveOrganisaatioRakenne(organisaatioTyypit, oid) {
+    function resolveOrganisaatioRakenne(organisaatioTyypit: string[], oppilaitosTyyppiUri: string, oid) {
         const organisaatioRakenne = resolveOrganisaatio(rakenne, {
             organisaatioTyypit,
+            oppilaitosTyyppiUri,
             oid,
         });
         setResolvedOrganisaatioRakenne(organisaatioRakenne);

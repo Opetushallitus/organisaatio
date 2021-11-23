@@ -1,5 +1,6 @@
 import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import * as React from 'react';
+import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
@@ -85,10 +86,15 @@ export type Perustiedot = {
     maa: KoodistoSelectOption;
     muutKotipaikat: KoodistoSelectOption[];
     kielet: KoodistoSelectOption[];
+    oppilaitosTyyppiUri: KoodistoSelectOption;
+    oppilaitosKoodi: string;
+    muutOppilaitosTyyppiUris: KoodistoSelectOption[];
+    vuosiluokat: KoodistoSelectOption[];
 };
 
 export type ParentTiedot = {
     organisaatioTyypit: KoodiUri[];
+    oppilaitosTyyppiUri: string;
     oid: string;
 };
 
@@ -150,6 +156,7 @@ export type OrganisaatioHistoria = {
     liitokset: OrganisaatioSuhde[];
     liittymiset: OrganisaatioSuhde[];
 };
+
 export interface YhteystietoTyyppi {
     allLisatietokenttas: any;
     oid?: string;
@@ -185,12 +192,21 @@ export interface Option {
     label: string;
     value: string;
 }
+
+export type DynamicField = {
+    name: Path<Perustiedot>;
+    label: string;
+    koodisto: 'vuosiluokatKoodisto';
+    type: 'INPUT' | 'SELECT' | 'MULTI_SELECT';
+    when: { name: Path<Perustiedot>; value: string };
+};
 export type ResolvedRakenne = {
     type: string[];
     moveTargetType: string[];
     mergeTargetType: string[];
     childTypes: string[];
     showYtj: boolean;
+    dynamicFields: DynamicField[];
 };
 export type Rakenne = {
     description: string;
@@ -199,6 +215,7 @@ export type Rakenne = {
     mergeTargetType: string | null;
     childTypes: string[];
     showYtj: boolean;
+    dynamicFields: DynamicField[];
 };
 
 export type I18n = {
@@ -228,6 +245,8 @@ export type KoodistoContextType = {
     oppilaitoksenOpetuskieletKoodisto: Koodisto;
     postinumerotKoodisto: Koodisto;
     maatJaValtiotKoodisto: Koodisto;
+    vuosiluokatKoodisto: Koodisto;
+    oppilaitostyyppiKoodisto: Koodisto;
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';

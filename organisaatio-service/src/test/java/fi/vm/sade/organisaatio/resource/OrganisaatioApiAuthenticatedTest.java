@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
@@ -52,7 +53,7 @@ class OrganisaatioApiAuthenticatedTest {
     }
 
     @Test
-   @WithMockUser(roles = {"APP_ANONYMOUS"})
+    @WithAnonymousUser
     void testChangeParentOidNoAuth() {
         Assertions.assertThrows(AccessDeniedException.class, () -> resource.updateOrganisaatio("123", null), "Exception was expected");
     }
