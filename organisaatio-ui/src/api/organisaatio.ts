@@ -198,10 +198,10 @@ function mapUiOrganisaatioToApiToSave(
         parentOid: parentOid || ROOT_OID,
         nimet,
         nimi,
-        oppilaitosTyyppiUri: oppilaitosTyyppiUri.value,
+        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.value,
         oppilaitosKoodi,
-        muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris.map((a) => a.value),
-        vuosiluokat: vuosiluokat.map((a) => a.value),
+        muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
+        vuosiluokat: vuosiluokat?.map((a) => a.value),
     };
 }
 
@@ -252,10 +252,10 @@ function mapUiOrganisaatioToApiToUpdate(
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
         kieletUris: kielet.map((a) => a.value),
-        oppilaitosTyyppiUri: oppilaitosTyyppiUri.value,
+        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.value,
         oppilaitosKoodi,
-        muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris.map((a) => a.value),
-        vuosiluokat: vuosiluokat.map((a) => a.value),
+        muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
+        vuosiluokat: vuosiluokat?.map((a) => a.value),
     };
 }
 
