@@ -18,6 +18,12 @@ type DynamicFieldsProps = {
     koodistot: KoodistoContextType;
 };
 
+export const DynamicFieldMethods = () => {
+    const filterDynamicFields = (getPerustiedotValues: () => Perustiedot) => {
+        return (a) => !a.when || getPerustiedotValues()[a.when.name].value.match(/([^#]*).*/)[1] === a.when.value;
+    };
+    return { filterDynamicFields };
+};
 export default function DynamicFields({
     dynamicFields,
     getPerustiedotValues,
@@ -28,83 +34,79 @@ export default function DynamicFields({
     const { i18n } = useContext(LanguageContext);
     return (
         <>
-            {dynamicFields
-                .filter(
-                    (a) => !a.when || getPerustiedotValues()[a.when.name].value.match(/([^#]*).*/)[1] === a.when.value
-                )
-                .map((field) => {
-                    switch (field.type) {
-                        case 'INPUT':
-                            return (
-                                <div key={field.name} className={styles.Rivi}>
-                                    <div className={styles.Kentta}>
-                                        <label>{field.label}</label>
-                                        <Controller
-                                            control={formControl}
-                                            name={field.name}
-                                            render={({ field: { ref, ...rest } }) => {
-                                                return (
-                                                    <Input
-                                                        id={field.name}
-                                                        {...rest}
-                                                        error={!!validationErrors[field.name]}
-                                                        options={koodistot[field.koodisto]?.selectOptions()}
-                                                    />
-                                                );
-                                            }}
-                                        />
-                                    </div>
+            {dynamicFields.filter(DynamicFieldMethods().filterDynamicFields(getPerustiedotValues)).map((field) => {
+                switch (field.type) {
+                    case 'INPUT':
+                        return (
+                            <div key={field.name} className={styles.Rivi}>
+                                <div className={styles.Kentta}>
+                                    <label>{field.label}</label>
+                                    <Controller
+                                        control={formControl}
+                                        name={field.name}
+                                        render={({ field: { ref, ...rest } }) => {
+                                            return (
+                                                <Input
+                                                    id={field.name}
+                                                    {...rest}
+                                                    error={!!validationErrors[field.name]}
+                                                    options={koodistot[field.koodisto]?.selectOptions()}
+                                                />
+                                            );
+                                        }}
+                                    />
                                 </div>
-                            );
-                        case 'SELECT':
-                            return (
-                                <div key={field.name} className={styles.Rivi}>
-                                    <div className={styles.Kentta}>
-                                        <label>{i18n.translate(field.label)}</label>
-                                        <Controller
-                                            control={formControl}
-                                            name={field.name}
-                                            render={({ field: { ref, value, ...rest } }) => {
-                                                return (
-                                                    <Select
-                                                        value={value as ValueType<{ label: string; value: string }>}
-                                                        id={field.name}
-                                                        {...rest}
-                                                        error={!!validationErrors[field.name]}
-                                                        options={koodistot[field.koodisto]?.selectOptions()}
-                                                    />
-                                                );
-                                            }}
-                                        />
-                                    </div>
+                            </div>
+                        );
+                    case 'SELECT':
+                        return (
+                            <div key={field.name} className={styles.Rivi}>
+                                <div className={styles.Kentta}>
+                                    <label>{i18n.translate(field.label)}</label>
+                                    <Controller
+                                        control={formControl}
+                                        name={field.name}
+                                        render={({ field: { ref, value, ...rest } }) => {
+                                            return (
+                                                <Select
+                                                    value={value as ValueType<{ label: string; value: string }>}
+                                                    id={field.name}
+                                                    {...rest}
+                                                    error={!!validationErrors[field.name]}
+                                                    options={koodistot[field.koodisto]?.selectOptions()}
+                                                />
+                                            );
+                                        }}
+                                    />
                                 </div>
-                            );
-                        case 'MULTI_SELECT':
-                            return (
-                                <div key={field.name} className={styles.Rivi}>
-                                    <div className={styles.Kentta}>
-                                        <label>{i18n.translate(field.label)}</label>
-                                        <Controller
-                                            control={formControl}
-                                            name={field.name}
-                                            render={({ field: { ref, value, ...rest } }) => {
-                                                return (
-                                                    <Select
-                                                        isMulti
-                                                        value={value as ValueType<{ label: string; value: string }>}
-                                                        id={field.name}
-                                                        {...rest}
-                                                        error={!!validationErrors[field.name]}
-                                                        options={koodistot[field.koodisto]?.selectOptions()}
-                                                    />
-                                                );
-                                            }}
-                                        />
-                                    </div>
+                            </div>
+                        );
+                    case 'MULTI_SELECT':
+                        return (
+                            <div key={field.name} className={styles.Rivi}>
+                                <div className={styles.Kentta}>
+                                    <label>{i18n.translate(field.label)}</label>
+                                    <Controller
+                                        control={formControl}
+                                        name={field.name}
+                                        render={({ field: { ref, value, ...rest } }) => {
+                                            return (
+                                                <Select
+                                                    isMulti
+                                                    value={value as ValueType<{ label: string; value: string }>}
+                                                    id={field.name}
+                                                    {...rest}
+                                                    error={!!validationErrors[field.name]}
+                                                    options={koodistot[field.koodisto]?.selectOptions()}
+                                                />
+                                            );
+                                        }}
+                                    />
                                 </div>
-                            );
-                    }
-                })}
+                            </div>
+                        );
+                }
+            })}
         </>
     );
 }
