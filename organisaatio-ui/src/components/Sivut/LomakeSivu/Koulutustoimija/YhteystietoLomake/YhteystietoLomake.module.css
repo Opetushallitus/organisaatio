@@ -1,70 +1,19 @@
-.UloinKehys {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-}
 
 .EnsimmainenRivi {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
 }
+
 .EnsimmainenRivi > h3 {
     font-weight: bolder;
     padding-bottom: 1rem;
     color: #0a789c
 }
 
-.Rivi {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    padding-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
-.Ruudukko {
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-columns: min-content auto;
-    padding-right: 2rem;
-}
-
-.Kentta {
-    width: 15rem;
-    padding-right: 5rem
-}
-
-.KenttaLyhyt {
-    margin-right: 2rem;
-    width: 5rem;
-}
-
 .PiilotaNappiKentta {
     margin-left: 1rem;
     margin-right: 5rem;
-}
-
-
-.AvainKevyestiBoldattu {
-    font-weight: 700;
-}
-
-.ReadOnly {
-    font-size: 16px;
-    -webkit-appearance: none;
-    border: none
-}
-
-.Nappi {
-    height: 2.5rem;
-}
-
-@media (min-width: 900px) {
-    .AvainKevyestiBoldattu {
-        white-space: nowrap;
-    }
 }
 
 .ToimipaikkaText {

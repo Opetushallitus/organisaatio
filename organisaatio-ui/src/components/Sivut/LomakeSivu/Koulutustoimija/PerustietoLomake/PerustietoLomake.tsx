@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import styles from './PerustietoLomake.module.css';
-import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
+import { KoodistoContext } from '../../../../../contexts/contexts';
 import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
 import TLHeader from '../../../../Modaalit/ToimipisteenLakkautus/TLHeader';
 import TLBody from '../../../../Modaalit/ToimipisteenLakkautus/TLBody';
@@ -23,6 +21,16 @@ import { Controller, useWatch } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import DatePickerController from '../../../../DatePickerController/DatePickerController';
 import DynamicFields from '../DynamicFields/DynamicFields';
+import {
+    AvainKevyestiBoldattu,
+    Kentta,
+    LomakeButton,
+    ReadOnly,
+    ReadOnlyNimi,
+    Rivi,
+    Ruudukko,
+    UloinKehys,
+} from '../../LomakeFields/LomakeFields';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -38,13 +46,11 @@ type PerustietoLomakeProps = {
 };
 
 const OrganisaationNimi = ({ defaultNimi, control }) => {
-    const { i18n } = useContext(LanguageContext);
     const nimi = useWatch({ control, name: 'nimi', defaultValue: defaultNimi });
-    return <span className={styles.ReadOnly}>{i18n.translateNimi(nimi)}</span>;
+    return <ReadOnlyNimi value={nimi} />;
 };
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
-    const { i18n } = useContext(LanguageContext);
     const {
         organisaatioBase,
         getPerustiedotValues,
@@ -65,34 +71,29 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     formRegister('nimi');
     const { nimi, organisaatioTyypit } = getPerustiedotValues();
     return (
-        <div className={styles.UloinKehys}>
-            <div className={styles.Rivi}>
-                <div className={styles.Ruudukko}>
-                    <span className={styles.AvainKevyestiBoldattu}>{i18n.translate('LABEL_OID')}</span>
-                    <span className={styles.ReadOnly}>{organisaatioBase?.oid}</span>
+        <UloinKehys>
+            <Rivi>
+                <Ruudukko>
+                    <AvainKevyestiBoldattu label="LABEL_OID" />
+                    <ReadOnly value={organisaatioBase?.oid} />
                     {organisaatioBase?.yritysmuoto && [
-                        <span key={'yritysmuoto_title'} className={styles.AvainKevyestiBoldattu}>
-                            {i18n.translate('PERUSTIETO_YRITYSMUOTO')}
-                        </span>,
-                        <span key={'yritysmuoto_arvo'} className={styles.ReadOnly}>
-                            {organisaatioBase.yritysmuoto}
-                        </span>,
+                        <AvainKevyestiBoldattu key={'yritysmuoto_title'} label="PERUSTIETO_YRITYSMUOTO" />,
+                        <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
                     ]}
-                    <span className={styles.AvainKevyestiBoldattu}>
-                        {i18n.translate('PERUSTIETO_ORGANISAATION_NIMI')}
-                    </span>
+                    <AvainKevyestiBoldattu label="PERUSTIETO_ORGANISAATION_NIMI" />
                     <OrganisaationNimi control={formControl} defaultNimi={nimi} />
-                </div>
+                </Ruudukko>
                 <div>
-                    <Button className={styles.Nappi} variant="outlined" onClick={() => setNimenmuutosModaaliAuki(true)}>
-                        {i18n.translate('PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA')}
-                    </Button>
+                    <LomakeButton
+                        label="PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA"
+                        onClick={() => setNimenmuutosModaaliAuki(true)}
+                    />
                 </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')} *</label>
-                    {organisaatioTyypit && (
+            </Rivi>
+
+            {organisaatioTyypit && (
+                <Rivi>
+                    <Kentta label="PERUSTIETO_ORGANISAATIOTYYPPI">
                         <Controller
                             control={formControl}
                             name={'organisaatioTyypit'}
@@ -100,19 +101,17 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 <CheckboxGroup {...rest} options={resolvedTyypit} />
                             )}
                         />
-                    )}
-                </div>
-            </div>
+                    </Kentta>
+                </Rivi>
+            )}
+
             {rakenne?.showYtj && (
-                <div className={styles.Rivi}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('PERUSTIETO_Y_TUNNUS')}</label>
+                <Rivi>
+                    <Kentta label="PERUSTIETO_Y_TUNNUS'">
                         <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
-                    </div>
-                    <Button className={styles.Nappi} variant="outlined" onClick={openYtjModal}>
-                        {i18n.translate('PERUSTIETO_PAIVITA_YTJ_TIEDOT')}
-                    </Button>
-                </div>
+                    </Kentta>
+                    <LomakeButton label="PERUSTIETO_PAIVITA_YTJ_TIEDOT" onClick={openYtjModal} />
+                </Rivi>
             )}
             {rakenne?.dynamicFields && (
                 <DynamicFields
@@ -123,22 +122,21 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     koodistot={koodistot}
                 />
             )}
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
+            <Rivi>
+                <Kentta label="PERUSTIETO_PERUSTAMISPAIVA">
                     <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
                         form={formControl}
                         validationErrors={validationErrors}
                     />
-                </div>
-                <Button className={styles.Nappi} variant="outlined" onClick={() => setLakkautusModaaliAuki(true)}>
-                    {i18n.translate('PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI')}
-                </Button>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_PAASIJAINTIKUNTA')}</label>
+                </Kentta>
+                <LomakeButton
+                    label="PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI"
+                    onClick={() => setLakkautusModaaliAuki(true)}
+                />
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_PAASIJAINTIKUNTA">
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -152,9 +150,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             />
                         )}
                     />
-                </div>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_MUUT_KUNNAT')}</label>
+                </Kentta>
+                <Kentta label="PERUSTIETO_MUUT_KUNNAT">
                     <Controller
                         control={formControl}
                         name={'muutKotipaikat'}
@@ -168,11 +165,10 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             />
                         )}
                     />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_MAA')}</label>
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_MAA">
                     <Controller
                         control={formControl}
                         name={'maa'}
@@ -185,11 +181,10 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             />
                         )}
                     />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_OPETUSKIELI">
                     <Controller
                         control={formControl}
                         name={'kielet'}
@@ -203,8 +198,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             />
                         )}
                     />
-                </div>
-            </div>
+                </Kentta>
+            </Rivi>
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
                     closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
@@ -226,6 +221,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     suljeCallback={() => setLakkautusModaaliAuki(false)}
                 />
             )}
-        </div>
+        </UloinKehys>
     );
 }

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import styles from './LomakeSivu.module.css';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -40,6 +39,17 @@ import { SiirraOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/SiirraOr
 import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
+import {
+    AlaBanneri,
+    LomakeButton,
+    MuokattuKolumni,
+    PaaOsio,
+    ValiContainer,
+    ValiNappulat,
+    ValiOtsikko,
+    VersioContainer,
+    YlaBanneri,
+} from './LomakeFields/LomakeFields';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -92,7 +102,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         formState: { errors: perustiedotValidationErrors },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
-        watch: perustiedotWatch,
+        watch: watchPerustiedot,
     } = useForm<Perustiedot>({ resolver: joiResolver(PerustietolomakeSchema) });
     const {
         getValues: getYhteystiedotValues,
@@ -107,8 +117,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
-    const watchOrganisaatioTyypit = perustiedotWatch('organisaatioTyypit');
-    const watchOppilaitosTyyppiUri = perustiedotWatch('oppilaitosTyyppiUri');
+    const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
+    const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
 
     useEffect(() => {
         (async function () {
@@ -120,8 +130,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.oid]);
     useEffect(() => {
-        resolveOrganisaatioRakenne(watchOrganisaatioTyypit || [], watchOppilaitosTyyppiUri?.value || '', params.oid);
-    }, [watchOrganisaatioTyypit, params.oid, watchOppilaitosTyyppiUri]);
+        const organisaatioRakenne = resolveOrganisaatio(rakenne, {
+            organisaatioTyypit: watchOrganisaatioTyypit || [],
+            oppilaitosTyyppiUri: watchOppilaitosTyyppiUri?.value || '',
+            oid: params.oid,
+        });
+        setResolvedOrganisaatioRakenne(organisaatioRakenne);
+    }, [params.oid, watchOppilaitosTyyppiUri?.value, watchOrganisaatioTyypit]);
     const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
@@ -183,15 +198,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setParentTiedot(parentTiedot);
         perustiedotReset(Uiperustiedot);
         yhteystiedotReset(Uiyhteystiedot);
-    }
-
-    function resolveOrganisaatioRakenne(organisaatioTyypit: string[], oppilaitosTyyppiUri: string, oid) {
-        const organisaatioRakenne = resolveOrganisaatio(rakenne, {
-            organisaatioTyypit,
-            oppilaitosTyyppiUri,
-            oid,
-        });
-        setResolvedOrganisaatioRakenne(organisaatioRakenne);
     }
 
     async function handleOrganisationMerge(props: SiirraOrganisaatioon | YhdistaOrganisaatioon) {
@@ -269,9 +275,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     if (!organisaatioBase || historiaLoading || historiaError) {
         return (
-            <div className={styles.PaaOsio}>
+            <PaaOsio>
                 <Spin />
-            </div>
+            </PaaOsio>
         );
     }
 
@@ -331,7 +337,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     };
     return (
         <PohjaSivu>
-            <div className={styles.YlaBanneri}>
+            <YlaBanneri>
                 <div>
                     <Link to="/">
                         <Icon icon={homeIcon} />
@@ -343,15 +349,20 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </div>,
                     organisaatioNimiPolku.length - 1 !== index && <div> &gt; </div>,
                 ])}
-            </div>
-            <div className={styles.ValiContainer}>
-                <div className={styles.ValiOtsikko}>
-                    <h3>{(organisaatioTyypit && organisaatioTyypit[0]) || i18n.translate('LABEL_NOT_AVAILABLE')}</h3>
-                    <h1 className={organisaatioBase?.status === 'AKTIIVINEN' ? '' : styles.Passivoitu}>
+            </YlaBanneri>
+            <ValiContainer>
+                <ValiOtsikko>
+                    <h3>
+                        {(organisaatioTyypit &&
+                            organisaatioTyypit[0] &&
+                            organisaatioTyypitKoodisto.uri2Nimi(organisaatioTyypit[0])) ||
+                            i18n.translate('LABEL_NOT_AVAILABLE')}
+                    </h3>
+                    <h1 style={organisaatioBase?.status === 'AKTIIVINEN' ? {} : { textDecoration: 'line-through' }}>
                         {nimi && (nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en'])}
                     </h1>
-                </div>
-                <div className={styles.ValiNappulat}>
+                </ValiOtsikko>
+                <ValiNappulat>
                     {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 && (
                         <Button
                             onClick={() => {
@@ -372,28 +383,24 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
                         </Button>
                     )}
-                    <Button onClick={handleLisaaUusiToimija}>{i18n.translate('LOMAKE_LISAA_UUSI_TOIMIJA')}</Button>
-                </div>
-            </div>
-            <div className={styles.PaaOsio}>
+                    <LomakeButton onClick={handleLisaaUusiToimija} label="LOMAKE_LISAA_UUSI_TOIMIJA" />
+                </ValiNappulat>
+            </ValiContainer>
+            <PaaOsio>
                 <Accordion {...accordionProps()} />
-            </div>
-            <div className={styles.AlaBanneri}>
-                <div className={styles.VersioContainer}>
-                    <div className={styles.MuokattuKolumni}>
-                        <span>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
+            </PaaOsio>
+            <AlaBanneri>
+                <VersioContainer>
+                    <MuokattuKolumni>
+                        <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
                         <span>01.01.2020 16:39 ngo Schimpff</span>
-                    </div>
-                </div>
+                    </MuokattuKolumni>
+                </VersioContainer>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula} onClick={() => history.push('/')}>
-                        {i18n.translate('BUTTON_SULJE')}
-                    </Button>
-                    <Button className={styles.Versionappula} onClick={saveOrganisaatio}>
-                        {i18n.translate('BUTTON_TALLENNA')}
-                    </Button>
+                    <LomakeButton label="BUTTON_SULJE" onClick={() => history.push('/')} />
+                    <LomakeButton label="BUTTON_TALLENNA" onClick={saveOrganisaatio} />
                 </div>
-            </div>
+            </AlaBanneri>
             {yhdistaOrganisaatioModaaliAuki && (
                 <YhdistaOrganisaatio
                     yhdistaOrganisaatio={yhdistaOrganisaatio}

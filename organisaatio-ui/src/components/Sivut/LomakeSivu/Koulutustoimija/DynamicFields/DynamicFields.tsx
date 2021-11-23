@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { useContext } from 'react';
-import styles from '../PerustietoLomake/PerustietoLomake.module.css';
 import { Controller } from 'react-hook-form';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { ValueType } from 'react-select';
 import { DynamicField, KoodistoContextType, Perustiedot } from '../../../../../types/types';
-import { LanguageContext } from '../../../../../contexts/contexts';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control } from 'react-hook-form/dist/types/form';
+import { Kentta, Rivi } from '../../LomakeFields/LomakeFields';
 
 type DynamicFieldsProps = {
     dynamicFields: DynamicField[];
@@ -20,7 +18,7 @@ type DynamicFieldsProps = {
 
 export const DynamicFieldMethods = () => {
     const filterDynamicFields = (getPerustiedotValues: () => Perustiedot) => {
-        return (a) => !a.when || getPerustiedotValues()[a.when.name].value.match(/([^#]*).*/)[1] === a.when.value;
+        return (a) => !a.when || getPerustiedotValues()[a.when.name]?.value.match(/([^#]*).*/)[1] === a.when.value;
     };
     return { filterDynamicFields };
 };
@@ -31,16 +29,14 @@ export default function DynamicFields({
     validationErrors,
     koodistot,
 }: DynamicFieldsProps) {
-    const { i18n } = useContext(LanguageContext);
     return (
         <>
             {dynamicFields.filter(DynamicFieldMethods().filterDynamicFields(getPerustiedotValues)).map((field) => {
                 switch (field.type) {
                     case 'INPUT':
                         return (
-                            <div key={field.name} className={styles.Rivi}>
-                                <div className={styles.Kentta}>
-                                    <label>{field.label}</label>
+                            <Rivi key={field.name}>
+                                <Kentta label={field.label}>
                                     <Controller
                                         control={formControl}
                                         name={field.name}
@@ -55,14 +51,13 @@ export default function DynamicFields({
                                             );
                                         }}
                                     />
-                                </div>
-                            </div>
+                                </Kentta>
+                            </Rivi>
                         );
                     case 'SELECT':
                         return (
-                            <div key={field.name} className={styles.Rivi}>
-                                <div className={styles.Kentta}>
-                                    <label>{i18n.translate(field.label)}</label>
+                            <Rivi key={field.name}>
+                                <Kentta label={field.label}>
                                     <Controller
                                         control={formControl}
                                         name={field.name}
@@ -78,14 +73,13 @@ export default function DynamicFields({
                                             );
                                         }}
                                     />
-                                </div>
-                            </div>
+                                </Kentta>
+                            </Rivi>
                         );
                     case 'MULTI_SELECT':
                         return (
-                            <div key={field.name} className={styles.Rivi}>
-                                <div className={styles.Kentta}>
-                                    <label>{i18n.translate(field.label)}</label>
+                            <Rivi key={field.name}>
+                                <Kentta label={field.label}>
                                     <Controller
                                         control={formControl}
                                         name={field.name}
@@ -102,8 +96,8 @@ export default function DynamicFields({
                                             );
                                         }}
                                     />
-                                </div>
-                            </div>
+                                </Kentta>
+                            </Rivi>
                         );
                 }
             })}
