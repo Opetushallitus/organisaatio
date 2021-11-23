@@ -92,7 +92,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
-        resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oppilaitosTyyppiUri: '', oid: '' })
+        resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
     );
     const {
         reset: perustiedotReset,
@@ -194,8 +194,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const {
             organisaatio: { tyypit: organisaatioTyypit, oid },
         } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID);
-        const parentTiedot = { organisaatioTyypit, oid, oppilaitosTyyppiUri: '' };
-        setParentTiedot(parentTiedot);
+        setParentTiedot({ organisaatioTyypit, oid });
         perustiedotReset(Uiperustiedot);
         yhteystiedotReset(Uiyhteystiedot);
     }

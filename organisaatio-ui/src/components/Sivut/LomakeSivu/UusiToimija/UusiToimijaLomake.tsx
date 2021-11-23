@@ -85,8 +85,6 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto, []),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
-    // const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
-    // const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
 
     const validateChanges = (accordionUuids: string[]): void => {
         const accordionuuid = accordionUuids[0];
