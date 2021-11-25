@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import styles from './PerustietoLomake.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
@@ -12,6 +11,8 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
+import { Kentta, LomakeButton, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -24,18 +25,56 @@ type UusiOrgPerustiedotProps = {
     setPerustiedotValue: UseFormSetValue<Perustiedot>;
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     watchPerustiedot: UseFormWatch<Perustiedot>;
+    getPerustiedotValues: () => Perustiedot;
 };
 
-export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
-    const { handleJatka, validationErrors, formControl, formRegister, rakenne, resolvedTyypit } = props;
+export default function PerustietoLomake({
+    handleJatka,
+    validationErrors,
+    formControl,
+    formRegister,
+    openYtjModal,
+    rakenne,
+    resolvedTyypit,
+    getPerustiedotValues,
+}: UusiOrgPerustiedotProps) {
     const { i18n } = useContext(LanguageContext);
-    const { kuntaKoodisto, maatJaValtiotKoodisto, oppilaitoksenOpetuskieletKoodisto } = useContext(KoodistoContext);
+    const koodistot = useContext(KoodistoContext);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     return (
-        <div className={styles.UloinKehys}>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_ORGANISAATIOTYYPPI')}</label>
+        <UloinKehys>
+            <Rivi>
+                <Kentta label="PERUSTIETO_NIMI_SUOMEKSI">
+                    <Input
+                        error={!!validationErrors['nimiFi']}
+                        id={'organisaation_nimiFi'}
+                        {...formRegister('nimi.fi')}
+                        defaultValue={''}
+                    />
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_NIMI_RUOTSIKSI">
+                    <Input
+                        error={!!validationErrors['nimiSv']}
+                        id={'organisaation_nimiSv'}
+                        {...formRegister('nimi.sv')}
+                        defaultValue={''}
+                    />
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_NIMI_ENGLANNIKSI">
+                    <Input
+                        error={!!validationErrors['nimiEn']}
+                        id={'organisaation_nimiEn'}
+                        {...formRegister('nimi.en')}
+                        defaultValue={''}
+                    />
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_ORGANISAATIOTYYPPI">
                     <Controller
                         control={formControl}
                         name={'organisaatioTyypit'}
@@ -44,12 +83,12 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                             return <CheckboxGroup {...rest} options={resolvedTyypit} />;
                         }}
                     />
-                </div>
-            </div>
+                </Kentta>
+            </Rivi>
             {rakenne.showYtj && (
                 <>
-                    <div className={styles.Rivi}>
-                        <div className={styles.Kentta}>
+                    <Rivi>
+                        <Kentta label="">
                             <RadioGroup
                                 value={onYunnus.toString()}
                                 options={[
@@ -58,63 +97,35 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                 ]}
                                 onChange={(e) => setOnYtunnus(!onYunnus)}
                             />
-                        </div>
-                    </div>
+                        </Kentta>
+                    </Rivi>
                     {onYunnus && (
-                        <div className={styles.Rivi}>
-                            <div className={styles.Kentta}>
-                                <label>Y-tunnus</label>
+                        <Rivi>
+                            <Kentta label="Y-TUNNUS">
                                 <Input
                                     error={!!validationErrors['ytunnus']}
                                     id={'ytunnus'}
                                     {...formRegister('ytunnus')}
                                     defaultValue={''}
                                 />
-                            </div>
-                            <Button className={styles.Nappi} variant="outlined" onClick={props.openYtjModal}>
-                                {i18n.translate('BUTTON_HAE_YTJ_TIEDOT')}
-                            </Button>
-                        </div>
+                            </Kentta>
+                            <LomakeButton label={'BUTTON_HAE_YTJ_TIEDOT'} onClick={openYtjModal} />
+                        </Rivi>
                     )}
                 </>
             )}
-            <div className={styles.Rivi}>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('PERUSTIETO_NIMI_SUOMEKSI')}</label>
-                    <Input
-                        error={!!validationErrors['nimiFi']}
-                        id={'organisaation_nimiFi'}
-                        {...formRegister('nimi.fi')}
-                        defaultValue={''}
-                    />
-                </div>{' '}
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('PERUSTIETO_NIMI_RUOTSIKSI')}</label>
-                    <Input
-                        error={!!validationErrors['nimiSv']}
-                        id={'organisaation_nimiSv'}
-                        {...formRegister('nimi.sv')}
-                        defaultValue={''}
-                    />
-                </div>{' '}
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('PERUSTIETO_NIMI_ENGLANNIKSI')}</label>
-                    <Input
-                        error={!!validationErrors['nimiEn']}
-                        id={'organisaation_nimiEn'}
-                        {...formRegister('nimi.en')}
-                        defaultValue={''}
-                    />
-                </div>
-            </div>
+            {rakenne?.dynamicFields && (
+                <DynamicFields
+                    dynamicFields={rakenne.dynamicFields}
+                    getPerustiedotValues={getPerustiedotValues}
+                    formControl={formControl}
+                    validationErrors={validationErrors}
+                    koodistot={koodistot}
+                />
+            )}
 
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_PERUSTAMISPAIVA')}</label>
+            <Rivi>
+                <Kentta label="PERUSTIETO_PERUSTAMISPAIVA">
                     <Controller
                         control={formControl}
                         name={'alkuPvm'}
@@ -122,11 +133,10 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                             <DatePickerInput error={!!validationErrors['alkuPvm']} {...rest} />
                         )}
                     />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_PAASIJAINTIKUNTA')}</label>
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_PAASIJAINTIKUNTA">
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -136,13 +146,12 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                 {...field}
                                 ref={undefined}
                                 error={!!validationErrors['kotipaikka']}
-                                options={kuntaKoodisto.selectOptions()}
+                                options={koodistot.kuntaKoodisto.selectOptions()}
                             />
                         )}
                     />
-                </div>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_MUUT_KUNNATs')}</label>
+                </Kentta>
+                <Kentta label="PERUSTIETO_MUUT_KUNNAT">
                     <Controller
                         control={formControl}
                         name={'muutKotipaikat'}
@@ -152,33 +161,31 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                 {...rest}
                                 error={!!validationErrors['muutKotipaikat']}
                                 isMulti
-                                options={kuntaKoodisto.selectOptions()}
+                                options={koodistot.kuntaKoodisto.selectOptions()}
                             />
                         )}
                     />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_MAA')}</label>
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_MAA">
                     <Controller
                         control={formControl}
                         name={'maa'}
-                        defaultValue={maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
+                        defaultValue={koodistot.maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 id="PERUSTIETO_MAA_SELECT"
                                 {...rest}
                                 error={!!validationErrors['maa']}
-                                options={maatJaValtiotKoodisto.selectOptions()}
+                                options={koodistot.maatJaValtiotKoodisto.selectOptions()}
                             />
                         )}
                     />
-                </div>
-            </div>
-            <div className={styles.Rivi}>
-                <div className={styles.Kentta}>
-                    <label>{i18n.translate('PERUSTIETO_OPETUSKIELI')}</label>
+                </Kentta>
+            </Rivi>
+            <Rivi>
+                <Kentta label="PERUSTIETO_OPETUSKIELI">
                     <Controller
                         control={formControl}
                         name={'kielet'}
@@ -188,15 +195,15 @@ export default function PerustietoLomake(props: UusiOrgPerustiedotProps) {
                                 id="PERUSTIETO_OPETUSKIELI_SELECT"
                                 {...rest}
                                 error={!!validationErrors['kielet']}
-                                options={oppilaitoksenOpetuskieletKoodisto.selectOptions()}
+                                options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                             />
                         )}
                     />
-                </div>
-            </div>
+                </Kentta>
+            </Rivi>
             <div>
                 <Button onClick={handleJatka}>{i18n.translate('BUTTON_JATKA')}</Button>
             </div>
-        </div>
+        </UloinKehys>
     );
 }

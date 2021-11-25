@@ -47,12 +47,12 @@
                 "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": null,
-        "paivitysPvm": "2017-09-06",
+        "paivittajaOid": "1.2.246.562.24.72158979901",
+        "paivitysPvm": "2021-07-22",
         "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_5",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 0,
+        "version": 1,
         "voimassaAlkuPvm": "2017-08-01",
         "voimassaLoppuPvm": null
     },
@@ -92,12 +92,12 @@
                 "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": null,
-        "paivitysPvm": "2015-01-28",
+        "paivittajaOid": "1.2.246.562.24.72158979901",
+        "paivitysPvm": "2021-07-22",
         "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_2",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 0,
+        "version": 1,
         "voimassaAlkuPvm": "2015-01-01",
         "voimassaLoppuPvm": null
     },
@@ -137,12 +137,12 @@
                 "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": null,
-        "paivitysPvm": "2015-01-28",
+        "paivittajaOid": "1.2.246.562.24.72158979901",
+        "paivitysPvm": "2021-07-22",
         "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_4",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 0,
+        "version": 1,
         "voimassaAlkuPvm": "2015-01-01",
         "voimassaLoppuPvm": null
     },
@@ -182,12 +182,12 @@
                 "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": null,
-        "paivitysPvm": "2015-01-28",
+        "paivittajaOid": "1.2.246.562.24.72158979901",
+        "paivitysPvm": "2021-07-22",
         "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_1",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 0,
+        "version": 1,
         "voimassaAlkuPvm": "2015-01-01",
         "voimassaLoppuPvm": null
     },
@@ -227,12 +227,12 @@
                 "sisaltaaMerkityksen": null
             }
         ],
-        "paivittajaOid": null,
-        "paivitysPvm": "2015-01-28",
+        "paivittajaOid": "1.2.246.562.24.72158979901",
+        "paivitysPvm": "2021-07-22",
         "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmatyypit_3",
         "tila": "LUONNOS",
         "versio": 1,
-        "version": 0,
+        "version": 1,
         "voimassaAlkuPvm": "2015-01-01",
         "voimassaLoppuPvm": null
     }

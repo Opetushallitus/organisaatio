@@ -11,7 +11,8 @@
       "organisaatiotyyppi_06",
       "organisaatiotyyppi_07",
       "organisaatiotyyppi_09"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Koulutustoimija",
@@ -22,7 +23,8 @@
     "childTypes": [
       "organisaatiotyyppi_02",
       "organisaatiotyyppi_04"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Oppilaitos",
@@ -32,6 +34,35 @@
     "mergeTargetType": "organisaatiotyyppi_02",
     "childTypes": [
       "organisaatiotyyppi_03"
+    ],
+    "dynamicFields": [
+      {
+        "name": "oppilaitosKoodi",
+        "label": "PERUSTIETO_OPPILAITOSKOODI",
+        "type": "INPUT"
+      },
+      {
+        "name": "oppilaitosTyyppiUri",
+        "label": "PERUSTIETO_OPPILAITOSTYYPPI",
+        "type": "SELECT",
+        "koodisto": "oppilaitostyyppiKoodisto"
+      },
+      {
+        "name": "muutOppilaitosTyyppiUris",
+        "label": "PERUSTIETO_MUUT_OPPILAITOSTYYPPI",
+        "type": "MULTI_SELECT",
+        "koodisto": "oppilaitostyyppiKoodisto"
+      },
+      {
+        "name": "vuosiluokat",
+        "label": "PERUSTIETO_VUOSILUOKAT",
+        "type": "MULTI_SELECT",
+        "koodisto": "vuosiluokatKoodisto",
+        "when": {
+          "name": "oppilaitosTyyppiUri",
+          "value": "oppilaitostyyppi_11"
+        }
+      }
     ]
   },
   {
@@ -42,7 +73,8 @@
     "mergeTargetType": null,
     "childTypes": [
       "organisaatiotyyppi_03"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Oppisopimustoimipiste",
@@ -51,7 +83,8 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Muu organisaatio",
@@ -62,7 +95,8 @@
     "childTypes": [
       "organisaatiotyyppi_03",
       "organisaatiotyyppi_05"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Tyoelamajarjesto",
@@ -72,7 +106,8 @@
     "mergeTargetType": null,
     "childTypes": [
       "organisaatiotyyppi_06"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Varhaiskasvatuksen jarjestaja",
@@ -82,7 +117,8 @@
     "mergeTargetType": null,
     "childTypes": [
       "organisaatiotyyppi_08"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Varhaiskasvatuksen toimipaikka",
@@ -92,7 +128,8 @@
     "mergeTargetType": null,
     "childTypes": [
       "organisaatiotyyppi_08"
-    ]
+    ],
+    "dynamicFields": []
   },
   {
     "description": "Kunta",
@@ -101,6 +138,7 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-    ]
+    ],
+    "dynamicFields": []
   }
 ]

@@ -10,6 +10,7 @@ import {
     Language,
     Lokalisointi,
     Nimi,
+    Rakenne,
 } from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
 import { homepage } from '../../package.json';
@@ -19,7 +20,7 @@ export const BASE_PATH = homepage;
 export const API_CONTEXT = `${homepage}/internal`;
 export const PUBLIC_API_CONTEXT = `${homepage}/api`;
 export const LEGACY_API_CONTEXT = `/organisaatio-service/rest`;
-export const rakenne = organisaatioRakenne;
+export const rakenne = organisaatioRakenne as Rakenne[];
 
 export class I18nImpl implements I18n {
     _data: Lokalisointi;
@@ -71,7 +72,7 @@ export class KoodistoImpl implements Koodisto {
     }
 
     uri2SelectOption(uri: KoodiUri, versio?: number): KoodistoSelectOption {
-        const label = this.nimi((koodi) => uri?.startsWith(koodi.uri));
+        const label = this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`));
         return {
             value: label === '' ? label : `${uri}${versio ? `#${versio}` : ''}`,
             label,
@@ -129,4 +130,6 @@ export const KoodistoContext = React.createContext<KoodistoContextType>({
     oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl([], 'fi'),
     postinumerotKoodisto: new KoodistoImpl([], 'fi'),
     maatJaValtiotKoodisto: new KoodistoImpl([], 'fi'),
+    vuosiluokatKoodisto: new KoodistoImpl([], 'fi'),
+    oppilaitostyyppiKoodisto: new KoodistoImpl([], 'fi'),
 });

@@ -1,20 +1,19 @@
 import { I18nImpl, KoodistoImpl } from './contexts';
 import { Koodi, Lokalisointi } from '../types/types';
 
-const koodit: Koodi[] = [
-    {
-        uri: 'koodi_1#1',
-        nimi: {
-            fi: 'Koodi',
-            sv: 'Kod',
-            en: 'Code',
-        },
-        arvo: '1',
-        versio: 1,
-    },
-];
-
 describe('KoodistoImpl', () => {
+    const koodit: Koodi[] = [
+        {
+            uri: 'koodi_1#1',
+            nimi: {
+                fi: 'Koodi',
+                sv: 'Kod',
+                en: 'Code',
+            },
+            arvo: '1',
+            versio: 1,
+        },
+    ];
     const impl = new KoodistoImpl(koodit, 'fi');
 
     it('Finds name using a uri', () => {
@@ -63,6 +62,37 @@ describe('KoodistoImpl', () => {
         const options = impl.selectOptions();
         expect(options.length).toEqual(1);
         expect(options[0].label).toEqual('Koodi');
+    });
+});
+describe('KoodistoImpl no version', () => {
+    const koodit: Koodi[] = [
+        {
+            uri: 'koodi_1',
+            nimi: {
+                fi: 'Koodi',
+                sv: 'Kod',
+                en: 'Code',
+            },
+            arvo: '1',
+            versio: 1,
+        },
+        {
+            uri: 'koodi_10',
+            nimi: {
+                fi: 'Koodi10',
+                sv: 'Kod10',
+                en: 'Code10',
+            },
+            arvo: '10',
+            versio: 1,
+        },
+    ];
+    const impl = new KoodistoImpl(koodit, 'fi');
+    it('Returns all selectOptions', () => {
+        const options = impl.selectOptions();
+        expect(options.length).toEqual(2);
+        expect(options[0].label).toEqual('Koodi');
+        expect(options[1].label).toEqual('Koodi10');
     });
 });
 describe('I18nImpl', () => {
