@@ -2,11 +2,8 @@ import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } fr
 import { ROOT_OID } from '../contexts/contexts';
 import { ApiOrganisaatio } from '../types/apiTypes';
 import queryString from 'query-string';
-
-export const resolveOrganisaatio = (
-    rakenne: Rakenne[],
-    organisaatio: { organisaatioTyypit: KoodiUri[]; oid?: string }
-): ResolvedRakenne => {
+type ResolvingOrganisaatio = { organisaatioTyypit: KoodiUri[]; oppilaitosTyyppiUri?: string; oid?: string };
+export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingOrganisaatio): ResolvedRakenne => {
     const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.organisaatioTyypit];
     return rakenne
         .filter((a) => {
@@ -25,16 +22,22 @@ export const resolveOrganisaatio = (
                     mergeTargetType: mergeTarget,
                     moveTargetType: moveTarget,
                     childTypes: [...previous.childTypes, ...current.childTypes],
+                    dynamicFields: [
+                        ...previous.dynamicFields,
+                        ...current.dynamicFields.filter((a) => {
+                            return !previous.dynamicFields.some((b) => b.name === a.name);
+                        }),
+                    ],
                     showYtj: current.showYtj || previous.showYtj,
                 };
             },
-            { type: [], mergeTargetType: [], moveTargetType: [], childTypes: [], showYtj: false }
+            { type: [], mergeTargetType: [], moveTargetType: [], childTypes: [], dynamicFields: [], showYtj: false }
         );
 };
 export const resolveOrganisaatioTyypit = (
     rakenne: Rakenne[],
     koodisto: Koodisto,
-    organisaatio: { organisaatioTyypit: KoodiUri[]; oid: string }
+    organisaatio: ResolvingOrganisaatio
 ): KoodistoSelectOption[] => {
     const parentRakenne = resolveOrganisaatio(rakenne, organisaatio);
     return parentRakenne.childTypes

@@ -1,0 +1,1313 @@
+[
+    {
+        "koodiArvo": "22",
+        "koodiUri": "oppilaitostyyppi_22",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Specialyrkesl\u00e4roanstalter",
+                "lyhytNimi": "Specialyrkesl\u00e4roanstalter",
+                "nimi": "Specialyrkesl\u00e4roanstalter",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Vocational special education institutions",
+                "lyhytNimi": "Vocational special education institutions",
+                "nimi": "Vocational special education institutions",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ammatilliset erityisoppilaitokset",
+                "lyhytNimi": "Ammatilliset erityisoppilaitokset",
+                "nimi": "Ammatilliset erityisoppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_22",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 12,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "28",
+        "koodiUri": "oppilaitostyyppi_28",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Palo-, poliisi- ja vartiointialojen oppilaitokset",
+                "lyhytNimi": "Palo-, poliisi- ja vartiointialojen oppilaitokset",
+                "nimi": "Palo-, poliisi- ja vartiointialojen oppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "L\u00e4roanstalter inom brand-, polis- och bevakningsv\u00e4sendet",
+                "lyhytNimi": "L\u00e4roanstalter inom brand-, polis- och bevakningsv\u00e4sendet",
+                "nimi": "L\u00e4roanstalter inom brand-, polis- och bevakningsv\u00e4sendet",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Fire, police and security service institutes",
+                "lyhytNimi": "Fire, police and security service institutesitokset",
+                "nimi": "Fire, police and security service institutes",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_28",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 4,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "93",
+        "koodiUri": "oppilaitostyyppi_93",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Koodiarvo ei sis\u00e4lly viralliseen Tilastokeskuksen yll\u00e4pit\u00e4m\u00e4\u00e4n oppilaitostyyppiluokitukseen",
+                "lyhytNimi": "Muut koulutuksen j\u00e4rjest\u00e4j\u00e4t",
+                "nimi": "Muut koulutuksen j\u00e4rjest\u00e4j\u00e4t",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "\u00d6vriga utbildningsanordnare",
+                "lyhytNimi": "\u00d6vriga utbildningsanordnare",
+                "nimi": "\u00d6vriga utbildningsanordnare",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Muut koulutuksen j\u00e4rjest\u00e4j\u00e4t",
+                "lyhytNimi": "Muut koulutuksen j\u00e4rjest\u00e4j\u00e4t",
+                "nimi": "Muut koulutuksen j\u00e4rjest\u00e4j\u00e4t",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_93",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 8,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "12",
+        "koodiUri": "oppilaitostyyppi_12",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Peruskouluasteen erityiskoulut",
+                "lyhytNimi": "Peruskouluasteen erityiskoulut",
+                "nimi": "Peruskouluasteen erityiskoulut",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Special education schools",
+                "lyhytNimi": "Special education schools",
+                "nimi": "Special education schools",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Specialskolor p\u00e5 grundskoleniv\u00e5",
+                "lyhytNimi": "Specialskolor p\u00e5 grundskoleniv\u00e5",
+                "nimi": "Specialskolor p\u00e5 grundskoleniv\u00e5",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_12",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 5,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "41",
+        "koodiUri": "oppilaitostyyppi_41",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Polytechnics",
+                "lyhytNimi": "Polytechnics",
+                "nimi": "Polytechnics",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Yrkesh\u00f6gskolor",
+                "lyhytNimi": "Yrkesh\u00f6gskolor",
+                "nimi": "Yrkesh\u00f6gskolor",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ammattikorkeakoulut",
+                "lyhytNimi": "Ammattikorkeakoulut",
+                "nimi": "Ammattikorkeakoulut",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_41",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 5,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "64",
+        "koodiUri": "oppilaitostyyppi_64",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Kansalaisopistot",
+                "lyhytNimi": "Kansalaisopistot",
+                "nimi": "Kansalaisopistot",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Medborgarinstitut",
+                "lyhytNimi": "Medborgarinstitut",
+                "nimi": "Medborgarinstitut",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Adult education centres",
+                "lyhytNimi": "Adult education centres",
+                "nimi": "Adult education centres",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_64",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 8,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "01",
+        "koodiUri": "oppilaitostyyppi_01",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Taiteen perusopetuksen oppilaitokset (ei musiikki)",
+                "lyhytNimi": "Taiteen perusopetuksen oppilaitokset (ei musiikki)",
+                "nimi": "Taiteen perusopetuksen oppilaitokset (ei musiikki)",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Art schools (not music)",
+                "lyhytNimi": "Art schools (not music)",
+                "nimi": "Art schools (not music)",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "L\u00e4roanstalt inom grundl\u00e4ggande konstundervisning (inte musik)",
+                "lyhytNimi": "L\u00e4roanstalt inom grundl\u00e4ggande konstundervisning (inte musik)",
+                "nimi": "L\u00e4roanstalt inom grundl\u00e4ggande konstundervisning (inte musik)",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_01",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 4,
+        "voimassaAlkuPvm": "2015-10-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "61",
+        "koodiUri": "oppilaitostyyppi_61",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Musikl\u00e4roanstalter",
+                "lyhytNimi": "Musikl\u00e4roanstalter",
+                "nimi": "Musikl\u00e4roanstalter",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Music institutes",
+                "lyhytNimi": "Music institutes",
+                "nimi": "Music institutes",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Musiikkioppilaitokset",
+                "lyhytNimi": "Musiikkioppilaitokset",
+                "nimi": "Musiikkioppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_61",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 8,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "19",
+        "koodiUri": "oppilaitostyyppi_19",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Skolor som omfattar grundskole- och gymnasieniv\u00e5",
+                "lyhytNimi": "Skolor som omfattar grundskole- och gymnasieniv\u00e5",
+                "nimi": "Skolor som omfattar grundskole- och gymnasieniv\u00e5",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Perus- ja lukioasteen koulut",
+                "lyhytNimi": "Perus- ja lukioasteen koulut",
+                "nimi": "Perus- ja lukioasteen koulut",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Basic and general upper secondary schools",
+                "lyhytNimi": "Basic and general upper secondary schools",
+                "nimi": "Basic and general upper secondary schools",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_19",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 10,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "21",
+        "koodiUri": "oppilaitostyyppi_21",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Vocational institutions",
+                "lyhytNimi": "Vocational institutions",
+                "nimi": "Vocational institutions",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Yrkesl\u00e4roanstalter",
+                "lyhytNimi": "Yrkesl\u00e4roanstalter",
+                "nimi": "Yrkesl\u00e4roanstalter",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ammatilliset oppilaitokset",
+                "lyhytNimi": "Ammatilliset oppilaitokset",
+                "nimi": "Ammatilliset oppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_21",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 14,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "24",
+        "koodiUri": "oppilaitostyyppi_24",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Vocational adult education centres",
+                "lyhytNimi": "Vocational adult education centres",
+                "nimi": "Vocational adult education centres",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ammatilliset aikuiskoulutuskeskukset",
+                "lyhytNimi": "Ammatilliset aikuiskoulutuskeskukset",
+                "nimi": "Ammatilliset aikuiskoulutuskeskukset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Yrkesutbildningscentrer f\u00f6r vuxna",
+                "lyhytNimi": "Yrkesutbildningscentrer f\u00f6r vuxna",
+                "nimi": "Yrkesutbildningscentrer f\u00f6r vuxna",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_24",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 10,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "XX",
+        "koodiUri": "oppilaitostyyppi_xx",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Ok\u00e4nd l\u00e4roanstaltstyp",
+                "lyhytNimi": "Ok\u00e4nd l\u00e4roanstaltstyp",
+                "nimi": "Ok\u00e4nd l\u00e4roanstaltstyp",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ei tiedossa (oppilaitostyyppi)",
+                "lyhytNimi": "Ei tiedossa (oppilaitostyyppi)",
+                "nimi": "Ei tiedossa (oppilaitostyyppi)",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Not known (type of institution)",
+                "lyhytNimi": "Not known (type of institution)",
+                "nimi": "Not known (type of institution)",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_xx",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 8,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "62",
+        "koodiUri": "oppilaitostyyppi_62",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Liikunnan koulutuskeskukset",
+                "lyhytNimi": "Liikunnan koulutuskeskukset",
+                "nimi": "Liikunnan koulutuskeskukset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Idrottsutbildningscentrer",
+                "lyhytNimi": "Idrottsutbildningscentrer",
+                "nimi": "Idrottsutbildningscentrer",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Sports institutes",
+                "lyhytNimi": "Sports institutes",
+                "nimi": "Sports institutes",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_62",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 11,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "63",
+        "koodiUri": "oppilaitostyyppi_63",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Folk high schools",
+                "lyhytNimi": "Folk high schools",
+                "nimi": "Folk high schools",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Folkh\u00f6gskolor",
+                "lyhytNimi": "Folkh\u00f6gskolor",
+                "nimi": "Folkh\u00f6gskolor",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Kansanopistot",
+                "lyhytNimi": "Kansanopistot",
+                "nimi": "Kansanopistot",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_63",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 18,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "65",
+        "koodiUri": "oppilaitostyyppi_65",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Study circle centres",
+                "lyhytNimi": "Study circle centres",
+                "nimi": "Study circle centres",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Studiecentraler",
+                "lyhytNimi": "Studiecentraler",
+                "nimi": "Studiecentraler",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Opintokeskukset",
+                "lyhytNimi": "Opintokeskukset",
+                "nimi": "Opintokeskukset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_65",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "11",
+        "koodiUri": "oppilaitostyyppi_11",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Grundskolor",
+                "lyhytNimi": "Grundskolor",
+                "nimi": "Grundskolor",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Comprehensive schools",
+                "lyhytNimi": "Comprehensive schools",
+                "nimi": "Comprehensive schools",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Peruskoulut",
+                "lyhytNimi": "Peruskoulut",
+                "nimi": "Peruskoulut",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_11",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 6,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "42",
+        "koodiUri": "oppilaitostyyppi_42",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Universities",
+                "lyhytNimi": "Universities",
+                "nimi": "Universities",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Universitet",
+                "lyhytNimi": "Universitet",
+                "nimi": "Universitet",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Yliopistot",
+                "lyhytNimi": "Yliopistot",
+                "nimi": "Yliopistot",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_42",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 6,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "43",
+        "koodiUri": "oppilaitostyyppi_43",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Sotilaskorkeakoulut",
+                "lyhytNimi": "Sotilaskorkeakoulut",
+                "nimi": "Sotilaskorkeakoulut",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Military universities",
+                "lyhytNimi": "Military universities",
+                "nimi": "Military universities",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Milit\u00e4ra h\u00f6gskolor",
+                "lyhytNimi": "Milit\u00e4ra h\u00f6gskolor",
+                "nimi": "Milit\u00e4ra h\u00f6gskolor",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_43",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 5,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "23",
+        "koodiUri": "oppilaitostyyppi_23",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Specialised vocational education and training institutions",
+                "lyhytNimi": "Specialised vocational education and training institutions",
+                "nimi": "Specialised vocational education and training institutions",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ammatilliset erikoisoppilaitokset",
+                "lyhytNimi": "Ammatilliset erikoisoppilaitokset",
+                "nimi": "Ammatilliset erikoisoppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "S\u00e4rskilda yrkesl\u00e4roanstalter",
+                "lyhytNimi": "S\u00e4rskilda yrkesl\u00e4roanstalter",
+                "nimi": "S\u00e4rskilda yrkesl\u00e4roanstalter",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_23",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 8,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "15",
+        "koodiUri": "oppilaitostyyppi_15",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "General upper secondary schools",
+                "lyhytNimi": "General upper secondary schools",
+                "nimi": "General upper secondary schools",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Lukiot",
+                "lyhytNimi": "Lukiot",
+                "nimi": "Lukiot",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Gymnasier",
+                "lyhytNimi": "Gymnasier",
+                "nimi": "Gymnasier",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.51707373173",
+        "paivitysPvm": "2019-09-25",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_15",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 12,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "29",
+        "koodiUri": "oppilaitostyyppi_29",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Military vocational institutes",
+                "lyhytNimi": "Military vocational institutes",
+                "nimi": "Military vocational institutes",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Sotilasalan ammatilliset oppilaitokset",
+                "lyhytNimi": "Sotilasalan ammatilliset oppilaitokset",
+                "nimi": "Sotilasalan ammatilliset oppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Milit\u00e4ra yrkesl\u00e4roanstalter",
+                "lyhytNimi": "Milit\u00e4ra yrkesl\u00e4roanstalter",
+                "nimi": "Milit\u00e4ra yrkesl\u00e4roanstalter",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_29",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "66",
+        "koodiUri": "oppilaitostyyppi_66",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Sommaruniversitet",
+                "lyhytNimi": "Sommaruniversitet",
+                "nimi": "Sommaruniversitet",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Kes\u00e4yliopistot",
+                "lyhytNimi": "Kes\u00e4yliopistot",
+                "nimi": "Kes\u00e4yliopistot",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Summer universities",
+                "lyhytNimi": "Summer universities",
+                "nimi": "Summer universities",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-02-06",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_66",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 5,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "99",
+        "koodiUri": "oppilaitostyyppi_99",
+        "koodisto": {
+            "koodistoUri": "oppilaitostyyppi",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "\u00d6vriga l\u00e4roanstalter",
+                "lyhytNimi": "\u00d6vriga l\u00e4roanstalter",
+                "nimi": "\u00d6vriga l\u00e4roanstalter",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Other educational institutions",
+                "lyhytNimi": "Other educational institutions",
+                "nimi": "Other educational institutions",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Muut oppilaitokset",
+                "lyhytNimi": "Muut oppilaitokset",
+                "nimi": "Muut oppilaitokset",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-11-04",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/oppilaitostyyppi_99",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 8,
+        "voimassaAlkuPvm": "1990-01-01",
+        "voimassaLoppuPvm": null
+    }
+]

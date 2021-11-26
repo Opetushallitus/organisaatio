@@ -175,6 +175,10 @@ function mapUiOrganisaatioToApiToSave(
         alkuPvm,
         nimi,
         ytunnus,
+        oppilaitosTyyppiUri,
+        oppilaitosKoodi,
+        muutOppilaitosTyyppiUris,
+        vuosiluokat,
     } = perustiedotFormValues;
     const nimet = [
         {
@@ -194,6 +198,10 @@ function mapUiOrganisaatioToApiToSave(
         parentOid: parentOid || ROOT_OID,
         nimet,
         nimi,
+        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.value,
+        oppilaitosKoodi,
+        muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
+        vuosiluokat: vuosiluokat?.map((a) => a.value),
     };
 }
 
@@ -209,7 +217,18 @@ function mapUiOrganisaatioToApiToUpdate(
         organisaatioBase.apiYhteystiedot,
         yhteystiedotFormValues
     );
-    const { kotipaikka, maa, kielet, organisaatioTyypit, muutKotipaikat, alkuPvm } = perustiedotFormValues;
+    const {
+        kotipaikka,
+        maa,
+        kielet,
+        organisaatioTyypit,
+        muutKotipaikat,
+        alkuPvm,
+        oppilaitosTyyppiUri,
+        oppilaitosKoodi,
+        muutOppilaitosTyyppiUris,
+        vuosiluokat,
+    } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
     const uusiNimi = { ...perustiedotFormValues.nimi };
@@ -233,6 +252,10 @@ function mapUiOrganisaatioToApiToUpdate(
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
         kieletUris: kielet.map((a) => a.value),
+        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.value,
+        oppilaitosKoodi,
+        muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
+        vuosiluokat: vuosiluokat?.map((a) => a.value),
     };
 }
 

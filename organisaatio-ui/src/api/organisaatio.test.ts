@@ -104,6 +104,10 @@ const apiOrganisaatio: ApiOrganisaatio = {
     status: 'AKTIIVINEN',
     tyypit: [],
     yhteystiedot: [...apiYhteystiedot],
+    oppilaitosTyyppiUri: 'oppilaitostyyppi_11#1',
+    oppilaitosKoodi: '',
+    muutOppilaitosTyyppiUris: [],
+    vuosiluokat: [],
 };
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
@@ -126,6 +130,10 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
             postitoimipaikka: 'HELSINKI',
         },
     ],
+    oppilaitosTyyppiUri: 'oppilaitostyyppi_11#1',
+    oppilaitosKoodi: '',
+    muutOppilaitosTyyppiUris: [],
+    vuosiluokat: [],
 };
 
 const kayntiosoite = {
@@ -154,6 +162,10 @@ const uiPerustiedot: Perustiedot = {
     muutKotipaikat: [],
     nimi: { fi: 'uusinimi' },
     organisaatioTyypit: [],
+    oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11#1' },
+    oppilaitosKoodi: '',
+    muutOppilaitosTyyppiUris: [],
+    vuosiluokat: [],
 };
 
 describe('mapUiYhteystiedotToApi', () => {

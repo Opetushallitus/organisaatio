@@ -31,7 +31,6 @@ Cypress.Commands.add('inputByName', (name, value) => {
 
 Cypress.Commands.add('clickButton', (contains) => {
     return cy
-        .get('button')
         .contains(contains)
         .scrollIntoView()
         .click()
@@ -42,7 +41,6 @@ Cypress.Commands.add('clickButton', (contains) => {
 
 Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
     return cy
-        .get('div')
         .contains(contains)
         .scrollIntoView()
         .click()
@@ -53,7 +51,6 @@ Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
 
 Cypress.Commands.add('clickAccordion', (contains) => {
     return cy
-        .get('span')
         .contains(contains)
         .scrollIntoView()
         .click()
@@ -64,10 +61,9 @@ Cypress.Commands.add('clickAccordion', (contains) => {
 
 Cypress.Commands.add('selectFromList', (list, contains, input) => {
     if (input) {
-        cy.get('label').contains(list).parent().find('input').type(input);
-    } else cy.get('label').contains(list).parent().find('svg').last().scrollIntoView().click();
+        cy.contains(list).parent().find('input').type(input);
+    } else cy.contains(list).parent().find('svg').last().scrollIntoView().click();
     return cy
-        .get('div')
         .contains(contains)
         .scrollIntoView()
         .click()
@@ -77,8 +73,8 @@ Cypress.Commands.add('selectFromList', (list, contains, input) => {
 });
 
 Cypress.Commands.add('enterDate', (label, date) => {
-    cy.get('label').contains(label).parent().find('input').type(date);
-    cy.get('label').contains(label).click();
+    cy.contains(label).parent().find('input').type(date);
+    cy.contains(label).click();
 });
 
 Cypress.Commands.add('enterYhteystieto', (kieli, values) => {

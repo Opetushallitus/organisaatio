@@ -15,6 +15,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
+import { Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 
 export type Props = {
     opetusKielet: string[];
@@ -59,8 +60,8 @@ const YhteystietoLomake = ({
     const visibleKielet = Array.from(new Set(visibleKieletByOpetuskielet.concat(haseSomeValueKielet)));
 
     return (
-        <div className={styles.UloinKehys}>
-            <div className={styles.Rivi}>
+        <UloinKehys>
+            <Rivi>
                 <div className={styles.PiilotaNappiKentta}>
                     <Button onClick={handleShowClick}>
                         {naytaMuutKielet
@@ -71,7 +72,7 @@ const YhteystietoLomake = ({
                 <Checkbox {...formRegister('osoitteetOnEri')} checked={osoitteetOnEri}>
                     {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE')}
                 </Checkbox>
-            </div>
+            </Rivi>
             <div className={styles.KortitContainer}>
                 {visibleKielet.map((kieli, index) => (
                     <YhteystietoKortti
@@ -108,7 +109,7 @@ const YhteystietoLomake = ({
                             />
                         ))}
             </div>
-        </div>
+        </UloinKehys>
     );
 };
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 ymp='untuvaopintopolku'
 folder='../src/api'
-for koodisto in 'kayttoryhmat' 'kunta' 'maatjavaltiot1' 'oppilaitoksenopetuskieli' 'organisaatiotyyppi' 'posti' 'ryhmantila' 'ryhmatyypit' 'kieli'
+for koodisto in 'kayttoryhmat' 'kunta' 'maatjavaltiot1' 'oppilaitoksenopetuskieli' 'organisaatiotyyppi' 'posti' 'ryhmantila' 'ryhmatyypit' 'kieli' 'vuosiluokat' 'oppilaitostyyppi'
 do
   url="https://virkailija.$ymp.fi/koodisto-service/rest/json/$koodisto/koodi?onlyValidKoodis=true"
   echo fetching $koodisto from $url

@@ -38,6 +38,10 @@ const OrganisaatioApp: React.FC = () => {
 
     const { data: kayttoRyhmat, loading: kayttoRyhmatLoading, error: kayttoRyhmatError } = useKoodisto('KAYTTORYHMAT');
     const { data: ryhmanTilat, loading: ryhmanTilatLoading, error: ryhmanTilatError } = useKoodisto('RYHMANTILA');
+    const { data: vuosiluokat, loading: vuosiluokatLoading, error: vuosiluokatError } = useKoodisto('VUOSILUOKAT');
+    const { data: oppilaitostyyppi, loading: oppilaitostyyppiLoading, error: oppilaitostyyppiError } = useKoodisto(
+        'OPPILAITOSTYYPPI'
+    );
     const {
         data: organisaatioTyypit,
         loading: organisaatioTyypitLoading,
@@ -64,7 +68,9 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitLoading ||
         ryhmanTilatLoading ||
         organisaatioTyypitLoading ||
-        postinumerotLoading
+        postinumerotLoading ||
+        vuosiluokatLoading ||
+        oppilaitostyyppiLoading
     ) {
         return <Loading />;
     }
@@ -79,7 +85,9 @@ const OrganisaatioApp: React.FC = () => {
         ryhmanTilatError ||
         maatJaValtiotError ||
         organisaatioTyypitError ||
-        postinumerotError
+        postinumerotError ||
+        vuosiluokatError ||
+        oppilaitostyyppiError
     ) {
         return <Error />;
     }
@@ -92,6 +100,9 @@ const OrganisaatioApp: React.FC = () => {
     const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
     const oppilaitoksenOpetuskieletKoodisto = new KoodistoImpl(oppilaitoksenOpetuskielet, language);
     const postinumerotKoodisto = new KoodistoImpl(postinumerot, language);
+    const vuosiluokatKoodisto = new KoodistoImpl(vuosiluokat, language);
+    const oppilaitostyyppiKoodisto = new KoodistoImpl(oppilaitostyyppi, language);
+
     return (
         <Router basename={BASE_PATH}>
             <ThemeProvider theme={theme}>
@@ -107,6 +118,8 @@ const OrganisaatioApp: React.FC = () => {
                             kayttoRyhmatKoodisto,
                             organisaatioTyypitKoodisto,
                             ryhmanTilaKoodisto,
+                            vuosiluokatKoodisto,
+                            oppilaitostyyppiKoodisto,
                         }}
                     >
                         <Switch>
