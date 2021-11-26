@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { LanguageContext } from '../../../../contexts/contexts';
 import * as React from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+import moment from 'moment';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props) => <div className={styles.YlaBanneri}>{props.children}</div>;
@@ -25,6 +26,10 @@ const ReadOnly = ({ value }) => {
 const ReadOnlyNimi = ({ value }) => {
     const { i18n } = useContext(LanguageContext);
     return <span className={styles.Kentta}>{i18n.translateNimi(value)}</span>;
+};
+const ReadOnlyDate = ({ value }) => {
+    const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
+    return <div className={styles.Kentta}>{formattedDate}</div>;
 };
 const Kentta = ({ label, children }) => {
     const { i18n } = useContext(LanguageContext);
@@ -69,5 +74,6 @@ export {
     AvainKevyestiBoldattu,
     ReadOnly,
     ReadOnlyNimi,
+    ReadOnlyDate,
     LomakeButton,
 };

@@ -124,6 +124,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             })();
         })();
     }
+
     if (!organisaatioRakenne || !resolvedTyypit) {
         return (
             <PaaOsio>

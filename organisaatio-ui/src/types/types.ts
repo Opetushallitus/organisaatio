@@ -90,6 +90,7 @@ export type Perustiedot = {
     oppilaitosKoodi: string;
     muutOppilaitosTyyppiUris: KoodistoSelectOption[];
     vuosiluokat: KoodistoSelectOption[];
+    lakkautusPvm?: LocalDate;
 };
 
 export type ParentTiedot = {

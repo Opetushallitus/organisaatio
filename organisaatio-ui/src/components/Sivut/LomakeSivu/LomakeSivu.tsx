@@ -155,6 +155,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         muutOppilaitosTyyppiUris,
         vuosiluokat,
         yhteystiedot: apiYhteystiedot,
+        lakkautusPvm,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -174,6 +175,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 kotipaikka,
                 muutKotipaikat,
                 alkuPvm,
+                lakkautusPvm,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
                 oppilaitosKoodi,
@@ -280,10 +282,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
     }
 
-    const handleNimiUpdate = (nimi) => {
-        setPerustiedotValue('nimi', nimi);
-    };
-
     registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
@@ -296,7 +294,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 resolvedTyypit={resolvedTyypit}
                 getPerustiedotValues={getPerustiedotValues}
                 formRegister={registerPerustiedot}
-                handleNimiUpdate={handleNimiUpdate}
+                setPerustiedotValue={setPerustiedotValue}
                 formControl={perustiedotControl}
                 validationErrors={perustiedotValidationErrors}
                 key={PERUSTIEDOTID}

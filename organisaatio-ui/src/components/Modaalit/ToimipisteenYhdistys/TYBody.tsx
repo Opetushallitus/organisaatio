@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
-import styles from './ToimipisteenYhdistys.module.css';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Option, ResolvedRakenne, UiOrganisaatioBase, YhdistaOrganisaatioon } from '../../../types/types';
@@ -8,6 +7,7 @@ import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { warning } from '../../Notification/Notification';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
+import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 
 type TYProps = {
     yhdistaOrganisaatio: YhdistaOrganisaatioon;
@@ -17,7 +17,7 @@ type TYProps = {
 };
 
 export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatioBase, organisaatioRakenne }: TYProps) {
-    const { i18n, language } = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     const targetType =
         organisaatioRakenne && organisaatioRakenne.mergeTargetType ? organisaatioRakenne.mergeTargetType[0] : undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
@@ -31,10 +31,9 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
     const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
-        <div className={styles.BodyKehys}>
-            <div className={styles.BodyRivi}>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO')}</label>
+        <BodyKehys>
+            <BodyRivi>
+                <BodyKentta label={'ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO'}>
                     <Select
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
@@ -51,17 +50,16 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                                 });
                         }}
                     />
-                </div>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATIO_YHDISTYS_PVM')}</label>
+                </BodyKentta>
+                <BodyKentta label={'ORGANISAATIO_YHDISTYS_PVM'}>
                     <DatePickerInput
                         value={yhdistaOrganisaatio.date}
                         onChange={(e) => {
                             handleChange({ ...yhdistaOrganisaatio, date: e });
                         }}
                     />
-                </div>
-            </div>
-        </div>
+                </BodyKentta>
+            </BodyRivi>
+        </BodyKehys>
     );
 }

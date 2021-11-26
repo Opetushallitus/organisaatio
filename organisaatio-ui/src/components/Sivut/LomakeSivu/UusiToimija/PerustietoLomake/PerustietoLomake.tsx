@@ -6,13 +6,13 @@ import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGrou
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import { Kentta, LomakeButton, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
+import DatePickerController from '../../../../Controllers/DatePickerController';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -126,12 +126,10 @@ export default function PerustietoLomake({
 
             <Rivi>
                 <Kentta label="PERUSTIETO_PERUSTAMISPAIVA">
-                    <Controller
-                        control={formControl}
+                    <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
-                        render={({ field: { ref, ...rest } }) => (
-                            <DatePickerInput error={!!validationErrors['alkuPvm']} {...rest} />
-                        )}
+                        form={formControl}
+                        validationErrors={validationErrors}
                     />
                 </Kentta>
             </Rivi>

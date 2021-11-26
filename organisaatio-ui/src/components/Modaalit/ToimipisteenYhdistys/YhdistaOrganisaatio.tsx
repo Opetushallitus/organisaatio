@@ -1,12 +1,12 @@
 import { ResolvedRakenne, UiOrganisaatioBase, YhdistaOrganisaatioon } from '../../../types/types';
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
-import TYHeader from './TYHeader';
 import TYBody from './TYBody';
-import TYFooter from './TYFooter';
 import * as React from 'react';
-import { Confirmation } from '../Confirmation/Confirmation';
 import { useContext, useState } from 'react';
+import { Confirmation } from '../Confirmation/Confirmation';
 import { LanguageContext } from '../../../contexts/contexts';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 export function YhdistaOrganisaatio(props: {
     yhdistaOrganisaatio: YhdistaOrganisaatioon;
@@ -25,7 +25,7 @@ export function YhdistaOrganisaatio(props: {
         <>
             {!confirmationModaaliAuki && (
                 <PohjaModaali
-                    header={<TYHeader titleKey={'TOIMIPISTEEN_YHDISTYS_TITLE'} />}
+                    header={<Header label={'TOIMIPISTEEN_YHDISTYS_TITLE'} />}
                     body={
                         <TYBody
                             organisaatioBase={props.organisaatioBase}
@@ -35,7 +35,7 @@ export function YhdistaOrganisaatio(props: {
                         />
                     }
                     footer={
-                        <TYFooter
+                        <Footer
                             tallennaCallback={() => setConfirmationModaaliAuki(true)}
                             peruutaCallback={props.peruutaCallback}
                         />

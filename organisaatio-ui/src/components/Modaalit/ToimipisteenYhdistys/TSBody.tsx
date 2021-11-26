@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
-import styles from './ToimipisteenYhdistys.module.css';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Option, ResolvedRakenne, SiirraOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
@@ -8,6 +7,7 @@ import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { warning } from '../../Notification/Notification';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
+import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 
 type TSProps = {
     siirraOrganisaatio: SiirraOrganisaatioon;
@@ -17,7 +17,7 @@ type TSProps = {
 };
 
 export default function TSBody({ siirraOrganisaatio, handleChange, organisaatioBase, organisaatioRakenne }: TSProps) {
-    const { i18n, language } = useContext(LanguageContext);
+    const { language } = useContext(LanguageContext);
     const targetType = organisaatioRakenne.moveTargetType[0] || undefined;
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
         organisaatiotyyppi: targetType,
@@ -30,10 +30,9 @@ export default function TSBody({ siirraOrganisaatio, handleChange, organisaatioB
     const newParent = organisaatiot.find((o) => o.oid === siirraOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
-        <div className={styles.BodyKehys}>
-            <div className={styles.BodyRivi}>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO')}</label>
+        <BodyKehys>
+            <BodyRivi>
+                <BodyKentta label={'ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO'}>
                     <Select
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
@@ -50,17 +49,16 @@ export default function TSBody({ siirraOrganisaatio, handleChange, organisaatioB
                                 });
                         }}
                     />
-                </div>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('ORGANISAATIO_SIIRTO_PVM')}</label>
+                </BodyKentta>
+                <BodyKentta label="ORGANISAATIO_SIIRTO_PVM">
                     <DatePickerInput
                         value={siirraOrganisaatio.date}
                         onChange={(e) => {
                             handleChange({ ...siirraOrganisaatio, date: e });
                         }}
                     />
-                </div>
-            </div>
-        </div>
+                </BodyKentta>
+            </BodyRivi>
+        </BodyKehys>
     );
 }

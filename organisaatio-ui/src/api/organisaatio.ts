@@ -189,6 +189,7 @@ function mapUiOrganisaatioToApiToSave(
     return {
         ytunnus,
         alkuPvm,
+        lakkautusPvm: '',
         tyypit: organisaatioTyypit,
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
@@ -228,6 +229,7 @@ function mapUiOrganisaatioToApiToUpdate(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris,
         vuosiluokat,
+        lakkautusPvm,
     } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
@@ -239,6 +241,7 @@ function mapUiOrganisaatioToApiToUpdate(
         nimet.push({ nimi: uusiNimi, alkuPvm: today });
     }
     return {
+        lakkautusPvm,
         alkuPvm,
         oid,
         parentOid,

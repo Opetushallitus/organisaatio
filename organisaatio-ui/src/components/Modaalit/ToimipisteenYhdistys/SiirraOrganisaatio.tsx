@@ -1,12 +1,12 @@
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
-import TYHeader from './TYHeader';
-import TYFooter from './TYFooter';
 import * as React from 'react';
 import { useContext, useState } from 'react';
 import TSBody from './TSBody';
 import { Confirmation } from '../Confirmation/Confirmation';
 import { ResolvedRakenne, SiirraOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/contexts';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 export function SiirraOrganisaatio(props: {
     siirraOrganisaatio: SiirraOrganisaatioon;
@@ -23,7 +23,7 @@ export function SiirraOrganisaatio(props: {
         <>
             {!confirmationModaaliAuki && (
                 <PohjaModaali
-                    header={<TYHeader titleKey={'TOIMIPISTEEN_SIIRTO_TITLE'} />}
+                    header={<Header label={'TOIMIPISTEEN_SIIRTO_TITLE'} />}
                     body={
                         <TSBody
                             organisaatioBase={props.organisaatioBase}
@@ -33,7 +33,7 @@ export function SiirraOrganisaatio(props: {
                         />
                     }
                     footer={
-                        <TYFooter
+                        <Footer
                             tallennaCallback={() => setConfirmationModaaliAuki(true)}
                             peruutaCallback={props.peruutaCallback}
                         />

@@ -4,17 +4,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext } from '../../../../../contexts/contexts';
-import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
-import TLHeader from '../../../../Modaalit/ToimipisteenLakkautus/TLHeader';
-import TLBody from '../../../../Modaalit/ToimipisteenLakkautus/TLBody';
-import TLFooter from '../../../../Modaalit/ToimipisteenLakkautus/TLFooter';
-import {
-    KoodistoSelectOption,
-    Nimi,
-    Perustiedot,
-    ResolvedRakenne,
-    UiOrganisaatioBase,
-} from '../../../../../types/types';
+import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
@@ -26,11 +16,13 @@ import {
     Kentta,
     LomakeButton,
     ReadOnly,
+    ReadOnlyDate,
     ReadOnlyNimi,
     Rivi,
     Ruudukko,
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
+import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -40,7 +32,7 @@ type PerustietoLomakeProps = {
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
-    handleNimiUpdate: (nimi: Nimi) => void;
+    setPerustiedotValue: any;
     getPerustiedotValues: () => Perustiedot;
     organisaatioBase: UiOrganisaatioBase;
 };
@@ -58,7 +50,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         validationErrors,
         formRegister,
         formControl,
-        handleNimiUpdate,
+        setPerustiedotValue,
         rakenne,
         resolvedTyypit,
     } = props;
@@ -69,7 +61,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
-    const { nimi, organisaatioTyypit } = getPerustiedotValues();
+    const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
     return (
         <UloinKehys>
             <Rivi>
@@ -107,7 +99,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
 
             {rakenne?.showYtj && (
                 <Rivi>
-                    <Kentta label="PERUSTIETO_Y_TUNNUS'">
+                    <Kentta label="PERUSTIETO_Y_TUNNUS">
                         <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
                     </Kentta>
                     <LomakeButton label="PERUSTIETO_PAIVITA_YTJ_TIEDOT" onClick={openYtjModal} />
@@ -130,6 +122,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         validationErrors={validationErrors}
                     />
                 </Kentta>
+                {lakkautusPvm && (
+                    <Kentta label="PERUSTIETO_LAKKAUTUSPAIVA">
+                        <ReadOnlyDate value={lakkautusPvm} />
+                    </Kentta>
+                )}
                 <LomakeButton
                     label="PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI"
                     onClick={() => setLakkautusModaaliAuki(true)}
@@ -203,22 +200,18 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
                     closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={handleNimiUpdate}
+                    handleNimiTallennus={() => setPerustiedotValue('nimi', nimi)}
                     nimi={nimi}
                 />
             )}
             {lakkautusModaaliAuki && (
-                <PohjaModaali
-                    header={<TLHeader />}
-                    body={<TLBody />}
-                    footer={
-                        <TLFooter
-                            peruutaCallback={() => {
-                                setLakkautusModaaliAuki(false);
-                            }}
-                        />
-                    }
-                    suljeCallback={() => setLakkautusModaaliAuki(false)}
+                <ToimipisteenLakkautus
+                    closeModaali={() => setLakkautusModaaliAuki(false)}
+                    date={lakkautusPvm}
+                    handleTallennus={(lakkautusPvm) => {
+                        console.log('in handler', lakkautusPvm);
+                        setPerustiedotValue('lakkautusPvm', lakkautusPvm);
+                    }}
                 />
             )}
         </UloinKehys>

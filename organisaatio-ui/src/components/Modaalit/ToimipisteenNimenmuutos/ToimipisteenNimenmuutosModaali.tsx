@@ -1,12 +1,12 @@
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
-import TNHeader from './TNHeader';
 import TNBody from './TNBody';
-import TNFooter from './TNFooter';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Nimi } from '../../../types/types';
 import ToimipisteenNimenmuutosModaaliSchema from '../../../ValidationSchemas/ToimipisteenNimenmuutosModaaliSchema';
+import Header from '../Header/Header';
+import Footer from '../Confirmation/Footer';
 
 type ModaaliProps = {
     nimi: Nimi;
@@ -33,9 +33,9 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     };
     return (
         <PohjaModaali
-            header={<TNHeader />}
+            header={<Header label={'TOIMIPISTEEN_NIMENMUUTOS_TITLE'} />}
             body={<TNBody validationErrors={validationErrors} register={register} />}
-            footer={<TNFooter tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}
+            footer={<Footer tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}
             suljeCallback={handlePeruuta}
         />
     );
