@@ -280,7 +280,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 watch={watchYhteystiedot}
                 setYhteystiedotValue={setYhteystiedotValue}
                 formControl={yhteystiedotControl}
-                validationErrors={yhteystiedotValidationErrors}
+                hasValidationErrors={!!yhteystiedotValidationErrors}
                 formRegister={yhteystiedotRegister}
                 key={YHTEYSTIEDOTID}
             />

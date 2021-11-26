@@ -26,11 +26,9 @@ type OsoitteentoimipaikkaProps = {
 };
 
 type props = {
-    isFirst: boolean;
     kieli: 'fi' | 'sv' | 'en';
     yhteystiedotRegister: UseFormRegister<Yhteystiedot>;
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
-    validationErrors: FieldErrors<Yhteystiedot>;
     formControl: Control<Yhteystiedot>;
     osoitteetOnEri: boolean;
 };
@@ -65,7 +63,6 @@ const OtsikkoRivi = ({ label }) => (
 );
 
 export const YhteystietoKortti = ({
-    isFirst,
     kieli: kortinKieli,
     setYhteystiedotValue,
     validationErrors,

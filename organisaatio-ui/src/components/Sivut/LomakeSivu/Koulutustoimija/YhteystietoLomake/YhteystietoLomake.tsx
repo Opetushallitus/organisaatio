@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './YhteystietoLomake.module.css';
 import { useContext, useState } from 'react';
 import type { SupportedKieli, Yhteystiedot } from '../../../../../types/types';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { svAltSchema, fiAltSchema, enAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import {
     Control,
     UseFormGetValues,
@@ -20,7 +20,7 @@ export type Props = {
     opetusKielet: string[];
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     yhteystiedot?: Yhteystiedot[];
-    validationErrors: FieldErrors<Yhteystiedot>;
+    hasValidationErrors: boolean;
     formRegister: UseFormRegister<Yhteystiedot>;
     formControl: Control<Yhteystiedot>;
     watch: UseFormWatch<Yhteystiedot>;
@@ -29,10 +29,16 @@ export type Props = {
 
 const kaikkiOpetuskielet: SupportedKieli[] = ['fi', 'sv', 'en'];
 
+const validationSchemas = {
+    fi: fiAltSchema,
+    sv: svAltSchema,
+    en: enAltSchema,
+};
+
 const YhteystietoLomake = ({
     opetusKielet,
     formRegister,
-    validationErrors,
+    hasValidationErrors,
     watch,
     formControl,
     setYhteystiedotValue,
@@ -51,6 +57,7 @@ const YhteystietoLomake = ({
         checkHasSomeValueByKieli(getYhteystiedotValues(kieli))
     );
     const visibleKielet = Array.from(new Set(visibleKieletByOpetuskielet.concat(haseSomeValueKielet)));
+
     return (
         <div className={styles.UloinKehys}>
             <div className={styles.Rivi}>
@@ -74,7 +81,11 @@ const YhteystietoLomake = ({
                         osoitteetOnEri={osoitteetOnEri}
                         kieli={kieli}
                         setYhteystiedotValue={setYhteystiedotValue}
-                        validationErrors={validationErrors}
+                        validationErrors={
+                            hasValidationErrors
+                                ? validationSchemas[kieli].validate(getYhteystiedotValues(kieli))
+                                : undefined
+                        }
                         formControl={formControl}
                     />
                 ))}
@@ -84,12 +95,15 @@ const YhteystietoLomake = ({
                         .map((kieli) => (
                             <YhteystietoKortti
                                 key={kieli}
-                                isFirst={false}
                                 osoitteetOnEri={osoitteetOnEri}
                                 kieli={kieli}
                                 yhteystiedotRegister={formRegister}
                                 setYhteystiedotValue={setYhteystiedotValue}
-                                validationErrors={validationErrors}
+                                validationErrors={
+                                    hasValidationErrors
+                                        ? validationSchemas[kieli].validate(getYhteystiedotValues(kieli))
+                                        : undefined
+                                }
                                 formControl={formControl}
                             />
                         ))}
