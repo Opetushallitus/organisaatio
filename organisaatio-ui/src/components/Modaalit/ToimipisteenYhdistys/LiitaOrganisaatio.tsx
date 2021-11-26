@@ -2,7 +2,7 @@ import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import * as React from 'react';
 import { useContext, useState } from 'react';
 import { Confirmation } from '../Confirmation/Confirmation';
-import { LiitaOrganisaatioon, ResolvedRakenne, UiOrganisaatioBase } from '../../../types/types';
+import { LiitaOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/contexts';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -12,7 +12,6 @@ export function LiitaOrganisaatio({
     liitaOrganisaatioon,
     organisaatioBase,
     handleChange,
-    organisaatioRakenne,
     tallennaCallback,
     peruutaCallback,
     suljeCallback,
@@ -22,7 +21,6 @@ export function LiitaOrganisaatio({
     liitaOrganisaatioon: LiitaOrganisaatioon;
     organisaatioBase: UiOrganisaatioBase;
     handleChange: (value: ((prevState: LiitaOrganisaatioon) => LiitaOrganisaatioon) | LiitaOrganisaatioon) => void;
-    organisaatioRakenne: ResolvedRakenne;
     tallennaCallback: () => void;
     peruutaCallback: () => void;
     suljeCallback: () => void;
@@ -41,7 +39,6 @@ export function LiitaOrganisaatio({
                             organisaatioBase={organisaatioBase}
                             liitaOrganisaatio={liitaOrganisaatioon}
                             handleChange={handleChange}
-                            organisaatioRakenne={organisaatioRakenne}
                             targetType={targetType}
                             labels={labels}
                         />

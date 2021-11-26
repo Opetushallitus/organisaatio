@@ -402,7 +402,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     liitaOrganisaatioon={yhdistaOrganisaatio}
                     organisaatioBase={organisaatioBase}
                     handleChange={setYhdistaOrganisaatio}
-                    organisaatioRakenne={resolvedOrganisaatioRakenne}
                     tallennaCallback={() => {
                         handleYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
                     }}
@@ -410,7 +409,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         cancelYhdistaOrganisaatio();
                     }}
                     suljeCallback={() => cancelYhdistaOrganisaatio()}
-                    targetType={resolvedOrganisaatioRakenne?.mergeTargetType?.[0]}
+                    targetType={resolvedOrganisaatioRakenne.mergeTargetType[0]}
                     labels={{
                         title: 'TOIMIPISTEEN_YHDISTYS_TITLE',
                         confirmTitle: 'TOIMIPISTEEN_YHDISTYS_VAHVISTUS_TITLE',
@@ -425,7 +424,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     liitaOrganisaatioon={siirraOrganisaatio}
                     organisaatioBase={organisaatioBase}
                     handleChange={setSiirraOrganisaatio}
-                    organisaatioRakenne={resolvedOrganisaatioRakenne}
                     tallennaCallback={() => {
                         handleSiirraOrganisaatio({ ...siirraOrganisaatio });
                     }}
@@ -433,7 +431,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         cancelSiirraOrganisaatio();
                     }}
                     suljeCallback={() => cancelSiirraOrganisaatio()}
-                    targetType={resolvedOrganisaatioRakenne?.moveTargetType?.[0]}
+                    targetType={resolvedOrganisaatioRakenne.moveTargetType[0]}
                     labels={{
                         title: 'TOIMIPISTEEN_SIIRTO_TITLE',
                         confirmTitle: 'TOIMIPISTEEN_SIIRTO_VAHVISTUS_TITLE',

@@ -2,10 +2,9 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { LiitaOrganisaatioon, Option, ResolvedRakenne, UiOrganisaatioBase } from '../../../types/types';
+import { LiitaOrganisaatioon, Option, UiOrganisaatioBase } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { warning } from '../../Notification/Notification';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 
@@ -13,19 +12,11 @@ type TSProps = {
     liitaOrganisaatio: LiitaOrganisaatioon;
     handleChange: (props: LiitaOrganisaatioon) => void;
     organisaatioBase: UiOrganisaatioBase;
-    organisaatioRakenne: ResolvedRakenne;
     targetType: string;
     labels: { otherOrg: string; liitosPvm: string };
 };
 
-export default function LiitosBody({
-    liitaOrganisaatio,
-    handleChange,
-    organisaatioBase,
-    organisaatioRakenne,
-    targetType,
-    labels,
-}: TSProps) {
+export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaatioBase, targetType, labels }: TSProps) {
     const { language } = useContext(LanguageContext);
 
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
@@ -35,7 +26,7 @@ export default function LiitosBody({
     if (organisaatiotLoading || organisaatiotError) {
         return <Spin />;
     }
-    if (!organisaatioRakenne || !organisaatioRakenne.mergeTargetType) warning({ message: 'PARENT_TYPE_NOT_AVAILABLE' });
+
     const newParent = organisaatiot.find((o) => o.oid === liitaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
