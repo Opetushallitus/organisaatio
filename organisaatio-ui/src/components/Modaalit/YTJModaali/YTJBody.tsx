@@ -71,7 +71,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                         suffix={
                             input && (
                                 <Button variant={'text'} style={{ boxShadow: 'none' }} onClick={() => setInput('')}>
-                                    <Icon color="#999999" icon={clearIcon} />
+                                    <Icon color={'#999999'} icon={clearIcon} />
                                 </Button>
                             )
                         }
@@ -85,7 +85,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                 {ytjTiedot.map((ytj) => {
                     return (
                         <BodyKentta key={ytj.ytunnus}>
-                            <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant="text">
+                            <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant={'text'}>
                                 {`${ytj.nimi} ${ytj.ytunnus}`}
                             </Button>
                         </BodyKentta>

@@ -83,7 +83,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                                 setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
                             }}
                             value={globalFilter}
-                            suffix={<Icon color="#999999" icon={searchIcon} />}
+                            suffix={<Icon color={'#999999'} icon={searchIcon} />}
                         />
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                     <div className={styles.Kentta}>
                         <label>{i18n.translate('RYHMAT_RYHMAN_TYYPPI')}</label>
                         <Select
-                            id="RYHMAN_TYYPPI_SELECT"
+                            id={'RYHMAN_TYYPPI_SELECT'}
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
                             ) => {
@@ -112,7 +112,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                     <div className={styles.Kentta}>
                         <label>{i18n.translate('RYHMAT_RYHMAN_KAYTTOTARKOITUS')}</label>
                         <Select
-                            id="RYHMAN_KAYTTOTARKOITUS_SELECT"
+                            id={'RYHMAN_KAYTTOTARKOITUS_SELECT'}
                             onChange={(
                                 values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
                             ) => {
@@ -266,18 +266,23 @@ const NormaaliTaulukko = ({
             </table>
             <div className={styles.PaginationContainer}>
                 <div className={styles.PaginationSivunvaihto}>
-                    <Button variant="text" color="secondary" onClick={() => previousPage()} disabled={!canPreviousPage}>
+                    <Button
+                        variant={'text'}
+                        color={'secondary'}
+                        onClick={() => previousPage()}
+                        disabled={!canPreviousPage}
+                    >
                         <Icon icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
                         if (option === pageIndex) return <Button onClick={() => gotoPage(option)}>{option + 1}</Button>;
                         return (
-                            <Button variant="text" color="secondary" onClick={() => gotoPage(option)}>
+                            <Button variant={'text'} color={'secondary'} onClick={() => gotoPage(option)}>
                                 {option + 1}
                             </Button>
                         );
                     })}
-                    <Button variant="text" color="secondary" onClick={() => nextPage()} disabled={!canNextPage}>
+                    <Button variant={'text'} color={'secondary'} onClick={() => nextPage()} disabled={!canNextPage}>
                         <Icon icon={chevronRight} />
                     </Button>
                 </div>

@@ -335,7 +335,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         <PohjaSivu>
             <YlaBanneri>
                 <div>
-                    <Link to="/">
+                    <Link to={'/'}>
                         <Icon icon={homeIcon} />
                     </Link>
                 </div>
@@ -379,7 +379,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
                         </Button>
                     )}
-                    <LomakeButton onClick={handleLisaaUusiToimija} label="LOMAKE_LISAA_UUSI_TOIMIJA" />
+                    <LomakeButton onClick={handleLisaaUusiToimija} label={'LOMAKE_LISAA_UUSI_TOIMIJA'} />
                 </ValiNappulat>
             </ValiContainer>
             <PaaOsio>
@@ -393,8 +393,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </MuokattuKolumni>
                 </VersioContainer>
                 <div>
-                    <LomakeButton label="BUTTON_SULJE" onClick={() => history.push('/')} />
-                    <LomakeButton label="BUTTON_TALLENNA" onClick={saveOrganisaatio} />
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/')} />
+                    <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
                 </div>
             </AlaBanneri>
             {yhdistaOrganisaatioModaaliAuki && (

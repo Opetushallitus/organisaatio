@@ -11,7 +11,7 @@ export default function VirheSivu(props: Props) {
         <div className={styles.VirheKirjautunut}>
             <div className={styles.VirheKirjautunutTausta}>
                 <div>
-                    <img src={sad} alt="" />
+                    <img src={sad} alt={''} />
                 </div>
                 {props.children}
             </div>
