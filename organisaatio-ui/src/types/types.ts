@@ -140,16 +140,12 @@ export type OrganisaatioSuhde = {
     parent: OrganisaatioBase;
 };
 
-export type YhdistaOrganisaatioon = {
+export type LiitaOrganisaatioon = {
     newParent?: ApiOrganisaatio;
     date: Date;
     merge: boolean;
 };
-export type SiirraOrganisaatioon = {
-    newParent?: ApiOrganisaatio;
-    date: Date;
-    merge: boolean;
-};
+
 export type OrganisaatioHistoria = {
     childSuhteet: OrganisaatioSuhde[];
     parentSuhteet: OrganisaatioSuhde[];

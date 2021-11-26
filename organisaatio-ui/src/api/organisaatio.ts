@@ -1,12 +1,11 @@
 import Axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
 import {
     Koodisto,
+    LiitaOrganisaatioon,
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
     OrganisaationNimetNimi,
     Perustiedot,
-    SiirraOrganisaatioon,
-    YhdistaOrganisaatioon,
     Yhteystiedot,
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
@@ -100,7 +99,7 @@ async function mergeOrganisaatio({
     newParent,
     date,
     merge,
-}: (YhdistaOrganisaatioon | SiirraOrganisaatioon) & {
+}: LiitaOrganisaatioon & {
     oid: string;
 }) {
     return errorHandlingWrapper(async () => {

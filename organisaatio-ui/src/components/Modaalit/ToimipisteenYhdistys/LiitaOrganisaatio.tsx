@@ -1,23 +1,33 @@
-import { ResolvedRakenne, UiOrganisaatioBase, YhdistaOrganisaatioon } from '../../../types/types';
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
-import TYBody from './TYBody';
 import * as React from 'react';
 import { useContext, useState } from 'react';
 import { Confirmation } from '../Confirmation/Confirmation';
+import { LiitaOrganisaatioon, ResolvedRakenne, UiOrganisaatioBase } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/contexts';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import LiitosBody from './LiitosBody';
 
-export function YhdistaOrganisaatio(props: {
-    yhdistaOrganisaatio: YhdistaOrganisaatioon;
+export function LiitaOrganisaatio({
+    liitaOrganisaatioon,
+    organisaatioBase,
+    handleChange,
+    organisaatioRakenne,
+    tallennaCallback,
+    peruutaCallback,
+    suljeCallback,
+    targetType,
+    labels,
+}: {
+    liitaOrganisaatioon: LiitaOrganisaatioon;
     organisaatioBase: UiOrganisaatioBase;
-    handleChange: (
-        value: ((prevState: YhdistaOrganisaatioon) => YhdistaOrganisaatioon) | YhdistaOrganisaatioon
-    ) => void;
+    handleChange: (value: ((prevState: LiitaOrganisaatioon) => LiitaOrganisaatioon) | LiitaOrganisaatioon) => void;
     organisaatioRakenne: ResolvedRakenne;
     tallennaCallback: () => void;
     peruutaCallback: () => void;
     suljeCallback: () => void;
+    targetType: string;
+    labels: { title: string; confirmTitle: string; confirmMessage: string; otherOrg: string; liitosPvm: string };
 }) {
     const { i18n } = useContext(LanguageContext);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
@@ -25,45 +35,45 @@ export function YhdistaOrganisaatio(props: {
         <>
             {!confirmationModaaliAuki && (
                 <PohjaModaali
-                    header={<Header label={'TOIMIPISTEEN_YHDISTYS_TITLE'} />}
+                    header={<Header label={labels.title} />}
                     body={
-                        <TYBody
-                            organisaatioBase={props.organisaatioBase}
-                            yhdistaOrganisaatio={props.yhdistaOrganisaatio}
-                            handleChange={props.handleChange}
-                            organisaatioRakenne={props.organisaatioRakenne}
+                        <LiitosBody
+                            organisaatioBase={organisaatioBase}
+                            liitaOrganisaatio={liitaOrganisaatioon}
+                            handleChange={handleChange}
+                            organisaatioRakenne={organisaatioRakenne}
+                            targetType={targetType}
+                            labels={labels}
                         />
                     }
                     footer={
                         <Footer
                             tallennaCallback={() => setConfirmationModaaliAuki(true)}
-                            peruutaCallback={props.peruutaCallback}
+                            peruutaCallback={peruutaCallback}
                         />
                     }
-                    suljeCallback={props.suljeCallback}
+                    suljeCallback={suljeCallback}
                 />
             )}
             {confirmationModaaliAuki && (
                 <Confirmation
-                    header={'TOIMIPISTEEN_YHDISTYS_TITLE'}
-                    message={'TOIMIPISTEEN_YHDISTYS_VAHVISTUS_{from}_TO_{to}'}
+                    header={labels.confirmTitle}
+                    message={labels.confirmMessage}
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(props.organisaatioBase.currentNimi)} (${
-                                props.organisaatioBase.oid
-                            })`,
+                            value: `${i18n.translateNimi(organisaatioBase.currentNimi)} (${organisaatioBase.oid})`,
                         },
                         {
                             key: 'to',
-                            value: `${i18n.translateNimi(props.yhdistaOrganisaatio.newParent?.nimi)} (${
-                                props.yhdistaOrganisaatio.newParent?.oid || ''
+                            value: `${i18n.translateNimi(liitaOrganisaatioon.newParent?.nimi)} (${
+                                liitaOrganisaatioon.newParent?.oid || ''
                             })`,
                         },
                     ]}
                     tallennaCallback={() => {
                         setConfirmationModaaliAuki(false);
-                        props.tallennaCallback();
+                        tallennaCallback();
                     }}
                     peruutaCallback={() => setConfirmationModaaliAuki(false)}
                     suljeCallback={() => setConfirmationModaaliAuki(false)}

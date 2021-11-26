@@ -2,24 +2,32 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../../../contexts/contexts';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { Option, ResolvedRakenne, UiOrganisaatioBase, YhdistaOrganisaatioon } from '../../../types/types';
+import { LiitaOrganisaatioon, Option, ResolvedRakenne, UiOrganisaatioBase } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { warning } from '../../Notification/Notification';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 
-type TYProps = {
-    yhdistaOrganisaatio: YhdistaOrganisaatioon;
-    handleChange: (props: YhdistaOrganisaatioon) => void;
+type TSProps = {
+    liitaOrganisaatio: LiitaOrganisaatioon;
+    handleChange: (props: LiitaOrganisaatioon) => void;
     organisaatioBase: UiOrganisaatioBase;
     organisaatioRakenne: ResolvedRakenne;
+    targetType: string;
+    labels: { otherOrg: string; liitosPvm: string };
 };
 
-export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatioBase, organisaatioRakenne }: TYProps) {
+export default function LiitosBody({
+    liitaOrganisaatio,
+    handleChange,
+    organisaatioBase,
+    organisaatioRakenne,
+    targetType,
+    labels,
+}: TSProps) {
     const { language } = useContext(LanguageContext);
-    const targetType =
-        organisaatioRakenne && organisaatioRakenne.mergeTargetType ? organisaatioRakenne.mergeTargetType[0] : undefined;
+
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
         organisaatiotyyppi: targetType,
     });
@@ -28,12 +36,12 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
         return <Spin />;
     }
     if (!organisaatioRakenne || !organisaatioRakenne.mergeTargetType) warning({ message: 'PARENT_TYPE_NOT_AVAILABLE' });
-    const newParent = organisaatiot.find((o) => o.oid === yhdistaOrganisaatio.newParent?.oid);
+    const newParent = organisaatiot.find((o) => o.oid === liitaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
         <BodyKehys>
             <BodyRivi>
-                <BodyKentta label={'ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO'}>
+                <BodyKentta label={labels.otherOrg}>
                     <Select
                         menuPortalTarget={document.body}
                         value={mapOrganisaatioToSelect(newParent, language)}
@@ -43,7 +51,7 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                         onChange={(option) => {
                             if (option)
                                 handleChange({
-                                    ...yhdistaOrganisaatio,
+                                    ...liitaOrganisaatio,
                                     newParent: organisaatiot.find((a) => {
                                         return (option as Option).value === a.oid;
                                     }),
@@ -51,11 +59,11 @@ export default function TYBody({ yhdistaOrganisaatio, handleChange, organisaatio
                         }}
                     />
                 </BodyKentta>
-                <BodyKentta label={'ORGANISAATIO_YHDISTYS_PVM'}>
+                <BodyKentta label={labels.liitosPvm}>
                     <DatePickerInput
-                        value={yhdistaOrganisaatio.date}
+                        value={liitaOrganisaatio.date}
                         onChange={(e) => {
-                            handleChange({ ...yhdistaOrganisaatio, date: e });
+                            handleChange({ ...liitaOrganisaatio, date: e });
                         }}
                     />
                 </BodyKentta>
