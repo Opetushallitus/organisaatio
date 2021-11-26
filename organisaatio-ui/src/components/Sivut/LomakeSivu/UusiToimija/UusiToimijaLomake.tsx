@@ -177,7 +177,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     return (
         <PohjaSivu>
             <YlaBanneri>
-                <Link to="/">
+                <Link to="/organisaatiot">
                     <Icon icon={homeIcon} />
                     {i18n.translate('UUSI_TOIMIJA_TITLE')}
                 </Link>
