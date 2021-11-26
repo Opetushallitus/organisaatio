@@ -21,7 +21,6 @@ export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefi
         englanti: ['en'],
         muu: ['en'],
     };
-    console.log(mapping, 'mapping', opetuskielet);
     const sort = (input: SupportedKieli[]): SupportedKieli[] =>
         input.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
     return sort(

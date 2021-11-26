@@ -208,9 +208,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 <ToimipisteenLakkautus
                     closeModaali={() => setLakkautusModaaliAuki(false)}
                     date={lakkautusPvm}
-                    handleTallennus={(lakkautusPvm) => {
-                        console.log('in handler', lakkautusPvm);
-                        setPerustiedotValue('lakkautusPvm', lakkautusPvm);
+                    handleTallennus={(date) => {
+                        setPerustiedotValue('lakkautusPvm', date);
                     }}
                 />
             )}
