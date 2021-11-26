@@ -63,6 +63,7 @@ export type OrganisaatioBase = {
 };
 export type ApiOrganisaatio = OrganisaatioBase & {
     alkuPvm: LocalDate;
+    lakkautusPvm?: LocalDate;
     parentOid: string;
     parentOidPath: string;
     yritysmuoto?: string;

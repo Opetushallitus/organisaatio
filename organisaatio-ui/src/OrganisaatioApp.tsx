@@ -123,24 +123,24 @@ const OrganisaatioApp: React.FC = () => {
                         }}
                     >
                         <Switch>
-                            <Route path="/" exact component={TaulukkoSivu} />
-                            <Route exact path="/lomake/uusi" component={UusiToimijaLomake} />
-                            <Route path="/lomake/:oid" component={LomakeSivu} />
-                            <Route path="/ryhmat" exact component={Ryhmat} />
+                            <Route path={'/'} exact component={TaulukkoSivu} />
+                            <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
+                            <Route path={'/lomake/:oid'} component={LomakeSivu} />
+                            <Route path={'/ryhmat'} exact component={Ryhmat} />
                             <Route
-                                path="/yhteystietotyypit"
+                                path={'/yhteystietotyypit'}
                                 exact
-                                component={() => <Tyypit tyyppi="yhteystietojentyyppi" />}
+                                component={() => <Tyypit tyyppi={'yhteystietojentyyppi'} />}
                             />
-                            <Route path="/lisatietotyypit/muokkaus/:nimi" component={LisatietotyypinMuokkaus} />
-                            <Route path="/yhteystietotyypit/muokkaus" component={YhteystietotyypinMuokkaus} />
+                            <Route path={'/lisatietotyypit/muokkaus/:nimi'} component={LisatietotyypinMuokkaus} />
+                            <Route path={'/yhteystietotyypit/muokkaus'} component={YhteystietotyypinMuokkaus} />
                             <Route
                                 exact
-                                path="/ryhmat/uusi"
+                                path={'/ryhmat/uusi'}
                                 component={(props) => <RyhmanMuokkaus {...props} isNew />}
                             />
-                            <Route path="/ryhmat/:oid" component={RyhmanMuokkaus} />
-                            <Route path="*">
+                            <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
+                            <Route path={'*'}>
                                 <ErrorPage>{'ERROR_404'}</ErrorPage>
                             </Route>
                         </Switch>

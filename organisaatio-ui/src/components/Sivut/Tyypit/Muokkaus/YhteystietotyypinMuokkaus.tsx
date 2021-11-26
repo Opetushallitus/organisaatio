@@ -41,12 +41,12 @@ export default function YhteystietotyypinMuokkaus() {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio/yhteystietotyypit">
+                    <a href={'/organisaatio/yhteystietotyypit'}>
                         <Icon icon={homeIcon} />
                     </a>
                 </div>
                 <div>
-                    <a href="/organisaatio/yhteystietotyypit">{i18n.translate('TYYPIT_KAIKKI_YHTEYSTIETOTYYPIT')}</a>
+                    <a href={'/organisaatio/yhteystietotyypit'}>{i18n.translate('TYYPIT_KAIKKI_YHTEYSTIETOTYYPIT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>
@@ -130,7 +130,7 @@ export default function YhteystietotyypinMuokkaus() {
                             </div>
                             <div className={styles.Rivi}>
                                 <label className={styles.FixedWidthLabel} />
-                                <Button variant="outlined" onClick={() => setIsModaaliAuki(true)}>
+                                <Button variant={'outlined'} onClick={() => setIsModaaliAuki(true)}>
                                     + {i18n.translate('TYYPIT_OSOITTEET_LISAA_UUSI')}
                                 </Button>
                             </div>
@@ -155,7 +155,7 @@ export default function YhteystietotyypinMuokkaus() {
                             </div>
                             <div className={styles.Rivi}>
                                 <label className={styles.FixedWidthLabel} />
-                                <Button variant="outlined">+ {i18n.translate('TYYPIT_SAHKOISET_LISAA_UUSI')}</Button>
+                                <Button variant={'outlined'}>+ {i18n.translate('TYYPIT_SAHKOISET_LISAA_UUSI')}</Button>
                             </div>
                         </div>
                     </div>
@@ -189,8 +189,8 @@ export default function YhteystietotyypinMuokkaus() {
             </div>
             <div className={styles.AlaBanneri}>
                 <div className={styles.VersioContainer}>
-                    <Button variant="outlined" className={styles.Versionappula}>
-                        <span className="material-icons">timeline</span>
+                    <Button variant={'outlined'} className={styles.Versionappula}>
+                        <span className={'material-icons'}>timeline</span>
                         <span className={styles.VersionappulanTeksti}>{i18n.translate('BUTTON_VERSIOHISTORIA')}</span>
                     </Button>
                     <div className={styles.MuokattuKolumni}>
@@ -199,7 +199,7 @@ export default function YhteystietotyypinMuokkaus() {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula}>
+                    <Button variant={'outlined'} className={styles.Versionappula}>
                         {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula}>{i18n.translate('BUTTON_TALLENNA')}</Button>

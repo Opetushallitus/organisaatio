@@ -65,12 +65,12 @@ export default function LisatietotyypinMuokkaus(props: Props) {
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <a href="/organisaatio/lisatietotyypit">
+                    <a href={'/organisaatio/lisatietotyypit'}>
                         <Icon icon={homeIcon} />
                     </a>
                 </div>
                 <div>
-                    <a href="/organisaatio/lisatietotyypit">{i18n.translate('TYYPIT_KAIKKI_LISATIETOTYYPIT')}</a>
+                    <a href={'/organisaatio/lisatietotyypit'}>{i18n.translate('TYYPIT_KAIKKI_LISATIETOTYYPIT')}</a>
                 </div>
             </div>
             <div className={styles.PaaKehys}>
@@ -121,8 +121,8 @@ export default function LisatietotyypinMuokkaus(props: Props) {
             </div>
             <div className={styles.AlaBanneri}>
                 <div className={styles.VersioContainer}>
-                    <Button variant="outlined" className={styles.Versionappula}>
-                        <span className="material-icons">timeline</span>
+                    <Button variant={'outlined'} className={styles.Versionappula}>
+                        <span className={'material-icons'}>timeline</span>
                         <span className={styles.VersionappulanTeksti}>{i18n.translate('BUTTON_VERSIOHISTORIA')}</span>
                     </Button>
                     <div className={styles.MuokattuKolumni}>
@@ -131,7 +131,7 @@ export default function LisatietotyypinMuokkaus(props: Props) {
                     </div>
                 </div>
                 <div>
-                    <Button variant="outlined" className={styles.Versionappula}>
+                    <Button variant={'outlined'} className={styles.Versionappula}>
                         {i18n.translate('BUTTON_SULJE')}
                     </Button>
                     <Button className={styles.Versionappula}>{i18n.translate('BUTTON_TALLENNA')}</Button>

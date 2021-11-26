@@ -1,12 +1,11 @@
 import Axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
 import {
     Koodisto,
+    LiitaOrganisaatioon,
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
     OrganisaationNimetNimi,
     Perustiedot,
-    SiirraOrganisaatioon,
-    YhdistaOrganisaatioon,
     Yhteystiedot,
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
@@ -100,7 +99,7 @@ async function mergeOrganisaatio({
     newParent,
     date,
     merge,
-}: (YhdistaOrganisaatioon | SiirraOrganisaatioon) & {
+}: LiitaOrganisaatioon & {
     oid: string;
 }) {
     return errorHandlingWrapper(async () => {
@@ -189,6 +188,7 @@ function mapUiOrganisaatioToApiToSave(
     return {
         ytunnus,
         alkuPvm,
+        lakkautusPvm: '',
         tyypit: organisaatioTyypit,
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
@@ -228,6 +228,7 @@ function mapUiOrganisaatioToApiToUpdate(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris,
         vuosiluokat,
+        lakkautusPvm,
     } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
@@ -239,6 +240,7 @@ function mapUiOrganisaatioToApiToUpdate(
         nimet.push({ nimi: uusiNimi, alkuPvm: today });
     }
     return {
+        lakkautusPvm,
         alkuPvm,
         oid,
         parentOid,

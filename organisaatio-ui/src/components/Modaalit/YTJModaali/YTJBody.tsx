@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
-import styles from './YTJModaali.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
@@ -9,6 +8,9 @@ import { getByYTunnus, isYtjData, searchByName, YtjHaku } from '../../../api/ytj
 import { warning } from '../../Notification/Notification';
 import { Perustiedot, Yhteystiedot } from '../../../types/types';
 import { UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { Icon } from '@iconify/react';
+import clearIcon from '@iconify/icons-fa-solid/times-circle';
 
 type Props = {
     ytunnus: string;
@@ -34,6 +36,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
     const koodistot = useContext(KoodistoContext);
     const [input, setInput] = useState(ytunnus);
     const [ytjTiedot, setYtjTiedot] = useState<YtjHaku[]>([]);
+
     async function haeYtjTiedot() {
         if (isYTunnus(input)) {
             const data = await getByYTunnus(input, koodistot);
@@ -43,6 +46,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
             setYtjTiedot(data);
         }
     }
+
     async function handleClick(ytjHaku: YtjHaku) {
         if (isYtjData(ytjHaku)) korvaaOrganisaatio({ ytjData: ytjHaku, setters, suljeModaali });
         else {
@@ -50,21 +54,44 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
             if (ytj) korvaaOrganisaatio({ ytjData: ytj, setters, suljeModaali });
         }
     }
+
     return (
-        <div className={styles.BodyKehys}>
-            <div className={styles.BodyRivi}>
-                <Input name={'ytjinput'} onChange={(e) => setInput(e.target.value)} value={input} />
-                <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
-            </div>
-            {ytjTiedot.map((ytj) => {
-                return (
-                    <div key={ytj.ytunnus} className={styles.BodyKentta}>
-                        <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant="text">
-                            {`${ytj.nimi} ${ytj.ytunnus}`}
-                        </Button>
-                    </div>
-                );
-            })}
-        </div>
+        <BodyKehys>
+            <BodyRivi>
+                <BodyKentta>
+                    <Input
+                        name={'ytjinput'}
+                        onChange={(e) => setInput(e.target.value)}
+                        value={input}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                haeYtjTiedot();
+                            }
+                        }}
+                        suffix={
+                            input && (
+                                <Button variant={'text'} style={{ boxShadow: 'none' }} onClick={() => setInput('')}>
+                                    <Icon color={'#999999'} icon={clearIcon} />
+                                </Button>
+                            )
+                        }
+                    />
+                </BodyKentta>
+                <BodyKentta>
+                    <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
+                </BodyKentta>
+            </BodyRivi>
+            <BodyRivi>
+                {ytjTiedot.map((ytj) => {
+                    return (
+                        <BodyKentta key={ytj.ytunnus}>
+                            <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant={'text'}>
+                                {`${ytj.nimi} ${ytj.ytunnus}`}
+                            </Button>
+                        </BodyKentta>
+                    );
+                })}
+            </BodyRivi>
+        </BodyKehys>
     );
 }

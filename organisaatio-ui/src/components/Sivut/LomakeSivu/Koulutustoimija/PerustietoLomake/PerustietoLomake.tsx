@@ -4,17 +4,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext } from '../../../../../contexts/contexts';
-import PohjaModaali from '../../../../Modaalit/PohjaModaali/PohjaModaali';
-import TLHeader from '../../../../Modaalit/ToimipisteenLakkautus/TLHeader';
-import TLBody from '../../../../Modaalit/ToimipisteenLakkautus/TLBody';
-import TLFooter from '../../../../Modaalit/ToimipisteenLakkautus/TLFooter';
-import {
-    KoodistoSelectOption,
-    Nimi,
-    Perustiedot,
-    ResolvedRakenne,
-    UiOrganisaatioBase,
-} from '../../../../../types/types';
+import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
@@ -26,11 +16,13 @@ import {
     Kentta,
     LomakeButton,
     ReadOnly,
+    ReadOnlyDate,
     ReadOnlyNimi,
     Rivi,
     Ruudukko,
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
+import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -40,7 +32,7 @@ type PerustietoLomakeProps = {
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
-    handleNimiUpdate: (nimi: Nimi) => void;
+    setPerustiedotValue: any;
     getPerustiedotValues: () => Perustiedot;
     organisaatioBase: UiOrganisaatioBase;
 };
@@ -58,7 +50,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         validationErrors,
         formRegister,
         formControl,
-        handleNimiUpdate,
+        setPerustiedotValue,
         rakenne,
         resolvedTyypit,
     } = props;
@@ -69,23 +61,23 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
-    const { nimi, organisaatioTyypit } = getPerustiedotValues();
+    const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
     return (
         <UloinKehys>
             <Rivi>
                 <Ruudukko>
-                    <AvainKevyestiBoldattu label="LABEL_OID" />
+                    <AvainKevyestiBoldattu label={'LABEL_OID'} />
                     <ReadOnly value={organisaatioBase?.oid} />
                     {organisaatioBase?.yritysmuoto && [
-                        <AvainKevyestiBoldattu key={'yritysmuoto_title'} label="PERUSTIETO_YRITYSMUOTO" />,
+                        <AvainKevyestiBoldattu key={'yritysmuoto_title'} label={'PERUSTIETO_YRITYSMUOTO'} />,
                         <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
                     ]}
-                    <AvainKevyestiBoldattu label="PERUSTIETO_ORGANISAATION_NIMI" />
+                    <AvainKevyestiBoldattu label={'PERUSTIETO_ORGANISAATION_NIMI'} />
                     <OrganisaationNimi control={formControl} defaultNimi={nimi} />
                 </Ruudukko>
                 <div>
                     <LomakeButton
-                        label="PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA"
+                        label={'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA'}
                         onClick={() => setNimenmuutosModaaliAuki(true)}
                     />
                 </div>
@@ -93,7 +85,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
 
             {organisaatioTyypit && (
                 <Rivi>
-                    <Kentta label="PERUSTIETO_ORGANISAATIOTYYPPI">
+                    <Kentta label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>
                         <Controller
                             control={formControl}
                             name={'organisaatioTyypit'}
@@ -107,10 +99,10 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
 
             {rakenne?.showYtj && (
                 <Rivi>
-                    <Kentta label="PERUSTIETO_Y_TUNNUS'">
+                    <Kentta label={'PERUSTIETO_Y_TUNNUS'}>
                         <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
                     </Kentta>
-                    <LomakeButton label="PERUSTIETO_PAIVITA_YTJ_TIEDOT" onClick={openYtjModal} />
+                    <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
                 </Rivi>
             )}
             {rakenne?.dynamicFields && (
@@ -123,26 +115,31 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 />
             )}
             <Rivi>
-                <Kentta label="PERUSTIETO_PERUSTAMISPAIVA">
+                <Kentta label={'PERUSTIETO_PERUSTAMISPAIVA'}>
                     <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
                         form={formControl}
                         validationErrors={validationErrors}
                     />
                 </Kentta>
+                {lakkautusPvm && (
+                    <Kentta label={'PERUSTIETO_LAKKAUTUSPAIVA'}>
+                        <ReadOnlyDate value={lakkautusPvm} />
+                    </Kentta>
+                )}
                 <LomakeButton
-                    label="PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI"
+                    label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
                     onClick={() => setLakkautusModaaliAuki(true)}
                 />
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_PAASIJAINTIKUNTA">
+                <Kentta label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
                         render={({ field }) => (
                             <Select
-                                id="PERUSTIETO_PAASIJAINTIKUNTA_SELECT"
+                                id={'PERUSTIETO_PAASIJAINTIKUNTA_SELECT'}
                                 {...field}
                                 ref={undefined}
                                 error={!!validationErrors['kotipaikka']}
@@ -151,13 +148,13 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         )}
                     />
                 </Kentta>
-                <Kentta label="PERUSTIETO_MUUT_KUNNAT">
+                <Kentta label={'PERUSTIETO_MUUT_KUNNAT'}>
                     <Controller
                         control={formControl}
                         name={'muutKotipaikat'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
-                                id="PERUSTIETO_MUUT_KUNNAT_SELECT"
+                                id={'PERUSTIETO_MUUT_KUNNAT_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['muutKotipaikat']}
                                 isMulti
@@ -168,13 +165,13 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_MAA">
+                <Kentta label={'PERUSTIETO_MAA'}>
                     <Controller
                         control={formControl}
                         name={'maa'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
-                                id="PERUSTIETO_MAA_SELECT"
+                                id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['maa']}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
@@ -184,14 +181,14 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_OPETUSKIELI">
+                <Kentta label={'PERUSTIETO_OPETUSKIELI'}>
                     <Controller
                         control={formControl}
                         name={'kielet'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti
-                                id="PERUSTIETO_OPETUSKIELI_SELECT"
+                                id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['kielet']}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
@@ -203,22 +200,17 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
                     closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={handleNimiUpdate}
+                    handleNimiTallennus={() => setPerustiedotValue('nimi', nimi)}
                     nimi={nimi}
                 />
             )}
             {lakkautusModaaliAuki && (
-                <PohjaModaali
-                    header={<TLHeader />}
-                    body={<TLBody />}
-                    footer={
-                        <TLFooter
-                            peruutaCallback={() => {
-                                setLakkautusModaaliAuki(false);
-                            }}
-                        />
-                    }
-                    suljeCallback={() => setLakkautusModaaliAuki(false)}
+                <ToimipisteenLakkautus
+                    closeModaali={() => setLakkautusModaaliAuki(false)}
+                    date={lakkautusPvm}
+                    handleTallennus={(date) => {
+                        setPerustiedotValue('lakkautusPvm', date);
+                    }}
                 />
             )}
         </UloinKehys>

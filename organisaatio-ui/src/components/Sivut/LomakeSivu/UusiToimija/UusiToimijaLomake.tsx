@@ -124,6 +124,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             })();
         })();
     }
+
     if (!organisaatioRakenne || !resolvedTyypit) {
         return (
             <PaaOsio>
@@ -177,7 +178,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     return (
         <PohjaSivu>
             <YlaBanneri>
-                <Link to="/">
+                <Link to={'/'}>
                     <Icon icon={homeIcon} />
                     {i18n.translate('UUSI_TOIMIJA_TITLE')}
                 </Link>
@@ -199,8 +200,8 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                     </MuokattuKolumni>
                 </VersioContainer>
                 <div>
-                    <LomakeButton label="BUTTON_SULJE" onClick={handleCancel} />
-                    <LomakeButton label="BUTTON_TALLENNA" onClick={saveOrganisaatio} />
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={handleCancel} />
+                    <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
                 </div>
             </AlaBanneri>
             {YTJModaaliAuki && (

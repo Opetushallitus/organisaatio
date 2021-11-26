@@ -106,13 +106,13 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
                                     style={{ boxShadow: 'none' }}
                                     onClick={() => setFilters({ ...filters, searchString: '' })}
                                 >
-                                    <Icon color="#999999" icon={clearIcon} />
+                                    <Icon color={'#999999'} icon={clearIcon} />
                                 </Button>
                             )
                         }
                     />
                     <Checkbox
-                        type="checkbox"
+                        type={'checkbox'}
                         checked={filters.naytaPassivoidut}
                         onChange={(e) => {
                             setFilters({ ...filters, naytaPassivoidut: e.target.checked });
@@ -121,7 +121,7 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
                         {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
                     </Checkbox>
                 </div>
-                <Button variant="outlined" className={styles.LisatiedotNappi}>
+                <Button variant={'outlined'} className={styles.LisatiedotNappi}>
                     ?
                 </Button>
             </div>
@@ -228,7 +228,12 @@ export default function OrganisaatioHakuTaulukko({
             </table>
             <div className={styles.PaginationContainer}>
                 <div className={styles.PaginationSivunvaihto}>
-                    <Button variant="text" color="secondary" onClick={() => previousPage()} disabled={!canPreviousPage}>
+                    <Button
+                        variant={'text'}
+                        color={'secondary'}
+                        onClick={() => previousPage()}
+                        disabled={!canPreviousPage}
+                    >
                         <Icon icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
@@ -239,12 +244,17 @@ export default function OrganisaatioHakuTaulukko({
                                 </Button>
                             );
                         return (
-                            <Button key={option + 1} variant="text" color="secondary" onClick={() => gotoPage(option)}>
+                            <Button
+                                key={option + 1}
+                                variant={'text'}
+                                color={'secondary'}
+                                onClick={() => gotoPage(option)}
+                            >
                                 {option + 1}
                             </Button>
                         );
                     })}
-                    <Button variant="text" color="secondary" onClick={() => nextPage()} disabled={!canNextPage}>
+                    <Button variant={'text'} color={'secondary'} onClick={() => nextPage()} disabled={!canNextPage}>
                         <Icon icon={chevronRight} />
                     </Button>
                 </div>

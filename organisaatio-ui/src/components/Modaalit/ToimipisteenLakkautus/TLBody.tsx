@@ -1,16 +1,24 @@
-import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
-import styles from './ToimipisteenLakkautus.module.css';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
+import React from 'react';
+import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { LocalDate } from '../../../types/types';
+import { Control } from 'react-hook-form/dist/types/form';
+import DatePickerController from '../../Controllers/DatePickerController';
+import { BodyKehys, BodyKentta } from '../ModalFields/ModalFields';
 
-export default function TLBody() {
-    const { i18n } = useContext(LanguageContext);
+type TLProps = {
+    validationErrors: FieldErrors<{ date: LocalDate }>;
+    control: Control<{ date: LocalDate }>;
+};
+export default function TLBody({ validationErrors, control }: TLProps) {
     return (
-        <div className={styles.BodyKehys}>
-            <div className={styles.BodyKentta}>
-                <label>{i18n.translate('TOIMIPISTEEN_LAKKAUTUS_PVM')}</label>
-                <Input value={''} />
-            </div>
-        </div>
+        <BodyKehys>
+            <BodyKentta label={'TOIMIPISTEEN_LAKKAUTUS_PVM'}>
+                <DatePickerController<{ date: LocalDate }>
+                    form={control}
+                    validationErrors={validationErrors}
+                    name={'date'}
+                />
+            </BodyKentta>
+        </BodyKehys>
     );
 }

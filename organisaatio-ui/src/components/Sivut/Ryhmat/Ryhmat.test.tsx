@@ -21,7 +21,7 @@ describe('Ryhmat', () => {
     describe('Rendering', () => {
         it('Renders Spinner when there is no data', () => {
             render(
-                <BrowserRouter basename="/organisaatio">
+                <BrowserRouter basename={'/organisaatio'}>
                     <Ryhmat />
                 </BrowserRouter>
             );
@@ -45,7 +45,7 @@ describe('Ryhmat', () => {
             (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
 
             render(
-                <BrowserRouter basename="/organisaatio">
+                <BrowserRouter basename={'/organisaatio'}>
                     <Ryhmat />
                 </BrowserRouter>
             );

@@ -63,7 +63,7 @@ describe('RyhmanMuokkaus', () => {
     });
     it('Renders Spinner when there is no ryhma and is not new', () => {
         render(
-            <BrowserRouter basename="/organisaatio">
+            <BrowserRouter basename={'/organisaatio'}>
                 <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
             </BrowserRouter>
         );
@@ -72,7 +72,7 @@ describe('RyhmanMuokkaus', () => {
 
     it('Renders form after there is ryhma when is not new', async () => {
         render(
-            <BrowserRouter basename="/organisaatio">
+            <BrowserRouter basename={'/organisaatio'}>
                 <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
             </BrowserRouter>
         );
@@ -81,7 +81,7 @@ describe('RyhmanMuokkaus', () => {
 
     it('Renders new ryhma form using empty ryhma when isNew prop is added', async () => {
         render(
-            <BrowserRouter basename="/organisaatio">
+            <BrowserRouter basename={'/organisaatio'}>
                 <RyhmanMuokkaus isNew {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
             </BrowserRouter>
         );
@@ -96,7 +96,7 @@ describe('RyhmanMuokkaus', () => {
             history: { location: { pathname: '/uusi' }, push: jest.fn() },
         };
         render(
-            <BrowserRouter basename="/organisaatio">
+            <BrowserRouter basename={'/organisaatio'}>
                 <RyhmanMuokkaus {...(UUSIPROPS as RouteComponentProps<RyhmanMuokausProps>)} />
             </BrowserRouter>
         );

@@ -13,13 +13,8 @@ export default function DatePickerController<T>(props: {
             control={props.form}
             name={props.name}
             render={({ field: { ref, value, ...rest } }) => {
-                return (
-                    <DatePickerInput
-                        value={moment(new Date(value)).format('D.M.yyyy')}
-                        error={!!props.validationErrors[props.name]}
-                        {...rest}
-                    />
-                );
+                const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
+                return <DatePickerInput value={formattedDate} error={!!props.validationErrors[props.name]} {...rest} />;
             }}
         />
     );
