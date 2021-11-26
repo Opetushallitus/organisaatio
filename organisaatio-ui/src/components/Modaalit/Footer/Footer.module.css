@@ -1,0 +1,12 @@
+
+.FooterRivi {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.FooterButton:last-child {
+    margin-left: 1rem;
+    margin-right: 2rem;
+}

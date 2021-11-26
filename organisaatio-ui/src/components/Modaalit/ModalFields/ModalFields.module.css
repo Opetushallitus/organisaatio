@@ -10,15 +10,18 @@
     flex-wrap: nowrap;
     padding-right: 1rem;
 }
-
-.FooterRivi {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+.BodyKehys > .BodyKentta:last-child{
+    flex-grow: 1;
 }
 
-.FooterButton:last-child {
-    margin-left: 1rem;
-    margin-right: 2rem;
+.BodyRivi {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+}
+
+.BodyRivi > div {
+    margin-right: 1rem;
 }

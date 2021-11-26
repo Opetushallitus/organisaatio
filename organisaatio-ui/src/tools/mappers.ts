@@ -18,20 +18,17 @@ export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefi
         suomi: ['fi'],
         ruotsi: ['sv'],
         'suomi/ruotsi': ['fi', 'sv'],
+        englanti: ['en'],
         muu: ['en'],
     };
     const sort = (input: SupportedKieli[]): SupportedKieli[] =>
         input.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
     return sort(
-        Array.from(
-            new Set(
-                (opetuskielet?.length ? opetuskielet : ['suomi']).reduce(
-                    (acc, lang) => [...acc, ...mapping[lang]],
-                    [] as SupportedKieli[]
-                )
-            )
+        (opetuskielet?.length ? opetuskielet : ['suomi']).reduce(
+            (acc, lang) => [...acc, ...(mapping[lang] || [])],
+            [] as SupportedKieli[]
         )
-    );
+    ).filter((value, index, self) => self.indexOf(value) === index);
 };
 
 export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[SupportedKieli]): boolean => {

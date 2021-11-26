@@ -6,13 +6,13 @@ import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGrou
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import { Kentta, LomakeButton, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
+import DatePickerController from '../../../../Controllers/DatePickerController';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -44,7 +44,7 @@ export default function PerustietoLomake({
     return (
         <UloinKehys>
             <Rivi>
-                <Kentta label="PERUSTIETO_NIMI_SUOMEKSI">
+                <Kentta label={'PERUSTIETO_NIMI_SUOMEKSI'}>
                     <Input
                         error={!!validationErrors['nimiFi']}
                         id={'organisaation_nimiFi'}
@@ -54,7 +54,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_NIMI_RUOTSIKSI">
+                <Kentta label={'PERUSTIETO_NIMI_RUOTSIKSI'}>
                     <Input
                         error={!!validationErrors['nimiSv']}
                         id={'organisaation_nimiSv'}
@@ -64,7 +64,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_NIMI_ENGLANNIKSI">
+                <Kentta label={'PERUSTIETO_NIMI_ENGLANNIKSI'}>
                     <Input
                         error={!!validationErrors['nimiEn']}
                         id={'organisaation_nimiEn'}
@@ -74,7 +74,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_ORGANISAATIOTYYPPI">
+                <Kentta label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>
                     <Controller
                         control={formControl}
                         name={'organisaatioTyypit'}
@@ -88,7 +88,7 @@ export default function PerustietoLomake({
             {rakenne.showYtj && (
                 <>
                     <Rivi>
-                        <Kentta label="">
+                        <Kentta label={''}>
                             <RadioGroup
                                 value={onYunnus.toString()}
                                 options={[
@@ -101,7 +101,7 @@ export default function PerustietoLomake({
                     </Rivi>
                     {onYunnus && (
                         <Rivi>
-                            <Kentta label="Y-TUNNUS">
+                            <Kentta label={'Y-TUNNUS'}>
                                 <Input
                                     error={!!validationErrors['ytunnus']}
                                     id={'ytunnus'}
@@ -125,24 +125,22 @@ export default function PerustietoLomake({
             )}
 
             <Rivi>
-                <Kentta label="PERUSTIETO_PERUSTAMISPAIVA">
-                    <Controller
-                        control={formControl}
+                <Kentta label={'PERUSTIETO_PERUSTAMISPAIVA'}>
+                    <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
-                        render={({ field: { ref, ...rest } }) => (
-                            <DatePickerInput error={!!validationErrors['alkuPvm']} {...rest} />
-                        )}
+                        form={formControl}
+                        validationErrors={validationErrors}
                     />
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_PAASIJAINTIKUNTA">
+                <Kentta label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
                         render={({ field }) => (
                             <Select
-                                id="PERUSTIETO_PAASIJAINTIKUNTA_SELECT"
+                                id={'PERUSTIETO_PAASIJAINTIKUNTA_SELECT'}
                                 {...field}
                                 ref={undefined}
                                 error={!!validationErrors['kotipaikka']}
@@ -151,13 +149,13 @@ export default function PerustietoLomake({
                         )}
                     />
                 </Kentta>
-                <Kentta label="PERUSTIETO_MUUT_KUNNAT">
+                <Kentta label={'PERUSTIETO_MUUT_KUNNAT'}>
                     <Controller
                         control={formControl}
                         name={'muutKotipaikat'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
-                                id="PERUSTIETO_MUUT_KUNNAT_SELECT"
+                                id={'PERUSTIETO_MUUT_KUNNAT_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['muutKotipaikat']}
                                 isMulti
@@ -168,14 +166,14 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_MAA">
+                <Kentta label={'PERUSTIETO_MAA'}>
                     <Controller
                         control={formControl}
                         name={'maa'}
                         defaultValue={koodistot.maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
-                                id="PERUSTIETO_MAA_SELECT"
+                                id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['maa']}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
@@ -185,14 +183,14 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_OPETUSKIELI">
+                <Kentta label={'PERUSTIETO_OPETUSKIELI'}>
                     <Controller
                         control={formControl}
                         name={'kielet'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
                                 isMulti
-                                id="PERUSTIETO_OPETUSKIELI_SELECT"
+                                id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['kielet']}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}

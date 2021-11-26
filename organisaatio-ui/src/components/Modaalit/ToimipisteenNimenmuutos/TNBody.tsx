@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
-import styles from './ToimipisteenNimenmuutos.module.css';
+import React from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import { Nimi } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { UseFormRegister } from 'react-hook-form/dist/types/form';
+import { BodyKehys, BodyKentta } from '../ModalFields/ModalFields';
 
 type TNProps = {
     validationErrors: FieldErrors<Nimi>;
@@ -12,24 +11,20 @@ type TNProps = {
 };
 
 export default function TNBody(props: TNProps) {
-    const { i18n } = useContext(LanguageContext);
     const { validationErrors, register } = props;
     return (
-        <div className={styles.BodyKehys}>
-            <div className={styles.BodyKentta}>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('LABEL_SUOMEKSI')}</label>
+        <BodyKehys>
+            <BodyKentta>
+                <BodyKentta label={'LABEL_SUOMEKSI'}>
                     <Input error={!!validationErrors['fi']} id={'organisaation_nimiFi'} {...register('fi')} />
-                </div>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('LABEL_RUOTSIKSI')}</label>
+                </BodyKentta>
+                <BodyKentta label={'LABEL_RUOTSIKSI'}>
                     <Input error={!!validationErrors['sv']} id={'organisaation_nimiSv'} {...register('sv')} />
-                </div>
-                <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
+                </BodyKentta>
+                <BodyKentta label={'LABEL_ENGLANNIKSI'}>
                     <Input error={!!validationErrors['en']} id={'organisaation_nimiEn'} {...register('en')} />
-                </div>
-            </div>
-        </div>
+                </BodyKentta>
+            </BodyKentta>
+        </BodyKehys>
     );
 }
