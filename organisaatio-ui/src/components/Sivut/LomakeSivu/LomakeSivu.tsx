@@ -335,7 +335,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         <PohjaSivu>
             <YlaBanneri>
                 <div>
-                    <Link to={'/'}>
+                    <Link to={'/organisaatiot'}>
                         <Icon icon={homeIcon} />
                     </Link>
                 </div>

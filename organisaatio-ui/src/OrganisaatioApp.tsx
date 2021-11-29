@@ -123,7 +123,7 @@ const OrganisaatioApp: React.FC = () => {
                         }}
                     >
                         <Switch>
-                            <Route path={'/'} exact component={TaulukkoSivu} />
+                            <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
                             <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
                             <Route path={'/lomake/:oid'} component={LomakeSivu} />
                             <Route path={'/ryhmat'} exact component={Ryhmat} />

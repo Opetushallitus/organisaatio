@@ -3,7 +3,7 @@ import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/c
 
 describe('Organisaatio Rakenne', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
-        cy.visit(`${BASE_PATH}/`);
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
     });

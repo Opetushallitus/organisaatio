@@ -1,5 +1,5 @@
 {
-  "homepage": "/organisaatio",
+  "homepage": "/organisaatio-service",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -71,8 +71,8 @@
     "audit": "npm audit --only=prod --audit-level=critical",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:ci": "wait-on http://devaaja:devaaja@localhost:8080/organisaatio && CYPRESS_BASE_URL=http://devaaja:devaaja@localhost:8080/ npm run cypress:run",
-    "cypress:test": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003/organisaatio && npm run cypress:run' 'npm run start'"
+    "cypress:ci": "wait-on http://devaaja:devaaja@localhost:8080/organisaatio-service && CYPRESS_BASE_URL=http://devaaja:devaaja@localhost:8080/ npm run cypress:run",
+    "cypress:test": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003/organisaatio-service && npm run cypress:run' 'npm run start'"
   },
   "eslintConfig": {
     "extends": [

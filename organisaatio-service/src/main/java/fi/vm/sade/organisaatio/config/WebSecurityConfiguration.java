@@ -77,7 +77,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl("/organisaatio-service/j_spring_cas_security_check");
+        casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
         return casAuthenticationFilter;
     }
 
@@ -113,10 +113,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/buildversion.txt").permitAll()
                 .antMatchers("/actuator/health").permitAll()
-                .antMatchers("/organisaatio/swagger-ui/**").permitAll()
-                .antMatchers("/organisaatio/api-docs/**").permitAll()
-                .antMatchers("/organisaatio-service/**").permitAll()
-                .antMatchers("/organisaatio/api/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/api-docs/**").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/rest/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(casAuthenticationFilter())
