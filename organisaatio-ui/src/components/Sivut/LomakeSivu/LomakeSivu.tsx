@@ -397,7 +397,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
                         <span>
                             {organisaatioPaivittaja.paivitysPvm
-                                ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy hh:ss')
+                                ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy HH:mm:ss')
                                 : ''}{' '}
                             {organisaatioPaivittaja.etuNimet} {organisaatioPaivittaja.sukuNimi}
                         </span>

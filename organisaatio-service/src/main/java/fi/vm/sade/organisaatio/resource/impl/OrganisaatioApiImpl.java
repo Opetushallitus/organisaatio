@@ -278,19 +278,17 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * @throws Exception
      */
     @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(String oid) {
         if (oid.isBlank()) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "oid cannot be blank");
         }
-
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
-
-
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
 
         if (org != null) {
@@ -301,9 +299,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             tulos.setEtuNimet(henkilo.getEtunimet());
             tulos.setSukuNimi(henkilo.getSukunimi());
             return tulos;
+        } else {
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "not found");
         }
 
-        return null;
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella
