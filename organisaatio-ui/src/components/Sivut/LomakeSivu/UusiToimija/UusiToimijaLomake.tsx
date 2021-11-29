@@ -56,7 +56,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         (async function () {
             const {
                 organisaatio: { tyypit, oid },
-            } = await readOrganisaatio(parentOid);
+            } = await readOrganisaatio(parentOid, true);
             setParentTiedot({ organisaatioTyypit: tyypit, oid });
         })();
     }, [parentOid]);

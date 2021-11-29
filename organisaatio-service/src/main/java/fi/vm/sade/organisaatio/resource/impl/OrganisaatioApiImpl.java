@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl;
 
+import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -10,6 +11,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
+import fi.vm.sade.organisaatio.client.OppijanumeroClient;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
 @RequestMapping("${server.api.context-path}")
 public class OrganisaatioApiImpl implements OrganisaatioApi {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
-
+    private final OppijanumeroClient oppijanumeroClient;
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
     private final OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper;
@@ -56,12 +58,14 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                                OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper,
                                PermissionChecker permissionChecker,
                                OrganisaatioBusinessService organisaatioBusinessService,
-                               OrganisaatioFindBusinessService organisaatioFindBusinessService) {
+                               OrganisaatioFindBusinessService organisaatioFindBusinessService,
+                               OppijanumeroClient oppijanumeroClient) {
         this.organisaatioResourceV2 = organisaatioResourceV2;
         this.organisaatioDTOV4ModelMapper = organisaatioDTOV4ModelMapper;
         this.permissionChecker = permissionChecker;
         this.organisaatioBusinessService = organisaatioBusinessService;
         this.organisaatioFindBusinessService = organisaatioFindBusinessService;
+        this.oppijanumeroClient = oppijanumeroClient;
     }
 
     /**
@@ -264,6 +268,42 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             LOG.warn("Error deleting org {} ", oid);
             throw new OrganisaatioResourceException(sbe);
         }
+    }
+
+    /**
+     * GET /api/{oid}/paivittaja
+     *
+     * @param oid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(String oid) {
+        if (oid.isBlank()) {
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "oid cannot be blank");
+        }
+
+        try {
+            permissionChecker.checkReadOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            LOG.warn("Not authorized to read organisation: " + oid);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+        }
+
+
+        Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
+
+        if (org != null) {
+            OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
+            final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
+            tulos.setPaivittaja(org.getPaivittaja());
+            tulos.setPaivitysPvm(org.getPaivitysPvm());
+            tulos.setEtuNimet(henkilo.getEtunimet());
+            tulos.setSukuNimi(henkilo.getSukunimi());
+            return tulos;
+        }
+
+        return null;
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

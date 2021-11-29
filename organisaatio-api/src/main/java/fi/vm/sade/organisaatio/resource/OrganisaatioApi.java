@@ -1,9 +1,11 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.api.DateParam;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -148,4 +150,7 @@ public interface OrganisaatioApi {
     void deleteOrganisaatio(
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid
     );
+    @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE)
+    OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(@PathVariable("oid") String oid);
+
 }
