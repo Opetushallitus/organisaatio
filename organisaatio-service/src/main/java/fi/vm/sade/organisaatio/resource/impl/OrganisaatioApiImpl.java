@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.resource.impl;
 
-import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -273,9 +272,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     /**
      * GET /api/{oid}/paivittaja
      *
-     * @param oid
-     * @return
-     * @throws Exception
      */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
@@ -286,7 +282,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn("Not authorized to read organisation: {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);

@@ -1,11 +1,9 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.api.DateParam;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioPaivittajaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
