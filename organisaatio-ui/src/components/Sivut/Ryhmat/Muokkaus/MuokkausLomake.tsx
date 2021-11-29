@@ -52,12 +52,12 @@ const MuokkausLomake = ({
         <PohjaSivu>
             <div className={styles.YlaBanneri}>
                 <div>
-                    <Link to="/ryhmat">
+                    <Link to={'/ryhmat'}>
                         <Icon icon={homeIcon} />
                     </Link>
                 </div>
                 <div>
-                    <Link to="/ryhmat">{i18n.translate('RYHMAT_KAIKKI_RYHMAT')}</Link>
+                    <Link to={'/ryhmat'}>{i18n.translate('RYHMAT_KAIKKI_RYHMAT')}</Link>
                 </div>
             </div>
             <div className={styles.PaaKehys}>
@@ -165,7 +165,7 @@ const MuokkausLomake = ({
                                 defaultValue={ryhmaTyypit}
                                 render={({ field }) => (
                                     <Select
-                                        id="RYHMALOMAKE_RYHMAN_TYYPPI_SELECT"
+                                        id={'RYHMALOMAKE_RYHMAN_TYYPPI_SELECT'}
                                         {...field}
                                         error={!!validationErrors['ryhmatyypit']}
                                         isMulti
@@ -185,7 +185,7 @@ const MuokkausLomake = ({
                                 defaultValue={kayttoRyhmat}
                                 render={({ field }) => (
                                     <Select
-                                        id="RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT"
+                                        id={'RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT'}
                                         {...field}
                                         error={!!validationErrors['kayttoryhmat']}
                                         isMulti
@@ -198,13 +198,13 @@ const MuokkausLomake = ({
                     </div>
                     {!onUusi && (
                         <div className={styles.AlinRivi}>
-                            <Button name="passivoibutton" variant="outlined" onClick={handlePassivoi}>
+                            <Button name={'passivoibutton'} variant={'outlined'} onClick={handlePassivoi}>
                                 {ryhma.status === 'AKTIIVINEN'
                                     ? i18n.translate('RYHMAT_PASSIVOI_RYHMA')
                                     : i18n.translate('RYHMAT_AKTIVOI_RYHMA')}
                             </Button>
                             ,
-                            <Button name="poistabutton" variant="outlined" onClick={handlePoista}>
+                            <Button name={'poistabutton'} variant={'outlined'} onClick={handlePoista}>
                                 {i18n.translate('RYHMAT_POISTA_RYHMA')}
                             </Button>
                         </div>
@@ -214,8 +214,8 @@ const MuokkausLomake = ({
             <div className={styles.AlaBanneri}>
                 <div>
                     <Button
-                        name="peruutabutton"
-                        variant="outlined"
+                        name={'peruutabutton'}
+                        variant={'outlined'}
                         className={styles.Versionappula}
                         onClick={handlePeruuta}
                     >
@@ -223,7 +223,7 @@ const MuokkausLomake = ({
                     </Button>
                     <Button
                         disabled={ryhma.status === 'PASSIIVINEN'}
-                        name="tallennabutton"
+                        name={'tallennabutton'}
                         className={styles.Versionappula}
                         onClick={handleSubmit(handleTallenna)}
                     >

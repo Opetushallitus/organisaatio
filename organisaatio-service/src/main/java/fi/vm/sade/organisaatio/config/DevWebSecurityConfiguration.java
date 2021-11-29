@@ -53,10 +53,11 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/buildversion.txt").permitAll()
                 .antMatchers("/actuator/health").permitAll()
-                .antMatchers("/organisaatio/swagger-ui/**").permitAll()
-                .antMatchers("/organisaatio/api-docs/**").permitAll()
-                .antMatchers("/organisaatio-service/**").permitAll()
-                .antMatchers("/organisaatio/api/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/api-docs/**").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/api/**").permitAll()
+                .antMatchers("/rest/**").permitAll()
                 .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and().httpBasic();
         ;

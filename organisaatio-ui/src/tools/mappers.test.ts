@@ -59,6 +59,7 @@ describe('mappers', () => {
             ['Strips duplicates', ['suomi', 'suomi'], ['fi']],
             ['Multiple values', ['suomi/ruotsi'], ['fi', 'sv']],
             ['Sorts correctly', ['muu', 'ruotsi', 'suomi'], ['fi', 'sv', 'en']],
+            ['Handles unanticipated language', ['muu', 'ruotsi', 'suomi', 'swahili'], ['fi', 'sv', 'en']],
         ])('%s', (_, input, expected) => expect(mapVisibleKieletFromOpetuskielet(input)).toStrictEqual(expected));
     });
 

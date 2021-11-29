@@ -112,7 +112,7 @@ jobs:
         - docker
       install:
         - git clone https://github.com/Opetushallitus/ci-tools.git
-        - export ARTIFACT_NAME="organisaatio2"
+        - export ARTIFACT_NAME="organisaatio"
       before_script:
         - source ci-tools/common/setup-tools.sh
         - cp ~/$TRAVIS_BUILD_NUMBER/organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar

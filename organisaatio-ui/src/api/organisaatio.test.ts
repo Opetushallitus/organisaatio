@@ -112,6 +112,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
     alkuPvm: '2000-10-10',
+    lakkautusPvm: '',
     kieletUris: [],
     kotipaikkaUri: 'kunta_1#1',
     muutKotipaikatUris: [],

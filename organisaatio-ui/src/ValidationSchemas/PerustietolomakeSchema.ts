@@ -13,4 +13,5 @@ export default Joi.object({
     oppilaitosKoodi: Joi.string().allow(''),
     muutOppilaitosTyyppiUris: Joi.array().min(0),
     vuosiluokat: Joi.array().min(0),
+    lakkautusPvm: Joi.date().allow(''),
 });

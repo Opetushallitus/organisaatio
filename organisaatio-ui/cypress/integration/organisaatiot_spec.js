@@ -2,7 +2,7 @@ import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/c
 
 describe('Organisaatiot Page', () => {
     it('Renders table of organisations', () => {
-        cy.visit(`${BASE_PATH}/`);
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('table', { timeout: 30000 });
     });
 
