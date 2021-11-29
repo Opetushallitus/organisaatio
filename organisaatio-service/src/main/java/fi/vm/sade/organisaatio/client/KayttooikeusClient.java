@@ -30,7 +30,7 @@ public class KayttooikeusClient extends CustomClient {
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, new TypeReference<>() {
                 }))
-                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", url)));
+                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", url)));
     }
 
     public Collection<VirkailijaDto> listVirkailija(VirkailijaCriteria criteria) {
@@ -44,7 +44,7 @@ public class KayttooikeusClient extends CustomClient {
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, new TypeReference<>() {
                 }))
-                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", url)));
+                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", url)));
     }
 
 }

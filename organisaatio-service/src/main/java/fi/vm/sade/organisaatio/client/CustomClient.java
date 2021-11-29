@@ -31,7 +31,7 @@ public abstract class CustomClient {
         try {
             return objectWriter.writeValueAsString(object);
         } catch (JsonProcessingException ex) {
-            throw new RuntimeException(ex);
+            throw new ClientException(ex);
         }
     }
 
@@ -39,7 +39,7 @@ public abstract class CustomClient {
         try {
             return objectReader.forType(javaType).readValue(json);
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new ClientException(ex);
         }
     }
 }
