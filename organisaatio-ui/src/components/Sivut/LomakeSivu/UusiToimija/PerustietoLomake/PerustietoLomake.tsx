@@ -46,7 +46,7 @@ export default function PerustietoLomake({
             <Rivi>
                 <Kentta label="PERUSTIETO_NIMI_SUOMEKSI">
                     <Input
-                        error={!!validationErrors['nimiFi']}
+                        error={!!validationErrors.nimi?.fi}
                         id={'organisaation_nimiFi'}
                         {...formRegister('nimi.fi')}
                         defaultValue={''}
@@ -56,7 +56,7 @@ export default function PerustietoLomake({
             <Rivi>
                 <Kentta label="PERUSTIETO_NIMI_RUOTSIKSI">
                     <Input
-                        error={!!validationErrors['nimiSv']}
+                        error={!!validationErrors.nimi?.sv}
                         id={'organisaation_nimiSv'}
                         {...formRegister('nimi.sv')}
                         defaultValue={''}
@@ -66,7 +66,7 @@ export default function PerustietoLomake({
             <Rivi>
                 <Kentta label="PERUSTIETO_NIMI_ENGLANNIKSI">
                     <Input
-                        error={!!validationErrors['nimiEn']}
+                        error={!!validationErrors.nimi?.en}
                         id={'organisaation_nimiEn'}
                         {...formRegister('nimi.en')}
                         defaultValue={''}

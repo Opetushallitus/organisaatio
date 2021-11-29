@@ -16,6 +16,7 @@ import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { LanguageContext } from '../../../../../contexts/contexts';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 import { Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
+import { useFormState } from 'react-hook-form';
 
 export type Props = {
     opetusKielet: string[];
@@ -58,7 +59,8 @@ const YhteystietoLomake = ({
         checkHasSomeValueByKieli(getYhteystiedotValues(kieli))
     );
     const visibleKielet = Array.from(new Set(visibleKieletByOpetuskielet.concat(haseSomeValueKielet)));
-
+    const { isSubmitted } = useFormState({ control: formControl });
+    const yhteystiedotValues = getYhteystiedotValues();
     return (
         <UloinKehys>
             <Rivi>
@@ -77,15 +79,14 @@ const YhteystietoLomake = ({
                 {visibleKielet.map((kieli, index) => (
                     <YhteystietoKortti
                         key={kieli}
-                        isFirst={index === 0}
                         yhteystiedotRegister={formRegister}
                         osoitteetOnEri={osoitteetOnEri}
                         kieli={kieli}
                         setYhteystiedotValue={setYhteystiedotValue}
                         validationErrors={
-                            hasValidationErrors
-                                ? validationSchemas[kieli].validate(getYhteystiedotValues(kieli))
-                                : undefined
+                            isSubmitted && hasValidationErrors
+                                ? validationSchemas[kieli].validate(yhteystiedotValues)
+                                : { value: yhteystiedotValues }
                         }
                         formControl={formControl}
                     />
@@ -101,9 +102,9 @@ const YhteystietoLomake = ({
                                 yhteystiedotRegister={formRegister}
                                 setYhteystiedotValue={setYhteystiedotValue}
                                 validationErrors={
-                                    hasValidationErrors
-                                        ? validationSchemas[kieli].validate(getYhteystiedotValues(kieli))
-                                        : undefined
+                                    isSubmitted && hasValidationErrors
+                                        ? validationSchemas[kieli].validate(yhteystiedotValues)
+                                        : { value: yhteystiedotValues }
                                 }
                                 formControl={formControl}
                             />
