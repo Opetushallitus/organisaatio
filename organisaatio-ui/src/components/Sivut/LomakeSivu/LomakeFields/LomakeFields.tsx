@@ -31,7 +31,7 @@ const ReadOnlyDate = ({ value }) => {
     const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
     return <div className={styles.Kentta}>{formattedDate}</div>;
 };
-const Kentta = ({ label, children, isRequired }) => {
+const Kentta = ({ label, children, isRequired = false }) => {
     const { i18n } = useContext(LanguageContext);
     return (
         <div className={styles.Kentta}>
