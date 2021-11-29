@@ -26,20 +26,24 @@ const ReadOnlyNimi = ({ value }) => {
     const { i18n } = useContext(LanguageContext);
     return <span className={styles.Kentta}>{i18n.translateNimi(value)}</span>;
 };
-const Kentta = ({ label, children }) => {
+const Kentta = ({ label, children, isRequired = false }) => {
     const { i18n } = useContext(LanguageContext);
     return (
         <div className={styles.Kentta}>
-            <label>{i18n.translate(label)}</label>
+            <label>
+                {i18n.translate(label)} {isRequired && '*'}
+            </label>
             {children}
         </div>
     );
 };
-const KenttaLyhyt = ({ label, children }) => {
+const KenttaLyhyt = ({ label, children, isRequired = false }) => {
     const { i18n } = useContext(LanguageContext);
     return (
         <div className={styles.KenttaLyhyt}>
-            <label>{i18n.translate(label)}</label>
+            <label>
+                {i18n.translate(label)} {isRequired && '*'}
+            </label>
             {children}
         </div>
     );

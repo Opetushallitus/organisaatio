@@ -107,7 +107,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
 
             {rakenne?.showYtj && (
                 <Rivi>
-                    <Kentta label="PERUSTIETO_Y_TUNNUS'">
+                    <Kentta isRequired label="PERUSTIETO_Y_TUNNUS'">
                         <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
                     </Kentta>
                     <LomakeButton label="PERUSTIETO_PAIVITA_YTJ_TIEDOT" onClick={openYtjModal} />
@@ -123,7 +123,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 />
             )}
             <Rivi>
-                <Kentta label="PERUSTIETO_PERUSTAMISPAIVA">
+                <Kentta isRequired label="PERUSTIETO_PERUSTAMISPAIVA">
                     <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
                         form={formControl}
@@ -136,7 +136,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 />
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_PAASIJAINTIKUNTA">
+                <Kentta isRequired label="PERUSTIETO_PAASIJAINTIKUNTA">
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -168,7 +168,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_MAA">
+                <Kentta isRequired label="PERUSTIETO_MAA">
                     <Controller
                         control={formControl}
                         name={'maa'}
@@ -184,7 +184,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_OPETUSKIELI">
+                <Kentta isRequired label="PERUSTIETO_OPETUSKIELI">
                     <Controller
                         control={formControl}
                         name={'kielet'}

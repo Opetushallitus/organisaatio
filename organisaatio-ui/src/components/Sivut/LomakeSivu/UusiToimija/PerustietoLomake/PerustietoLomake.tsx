@@ -44,7 +44,7 @@ export default function PerustietoLomake({
     return (
         <UloinKehys>
             <Rivi>
-                <Kentta label="PERUSTIETO_NIMI_SUOMEKSI">
+                <Kentta isRequired label="PERUSTIETO_NIMI_SUOMEKSI">
                     <Input
                         error={!!validationErrors.nimi?.fi}
                         id={'organisaation_nimiFi'}
@@ -54,7 +54,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_NIMI_RUOTSIKSI">
+                <Kentta isRequired label="PERUSTIETO_NIMI_RUOTSIKSI">
                     <Input
                         error={!!validationErrors.nimi?.sv}
                         id={'organisaation_nimiSv'}
@@ -64,7 +64,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_NIMI_ENGLANNIKSI">
+                <Kentta isRequired label="PERUSTIETO_NIMI_ENGLANNIKSI">
                     <Input
                         error={!!validationErrors.nimi?.en}
                         id={'organisaation_nimiEn'}
@@ -74,7 +74,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label="PERUSTIETO_ORGANISAATIOTYYPPI">
+                <Kentta isRequired label="PERUSTIETO_ORGANISAATIOTYYPPI">
                     <Controller
                         control={formControl}
                         name={'organisaatioTyypit'}
@@ -101,7 +101,7 @@ export default function PerustietoLomake({
                     </Rivi>
                     {onYunnus && (
                         <Rivi>
-                            <Kentta label="Y-TUNNUS">
+                            <Kentta isRequired label="Y-TUNNUS">
                                 <Input
                                     error={!!validationErrors['ytunnus']}
                                     id={'ytunnus'}

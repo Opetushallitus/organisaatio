@@ -18,15 +18,15 @@ export default function TNBody(props: TNProps) {
         <div className={styles.BodyKehys}>
             <div className={styles.BodyKentta}>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('LABEL_SUOMEKSI')}</label>
+                    <label>{i18n.translate('LABEL_SUOMEKSI')} *</label>
                     <Input error={!!validationErrors['fi']} id={'organisaation_nimiFi'} {...register('fi')} />
                 </div>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('LABEL_RUOTSIKSI')}</label>
+                    <label>{i18n.translate('LABEL_RUOTSIKSI')} *</label>
                     <Input error={!!validationErrors['sv']} id={'organisaation_nimiSv'} {...register('sv')} />
                 </div>
                 <div className={styles.BodyKentta}>
-                    <label>{i18n.translate('LABEL_ENGLANNIKSI')}</label>
+                    <label>{i18n.translate('LABEL_ENGLANNIKSI')} *</label>
                     <Input error={!!validationErrors['en']} id={'organisaation_nimiEn'} {...register('en')} />
                 </div>
             </div>
