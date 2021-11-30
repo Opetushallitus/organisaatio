@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/contexts';
 
 const Y_TUNNUS = '2627679-5';
 beforeEach(() => {
@@ -22,6 +22,7 @@ describe('New organisaatio from YTJ', () => {
         cy.clickButton('BUTTON_JATKA');
         cy.intercept('POST', `${PUBLIC_API_CONTEXT}`).as('saveOrg');
         cy.clickSaveButton();
+        cy.wait(['@saveOrg'], { timeout: 10000 });
         cy.contains('Hameen ammatti-instituutti');
     });
 });
@@ -29,7 +30,9 @@ describe('Edit organisaatio from YTJ', () => {
     it('Can fetch from YTJ', () => {
         cy.persistOrganisaatio(organisaatio('BERFORE_FETCH'), 'parentOrganisaatio');
         cy.get('@parentOrganisaatio').then((response) => {
+            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/${ROOT_OID}*`).as('getParentOrg');
             cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
+            cy.wait(['@getParentOrg'], { timeout: 10000 });
             cy.clickButton('PAIVITA_YTJ_TIEDOT');
             cy.inputByName('ytjinput', Y_TUNNUS);
             cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/*`).as('findYtj');
