@@ -13,7 +13,7 @@ describe('Organisaatio Rakenne', () => {
         cy.get('@parentOrganisaatio').then((response) => {
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/${ROOT_OID}*`).as('getParentOrg');
             cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
-            cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
+            cy.wait('@getParentOrg', { timeout: 10000 });
             cy.clickButton('LISAA_UUSI_TOIMIJA');
             cy.contains('UUDEN_TOIMIJAN_LISAAMINEN');
             cy.clickAccordion('PERUSTIEDOT');
