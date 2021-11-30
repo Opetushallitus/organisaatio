@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/contexts';
 
 describe('Organisaatio Rakenne', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
@@ -11,6 +11,8 @@ describe('Organisaatio Rakenne', () => {
     it('Can add CHILD organisaatio', () => {
         cy.persistOrganisaatio(organisaatio('PARENT'), 'parentOrganisaatio');
         cy.get('@parentOrganisaatio').then((response) => {
+            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/${ROOT_OID}*`).as('getParentOrg');
+            cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
             cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
             cy.clickButton('LISAA_UUSI_TOIMIJA');
             cy.contains('UUDEN_TOIMIJAN_LISAAMINEN');
@@ -21,12 +23,13 @@ describe('Organisaatio Rakenne', () => {
             cy.enterAllYhteystiedot('CHILD');
             cy.intercept('POST', `${PUBLIC_API_CONTEXT}/findbyoids`).as('findPAth');
             cy.clickSaveButton();
-            cy.wait(['@findPAth'], { timeout: 10000 });
+            cy.wait('@findPAth', { timeout: 10000 });
             cy.contains('CHILD Suominimi');
+            cy.intercept('POST', `${PUBLIC_API_CONTEXT}/findbyoids`).as('historia');
+            cy.clickAccordion('RAKENNE');
+            cy.wait('@historia', { timeout: 10000 });
+
+            cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
         });
-    });
-    it('Should have parent organisation', () => {
-        cy.clickAccordion('RAKENNE');
-        cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
     });
 });
