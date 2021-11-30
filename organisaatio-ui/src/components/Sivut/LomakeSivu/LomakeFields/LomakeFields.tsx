@@ -31,20 +31,24 @@ const ReadOnlyDate = ({ value }) => {
     const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
     return <div className={styles.Kentta}>{formattedDate}</div>;
 };
-const Kentta = ({ label, children }) => {
+const Kentta = ({ label, children, isRequired = false }) => {
     const { i18n } = useContext(LanguageContext);
     return (
         <div className={styles.Kentta}>
-            <label>{i18n.translate(label)}</label>
+            <label>
+                {i18n.translate(label)} {isRequired && '*'}
+            </label>
             {children}
         </div>
     );
 };
-const KenttaLyhyt = ({ label, children }) => {
+const KenttaLyhyt = ({ label, children, isRequired = false }) => {
     const { i18n } = useContext(LanguageContext);
     return (
         <div className={styles.KenttaLyhyt}>
-            <label>{i18n.translate(label)}</label>
+            <label>
+                {i18n.translate(label)} {isRequired && '*'}
+            </label>
             {children}
         </div>
     );

@@ -30,7 +30,7 @@ const requiredFieldsObject = {
         .required(),
 };
 
-const fiAltSchema = Joi.object({
+export const fiAltSchema = Joi.object({
     fi: Joi.object({ ...allAllowedLanguageObject, ...requiredFieldsObject }).when('osoitteetOnEri', {
         is: true,
         then: kayntiOsoiteRequiredSchema,
@@ -40,7 +40,7 @@ const fiAltSchema = Joi.object({
     osoitteetOnEri: Joi.boolean(),
 });
 
-const svAltSchema = Joi.object({
+export const svAltSchema = Joi.object({
     fi: Joi.object(allAllowedLanguageObject),
     sv: Joi.object({ ...allAllowedLanguageObject, ...requiredFieldsObject }).when('osoitteetOnEri', {
         is: true,
@@ -50,7 +50,7 @@ const svAltSchema = Joi.object({
     osoitteetOnEri: Joi.boolean(),
 });
 
-const enAltSchema = Joi.object({
+export const enAltSchema = Joi.object({
     fi: Joi.object(allAllowedLanguageObject),
     sv: Joi.object(allAllowedLanguageObject),
     en: Joi.object({

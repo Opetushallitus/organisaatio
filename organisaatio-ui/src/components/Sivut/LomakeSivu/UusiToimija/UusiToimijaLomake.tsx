@@ -160,7 +160,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}
-                validationErrors={yhteystiedotValidationErrors}
+                hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
                 formRegister={registerYhteystiedot}
                 key={YHTEYSTIEDOTUUID}
             />

@@ -15,13 +15,13 @@ export default function TNBody(props: TNProps) {
     return (
         <BodyKehys>
             <BodyKentta>
-                <BodyKentta label={'LABEL_SUOMEKSI'}>
+                <BodyKentta isRequired label={'LABEL_SUOMEKSI'}>
                     <Input error={!!validationErrors['fi']} id={'organisaation_nimiFi'} {...register('fi')} />
                 </BodyKentta>
-                <BodyKentta label={'LABEL_RUOTSIKSI'}>
+                <BodyKentta isRequired label={'LABEL_RUOTSIKSI'}>
                     <Input error={!!validationErrors['sv']} id={'organisaation_nimiSv'} {...register('sv')} />
                 </BodyKentta>
-                <BodyKentta label={'LABEL_ENGLANNIKSI'}>
+                <BodyKentta isRequired label={'LABEL_ENGLANNIKSI'}>
                     <Input error={!!validationErrors['en']} id={'organisaation_nimiEn'} {...register('en')} />
                 </BodyKentta>
             </BodyKentta>
