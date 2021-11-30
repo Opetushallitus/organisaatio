@@ -45,9 +45,6 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache
       install:
-        - export NODE_VERSION=16.13
-        - nvm install $NODE_VERSION
-        - nvm use $NODE_VERSION
         - cd mock-api && npm install && cd -
         - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts" # TODO: update dependencies
         - export TZ=Europe/Helsinki # TODO: fix tests
