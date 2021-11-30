@@ -45,7 +45,7 @@ jobs:
           - $HOME/.gradle
           - $HOME/.cache
       install:
-        - export NODE_VERSION=11.1
+        - export NODE_VERSION=16.13
         - nvm install $NODE_VERSION
         - nvm use $NODE_VERSION
         - cd mock-api && npm install && cd -
