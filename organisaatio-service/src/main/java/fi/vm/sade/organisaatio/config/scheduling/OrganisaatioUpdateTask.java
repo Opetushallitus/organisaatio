@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.Date;
 /**
  * Laukaisee organisaatioiden ajastetut päivitys operaatiot
  */
+@Profile("!dev")
 @Component
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
