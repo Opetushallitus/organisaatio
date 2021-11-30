@@ -21,7 +21,6 @@ import java.util.Date;
 /**
  * Laukaisee organisaatioiden ajastetut päivitys operaatiot
  */
-@Profile("!dev")
 @Component
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
