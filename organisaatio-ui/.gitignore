@@ -1,6 +1,8 @@
 build/
 .gradle/
+.nyc_output
 src/react-app-env.d.ts
 coverage/
 cypress/videos
 cypress/screenshots
+cypress-coverage
