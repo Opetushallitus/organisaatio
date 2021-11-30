@@ -1,5 +1,4 @@
 import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
-import * as React from 'react';
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
@@ -122,9 +121,7 @@ export type Ryhma = {
     toimipistekoodi?: string;
     tyypit: string[];
     version?: number;
-    vuosiluokat?: any[];
     yhteystiedot?: Yhteystiedot[];
-    yhteystietoArvos?: any[];
     status: string;
 };
 
@@ -154,7 +151,6 @@ export type OrganisaatioHistoria = {
 };
 
 export interface YhteystietoTyyppi {
-    allLisatietokenttas: any;
     oid?: string;
     nimi: Nimi;
     sovellettavatOppilaitostyyppis: string[];
@@ -170,14 +166,6 @@ export interface OrganisaatioNimiJaOid {
 export type SelectOptionType = {
     value: string;
     label: string;
-};
-
-export type TranslatedInputBind = {
-    localizationKey: string;
-    name: string;
-    value: string;
-    onChange: (e: React.FormEvent<HTMLInputElement>) => void;
-    disabled?: boolean;
 };
 
 export type FrontProperties = {

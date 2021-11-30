@@ -22,8 +22,7 @@ addons:
     token:
       secure: "QpZCPf2OCCcvp27AhCM4g71+OzmtdtpcPnyhhCf60/HXZB8SOSLU00qAWcv86iNLSTIuL8AVrwo+Jw63LguZTVxQ8a5Qh8SYXUgrm9i9pj66I8c/BzfhtOXQqzYLHKzl3XYqbsdfD4AVPwB5BDE1ohF1A7bPjIVvNqyjJb/bJqo="
 before_install:
-  - sysctl fs.inotify.max_user_watches=524288
-  - sysctl fs.inotify.max_queued_events=524288
+  - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
   - nvm install 12.18.1
   - nvm use 12.18.1
   - pyenv global 3.7.1

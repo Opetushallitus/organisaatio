@@ -5,7 +5,7 @@ import * as React from 'react';
 
 export default function DatePickerController<T>(props: {
     form: Control<T>;
-    validationErrors: { [x: string]: any };
+    validationErrors: { [x: string]: unknown };
     name: Path<T>;
 }) {
     return (
