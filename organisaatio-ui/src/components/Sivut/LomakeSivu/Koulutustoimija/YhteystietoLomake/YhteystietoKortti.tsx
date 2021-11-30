@@ -38,7 +38,7 @@ type props = {
 const RiviKentta = ({ label, children, isRequired = false }) => {
     return (
         <Rivi>
-            <Kentta isRequired label={label}>
+            <Kentta isRequired={isRequired} label={label}>
                 {children}
             </Kentta>
         </Rivi>
@@ -56,11 +56,14 @@ const PostinumeroKentta = ({ children, toimipaikkaName: name, control, label, is
         </Rivi>
     );
 };
-const OtsikkoRivi = ({ label }) => (
-    <div className={styles.EnsimmainenRivi}>
-        <h3>{label}</h3>
-    </div>
-);
+const OtsikkoRivi = ({ label }) => {
+    const { i18n } = useContext(LanguageContext);
+    return (
+        <div className={styles.EnsimmainenRivi}>
+            <h3>{i18n.translate(label)}</h3>
+        </div>
+    );
+};
 
 const getErrorDetails = (validationErrors) => {
     const details = validationErrors?.error?.details;
@@ -68,7 +71,7 @@ const getErrorDetails = (validationErrors) => {
         const [lang, name] = details[0].path;
         return { lang, name };
     } else {
-        return { lang: 'fi', name: '' };
+        return { lang: 'fi', name: 'no error' };
     }
 };
 
@@ -80,7 +83,6 @@ export const YhteystietoKortti = ({
     osoitteetOnEri,
     yhteystiedotRegister,
 }: props) => {
-    const { i18n } = useContext(LanguageContext);
     const { postinumerotKoodisto } = useContext(KoodistoContext);
     const registerToimipaikkaUpdate = (toimipaikkaName, { onChange: originalOnchange, ...rest }) => {
         const koodit = postinumerotKoodisto.koodit();
@@ -104,11 +106,11 @@ export const YhteystietoKortti = ({
     if (kortinKieli === 'en')
         return (
             <div key={kortinKieli} className={styles.KorttiKehys}>
-                <OtsikkoRivi label={i18n.translate(`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`)} />
+                <OtsikkoRivi label={`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`} />
                 <RiviKentta label="YHTEYSTIEDOT_POSTIOSOITE_MUU" isRequired>
                     <Textarea
                         {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)}
-                        error={error.lang === kortinKieli && error.name === 'postiosoite'}
+                        error={error.lang === kortinKieli && error.name === 'postiOsoite'}
                     />
                 </RiviKentta>
                 <RiviKentta label="YHTEYSTIEDOT_PUHELINNUMERO">
@@ -133,7 +135,7 @@ export const YhteystietoKortti = ({
         );
     return (
         <div key={kortinKieli} className={styles.KorttiKehys}>
-            <OtsikkoRivi label={i18n.translate(`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`)} />
+            <OtsikkoRivi label={`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`} />
             <RiviKentta label="YHTEYSTIEDOT_POSTIOSOITE" isRequired>
                 <Input
                     {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)}
@@ -155,14 +157,14 @@ export const YhteystietoKortti = ({
                 />
             </PostinumeroKentta>
             {osoitteetOnEri && [
-                <RiviKentta label={i18n.translate('YHTEYSTIEDOT_KAYNTIOSOITE')}>
+                <RiviKentta label="YHTEYSTIEDOT_KAYNTIOSOITE">
                     <Input
                         {...yhteystiedotRegister(`${kortinKieli}.kayntiOsoite` as const)}
                         error={error.lang === kortinKieli && error.name === 'kayntiOsoite'}
                     />
                 </RiviKentta>,
                 <PostinumeroKentta
-                    label={i18n.translate('YHTEYSTIEDOT_POSTINUMERO')}
+                    label="YHTEYSTIEDOT_POSTINUMERO'"
                     toimipaikkaName={`${kortinKieli}.kayntiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
                     control={formControl}
                 >
@@ -175,7 +177,7 @@ export const YhteystietoKortti = ({
                     />
                 </PostinumeroKentta>,
             ]}
-            <RiviKentta label={i18n.translate('YHTEYSTIEDOT_PUHELINNUMERO')}>
+            <RiviKentta label="YHTEYSTIEDOT_PUHELINNUMERO">
                 <Input
                     {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)}
                     name={`${kortinKieli}.puhelinnumero`}
@@ -188,7 +190,7 @@ export const YhteystietoKortti = ({
                     error={error.lang === kortinKieli && error.name === 'email'}
                 />
             </RiviKentta>
-            <RiviKentta label={i18n.translate('YHTEYSTIEDOT_WWW_OSOITE')}>
+            <RiviKentta label="YHTEYSTIEDOT_WWW_OSOITE">
                 <Input
                     {...yhteystiedotRegister(`${kortinKieli}.www` as const)}
                     error={error.lang === kortinKieli && error.name === 'www'}
