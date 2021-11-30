@@ -68,6 +68,6 @@ public class OrganisaatioViestintaClient {
         return wrapException(() -> httpClient.<String>execute(request)
                 .expectedStatus(200)
                 .mapWith(identity())
-                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", viestintaServiceUrl))));
+                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", viestintaServiceUrl))));
     }
 }

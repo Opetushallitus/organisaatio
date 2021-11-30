@@ -70,7 +70,7 @@ public class OrganisaatioKoodistoClient {
      */
     public String get(String uri) throws OrganisaatioKoodistoException {
         return wrapException(() -> httpClient.<String>execute(OphHttpRequest.Builder.get(uri).build())
-                .handleErrorStatus(204).with(json -> { throw new RuntimeException(String.format("Osoite %s palautti 204", uri)); }) // ilman tätä 204 => Optional#empty
+                .handleErrorStatus(204).with(json -> { throw new ClientException(String.format("Osoite %s palautti 204", uri)); }) // ilman tätä 204 => Optional#empty
                 .handleErrorStatus(500).with(json -> Optional.empty()) // 500 => Koodia ei löydy
                 .expectedStatus(200)
                 .mapWith(identity())
@@ -94,7 +94,7 @@ public class OrganisaatioKoodistoClient {
         wrapException(() -> httpClient.<String>execute(request)
                 .expectedStatus(200)
                 .mapWith(identity())
-                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri))));
+                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", uri))));
     }
 
     /**
@@ -115,6 +115,6 @@ public class OrganisaatioKoodistoClient {
         wrapException(() -> httpClient.<String>execute(request)
                 .expectedStatus(201)
                 .mapWith(identity())
-                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri))));
+                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", uri))));
     }
 }

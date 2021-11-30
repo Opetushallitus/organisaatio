@@ -5,6 +5,7 @@ import {
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
     OrganisaationNimetNimi,
+    OrganisaatioPaivittaja,
     Perustiedot,
     Yhteystiedot,
 } from '../types/types';
@@ -61,6 +62,11 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     }));
     return polku;
 }
+async function readOrganisaatioPaivittaja(oid: string): Promise<OrganisaatioPaivittaja> {
+    if (oid.length == 0) return {};
+    const { data } = await Axios.get<OrganisaatioPaivittaja>(`${baseUrl}${oid}/paivittaja`);
+    return data;
+}
 async function searchOrganisation({
     searchStr,
     aktiiviset = true,
@@ -84,13 +90,17 @@ async function searchOrganisation({
 
     return data.organisaatiot;
 }
-async function readOrganisaatio(oid: string) {
+async function readOrganisaatio(oid: string, parent?: boolean) {
     return errorHandlingWrapper(async () => {
         const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
         const organisaatio = response.data;
+        if (!!parent) {
+            return { organisaatio, polku: '', paivittaja: {} };
+        }
+        const paivittaja = await readOrganisaatioPaivittaja(oid);
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
-        return { organisaatio: organisaatio, polku: polku };
+        return { organisaatio, polku, paivittaja };
     });
 }
 
@@ -359,7 +369,12 @@ export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYht
 function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
     function liitosMapper(
         a: OrganisaatioLiitos
-    ): { alkuPvm: string; parent: OrganisaatioBase; loppuPvm: string | undefined; child: OrganisaatioBase } {
+    ): {
+        alkuPvm: string;
+        parent: OrganisaatioBase;
+        loppuPvm: string | undefined;
+        child: OrganisaatioBase;
+    } {
         return { alkuPvm: a.alkuPvm, loppuPvm: a.loppuPvm, child: a.kohde, parent: a.organisaatio };
     }
     return {
@@ -441,4 +456,5 @@ export {
     updateOrganisaatio,
     mergeOrganisaatio,
     searchOrganisation,
+    readOrganisaatioPaivittaja,
 };

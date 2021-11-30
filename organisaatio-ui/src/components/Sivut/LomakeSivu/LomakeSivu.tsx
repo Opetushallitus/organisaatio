@@ -9,6 +9,7 @@ import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../co
 import {
     LiitaOrganisaatioon,
     OrganisaatioNimiJaOid,
+    OrganisaatioPaivittaja,
     ParentTiedot,
     Perustiedot,
     ResolvedRakenne,
@@ -29,6 +30,7 @@ import {
     mapUiOrganisaatioToApiToUpdate,
     mergeOrganisaatio,
     readOrganisaatio,
+    readOrganisaatioPaivittaja,
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
@@ -49,6 +51,7 @@ import {
     VersioContainer,
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
+import moment from 'moment';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -90,6 +93,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         oppilaitostyyppiKoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
+    const [organisaatioPaivittaja, setOrganisaatioPaivittaja] = useState<OrganisaatioPaivittaja>({});
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
     );
@@ -121,9 +125,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     useEffect(() => {
         (async function () {
-            const { organisaatio, polku } = await readOrganisaatio(params.oid);
-            if (organisaatio && polku) {
-                await resetOrganisaatio(organisaatio, polku);
+            const organisaatio = await readOrganisaatio(params.oid);
+            if (organisaatio) {
+                await resetOrganisaatio(organisaatio);
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,13 +192,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         };
     };
 
-    async function resetOrganisaatio(organisaatio, polku) {
+    async function resetOrganisaatio({ organisaatio, polku, paivittaja }) {
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
+        setOrganisaatioPaivittaja(paivittaja);
         const {
             organisaatio: { tyypit: organisaatioTyypit, oid },
-        } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID);
+        } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
         setParentTiedot({ organisaatioTyypit, oid });
         perustiedotReset(Uiperustiedot);
         yhteystiedotReset(Uiyhteystiedot);
@@ -209,7 +214,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (mergeOrganisaatioResult) {
                 const organisaatioAfterMerge = await readOrganisaatio(params.oid);
                 if (organisaatioAfterMerge) {
-                    await resetOrganisaatio(organisaatioAfterMerge.organisaatio, organisaatioAfterMerge.polku);
+                    await resetOrganisaatio(organisaatioAfterMerge);
                     executeHistoria();
                 }
             }
@@ -264,9 +269,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         yhteystiedotFormValues,
                         perustiedotFormValues
                     );
-                    const updatedOrganisaatio = await updateOrganisaatio(apiOrganisaatio);
-                    if (updatedOrganisaatio) {
-                        await resetOrganisaatio(updatedOrganisaatio, organisaatioNimiPolku);
+                    const organisaatio = await updateOrganisaatio(apiOrganisaatio);
+                    const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
+                    if (organisaatio) {
+                        await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku, paivittaja });
                     }
                 })();
             })();
@@ -389,7 +395,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 <VersioContainer>
                     <MuokattuKolumni>
                         <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
-                        <span>01.01.2020 16:39 ngo Schimpff</span>
+                        <span>
+                            {organisaatioPaivittaja.paivitysPvm
+                                ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy HH:mm:ss')
+                                : ''}{' '}
+                            {organisaatioPaivittaja.etuNimet} {organisaatioPaivittaja.sukuNimi}
+                        </span>
                     </MuokattuKolumni>
                 </VersioContainer>
                 <div>

@@ -166,6 +166,11 @@ export interface OrganisaatioNimiJaOid {
     oid: string;
     nimi: Nimi;
 }
+export type OrganisaatioPaivittaja = {
+    paivitysPvm?: Date;
+    etuNimet?: string;
+    sukuNimi?: string;
+};
 
 export type SelectOptionType = {
     value: string;
