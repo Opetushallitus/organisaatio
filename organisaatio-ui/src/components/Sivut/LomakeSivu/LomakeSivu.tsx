@@ -126,8 +126,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     useEffect(() => {
         (async function () {
             const organisaatio = await readOrganisaatio(params.oid);
+            const paivittaja = await readOrganisaatioPaivittaja(params.oid);
             if (organisaatio) {
-                await resetOrganisaatio(organisaatio);
+                await resetOrganisaatio({ ...organisaatio, paivittaja });
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,7 +215,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (mergeOrganisaatioResult) {
                 const organisaatioAfterMerge = await readOrganisaatio(params.oid);
                 if (organisaatioAfterMerge) {
-                    await resetOrganisaatio(organisaatioAfterMerge);
+                    const paivittaja = await readOrganisaatioPaivittaja(params.oid);
+                    await resetOrganisaatio({ ...organisaatioAfterMerge, paivittaja });
                     executeHistoria();
                 }
             }

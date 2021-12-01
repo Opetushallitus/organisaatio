@@ -97,12 +97,11 @@ async function readOrganisaatio(oid: string, parent?: boolean) {
         const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
         const organisaatio = response.data;
         if (!!parent) {
-            return { organisaatio, polku: '', paivittaja: {} };
+            return { organisaatio, polku: '' };
         }
-        const paivittaja = await readOrganisaatioPaivittaja(oid);
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
-        return { organisaatio, polku, paivittaja };
+        return { organisaatio, polku };
     });
 }
 
