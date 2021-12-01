@@ -64,8 +64,10 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
 }
 async function readOrganisaatioPaivittaja(oid: string): Promise<OrganisaatioPaivittaja> {
     if (oid.length == 0) return {};
-    const { data } = await Axios.get<OrganisaatioPaivittaja>(`${baseUrl}${oid}/paivittaja`);
-    return data;
+    return errorHandlingWrapper(async () => {
+        const { data } = await Axios.get<OrganisaatioPaivittaja>(`${baseUrl}${oid}/paivittaja`);
+        return data;
+    });
 }
 async function searchOrganisation({
     searchStr,
