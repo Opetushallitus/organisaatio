@@ -121,8 +121,6 @@ jobs:
         - ./ci-tools/common/pull-image.sh
         - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
         - ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
-      after_success:
-        - aws s3 rm --recursive s3://$s3bucket/$TRAVIS_BUILD_NUMBER # clean up after ourselves
     - name: "SonarCloud"
       language: java
       jdk:
