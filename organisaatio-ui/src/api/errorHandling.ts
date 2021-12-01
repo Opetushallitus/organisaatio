@@ -8,12 +8,13 @@ function handleError(error) {
     if (Axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<OrganisaatioVirhe>;
         if (axiosError.response) {
-            if (axiosError.response.data.errorKey) {
-                warning({ message: axiosError.response.data.errorKey });
-                console.error(axiosError.response.data.errorKey, axiosError.response.data.errorMessage);
+            console.error(axiosError.response);
+            if (axiosError.response.data?.errorKey) {
+                warning({ title: axiosError.response.data.errorKey, message: axiosError.response.data.errorMessage });
+            } else if (axiosError.response.data?.errorMessage) {
+                danger({ title: axiosError.response.statusText, message: axiosError.response.data.errorMessage });
             } else {
                 danger({ message: axiosError.response.statusText });
-                console.error(axiosError);
             }
         }
     } else {
