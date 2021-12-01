@@ -24,7 +24,7 @@ import java.util.Date;
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private String nameUpdateCronExpression;
+    private final String nameUpdateCronExpression;
 
     private final OrganisaatioBusinessService organisaatioBusinessService;
 
@@ -44,7 +44,7 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
 
     @Override
     public void executeRecurringly(TaskInstance taskInstance, ExecutionContext executionContext) {
-        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: " + new Date(), nameUpdateCronExpression);
+        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
 
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
