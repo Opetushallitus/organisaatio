@@ -11,7 +11,7 @@ export default function SelectController<T>({
     koodisto,
 }: {
     form: Control<T>;
-    validationErrors: { [x: string]: any };
+    validationErrors: { [x: string]: unknown };
     name: Path<T>;
     koodisto: Koodisto;
 }) {
