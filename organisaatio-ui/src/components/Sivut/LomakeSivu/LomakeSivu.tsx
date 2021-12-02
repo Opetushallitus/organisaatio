@@ -228,15 +228,18 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setSiirraOrganisaatio(initialSiirra);
         await handleOrganisationMerge(props);
     }
+
     async function cancelSiirraOrganisaatio() {
         setSiirraOrganisaatioModaaliAuki(false);
         setSiirraOrganisaatio(initialSiirra);
     }
+
     async function handleYhdistaOrganisaatio(props: LiitaOrganisaatioon) {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
         await handleOrganisationMerge(props);
     }
+
     async function cancelYhdistaOrganisaatio() {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
