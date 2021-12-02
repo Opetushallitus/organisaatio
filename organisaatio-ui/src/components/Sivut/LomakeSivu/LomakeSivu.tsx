@@ -63,6 +63,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const initialYhdista = {
         merge: true,
         date: new Date(),
@@ -258,22 +259,27 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
-                        postinumerotKoodisto,
-                        organisaatioBase,
-                        yhteystiedotFormValues,
-                        perustiedotFormValues
-                    );
-                    const updatedOrganisaatio = await updateOrganisaatio(apiOrganisaatio);
-                    if (updatedOrganisaatio) {
-                        await resetOrganisaatio(updatedOrganisaatio, organisaatioNimiPolku);
+                    try {
+                        setIsLoading(true);
+                        const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                            postinumerotKoodisto,
+                            organisaatioBase,
+                            yhteystiedotFormValues,
+                            perustiedotFormValues
+                        );
+                        const updatedOrganisaatio = await updateOrganisaatio(apiOrganisaatio);
+                        if (updatedOrganisaatio) {
+                            await resetOrganisaatio(updatedOrganisaatio, organisaatioNimiPolku);
+                        }
+                    } finally {
+                        setIsLoading(false);
                     }
                 })();
             })();
         }
     }
 
-    if (!organisaatioBase || historiaLoading || historiaError) {
+    if (!organisaatioBase || historiaLoading || historiaError || isLoading) {
         return (
             <PaaOsio>
                 <Spin />

@@ -51,6 +51,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         oid: '',
     });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         (async function () {
@@ -111,21 +112,26 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     async function saveOrganisaatio() {
         await perustiedotHandleSubmit((perustiedotFormValues) => {
             yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                const apiOrganisaatio = mapUiOrganisaatioToApiToSave(
-                    postinumerotKoodisto,
-                    yhteystiedotFormValues,
-                    perustiedotFormValues,
-                    parentOid
-                );
-                const savedOrganisaatio = await createOrganisaatio(apiOrganisaatio);
-                if (savedOrganisaatio) {
-                    props.history.push(`/lomake/${savedOrganisaatio.oid}`);
+                try {
+                    setIsLoading(true);
+                    const apiOrganisaatio = mapUiOrganisaatioToApiToSave(
+                        postinumerotKoodisto,
+                        yhteystiedotFormValues,
+                        perustiedotFormValues,
+                        parentOid
+                    );
+                    const savedOrganisaatio = await createOrganisaatio(apiOrganisaatio);
+                    if (savedOrganisaatio) {
+                        props.history.push(`/lomake/${savedOrganisaatio.oid}`);
+                    }
+                } finally {
+                    setIsLoading(false);
                 }
             })();
         })();
     }
 
-    if (!organisaatioRakenne || !resolvedTyypit) {
+    if (!organisaatioRakenne || !resolvedTyypit || isLoading) {
         return (
             <PaaOsio>
                 <Spin />
