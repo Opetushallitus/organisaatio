@@ -6,7 +6,7 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext } from '../../../../../contexts/contexts';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import DatePickerController from '../../../../Controllers/DatePickerController';
@@ -32,8 +32,8 @@ type PerustietoLomakeProps = {
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;
     formControl: Control<Perustiedot>;
-    setPerustiedotValue: any;
-    getPerustiedotValues: () => Perustiedot;
+    setPerustiedotValue: UseFormSetValue<Perustiedot>;
+    getPerustiedotValues: UseFormGetValues<Perustiedot>;
     organisaatioBase: UiOrganisaatioBase;
 };
 

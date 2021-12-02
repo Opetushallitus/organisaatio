@@ -148,4 +148,7 @@ public interface OrganisaatioApi {
     void deleteOrganisaatio(
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid
     );
+    @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE)
+    OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(@PathVariable("oid") String oid);
+
 }

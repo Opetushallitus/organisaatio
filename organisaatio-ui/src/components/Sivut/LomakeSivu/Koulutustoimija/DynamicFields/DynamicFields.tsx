@@ -70,6 +70,8 @@ export default function DynamicFields({
                                 </Kentta>
                             </Rivi>
                         );
+                    default:
+                        return <></>;
                 }
             })}
         </>

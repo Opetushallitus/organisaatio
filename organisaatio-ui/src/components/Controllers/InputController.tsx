@@ -8,7 +8,7 @@ export default function InputController<T>({
     validationErrors,
 }: {
     form: Control<T>;
-    validationErrors: { [x: string]: any };
+    validationErrors: { [x: string]: unknown };
     name: Path<T>;
 }) {
     return (

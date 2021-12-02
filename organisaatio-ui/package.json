@@ -26,6 +26,8 @@
     "universal-cookie": "4.0.4"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.9.11",
+    "@cypress/instrument-cra": "^1.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "7.2.1",
@@ -58,7 +60,7 @@
   "scripts": {
     "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
     "nginx": "docker-compose -f nginx/docker-compose.yml up",
-    "start": "BROWSER=none PORT=3003 react-scripts start organisaatioApp",
+    "start": "BROWSER=none PORT=3003 react-scripts -r @cypress/instrument-cra start organisaatioApp ",
     "stop": "killall -SIGINT organisaatioApp",
     "build": "CI='' react-scripts build",
     "test": "react-scripts test --coverage --watchAll=false",
@@ -71,8 +73,8 @@
     "audit": "npm audit --only=prod --audit-level=critical",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:ci": "wait-on http://devaaja:devaaja@localhost:8080/organisaatio-service && CYPRESS_BASE_URL=http://devaaja:devaaja@localhost:8080/ npm run cypress:run",
-    "cypress:test": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003/organisaatio-service && npm run cypress:run' 'npm run start'"
+    "cypress:notused": "wait-on http://devaaja:devaaja@localhost:8080/organisaatio-service && CYPRESS_BASE_URL=http://devaaja:devaaja@localhost:8080/ npm run cypress:run",
+    "cypress:ci": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003/organisaatio-service && npm run cypress:run' 'npm run start'"
   },
   "eslintConfig": {
     "extends": [
@@ -161,5 +163,8 @@
     "coverageReporters": [
       "lcov"
     ]
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage"
   }
 }
