@@ -273,7 +273,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             perustiedotFormValues
                         );
                         const organisaatio = await updateOrganisaatio(apiOrganisaatio);
-                    const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
+                        const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
                         if (organisaatio) {
                             await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku, paivittaja });
                         }
