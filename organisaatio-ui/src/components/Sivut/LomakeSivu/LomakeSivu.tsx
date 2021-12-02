@@ -126,8 +126,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     useEffect(() => {
         (async function () {
             const organisaatio = await readOrganisaatio(params.oid);
+            const paivittaja = await readOrganisaatioPaivittaja(params.oid);
             if (organisaatio) {
-                await resetOrganisaatio(organisaatio);
+                await resetOrganisaatio({ ...organisaatio, paivittaja });
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,7 +215,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (mergeOrganisaatioResult) {
                 const organisaatioAfterMerge = await readOrganisaatio(params.oid);
                 if (organisaatioAfterMerge) {
-                    await resetOrganisaatio(organisaatioAfterMerge);
+                    const paivittaja = await readOrganisaatioPaivittaja(params.oid);
+                    await resetOrganisaatio({ ...organisaatioAfterMerge, paivittaja });
                     executeHistoria();
                 }
             }
@@ -226,15 +228,18 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setSiirraOrganisaatio(initialSiirra);
         await handleOrganisationMerge(props);
     }
+
     async function cancelSiirraOrganisaatio() {
         setSiirraOrganisaatioModaaliAuki(false);
         setSiirraOrganisaatio(initialSiirra);
     }
+
     async function handleYhdistaOrganisaatio(props: LiitaOrganisaatioon) {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
         await handleOrganisationMerge(props);
     }
+
     async function cancelYhdistaOrganisaatio() {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
@@ -396,10 +401,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <MuokattuKolumni>
                         <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
                         <span>
-                            {organisaatioPaivittaja.paivitysPvm
+                            {organisaatioPaivittaja?.paivitysPvm
                                 ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy HH:mm:ss')
                                 : ''}{' '}
-                            {organisaatioPaivittaja.etuNimet} {organisaatioPaivittaja.sukuNimi}
+                            {organisaatioPaivittaja?.etuNimet} {organisaatioPaivittaja?.sukuNimi}
                         </span>
                     </MuokattuKolumni>
                 </VersioContainer>
