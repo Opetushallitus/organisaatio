@@ -116,7 +116,6 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_08"
     ],
     "dynamicFields": []
   },
@@ -127,7 +126,6 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_08"
     ],
     "dynamicFields": []
   },

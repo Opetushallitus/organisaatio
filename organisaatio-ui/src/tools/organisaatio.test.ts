@@ -61,10 +61,6 @@ describe('resolveOrganisaatioTyypit', () => {
                 label: 'organisaatiotyyppi_04',
                 value: 'organisaatiotyyppi_04',
             },
-            {
-                label: 'organisaatiotyyppi_08',
-                value: 'organisaatiotyyppi_08',
-            },
         ]);
     });
     it('Works when second has no children', () => {
@@ -98,10 +94,6 @@ describe('resolveOrganisaatioTyypit', () => {
             {
                 value: 'organisaatiotyyppi_04',
                 label: 'organisaatiotyyppi_04',
-            },
-            {
-                value: 'organisaatiotyyppi_08',
-                label: 'organisaatiotyyppi_08',
             },
         ]);
     });
