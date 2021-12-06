@@ -161,6 +161,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         vuosiluokat,
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
+        ytunnus,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -181,6 +182,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 muutKotipaikat,
                 alkuPvm,
                 lakkautusPvm,
+                ytunnus,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
                 oppilaitosKoodi,
@@ -415,7 +417,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </MuokattuKolumni>
                 </VersioContainer>
                 <div>
-                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/')} />
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
                     <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
                 </div>
             </AlaBanneri>
