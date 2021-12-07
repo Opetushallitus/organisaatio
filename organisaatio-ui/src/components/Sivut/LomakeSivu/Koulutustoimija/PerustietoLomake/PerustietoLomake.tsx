@@ -4,7 +4,15 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext } from '../../../../../contexts/contexts';
-import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
+import {
+    KoodistoSelectOption,
+    Nimenmuutostyyppi,
+    Nimi,
+    OrganisaationNimetNimi,
+    Perustiedot,
+    ResolvedRakenne,
+    UiOrganisaatioBase,
+} from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
@@ -61,6 +69,29 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
+
+    const handleNimenTallenus = (nimenmuutosTyyppi: Nimenmuutostyyppi, nimi: Nimi) => {
+        const nimet = organisaatioBase.nimet;
+        const sameDayNimiIdx = organisaatioBase.nimet.findIndex(
+            (nimi: OrganisaationNimetNimi) => nimi.alkuPvm === today
+        );
+        if (sameDayNimiIdx > -1) {
+            nimet[sameDayNimiIdx].nimi = uusiNimi;
+        } else {
+            nimet.push({ nimi, alkuPvm: today });
+        }
+        switch (nimenmuutosTyyppi) {
+            case 'CREATE':
+                setPerustiedotValue('nimi', nimi);
+                break;
+            case 'EDIT':
+                setPerustiedotValue('nimi', nimi);
+                break;
+            case 'CANCEL':
+                setPerustiedotValue('nimi', nimi);
+                break;
+        }
+    };
     const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
     return (
         <UloinKehys>
@@ -200,7 +231,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
                     closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={() => setPerustiedotValue('nimi', nimi)}
+                    handleNimiTallennus={handleNimenTallenus}
                     nimi={nimi}
                 />
             )}

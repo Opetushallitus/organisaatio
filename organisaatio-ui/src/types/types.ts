@@ -20,6 +20,8 @@ export type KoodistoSelectOption = {
     label: string;
 };
 
+export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'CANCEL';
+
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 
@@ -55,6 +57,7 @@ export type Nimi = {
     fi?: string;
     sv?: string;
     en?: string;
+    muutostyyppi?: Nimenmuutostyyppi;
 };
 
 export type OrganisaationNimetNimi = {

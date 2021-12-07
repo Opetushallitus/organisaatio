@@ -11,7 +11,7 @@ import Footer from '../Confirmation/Footer';
 type ModaaliProps = {
     nimi: Nimi;
     closeNimenmuutosModaali: () => void;
-    handleNimiTallennus: (Nimi) => void;
+    handleNimiTallennus: (Nimenmuutostyyppi, Nimi) => void;
 };
 export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     const {
@@ -20,11 +20,12 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         register,
         formState: { errors: validationErrors },
         handleSubmit,
+        control: formControl,
     } = useForm<Nimi>({ defaultValues: props.nimi, resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema) });
 
     const handleTallenna = () => {
-        const nimi = getValues();
-        props.handleNimiTallennus(nimi);
+        const { muutostyyppi, ...rest } = getValues();
+        props.handleNimiTallennus({ ...rest }, muutostyyppi);
         return props.closeNimenmuutosModaali();
     };
     const handlePeruuta = () => {
@@ -34,7 +35,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     return (
         <PohjaModaali
             header={<Header label={'TOIMIPISTEEN_NIMENMUUTOS_TITLE'} />}
-            body={<TNBody validationErrors={validationErrors} register={register} />}
+            body={<TNBody validationErrors={validationErrors} register={register} formControl={formControl} />}
             footer={<Footer tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}
             suljeCallback={handlePeruuta}
         />
