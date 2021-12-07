@@ -1,0 +1,45 @@
+{
+  "oidHenkilo": "1.2.246.562.24.25909319372",
+  "hetu": null,
+  "kaikkiHetut": [],
+  "passivoitu": false,
+  "etunimet": "Devaaja Juuseri",
+  "kutsumanimi": "Devaaja",
+  "sukunimi": "Virkailija",
+  "aidinkieli": null,
+  "asiointiKieli": {
+    "kieliKoodi": "fi",
+    "kieliTyyppi": "suomi"
+  },
+  "kansalaisuus": [
+    {
+      "kansalaisuusKoodi": "246"
+    }
+  ],
+  "kasittelijaOid": "1.2.246.562.24.25909319372",
+  "syntymaaika": "1961-10-15",
+  "sukupuoli": "2",
+  "kotikunta": null,
+  "oppijanumero": "1.2.246.562.24.25909319372",
+  "turvakielto": false,
+  "eiSuomalaistaHetua": false,
+  "yksiloity": false,
+  "yksiloityVTJ": true,
+  "yksilointiYritetty": true,
+  "duplicate": false,
+  "created": -7200000,
+  "modified": 1410763453475,
+  "vtjsynced": null,
+  "yhteystiedotRyhma": [
+    {
+      "id": 156748,
+      "ryhmaKuvaus": "yhteystietotyyppi2",
+      "ryhmaAlkuperaTieto": "alkupera6",
+      "readOnly": false,
+      "yhteystieto": []
+    }
+  ],
+  "yksilointivirheet": [],
+  "henkiloTyyppi": "OPPIJA",
+  "kielisyys": []
+}
