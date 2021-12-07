@@ -26,7 +26,8 @@ before_install:
   - export TZ=Europe/Helsinki
   - nvm install 12.18.1
   - nvm use 12.18.1
-  - pyenv global 3.7.1
+  - pyenv versions
+  - pyenv global 3.7.2
   - pip install -U pip
   - pip install awscli
   - mkdir -p ~/$TRAVIS_BUILD_NUMBER
