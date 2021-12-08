@@ -52,14 +52,11 @@ public class YTJResource {
      */
     @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON)
     public YTJDTO findByYTunnus(@PathVariable String ytunnus) {
-        YTJDTO ytj = new YTJDTO();
         try {
-            ytj = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
+            return ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
         } catch (YtjConnectionException ex) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
         }
-
-        return ytj;
     }
 
     @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON)

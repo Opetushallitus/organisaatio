@@ -22,12 +22,15 @@ function handleError(error) {
         console.error(error);
     }
 }
-async function errorHandlingWrapper<A = never, B = AxiosResponse<A>>(workhorse: () => Promise<B>): Promise<B> {
+async function errorHandlingWrapper<A = never, B = AxiosResponse<A>>(
+    workhorse: () => Promise<B>
+): Promise<B | undefined> {
     try {
-        return await workhorse();
+        const value = await workhorse();
+        return value;
     } catch (error) {
-        handleError(error);
-        return new Promise(() => {});
+        await handleError(error);
+        return new Promise((resolve, reject) => resolve(undefined));
     }
 }
 function useErrorHandlingWrapper(workhorse) {

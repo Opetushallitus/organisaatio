@@ -44,7 +44,7 @@ async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
 }
 
 async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
-    return errorHandlingWrapper(async () => {
+    const promise = await errorHandlingWrapper(async () => {
         const { data } = await Axios.put<{ organisaatio: ApiOrganisaatio }>(
             `${baseUrl}${organisaatio.oid}`,
             organisaatio
@@ -52,6 +52,7 @@ async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
         return data.organisaatio;
     });
+    return promise;
 }
 async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaOid[]> {
     if (oids.length === 0) return [];
@@ -62,7 +63,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     }));
     return polku;
 }
-async function readOrganisaatioPaivittaja(oid: string): Promise<OrganisaatioPaivittaja> {
+async function readOrganisaatioPaivittaja(oid: string): Promise<OrganisaatioPaivittaja | undefined> {
     if (oid.length == 0) return {};
     return errorHandlingWrapper(async () => {
         const { data } = await Axios.get<OrganisaatioPaivittaja>(`${baseUrl}${oid}/paivittaja`);

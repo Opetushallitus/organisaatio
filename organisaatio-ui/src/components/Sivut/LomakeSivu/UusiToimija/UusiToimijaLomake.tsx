@@ -55,10 +55,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
 
     useEffect(() => {
         (async function () {
-            const {
-                organisaatio: { tyypit, oid },
-            } = await readOrganisaatio(parentOid, true);
-            setParentTiedot({ organisaatioTyypit: tyypit, oid });
+            const data = await readOrganisaatio(parentOid, true);
+            if (data) {
+                const {
+                    organisaatio: { tyypit, oid },
+                } = data;
+                setParentTiedot({ organisaatioTyypit: tyypit, oid });
+            }
         })();
     }, [parentOid]);
 

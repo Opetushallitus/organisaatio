@@ -199,12 +199,15 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
         setOrganisaatioPaivittaja(paivittaja);
-        const {
-            organisaatio: { tyypit: organisaatioTyypit, oid },
-        } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
-        setParentTiedot({ organisaatioTyypit, oid });
-        perustiedotReset(Uiperustiedot);
-        yhteystiedotReset(Uiyhteystiedot);
+        const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
+        if (data) {
+            const {
+                organisaatio: { tyypit: organisaatioTyypit, oid },
+            } = data;
+            setParentTiedot({ organisaatioTyypit, oid });
+            perustiedotReset(Uiperustiedot);
+            yhteystiedotReset(Uiyhteystiedot);
+        }
     }
 
     async function handleOrganisationMerge(props: LiitaOrganisaatioon) {
@@ -278,8 +281,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             perustiedotFormValues
                         );
                         const organisaatio = await updateOrganisaatio(apiOrganisaatio);
-                        const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
                         if (organisaatio) {
+                            const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
                             await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku, paivittaja });
                         }
                     } finally {
