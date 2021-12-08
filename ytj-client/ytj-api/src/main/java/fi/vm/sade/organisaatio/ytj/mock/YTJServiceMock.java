@@ -26,7 +26,8 @@ public class YTJServiceMock implements YTJService {
 
     @Override
     public YTJDTO findByYTunnus(String ytunnus, YTJKieli kieli) throws YtjConnectionException {
-        if (ytunnus.isEmpty()) throw new YtjConnectionException(YtjExceptionType.SOAP, "empty ytunnus");
+        if (ytunnus != null && ytunnus.isEmpty())
+            throw new YtjConnectionException(YtjExceptionType.SOAP, "empty ytunnus");
         return dataByYTunnus.get(ytunnus);
     }
 
