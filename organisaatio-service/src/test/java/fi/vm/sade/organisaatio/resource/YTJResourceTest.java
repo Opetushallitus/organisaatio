@@ -110,7 +110,7 @@ class YTJResourceTest extends SecurityAwareTestBase {
     @Test
     void findByYNimi3() {
         OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
-            ytjResource.findByYNimi("X");
+            ytjResource.findByYNimi("x");
         });
     }
 }
