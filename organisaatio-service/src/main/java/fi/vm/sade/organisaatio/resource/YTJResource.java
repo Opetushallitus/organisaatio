@@ -21,6 +21,7 @@ import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
+import fi.vm.sade.organisaatio.ytj.api.exception.YtjExceptionType;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -81,6 +82,10 @@ public class YTJResource {
             try {
                 ytjList = ytjService.findByYNimi(nimi.trim(), true, YTJKieli.FI);
             } catch (YtjConnectionException ex) {
+                if(ex.getExceptionType().equals(YtjExceptionType.SOAP)){
+                    //assuming fault due to too many results
+                    throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "organisaatio.exception.too.many.results", ex.getExceptionType().name());
+                }
                 throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
             }
         }
