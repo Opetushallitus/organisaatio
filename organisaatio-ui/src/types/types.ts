@@ -18,6 +18,7 @@ export type Koodi = {
 export type KoodistoSelectOption = {
     value: KoodiUri;
     label: string;
+    disabled?: boolean;
 };
 
 // lokalisointi
@@ -195,6 +196,7 @@ export type ResolvedRakenne = {
     mergeTargetType: string[];
     childTypes: string[];
     showYtj: boolean;
+    disabledChildTypes: string[];
     dynamicFields: DynamicField[];
 };
 export type Rakenne = {
@@ -204,6 +206,7 @@ export type Rakenne = {
     mergeTargetType: string | null;
     childTypes: string[];
     showYtj: boolean;
+    disabledChildTypes: string[];
     dynamicFields: DynamicField[];
 };
 
@@ -222,7 +225,7 @@ export type Koodisto = {
     nimet: () => string[];
     koodit: () => Koodi[];
     selectOptions: () => KoodistoSelectOption[];
-    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
+    uri2SelectOption: (uri: KoodiUri, disabled?: boolean, versio?: number) => KoodistoSelectOption;
 };
 
 export type KoodistoContextType = {

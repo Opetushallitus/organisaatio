@@ -1,6 +1,11 @@
-import { resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
+import {
+    IsOnlyVakaToimipaikkaOrVakaJarjestaja,
+    resolveOrganisaatioTyypit,
+    resolveParentOidByQuery,
+} from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/contexts';
 import { Koodi, Koodisto } from '../types/types';
+import { mapVisibleKieletFromOpetuskielet } from './mappers';
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {
         return { label: uri, value: uri };
@@ -61,6 +66,10 @@ describe('resolveOrganisaatioTyypit', () => {
                 label: 'organisaatiotyyppi_04',
                 value: 'organisaatiotyyppi_04',
             },
+            {
+                label: 'organisaatiotyyppi_08',
+                value: 'organisaatiotyyppi_08',
+            },
         ]);
     });
     it('Works when second has no children', () => {
@@ -94,6 +103,10 @@ describe('resolveOrganisaatioTyypit', () => {
             {
                 value: 'organisaatiotyyppi_04',
                 label: 'organisaatiotyyppi_04',
+            },
+            {
+                label: 'organisaatiotyyppi_08',
+                value: 'organisaatiotyyppi_08',
             },
         ]);
     });
@@ -136,4 +149,17 @@ describe('resolveParentOidByQuery', () => {
         const parentOid = '1.23.1.21111000';
         expect(resolveParentOidByQuery(`parentOid=${parentOid}`)).toBe(parentOid);
     });
+});
+
+describe('IsOnlyVakaToimipaikkaOrVakaJarjestaja', () => {
+    test.each([
+        ['Returns true if organisaatiotyyppi only is Varhaiskasvatuksen toimipaikka', ['organisaatiotyyppi_08'], true],
+        ['Returns true if organisaatiotyyppi only is Varhaiskasvatuksen jarjestaja', ['organisaatiotyyppi_08'], true],
+        [
+            'Returns false if organisaatiotyyppi is Varhaiskasvatuksen jarjestaja and something else',
+            ['organisaatiotyyppi_08', 'organisaatiotyyppi_06'],
+            false,
+        ],
+        ['Returns false if organisaatiotyypit is empty', [], false],
+    ])('%s', (_, input, expected) => expect(IsOnlyVakaToimipaikkaOrVakaJarjestaja(input)).toStrictEqual(expected));
 });

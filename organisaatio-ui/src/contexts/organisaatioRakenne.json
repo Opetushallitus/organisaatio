@@ -12,6 +12,7 @@
       "organisaatiotyyppi_07",
       "organisaatiotyyppi_09"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -24,6 +25,7 @@
       "organisaatiotyyppi_02",
       "organisaatiotyyppi_04"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -35,6 +37,7 @@
     "childTypes": [
       "organisaatiotyyppi_03"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": [
       {
         "name": "oppilaitosKoodi",
@@ -74,6 +77,7 @@
     "childTypes": [
       "organisaatiotyyppi_03"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -84,6 +88,7 @@
     "mergeTargetType": null,
     "childTypes": [
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -96,6 +101,7 @@
       "organisaatiotyyppi_03",
       "organisaatiotyyppi_05"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -107,6 +113,7 @@
     "childTypes": [
       "organisaatiotyyppi_06"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -116,6 +123,10 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
+      "organisaatiotyyppi_08"
+    ],
+    "disabledChildTypes": [
+      "organisaatiotyyppi_08"
     ],
     "dynamicFields": []
   },
@@ -126,7 +137,9 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
+      "organisaatiotyyppi_08"
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -137,6 +150,7 @@
     "mergeTargetType": null,
     "childTypes": [
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   }
 ]

@@ -37,7 +37,11 @@ import {
 import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { LiitaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/LiitaOrganisaatio';
-import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import {
+    IsOnlyVakaToimipaikkaOrVakaJarjestaja,
+    resolveOrganisaatio,
+    resolveOrganisaatioTyypit,
+} from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import {
@@ -366,13 +370,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             <ValiContainer>
                 <ValiOtsikko>
                     <h3>
-                        {(organisaatioTyypit &&
-                            organisaatioTyypit[0] &&
+                        {(organisaatioTyypit?.length > 0 &&
                             organisaatioTyypitKoodisto.uri2Nimi(organisaatioTyypit[0])) ||
                             i18n.translate('LABEL_NOT_AVAILABLE')}
                     </h3>
                     <h1 style={organisaatioBase?.status === 'AKTIIVINEN' ? {} : { textDecoration: 'line-through' }}>
-                        {nimi && (nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en'])}
+                        {i18n.translateNimi(nimi)}
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
@@ -396,7 +399,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
                         </Button>
                     )}
-                    <LomakeButton onClick={handleLisaaUusiToimija} label={'LOMAKE_LISAA_UUSI_TOIMIJA'} />
+                    {!IsOnlyVakaToimipaikkaOrVakaJarjestaja(organisaatioTyypit) && (
+                        <LomakeButton onClick={handleLisaaUusiToimija} label={'LOMAKE_LISAA_UUSI_TOIMIJA'} />
+                    )}
                 </ValiNappulat>
             </ValiContainer>
             <PaaOsio>

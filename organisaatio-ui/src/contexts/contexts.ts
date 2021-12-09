@@ -68,14 +68,17 @@ export class KoodistoImpl implements Koodisto {
     constructor(koodisto: Koodi[], kieli: Language) {
         this.koodisto = koodisto.sort((a, b) => a.uri.localeCompare(b.uri));
         this.kieli = kieli;
-        this.KoodistoOptionValues = koodisto.map((koodi: Koodi) => this.uri2SelectOption(koodi.uri, koodi.versio));
+        this.KoodistoOptionValues = koodisto.map((koodi: Koodi) =>
+            this.uri2SelectOption(koodi.uri, false, koodi.versio)
+        );
     }
 
-    uri2SelectOption(uri: KoodiUri, versio?: number): KoodistoSelectOption {
+    uri2SelectOption(uri: KoodiUri, disabled = false, versio?: number): KoodistoSelectOption {
         const label = this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`));
         return {
             value: label === '' ? label : `${uri}${versio ? `#${versio}` : ''}`,
             label,
+            disabled,
         };
     }
 
