@@ -32,7 +32,7 @@ public class Www extends Yhteystieto {
 
     // Huom. Alunperin www pattern tuli tuolta: fi.vm.sade.generic.common.validation.ValidationConstants.WWW_PATTERN;
     @NotNull
-    @Pattern(regexp = "^(https?)(:\\/\\/)([-a-zA-Z0-9+&@#\\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%ÅåÄäÖö=~_|])", message = "{validation.invalid.www}")
+    @Pattern(regexp = "^((https?)(:\\/\\/))?([-a-zA-Z0-9+&@#\\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%ÅåÄäÖö=~_|])", message = "{validation.invalid.www}")
     private String wwwOsoite;  // TODO XSS filtteri
 
     public Www() {
