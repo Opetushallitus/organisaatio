@@ -5,7 +5,6 @@ import {
 } from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/contexts';
 import { Koodi, Koodisto } from '../types/types';
-import { mapVisibleKieletFromOpetuskielet } from './mappers';
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {
         return { label: uri, value: uri };
