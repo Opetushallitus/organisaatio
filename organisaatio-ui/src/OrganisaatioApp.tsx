@@ -4,7 +4,15 @@ import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { BASE_PATH, I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
+import {
+    BASE_PATH,
+    I18nImpl,
+    KoodistoContext,
+    KoodistoImpl,
+    LanguageContext,
+    SearchFilterContext,
+    SearchFiltersImpl,
+} from './contexts/contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
@@ -107,44 +115,46 @@ const OrganisaatioApp: React.FC = () => {
         <Router basename={BASE_PATH}>
             <ThemeProvider theme={theme}>
                 <LanguageContext.Provider value={{ language, i18n }}>
-                    <Notification />
-                    <KoodistoContext.Provider
-                        value={{
-                            postinumerotKoodisto,
-                            oppilaitoksenOpetuskieletKoodisto,
-                            maatJaValtiotKoodisto,
-                            kuntaKoodisto,
-                            ryhmaTyypitKoodisto,
-                            kayttoRyhmatKoodisto,
-                            organisaatioTyypitKoodisto,
-                            ryhmanTilaKoodisto,
-                            vuosiluokatKoodisto,
-                            oppilaitostyyppiKoodisto,
-                        }}
-                    >
-                        <Switch>
-                            <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                            <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
-                            <Route path={'/lomake/:oid'} component={LomakeSivu} />
-                            <Route path={'/ryhmat'} exact component={Ryhmat} />
-                            <Route
-                                path={'/yhteystietotyypit'}
-                                exact
-                                component={() => <Tyypit tyyppi={'yhteystietojentyyppi'} />}
-                            />
-                            <Route path={'/lisatietotyypit/muokkaus/:nimi'} component={LisatietotyypinMuokkaus} />
-                            <Route path={'/yhteystietotyypit/muokkaus'} component={YhteystietotyypinMuokkaus} />
-                            <Route
-                                exact
-                                path={'/ryhmat/uusi'}
-                                component={(props) => <RyhmanMuokkaus {...props} isNew />}
-                            />
-                            <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
-                            <Route path={'*'}>
-                                <ErrorPage>{'ERROR_404'}</ErrorPage>
-                            </Route>
-                        </Switch>
-                    </KoodistoContext.Provider>
+                    <SearchFilterContext.Provider value={{ searchFilters: new SearchFiltersImpl() }}>
+                        <Notification />
+                        <KoodistoContext.Provider
+                            value={{
+                                postinumerotKoodisto,
+                                oppilaitoksenOpetuskieletKoodisto,
+                                maatJaValtiotKoodisto,
+                                kuntaKoodisto,
+                                ryhmaTyypitKoodisto,
+                                kayttoRyhmatKoodisto,
+                                organisaatioTyypitKoodisto,
+                                ryhmanTilaKoodisto,
+                                vuosiluokatKoodisto,
+                                oppilaitostyyppiKoodisto,
+                            }}
+                        >
+                            <Switch>
+                                <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
+                                <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
+                                <Route path={'/lomake/:oid'} component={LomakeSivu} />
+                                <Route path={'/ryhmat'} exact component={Ryhmat} />
+                                <Route
+                                    path={'/yhteystietotyypit'}
+                                    exact
+                                    component={() => <Tyypit tyyppi={'yhteystietojentyyppi'} />}
+                                />
+                                <Route path={'/lisatietotyypit/muokkaus/:nimi'} component={LisatietotyypinMuokkaus} />
+                                <Route path={'/yhteystietotyypit/muokkaus'} component={YhteystietotyypinMuokkaus} />
+                                <Route
+                                    exact
+                                    path={'/ryhmat/uusi'}
+                                    component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                                />
+                                <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
+                                <Route path={'*'}>
+                                    <ErrorPage>{'ERROR_404'}</ErrorPage>
+                                </Route>
+                            </Switch>
+                        </KoodistoContext.Provider>
+                    </SearchFilterContext.Provider>
                 </LanguageContext.Provider>
             </ThemeProvider>
         </Router>
