@@ -29,7 +29,7 @@ async function errorHandlingWrapper<A = never, B = AxiosResponse<A>>(
     workhorse: () => Promise<B>
 ): Promise<B | undefined> {
     try {
-        return await workhorse();
+        return workhorse();
     } catch (error) {
         handleError(error);
         return Promise.resolve(undefined);
