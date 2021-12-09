@@ -44,7 +44,7 @@ async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
 }
 
 async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
-    return await errorHandlingWrapper(async () => {
+    return errorHandlingWrapper(async () => {
         const { data } = await Axios.put<{ organisaatio: ApiOrganisaatio }>(
             `${baseUrl}${organisaatio.oid}`,
             organisaatio
