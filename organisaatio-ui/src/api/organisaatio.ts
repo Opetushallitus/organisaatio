@@ -44,7 +44,7 @@ async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
 }
 
 async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
-    const promise = await errorHandlingWrapper(async () => {
+    return await errorHandlingWrapper(async () => {
         const { data } = await Axios.put<{ organisaatio: ApiOrganisaatio }>(
             `${baseUrl}${organisaatio.oid}`,
             organisaatio
@@ -52,24 +52,25 @@ async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
         success({ message: 'MESSAGE_TALLENNUS_ONNISTUI' });
         return data.organisaatio;
     });
-    return promise;
 }
+
 async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaOid[]> {
     if (oids.length === 0) return [];
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
-    const polku = oids.map((oid: string) => ({
+    return oids.map((oid: string) => ({
         oid,
         nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).nimi,
     }));
-    return polku;
 }
+
 async function readOrganisaatioPaivittaja(oid: string): Promise<OrganisaatioPaivittaja | undefined> {
-    if (oid.length == 0) return {};
+    if (oid.length === 0) return {};
     return errorHandlingWrapper(async () => {
         const { data } = await Axios.get<OrganisaatioPaivittaja>(`${baseUrl}${oid}/paivittaja`);
         return data;
     });
 }
+
 async function searchOrganisation({
     searchStr,
     aktiiviset = true,
@@ -93,6 +94,7 @@ async function searchOrganisation({
 
     return data.organisaatiot;
 }
+
 async function readOrganisaatio(oid: string, parent?: boolean) {
     return errorHandlingWrapper(async () => {
         const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
@@ -379,6 +381,7 @@ function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
     } {
         return { alkuPvm: a.alkuPvm, loppuPvm: a.loppuPvm, child: a.kohde, parent: a.organisaatio };
     }
+
     return {
         childSuhteet: data.childSuhteet,
         parentSuhteet: data.parentSuhteet,
