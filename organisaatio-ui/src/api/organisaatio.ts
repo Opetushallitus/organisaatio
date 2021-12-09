@@ -240,6 +240,7 @@ function mapUiOrganisaatioToApiToUpdate(
         muutOppilaitosTyyppiUris,
         vuosiluokat,
         lakkautusPvm,
+        ytunnus,
     } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
@@ -259,6 +260,7 @@ function mapUiOrganisaatioToApiToUpdate(
         status,
         yhteystiedot,
         nimet,
+        ytunnus,
         nimi: uusiNimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
