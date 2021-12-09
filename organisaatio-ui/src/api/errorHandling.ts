@@ -28,12 +28,10 @@ function handleError(error) {
 async function errorHandlingWrapper<A = never, B = AxiosResponse<A>>(
     workhorse: () => Promise<B>
 ): Promise<B | undefined> {
-    try {
-        return workhorse();
-    } catch (error) {
-        handleError(error);
+    return workhorse().catch((e) => {
+        handleError(e);
         return Promise.resolve(undefined);
-    }
+    });
 }
 
 function useErrorHandlingWrapper(workhorse) {
