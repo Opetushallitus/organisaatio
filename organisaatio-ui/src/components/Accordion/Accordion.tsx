@@ -1,11 +1,10 @@
 import React, { FormEvent, ReactElement } from 'react';
 import styles from './Accordion.module.css';
-
 import {
-    Accordion,
+    Accordion as ReactAccordion,
     AccordionItem,
-    AccordionItemHeading,
     AccordionItemButton,
+    AccordionItemHeading,
     AccordionItemPanel,
 } from 'react-accessible-accordion';
 
@@ -18,7 +17,7 @@ type props = {
     handleUuidChange?: (Uuids: string[]) => void;
 };
 
-export default function OrganisaatioMuokkausAccordion(props: props) {
+export default function Accordion(props: props) {
     const {
         lomakkeet,
         otsikot,
@@ -29,7 +28,7 @@ export default function OrganisaatioMuokkausAccordion(props: props) {
     } = props;
     const isPreExpandedInUse = !!preExpanded;
     return (
-        <Accordion onChange={handleUuidChange} className={styles.Accordion}>
+        <ReactAccordion onChange={handleUuidChange} className={styles.Accordion}>
             {lomakkeet.map((lomake, index) => {
                 const id = (lomake.key as string) || `${index}`;
                 return (
@@ -48,10 +47,12 @@ export default function OrganisaatioMuokkausAccordion(props: props) {
                                 <span className={styles.OtsikkoTeksti}>{`${index + 1}. ${otsikot[index]}`}</span>
                             </AccordionItemButton>
                         </AccordionItemHeading>
-                        <AccordionItemPanel className={styles.AccordionPanel}>{lomake}</AccordionItemPanel>
+                        {preExpanded === id && (
+                            <AccordionItemPanel className={styles.AccordionPanel}>{lomake}</AccordionItemPanel>
+                        )}
                     </AccordionItem>
                 );
             })}
-        </Accordion>
+        </ReactAccordion>
     );
 }

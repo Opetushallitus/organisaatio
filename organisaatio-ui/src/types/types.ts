@@ -18,6 +18,7 @@ export type Koodi = {
 export type KoodistoSelectOption = {
     value: KoodiUri;
     label: string;
+    disabled?: boolean;
 };
 
 // lokalisointi
@@ -189,11 +190,16 @@ export type DynamicField = {
     type: 'INPUT' | 'SELECT' | 'MULTI_SELECT';
     when: { name: Path<Perustiedot>; value: string };
 };
+
+type OrganisaatioChildType = {
+    type: string;
+    disabled?: boolean;
+};
 export type ResolvedRakenne = {
     type: string[];
     moveTargetType: string[];
     mergeTargetType: string[];
-    childTypes: string[];
+    childTypes: OrganisaatioChildType[];
     showYtj: boolean;
     dynamicFields: DynamicField[];
 };
@@ -202,7 +208,7 @@ export type Rakenne = {
     type: string;
     moveTargetType: string | null;
     mergeTargetType: string | null;
-    childTypes: string[];
+    childTypes: OrganisaatioChildType[];
     showYtj: boolean;
     dynamicFields: DynamicField[];
 };
@@ -222,7 +228,7 @@ export type Koodisto = {
     nimet: () => string[];
     koodit: () => Koodi[];
     selectOptions: () => KoodistoSelectOption[];
-    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
+    uri2SelectOption: (uri: KoodiUri, disabled?: boolean, versio?: number) => KoodistoSelectOption;
 };
 
 export type KoodistoContextType = {

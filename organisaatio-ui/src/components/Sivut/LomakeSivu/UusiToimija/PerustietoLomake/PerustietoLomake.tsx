@@ -80,7 +80,13 @@ export default function PerustietoLomake({
                         name={'organisaatioTyypit'}
                         defaultValue={[]}
                         render={({ field: { ref, ...rest } }) => {
-                            return <CheckboxGroup {...rest} options={resolvedTyypit} />;
+                            return (
+                                <CheckboxGroup
+                                    {...rest}
+                                    error={!!validationErrors['organisaatioTyypit']}
+                                    options={resolvedTyypit}
+                                />
+                            );
                         }}
                     />
                 </Kentta>
@@ -88,7 +94,7 @@ export default function PerustietoLomake({
             {rakenne.showYtj && (
                 <>
                     <Rivi>
-                        <Kentta label={''}>
+                        <Kentta isRequired label={''}>
                             <RadioGroup
                                 value={onYunnus.toString()}
                                 options={[
@@ -125,7 +131,7 @@ export default function PerustietoLomake({
             )}
 
             <Rivi>
-                <Kentta label={'PERUSTIETO_PERUSTAMISPAIVA'}>
+                <Kentta isRequired label={'PERUSTIETO_PERUSTAMISPAIVA'}>
                     <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
                         form={formControl}
@@ -134,7 +140,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
+                <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -166,7 +172,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label={'PERUSTIETO_MAA'}>
+                <Kentta isRequired label={'PERUSTIETO_MAA'}>
                     <Controller
                         control={formControl}
                         name={'maa'}
@@ -183,7 +189,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label={'PERUSTIETO_OPETUSKIELI'}>
+                <Kentta isRequired label={'PERUSTIETO_OPETUSKIELI'}>
                     <Controller
                         control={formControl}
                         name={'kielet'}
