@@ -38,7 +38,7 @@ import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeS
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { LiitaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/LiitaOrganisaatio';
 import {
-    IsOnlyVakaToimipaikkaOrVakaJarjestaja,
+    showCreateChildButton,
     resolveOrganisaatio,
     resolveOrganisaatioTyypit,
 } from '../../../tools/organisaatio';
@@ -107,7 +107,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setValue: setPerustiedotValue,
         getValues: getPerustiedotValues,
         register: registerPerustiedot,
-        formState: { errors: perustiedotValidationErrors },
+        formState: { errors: perustiedotValidationErrors, isDirty },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
         watch: watchPerustiedot,
@@ -399,8 +399,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
                         </Button>
                     )}
-                    {!IsOnlyVakaToimipaikkaOrVakaJarjestaja(organisaatioTyypit) && (
-                        <LomakeButton onClick={handleLisaaUusiToimija} label={'LOMAKE_LISAA_UUSI_TOIMIJA'} />
+                    {showCreateChildButton(resolvedOrganisaatioRakenne) && (
+                        <LomakeButton
+                            disabled={isDirty}
+                            onClick={handleLisaaUusiToimija}
+                            label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
+                        />
                     )}
                 </ValiNappulat>
             </ValiContainer>

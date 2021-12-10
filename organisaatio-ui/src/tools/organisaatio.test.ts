@@ -1,10 +1,6 @@
-import {
-    IsOnlyVakaToimipaikkaOrVakaJarjestaja,
-    resolveOrganisaatioTyypit,
-    resolveParentOidByQuery,
-} from './organisaatio';
+import { showCreateChildButton, resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/contexts';
-import { Koodi, Koodisto } from '../types/types';
+import { Koodi, Koodisto, ResolvedRakenne } from '../types/types';
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {
         return { label: uri, value: uri };
@@ -150,15 +146,106 @@ describe('resolveParentOidByQuery', () => {
     });
 });
 
-describe('IsOnlyVakaToimipaikkaOrVakaJarjestaja', () => {
-    test.each([
-        ['Returns true if organisaatiotyyppi only is Varhaiskasvatuksen toimipaikka', ['organisaatiotyyppi_08'], true],
-        ['Returns true if organisaatiotyyppi only is Varhaiskasvatuksen jarjestaja', ['organisaatiotyyppi_08'], true],
-        [
-            'Returns false if organisaatiotyyppi is Varhaiskasvatuksen jarjestaja and something else',
-            ['organisaatiotyyppi_08', 'organisaatiotyyppi_06'],
-            false,
+describe('showCreateChildButton', () => {
+    const onlyKoulutustoimijaRakenne = {
+        type: ['organisaatiotyyppi_01'],
+        childTypes: [
+            {
+                type: 'organisaatiotyyppi_02',
+            },
+            {
+                type: 'organisaatiotyyppi_04',
+            },
         ],
-        ['Returns false if organisaatiotyypit is empty', [], false],
-    ])('%s', (_, input, expected) => expect(IsOnlyVakaToimipaikkaOrVakaJarjestaja(input)).toStrictEqual(expected));
+        moveTargetType: [],
+        mergeTargetType: [],
+        showYtj: false,
+        dynamicFields: [],
+    };
+
+    const onlyDisabledRakene = {
+        type: ['organisaatiotyyppi_08', 'organisaatiotyyppi_07'],
+        childTypes: [
+            {
+                type: 'organisaatiotyyppi_08',
+                disabled: true,
+            },
+            {
+                type: 'organisaatiotyyppi_07',
+                disabled: true,
+            },
+        ],
+        moveTargetType: [],
+        mergeTargetType: [],
+        showYtj: false,
+        dynamicFields: [],
+    };
+    const oneDisabledRakenne = {
+        type: ['organisaatiotyyppi_08', 'organisaatiotyyppi_03'],
+        childTypes: [
+            {
+                type: 'organisaatiotyyppi_08',
+                disabled: true,
+            },
+            {
+                type: 'organisaatiotyyppi_03',
+            },
+        ],
+        moveTargetType: [],
+        mergeTargetType: [],
+        showYtj: false,
+        dynamicFields: [],
+    };
+
+    const allValidRakenne = {
+        type: ['organisaatiotyyppi_06', 'organisaatiotyyppi_03'],
+        childTypes: [
+            {
+                type: 'organisaatiotyyppi_06',
+                disabled: true,
+            },
+            {
+                type: 'organisaatiotyyppi_03',
+            },
+        ],
+        moveTargetType: [],
+        mergeTargetType: [],
+        showYtj: false,
+        dynamicFields: [],
+    };
+
+    const emptyTypeRakenne = {
+        type: [],
+        childTypes: [
+            {
+                type: 'organisaatiotyyppi_06',
+                disabled: true,
+            },
+            {
+                type: 'organisaatiotyyppi_03',
+            },
+        ],
+        moveTargetType: [],
+        mergeTargetType: [],
+        showYtj: false,
+        dynamicFields: [],
+    };
+    const emptyChildrenRakenne = {
+        type: ['organisaatiotyyppi_03'],
+        childTypes: [],
+        moveTargetType: [],
+        mergeTargetType: [],
+        showYtj: false,
+        dynamicFields: [],
+    };
+    test.each([
+        ['Returns false if organisaatiotyyppi childtypes includes only disabled', onlyDisabledRakene, false],
+        ['Returns true if only koulutustoimija is selected', onlyKoulutustoimijaRakenne, true],
+        ['Returns true if organisaatiotyyppi childtypes one valid', oneDisabledRakenne, true],
+        ['Returns true if all organisaatiotyyppi childtypes are valid', allValidRakenne, true],
+        ['Returns false organisaatiotyypit is empty', emptyTypeRakenne, false],
+        ['Returns false when organisaatiotyyppi childtypes is empty', emptyChildrenRakenne, false],
+    ])('%s', (_, input, expected) => {
+        expect(showCreateChildButton(input)).toStrictEqual(expected);
+    });
 });

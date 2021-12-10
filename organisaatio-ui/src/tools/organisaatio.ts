@@ -3,9 +3,6 @@ import { ROOT_OID } from '../contexts/contexts';
 import { ApiOrganisaatio } from '../types/apiTypes';
 import queryString from 'query-string';
 
-const VAKA_TOIMIPAIKKA_TYYPPIURI = 'organisaatiotyyppi_08';
-const VAKA_JARJESTAJA_TYYPPIURI = 'organisaatiotyyppi_07';
-
 type ResolvingOrganisaatio = { organisaatioTyypit: KoodiUri[]; oppilaitosTyyppiUri?: string; oid?: string };
 export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingOrganisaatio): ResolvedRakenne => {
     const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.organisaatioTyypit];
@@ -26,7 +23,6 @@ export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingO
                     mergeTargetType: mergeTarget,
                     moveTargetType: moveTarget,
                     childTypes: [...previous.childTypes, ...current.childTypes],
-                    disabledChildTypes: [...previous.disabledChildTypes, ...current.disabledChildTypes],
                     dynamicFields: [
                         ...previous.dynamicFields,
                         ...current.dynamicFields.filter((a) => {
@@ -42,7 +38,6 @@ export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingO
                 moveTargetType: [],
                 childTypes: [],
                 dynamicFields: [],
-                disabledChildTypes: [],
                 showYtj: false,
             }
         );
@@ -54,7 +49,7 @@ export const resolveOrganisaatioTyypit = (
 ): KoodistoSelectOption[] => {
     const parentRakenne = resolveOrganisaatio(rakenne, organisaatio);
     return parentRakenne.childTypes
-        .map((tyyppiUri) => koodisto.uri2SelectOption(tyyppiUri, parentRakenne.disabledChildTypes.includes(tyyppiUri)))
+        .map((tyyppi) => koodisto.uri2SelectOption(tyyppi.type, tyyppi.disabled))
         .sort((a, b) => a.label.localeCompare(b.label));
 };
 
@@ -74,6 +69,7 @@ export const resolveParentOidByQuery = (searchStr): string => {
     return (parentOid as string) || ROOT_OID;
 };
 
-export const IsOnlyVakaToimipaikkaOrVakaJarjestaja = (organisaatioTyypit: string[]): boolean =>
-    organisaatioTyypit?.length === 1 &&
-    (organisaatioTyypit[0] === VAKA_TOIMIPAIKKA_TYYPPIURI || organisaatioTyypit[0] === VAKA_JARJESTAJA_TYYPPIURI);
+export const showCreateChildButton = (organisaatioRakenne: ResolvedRakenne): boolean =>
+    organisaatioRakenne?.type.length > 0 &&
+    organisaatioRakenne?.childTypes.length > 0 &&
+    !!organisaatioRakenne.childTypes.find((resolvedTyyppi) => !resolvedTyyppi.disabled);

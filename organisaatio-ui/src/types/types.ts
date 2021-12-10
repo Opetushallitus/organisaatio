@@ -190,13 +190,17 @@ export type DynamicField = {
     type: 'INPUT' | 'SELECT' | 'MULTI_SELECT';
     when: { name: Path<Perustiedot>; value: string };
 };
+
+type OrganisaatioChildType = {
+    type: string;
+    disabled?: boolean;
+};
 export type ResolvedRakenne = {
     type: string[];
     moveTargetType: string[];
     mergeTargetType: string[];
-    childTypes: string[];
+    childTypes: OrganisaatioChildType[];
     showYtj: boolean;
-    disabledChildTypes: string[];
     dynamicFields: DynamicField[];
 };
 export type Rakenne = {
@@ -204,9 +208,8 @@ export type Rakenne = {
     type: string;
     moveTargetType: string | null;
     mergeTargetType: string | null;
-    childTypes: string[];
+    childTypes: OrganisaatioChildType[];
     showYtj: boolean;
-    disabledChildTypes: string[];
     dynamicFields: DynamicField[];
 };
 
