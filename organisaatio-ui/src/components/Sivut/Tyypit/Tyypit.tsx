@@ -1,16 +1,14 @@
 import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './Tyypit.module.css';
 import TyypitJaRyhmatKehys from '../TyypitJaRyhmatKehys/TyypitJaRyhmatKehys';
-import { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { useEffect } from 'react';
 import Axios from 'axios';
-import { useState } from 'react';
 import { YhteystietoTyyppi } from '../../../types/types';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import { Column } from 'react-table';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 
 const nimiMapper = (nimi: any, language: string) => {
     if (nimi.teksti && nimi.teksti.length > 0) {
@@ -43,6 +41,7 @@ const Tyypit = (props: Props) => {
                 console.error('error fetching', error);
             }
         }
+
         fetch();
     }, [props.tyyppi]);
 

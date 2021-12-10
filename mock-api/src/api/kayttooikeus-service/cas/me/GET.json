@@ -7,6 +7,6 @@
     "LANG_fi",
     "VIRKAILIJA"
   ],
-  "roles": "[\"LANG_fi\",\"USER_mbender\",\"VIRKAILIJA\"]",
+  "roles": "[\"APP_ORGANISAATIOHALLINTA\",\"APP_ORGANISAATIOHALLINTA_CRUD\",\"APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001\",\"LANG_fi\",\"USER_mbender\",\"VIRKAILIJA\"]",
   "lang": "fi"
 }

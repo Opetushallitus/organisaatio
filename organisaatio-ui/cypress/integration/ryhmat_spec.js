@@ -1,4 +1,4 @@
-import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/constants';
 
 describe('Ryhmat Page', () => {
     beforeEach(() => {});

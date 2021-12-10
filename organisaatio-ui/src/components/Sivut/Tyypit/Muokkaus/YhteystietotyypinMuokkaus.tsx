@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
 import styles from './YhteystietotyypinMuokkaus.module.css';
-import { LanguageContext } from '../../../../contexts/contexts';
 import PohjaModaali from '../../../Modaalit/PohjaModaali/PohjaModaali';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
@@ -17,6 +16,7 @@ import UOTHeader from '../../../Modaalit/UusiOsoiteTyyppi/UOTHeader';
 import UOTBody from '../../../Modaalit/UusiOsoiteTyyppi/OUTBody';
 import UOTFooter from '../../../Modaalit/UusiOsoiteTyyppi/UOTFooter';
 import useKoodisto from '../../../../api/koodisto';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
 
 const KAIKKIVALITTU = '1';
 

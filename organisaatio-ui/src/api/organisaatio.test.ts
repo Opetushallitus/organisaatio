@@ -9,7 +9,7 @@ import {
     mapUiOrganisaatioToApiToSave,
     checkAndMapValuesToYhteystiedot,
 } from './organisaatio';
-import { ROOT_OID } from '../contexts/contexts';
+import { ROOT_OID } from '../contexts/constants';
 
 const kieli = 'kieli_fi#1';
 

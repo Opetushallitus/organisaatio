@@ -19,10 +19,11 @@ import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { useContext } from 'react';
-import { KoodistoContext, LanguageContext } from '../../contexts/contexts';
+import { KoodistoContext } from '../../contexts/KoodistoContext';
 import { useState } from 'react';
 import { Ryhma, SelectOptionType, YhteystietoTyyppi } from '../../types/types';
 import { ValueType } from 'react-select';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 // TODO yhtenäistä!
 const mapPaginationSelectors = (index) => {

@@ -1,6 +1,6 @@
 import useAxios from 'axios-hooks';
 import { Lokalisointi } from '../types/types';
-import { API_CONTEXT } from '../contexts/contexts';
+import { API_CONTEXT } from '../contexts/constants';
 
 const baseUrl = `${API_CONTEXT}/lokalisointi/`;
 

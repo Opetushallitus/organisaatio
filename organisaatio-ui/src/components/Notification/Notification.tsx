@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import ReactNotification, { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
-import { LanguageContext } from '../../contexts/contexts';
+import { LanguageContext } from '../../contexts/LanguageContext';
+
 const DEFAULT_TIMEOUT = 5000;
 const MESSAGE_DEFAULTS = {
     insert: 'top',

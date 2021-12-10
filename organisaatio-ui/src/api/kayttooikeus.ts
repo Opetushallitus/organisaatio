@@ -2,6 +2,7 @@ import useAxios from 'axios-hooks';
 import { urls } from 'oph-urls-js';
 import { CASMe } from '../types/apiTypes';
 import { Language } from '../types/types';
+import { CASMeImpl } from '../contexts/CasMeContext';
 
 type CASMeApi = {
     uid: string;
@@ -14,7 +15,7 @@ type CASMeApi = {
 };
 
 export const mapApiToUI = (api: CASMeApi): CASMe => {
-    return { ...api, roles: JSON.parse(api?.roles || '[]'), lang: (api?.lang || 'fi') as Language };
+    return new CASMeImpl({ ...api, roles: JSON.parse(api?.roles || '[]'), lang: (api?.lang || 'fi') as Language });
 };
 
 export function useCAS(): { data: CASMe; loading: boolean; error: undefined } {
@@ -23,7 +24,7 @@ export function useCAS(): { data: CASMe; loading: boolean; error: undefined } {
     const [{ data, loading, error }] = useAxios<CASMeApi>(`${baseUrl}cas/me`);
     if (error) {
         return {
-            data: {
+            data: new CASMeImpl({
                 uid: '',
                 oid: '',
                 firstName: '',
@@ -31,7 +32,7 @@ export function useCAS(): { data: CASMe; loading: boolean; error: undefined } {
                 groups: [],
                 roles: [],
                 lang: 'fi' as Language,
-            },
+            }),
             loading: false,
             error: undefined,
         };

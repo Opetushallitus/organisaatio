@@ -1,4 +1,4 @@
-import { BASE_PATH } from '../../src/contexts/contexts';
+import { BASE_PATH } from '../../src/contexts/constants';
 
 describe('Ryhma view Page', () => {
     it('Can save a new ryhma', () => {

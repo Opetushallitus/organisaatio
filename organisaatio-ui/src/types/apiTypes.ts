@@ -1,5 +1,6 @@
 import { KoodiUri, Language, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde } from './types';
 
+export type ConfigurableButton = 'LOMAKE_LISAA_UUSI_TOIMIJA' | 'TAULUKKO_LISAA_UUSI_TOIMIJA' | 'BUTTON_TALLENNA';
 export type CASMe = {
     uid: string;
     oid: string;
@@ -8,6 +9,7 @@ export type CASMe = {
     groups: string[];
     roles: string[];
     lang: Language;
+    canHaveButton: (button: ConfigurableButton) => boolean;
 };
 
 export type OrganisaatioLiitos = {

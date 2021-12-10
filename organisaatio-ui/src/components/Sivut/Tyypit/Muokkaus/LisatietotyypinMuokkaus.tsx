@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import styles from './LisatietotyypinMuokkaus.module.css';
-import { LanguageContext } from '../../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Icon from '@iconify/react';
@@ -12,6 +11,7 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import Axios from 'axios';
 import useKoodisto from '../../../../api/koodisto';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
 
 const KAIKKIVALITTU = '1',
     RAJATUT_VALITTU = '0';

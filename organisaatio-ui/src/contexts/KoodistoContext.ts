@@ -1,7 +1,4 @@
-import * as React from 'react';
 import {
-    SearchFilters,
-    I18n,
     Koodi,
     KoodiArvo,
     Koodisto,
@@ -9,81 +6,8 @@ import {
     KoodistoSelectOption,
     KoodiUri,
     Language,
-    Lokalisointi,
-    Nimi,
-    Rakenne,
-    Filters,
 } from '../types/types';
-import organisaatioRakenne from './organisaatioRakenne.json';
-import { homepage } from '../../package.json';
-export const ROOT_OID = '1.2.246.562.10.00000000001';
-
-export const BASE_PATH = homepage;
-export const API_CONTEXT = `${homepage}/internal`;
-export const PUBLIC_API_CONTEXT = `${homepage}/api`;
-export const LEGACY_API_CONTEXT = `/organisaatio-service/rest`;
-export const rakenne = organisaatioRakenne as Rakenne[];
-
-export class I18nImpl implements I18n {
-    _data: Lokalisointi;
-    _language: Language;
-
-    constructor(data: Lokalisointi, language: Language) {
-        this._data = data;
-        this._language = language;
-    }
-
-    translate(key: string): string {
-        return this.translateWithLang(key, this._language);
-    }
-
-    translateWithLang(key: string, language: Language): string {
-        return this._data[language]?.[key] || key;
-    }
-
-    translateNimi = (nimi: Nimi | undefined) => {
-        return (nimi && (nimi[this._language] || nimi['fi'] || nimi['sv'] || nimi['en'])) || '';
-    };
-
-    enrichMessage = (key: string, replacements: { key: string; value: string }[]) => {
-        return replacements.reduce((previous, current) => {
-            return previous.replace(`{${current.key}}`, current.value);
-        }, this.translate(key));
-    };
-}
-
-type LanguageContextType = {
-    language: Language;
-    i18n: I18n;
-};
-
-export const LanguageContext = React.createContext<LanguageContextType>({
-    language: 'fi',
-    i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
-});
-
-export class SearchFiltersImpl implements SearchFilters {
-    filters: Filters;
-    constructor(isOPHVirkailija = false) {
-        this.filters = {
-            isOPHVirkailija: isOPHVirkailija,
-            naytaPassivoidut: false,
-            omatOrganisaatiotSelected: false,
-            searchString: '',
-        };
-    }
-
-    setFilters(filters: Filters): void {
-        this.filters = filters;
-    }
-}
-
-type SearchFiltersContextType = {
-    searchFilters: SearchFilters;
-};
-export const SearchFilterContext = React.createContext<SearchFiltersContextType>({
-    searchFilters: new SearchFiltersImpl(),
-});
+import * as React from 'react';
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];

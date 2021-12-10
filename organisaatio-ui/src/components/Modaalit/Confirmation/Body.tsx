@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
 import styles from './Confirmation.module.css';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 
 export default function Body({
     messageKey,

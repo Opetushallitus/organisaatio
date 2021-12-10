@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/constants';
 
 const Y_TUNNUS = '2627679-5';
 beforeEach(() => {

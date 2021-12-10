@@ -16,13 +16,14 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { LanguageContext, SearchFilterContext } from '../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { searchOrganisation } from '../../../api/organisaatio';
 import { Filters } from '../../../types/types';
+import { LanguageContext } from '../../../contexts/LanguageContext';
+import { SearchFilterContext } from '../../../contexts/SearchFiltersContext';
 
 const SEARCH_LENGTH = 3;
 const mapPaginationSelectors = (index) => {
@@ -31,16 +32,14 @@ const mapPaginationSelectors = (index) => {
 };
 
 type OrganisaatioHakuTaulukkoProps = {
-    isOPHVirkailija: boolean;
     tableColumns: Column<ApiOrganisaatio>[];
 };
 
 type HakufiltteritProps = {
-    isOPHVirkailija: boolean;
     setOrganisaatiot: (data: ApiOrganisaatio[]) => void;
 };
 
-function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps) {
+function Hakufiltterit({ setOrganisaatiot }: HakufiltteritProps) {
     const { i18n } = useContext(LanguageContext);
     const { searchFilters } = useContext(SearchFilterContext);
     const [filters, setFilters] = useState<Filters>(searchFilters.filters);
@@ -123,10 +122,7 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
     );
 }
 
-export default function OrganisaatioHakuTaulukko({
-    isOPHVirkailija,
-    tableColumns = [],
-}: OrganisaatioHakuTaulukkoProps) {
+export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: OrganisaatioHakuTaulukkoProps) {
     const { i18n } = useContext(LanguageContext);
 
     const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
@@ -172,7 +168,7 @@ export default function OrganisaatioHakuTaulukko({
 
     return (
         <div>
-            <Hakufiltterit isOPHVirkailija={isOPHVirkailija} setOrganisaatiot={setOrganisaatiot} />
+            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} />
             <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
                 <thead>
                     {headerGroups.map((headerGroup: HeaderGroup<ApiOrganisaatio>) => (

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
+import { KoodistoContext } from '../../../contexts/KoodistoContext';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
