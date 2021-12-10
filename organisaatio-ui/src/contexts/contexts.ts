@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+    SearchFilters,
     I18n,
     Koodi,
     KoodiArvo,
@@ -11,6 +12,7 @@ import {
     Lokalisointi,
     Nimi,
     Rakenne,
+    Filters,
 } from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
 import { homepage } from '../../package.json';
@@ -58,6 +60,29 @@ type LanguageContextType = {
 export const LanguageContext = React.createContext<LanguageContextType>({
     language: 'fi',
     i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
+});
+
+export class SearchFiltersImpl implements SearchFilters {
+    filters: Filters;
+    constructor(isOPHVirkailija = false) {
+        this.filters = {
+            isOPHVirkailija: isOPHVirkailija,
+            naytaPassivoidut: false,
+            omatOrganisaatiotSelected: false,
+            searchString: '',
+        };
+    }
+
+    setFilters(filters: Filters): void {
+        this.filters = filters;
+    }
+}
+
+type SearchFiltersContextType = {
+    searchFilters: SearchFilters;
+};
+export const SearchFilterContext = React.createContext<SearchFiltersContextType>({
+    searchFilters: new SearchFiltersImpl(),
 });
 
 export class KoodistoImpl implements Koodisto {

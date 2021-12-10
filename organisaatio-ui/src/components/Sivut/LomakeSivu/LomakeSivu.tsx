@@ -376,8 +376,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             organisaatioTyypitKoodisto.uri2Nimi(organisaatioTyypit[0])) ||
                             i18n.translate('LABEL_NOT_AVAILABLE')}
                     </h3>
-                    <h1 style={organisaatioBase?.status === 'AKTIIVINEN' ? {} : { textDecoration: 'line-through' }}>
+                    <h1>
                         {i18n.translateNimi(nimi)}
+                        {organisaatioBase?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
 import {
     Cell,
@@ -16,12 +16,13 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { LanguageContext } from '../../../contexts/contexts';
+import { LanguageContext, SearchFilterContext } from '../../../contexts/contexts';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { searchOrganisation } from '../../../api/organisaatio';
+import { Filters } from '../../../types/types';
 
 const SEARCH_LENGTH = 3;
 const mapPaginationSelectors = (index) => {
@@ -33,12 +34,6 @@ type OrganisaatioHakuTaulukkoProps = {
     isOPHVirkailija: boolean;
     tableColumns: Column<ApiOrganisaatio>[];
 };
-type Filters = {
-    searchString: string;
-    naytaPassivoidut: boolean;
-    isOPHVirkailija: boolean;
-    omatOrganisaatiotSelected: boolean;
-};
 
 type HakufiltteritProps = {
     isOPHVirkailija: boolean;
@@ -47,13 +42,11 @@ type HakufiltteritProps = {
 
 function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps) {
     const { i18n } = useContext(LanguageContext);
-    const [filters, setFilters] = useState<Filters>({
-        searchString: '',
-        naytaPassivoidut: false,
-        isOPHVirkailija: isOPHVirkailija,
-        omatOrganisaatiotSelected: true,
-    });
-    const runQuery = () => {
+    const { searchFilters } = useContext(SearchFilterContext);
+    const [filters, setFilters] = useState<Filters>(searchFilters.filters);
+    const [searchString, setSearchString] = useState<string>(filters.searchString);
+    useEffect(() => {
+        searchFilters.setFilters(filters);
         if (filters.searchString.length >= SEARCH_LENGTH) {
             (async () => {
                 const searchResult = await searchOrganisation({
@@ -63,7 +56,8 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
                 setOrganisaatiot(searchResult);
             })();
         }
-    };
+    }, [filters, setOrganisaatiot, searchFilters]);
+
     return (
         <div>
             {!filters.isOPHVirkailija && (
@@ -90,13 +84,13 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
                 <div className={styles.FiltteriInputOsa}>
                     <Input
                         placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
-                        value={filters.searchString || ''}
+                        value={searchString || ''}
                         onChange={(e) => {
-                            setFilters({ ...filters, searchString: e.target.value });
+                            setSearchString(e.target.value);
                         }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                runQuery();
+                                setFilters({ ...filters, searchString: searchString });
                             }
                         }}
                         suffix={
@@ -267,9 +261,9 @@ export default function OrganisaatioHakuTaulukko({
                             setPageSize(Number(e.target.value));
                         }}
                     >
-                        {[10, 20, 30, 40, 50].map((pageSize) => (
-                            <option key={pageSize} value={pageSize}>
-                                {pageSize}
+                        {[10, 20, 30, 40, 50].map((pageSizeOption) => (
+                            <option key={pageSizeOption} value={pageSizeOption}>
+                                {pageSizeOption}
                             </option>
                         ))}
                     </select>
