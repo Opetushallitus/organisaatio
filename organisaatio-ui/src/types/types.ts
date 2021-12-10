@@ -243,3 +243,14 @@ export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
 export type SupportedKieli = 'fi' | 'sv' | 'en';
 
 export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
+
+export type SearchFilters = {
+    filters: Filters;
+    setFilters: (filters: Filters) => void;
+};
+export type Filters = {
+    searchString: string;
+    naytaPassivoidut: boolean;
+    isOPHVirkailija: boolean;
+    omatOrganisaatiotSelected: boolean;
+};
