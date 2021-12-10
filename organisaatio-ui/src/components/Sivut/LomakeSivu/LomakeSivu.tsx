@@ -37,11 +37,7 @@ import {
 import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { LiitaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/LiitaOrganisaatio';
-import {
-    showCreateChildButton,
-    resolveOrganisaatio,
-    resolveOrganisaatioTyypit,
-} from '../../../tools/organisaatio';
+import { showCreateChildButton, resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import {
