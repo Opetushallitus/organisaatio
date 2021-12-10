@@ -364,6 +364,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             defaultValue={
               Array [
                 Object {
+                  "disabled": false,
                   "label": "",
                   "value": "",
                 },
@@ -518,6 +519,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
             defaultValue={
               Array [
                 Object {
+                  "disabled": false,
                   "label": "",
                   "value": "",
                 },
