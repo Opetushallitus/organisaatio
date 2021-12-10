@@ -54,11 +54,8 @@ const TaulukkoSivu = (props) => {
             Cell: ({ row }) => {
                 return (
                     <Link to={`/lomake/${row.original.oid}`}>
-                        {row.original.nimi[language] ||
-                            row.original.nimi.fi ||
-                            row.original.nimi.sv ||
-                            row.original.nimi.fi ||
-                            row.original.nimi.en}
+                        {i18n.translateNimi(row.original.nimi)}
+                        {row.original?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
                     </Link>
                 );
             },
