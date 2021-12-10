@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,9 +25,8 @@ public class YTJServiceImpl implements YTJService {
     private static final Logger LOG = LoggerFactory.getLogger(YTJServiceImpl.class);
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String HASH_ALGORITHM = "SHA-1";
-    private static final String ENCODING = "UTF-8";
-
-    private final String tiketti = ""; // ???
+    private static final String DEFAULT_ERROR_MESSAGE = "Error connecting to service";
+    private static final String TIKETTI = ""; // ???
     private final YtjDtoMapperHelper mapper = new YtjDtoMapperHelper();
     private final String asiakastunnus;
     private final String salainenavain;
@@ -41,7 +41,7 @@ public class YTJServiceImpl implements YTJService {
 
     public String createHashHex(String strToHash) {
         try {
-            byte[] strBytes = strToHash.getBytes(ENCODING);
+            byte[] strBytes = strToHash.getBytes(StandardCharsets.UTF_8);
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
             byte[] digestBytes = md.digest(strBytes);
 
@@ -76,24 +76,20 @@ public class YTJServiceImpl implements YTJService {
                     asiakastunnus,
                     aikaleima,
                     tarkiste,
-                    tiketti);
+                    TIKETTI);
         } catch (SOAPFaultException exp) {
-            LOG.error("SOAPException connecting to YTJ-service : " + exp.getFault().getFaultCode() + " " + exp.getFault().getFaultString(), exp);
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
 
         } catch (Exception commonExp) {
-            LOG.error("Exception occured in YTJ-service : " + commonExp.toString(), commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
 
         if (vastaus == null) {
-            LOG.error("Exception in YTJ-service : reply was null");
-            throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service");
+            throw new YtjConnectionException(YtjExceptionType.OTHER, DEFAULT_ERROR_MESSAGE);
         }
 
         if (vastaus.getYritysHaku() == null) {
             if (vastaus.getVirheTiedot() != null) {
-                LOG.error("Exception occurred when connecting to YTJ-service: " + vastaus.getVirheTiedot().getMessage());
                 throw new YtjConnectionException(YtjExceptionType.OTHER, vastaus.getVirheTiedot().getMessage());
             } else {
                 throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service, vastaus  : "
@@ -129,17 +125,15 @@ public class YTJServiceImpl implements YTJService {
                     asiakastunnus,
                     aikaleima,
                     tarkiste,
-                    tiketti);
+                    TIKETTI);
         } catch (SOAPFaultException exp) {
-            LOG.error("SOAPFaultException : " + exp.getFault().getFaultString(), exp);
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
         } catch (Exception commonExp) {
-            LOG.error("Unknown exception in YTJ-service : " + commonExp, commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
         if (vastaus == null) {
             LOG.error("YTJ service returned null reply");
-            throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service");
+            throw new YtjConnectionException(YtjExceptionType.OTHER, DEFAULT_ERROR_MESSAGE);
         }
         return mapper.mapYritysTiedotV2DTOtoYTJDTO(vastaus);
     }
@@ -160,20 +154,18 @@ public class YTJServiceImpl implements YTJService {
                     asiakastunnus,
                     aikaleima,
                     tarkiste,
-                    tiketti);
+                    TIKETTI);
 
         } catch (SOAPFaultException exp) {
-            LOG.error("SOAPFaultException : " + exp.getFault().getFaultString(), exp);
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
 
         } catch (Exception commonExp) {
-            LOG.error("Unknown exception in YTJ-service : " + commonExp, commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
 
         if (vastaus.getYritysTiedotV2DTO().get(0).getVirheTiedot() != null) {
             LOG.error("YTJ service returned null reply");
-            throw new YtjConnectionException(YtjExceptionType.OTHER, "Error connecting to service");
+            throw new YtjConnectionException(YtjExceptionType.OTHER, DEFAULT_ERROR_MESSAGE);
         }
 
         return vastaus.getYritysTiedotV2DTO()
