@@ -36,7 +36,6 @@ const OrganisaatioApp: React.FC = () => {
     registerLocale('en', enGB);
 
     const { data: casData, loading: casDataLoading, error: casDataError } = useCAS();
-    console.log(casData?.roles);
     const { data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError } = useLokalisaatio();
     const { data: kunnat, loading: kunnatLoading, error: kunnatError } = useKoodisto('KUNTA');
     const { data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError } = useKoodisto('RYHMATYYPIT');
