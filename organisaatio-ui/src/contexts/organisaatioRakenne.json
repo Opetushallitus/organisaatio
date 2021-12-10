@@ -6,11 +6,21 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_01",
-      "organisaatiotyyppi_05",
-      "organisaatiotyyppi_06",
-      "organisaatiotyyppi_07",
-      "organisaatiotyyppi_09"
+      {
+        "type": "organisaatiotyyppi_01"
+      },
+      {
+        "type": "organisaatiotyyppi_05"
+      },
+      {
+        "type": "organisaatiotyyppi_06"
+      },
+      {
+        "type": "organisaatiotyyppi_07"
+      },
+      {
+        "type": "organisaatiotyyppi_09"
+      }
     ],
     "dynamicFields": []
   },
@@ -21,8 +31,12 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_02",
-      "organisaatiotyyppi_04"
+      {
+        "type": "organisaatiotyyppi_02"
+      },
+      {
+        "type": "organisaatiotyyppi_04"
+      }
     ],
     "dynamicFields": []
   },
@@ -33,7 +47,9 @@
     "moveTargetType": "organisaatiotyyppi_01",
     "mergeTargetType": "organisaatiotyyppi_02",
     "childTypes": [
-      "organisaatiotyyppi_03"
+      {
+        "type": "organisaatiotyyppi_03"
+      }
     ],
     "dynamicFields": [
       {
@@ -72,7 +88,9 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_03"
+      {
+        "type": "organisaatiotyyppi_03"
+      }
     ],
     "dynamicFields": []
   },
@@ -84,6 +102,7 @@
     "mergeTargetType": null,
     "childTypes": [
     ],
+    "disabledChildTypes": [],
     "dynamicFields": []
   },
   {
@@ -93,8 +112,12 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_03",
-      "organisaatiotyyppi_05"
+      {
+        "type": "organisaatiotyyppi_03"
+      },
+      {
+        "type": "organisaatiotyyppi_05"
+      }
     ],
     "dynamicFields": []
   },
@@ -105,7 +128,9 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_06"
+      {
+        "type": "organisaatiotyyppi_06"
+      }
     ],
     "dynamicFields": []
   },
@@ -116,7 +141,10 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_08"
+      {
+        "type": "organisaatiotyyppi_08",
+        "disabled": true
+      }
     ],
     "dynamicFields": []
   },
@@ -127,7 +155,10 @@
     "moveTargetType": null,
     "mergeTargetType": null,
     "childTypes": [
-      "organisaatiotyyppi_08"
+      {
+        "type": "organisaatiotyyppi_08",
+        "disabled": true
+      }
     ],
     "dynamicFields": []
   },

@@ -53,10 +53,10 @@ const KenttaLyhyt = ({ label, children, isRequired = false }) => {
         </div>
     );
 };
-const LomakeButton = ({ onClick, label }) => {
+const LomakeButton = ({ onClick, label, ...rest }) => {
     const { i18n } = useContext(LanguageContext);
     return (
-        <Button className={styles.Nappi} variant={'outlined'} onClick={onClick}>
+        <Button className={styles.Nappi} variant={'outlined'} onClick={onClick} {...rest}>
             {i18n.translate(label)}
         </Button>
     );

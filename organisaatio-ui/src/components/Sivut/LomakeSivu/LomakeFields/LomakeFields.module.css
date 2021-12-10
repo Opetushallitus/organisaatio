@@ -70,7 +70,7 @@
 }
 .KenttaLyhyt {
     margin-right: 2rem;
-    width: 5rem;
+    max-width: 50%;
 }
 
 .AvainKevyestiBoldattu {

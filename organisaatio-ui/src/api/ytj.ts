@@ -87,7 +87,7 @@ async function getByYTunnus(yTunnus: string, koodistot: KoodistoContextType): Pr
     });
 }
 
-async function searchByName(name: string): Promise<YtjHaku[]> {
+async function searchByName(name: string): Promise<YtjHaku[] | undefined> {
     return errorHandlingWrapper(async () => {
         const { data } = await Axios.get<YtjHaku[]>(`${baseUrl}hae`, { params: { nimi: name } });
         return data;

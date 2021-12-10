@@ -43,7 +43,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
             if (data) setYtjTiedot([data]);
         } else {
             const data = await searchByName(input);
-            setYtjTiedot(data);
+            if (data) setYtjTiedot(data);
         }
     }
 

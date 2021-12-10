@@ -26,6 +26,7 @@ const MINIMAL_FILTTERIT_PROPS: FiltteritProps = {
 
 beforeEach(() => {
     jest.resetAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterAll(() => {
