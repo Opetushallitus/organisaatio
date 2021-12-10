@@ -23,7 +23,7 @@ import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/Lisatiet
 import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
-import { useCASLanguage } from './api/kayttooikeus';
+import { useCAS } from './api/kayttooikeus';
 import Loading from './components/Loading/Loading';
 import useKoodisto from './api/koodisto';
 import Notification from './components/Notification/Notification';
@@ -39,7 +39,8 @@ const OrganisaatioApp: React.FC = () => {
     registerLocale('sv', sv);
     registerLocale('en', enGB);
 
-    const { data: language, loading: languageLoading, error: languageError } = useCASLanguage();
+    const { data: casData, loading: casDataLoading, error: casDataError } = useCAS();
+    console.log(casData?.roles);
     const { data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError } = useLokalisaatio();
     const { data: kunnat, loading: kunnatLoading, error: kunnatError } = useKoodisto('KUNTA');
     const { data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError } = useKoodisto('RYHMATYYPIT');
@@ -68,7 +69,7 @@ const OrganisaatioApp: React.FC = () => {
     if (
         oppilaitoksenOpetuskieletLoading ||
         maatJaValtiotLoading ||
-        languageLoading ||
+        casDataLoading ||
         lokalisointiLoading ||
         kunnatLoading ||
         ryhmaTyypitLoading ||
@@ -84,7 +85,7 @@ const OrganisaatioApp: React.FC = () => {
     }
     if (
         oppilaitoksenOpetuskieletError ||
-        languageError ||
+        casDataError ||
         lokalisointiError ||
         kunnatError ||
         ryhmaTyypitError ||
@@ -99,22 +100,22 @@ const OrganisaatioApp: React.FC = () => {
     ) {
         return <Error />;
     }
-    const i18n = new I18nImpl(lokalisointi, language);
-    const kuntaKoodisto = new KoodistoImpl(kunnat, language);
-    const ryhmaTyypitKoodisto = new KoodistoImpl(ryhmaTyypit, language);
-    const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
-    const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, language);
-    const ryhmanTilaKoodisto = new KoodistoImpl(ryhmanTilat, language);
-    const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
-    const oppilaitoksenOpetuskieletKoodisto = new KoodistoImpl(oppilaitoksenOpetuskielet, language);
-    const postinumerotKoodisto = new KoodistoImpl(postinumerot, language);
-    const vuosiluokatKoodisto = new KoodistoImpl(vuosiluokat, language);
-    const oppilaitostyyppiKoodisto = new KoodistoImpl(oppilaitostyyppi, language);
+    const i18n = new I18nImpl(lokalisointi, casData.lang);
+    const kuntaKoodisto = new KoodistoImpl(kunnat, casData.lang);
+    const ryhmaTyypitKoodisto = new KoodistoImpl(ryhmaTyypit, casData.lang);
+    const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, casData.lang);
+    const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, casData.lang);
+    const ryhmanTilaKoodisto = new KoodistoImpl(ryhmanTilat, casData.lang);
+    const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, casData.lang);
+    const oppilaitoksenOpetuskieletKoodisto = new KoodistoImpl(oppilaitoksenOpetuskielet, casData.lang);
+    const postinumerotKoodisto = new KoodistoImpl(postinumerot, casData.lang);
+    const vuosiluokatKoodisto = new KoodistoImpl(vuosiluokat, casData.lang);
+    const oppilaitostyyppiKoodisto = new KoodistoImpl(oppilaitostyyppi, casData.lang);
 
     return (
         <Router basename={BASE_PATH}>
             <ThemeProvider theme={theme}>
-                <LanguageContext.Provider value={{ language, i18n }}>
+                <LanguageContext.Provider value={{ language: casData.lang, i18n }}>
                     <SearchFilterContext.Provider value={{ searchFilters: new SearchFiltersImpl() }}>
                         <Notification />
                         <KoodistoContext.Provider

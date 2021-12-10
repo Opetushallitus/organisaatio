@@ -6,9 +6,10 @@ export type CASMe = {
     firstName: string;
     lastName: string;
     groups: string[];
-    roles: string;
+    roles: string[];
     lang: Language;
 };
+
 export type OrganisaatioLiitos = {
     alkuPvm: string;
     loppuPvm?: string;
