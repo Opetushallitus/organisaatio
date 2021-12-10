@@ -45,7 +45,6 @@ function Hakufiltterit({ isOPHVirkailija, setOrganisaatiot }: HakufiltteritProps
     const { searchFilters } = useContext(SearchFilterContext);
     const [filters, setFilters] = useState<Filters>(searchFilters.filters);
     const [searchString, setSearchString] = useState<string>(filters.searchString);
-    console.log(searchFilters.filters);
     useEffect(() => {
         searchFilters.setFilters(filters);
         if (filters.searchString.length >= SEARCH_LENGTH) {
