@@ -1,14 +1,4 @@
 #!/bin/sh
-
 . "$(dirname "$0")/_/husky.sh"
 
-set -e
-
-git -c core.whitespace=trailing-space diff --cached --check
-
-if (( `git diff --name-only --cached | cut -d '/' -f 1 | sort | uniq | grep -v organisaatio-ui | wc -l ` )) ;
-    then
-        ./gradlew --rerun-tasks test :organisaatio-ui:uiTest -x :organisaatio-ui:bundle
-    else
-        ./gradlew --rerun-tasks :organisaatio-ui:uiTest
-fi;
+cd organisaatio-ui && npx pretty-quick --staged

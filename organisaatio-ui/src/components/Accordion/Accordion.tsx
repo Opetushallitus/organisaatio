@@ -3,9 +3,11 @@ import styles from './Accordion.module.css';
 import {
     Accordion as ReactAccordion,
     AccordionItem,
+
     AccordionItemButton,
-    AccordionItemHeading,
-    AccordionItemPanel,
+   AccordionItemHeading,
+
+        AccordionItemPanel,
 } from 'react-accessible-accordion';
 
 type props = {
