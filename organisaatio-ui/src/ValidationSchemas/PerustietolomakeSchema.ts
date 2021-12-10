@@ -10,7 +10,7 @@ export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).required(),
     ytunnus: Joi.string().allow(''),
     alkuPvm: Joi.date().required(),
-    organisaatioTyypit: Joi.array().min(1).required(),
+    organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not('organisaatiotyyppi_09').required()),
     kotipaikka: perustietoOptionSchema,
     muutKotipaikat: Joi.array(),
     maa: perustietoOptionSchema,
