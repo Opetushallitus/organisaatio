@@ -5,7 +5,9 @@ describe('Ryhmat Page', () => {
     it('Renders table of Ryhmat', () => {
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/koodisto/POSTI/koodi*`).as('postikoodit');
+        cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/ryhmat`);
+        cy.wait(['@getConfig'], { timeout: 10000 });
         cy.wait('@postikoodit', { timeout: 10000 });
         cy.get('table', { timeout: 30000 });
     });
@@ -29,7 +31,9 @@ describe('Ryhmat Page', () => {
     it('Can use table pagination', () => {
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/koodisto/POSTI/koodi*`).as('postikoodit');
+        cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/ryhmat`);
+        cy.wait(['@getConfig'], { timeout: 10000 });
         cy.wait('@postikoodit', { timeout: 10000 });
         cy.get('table').then(() => {
             cy.get('tbody').children().should('have.length', 10);
@@ -50,7 +54,9 @@ describe('Ryhmat Page', () => {
     it('Can transition to create a new ryhma organisation', () => {
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/koodisto/POSTI/koodi*`).as('postikoodit');
+        cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/ryhmat`);
+        cy.wait(['@getConfig'], { timeout: 10000 });
         cy.wait('@postikoodit', { timeout: 10000 });
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('button').first().click();
