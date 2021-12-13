@@ -1,6 +1,11 @@
 import { KoodiUri, Language, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde } from './types';
 
-export type ConfigurableButton = 'LOMAKE_LISAA_UUSI_TOIMIJA' | 'TAULUKKO_LISAA_UUSI_TOIMIJA' | 'BUTTON_TALLENNA';
+export type ConfigurableButton =
+    | 'LOMAKE_YHDISTA_ORGANISAATIO'
+    | 'LOMAKE_SIIRRA_ORGANISAATIO'
+    | 'LOMAKE_LISAA_UUSI_TOIMIJA'
+    | 'TAULUKKO_LISAA_UUSI_TOIMIJA'
+    | 'BUTTON_TALLENNA';
 export type CASMe = {
     uid: string;
     oid: string;

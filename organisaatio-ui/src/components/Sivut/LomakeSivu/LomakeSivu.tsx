@@ -385,26 +385,28 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
-                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 && (
-                        <Button
-                            onClick={() => {
-                                setSiirraOrganisaatio({ ...siirraOrganisaatio });
-                                setSiirraOrganisaatioModaaliAuki(true);
-                            }}
-                        >
-                            {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
-                        </Button>
-                    )}
-                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 && (
-                        <Button
-                            onClick={() => {
-                                setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
-                                setYhdistaOrganisaatioModaaliAuki(true);
-                            }}
-                        >
-                            {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
-                        </Button>
-                    )}
+                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO') && (
+                            <Button
+                                onClick={() => {
+                                    setSiirraOrganisaatio({ ...siirraOrganisaatio });
+                                    setSiirraOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
+                            </Button>
+                        )}
+                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_YHDISTA_ORGANISAATIO') && (
+                            <Button
+                                onClick={() => {
+                                    setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
+                                    setYhdistaOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
+                            </Button>
+                        )}
                     {showCreateChildButton(resolvedOrganisaatioRakenne) &&
                         casMe.canHaveButton('TAULUKKO_LISAA_UUSI_TOIMIJA') && (
                             <LomakeButton
