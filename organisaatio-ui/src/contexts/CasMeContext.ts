@@ -29,10 +29,9 @@ export class CASMeImpl implements CASMe {
                 ...getRoleButtons(c, 'APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001', [
                     'LOMAKE_YHDISTA_ORGANISAATIO',
                     'LOMAKE_SIIRRA_ORGANISAATIO',
-                    'LOMAKE_LISAA_UUSI_TOIMIJA',
                     'TAULUKKO_LISAA_UUSI_TOIMIJA',
                 ]),
-                ...getRoleButtons(c, 'APP_ORGANISAATIOHALLINTA_CRUD', ['BUTTON_TALLENNA']),
+                ...getRoleButtons(c, 'APP_ORGANISAATIOHALLINTA_CRUD', ['BUTTON_TALLENNA', 'LOMAKE_LISAA_UUSI_TOIMIJA']),
             ],
             [] as string[]
         );

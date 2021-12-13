@@ -408,7 +408,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             </Button>
                         )}
                     {showCreateChildButton(resolvedOrganisaatioRakenne) &&
-                        casMe.canHaveButton('TAULUKKO_LISAA_UUSI_TOIMIJA') && (
+                        casMe.canHaveButton('LOMAKE_LISAA_UUSI_TOIMIJA') && (
                             <LomakeButton
                                 disabled={isDirty}
                                 onClick={handleLisaaUusiToimija}

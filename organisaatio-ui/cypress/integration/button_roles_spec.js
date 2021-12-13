@@ -26,7 +26,7 @@ describe('Restrict buttons by roles', () => {
             cy.get('h1').contains('CHILD').should('exist');
             cy.get('button').contains('SIIRRA').should('not.exist');
             cy.get('button').contains('YHDISTA').should('not.exist');
-            cy.get('button').contains('LISAA').should('not.exist');
+            cy.get('button').contains('LISAA_UUSI').should('not.exist');
         });
     });
     it('Shows buttons with OPH roles', () => {
@@ -52,7 +52,7 @@ describe('Restrict buttons by roles', () => {
             cy.get('h1').contains('CHILD').should('exist');
             cy.get('button').contains('SIIRRA').should('exist');
             cy.get('button').contains('YHDISTA').should('exist');
-            cy.get('button').contains('LISAA').should('exist');
+            cy.get('button').contains('LISAA_UUSI').should('exist');
             cy.get('button').contains('TALLENNA').should('exist');
         });
     });
@@ -79,7 +79,7 @@ describe('Restrict buttons by roles', () => {
             cy.get('h1').contains('CHILD').should('exist');
             cy.get('button').contains('SIIRRA').should('not.exist');
             cy.get('button').contains('YHDISTA').should('not.exist');
-            cy.get('button').contains('LISAA').should('not.exist');
+            cy.get('button').contains('LISAA_UUSI').should('exist');
             cy.get('button').contains('TALLENNA').should('exist');
         });
     });
