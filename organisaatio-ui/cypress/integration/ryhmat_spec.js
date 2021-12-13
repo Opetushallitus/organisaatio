@@ -35,7 +35,7 @@ describe('Ryhmat Page', () => {
         cy.visit(`${BASE_PATH}/ryhmat`);
         cy.wait(['@getConfig'], { timeout: 10000 });
         cy.wait('@postikoodit', { timeout: 10000 });
-        cy.get('table').then(() => {
+        cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('tbody').children().should('have.length', 10);
             cy.get('button').contains('2').should('have.attr', 'color', 'secondary').click();
             cy.get('tbody').children().should('have.length', 10);
@@ -44,7 +44,7 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table näyta sivulla', () => {
-        cy.get('table').then(() => {
+        cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('tbody').children().should('have.length', 10);
             cy.get('select').last().select('30');
             cy.get('tbody').children().should('have.length', 30);
