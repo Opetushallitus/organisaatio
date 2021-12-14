@@ -10,9 +10,6 @@ import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
 import Ryhmat from './components/Sivut/Ryhmat/Ryhmat';
-import Tyypit from './components/Sivut/Tyypit/Tyypit';
-import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/LisatietotyypinMuokkaus';
-import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
 import { useCAS } from './api/kayttooikeus';
@@ -24,6 +21,7 @@ import { I18nImpl, LanguageContext } from './contexts/LanguageContext';
 import { SearchFilterContext, SearchFiltersImpl } from './contexts/SearchFiltersContext';
 import { KoodistoContext, KoodistoImpl } from './contexts/KoodistoContext';
 import { CasMeContext, CASMeImpl } from './contexts/CasMeContext';
+import Raamit from './components/Raamit/Raamit';
 
 const theme = createTheme();
 const Error = () => {
@@ -122,21 +120,12 @@ const OrganisaatioApp: React.FC = () => {
                                     oppilaitostyyppiKoodisto: new KoodistoImpl(oppilaitostyyppi, casData.lang),
                                 }}
                             >
+                                <Raamit />
                                 <Switch>
                                     <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
                                     <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
                                     <Route path={'/lomake/:oid'} component={LomakeSivu} />
                                     <Route path={'/ryhmat'} exact component={Ryhmat} />
-                                    <Route
-                                        path={'/yhteystietotyypit'}
-                                        exact
-                                        component={() => <Tyypit tyyppi={'yhteystietojentyyppi'} />}
-                                    />
-                                    <Route
-                                        path={'/lisatietotyypit/muokkaus/:nimi'}
-                                        component={LisatietotyypinMuokkaus}
-                                    />
-                                    <Route path={'/yhteystietotyypit/muokkaus'} component={YhteystietotyypinMuokkaus} />
                                     <Route
                                         exact
                                         path={'/ryhmat/uusi'}
