@@ -15,6 +15,8 @@ import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
+import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
+import Muokattu from '../../../Muokattu/Muokattu';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -211,26 +213,19 @@ const MuokkausLomake = ({
                     )}
                 </div>
             </div>
-            <div className={styles.AlaBanneri}>
+            <AlaBanneri>
+                <VersioContainer>
+                    <Muokattu oid={ryhma.oid} />
+                </VersioContainer>
                 <div>
-                    <Button
-                        name={'peruutabutton'}
-                        variant={'outlined'}
-                        className={styles.Versionappula}
-                        onClick={handlePeruuta}
-                    >
-                        {i18n.translate('BUTTON_SULJE')}
-                    </Button>
-                    <Button
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={handlePeruuta} />
+                    <LomakeButton
+                        label={'BUTTON_TALLENNA'}
                         disabled={ryhma.status === 'PASSIIVINEN'}
-                        name={'tallennabutton'}
-                        className={styles.Versionappula}
                         onClick={handleSubmit(handleTallenna)}
-                    >
-                        {i18n.translate('BUTTON_TALLENNA')}
-                    </Button>
+                    />
                 </div>
-            </div>
+            </AlaBanneri>
         </PohjaSivu>
     );
 };

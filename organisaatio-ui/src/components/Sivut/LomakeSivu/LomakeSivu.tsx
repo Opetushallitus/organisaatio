@@ -9,7 +9,6 @@ import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../co
 import {
     LiitaOrganisaatioon,
     OrganisaatioNimiJaOid,
-    OrganisaatioPaivittaja,
     ParentTiedot,
     Perustiedot,
     ResolvedRakenne,
@@ -30,20 +29,18 @@ import {
     mapUiOrganisaatioToApiToUpdate,
     mergeOrganisaatio,
     readOrganisaatio,
-    readOrganisaatioPaivittaja,
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
 import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { LiitaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/LiitaOrganisaatio';
-import { showCreateChildButton, resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit, showCreateChildButton } from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import {
     AlaBanneri,
     LomakeButton,
-    MuokattuKolumni,
     PaaOsio,
     ValiContainer,
     ValiNappulat,
@@ -51,7 +48,7 @@ import {
     VersioContainer,
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
-import moment from 'moment';
+import Muokattu from '../../Muokattu/Muokattu';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -94,7 +91,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         oppilaitostyyppiKoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
-    const [organisaatioPaivittaja, setOrganisaatioPaivittaja] = useState<OrganisaatioPaivittaja>({});
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
     );
@@ -127,9 +123,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     useEffect(() => {
         (async function () {
             const organisaatio = await readOrganisaatio(params.oid);
-            const paivittaja = await readOrganisaatioPaivittaja(params.oid);
             if (organisaatio) {
-                await resetOrganisaatio({ ...organisaatio, paivittaja });
+                await resetOrganisaatio({ ...organisaatio });
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,11 +191,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         };
     };
 
-    async function resetOrganisaatio({ organisaatio, polku, paivittaja }) {
+    async function resetOrganisaatio({ organisaatio, polku }) {
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
-        setOrganisaatioPaivittaja(paivittaja);
         const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
         if (data) {
             const {
@@ -221,8 +215,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (mergeOrganisaatioResult) {
                 const organisaatioAfterMerge = await readOrganisaatio(params.oid);
                 if (organisaatioAfterMerge) {
-                    const paivittaja = await readOrganisaatioPaivittaja(params.oid);
-                    await resetOrganisaatio({ ...organisaatioAfterMerge, paivittaja });
+                    await resetOrganisaatio({ ...organisaatioAfterMerge });
                     executeHistoria();
                 }
             }
@@ -284,8 +277,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         );
                         const organisaatio = await updateOrganisaatio(apiOrganisaatio);
                         if (organisaatio) {
-                            const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
-                            await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku, paivittaja });
+                            await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
                         }
                     } finally {
                         setIsLoading(false);
@@ -415,15 +407,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
             <AlaBanneri>
                 <VersioContainer>
-                    <MuokattuKolumni>
-                        <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
-                        <span>
-                            {organisaatioPaivittaja?.paivitysPvm
-                                ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy HH:mm:ss')
-                                : ''}{' '}
-                            {organisaatioPaivittaja?.etuNimet} {organisaatioPaivittaja?.sukuNimi}
-                        </span>
-                    </MuokattuKolumni>
+                    <Muokattu oid={params.oid} />
                 </VersioContainer>
                 <div>
                     <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
