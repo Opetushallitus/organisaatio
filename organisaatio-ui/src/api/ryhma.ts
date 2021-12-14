@@ -1,6 +1,6 @@
 import { NewRyhma, Ryhma } from '../types/types';
 import Axios, { AxiosResponse } from 'axios';
-import { LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT } from '../contexts/contexts';
+import { LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT } from '../contexts/constants';
 
 const baseUrl = `${PUBLIC_API_CONTEXT}/`;
 

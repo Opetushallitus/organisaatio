@@ -1,9 +1,9 @@
 import styles from './LomakeFields.module.css';
-import { useContext } from 'react';
-import { LanguageContext } from '../../../../contexts/contexts';
 import * as React from 'react';
+import { useContext } from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import moment from 'moment';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props) => <div className={styles.YlaBanneri}>{props.children}</div>;

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { LiitaOrganisaatioon, Option, UiOrganisaatioBase } from '../../../types/types';

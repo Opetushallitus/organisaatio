@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/constants';
 
 const Y_TUNNUS = '2627679-5';
 beforeEach(() => {
@@ -15,7 +15,7 @@ describe('New organisaatio from YTJ', () => {
         cy.clickRadioOrCheckbox('Koulutustoimija');
         cy.clickButton('HAE_YTJ_TIEDOT');
         cy.inputByName('ytjinput', Y_TUNNUS);
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/*`).as('findYtj');
+        cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/${Y_TUNNUS}`, { fixture: 'ytjHameen.json' }).as('findYtj');
         cy.clickButton('HAE_YTJTIEDOT');
         cy.wait(['@findYtj'], { timeout: 10000 });
         cy.clickButton('Hameen ammatti');
@@ -23,7 +23,7 @@ describe('New organisaatio from YTJ', () => {
         cy.intercept('POST', `${PUBLIC_API_CONTEXT}`).as('saveOrg');
         cy.clickSaveButton();
         cy.wait(['@saveOrg'], { timeout: 10000 });
-        cy.contains('Hameen ammatti-instituutti');
+        cy.contains('Hameen ammatti-instituutti').should('exist');
     });
 });
 describe('Edit organisaatio from YTJ', () => {
@@ -35,13 +35,13 @@ describe('Edit organisaatio from YTJ', () => {
             cy.wait(['@getParentOrg'], { timeout: 10000 });
             cy.clickButton('PAIVITA_YTJ_TIEDOT');
             cy.inputByName('ytjinput', Y_TUNNUS);
-            cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/*`).as('findYtj');
+            cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/${Y_TUNNUS}`, { fixture: 'ytjHameen.json' }).as('findYtj');
             cy.clickButton('HAE_YTJTIEDOT');
             cy.wait(['@findYtj'], { timeout: 10000 });
             cy.clickButton('Hameen ammatti');
             cy.intercept('PUT', `${PUBLIC_API_CONTEXT}/${response.body.organisaatio.oid}`).as('saveOrg');
             cy.clickSaveButton();
-            cy.contains('Hameen ammatti-instituutti');
+            cy.contains('Hameen ammatti-instituutti').should('exist');
         });
     });
 });

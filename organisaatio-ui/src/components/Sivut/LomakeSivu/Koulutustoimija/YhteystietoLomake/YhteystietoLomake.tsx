@@ -1,8 +1,8 @@
 import * as React from 'react';
-import styles from './YhteystietoLomake.module.css';
 import { useContext, useState } from 'react';
+import styles from './YhteystietoLomake.module.css';
 import type { SupportedKieli, Yhteystiedot } from '../../../../../types/types';
-import { svAltSchema, fiAltSchema, enAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
+import { enAltSchema, fiAltSchema, svAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import {
     Control,
     UseFormGetValues,
@@ -13,10 +13,10 @@ import {
 import { YhteystietoKortti } from './YhteystietoKortti';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
-import { LanguageContext } from '../../../../../contexts/contexts';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 import { Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 import { useFormState } from 'react-hook-form';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 export type Props = {
     opetusKielet: string[];

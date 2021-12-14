@@ -4,7 +4,7 @@ import './index.css';
 import OrganisaatioApp from './OrganisaatioApp';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import { ROOT_OID } from './contexts/contexts';
+import { ROOT_OID } from './contexts/constants';
 import useFrontProperties from './api/config';
 import Loading from './components/Loading/Loading';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';

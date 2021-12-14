@@ -1,5 +1,5 @@
 const { FinnishBusinessIds } = require('finnish-business-ids');
-const { API_CONTEXT, PUBLIC_API_CONTEXT } = require('../../src/contexts/contexts');
+const { API_CONTEXT, PUBLIC_API_CONTEXT } = require('../../src/contexts/constants');
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite

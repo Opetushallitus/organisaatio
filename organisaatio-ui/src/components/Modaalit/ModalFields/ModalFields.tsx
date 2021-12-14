@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './ModalFields.module.css';
 import { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 
 const BodyKehys = (props) => <div className={styles.BodyKehys}>{props.children}</div>;
 const BodyRivi = (props) => <div className={styles.BodyRivi}>{props.children}</div>;
