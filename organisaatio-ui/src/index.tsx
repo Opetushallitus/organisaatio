@@ -8,7 +8,6 @@ import { ROOT_OID } from './contexts/contexts';
 import useFrontProperties from './api/config';
 import Loading from './components/Loading/Loading';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import Raamit from './components/Raamit/Raamit';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
@@ -29,7 +28,6 @@ const InitGate = ({ children }) => {
 };
 ReactDOM.render(
     <React.StrictMode>
-        <Raamit />
         <InitGate>
             <OrganisaatioApp />
         </InitGate>
