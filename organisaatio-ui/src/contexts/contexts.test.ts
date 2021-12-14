@@ -1,5 +1,6 @@
-import { I18nImpl, KoodistoImpl } from './contexts';
+import { KoodistoImpl } from './KoodistoContext';
 import { Koodi, Lokalisointi } from '../types/types';
+import { I18nImpl } from './LanguageContext';
 
 describe('KoodistoImpl', () => {
     const koodit: Koodi[] = [

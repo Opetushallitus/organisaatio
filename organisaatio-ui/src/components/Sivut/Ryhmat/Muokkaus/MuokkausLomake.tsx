@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import styles from './MuokkausLomake.module.css';
 import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
@@ -7,14 +8,14 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
-import { useContext } from 'react';
-import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
+import { KoodistoContext } from '../../../../contexts/KoodistoContext';
 import { mapLocalizedKoodiToLang } from '../../../../tools/mappers';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
-import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
 import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
 import Muokattu from '../../../Muokattu/Muokattu';
 
@@ -218,7 +219,7 @@ const MuokkausLomake = ({
                     <Muokattu oid={ryhma.oid} />
                 </VersioContainer>
                 <div>
-                    <LomakeButton label={'BUTTON_SULJE'} onClick={handlePeruuta} />
+                    <LomakeButton label={'BUTTON_SULJE'} name={'peruutabutton'} onClick={handlePeruuta} />
                     <LomakeButton
                         label={'BUTTON_TALLENNA'}
                         disabled={ryhma.status === 'PASSIIVINEN'}

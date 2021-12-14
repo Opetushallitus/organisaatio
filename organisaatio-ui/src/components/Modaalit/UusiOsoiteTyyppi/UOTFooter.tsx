@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import styles from './UusiOsoiteTyyppi.module.css';
 

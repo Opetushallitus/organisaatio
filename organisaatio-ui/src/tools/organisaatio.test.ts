@@ -1,5 +1,5 @@
 import { showCreateChildButton, resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
-import { rakenne, ROOT_OID } from '../contexts/contexts';
+import { rakenne, ROOT_OID } from '../contexts/constants';
 import { Koodi, Koodisto } from '../types/types';
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {

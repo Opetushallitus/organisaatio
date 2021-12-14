@@ -1,18 +1,17 @@
 import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './Ryhmat.module.css';
 import TyypitJaRyhmatKehys from '../TyypitJaRyhmatKehys/TyypitJaRyhmatKehys';
-import { useContext } from 'react';
-import { KoodistoContext, LanguageContext } from '../../../contexts/contexts';
+import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { useEffect } from 'react';
 import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../../tools/mappers';
 import { getRyhmat } from '../../../api/ryhma';
-import { useState } from 'react';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Column } from 'react-table';
 import { Link, useHistory } from 'react-router-dom';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 
 const Ryhmat = () => {
     const { i18n, language } = useContext(LanguageContext);

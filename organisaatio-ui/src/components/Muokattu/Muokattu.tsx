@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { OrganisaatioPaivittaja } from '../../types/types';
 import { readOrganisaatioPaivittaja } from '../../api/organisaatio';
-import { LanguageContext } from '../../contexts/contexts';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 export default function Muokattu(params: { oid?: string }) {
     console.log(params.oid);

@@ -5,7 +5,7 @@ import Accordion from '../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
-import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
+import { rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
     LiitaOrganisaatioon,
     OrganisaatioNimiJaOid,
@@ -49,6 +49,9 @@ import {
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
 import Muokattu from '../../Muokattu/Muokattu';
+import { LanguageContext } from '../../../contexts/LanguageContext';
+import { KoodistoContext } from '../../../contexts/KoodistoContext';
+import { CasMeContext } from '../../../contexts/CasMeContext';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -60,6 +63,7 @@ const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
+    const { me: casMe } = useContext(CasMeContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
@@ -373,33 +377,36 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
-                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 && (
-                        <Button
-                            onClick={() => {
-                                setSiirraOrganisaatio({ ...siirraOrganisaatio });
-                                setSiirraOrganisaatioModaaliAuki(true);
-                            }}
-                        >
-                            {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
-                        </Button>
-                    )}
-                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 && (
-                        <Button
-                            onClick={() => {
-                                setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
-                                setYhdistaOrganisaatioModaaliAuki(true);
-                            }}
-                        >
-                            {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
-                        </Button>
-                    )}
-                    {showCreateChildButton(resolvedOrganisaatioRakenne) && (
-                        <LomakeButton
-                            disabled={isDirty}
-                            onClick={handleLisaaUusiToimija}
-                            label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
-                        />
-                    )}
+                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO') && (
+                            <Button
+                                onClick={() => {
+                                    setSiirraOrganisaatio({ ...siirraOrganisaatio });
+                                    setSiirraOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
+                            </Button>
+                        )}
+                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_YHDISTA_ORGANISAATIO') && (
+                            <Button
+                                onClick={() => {
+                                    setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
+                                    setYhdistaOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
+                            </Button>
+                        )}
+                    {showCreateChildButton(resolvedOrganisaatioRakenne) &&
+                        casMe.canHaveButton('LOMAKE_LISAA_UUSI_TOIMIJA') && (
+                            <LomakeButton
+                                disabled={isDirty}
+                                onClick={handleLisaaUusiToimija}
+                                label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
+                            />
+                        )}
                 </ValiNappulat>
             </ValiContainer>
             <PaaOsio>
@@ -411,7 +418,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 </VersioContainer>
                 <div>
                     <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
-                    <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    {casMe.canHaveButton('BUTTON_TALLENNA') && (
+                        <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    )}
                 </div>
             </AlaBanneri>
             {yhdistaOrganisaatioModaaliAuki && (

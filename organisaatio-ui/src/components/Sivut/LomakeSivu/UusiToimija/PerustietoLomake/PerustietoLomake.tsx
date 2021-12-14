@@ -4,7 +4,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
+import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
@@ -13,6 +13,7 @@ import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import { Kentta, LomakeButton, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 import DatePickerController from '../../../../Controllers/DatePickerController';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];

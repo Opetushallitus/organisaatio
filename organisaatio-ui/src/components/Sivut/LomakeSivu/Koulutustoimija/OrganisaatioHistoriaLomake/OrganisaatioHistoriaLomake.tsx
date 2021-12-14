@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useContext } from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import { LanguageContext } from '../../../../../contexts/contexts';
 import { Link } from 'react-router-dom';
 import {
     HistoriaTaulukkoData,
@@ -12,6 +11,7 @@ import {
 } from '../../../../../types/types';
 import { OrganisaatioBase } from '../../../../../types/apiTypes';
 import { Column } from 'react-table';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],

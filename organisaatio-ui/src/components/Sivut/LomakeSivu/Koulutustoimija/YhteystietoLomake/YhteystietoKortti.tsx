@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
@@ -6,10 +7,10 @@ import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoL
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Yhteystiedot } from '../../../../../types/types';
 import { useWatch } from 'react-hook-form';
-import { useContext } from 'react';
-import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
+import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 const postiOsoiteToimipaikkaFiName = 'fi.postiOsoiteToimipaikka';
 const postiOsoiteToimipaikkaSvName = 'sv.postiOsoiteToimipaikka';

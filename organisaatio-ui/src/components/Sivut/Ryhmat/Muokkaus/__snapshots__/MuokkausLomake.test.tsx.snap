@@ -551,27 +551,24 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
       </div>
     </div>
   </div>
-  <div
-    className="AlaBanneri"
-  >
+  <AlaBanneri>
+    <VersioContainer>
+      <Muokattu
+        oid="1234"
+      />
+    </VersioContainer>
     <div>
-      <ForwardRef
-        className="Versionappula"
+      <LomakeButton
+        label="BUTTON_SULJE"
         name="peruutabutton"
         onClick={[MockFunction]}
-        variant="outlined"
-      >
-        BUTTON_SULJE
-      </ForwardRef>
-      <ForwardRef
-        className="Versionappula"
+      />
+      <LomakeButton
         disabled={false}
-        name="tallennabutton"
+        label="BUTTON_TALLENNA"
         onClick={[Function]}
-      >
-        BUTTON_TALLENNA
-      </ForwardRef>
+      />
     </div>
-  </div>
+  </AlaBanneri>
 </PohjaSivu>
 `;

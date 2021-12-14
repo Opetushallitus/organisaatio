@@ -1,14 +1,22 @@
 import { KoodiUri, Language, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde } from './types';
 
+export type ConfigurableButton =
+    | 'LOMAKE_YHDISTA_ORGANISAATIO'
+    | 'LOMAKE_SIIRRA_ORGANISAATIO'
+    | 'LOMAKE_LISAA_UUSI_TOIMIJA'
+    | 'TAULUKKO_LISAA_UUSI_TOIMIJA'
+    | 'BUTTON_TALLENNA';
 export type CASMe = {
     uid: string;
     oid: string;
     firstName: string;
     lastName: string;
     groups: string[];
-    roles: string;
+    roles: string[];
     lang: Language;
+    canHaveButton: (button: ConfigurableButton) => boolean;
 };
+
 export type OrganisaatioLiitos = {
     alkuPvm: string;
     loppuPvm?: string;

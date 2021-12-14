@@ -24,7 +24,7 @@ import {
 } from '../types/apiTypes';
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
-import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/contexts';
+import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/constants';
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
 type SupportedYhteystietoType = 'www' | 'email' | 'numero';

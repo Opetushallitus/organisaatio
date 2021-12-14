@@ -1,5 +1,5 @@
 import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } from '../types/types';
-import { ROOT_OID } from '../contexts/contexts';
+import { ROOT_OID } from '../contexts/constants';
 import { ApiOrganisaatio } from '../types/apiTypes';
 import queryString from 'query-string';
 

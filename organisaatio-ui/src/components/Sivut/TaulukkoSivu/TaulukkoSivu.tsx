@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import styles from './TaulukkoSivu.module.css';
 import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { KoodistoContext, LanguageContext, ROOT_OID } from '../../../contexts/contexts';
+import { ROOT_OID } from '../../../contexts/constants';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/OrganisaatioHakuTaulukko';
 
@@ -12,6 +12,9 @@ import { Link } from 'react-router-dom';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { Column } from 'react-table';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
+import { LanguageContext } from '../../../contexts/LanguageContext';
+import { KoodistoContext } from '../../../contexts/KoodistoContext';
+import { CasMeContext } from '../../../contexts/CasMeContext';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -25,7 +28,7 @@ const TaulukkoSivu = (props) => {
     };
     const { i18n, language } = useContext(LanguageContext);
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
-    const [isOPHVirkailija, setIsOPHVirkailija] = useState(true);
+    const { me: casMe } = useContext(CasMeContext);
 
     const columns: (Column<ApiOrganisaatio> & { collapse?: boolean })[] = [
         {
@@ -100,17 +103,12 @@ const TaulukkoSivu = (props) => {
             ),
         },
     ];
-
     return (
         <PohjaSivu>
-            <Button color={isOPHVirkailija ? 'success' : 'danger'} onClick={() => setIsOPHVirkailija(!isOPHVirkailija)}>
-                {' '}
-                OphVirkailija?{' '}
-            </Button>
             <div className={styles.PaaOsio}>
                 <div className={styles.OtsikkoContainer}>
                     <h2>Organisaatiot</h2>
-                    {isOPHVirkailija && (
+                    {casMe.canHaveButton('TAULUKKO_LISAA_UUSI_TOIMIJA') && (
                         <Button style={{ height: '3rem' }} onClick={handleLisaaUusiToimija}>
                             {' '}
                             + {i18n.translate('TAULUKKO_LISAA_UUSI_TOIMIJA')}
@@ -118,7 +116,7 @@ const TaulukkoSivu = (props) => {
                     )}
                 </div>
                 <div className={styles.TaulukkoContainer}>
-                    <OrganisaatioHakuTaulukko isOPHVirkailija={isOPHVirkailija} tableColumns={columns} />
+                    <OrganisaatioHakuTaulukko tableColumns={columns} />
                 </div>
             </div>
         </PohjaSivu>

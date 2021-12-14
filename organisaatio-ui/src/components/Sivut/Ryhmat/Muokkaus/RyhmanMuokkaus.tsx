@@ -5,8 +5,9 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../../api/ryhma';
 import { NewRyhma, Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
-import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
+import { ROOT_OID } from '../../../../contexts/constants';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
 
 export type RyhmanMuokausProps = {
     oid?: string;

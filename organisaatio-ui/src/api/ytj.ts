@@ -2,7 +2,7 @@ import Axios from 'axios';
 import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
 import { KoodistoContextType, KoodistoSelectOption, LocalDate, YhteystiedotBase } from '../types/types';
-import { LEGACY_API_CONTEXT } from '../contexts/contexts';
+import { LEGACY_API_CONTEXT } from '../contexts/constants';
 
 const baseUrl = `${LEGACY_API_CONTEXT}/ytj/`;
 
