@@ -151,14 +151,6 @@ export type OrganisaatioHistoria = {
     liittymiset: OrganisaatioSuhde[];
 };
 
-export interface YhteystietoTyyppi {
-    oid?: string;
-    nimi: Nimi;
-    sovellettavatOppilaitostyyppis: string[];
-    sovellettavatOrganisaatios: string[];
-    version: number;
-}
-
 export interface OrganisaatioNimiJaOid {
     oid: string;
     nimi: Nimi;

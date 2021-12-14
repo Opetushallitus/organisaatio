@@ -6,3 +6,5 @@ coverage/
 cypress/videos
 cypress/screenshots
 cypress-coverage
+scripts/*.csv
+scripts/*.json
