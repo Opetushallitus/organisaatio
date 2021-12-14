@@ -7,7 +7,7 @@ describe('Restrict buttons by roles', () => {
         cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.wait(['@getConfig'], { timeout: 10000 });
-        cy.get('button').contains('TAULUKKO_LISAA_UUSI').should('not.exist');
+        cy.get('button', { timeout: 30000 }).contains('TAULUKKO_LISAA_UUSI').should('not.exist');
 
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
         cy.get('@parentOrganisaatio1').then((parentOrganisaatio) => {
