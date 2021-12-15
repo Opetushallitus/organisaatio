@@ -20,8 +20,8 @@ const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => 
         <MuokattuKolumni>
             <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
             <span onClick={execute}>
-                {data?.paivitysPvm ? moment(new Date(data.paivitysPvm)).format('D.M.yyyy HH:mm:ss') : ''}{' '}
-                {data?.etuNimet} {data?.sukuNimi}
+                {data?.paivitysPvm ? moment(data.paivitysPvm).format('D.M.yyyy HH:mm:ss') : ''} {data?.etuNimet}{' '}
+                {data?.sukuNimi}
             </span>
         </MuokattuKolumni>
     );
