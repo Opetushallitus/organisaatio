@@ -47,11 +47,11 @@ describe('KoodistoImpl', () => {
         expect(nimi).toEqual('');
     });
 
-    it('Returns all names', () => {
-        const nimet = impl.nimet();
-        expect(nimet.length).toEqual(1);
-        expect(nimet[0]).toEqual('Koodi');
-    });
+    // it('Returns all names', () => {
+    //     const nimet = impl.nimet();
+    //     expect(nimet.length).toEqual(1);
+    //     expect(nimet[0]).toEqual('Koodi');
+    // });
 
     it('Returns all koodis', () => {
         const koodit = impl.koodit();

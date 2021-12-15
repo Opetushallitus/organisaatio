@@ -23,17 +23,11 @@ export class KoodistoImpl implements Koodisto {
     }
 
     uri2SelectOption(uri: KoodiUri, disabled = false, versio?: number): KoodistoSelectOption {
-        const label = this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`));
-        return {
-            value: label === '' ? label : `${uri}${versio ? `#${versio}` : ''}`,
-            label,
-            arvo: uri,
-            disabled,
-        };
+        return this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`));
     }
 
     uri2Nimi(uri: KoodiUri): string {
-        return this.nimi((koodi) => koodi.uri === uri);
+        return this.nimi((koodi) => koodi.uri === uri).label;
     }
 
     uri2Arvo(uri: KoodiUri): string {
@@ -41,15 +35,11 @@ export class KoodistoImpl implements Koodisto {
     }
 
     arvo2Nimi(arvo: KoodiArvo): string {
-        return this.nimi((koodi) => koodi.arvo === arvo);
+        return this.nimi((koodi) => koodi.arvo === arvo).label;
     }
 
     arvo2Uri(arvo: string): string {
         return this.koodit().find((koodi) => koodi.arvo === arvo)?.uri || '';
-    }
-
-    nimet(): string[] {
-        return this.koodisto.map((koodi) => this.kielistettyNimi(koodi));
     }
 
     koodit(): Koodi[] {
@@ -60,17 +50,18 @@ export class KoodistoImpl implements Koodisto {
         return [...this.KoodistoOptionValues];
     }
 
-    private nimi(predikaatti: (koodi: Koodi) => boolean): string {
-        const koodi = this.koodisto.find(predikaatti);
-        let nimi = '';
-        if (koodi) {
-            nimi = this.kielistettyNimi(koodi);
-        }
-        return nimi;
+    private nimi(predikaatti: (koodi: Koodi) => boolean): KoodistoSelectOption {
+        return this.kielistettyNimi(this.koodisto.find(predikaatti));
     }
 
-    private kielistettyNimi(koodi: Koodi): string {
-        return koodi.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi.nimi['fi'] || '');
+    private kielistettyNimi(koodi?: Koodi): KoodistoSelectOption {
+        return {
+            arvo: koodi?.arvo || '',
+            disabled: false,
+            value: koodi?.uri || '',
+            versio: koodi?.versio || 0,
+            label: koodi?.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi?.nimi['fi'] || ''),
+        };
     }
 }
 

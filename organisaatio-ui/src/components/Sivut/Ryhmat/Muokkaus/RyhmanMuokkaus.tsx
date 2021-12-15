@@ -73,8 +73,8 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
                     'kieli_sv#1': kuvaus2Sv,
                     'kieli_en#1': kuvaus2En,
                 },
-                ryhmatyypit: ryhmatyypit.map((rt) => rt.value),
-                kayttoryhmat: kayttoryhmat.map((rt) => rt.value),
+                ryhmatyypit: ryhmatyypit.map((a) => `${a.value}#${a.versio}`),
+                kayttoryhmat: kayttoryhmat.map((a) => `${a.value}#${a.versio}`),
             };
             try {
                 const { organisaatio: updatedRyhma } = onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);

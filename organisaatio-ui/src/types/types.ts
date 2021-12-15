@@ -19,7 +19,8 @@ export type KoodistoSelectOption = {
     value: KoodiUri;
     arvo: KoodiArvo;
     label: string;
-    disabled?: boolean;
+    versio: number;
+    disabled: boolean;
 };
 
 // lokalisointi
@@ -218,7 +219,6 @@ export type Koodisto = {
     arvo2Uri: (arvo: KoodiArvo) => string;
     uri2Nimi: (uri: KoodiUri) => string;
     arvo2Nimi: (arvo: KoodiArvo) => string;
-    nimet: () => string[];
     koodit: () => Koodi[];
     selectOptions: () => KoodistoSelectOption[];
     uri2SelectOption: (uri: KoodiUri, disabled?: boolean, versio?: number) => KoodistoSelectOption;

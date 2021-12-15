@@ -4,12 +4,14 @@ const perustietoOptionSchemaRequired = Joi.object({
     label: Joi.string().required(),
     value: Joi.string().required(),
     arvo: Joi.string().required(),
+    versio: Joi.number().optional(),
     disabled: Joi.boolean().optional(),
 }).required();
 const perustietoOptionSchemaOptional = Joi.object({
     label: Joi.string().allow(''),
     value: Joi.string().allow(''),
     arvo: Joi.string().allow(''),
+    versio: Joi.number().optional(),
     disabled: Joi.boolean().optional(),
 });
 
