@@ -3,7 +3,7 @@ import { rakenne, ROOT_OID } from '../contexts/constants';
 import { Koodi, Koodisto } from '../types/types';
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {
-        return { label: uri, value: uri };
+        return { label: uri, value: uri, arvo: '' };
     },
     koodit: () =>
         [
@@ -54,14 +54,17 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_02',
                 label: 'organisaatiotyyppi_02',
             },
             {
+                arvo: '',
                 label: 'organisaatiotyyppi_04',
                 value: 'organisaatiotyyppi_04',
             },
             {
+                arvo: '',
                 label: 'organisaatiotyyppi_08',
                 value: 'organisaatiotyyppi_08',
             },
@@ -75,10 +78,12 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_02',
                 label: 'organisaatiotyyppi_02',
             },
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_04',
                 label: 'organisaatiotyyppi_04',
             },
@@ -92,14 +97,17 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_02',
                 label: 'organisaatiotyyppi_02',
             },
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_04',
                 label: 'organisaatiotyyppi_04',
             },
             {
+                arvo: '',
                 label: 'organisaatiotyyppi_08',
                 value: 'organisaatiotyyppi_08',
             },
@@ -113,22 +121,27 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_01',
                 label: 'organisaatiotyyppi_01',
             },
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_05',
                 label: 'organisaatiotyyppi_05',
             },
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_06',
                 label: 'organisaatiotyyppi_06',
             },
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_07',
                 label: 'organisaatiotyyppi_07',
             },
             {
+                arvo: '',
                 value: 'organisaatiotyyppi_09',
                 label: 'organisaatiotyyppi_09',
             },
