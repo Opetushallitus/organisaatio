@@ -38,10 +38,8 @@ const MuokkausLomake = ({
 }: MuokkausLomakeProps) => {
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
-
     const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
-
     const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri));
     const ryhmaTyypit = ryhma.ryhmatyypit.map((koodiUri) => ryhmaTyypitKoodisto.uri2SelectOption(koodiUri));
     const isDisabled = !ryhma || ryhma.status === 'PASSIIVINEN';
@@ -215,15 +213,15 @@ const MuokkausLomake = ({
                 </div>
             </div>
             <AlaBanneri>
-                <VersioContainer>
-                    <Muokattu oid={ryhma.oid} />
-                </VersioContainer>
+                <VersioContainer>{ryhma.oid && <Muokattu oid={ryhma.oid} />}</VersioContainer>
                 <div>
                     <LomakeButton label={'BUTTON_SULJE'} name={'peruutabutton'} onClick={handlePeruuta} />
                     <LomakeButton
                         label={'BUTTON_TALLENNA'}
                         disabled={ryhma.status === 'PASSIIVINEN'}
-                        onClick={handleSubmit(handleTallenna)}
+                        onClick={() => {
+                            handleSubmit(handleTallenna)();
+                        }}
                     />
                 </div>
             </AlaBanneri>

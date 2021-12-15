@@ -63,11 +63,20 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     }));
 }
 
-async function readOrganisaatioPaivittaja(oid?: string): Promise<OrganisaatioPaivittaja | undefined> {
-    if (oid?.length === 0) return {};
-    return errorHandlingWrapper(async () => {
-        const { data } = await Axios.get<OrganisaatioPaivittaja>(`${baseUrl}${oid}/paivittaja`);
-        return data;
+function useOrganisaatioPaivittaja(
+    oid: string
+): { data: OrganisaatioPaivittaja; loading: boolean; error: boolean; execute: () => void } {
+    return useErrorHandlingWrapper(function useHorse() {
+        const [{ data, loading, error }, execute]: [
+            ResponseValues<OrganisaatioPaivittaja>,
+            (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<OrganisaatioPaivittaja>
+        ] = useAxios({ url: `${baseUrl}${oid}/paivittaja`, method: 'GET' }, { manual: true });
+        return {
+            data,
+            loading,
+            error,
+            execute,
+        };
     });
 }
 
@@ -166,7 +175,7 @@ function getApiYhteystieto(
         (yhteystieto: ApiYhteystiedot) => yhteystieto.kieli === kieli && yhteystieto.hasOwnProperty(osoiteTyyppi)
     );
     if (found) {
-        return found as ApiYhteystiedot;
+        return found;
     }
     yhteystiedot.push({ kieli, [osoiteTyyppi]: '', isNew: true } as ApiYhteystiedot);
     return getApiYhteystieto(yhteystiedot, kieli, osoiteTyyppi);
@@ -178,7 +187,10 @@ function mapUiOrganisaatioToApiToSave(
     perustiedotFormValues: Perustiedot,
     parentOid?: string
 ): NewApiOrganisaatio {
-    const yhteystiedot = mapUiYhteystiedotToApi(postinumerotKoodisto, [], yhteystiedotFormValues);
+    const yhteystiedot = mapUiYhteystiedotToApi({
+        postinumerotKoodisto: postinumerotKoodisto,
+        uiYhteystiedot: yhteystiedotFormValues,
+    });
     const {
         kotipaikka,
         maa,
@@ -226,11 +238,11 @@ function mapUiOrganisaatioToApiToUpdate(
     perustiedotFormValues
 ): ApiOrganisaatio {
     const { oid, parentOid, parentOidPath, status } = organisaatioBase;
-    const yhteystiedot = mapUiYhteystiedotToApi(
+    const yhteystiedot = mapUiYhteystiedotToApi({
         postinumerotKoodisto,
-        organisaatioBase.apiYhteystiedot,
-        yhteystiedotFormValues
-    );
+        apiYhteystiedot: organisaatioBase.apiYhteystiedot,
+        uiYhteystiedot: yhteystiedotFormValues,
+    });
     const {
         kotipaikka,
         maa,
@@ -308,11 +320,15 @@ function mapApiYhteystiedotToUi(
     };
 }
 
-function mapUiYhteystiedotToApi(
-    postinumerotKoodisto: Koodisto,
-    apiYhteystiedot: ApiYhteystiedot[] = [],
-    uiYhteystiedot: Yhteystiedot
-): ApiYhteystiedot[] {
+function mapUiYhteystiedotToApi({
+    postinumerotKoodisto,
+    apiYhteystiedot = [],
+    uiYhteystiedot,
+}: {
+    postinumerotKoodisto: Koodisto;
+    apiYhteystiedot?: ApiYhteystiedot[];
+    uiYhteystiedot: Yhteystiedot;
+}): ApiYhteystiedot[] {
     const { osoitteetOnEri, ...rest } = uiYhteystiedot;
     return Object.keys(rest)
         .map((kieli) => {
@@ -463,5 +479,5 @@ export {
     updateOrganisaatio,
     mergeOrganisaatio,
     searchOrganisation,
-    readOrganisaatioPaivittaja,
+    useOrganisaatioPaivittaja,
 };

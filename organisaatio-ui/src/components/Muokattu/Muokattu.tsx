@@ -1,30 +1,29 @@
 import { MuokattuKolumni } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 import moment from 'moment';
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
-import { OrganisaatioPaivittaja } from '../../types/types';
-import { readOrganisaatioPaivittaja } from '../../api/organisaatio';
+import { useContext, useEffect } from 'react';
+import { useOrganisaatioPaivittaja } from '../../api/organisaatio';
 import { LanguageContext } from '../../contexts/LanguageContext';
+import Loading from '../Loading/Loading';
+import VirheSivu from '../Sivut/VirheSivu/VirheSivu';
 
-export default function Muokattu(params: { oid?: string }) {
-    console.log(params.oid);
+const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => {
     const { i18n } = useContext(LanguageContext);
-    const [organisaatioPaivittaja, setOrganisaatioPaivittaja] = useState<OrganisaatioPaivittaja>({});
+    const { data, error, loading, execute } = useOrganisaatioPaivittaja(oid);
     useEffect(() => {
-        (async function () {
-            const paivittaja = await readOrganisaatioPaivittaja(params.oid);
-            if (paivittaja) setOrganisaatioPaivittaja(paivittaja);
-        })();
-    }, [params.oid]);
+        execute();
+    }, [execute, muokattu]);
+    if (loading) return <Loading />;
+    if (error) return <VirheSivu />;
+
     return (
         <MuokattuKolumni>
             <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
-            <span>
-                {organisaatioPaivittaja?.paivitysPvm
-                    ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy HH:mm:ss')
-                    : ''}{' '}
-                {organisaatioPaivittaja?.etuNimet} {organisaatioPaivittaja?.sukuNimi}
+            <span onClick={execute}>
+                {data?.paivitysPvm ? moment(new Date(data.paivitysPvm)).format('D.M.yyyy HH:mm:ss') : ''}{' '}
+                {data?.etuNimet} {data?.sukuNimi}
             </span>
         </MuokattuKolumni>
     );
-}
+};
+export default Muokattu;

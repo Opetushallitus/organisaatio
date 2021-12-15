@@ -142,12 +142,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setResolvedOrganisaatioRakenne(organisaatioRakenne);
     }, [params.oid, watchOppilaitosTyyppiUri?.value, watchOrganisaatioTyypit]);
     const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
+    const [muokattu, setMuokattu] = useState(0);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
     };
 
     const mapOrganisaatioToUi = ({
-        nimi,
+        nimi: mappingNimi,
         maaUri,
         kieletUris,
         kotipaikkaUri,
@@ -160,7 +161,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         vuosiluokat,
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
-        ytunnus,
+        ytunnus: mappingYtunnus,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -174,14 +175,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
         return {
             Uiperustiedot: {
-                nimi,
+                nimi: mappingNimi,
                 maa,
                 kielet,
                 kotipaikka,
                 muutKotipaikat,
                 alkuPvm,
                 lakkautusPvm,
-                ytunnus,
+                ytunnus: mappingYtunnus,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
                 oppilaitosKoodi,
@@ -190,7 +191,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 ),
                 vuosiluokat: vuosiluokat.map((kieliUri) => vuosiluokatKoodisto.uri2SelectOption(kieliUri)),
             },
-            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: nimi },
+            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
         };
     };
@@ -202,9 +203,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
         if (data) {
             const {
-                organisaatio: { tyypit: organisaatioTyypit, oid },
+                organisaatio: { tyypit, oid },
             } = data;
-            setParentTiedot({ organisaatioTyypit, oid });
+            setParentTiedot({ organisaatioTyypit: tyypit, oid });
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
         }
@@ -282,6 +283,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         const organisaatio = await updateOrganisaatio(apiOrganisaatio);
                         if (organisaatio) {
                             await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
+                            setMuokattu(muokattu + 1);
                         }
                     } finally {
                         setIsLoading(false);
@@ -414,7 +416,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
             <AlaBanneri>
                 <VersioContainer>
-                    <Muokattu oid={params.oid} />
+                    <Muokattu oid={organisaatioBase.oid} muokattu={muokattu} />
                 </VersioContainer>
                 <div>
                     <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />

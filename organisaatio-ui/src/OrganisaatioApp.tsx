@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
 import { BASE_PATH } from './contexts/constants';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
+import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
 import Ryhmat from './components/Sivut/Ryhmat/Ryhmat';
@@ -24,10 +23,7 @@ import { CasMeContext, CASMeImpl } from './contexts/CasMeContext';
 import Raamit from './components/Raamit/Raamit';
 
 const theme = createTheme();
-const Error = () => {
-    const { i18n } = useContext(LanguageContext);
-    return <ErrorPage>{i18n.translate('LABEL_ERROR_LOADING_DATA')}</ErrorPage>;
-};
+
 const OrganisaatioApp: React.FC = () => {
     registerLocale('fi', fi);
     registerLocale('sv', sv);
@@ -91,7 +87,7 @@ const OrganisaatioApp: React.FC = () => {
         vuosiluokatError ||
         oppilaitostyyppiError
     ) {
-        return <Error />;
+        return <VirheSivu />;
     }
 
     return (
@@ -133,7 +129,7 @@ const OrganisaatioApp: React.FC = () => {
                                     />
                                     <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
                                     <Route path={'*'}>
-                                        <ErrorPage>{'ERROR_404'}</ErrorPage>
+                                        <VirheSivu>{'ERROR_404'}</VirheSivu>
                                     </Route>
                                 </Switch>
                             </KoodistoContext.Provider>
