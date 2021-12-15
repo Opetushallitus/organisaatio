@@ -19,11 +19,13 @@ const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
         kayttoryhmat: ['testikayttoryhma#1'],
         status: 'AKTIIVINEN',
         oid: '1234',
-        kayntiosoite: 'dds',
+        kayntiosoite: { osoite: 'dds' },
         kuvaus2: {
             'kieli_fi#1': 'testikuvaus',
         },
-    } as any,
+        nimet: [],
+        tyypit: [],
+    },
 };
 
 let testProps = { ...MINIMAL_PROPS };

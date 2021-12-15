@@ -1,4 +1,4 @@
-import Axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
+import Axios from 'axios';
 import {
     Koodisto,
     LiitaOrganisaatioon,
@@ -22,7 +22,7 @@ import {
     YhteystiedotPhone,
     YhteystiedotWww,
 } from '../types/apiTypes';
-import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
+import useAxios from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
 import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/constants';
 
@@ -65,12 +65,17 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
 
 function useOrganisaatioPaivittaja(
     oid: string
-): { data: OrganisaatioPaivittaja; loading: boolean; error: boolean; execute: () => void } {
+): {
+    data: OrganisaatioPaivittaja;
+    loading: boolean;
+    error: boolean;
+    execute: () => void;
+} {
     return useErrorHandlingWrapper(function useHorse() {
-        const [{ data, loading, error }, execute]: [
-            ResponseValues<OrganisaatioPaivittaja>,
-            (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<OrganisaatioPaivittaja>
-        ] = useAxios({ url: `${baseUrl}${oid}/paivittaja`, method: 'GET' }, { manual: true });
+        const [{ data, loading, error }, execute] = useAxios<OrganisaatioPaivittaja>(
+            { url: `${baseUrl}${oid}/paivittaja`, method: 'GET' },
+            { manual: true }
+        );
         return {
             data,
             loading,
@@ -410,10 +415,7 @@ function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
 
 function useOrganisaatioHistoria(oid: string) {
     return useErrorHandlingWrapper(function useHorse() {
-        const [{ data, loading, error }, execute]: [
-            ResponseValues<APIOrganisaatioHistoria>,
-            (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<APIOrganisaatioHistoria>
-        ] = useAxios(`${baseUrl}${oid}/historia`);
+        const [{ data, loading, error }, execute] = useAxios<APIOrganisaatioHistoria>(`${baseUrl}${oid}/historia`);
         return {
             historia: data && transformData(data),
             historiaLoading: loading,
@@ -441,13 +443,7 @@ function useOrganisaatioHaku({
     organisaatiotError: boolean;
 } {
     return useErrorHandlingWrapper(function useHorse() {
-        const [{ data, loading, error }]: [
-            ResponseValues<{ organisaatiot: ApiOrganisaatio[] }>,
-            (
-                config?: AxiosRequestConfig,
-                options?: RefetchOptions
-            ) => AxiosPromise<{ organisaatiot: ApiOrganisaatio[] }>
-        ] = useAxios({
+        const [{ data, loading, error }] = useAxios<{ organisaatiot: ApiOrganisaatio[] }>({
             url: `${baseUrl}hae`,
             params: {
                 aktiiviset,
