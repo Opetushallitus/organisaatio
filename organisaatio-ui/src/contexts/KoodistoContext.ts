@@ -27,6 +27,7 @@ export class KoodistoImpl implements Koodisto {
         return {
             value: label === '' ? label : `${uri}${versio ? `#${versio}` : ''}`,
             label,
+            arvo: uri,
             disabled,
         };
     }

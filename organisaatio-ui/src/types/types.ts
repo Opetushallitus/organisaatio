@@ -17,6 +17,7 @@ export type Koodi = {
 
 export type KoodistoSelectOption = {
     value: KoodiUri;
+    arvo: KoodiArvo;
     label: string;
     disabled?: boolean;
 };
