@@ -127,7 +127,7 @@ Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
             };
             cy.request('PUT', `${PUBLIC_API_CONTEXT}/${oid}`, mod).as('edit');
             cy.get('@edit').then((response) => {
-                console.log('RESPONSE', response.body);
+                cy.log('RESPONSE', response.body);
             });
         }
     });

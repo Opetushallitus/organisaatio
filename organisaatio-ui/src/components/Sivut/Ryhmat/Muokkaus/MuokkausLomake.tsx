@@ -16,6 +16,8 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
 import { LanguageContext } from '../../../../contexts/LanguageContext';
+import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
+import Muokattu from '../../../Muokattu/Muokattu';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -36,10 +38,8 @@ const MuokkausLomake = ({
 }: MuokkausLomakeProps) => {
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
-
     const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
-
     const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri));
     const ryhmaTyypit = ryhma.ryhmatyypit.map((koodiUri) => ryhmaTyypitKoodisto.uri2SelectOption(koodiUri));
     const isDisabled = !ryhma || ryhma.status === 'PASSIIVINEN';
@@ -212,26 +212,19 @@ const MuokkausLomake = ({
                     )}
                 </div>
             </div>
-            <div className={styles.AlaBanneri}>
+            <AlaBanneri>
+                <VersioContainer>{ryhma.oid && <Muokattu oid={ryhma.oid} />}</VersioContainer>
                 <div>
-                    <Button
-                        name={'peruutabutton'}
-                        variant={'outlined'}
-                        className={styles.Versionappula}
-                        onClick={handlePeruuta}
-                    >
-                        {i18n.translate('BUTTON_SULJE')}
-                    </Button>
-                    <Button
+                    <LomakeButton label={'BUTTON_SULJE'} name={'peruutabutton'} onClick={handlePeruuta} />
+                    <LomakeButton
+                        label={'BUTTON_TALLENNA'}
                         disabled={ryhma.status === 'PASSIIVINEN'}
-                        name={'tallennabutton'}
-                        className={styles.Versionappula}
-                        onClick={handleSubmit(handleTallenna)}
-                    >
-                        {i18n.translate('BUTTON_TALLENNA')}
-                    </Button>
+                        onClick={() => {
+                            handleSubmit(handleTallenna)();
+                        }}
+                    />
                 </div>
-            </div>
+            </AlaBanneri>
         </PohjaSivu>
     );
 };
