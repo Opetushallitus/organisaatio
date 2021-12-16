@@ -173,9 +173,13 @@ describe('mapUiYhteystiedotToApi', () => {
     it('Maps api yhteystiedot to Api array format ([yhteystieto, ...]) and removes empty attributes', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
         expect(
-            mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], {
-                ...uiYhteystiedot,
-                osoitteetOnEri: true,
+            mapUiYhteystiedotToApi({
+                postinumerotKoodisto: postinumerotKoodisto as Koodisto,
+                apiYhteystiedot: [...oldApiyhteystiedot],
+                uiYhteystiedot: {
+                    ...uiYhteystiedot,
+                    osoitteetOnEri: true,
+                },
             })
         ).toEqual(expect.arrayContaining(expected));
     });
@@ -183,7 +187,11 @@ describe('mapUiYhteystiedotToApi', () => {
     it('creates kayntiOsoite from postiOsoite when osoitteetOnEri is false', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite];
         expect(
-            mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], { ...uiYhteystiedot })
+            mapUiYhteystiedotToApi({
+                postinumerotKoodisto: postinumerotKoodisto as Koodisto,
+                apiYhteystiedot: [...oldApiyhteystiedot],
+                uiYhteystiedot: { ...uiYhteystiedot },
+            })
         ).toEqual(expect.arrayContaining(expected));
     });
 
@@ -194,9 +202,13 @@ describe('mapUiYhteystiedotToApi', () => {
             sv: { ...uiYhteystiedot.sv, kayntiOsoite: '', kayntiOsoitePostiNro: '' },
             osoitteetOnEri: true,
         };
-        expect(mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], yhteystiedot)).toEqual(
-            expect.arrayContaining(expected)
-        );
+        expect(
+            mapUiYhteystiedotToApi({
+                postinumerotKoodisto: postinumerotKoodisto as Koodisto,
+                apiYhteystiedot: [...oldApiyhteystiedot],
+                uiYhteystiedot: yhteystiedot,
+            })
+        ).toEqual(expect.arrayContaining(expected));
     });
 });
 

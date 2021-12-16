@@ -4,10 +4,12 @@ import './index.css';
 import OrganisaatioApp from './OrganisaatioApp';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import { ROOT_OID } from './contexts/constants';
+import { BASE_PATH, ROOT_OID } from './contexts/constants';
 import useFrontProperties from './api/config';
 import Loading from './components/Loading/Loading';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
+import Raamit from './components/Raamit/Raamit';
+import { BrowserRouter } from 'react-router-dom';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
@@ -28,9 +30,12 @@ const InitGate = ({ children }) => {
 };
 ReactDOM.render(
     <React.StrictMode>
-        <InitGate>
-            <OrganisaatioApp />
-        </InitGate>
+        <BrowserRouter basename={BASE_PATH}>
+            <Raamit />
+            <InitGate>
+                <OrganisaatioApp />
+            </InitGate>
+        </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')
 );

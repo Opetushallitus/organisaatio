@@ -21,7 +21,7 @@ cxfCodegen {
             wsdl = file("src/main/resources/wsdl/yritystiedot.wsdl")
             wsdlLocation = "classpath:wsdl/yritystiedot.wsdl"
             markGenerated = true
-            extraArgs = ["-xjc-Xbg", "-verbose"]
+            extraArgs = ["-xjc-Xbg"]
         }
     }
 }
