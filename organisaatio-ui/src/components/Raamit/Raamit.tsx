@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import VirkailijaRaamit from '@opetushallitus/virkailija-ui-components/VirkailijaRaamit';
 
-export default function Raamit(props) {
+export default function Raamit() {
     const virkailijaRaamitUrl = '/virkailija-raamit/apply-raamit.js';
     if (process.env.NODE_ENV === 'development') {
         return (
