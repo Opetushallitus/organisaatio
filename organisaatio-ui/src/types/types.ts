@@ -221,7 +221,7 @@ export type Koodisto = {
     arvo2Nimi: (arvo: KoodiArvo) => string;
     koodit: () => Koodi[];
     selectOptions: () => KoodistoSelectOption[];
-    uri2SelectOption: (uri: KoodiUri, disabled?: boolean, versio?: number) => KoodistoSelectOption;
+    uri2SelectOption: (uri: KoodiUri, disabled?: boolean) => KoodistoSelectOption;
 };
 
 export type KoodistoContextType = {
