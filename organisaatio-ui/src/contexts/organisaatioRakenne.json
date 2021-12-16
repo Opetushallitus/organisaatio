@@ -1,175 +1,189 @@
 [
-  {
-    "description": "Opetushallitus",
-    "type": "opetushallitus",
-    "showYtj": false,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_01"
-      },
-      {
-        "type": "organisaatiotyyppi_05"
-      },
-      {
-        "type": "organisaatiotyyppi_06"
-      },
-      {
-        "type": "organisaatiotyyppi_07"
-      },
-      {
-        "type": "organisaatiotyyppi_09"
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Koulutustoimija",
-    "type": "organisaatiotyyppi_01",
-    "showYtj": true,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_02"
-      },
-      {
-        "type": "organisaatiotyyppi_04"
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Oppilaitos",
-    "type": "organisaatiotyyppi_02",
-    "showYtj": false,
-    "moveTargetType": "organisaatiotyyppi_01",
-    "mergeTargetType": "organisaatiotyyppi_02",
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_03"
-      }
-    ],
-    "dynamicFields": [
-      {
-        "name": "oppilaitosKoodi",
-        "label": "PERUSTIETO_OPPILAITOSKOODI",
-        "type": "INPUT"
-      },
-      {
-        "name": "oppilaitosTyyppiUri",
-        "label": "PERUSTIETO_OPPILAITOSTYYPPI",
-        "type": "SELECT",
-        "koodisto": "oppilaitostyyppiKoodisto"
-      },
-      {
-        "name": "muutOppilaitosTyyppiUris",
-        "label": "PERUSTIETO_MUUT_OPPILAITOSTYYPPI",
-        "type": "MULTI_SELECT",
-        "koodisto": "oppilaitostyyppiKoodisto"
-      },
-      {
-        "name": "vuosiluokat",
-        "label": "PERUSTIETO_VUOSILUOKAT",
-        "type": "MULTI_SELECT",
-        "koodisto": "vuosiluokatKoodisto",
-        "when": {
-          "name": "oppilaitosTyyppiUri",
-          "value": "oppilaitostyyppi_11"
-        }
-      }
-    ]
-  },
-  {
-    "description": "Toimipiste",
-    "type": "organisaatiotyyppi_03",
-    "showYtj": false,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_03"
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Oppisopimustoimipiste",
-    "type": "organisaatiotyyppi_04",
-    "showYtj": false,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-    ],
-    "disabledChildTypes": [],
-    "dynamicFields": []
-  },
-  {
-    "description": "Muu organisaatio",
-    "type": "organisaatiotyyppi_05",
-    "showYtj": true,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_03"
-      },
-      {
-        "type": "organisaatiotyyppi_05"
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Tyoelamajarjesto",
-    "type": "organisaatiotyyppi_06",
-    "showYtj": true,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_06"
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Varhaiskasvatuksen jarjestaja",
-    "type": "organisaatiotyyppi_07",
-    "showYtj": true,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
+    {
+        "description": "Opetushallitus",
+        "type": "opetushallitus",
+        "showYtj": false,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_01"
+            },
+            {
+                "type": "organisaatiotyyppi_05"
+            },
+            {
+                "type": "organisaatiotyyppi_06"
+            },
+            {
+                "type": "organisaatiotyyppi_07"
+            },
+            {
+                "type": "organisaatiotyyppi_09"
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Koulutustoimija",
+        "type": "organisaatiotyyppi_01",
+        "showYtj": true,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_02"
+            },
+            {
+                "type": "organisaatiotyyppi_04"
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Oppilaitos",
+        "type": "organisaatiotyyppi_02",
+        "showYtj": false,
+        "moveTargetType": "organisaatiotyyppi_01",
+        "mergeTargetType": "organisaatiotyyppi_02",
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_03"
+            }
+        ],
+        "dynamicFields": [
+            {
+                "name": "oppilaitosKoodi",
+                "label": "PERUSTIETO_OPPILAITOS_MUUTOKSET",
+                "type": "LINK",
+                "value": "https://link.webropolsurveys.com/S/D90BF1EA77056AE8"
+            },
+            {
+                "name": "oppilaitosKoodi",
+                "label": "PERUSTIETO_OPPILAITOSKOODI",
+                "type": "INPUT"
+            },
+            {
+                "name": "oppilaitosTyyppiUri",
+                "label": "PERUSTIETO_OPPILAITOSTYYPPI",
+                "type": "SELECT",
+                "koodisto": "oppilaitostyyppiKoodisto"
+            },
+            {
+                "name": "muutOppilaitosTyyppiUris",
+                "label": "PERUSTIETO_MUUT_OPPILAITOSTYYPPI",
+                "type": "MULTI_SELECT",
+                "koodisto": "oppilaitostyyppiKoodisto"
+            },
+            {
+                "name": "vuosiluokat",
+                "label": "PERUSTIETO_VUOSILUOKAT",
+                "type": "MULTI_SELECT",
+                "koodisto": "vuosiluokatKoodisto",
+                "when": [
+                    {
+                        "name": "oppilaitosTyyppiUri",
+                        "value": "oppilaitostyyppi_11"
+                    },
+                    {
+                        "name": "oppilaitosTyyppiUri",
+                        "value": "oppilaitostyyppi_12"
+                    },
+                    {
+                        "name": "oppilaitosTyyppiUri",
+                        "value": "oppilaitostyyppi_19"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "description": "Toimipiste",
+        "type": "organisaatiotyyppi_03",
+        "showYtj": false,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_03"
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Oppisopimustoimipiste",
+        "type": "organisaatiotyyppi_04",
+        "showYtj": false,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [],
+        "disabledChildTypes": [],
+        "dynamicFields": []
+    },
+    {
+        "description": "Muu organisaatio",
+        "type": "organisaatiotyyppi_05",
+        "showYtj": true,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_03"
+            },
+            {
+                "type": "organisaatiotyyppi_05"
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Tyoelamajarjesto",
+        "type": "organisaatiotyyppi_06",
+        "showYtj": true,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_06"
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Varhaiskasvatuksen jarjestaja",
+        "type": "organisaatiotyyppi_07",
+        "showYtj": true,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_08",
+                "disabled": true
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Varhaiskasvatuksen toimipaikka",
         "type": "organisaatiotyyppi_08",
-        "disabled": true
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Varhaiskasvatuksen toimipaikka",
-    "type": "organisaatiotyyppi_08",
-    "showYtj": false,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-      {
-        "type": "organisaatiotyyppi_08",
-        "disabled": true
-      }
-    ],
-    "dynamicFields": []
-  },
-  {
-    "description": "Kunta",
-    "type": "organisaatiotyyppi_09",
-    "showYtj": false,
-    "moveTargetType": null,
-    "mergeTargetType": null,
-    "childTypes": [
-    ],
-    "dynamicFields": []
-  }
+        "showYtj": false,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [
+            {
+                "type": "organisaatiotyyppi_08",
+                "disabled": true
+            }
+        ],
+        "dynamicFields": []
+    },
+    {
+        "description": "Kunta",
+        "type": "organisaatiotyyppi_09",
+        "showYtj": false,
+        "moveTargetType": null,
+        "mergeTargetType": null,
+        "childTypes": [],
+        "dynamicFields": []
+    }
 ]

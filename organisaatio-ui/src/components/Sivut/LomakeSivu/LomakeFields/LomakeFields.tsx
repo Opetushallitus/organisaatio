@@ -27,6 +27,14 @@ const ReadOnlyNimi = ({ value }) => {
     const { i18n } = useContext(LanguageContext);
     return <span className={styles.Kentta}>{i18n.translateNimi(value)}</span>;
 };
+const LabelLink = ({ value, to }) => {
+    const { i18n } = useContext(LanguageContext);
+    return (
+        <a href={to} target={'_blank'} rel={'noopener'}>
+            {i18n.translate(value)}
+        </a>
+    );
+};
 const ReadOnlyDate = ({ value }) => {
     const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
     return <div className={styles.Kentta}>{formattedDate}</div>;
@@ -80,4 +88,5 @@ export {
     ReadOnlyNimi,
     ReadOnlyDate,
     LomakeButton,
+    LabelLink,
 };

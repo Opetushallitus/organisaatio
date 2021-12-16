@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DynamicField, KoodistoContextType, Perustiedot } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control } from 'react-hook-form/dist/types/form';
-import { Kentta, Rivi } from '../../LomakeFields/LomakeFields';
+import { Kentta, LabelLink, Rivi } from '../../LomakeFields/LomakeFields';
 import InputController from '../../../../Controllers/InputController';
 import SelectController from '../../../../Controllers/SelectController';
 import MultiSelectController from '../../../../Controllers/MultiSelectController';
@@ -17,7 +17,14 @@ type DynamicFieldsProps = {
 
 export const DynamicFieldMethods = () => {
     const filterDynamicFields = (getPerustiedotValues: () => Perustiedot) => {
-        return (a) => !a.when || getPerustiedotValues()[a.when.name]?.value.match(/([^#]*).*/)[1] === a.when.value;
+        return (a) => {
+            if (a.when?.length > 0) {
+                return a.when.reduce((p, a) => {
+                    return p || getPerustiedotValues()[a.name]?.value.match(/([^#]*).*/)[1] === a.value;
+                }, false);
+            }
+            return true;
+        };
     };
     return { filterDynamicFields };
 };
@@ -69,6 +76,16 @@ export default function DynamicFields({
                                     />
                                 </Kentta>
                             </Rivi>
+                        );
+                    case 'LINK':
+                        return (
+                            <>
+                                {field.value && (
+                                    <Rivi key={field.name}>
+                                        <LabelLink value={field.label} to={field.value} />
+                                    </Rivi>
+                                )}
+                            </>
                         );
                     default:
                         return <></>;

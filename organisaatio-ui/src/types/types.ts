@@ -179,8 +179,9 @@ export type DynamicField = {
     name: Path<Perustiedot>;
     label: string;
     koodisto: 'vuosiluokatKoodisto';
-    type: 'INPUT' | 'SELECT' | 'MULTI_SELECT';
-    when: { name: Path<Perustiedot>; value: string };
+    type: 'INPUT' | 'SELECT' | 'MULTI_SELECT' | 'LINK';
+    when: [{ name: Path<Perustiedot>; value: string }];
+    value?: string;
 };
 
 type OrganisaatioChildType = {
