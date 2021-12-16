@@ -179,7 +179,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         Uiyhteystiedot: Yhteystiedot;
         UIhteysTietoArvot: YhteystietoArvot;
     } => {
-        console.log(yhteystietoArvos);
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
         const kotipaikka = kuntaKoodisto.uri2SelectOption(kotipaikkaUri);
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
@@ -208,7 +207,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             UIhteysTietoArvot: {
                 koskiposti: (yhteystietoArvos || [])
                     .filter((a) => {
-                        console.log(a['YhteystietojenTyyppi.oid']);
                         return a['YhteystietojenTyyppi.oid'] === '1.2.246.562.5.79385887983';
                     })
                     .reduce((p, c) => {
