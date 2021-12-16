@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { BASE_PATH } from '../../src/contexts/constants';
+import { BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
 
 describe('Oppilaitos koski posti', () => {
     it('Shows koski posti oppilaitos is chosen', () => {
@@ -22,7 +22,16 @@ describe('Oppilaitos koski posti', () => {
             cy.clickRadioOrCheckbox('Oppilaitos');
             cy.contains('LOMAKE_KOSKI_POSTI').should('exist');
             cy.clickAccordion('LOMAKE_KOSKI_POSTI');
-            cy.log(child.body.organisaatio.yhteystietoArvos);
+            cy.get('input[name="koskiposti.fi"]').should('have.value', 'testi@testi.com');
+            cy.inputByName('koskiposti.fi', 'muokattufi@testi.com');
+            cy.inputByName('koskiposti.sv', 'muokattusv@testi.com');
+            cy.inputByName('koskiposti.en', 'muokattuen@testi.com');
+            cy.clickSaveButton('PUT');
+            cy.contains('Suominimi', { timeout: 10000 }).should('exist');
+            cy.get('input[name="koskiposti.fi"]').should('not.have.value', 'testi@testi.com');
+            cy.get('input[name="koskiposti.fi"]').should('have.value', 'muokattufi@testi.com');
+            cy.get('input[name="koskiposti.sv"]').should('have.value', 'muokattusv@testi.com');
+            cy.get('input[name="koskiposti.en"]').should('have.value', 'muokattuen@testi.com');
         });
     });
 });

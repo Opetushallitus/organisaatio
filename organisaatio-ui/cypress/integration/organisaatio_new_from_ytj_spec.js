@@ -20,10 +20,8 @@ describe('New organisaatio from YTJ', () => {
         cy.wait(['@findYtj'], { timeout: 10000 });
         cy.clickButton('Hameen ammatti');
         cy.clickButton('BUTTON_JATKA');
-        cy.intercept('POST', `${PUBLIC_API_CONTEXT}`).as('saveOrg');
         cy.clickSaveButton();
-        cy.wait(['@saveOrg'], { timeout: 10000 });
-        cy.contains('Hameen ammatti-instituutti').should('exist');
+        cy.contains('Hameen ammatti-instituutti', { timeout: 10000 }).should('exist');
     });
 });
 describe('Edit organisaatio from YTJ', () => {
@@ -39,9 +37,8 @@ describe('Edit organisaatio from YTJ', () => {
             cy.clickButton('HAE_YTJTIEDOT');
             cy.wait(['@findYtj'], { timeout: 10000 });
             cy.clickButton('Hameen ammatti');
-            cy.intercept('PUT', `${PUBLIC_API_CONTEXT}/${response.body.organisaatio.oid}`).as('saveOrg');
             cy.clickSaveButton();
-            cy.contains('Hameen ammatti-instituutti').should('exist');
+            cy.contains('Hameen ammatti-instituutti', { timeout: 10000 }).should('exist');
         });
     });
 });

@@ -102,10 +102,9 @@ Cypress.Commands.add('enterAllYhteystiedot', (prefix) => {
     });
 });
 
-Cypress.Commands.add('clickSaveButton', () => {
-    cy.intercept('POST', `${PUBLIC_API_CONTEXT}`).as('saveOrg');
-    cy.get('button').contains('TALLENNA').scrollIntoView().click();
-    return cy.wait(['@saveOrg'], { timeout: 10000 });
+Cypress.Commands.add('clickSaveButton', (method = 'POST') => {
+    return cy.get('button').contains('TALLENNA').scrollIntoView().click();
+    cy.contains('TALLENNA', { timeout: 10000 });
 });
 
 Cypress.Commands.add('deleteByYTunnus', (ytunnus) => {
