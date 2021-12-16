@@ -88,6 +88,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     oppilaitosKoodi: string;
     muutOppilaitosTyyppiUris: string[];
     vuosiluokat: string[];
+    yhteystietoArvos?: any;
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

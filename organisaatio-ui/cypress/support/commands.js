@@ -41,6 +41,8 @@ Cypress.Commands.add('clickButton', (contains) => {
 
 Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
     return cy
+        .get('label')
+        .parent()
         .contains(contains)
         .scrollIntoView()
         .click()
@@ -159,6 +161,9 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
 
 Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
     cy.request('POST', `${PUBLIC_API_CONTEXT}/`, organisaatio).as(key);
+});
+Cypress.Commands.add('updateOrganisaatio', (organisaatio, key) => {
+    cy.request('PUT', `${PUBLIC_API_CONTEXT}/${organisaatio.oid}`, organisaatio).as(key);
 });
 
 Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {

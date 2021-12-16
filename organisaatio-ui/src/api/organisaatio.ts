@@ -233,6 +233,7 @@ function mapUiOrganisaatioToApiToSave(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
         vuosiluokat: vuosiluokat?.map((a) => a.value),
+        yhteystietoArvos: [], //TODO
     };
 }
 

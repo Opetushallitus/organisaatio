@@ -14,6 +14,7 @@ import {
     ResolvedRakenne,
     UiOrganisaatioBase,
     Yhteystiedot,
+    YhteystietoArvot,
 } from '../../../types/types';
 
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
@@ -52,6 +53,7 @@ import Muokattu from '../../Muokattu/Muokattu';
 import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
+import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -121,6 +123,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
+    const { register: yhteystietoArvoRegister, reset: yhteystietoArvoReset } = useForm<YhteystietoArvot>({
+        defaultValues: {},
+    });
     const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
     const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
 
@@ -162,12 +167,15 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
         ytunnus: mappingYtunnus,
+        yhteystietoArvos,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
         Uiyhteystiedot: Yhteystiedot;
+        UIhteysTietoArvot: YhteystietoArvot;
     } => {
+        console.log(yhteystietoArvos);
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
         const kotipaikka = kuntaKoodisto.uri2SelectOption(kotipaikkaUri);
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
@@ -193,11 +201,30 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
+            UIhteysTietoArvot: {
+                koskiposti: (yhteystietoArvos || [])
+                    .filter((a) => {
+                        console.log(a['YhteystietojenTyyppi.oid']);
+                        return a['YhteystietojenTyyppi.oid'] === '1.2.246.562.5.79385887983';
+                    })
+                    .reduce((p, c) => {
+                        switch (c['YhteystietoArvo.kieli'].substr(0, 8)) {
+                            case 'kieli_fi':
+                                return { ...p, fi: c['YhteystietoArvo.arvoText'] };
+                            case 'kieli_sv':
+                                return { ...p, sv: c['YhteystietoArvo.arvoText'] };
+                            case 'kieli_en':
+                                return { ...p, en: c['YhteystietoArvo.arvoText'] };
+                            default:
+                                return { ...p };
+                        }
+                    }, {}),
+            },
         };
     };
 
     async function resetOrganisaatio({ organisaatio, polku }) {
-        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
+        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
         const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
@@ -208,6 +235,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             setParentTiedot({ organisaatioTyypit: tyypit, oid });
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
+            yhteystietoArvoReset(UIhteysTietoArvot);
         }
     }
 
@@ -337,6 +365,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
+            lomakkeet.push(
+                <ArvoLomake tyyppiOid={'1.2.246.562.5.79385887983'} yhteystietoArvoRegister={yhteystietoArvoRegister} />
+            );
+            otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));
+        }
         lomakkeet.push(<NimiHistoriaLomake key={'nimihistorialomake'} nimet={organisaatioBase?.nimet} />);
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
         if (organisaatioBase?.oid !== ROOT_OID && organisaatioBase?.oid) {
