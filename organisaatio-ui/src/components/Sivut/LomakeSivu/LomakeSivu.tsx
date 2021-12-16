@@ -123,7 +123,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
-    const { register: yhteystietoArvoRegister, reset: yhteystietoArvoReset } = useForm<YhteystietoArvot>({
+    const {
+        register: yhteystietoArvoRegister,
+        reset: yhteystietoArvoReset,
+        handleSubmit: yhteystietoArvoHandleSubmit,
+    } = useForm<YhteystietoArvot>({
         defaultValues: {},
     });
     const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
@@ -300,22 +304,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    try {
-                        setIsLoading(true);
-                        const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
-                            postinumerotKoodisto,
-                            organisaatioBase,
-                            yhteystiedotFormValues,
-                            perustiedotFormValues
-                        );
-                        const organisaatio = await updateOrganisaatio(apiOrganisaatio);
-                        if (organisaatio) {
-                            await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
-                            setMuokattu(muokattu + 1);
+                    yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
+                        try {
+                            setIsLoading(true);
+                            const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                                postinumerotKoodisto,
+                                organisaatioBase,
+                                yhteystiedotFormValues,
+                                perustiedotFormValues,
+                                yhteystietoArvoFormValuet
+                            );
+                            const organisaatio = await updateOrganisaatio(apiOrganisaatio);
+                            if (organisaatio) {
+                                await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
+                                setMuokattu(muokattu + 1);
+                            }
+                        } finally {
+                            setIsLoading(false);
                         }
-                    } finally {
-                        setIsLoading(false);
-                    }
+                    })();
                 })();
             })();
         }

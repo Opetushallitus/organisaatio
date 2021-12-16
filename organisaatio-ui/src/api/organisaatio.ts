@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import {
+    ApiYhteystietoArvo,
     Koodisto,
     LiitaOrganisaatioon,
     OrganisaatioHistoria,
@@ -8,6 +9,7 @@ import {
     OrganisaatioPaivittaja,
     Perustiedot,
     Yhteystiedot,
+    YhteystietoArvot,
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
 import {
@@ -233,15 +235,53 @@ function mapUiOrganisaatioToApiToSave(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
         vuosiluokat: vuosiluokat?.map((a) => a.value),
-        yhteystietoArvos: [], //TODO
     };
+}
+
+function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot): ApiYhteystietoArvo[] {
+    const arvot = [] as ApiYhteystietoArvo[];
+    if (yhteystietoArvoFormValuet.koskiposti?.fi) {
+        arvot.push({
+            //KOSKI sahkoposti
+            'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.fi,
+            'YhteystietoArvo.kieli': 'kieli_fi#1',
+            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+            'YhteystietoElementti.pakollinen': false,
+            'YhteystietoElementti.kaytossa': true,
+        });
+    }
+    if (yhteystietoArvoFormValuet.koskiposti?.sv) {
+        arvot.push({
+            //KOSKI sahkoposti
+            'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.sv,
+            'YhteystietoArvo.kieli': 'kieli_sv#1',
+            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+            'YhteystietoElementti.pakollinen': false,
+            'YhteystietoElementti.kaytossa': true,
+        });
+    }
+    if (yhteystietoArvoFormValuet.koskiposti?.en) {
+        arvot.push({
+            //KOSKI sahkoposti
+            'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.en,
+            'YhteystietoArvo.kieli': 'kieli_en#1',
+            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+            'YhteystietoElementti.pakollinen': false,
+            'YhteystietoElementti.kaytossa': true,
+        });
+    }
+    return arvot;
 }
 
 function mapUiOrganisaatioToApiToUpdate(
     postinumerotKoodisto,
     organisaatioBase,
     yhteystiedotFormValues,
-    perustiedotFormValues
+    perustiedotFormValues,
+    yhteystietoArvoFormValuet
 ): ApiOrganisaatio {
     const { oid, parentOid, parentOidPath, status } = organisaatioBase;
     const yhteystiedot = mapUiYhteystiedotToApi({
@@ -249,6 +289,7 @@ function mapUiOrganisaatioToApiToUpdate(
         apiYhteystiedot: organisaatioBase.apiYhteystiedot,
         uiYhteystiedot: yhteystiedotFormValues,
     });
+    const yhteystietoArvos = mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet);
     const {
         kotipaikka,
         maa,
@@ -292,6 +333,7 @@ function mapUiOrganisaatioToApiToUpdate(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => a.value),
         vuosiluokat: vuosiluokat?.map((a) => a.value),
+        yhteystietoArvos,
     };
 }
 

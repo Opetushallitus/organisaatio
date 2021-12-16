@@ -94,6 +94,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
     alkuPvm: '2000-10-10',
     kieletUris: [],
     kotipaikkaUri: 'kunta_1#1',
+    lakkautusPvm: undefined,
     muutKotipaikatUris: [],
     maaUri: 'maa_1#1',
     nimet: apinimet,
@@ -108,6 +109,8 @@ const apiOrganisaatio: ApiOrganisaatio = {
     oppilaitosKoodi: '',
     muutOppilaitosTyyppiUris: [],
     vuosiluokat: [],
+    yhteystietoArvos: [],
+    ytunnus: undefined,
 };
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
@@ -243,7 +246,8 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             postinumerotKoodisto as Koodisto,
             uiBaseTiedot,
             uiYhteystiedot,
-            uiPerustiedot
+            uiPerustiedot,
+            {}
         );
         mappedApiOrganisaatio.yhteystiedot = mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
         expect(mappedApiOrganisaatio).toEqual({
@@ -265,7 +269,8 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             postinumerotKoodisto as Koodisto,
             { nimet, ...rest },
             uiYhteystiedot,
-            uiPerustiedot
+            uiPerustiedot,
+            {}
         );
         expect(mappedNimet).toEqual(expectedNimet);
     });

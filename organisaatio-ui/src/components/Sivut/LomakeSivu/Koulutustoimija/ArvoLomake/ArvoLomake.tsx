@@ -14,17 +14,17 @@ export default function ArvoLomake({ yhteystietoArvoRegister }: Props) {
             <Rivi>
                 <Rivi>
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_fi'}>
-                        <Input id={'ytunnus'} {...yhteystietoArvoRegister('koskiposti.fi')} />
+                        <Input id={'koskiposti.fi'} {...yhteystietoArvoRegister('koskiposti.fi')} />
                     </Kentta>
                 </Rivi>
                 <Rivi>
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_sv'}>
-                        <Input />
+                        <Input id={'koskiposti.sv'} {...yhteystietoArvoRegister('koskiposti.sv')} />
                     </Kentta>
                 </Rivi>
                 <Rivi>
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_en'}>
-                        <Input />
+                        <Input id={'koskiposti.en'} {...yhteystietoArvoRegister('koskiposti.en')} />
                     </Kentta>
                 </Rivi>
             </Rivi>
