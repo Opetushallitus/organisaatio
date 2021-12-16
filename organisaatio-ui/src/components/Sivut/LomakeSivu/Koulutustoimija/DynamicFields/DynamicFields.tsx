@@ -19,8 +19,8 @@ export const DynamicFieldMethods = () => {
     const filterDynamicFields = (getPerustiedotValues: () => Perustiedot) => {
         return (a) => {
             if (a.when?.length > 0) {
-                return a.when.reduce((p, a) => {
-                    return p || getPerustiedotValues()[a.name]?.value.match(/([^#]*).*/)[1] === a.value;
+                return a.when.reduce((p, c) => {
+                    return p || getPerustiedotValues()[c.name]?.value.match(/([^#]*).*/)[1] === c.value;
                 }, false);
             }
             return true;
