@@ -28,6 +28,8 @@ describe('Oppilaitos koski posti', () => {
             cy.inputByName('koskiposti.en', 'muokattuen@testi.com');
             cy.clickSaveButton('PUT');
             cy.contains('Suominimi', { timeout: 10000 }).should('exist');
+            cy.clickAccordion('LOMAKE_KOSKI_POSTI');
+            cy.contains('YHTEYSTIEDOT_SAHKOPOSTIOSOITE', { timeout: 10000 }).should('exist');
             cy.get('input[name="koskiposti.fi"]').should('not.have.value', 'testi@testi.com');
             cy.get('input[name="koskiposti.fi"]').should('have.value', 'muokattufi@testi.com');
             cy.get('input[name="koskiposti.sv"]').should('have.value', 'muokattusv@testi.com');
