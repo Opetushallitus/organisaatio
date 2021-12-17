@@ -75,6 +75,7 @@ jobs:
         - cd organisaatio-ui && npm run cypress:ci && cd -
         - kill $(jobs -p) || true
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress-coverage ~/$TRAVIS_BUILD_NUMBER/
+        - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress/screenshots ~/$TRAVIS_BUILD_NUMBER/
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress/videos ~/$TRAVIS_BUILD_NUMBER/
       after_success:
         - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
