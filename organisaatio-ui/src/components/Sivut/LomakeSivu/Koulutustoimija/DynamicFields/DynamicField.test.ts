@@ -10,8 +10,8 @@ describe('DynamicField', () => {
             koodisto: 'vuosiluokatKoodisto',
             when: [
                 {
-                    name: 'oppilaitosTyyppiUri',
-                    value: 'oppilaitostyyppi_11',
+                    field: 'oppilaitosTyyppiUri',
+                    is: 'oppilaitostyyppi_11',
                 },
             ],
         },

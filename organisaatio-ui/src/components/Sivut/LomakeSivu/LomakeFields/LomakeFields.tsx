@@ -30,7 +30,7 @@ const ReadOnlyNimi = ({ value }) => {
 const LabelLink = ({ value, to }) => {
     const { i18n } = useContext(LanguageContext);
     return (
-        <a href={to} target={'_blank'} rel={'noopener'}>
+        <a href={to} target={'_blank'} rel={'noreferrer'}>
             {i18n.translate(value)}
         </a>
     );
