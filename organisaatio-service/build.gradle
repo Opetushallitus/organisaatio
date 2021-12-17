@@ -4,7 +4,7 @@ plugins {
 	id 'java'
 	id 'jacoco'
 	id 'application'
-	id "org.flywaydb.flyway" version "6.4.4"
+	id "org.flywaydb.flyway" version "6.5.7"
 }
 
 ext {
@@ -53,7 +53,7 @@ dependencies {
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
 	compile 'net.sf.dozer:dozer:5.5.1'
 
-	compile "org.flywaydb:flyway-core:6.4.4" // TODO lopullinen versio, mutta jos vanha kanta pohjalla, pitää ensin käyttää versiota 4.2..0
+	compile "org.flywaydb:flyway-core:6.5.7" // TODO lopullinen versio, mutta jos vanha kanta pohjalla, pitää ensin käyttää versiota 4.2..0
 
 
 	compile ('commons-fileupload:commons-fileupload:1.4') {
