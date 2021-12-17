@@ -16,6 +16,11 @@ env:
     - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
     # S3 bucket used to share build files between jobs
     - s3bucket: "opintopolku-utility-travis-artifacts/artifacts/Opetushallitus/organisaatio2"
+cache:
+  directories:
+    - ~/.gradle
+    - ~/.cache
+    - ~/.npm
 addons:
   sonarcloud:
     organization: "opetushallitus"
@@ -41,10 +46,6 @@ jobs:
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       script:
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
@@ -58,10 +59,6 @@ jobs:
         - openjdk11
       services:
         - postgresql
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       install:
         - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
         - cd mock-api && npm install && cd -
@@ -85,10 +82,6 @@ jobs:
       name: "release to artifactory"
       if: branch = master
       language: java
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       install:
         - echo 'override install to skip default gradle call'
       script:
@@ -130,10 +123,6 @@ jobs:
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       script:
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
