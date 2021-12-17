@@ -16,7 +16,7 @@ describe('Oppilaitos koski posti', () => {
         });
         cy.get('@child').then((child) => {
             cy.visit(`${BASE_PATH}/lomake/${child.body.organisaatio.oid}`);
-            cy.contains('Oppilaitos', { timeout: 30000 }).should('exist');
+            cy.contains('Oppilaitos', { timeout: 120000 }).should('exist');
             cy.clickRadioOrCheckbox('Oppilaitos');
             cy.contains('LOMAKE_KOSKI_POSTI').should('not.exist');
             cy.clickRadioOrCheckbox('Oppilaitos');
