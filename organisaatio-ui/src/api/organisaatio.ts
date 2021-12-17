@@ -34,7 +34,12 @@ type SupportedYhteystietoType = 'www' | 'email' | 'numero';
 const NAME_WWW = 'www';
 const NAME_EMAIL = 'email';
 const NAME_PHONE = 'numero';
-
+const KOSKI_POSTI_BASE = {
+    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+    'YhteystietoElementti.pakollinen': false,
+    'YhteystietoElementti.kaytossa': true,
+};
 const baseUrl = `${PUBLIC_API_CONTEXT}/`;
 
 async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
@@ -242,35 +247,23 @@ function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot)
     const arvot = [] as ApiYhteystietoArvo[];
     if (yhteystietoArvoFormValuet.koskiposti?.fi) {
         arvot.push({
-            //KOSKI sahkoposti
+            ...KOSKI_POSTI_BASE,
             'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.fi,
             'YhteystietoArvo.kieli': 'kieli_fi#1',
-            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-            'YhteystietoElementti.pakollinen': false,
-            'YhteystietoElementti.kaytossa': true,
         });
     }
     if (yhteystietoArvoFormValuet.koskiposti?.sv) {
         arvot.push({
-            //KOSKI sahkoposti
+            ...KOSKI_POSTI_BASE,
             'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.sv,
             'YhteystietoArvo.kieli': 'kieli_sv#1',
-            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-            'YhteystietoElementti.pakollinen': false,
-            'YhteystietoElementti.kaytossa': true,
         });
     }
     if (yhteystietoArvoFormValuet.koskiposti?.en) {
         arvot.push({
-            //KOSKI sahkoposti
+            ...KOSKI_POSTI_BASE,
             'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.en,
             'YhteystietoArvo.kieli': 'kieli_en#1',
-            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-            'YhteystietoElementti.pakollinen': false,
-            'YhteystietoElementti.kaytossa': true,
         });
     }
     return arvot;
