@@ -17,10 +17,10 @@ type DynamicFieldsProps = {
 
 export const DynamicFieldMethods = () => {
     const filterDynamicFields = (getPerustiedotValues: () => Perustiedot) => {
-        return (a) => {
-            if (a.when?.length > 0) {
-                return a.when.reduce((p, c) => {
-                    return p || getPerustiedotValues()[c.name]?.value.match(/([^#]*).*/)[1] === c.value;
+        return (showField) => {
+            if (showField.when?.length > 0) {
+                return showField.when.reduce((p, c) => {
+                    return p || getPerustiedotValues()[c.field]?.value.match(/([^#]*).*/)[1] === c.is;
                 }, false);
             }
             return true;

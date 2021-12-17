@@ -180,7 +180,7 @@ export type DynamicField = {
     label: string;
     koodisto: 'vuosiluokatKoodisto';
     type: 'INPUT' | 'SELECT' | 'MULTI_SELECT' | 'LINK';
-    when: [{ name: Path<Perustiedot>; value: string }];
+    when: [{ field: Path<Perustiedot>; is: string }];
     value?: string;
 };
 

@@ -53,7 +53,7 @@
         ],
         "dynamicFields": [
             {
-                "name": "oppilaitosKoodi",
+                "name": "oppilaitosMuutosWebLink",
                 "label": "PERUSTIETO_OPPILAITOS_MUUTOKSET",
                 "type": "LINK",
                 "value": "https://link.webropolsurveys.com/S/D90BF1EA77056AE8"
@@ -82,16 +82,16 @@
                 "koodisto": "vuosiluokatKoodisto",
                 "when": [
                     {
-                        "name": "oppilaitosTyyppiUri",
-                        "value": "oppilaitostyyppi_11"
+                        "field": "oppilaitosTyyppiUri",
+                        "is": "oppilaitostyyppi_11"
                     },
                     {
-                        "name": "oppilaitosTyyppiUri",
-                        "value": "oppilaitostyyppi_12"
+                        "field": "oppilaitosTyyppiUri",
+                        "is": "oppilaitostyyppi_12"
                     },
                     {
-                        "name": "oppilaitosTyyppiUri",
-                        "value": "oppilaitostyyppi_19"
+                        "field": "oppilaitosTyyppiUri",
+                        "is": "oppilaitostyyppi_19"
                     }
                 ]
             }
