@@ -8,10 +8,12 @@ describe('DynamicField', () => {
             label: 'PERUSTIETO_VUOSILUOKAT',
             type: 'MULTI_SELECT',
             koodisto: 'vuosiluokatKoodisto',
-            when: {
-                name: 'oppilaitosTyyppiUri',
-                value: 'oppilaitostyyppi_11',
-            },
+            when: [
+                {
+                    field: 'oppilaitosTyyppiUri',
+                    is: 'oppilaitostyyppi_11',
+                },
+            ],
         },
     ];
 

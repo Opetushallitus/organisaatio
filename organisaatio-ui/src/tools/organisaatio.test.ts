@@ -1,9 +1,10 @@
 import { showCreateChildButton, resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/constants';
 import { Koodi, Koodisto } from '../types/types';
+const defaultValues = { arvo: '', disabled: false, versio: 0 };
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {
-        return { label: uri, value: uri };
+        return { label: uri, value: uri, arvo: '', disabled: false, versio: 0 };
     },
     koodit: () =>
         [
@@ -54,14 +55,17 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_02',
                 label: 'organisaatiotyyppi_02',
             },
             {
+                ...defaultValues,
                 label: 'organisaatiotyyppi_04',
                 value: 'organisaatiotyyppi_04',
             },
             {
+                ...defaultValues,
                 label: 'organisaatiotyyppi_08',
                 value: 'organisaatiotyyppi_08',
             },
@@ -75,10 +79,12 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_02',
                 label: 'organisaatiotyyppi_02',
             },
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_04',
                 label: 'organisaatiotyyppi_04',
             },
@@ -92,14 +98,17 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_02',
                 label: 'organisaatiotyyppi_02',
             },
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_04',
                 label: 'organisaatiotyyppi_04',
             },
             {
+                ...defaultValues,
                 label: 'organisaatiotyyppi_08',
                 value: 'organisaatiotyyppi_08',
             },
@@ -113,22 +122,27 @@ describe('resolveOrganisaatioTyypit', () => {
             })
         ).toStrictEqual([
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_01',
                 label: 'organisaatiotyyppi_01',
             },
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_05',
                 label: 'organisaatiotyyppi_05',
             },
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_06',
                 label: 'organisaatiotyyppi_06',
             },
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_07',
                 label: 'organisaatiotyyppi_07',
             },
             {
+                ...defaultValues,
                 value: 'organisaatiotyyppi_09',
                 label: 'organisaatiotyyppi_09',
             },
