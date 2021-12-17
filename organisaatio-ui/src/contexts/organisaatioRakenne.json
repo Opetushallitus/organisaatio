@@ -167,8 +167,8 @@
         "description": "Varhaiskasvatuksen toimipaikka",
         "type": "organisaatiotyyppi_08",
         "showYtj": false,
-        "moveTargetType": null,
-        "mergeTargetType": null,
+        "moveTargetType": "organisaatiotyyppi_07",
+        "mergeTargetType": "organisaatiotyyppi_08",
         "childTypes": [
             {
                 "type": "organisaatiotyyppi_08",
