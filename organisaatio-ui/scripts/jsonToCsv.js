@@ -8,7 +8,7 @@ fs.unlink(output, function (err) {
 fs.readFile(input, 'utf8', function (err, data) {
     const json = JSON.parse(data);
     const organisaatio2Data = json.filter((a) => a.category === 'organisaatio2');
-    fs.appendFile(output, '\ufeff"category","key","value_fi","value_sv","value_en"\n', function (err) {
+    fs.appendFile(output, '\uFEFFsep=,\n"category","key","value_fi","value_sv","value_en"\n', function (err) {
         if (err) throw err;
     });
     organisaatio2Data.sort((a, b) => {
