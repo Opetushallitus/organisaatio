@@ -7,6 +7,7 @@ import {
     OrganisaationNimetNimi,
     OrganisaatioPaivittaja,
     Perustiedot,
+    UiOrganisaatioBase,
     Yhteystiedot,
     YhteystietoArvot,
 } from '../types/types';
@@ -271,10 +272,10 @@ function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot)
 
 function mapUiOrganisaatioToApiToUpdate(
     postinumerotKoodisto,
-    organisaatioBase,
+    organisaatioBase: UiOrganisaatioBase,
     yhteystiedotFormValues,
-    perustiedotFormValues,
-    yhteystietoArvoFormValuet
+    perustiedotFormValues: Perustiedot,
+    yhteystietoArvoFormValuet: YhteystietoArvot
 ): ApiOrganisaatio {
     const { oid, parentOid, parentOidPath, status } = organisaatioBase;
     const yhteystiedot = mapUiYhteystiedotToApi({
@@ -308,7 +309,6 @@ function mapUiOrganisaatioToApiToUpdate(
         nimet.push({ nimi: uusiNimi, alkuPvm: today });
     }
     return {
-        ...organisaatioBase,
         lakkautusPvm,
         alkuPvm,
         oid,
@@ -318,6 +318,7 @@ function mapUiOrganisaatioToApiToUpdate(
         yhteystiedot,
         nimet,
         ytunnus,
+        varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,
         nimi: uusiNimi,
         tyypit: organisaatioTyypit,

@@ -305,7 +305,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
+                    await yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
                         try {
                             setIsLoading(true);
                             const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(

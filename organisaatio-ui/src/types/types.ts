@@ -1,4 +1,4 @@
-import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
@@ -76,6 +76,7 @@ export type UiOrganisaatioBase = {
     parentOidPath: string;
     apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
     currentNimi: Nimi; //  needed for merging and combining orgs
+    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
 };
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;

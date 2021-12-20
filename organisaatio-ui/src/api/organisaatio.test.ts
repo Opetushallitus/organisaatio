@@ -112,6 +112,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
     vuosiluokat: [],
     yhteystietoArvos: [],
     ytunnus: undefined,
+    piilotettu: undefined,
 };
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
