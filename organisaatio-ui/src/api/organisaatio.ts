@@ -261,6 +261,7 @@ function mapUiOrganisaatioToApiToUpdate(
         vuosiluokat,
         lakkautusPvm,
         ytunnus,
+        piilotettu,
     } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
@@ -272,6 +273,7 @@ function mapUiOrganisaatioToApiToUpdate(
         nimet.push({ nimi: uusiNimi, alkuPvm: today });
     }
     return {
+        ...organisaatioBase,
         lakkautusPvm,
         alkuPvm,
         oid,
@@ -281,6 +283,7 @@ function mapUiOrganisaatioToApiToUpdate(
         yhteystiedot,
         nimet,
         ytunnus,
+        piilotettu,
         nimi: uusiNimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),

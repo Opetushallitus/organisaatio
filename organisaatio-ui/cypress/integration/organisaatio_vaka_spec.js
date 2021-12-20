@@ -10,6 +10,7 @@ describe('Oppilaitos specific fields', () => {
                 organisaatio('CHILD', {
                     parentOid: parentOrganisaatio.body.organisaatio.oid,
                     tyypit: [`organisaatiotyyppi_08`],
+                    piilotettu: true,
                     varhaiskasvatuksenToimipaikkaTiedot: {
                         toimintamuoto: 'vardatoimintamuoto_tm02',
                         kasvatusopillinenJarjestelma: 'vardakasvatusopillinenjarjestelma_kj98',
@@ -79,6 +80,7 @@ describe('Oppilaitos specific fields', () => {
                 .next()
                 .contains('suomi 1.11.2021')
                 .should('exist');
+            cy.contains('VAKA_PIILOTETTU').should('exist').next().get('input').should('be.checked');
         });
     });
 });

@@ -107,6 +107,7 @@ export type Perustiedot = {
     vuosiluokat: KoodistoSelectOption[];
     lakkautusPvm?: LocalDate;
     varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
+    piilotettu?: boolean;
 };
 
 export type ParentTiedot = {

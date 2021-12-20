@@ -169,6 +169,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
         ytunnus: mappingYtunnus,
+        piilotettu,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -207,6 +208,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         kielikoodisto,
                     },
                 }),
+                piilotettu,
             },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
@@ -336,7 +338,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 key={PERUSTIEDOTID}
                 organisaatioBase={organisaatioBase}
                 rakenne={resolvedOrganisaatioRakenne}
-                language={language}
                 openYtjModal={() => setYTJModaaliAuki(true)}
             />
         );
@@ -355,7 +356,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         if (organisaatioTyypit?.includes('organisaatiotyyppi_08') && varhaiskasvatuksenToimipaikkaTiedot) {
-            lomakkeet.push(<VakaToimipaikka vaka={varhaiskasvatuksenToimipaikkaTiedot} />);
+            lomakkeet.push(
+                <VakaToimipaikka
+                    control={perustiedotControl}
+                    key={'VakaToimipaikka'}
+                    getPerustiedotValues={getPerustiedotValues}
+                    vaka={varhaiskasvatuksenToimipaikkaTiedot}
+                />
+            );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
         }
         lomakkeet.push(<NimiHistoriaLomake key={'nimihistorialomake'} nimet={organisaatioBase?.nimet} />);
@@ -384,7 +392,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <div key={o.oid}>
                         <Link to={`${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</Link>
                     </div>,
-                    organisaatioNimiPolku.length - 1 !== index && <div> &gt; </div>,
+                    organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
                 ])}
             </YlaBanneri>
             <ValiContainer>

@@ -30,4 +30,5 @@ export default Joi.object({
     vuosiluokat: Joi.array().min(0),
     lakkautusPvm: Joi.date().allow(''),
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
+    piilotettu: Joi.optional(),
 });
