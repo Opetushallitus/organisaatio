@@ -52,6 +52,27 @@ const OrganisaatioApp: React.FC = () => {
         loading: oppilaitoksenOpetuskieletLoading,
         error: oppilaitoksenOpetuskieletError,
     } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
+    const {
+        data: vardatoimintamuoto,
+        loading: vardatoimintamuotoLoading,
+        error: vardatoimintamuotoError,
+    } = useKoodisto('VARDATOIMINTAMUOTO');
+    const {
+        data: vardakasvatusopillinenjarjestelma,
+        loading: vardakasvatusopillinenjarjestelmaLoading,
+        error: vardakasvatusopillinenjarjestelmaError,
+    } = useKoodisto('VARDAKASVATUSOPILLINENJARJESTELMA');
+    const {
+        data: vardatoiminnallinenpainotus,
+        loading: vardatoiminnallinenpainotusLoading,
+        error: vardatoiminnallinenpainotusError,
+    } = useKoodisto('VARDATOIMINNALLINENPAINOTUS');
+    const {
+        data: vardajarjestamismuoto,
+        loading: vardajarjestamismuotoLoading,
+        error: vardajarjestamismuotoError,
+    } = useKoodisto('VARDAJARJESTAMISMUOTO');
+    const { data: kieli, loading: kieliLoading, error: kieliError } = useKoodisto('KIELI');
     const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
     if (
         oppilaitoksenOpetuskieletLoading ||
@@ -66,7 +87,12 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitLoading ||
         postinumerotLoading ||
         vuosiluokatLoading ||
-        oppilaitostyyppiLoading
+        oppilaitostyyppiLoading ||
+        vardatoimintamuotoLoading ||
+        vardakasvatusopillinenjarjestelmaLoading ||
+        vardatoiminnallinenpainotusLoading ||
+        vardajarjestamismuotoLoading ||
+        kieliLoading
     ) {
         return <Loading />;
     }
@@ -83,7 +109,13 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitError ||
         postinumerotError ||
         vuosiluokatError ||
-        oppilaitostyyppiError
+        oppilaitostyyppiError ||
+        oppilaitostyyppiError ||
+        vardatoimintamuotoError ||
+        vardakasvatusopillinenjarjestelmaError ||
+        vardatoiminnallinenpainotusError ||
+        vardajarjestamismuotoError ||
+        kieliError
     ) {
         return <VirheSivu />;
     }
@@ -111,6 +143,17 @@ const OrganisaatioApp: React.FC = () => {
                                 ryhmanTilaKoodisto: new KoodistoImpl(ryhmanTilat, casData.lang),
                                 vuosiluokatKoodisto: new KoodistoImpl(vuosiluokat, casData.lang),
                                 oppilaitostyyppiKoodisto: new KoodistoImpl(oppilaitostyyppi, casData.lang),
+                                vardatoimintamuotoKoodisto: new KoodistoImpl(vardatoimintamuoto, casData.lang),
+                                vardakasvatusopillinenjarjestelmaKoodisto: new KoodistoImpl(
+                                    vardakasvatusopillinenjarjestelma,
+                                    casData.lang
+                                ),
+                                vardatoiminnallinenpainotusKoodisto: new KoodistoImpl(
+                                    vardatoiminnallinenpainotus,
+                                    casData.lang
+                                ),
+                                vardajarjestamismuotoKoodisto: new KoodistoImpl(vardajarjestamismuoto, casData.lang),
+                                kielikoodisto: new KoodistoImpl(kieli, casData.lang),
                             }}
                         >
                             <Switch>

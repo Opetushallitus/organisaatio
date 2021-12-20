@@ -27,7 +27,6 @@ import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
     rakenne: ResolvedRakenne | undefined;
-    language: string;
     openYtjModal: () => void;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;

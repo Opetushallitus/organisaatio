@@ -7,6 +7,7 @@ import {
     OrganisaationNimetNimi,
     OrganisaatioPaivittaja,
     Perustiedot,
+    UiOrganisaatioBase,
     Yhteystiedot,
     YhteystietoArvot,
 } from '../types/types';
@@ -271,10 +272,10 @@ function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot)
 
 function mapUiOrganisaatioToApiToUpdate(
     postinumerotKoodisto,
-    organisaatioBase,
+    organisaatioBase: UiOrganisaatioBase,
     yhteystiedotFormValues,
-    perustiedotFormValues,
-    yhteystietoArvoFormValuet
+    perustiedotFormValues: Perustiedot,
+    yhteystietoArvoFormValuet: YhteystietoArvot
 ): ApiOrganisaatio {
     const { oid, parentOid, parentOidPath, status } = organisaatioBase;
     const yhteystiedot = mapUiYhteystiedotToApi({
@@ -296,6 +297,7 @@ function mapUiOrganisaatioToApiToUpdate(
         vuosiluokat,
         lakkautusPvm,
         ytunnus,
+        piilotettu,
     } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
@@ -316,6 +318,8 @@ function mapUiOrganisaatioToApiToUpdate(
         yhteystiedot,
         nimet,
         ytunnus,
+        varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
+        piilotettu,
         nimi: uusiNimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),
@@ -360,6 +364,45 @@ function mapApiYhteystiedotToUi(
         osoitteetOnEri: false,
     };
 }
+function mapApiVakaToUi({
+    vaka: varhaiskasvatuksenToimipaikkaTiedot,
+    koodistot: {
+        vardatoimintamuotoKoodisto,
+        vardakasvatusopillinenjarjestelmaKoodisto,
+        vardatoiminnallinenpainotusKoodisto,
+        vardajarjestamismuotoKoodisto,
+        kielikoodisto,
+    },
+}) {
+    if (!varhaiskasvatuksenToimipaikkaTiedot) return undefined;
+    return {
+        toimintamuoto: vardatoimintamuotoKoodisto.uri2SelectOption(varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto),
+        kasvatusopillinenJarjestelma: vardakasvatusopillinenjarjestelmaKoodisto.uri2SelectOption(
+            varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma
+        ),
+        paikkojenLukumaara: varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara,
+        varhaiskasvatuksenToiminnallinenpainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset.map(
+            (a) => ({
+                painotus: vardatoiminnallinenpainotusKoodisto.uri2SelectOption(a.toiminnallinenpainotus),
+                alkupvm: new Date(a.alkupvm),
+                loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
+            })
+        ),
+        varhaiskasvatuksenKielipainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset.map(
+            (a) => {
+                return {
+                    painotus: kielikoodisto.uri2SelectOption(a.kielipainotus),
+                    alkupvm: new Date(a.alkupvm),
+                    loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
+                };
+            }
+        ),
+        varhaiskasvatuksenJarjestamismuodot: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.map(
+            (a) => vardajarjestamismuotoKoodisto.uri2SelectOption(a)
+        ),
+    };
+}
+
 function mapApiYhteysTietoArvotToUi(yhteystietoArvos) {
     return {
         koskiposti: (yhteystietoArvos || [])
@@ -520,6 +563,7 @@ export {
     getApiOsoite,
     getApiYhteystieto,
     mapApiYhteystiedotToUi,
+    mapApiVakaToUi,
     mapUiYhteystiedotToApi,
     mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToSave,

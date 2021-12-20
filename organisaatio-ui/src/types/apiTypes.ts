@@ -77,6 +77,22 @@ export type ApiYhteystietoArvo = {
     'YhteystietoElementti.pakollinen': boolean;
     'YhteystietoElementti.kaytossa': boolean;
 };
+export type ApiVakaTiedot = {
+    toimintamuoto: KoodiUri;
+    kasvatusopillinenJarjestelma: KoodiUri;
+    paikkojenLukumaara: number;
+    varhaiskasvatuksenToiminnallinenpainotukset: {
+        toiminnallinenpainotus: KoodiUri;
+        alkupvm: LocalDate;
+        loppupvm?: LocalDate;
+    }[];
+    varhaiskasvatuksenKielipainotukset: {
+        kielipainotus: KoodiUri;
+        alkupvm: LocalDate;
+        loppupvm?: LocalDate;
+    }[];
+    varhaiskasvatuksenJarjestamismuodot: KoodiUri[];
+};
 export type ApiOrganisaatio = OrganisaatioBase & {
     alkuPvm: LocalDate;
     lakkautusPvm?: LocalDate;
@@ -96,6 +112,8 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     oppilaitosKoodi: string;
     muutOppilaitosTyyppiUris: string[];
     vuosiluokat: string[];
+    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
+    piilotettu?: boolean;
     yhteystietoArvos?: ApiYhteystietoArvo[];
 };
 

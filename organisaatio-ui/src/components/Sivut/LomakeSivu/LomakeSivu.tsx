@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
+    mapApiVakaToUi,
     mapApiYhteystiedotToUi,
     mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToUpdate,
@@ -54,6 +55,7 @@ import Muokattu from '../../Muokattu/Muokattu';
 import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
+import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 
 type LomakeSivuProps = {
@@ -96,6 +98,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         kuntaKoodisto,
         vuosiluokatKoodisto,
         oppilaitostyyppiKoodisto,
+        vardatoimintamuotoKoodisto,
+        vardakasvatusopillinenjarjestelmaKoodisto,
+        vardatoiminnallinenpainotusKoodisto,
+        vardajarjestamismuotoKoodisto,
+        kielikoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
@@ -172,6 +179,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
         ytunnus: mappingYtunnus,
+        piilotettu,
         yhteystietoArvos,
         ...rest
     }: ApiOrganisaatio): {
@@ -202,6 +210,17 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     oppilaitostyyppiKoodisto.uri2SelectOption(kieliUri)
                 ),
                 vuosiluokat: vuosiluokat.map((kieliUri) => vuosiluokatKoodisto.uri2SelectOption(kieliUri)),
+                varhaiskasvatuksenToimipaikkaTiedot: mapApiVakaToUi({
+                    vaka: rest.varhaiskasvatuksenToimipaikkaTiedot,
+                    koodistot: {
+                        vardatoimintamuotoKoodisto,
+                        vardakasvatusopillinenjarjestelmaKoodisto,
+                        vardatoiminnallinenpainotusKoodisto,
+                        vardajarjestamismuotoKoodisto,
+                        kielikoodisto,
+                    },
+                }),
+                piilotettu,
             },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
@@ -286,7 +305,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
+                    await yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
                         try {
                             setIsLoading(true);
                             const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
@@ -319,7 +338,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     }
 
     registerPerustiedot('nimi');
-    const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
+    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
@@ -336,7 +355,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 key={PERUSTIEDOTID}
                 organisaatioBase={organisaatioBase}
                 rakenne={resolvedOrganisaatioRakenne}
-                language={language}
                 openYtjModal={() => setYTJModaaliAuki(true)}
             />
         );
@@ -354,6 +372,17 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        if (organisaatioTyypit?.includes('organisaatiotyyppi_08') && varhaiskasvatuksenToimipaikkaTiedot) {
+            lomakkeet.push(
+                <VakaToimipaikka
+                    control={perustiedotControl}
+                    key={'VakaToimipaikka'}
+                    getPerustiedotValues={getPerustiedotValues}
+                    vaka={varhaiskasvatuksenToimipaikkaTiedot}
+                />
+            );
+            otsikot.push(i18n.translate('LOMAKE_VAKA'));
+        }
         if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
             lomakkeet.push(
                 <ArvoLomake tyyppiOid={'1.2.246.562.5.79385887983'} yhteystietoArvoRegister={yhteystietoArvoRegister} />
@@ -386,7 +415,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <div key={o.oid}>
                         <Link to={`${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</Link>
                     </div>,
-                    organisaatioNimiPolku.length - 1 !== index && <div> &gt; </div>,
+                    organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
                 ])}
             </YlaBanneri>
             <ValiContainer>

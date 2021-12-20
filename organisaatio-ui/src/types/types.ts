@@ -1,4 +1,4 @@
-import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
@@ -76,12 +76,26 @@ export type UiOrganisaatioBase = {
     parentOidPath: string;
     apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
     currentNimi: Nimi; //  needed for merging and combining orgs
+    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
 };
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
 
 export type NewUiOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
 
+export type VakaPainotus = {
+    painotus: KoodistoSelectOption;
+    alkupvm: Date;
+    loppupvm?: Date;
+};
+export type VakaToimipaikkaTiedot = {
+    toimintamuoto: KoodistoSelectOption;
+    kasvatusopillinenJarjestelma: KoodistoSelectOption;
+    paikkojenLukumaara: number;
+    varhaiskasvatuksenToiminnallinenpainotukset: VakaPainotus[];
+    varhaiskasvatuksenKielipainotukset: VakaPainotus[];
+    varhaiskasvatuksenJarjestamismuodot: KoodistoSelectOption[];
+};
 export type Perustiedot = {
     ytunnus?: string;
     nimi: Nimi;
@@ -96,6 +110,8 @@ export type Perustiedot = {
     muutOppilaitosTyyppiUris: KoodistoSelectOption[];
     vuosiluokat: KoodistoSelectOption[];
     lakkautusPvm?: LocalDate;
+    varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
+    piilotettu?: boolean;
 };
 
 export type ParentTiedot = {
@@ -239,6 +255,11 @@ export type KoodistoContextType = {
     maatJaValtiotKoodisto: Koodisto;
     vuosiluokatKoodisto: Koodisto;
     oppilaitostyyppiKoodisto: Koodisto;
+    vardatoimintamuotoKoodisto: Koodisto;
+    vardakasvatusopillinenjarjestelmaKoodisto: Koodisto;
+    vardatoiminnallinenpainotusKoodisto: Koodisto;
+    vardajarjestamismuotoKoodisto: Koodisto;
+    kielikoodisto: Koodisto;
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';

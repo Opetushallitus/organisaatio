@@ -74,4 +74,9 @@ export const KoodistoContext = React.createContext<KoodistoContextType>({
     maatJaValtiotKoodisto: new KoodistoImpl([], 'fi'),
     vuosiluokatKoodisto: new KoodistoImpl([], 'fi'),
     oppilaitostyyppiKoodisto: new KoodistoImpl([], 'fi'),
+    vardatoimintamuotoKoodisto: new KoodistoImpl([], 'fi'),
+    vardakasvatusopillinenjarjestelmaKoodisto: new KoodistoImpl([], 'fi'),
+    vardatoiminnallinenpainotusKoodisto: new KoodistoImpl([], 'fi'),
+    vardajarjestamismuotoKoodisto: new KoodistoImpl([], 'fi'),
+    kielikoodisto: new KoodistoImpl([], 'fi'),
 });
