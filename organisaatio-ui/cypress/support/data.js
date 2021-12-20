@@ -73,17 +73,6 @@ export const organisaatio = (prefix = '', override) => {
                     postitoimipaikka: ``,
                 },
             ],
-            yhteystietoArvos: [
-                {
-                    //KOSKI sahkoposti
-                    'YhteystietoArvo.arvoText': 'testi@testi.com',
-                    'YhteystietoArvo.kieli': 'kieli_fi#1',
-                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-                    'YhteystietoElementti.pakollinen': false,
-                    'YhteystietoElementti.kaytossa': true,
-                },
-            ],
         },
         ...override,
     };
