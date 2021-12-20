@@ -79,6 +79,19 @@ export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
 
 export type NewUiOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
 
+export type VakaPainotus = {
+    painotus: KoodistoSelectOption;
+    alkupvm: Date;
+    loppupvm?: Date;
+};
+export type VakaToimipaikkaTiedot = {
+    toimintamuoto: KoodistoSelectOption;
+    kasvatusopillinenJarjestelma: KoodistoSelectOption;
+    paikkojenLukumaara: number;
+    varhaiskasvatuksenToiminnallinenpainotukset: VakaPainotus[];
+    varhaiskasvatuksenKielipainotukset: VakaPainotus[];
+    varhaiskasvatuksenJarjestamismuodot: KoodistoSelectOption[];
+};
 export type Perustiedot = {
     ytunnus?: string;
     nimi: Nimi;
@@ -93,6 +106,7 @@ export type Perustiedot = {
     muutOppilaitosTyyppiUris: KoodistoSelectOption[];
     vuosiluokat: KoodistoSelectOption[];
     lakkautusPvm?: LocalDate;
+    varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
 };
 
 export type ParentTiedot = {
@@ -236,6 +250,11 @@ export type KoodistoContextType = {
     maatJaValtiotKoodisto: Koodisto;
     vuosiluokatKoodisto: Koodisto;
     oppilaitostyyppiKoodisto: Koodisto;
+    vardatoimintamuotoKoodisto: Koodisto;
+    vardakasvatusopillinenjarjestelmaKoodisto: Koodisto;
+    vardatoiminnallinenpainotusKoodisto: Koodisto;
+    vardajarjestamismuotoKoodisto: Koodisto;
+    kielikoodisto: Koodisto;
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';

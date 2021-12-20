@@ -88,6 +88,23 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     oppilaitosKoodi: string;
     muutOppilaitosTyyppiUris: string[];
     vuosiluokat: string[];
+    varhaiskasvatuksenToimipaikkaTiedot?: {
+        toimintamuoto: KoodiUri;
+        kasvatusopillinenJarjestelma: KoodiUri;
+        paikkojenLukumaara: number;
+        varhaiskasvatuksenToiminnallinenpainotukset: {
+            toiminnallinenpainotus: KoodiUri;
+            alkupvm: LocalDate;
+            loppupvm?: LocalDate;
+        }[];
+        varhaiskasvatuksenKielipainotukset: {
+            kielipainotus: KoodiUri;
+            alkupvm: LocalDate;
+            loppupvm?: LocalDate;
+        }[];
+        varhaiskasvatuksenJarjestamismuodot: KoodiUri[];
+    };
+    piilotettu?: boolean;
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

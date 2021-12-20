@@ -52,6 +52,7 @@ import Muokattu from '../../Muokattu/Muokattu';
 import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
+import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -93,6 +94,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         kuntaKoodisto,
         vuosiluokatKoodisto,
         oppilaitostyyppiKoodisto,
+        vardatoimintamuotoKoodisto,
+        vardakasvatusopillinenjarjestelmaKoodisto,
+        vardatoiminnallinenpainotusKoodisto,
+        vardajarjestamismuotoKoodisto,
+        kielikoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
@@ -162,6 +168,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
         ytunnus: mappingYtunnus,
+        varhaiskasvatuksenToimipaikkaTiedot,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -173,6 +180,36 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
+        const vaka = varhaiskasvatuksenToimipaikkaTiedot
+            ? {
+                  toimintamuoto: vardatoimintamuotoKoodisto.uri2SelectOption(
+                      varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto
+                  ),
+                  kasvatusopillinenJarjestelma: vardakasvatusopillinenjarjestelmaKoodisto.uri2SelectOption(
+                      varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma
+                  ),
+                  paikkojenLukumaara: varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara,
+                  varhaiskasvatuksenToiminnallinenpainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset.map(
+                      (a) => ({
+                          painotus: vardatoiminnallinenpainotusKoodisto.uri2SelectOption(a.toiminnallinenpainotus),
+                          alkupvm: new Date(a.alkupvm),
+                          loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
+                      })
+                  ),
+                  varhaiskasvatuksenKielipainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset.map(
+                      (a) => {
+                          return {
+                              painotus: kielikoodisto.uri2SelectOption(a.kielipainotus),
+                              alkupvm: new Date(a.alkupvm),
+                              loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
+                          };
+                      }
+                  ),
+                  varhaiskasvatuksenJarjestamismuodot: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.map(
+                      (a) => vardajarjestamismuotoKoodisto.uri2SelectOption(a)
+                  ),
+              }
+            : undefined;
         return {
             Uiperustiedot: {
                 nimi: mappingNimi,
@@ -190,6 +227,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     oppilaitostyyppiKoodisto.uri2SelectOption(kieliUri)
                 ),
                 vuosiluokat: vuosiluokat.map((kieliUri) => vuosiluokatKoodisto.uri2SelectOption(kieliUri)),
+                varhaiskasvatuksenToimipaikkaTiedot: vaka,
             },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
@@ -302,7 +340,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     }
 
     registerPerustiedot('nimi');
-    const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
+    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
@@ -337,6 +375,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        if (organisaatioTyypit?.includes('organisaatiotyyppi_08') && varhaiskasvatuksenToimipaikkaTiedot) {
+            lomakkeet.push(<VakaToimipaikka vaka={varhaiskasvatuksenToimipaikkaTiedot} />);
+            otsikot.push(i18n.translate('LOMAKE_VAKA'));
+        }
         lomakkeet.push(<NimiHistoriaLomake key={'nimihistorialomake'} nimet={organisaatioBase?.nimet} />);
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
         if (organisaatioBase?.oid !== ROOT_OID && organisaatioBase?.oid) {
