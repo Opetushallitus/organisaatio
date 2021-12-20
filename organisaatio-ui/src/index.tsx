@@ -21,9 +21,19 @@ axios.interceptors.request.use((config) => {
 const InitGate = ({ children }) => {
     const { loading: frontPropertiesLoading, error: frontPropertiesError } = useFrontProperties();
     if (frontPropertiesLoading) {
-        return <Loading />;
+        return (
+            <>
+                <Raamit />
+                <Loading />
+            </>
+        );
     } else if (frontPropertiesError) {
-        return <ErrorPage>Service unavailable.</ErrorPage>;
+        return (
+            <>
+                <Raamit />
+                <ErrorPage>Service unavailable.</ErrorPage>
+            </>
+        );
     } else {
         return children;
     }
@@ -31,8 +41,8 @@ const InitGate = ({ children }) => {
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter basename={BASE_PATH}>
-            <Raamit />
             <InitGate>
+                <Raamit />
                 <OrganisaatioApp />
             </InitGate>
         </BrowserRouter>

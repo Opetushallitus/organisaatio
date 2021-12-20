@@ -69,6 +69,14 @@ export type OrganisaatioBase = {
     parentOid: string;
     parentOidPath: string;
 };
+export type ApiYhteystietoArvo = {
+    'YhteystietoArvo.arvoText': string;
+    'YhteystietoArvo.kieli': string;
+    'YhteystietojenTyyppi.oid': string;
+    'YhteystietoElementti.oid': string;
+    'YhteystietoElementti.pakollinen': boolean;
+    'YhteystietoElementti.kaytossa': boolean;
+};
 export type ApiOrganisaatio = OrganisaatioBase & {
     alkuPvm: LocalDate;
     lakkautusPvm?: LocalDate;
@@ -105,6 +113,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
         varhaiskasvatuksenJarjestamismuodot: KoodiUri[];
     };
     piilotettu?: boolean;
+    yhteystietoArvos?: ApiYhteystietoArvo[];
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

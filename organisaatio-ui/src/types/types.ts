@@ -53,6 +53,9 @@ export type Yhteystiedot = {
     en: YhteystiedotBase;
     osoitteetOnEri?: boolean;
 };
+export type YhteystietoArvot = {
+    koskiposti?: { fi?: string; sv?: string; en?: string };
+};
 
 export type Nimi = {
     fi?: string;

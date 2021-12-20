@@ -14,6 +14,7 @@ import {
     ResolvedRakenne,
     UiOrganisaatioBase,
     Yhteystiedot,
+    YhteystietoArvot,
 } from '../../../types/types';
 
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
@@ -27,6 +28,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
     mapApiVakaToUi,
     mapApiYhteystiedotToUi,
+    mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToUpdate,
     mergeOrganisaatio,
     readOrganisaatio,
@@ -54,6 +56,7 @@ import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
+import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -128,6 +131,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
+    const {
+        register: yhteystietoArvoRegister,
+        reset: yhteystietoArvoReset,
+        handleSubmit: yhteystietoArvoHandleSubmit,
+    } = useForm<YhteystietoArvot>({
+        defaultValues: {},
+    });
     const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
     const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
 
@@ -170,11 +180,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         lakkautusPvm,
         ytunnus: mappingYtunnus,
         piilotettu,
+        yhteystietoArvos,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
         Uiyhteystiedot: Yhteystiedot;
+        UIhteysTietoArvot: YhteystietoArvot;
     } => {
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
         const kotipaikka = kuntaKoodisto.uri2SelectOption(kotipaikkaUri);
@@ -212,11 +224,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
+            UIhteysTietoArvot: mapApiYhteysTietoArvotToUi(yhteystietoArvos),
         };
     };
 
     async function resetOrganisaatio({ organisaatio, polku }) {
-        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
+        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
         const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
@@ -227,6 +240,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             setParentTiedot({ organisaatioTyypit: tyypit, oid });
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
+            yhteystietoArvoReset(UIhteysTietoArvot);
         }
     }
 
@@ -291,22 +305,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    try {
-                        setIsLoading(true);
-                        const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
-                            postinumerotKoodisto,
-                            organisaatioBase,
-                            yhteystiedotFormValues,
-                            perustiedotFormValues
-                        );
-                        const organisaatio = await updateOrganisaatio(apiOrganisaatio);
-                        if (organisaatio) {
-                            await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
-                            setMuokattu(muokattu + 1);
+                    yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
+                        try {
+                            setIsLoading(true);
+                            const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                                postinumerotKoodisto,
+                                organisaatioBase,
+                                yhteystiedotFormValues,
+                                perustiedotFormValues,
+                                yhteystietoArvoFormValuet
+                            );
+                            const organisaatio = await updateOrganisaatio(apiOrganisaatio);
+                            if (organisaatio) {
+                                await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
+                                setMuokattu(muokattu + 1);
+                            }
+                        } finally {
+                            setIsLoading(false);
                         }
-                    } finally {
-                        setIsLoading(false);
-                    }
+                    })();
                 })();
             })();
         }
@@ -365,6 +382,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
+        }
+        if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
+            lomakkeet.push(
+                <ArvoLomake tyyppiOid={'1.2.246.562.5.79385887983'} yhteystietoArvoRegister={yhteystietoArvoRegister} />
+            );
+            otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));
         }
         lomakkeet.push(<NimiHistoriaLomake key={'nimihistorialomake'} nimet={organisaatioBase?.nimet} />);
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));

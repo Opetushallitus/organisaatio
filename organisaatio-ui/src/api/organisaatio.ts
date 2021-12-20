@@ -8,9 +8,11 @@ import {
     OrganisaatioPaivittaja,
     Perustiedot,
     Yhteystiedot,
+    YhteystietoArvot,
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
 import {
+    ApiYhteystietoArvo,
     ApiOrganisaatio,
     APIOrganisaatioHistoria,
     ApiYhteystiedot,
@@ -32,7 +34,12 @@ type SupportedYhteystietoType = 'www' | 'email' | 'numero';
 const NAME_WWW = 'www';
 const NAME_EMAIL = 'email';
 const NAME_PHONE = 'numero';
-
+const KOSKI_POSTI_BASE = {
+    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+    'YhteystietoElementti.pakollinen': false,
+    'YhteystietoElementti.kaytossa': true,
+};
 const baseUrl = `${PUBLIC_API_CONTEXT}/`;
 
 async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {
@@ -236,11 +243,38 @@ function mapUiOrganisaatioToApiToSave(
     };
 }
 
+function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot): ApiYhteystietoArvo[] {
+    const arvot = [] as ApiYhteystietoArvo[];
+    if (yhteystietoArvoFormValuet.koskiposti?.fi) {
+        arvot.push({
+            ...KOSKI_POSTI_BASE,
+            'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.fi,
+            'YhteystietoArvo.kieli': 'kieli_fi#1',
+        });
+    }
+    if (yhteystietoArvoFormValuet.koskiposti?.sv) {
+        arvot.push({
+            ...KOSKI_POSTI_BASE,
+            'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.sv,
+            'YhteystietoArvo.kieli': 'kieli_sv#1',
+        });
+    }
+    if (yhteystietoArvoFormValuet.koskiposti?.en) {
+        arvot.push({
+            ...KOSKI_POSTI_BASE,
+            'YhteystietoArvo.arvoText': yhteystietoArvoFormValuet.koskiposti.en,
+            'YhteystietoArvo.kieli': 'kieli_en#1',
+        });
+    }
+    return arvot;
+}
+
 function mapUiOrganisaatioToApiToUpdate(
     postinumerotKoodisto,
     organisaatioBase,
     yhteystiedotFormValues,
-    perustiedotFormValues
+    perustiedotFormValues,
+    yhteystietoArvoFormValuet
 ): ApiOrganisaatio {
     const { oid, parentOid, parentOidPath, status } = organisaatioBase;
     const yhteystiedot = mapUiYhteystiedotToApi({
@@ -248,6 +282,7 @@ function mapUiOrganisaatioToApiToUpdate(
         apiYhteystiedot: organisaatioBase.apiYhteystiedot,
         uiYhteystiedot: yhteystiedotFormValues,
     });
+    const yhteystietoArvos = mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet);
     const {
         kotipaikka,
         maa,
@@ -294,6 +329,7 @@ function mapUiOrganisaatioToApiToUpdate(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
         vuosiluokat: vuosiluokat?.map((a) => `${a.value}#${a.versio}`),
+        yhteystietoArvos,
     };
 }
 
@@ -366,6 +402,26 @@ function mapApiVakaToUi({
     };
 }
 
+function mapApiYhteysTietoArvotToUi(yhteystietoArvos) {
+    return {
+        koskiposti: (yhteystietoArvos || [])
+            .filter((a) => {
+                return a['YhteystietojenTyyppi.oid'] === '1.2.246.562.5.79385887983';
+            })
+            .reduce((p, c) => {
+                switch (c['YhteystietoArvo.kieli'].substr(0, 8)) {
+                    case 'kieli_fi':
+                        return { ...p, fi: c['YhteystietoArvo.arvoText'] };
+                    case 'kieli_sv':
+                        return { ...p, sv: c['YhteystietoArvo.arvoText'] };
+                    case 'kieli_en':
+                        return { ...p, en: c['YhteystietoArvo.arvoText'] };
+                    default:
+                        return { ...p };
+                }
+            }, {}),
+    };
+}
 function mapUiYhteystiedotToApi({
     postinumerotKoodisto,
     apiYhteystiedot = [],
@@ -508,6 +564,7 @@ export {
     mapApiYhteystiedotToUi,
     mapApiVakaToUi,
     mapUiYhteystiedotToApi,
+    mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToSave,
     mapUiOrganisaatioToApiToUpdate,
     useOrganisaatioHistoria,
