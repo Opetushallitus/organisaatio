@@ -4,18 +4,10 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { KoodistoContext } from '../../../../../contexts/contexts';
-import {
-    KoodistoSelectOption,
-    Nimenmuutostyyppi,
-    Nimi,
-    OrganisaationNimetNimi,
-    Perustiedot,
-    ResolvedRakenne,
-    UiOrganisaatioBase,
-} from '../../../../../types/types';
+import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import DatePickerController from '../../../../Controllers/DatePickerController';
 import DynamicFields from '../DynamicFields/DynamicFields';
@@ -31,6 +23,7 @@ import {
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
 import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
+import { findCurrentNimi } from '../../../../../tools/mappers';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -43,11 +36,6 @@ type PerustietoLomakeProps = {
     setPerustiedotValue: UseFormSetValue<Perustiedot>;
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
     organisaatioBase: UiOrganisaatioBase;
-};
-
-const OrganisaationNimi = ({ defaultNimi, control }) => {
-    const nimi = useWatch({ control, name: 'nimi', defaultValue: defaultNimi });
-    return <ReadOnlyNimi value={nimi} />;
 };
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
@@ -68,31 +56,12 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const koodistot = useContext(KoodistoContext);
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
-    formRegister('nimi');
-
-    const handleNimenTallenus = (nimenmuutosTyyppi: Nimenmuutostyyppi, nimi: Nimi) => {
-        const nimet = organisaatioBase.nimet;
-        const sameDayNimiIdx = organisaatioBase.nimet.findIndex(
-            (nimi: OrganisaationNimetNimi) => nimi.alkuPvm === today
-        );
-        if (sameDayNimiIdx > -1) {
-            nimet[sameDayNimiIdx].nimi = uusiNimi;
-        } else {
-            nimet.push({ nimi, alkuPvm: today });
-        }
-        switch (nimenmuutosTyyppi) {
-            case 'CREATE':
-                setPerustiedotValue('nimi', nimi);
-                break;
-            case 'EDIT':
-                setPerustiedotValue('nimi', nimi);
-                break;
-            case 'CANCEL':
-                setPerustiedotValue('nimi', nimi);
-                break;
-        }
+    const handleNimenMuutosModaaliClose = (nimiIsUpdated: boolean) => {
+        setNimenmuutosModaaliAuki(false);
     };
     const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
+    const currentNimi = findCurrentNimi(organisaatioBase.nimet, nimi);
+
     return (
         <UloinKehys>
             <Rivi>
@@ -104,7 +73,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
                     ]}
                     <AvainKevyestiBoldattu label={'PERUSTIETO_ORGANISAATION_NIMI'} />
-                    <OrganisaationNimi control={formControl} defaultNimi={nimi} />
+                    <ReadOnlyNimi value={nimi} />
                 </Ruudukko>
                 <div>
                     <LomakeButton
@@ -230,9 +199,9 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             </Rivi>
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
-                    closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={handleNimenTallenus}
-                    nimi={nimi}
+                    closeNimenmuutosModaali={handleNimenMuutosModaaliClose}
+                    currentNimi={currentNimi}
+                    oid={organisaatioBase.oid}
                 />
             )}
             {lakkautusModaaliAuki && (

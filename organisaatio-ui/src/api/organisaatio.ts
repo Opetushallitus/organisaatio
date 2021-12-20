@@ -7,6 +7,7 @@ import {
     OrganisaationNimetNimi,
     OrganisaatioPaivittaja,
     Perustiedot,
+    UiOrganisaatioBase,
     Yhteystiedot,
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
@@ -25,6 +26,7 @@ import {
 import useAxios, { RefetchOptions, ResponseValues } from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
 import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/contexts';
+import { UnpackNestedValue } from 'react-hook-form';
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
 type SupportedYhteystietoType = 'www' | 'email' | 'numero';
@@ -53,6 +55,28 @@ async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
         return data.organisaatio;
     });
 }
+
+async function createOrganisaatioNimi(oid: string, nimi: OrganisaationNimetNimi) {
+    return errorHandlingWrapper(async () => {
+        const { data: nimiData } = await Axios.post<OrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, nimi);
+        success({ message: 'MESSAGE_NIMEN_TALLENNUS_ONNISTUI' });
+        return nimiData;
+    });
+}
+
+async function updateOrganisaatioNimi(
+    oid: string,
+    currentNimi: OrganisaationNimetNimi,
+    updatedNimi: OrganisaationNimetNimi
+) {
+    const requestBody = { currentNimi, updatedNimi };
+    return errorHandlingWrapper(async () => {
+        const { data: nimi } = await Axios.put<OrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, requestBody);
+        success({ message: 'MESSAGE_NIMEN_MUOKKAUS_ONNISTUI' });
+        return nimi;
+    });
+}
+
 async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaOid[]> {
     if (oids.length === 0) return [];
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
@@ -193,8 +217,8 @@ function mapUiOrganisaatioToApiToSave(
     const nimet = [
         {
             nimi,
-            alkuPvm: new Date().toISOString().split('T')[0],
-        },
+            alkuPvm,
+        } as OrganisaationNimetNimi,
     ];
     return {
         ytunnus,
@@ -217,10 +241,10 @@ function mapUiOrganisaatioToApiToSave(
 }
 
 function mapUiOrganisaatioToApiToUpdate(
-    postinumerotKoodisto,
-    organisaatioBase,
-    yhteystiedotFormValues,
-    perustiedotFormValues
+    postinumerotKoodisto: Koodisto,
+    organisaatioBase: UiOrganisaatioBase,
+    yhteystiedotFormValues: UnpackNestedValue<Yhteystiedot>,
+    perustiedotFormValues: UnpackNestedValue<Perustiedot>
 ): ApiOrganisaatio {
     const { oid, parentOid, parentOidPath, status } = organisaatioBase;
     const yhteystiedot = mapUiYhteystiedotToApi(
@@ -241,15 +265,7 @@ function mapUiOrganisaatioToApiToUpdate(
         vuosiluokat,
         lakkautusPvm,
     } = perustiedotFormValues;
-    const today = new Date().toISOString().split('T')[0];
-    const nimet = organisaatioBase.nimet;
-    const uusiNimi = { ...perustiedotFormValues.nimi };
-    const sameDayNimiIdx = organisaatioBase.nimet.findIndex((nimi: OrganisaationNimetNimi) => nimi.alkuPvm === today);
-    if (sameDayNimiIdx > -1) {
-        nimet[sameDayNimiIdx].nimi = uusiNimi;
-    } else {
-        nimet.push({ nimi: uusiNimi, alkuPvm: today });
-    }
+    const { nimet, currentNimi: nimi } = organisaatioBase;
     return {
         lakkautusPvm,
         alkuPvm,
@@ -259,7 +275,7 @@ function mapUiOrganisaatioToApiToUpdate(
         status,
         yhteystiedot,
         nimet,
-        nimi: uusiNimi,
+        nimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => a.value),
         kotipaikkaUri: kotipaikka.value,
@@ -458,4 +474,6 @@ export {
     mergeOrganisaatio,
     searchOrganisation,
     readOrganisaatioPaivittaja,
+    createOrganisaatioNimi,
+    updateOrganisaatioNimi,
 };

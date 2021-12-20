@@ -1,4 +1,4 @@
-import { Koodi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import { Koodi, Nimi, OrganisaationNimetNimi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
     if (hasVersioningHashtag !== -1) {
@@ -36,4 +36,11 @@ export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[Supp
         Object.keys(KielisetYhteystiedot).filter((yhteystietokentta) => KielisetYhteystiedot[yhteystietokentta])
             .length > 0
     );
+};
+
+export const findCurrentNimi = (nimet: OrganisaationNimetNimi[], nimi: Nimi) => {
+    const currentNimi = nimet.find((nimetNimi) => JSON.stringify(nimetNimi.nimi) === JSON.stringify(nimi));
+    const editModeDisabled =
+        currentNimi && !!nimet.find((nimetNimi) => new Date(nimetNimi.alkuPvm) > new Date(currentNimi.alkuPvm));
+    return currentNimi ? { ...currentNimi, disabled: editModeDisabled } : undefined;
 };

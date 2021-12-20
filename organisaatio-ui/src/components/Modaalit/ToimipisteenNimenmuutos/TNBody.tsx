@@ -1,61 +1,76 @@
 import React, { useContext } from 'react';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Radio from '@opetushallitus/virkailija-ui-components/Radio';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import { Nimi } from '../../../types/types';
+import { NimenmuutosLomake } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
-import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { Control, UseFormGetValues, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { LanguageContext } from '../../../contexts/contexts';
 import { Controller } from 'react-hook-form';
+import NimenMuutosFields from './NimenMuutosFields';
+import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
+import Spinner from '../../Spinner/Spinner';
+import Typography from '@opetushallitus/virkailija-ui-components/Typography';
 
 type TNProps = {
-    validationErrors: FieldErrors<Nimi>;
-    register: UseFormRegister<Nimi>;
-    formControl: Control<Nimi>;
+    validationErrors: FieldErrors<NimenmuutosLomake>;
+    register: UseFormRegister<NimenmuutosLomake>;
+    formControl: Control<NimenmuutosLomake>;
+    getValues: UseFormGetValues<NimenmuutosLomake>;
+    isLoading: boolean;
 };
 
 export default function TNBody(props: TNProps) {
-    const { validationErrors, register, formControl } = props;
-    console.log('ve', validationErrors);
+    const { validationErrors, register, formControl, getValues, isLoading } = props;
     const { i18n } = useContext(LanguageContext);
+    if (isLoading) {
+        return (
+            <BodyRivi>
+                <BodyKentta>
+                    <Spinner />
+                </BodyKentta>
+            </BodyRivi>
+        );
+    }
+    const { muutostyyppi, editDisabled } = getValues();
     return (
-        <BodyKehys>
+        <>
             <BodyRivi>
                 <BodyKentta>
                     <Controller
                         control={formControl}
-                        defaultValue="CREATE"
                         name={'muutostyyppi'}
-                        render={({ field: { ref, value, ...rest } }) => (
-                            <RadioGroup {...rest} value={value || 'CREATE'}>
-                                <Radio value="CREATE">
+                        render={({ field: { ref, value = 'CREATE', ...rest } }) => (
+                            <RadioGroup {...rest} value={value}>
+                                <Radio value={MUUTOSTYYPPI_CREATE}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
                                 </Radio>
-                                <Radio value="EDIT">
+                                <Radio disabled={editDisabled} value={MUUTOSTYYPPI_EDIT}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
-                                </Radio>
-                                <Radio value="CANCEL">
-                                    {i18n.translate('NIMENMUUTOS_PERUUTA_AJASTETTU_NIMENMUUTOS')}
                                 </Radio>
                             </RadioGroup>
                         )}
                     />
                 </BodyKentta>
             </BodyRivi>
+            {editDisabled && (
+                <BodyRivi>
+                    <BodyKentta>
+                        <Typography variant="body">
+                            {i18n.translate('NIMENMUUTOS_MUOKKAUS_DISABLED_HAS_SCHEDULED_CHANGE')}
+                        </Typography>
+                    </BodyKentta>
+                </BodyRivi>
+            )}
             <BodyRivi>
-                <BodyKentta>
-                    <BodyKentta isRequired label={'LABEL_SUOMEKSI'}>
-                        <Input error={!!validationErrors['fi']} id={'organisaation_nimiFi'} {...register('fi')} />
-                    </BodyKentta>
-                    <BodyKentta isRequired label={'LABEL_RUOTSIKSI'}>
-                        <Input error={!!validationErrors['sv']} id={'organisaation_nimiSv'} {...register('sv')} />
-                    </BodyKentta>
-                    <BodyKentta isRequired label={'LABEL_ENGLANNIKSI'}>
-                        <Input error={!!validationErrors['en']} id={'organisaation_nimiEn'} {...register('en')} />
-                    </BodyKentta>
-                </BodyKentta>
+                <NimenMuutosFields
+                    disabled={editDisabled && muutostyyppi === MUUTOSTYYPPI_EDIT}
+                    edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
+                    validationErrors={validationErrors}
+                    formControl={formControl}
+                    register={register}
+                />
             </BodyRivi>
-        </BodyKehys>
+        </>
     );
 }

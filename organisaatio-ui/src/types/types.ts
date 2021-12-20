@@ -20,7 +20,7 @@ export type KoodistoSelectOption = {
     label: string;
 };
 
-export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'CANCEL';
+export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'DELETE';
 
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
@@ -57,12 +57,19 @@ export type Nimi = {
     fi?: string;
     sv?: string;
     en?: string;
-    muutostyyppi?: Nimenmuutostyyppi;
+};
+
+export type NimenmuutosLomake = {
+    nimi: Nimi;
+    alkuPvm: LocalDate;
+    muutostyyppi: Nimenmuutostyyppi;
+    oid: string;
+    editDisabled?: boolean;
 };
 
 export type OrganisaationNimetNimi = {
     nimi: Nimi;
-    alkuPvm?: string;
+    alkuPvm: LocalDate;
 };
 export type UiOrganisaatioBase = {
     oid: string;

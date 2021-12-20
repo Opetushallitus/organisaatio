@@ -1,7 +1,8 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.api.DateParam;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -142,29 +143,28 @@ public interface OrganisaatioApi {
             @Parameter(description = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = true) @RequestParam("moveDate") DateParam moveDate
     );
 
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{oid}")
     @Operation(
             summary = "Poistaa oid:n määrittämän organisaation",
             description = "Operaatio poistaa organisaation annetulla oid:llä.")
     void deleteOrganisaatio(
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid
     );
+
     @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(@PathVariable("oid") String oid);
 
     // nimen muokkausta varten alla:
-    @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(@PathVariable("oid") String oid) throws Exception;
 
     // Operaatio luo uuden nimen organisaatiolle annetusta JSON:sta.
-    @PutMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioNimiDTOV2 newOrganisaatioNimi(@PathVariable("oid") String oid, OrganisaatioNimiDTOV2 nimidto) throws Exception;
+    @PostMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    OrganisaatioNimiDTO newOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
 
     // Operaatio päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
-    @PostMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date, OrganisaatioNimiDTOV2 nimidto) throws Exception;
+    @PutMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    OrganisaatioNimiDTO updateOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiUpdateDTO nimiUpdateDto);
 
     // Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
-    @DeleteMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date) throws Exception;
-}
+    @DeleteMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}")
+    void deleteOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date);
+};

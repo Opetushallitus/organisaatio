@@ -1,4 +1,4 @@
-import { Koodisto, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+import { Koodisto, LocalDate, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
 import { ApiOrganisaatio, ApiYhteystiedot, NewApiOrganisaatio, YhteystiedotOsoite } from '../types/apiTypes';
 import {
     getApiOsoite,
@@ -22,8 +22,8 @@ const postinumerotKoodisto: Partial<Koodisto> = {
     uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
-const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-const today = new Date().toISOString().split('T')[0];
+const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] as LocalDate;
+const today = new Date().toISOString().split('T')[0] as LocalDate;
 
 const oldApiyhteystiedot = [
     {

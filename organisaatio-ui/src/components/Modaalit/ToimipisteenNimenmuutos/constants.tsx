@@ -1,0 +1,2 @@
+export const MUUTOSTYYPPI_EDIT = 'EDIT';
+export const MUUTOSTYYPPI_CREATE = 'CREATE';

@@ -1,8 +1,13 @@
 import Joi from 'joi';
 
 export default Joi.object({
-    fi: Joi.string().required(),
-    en: Joi.string().required(),
-    sv: Joi.string().required(),
-    muutostyyppi: Joi.string().allow('CREATE', 'EDIT', 'CANCEL'),
+    nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).required(),
+    alkuPvm: Joi.when('muutostyyppi', {
+        is: 'CREATE',
+        then: Joi.date().required(),
+        otherwise: Joi.optional(),
+    }),
+    muutostyyppi: Joi.string().allow('CREATE', 'EDIT').required(),
+    oid: Joi.string().required(),
+    editDisabled: Joi.boolean().optional(),
 });

@@ -28,6 +28,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -37,10 +38,7 @@ import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.resource.dto.*;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
@@ -298,7 +296,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/nimet
     @Override
-    public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(String oid) throws Exception {
+    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid) throws Exception {
         Preconditions.checkNotNull(oid);
 
         try {
@@ -311,7 +309,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         List<OrganisaatioNimi> organisaatioNimet = organisaatioBusinessService.getOrganisaatioNimet(oid);
 
         // Define the target list type for mapping
-        Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTOV2>>() {
+        Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTO>>() {
         }.getType();
 
         // Map domain type to DTO

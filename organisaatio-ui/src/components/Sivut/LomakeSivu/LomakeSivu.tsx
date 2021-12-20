@@ -121,8 +121,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
+    registerPerustiedot('nimi');
     const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
     const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
+    watchPerustiedot('nimi');
 
     useEffect(() => {
         (async function () {
@@ -297,8 +299,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
         );
     }
-
-    registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];

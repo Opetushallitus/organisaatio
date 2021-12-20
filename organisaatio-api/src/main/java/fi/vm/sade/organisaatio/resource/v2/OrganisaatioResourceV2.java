@@ -19,6 +19,7 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -69,7 +70,7 @@ public interface OrganisaatioResourceV2 {
     OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@PathVariable("oid") String oid) throws Exception;
 
     @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(@PathVariable("oid") String oid) throws Exception;
+    List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid) throws Exception;
 
     @GetMapping(path = "/{id}/LOP", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@PathVariable("id") String oid);
