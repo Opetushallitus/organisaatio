@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import {
-    ApiYhteystietoArvo,
     Koodisto,
     LiitaOrganisaatioon,
     OrganisaatioHistoria,
@@ -13,6 +12,7 @@ import {
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
 import {
+    ApiYhteystietoArvo,
     ApiOrganisaatio,
     APIOrganisaatioHistoria,
     ApiYhteystiedot,
