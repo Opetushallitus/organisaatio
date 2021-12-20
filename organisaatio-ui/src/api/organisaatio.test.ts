@@ -8,6 +8,7 @@ import {
     mapUiOrganisaatioToApiToUpdate,
     mapUiOrganisaatioToApiToSave,
     checkAndMapValuesToYhteystiedot,
+    mapApiYhteysTietoArvotToUi,
 } from './organisaatio';
 import { ROOT_OID } from '../contexts/constants';
 
@@ -173,7 +174,51 @@ const uiPerustiedot: Perustiedot = {
     ],
     vuosiluokat: [],
 };
-
+describe('mapApiYhteysTietoArvotToUi', () => {
+    it('Maps api yhteystietoarvot to Api format', () => {
+        const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' } };
+        expect(
+            mapApiYhteysTietoArvotToUi([
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'fi',
+                    'YhteystietoArvo.kieli': 'kieli_fi#1',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'sv',
+                    'YhteystietoArvo.kieli': 'kieli_sv#1',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'en',
+                    'YhteystietoArvo.kieli': 'kieli_en#12',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'foo',
+                    'YhteystietoArvo.kieli': 'kieli_en#12',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.shouldignore',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+            ])
+        ).toEqual(expected);
+    });
+});
 describe('mapUiYhteystiedotToApi', () => {
     it('Maps api yhteystiedot to Api array format ([yhteystieto, ...]) and removes empty attributes', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];

@@ -360,7 +360,26 @@ function mapApiYhteystiedotToUi(
         osoitteetOnEri: false,
     };
 }
-
+function mapApiYhteysTietoArvotToUi(yhteystietoArvos) {
+    return {
+        koskiposti: (yhteystietoArvos || [])
+            .filter((a) => {
+                return a['YhteystietojenTyyppi.oid'] === '1.2.246.562.5.79385887983';
+            })
+            .reduce((p, c) => {
+                switch (c['YhteystietoArvo.kieli'].substr(0, 8)) {
+                    case 'kieli_fi':
+                        return { ...p, fi: c['YhteystietoArvo.arvoText'] };
+                    case 'kieli_sv':
+                        return { ...p, sv: c['YhteystietoArvo.arvoText'] };
+                    case 'kieli_en':
+                        return { ...p, en: c['YhteystietoArvo.arvoText'] };
+                    default:
+                        return { ...p };
+                }
+            }, {}),
+    };
+}
 function mapUiYhteystiedotToApi({
     postinumerotKoodisto,
     apiYhteystiedot = [],
@@ -502,6 +521,7 @@ export {
     getApiYhteystieto,
     mapApiYhteystiedotToUi,
     mapUiYhteystiedotToApi,
+    mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToSave,
     mapUiOrganisaatioToApiToUpdate,
     useOrganisaatioHistoria,
