@@ -16,6 +16,11 @@ env:
     - secure: "iDr7c8Nc5V3zHflXwYJAzkL/ObGbRzIpIxEFOoGquUWOk+04tsnmH1Aj3mztQ4G8TsHZOZ4PAIW+KtI7II9AtqyW2zRJykV/RBkAhE/nAqsFZTbYJ7lPTGxTEmD6mG4Mm2i0P2yE0fwwAD2sd3s9MpXLHScEOpOfFUKeRvYj5QA="
     # S3 bucket used to share build files between jobs
     - s3bucket: "opintopolku-utility-travis-artifacts/artifacts/Opetushallitus/organisaatio2"
+cache:
+  directories:
+    - ~/.gradle
+    - ~/.cache
+    - ~/.npm
 addons:
   sonarcloud:
     organization: "opetushallitus"
@@ -41,10 +46,6 @@ jobs:
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       script:
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
@@ -58,10 +59,6 @@ jobs:
         - openjdk11
       services:
         - postgresql
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       install:
         - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
         - cd mock-api && npm install && cd -
@@ -71,20 +68,20 @@ jobs:
       script:
         - ./gradlew clean build -x test -x uiTest -x lint -x checkFormatting -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - cd mock-api && npm run mock-api &
-        - java -jar -Xms4g -Xmx4g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice organisaatio-service/build/libs/organisaatio-service.jar &
+        - java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice organisaatio-service/build/libs/organisaatio-service.jar &
         - cd organisaatio-ui && npm run cypress:ci && cd -
         - kill $(jobs -p) || true
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress-coverage ~/$TRAVIS_BUILD_NUMBER/
       after_success:
         - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
+      after_failure:
+        - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress/screenshots ~/$TRAVIS_BUILD_NUMBER/
+        - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress/videos ~/$TRAVIS_BUILD_NUMBER/
+        - aws s3 sync ~/$TRAVIS_BUILD_NUMBER s3://$s3bucket/$TRAVIS_BUILD_NUMBER
     - stage: "Deploy"
       name: "release to artifactory"
       if: branch = master
       language: java
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       install:
         - echo 'override install to skip default gradle call'
       script:
@@ -126,10 +123,6 @@ jobs:
       language: java
       jdk:
         - openjdk11
-      cache:
-        directories:
-          - $HOME/.gradle
-          - $HOME/.cache
       script:
         - echo -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - ./gradlew clean build -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
