@@ -95,6 +95,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [organisaatioPaivittaja, setOrganisaatioPaivittaja] = useState<OrganisaatioPaivittaja>({});
+    const [nimiIsMuuttunut, setNimiIsMuuttunut] = useState<boolean>(false);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
     );
@@ -128,14 +129,18 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     useEffect(() => {
         (async function () {
-            const organisaatio = await readOrganisaatio(params.oid);
-            const paivittaja = await readOrganisaatioPaivittaja(params.oid);
-            if (organisaatio) {
-                await resetOrganisaatio({ ...organisaatio, paivittaja });
+            try {
+                const organisaatio = await readOrganisaatio(params.oid);
+                const paivittaja = await readOrganisaatioPaivittaja(params.oid);
+                if (organisaatio) {
+                    await resetOrganisaatio({ ...organisaatio, paivittaja });
+                }
+            } finally {
+                nimiIsMuuttunut && setNimiIsMuuttunut(!nimiIsMuuttunut);
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params.oid]);
+    }, [params.oid, nimiIsMuuttunut]);
     useEffect(() => {
         const organisaatioRakenne = resolveOrganisaatio(rakenne, {
             organisaatioTyypit: watchOrganisaatioTyypit || [],
@@ -243,9 +248,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         await handleOrganisationMerge(props);
     }
 
-    async function cancelYhdistaOrganisaatio() {
+    function cancelYhdistaOrganisaatio() {
         setYhdistaOrganisaatioModaaliAuki(false);
         setYhdistaOrganisaatio(initialYhdista);
+    }
+
+    function handleNimiMuutos() {
+        setNimiIsMuuttunut(true);
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);
@@ -318,6 +327,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 rakenne={resolvedOrganisaatioRakenne}
                 language={language}
                 openYtjModal={() => setYTJModaaliAuki(true)}
+                handleNimiTallennus={handleNimiMuutos}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));

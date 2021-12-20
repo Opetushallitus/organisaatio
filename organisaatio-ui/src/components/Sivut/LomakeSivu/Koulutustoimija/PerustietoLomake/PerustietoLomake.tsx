@@ -36,6 +36,7 @@ type PerustietoLomakeProps = {
     setPerustiedotValue: UseFormSetValue<Perustiedot>;
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
     organisaatioBase: UiOrganisaatioBase;
+    handleNimiTallennus: () => void;
 };
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
@@ -47,6 +48,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         formRegister,
         formControl,
         setPerustiedotValue,
+        handleNimiTallennus,
         rakenne,
         resolvedTyypit,
     } = props;
@@ -57,6 +59,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     const handleNimenMuutosModaaliClose = (nimiIsUpdated: boolean) => {
+        nimiIsUpdated && handleNimiTallennus();
         setNimenmuutosModaaliAuki(false);
     };
     const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
@@ -77,6 +80,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 </Ruudukko>
                 <div>
                     <LomakeButton
+                        disabled={!currentNimi}
                         label={'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA'}
                         onClick={() => setNimenmuutosModaaliAuki(true)}
                     />
