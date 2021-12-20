@@ -324,6 +324,44 @@ function mapApiYhteystiedotToUi(
         osoitteetOnEri: false,
     };
 }
+function mapApiVakaToUi({
+    vaka: varhaiskasvatuksenToimipaikkaTiedot,
+    koodistot: {
+        vardatoimintamuotoKoodisto,
+        vardakasvatusopillinenjarjestelmaKoodisto,
+        vardatoiminnallinenpainotusKoodisto,
+        vardajarjestamismuotoKoodisto,
+        kielikoodisto,
+    },
+}) {
+    if (!varhaiskasvatuksenToimipaikkaTiedot) return undefined;
+    return {
+        toimintamuoto: vardatoimintamuotoKoodisto.uri2SelectOption(varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto),
+        kasvatusopillinenJarjestelma: vardakasvatusopillinenjarjestelmaKoodisto.uri2SelectOption(
+            varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma
+        ),
+        paikkojenLukumaara: varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara,
+        varhaiskasvatuksenToiminnallinenpainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset.map(
+            (a) => ({
+                painotus: vardatoiminnallinenpainotusKoodisto.uri2SelectOption(a.toiminnallinenpainotus),
+                alkupvm: new Date(a.alkupvm),
+                loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
+            })
+        ),
+        varhaiskasvatuksenKielipainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset.map(
+            (a) => {
+                return {
+                    painotus: kielikoodisto.uri2SelectOption(a.kielipainotus),
+                    alkupvm: new Date(a.alkupvm),
+                    loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
+                };
+            }
+        ),
+        varhaiskasvatuksenJarjestamismuodot: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.map(
+            (a) => vardajarjestamismuotoKoodisto.uri2SelectOption(a)
+        ),
+    };
+}
 
 function mapUiYhteystiedotToApi({
     postinumerotKoodisto,
@@ -465,6 +503,7 @@ export {
     getApiOsoite,
     getApiYhteystieto,
     mapApiYhteystiedotToUi,
+    mapApiVakaToUi,
     mapUiYhteystiedotToApi,
     mapUiOrganisaatioToApiToSave,
     mapUiOrganisaatioToApiToUpdate,

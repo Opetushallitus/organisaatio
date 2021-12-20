@@ -25,6 +25,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
+    mapApiVakaToUi,
     mapApiYhteystiedotToUi,
     mapUiOrganisaatioToApiToUpdate,
     mergeOrganisaatio,
@@ -168,7 +169,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
         ytunnus: mappingYtunnus,
-        varhaiskasvatuksenToimipaikkaTiedot,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -180,36 +180,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
-        const vaka = varhaiskasvatuksenToimipaikkaTiedot
-            ? {
-                  toimintamuoto: vardatoimintamuotoKoodisto.uri2SelectOption(
-                      varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto
-                  ),
-                  kasvatusopillinenJarjestelma: vardakasvatusopillinenjarjestelmaKoodisto.uri2SelectOption(
-                      varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma
-                  ),
-                  paikkojenLukumaara: varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara,
-                  varhaiskasvatuksenToiminnallinenpainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset.map(
-                      (a) => ({
-                          painotus: vardatoiminnallinenpainotusKoodisto.uri2SelectOption(a.toiminnallinenpainotus),
-                          alkupvm: new Date(a.alkupvm),
-                          loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
-                      })
-                  ),
-                  varhaiskasvatuksenKielipainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset.map(
-                      (a) => {
-                          return {
-                              painotus: kielikoodisto.uri2SelectOption(a.kielipainotus),
-                              alkupvm: new Date(a.alkupvm),
-                              loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
-                          };
-                      }
-                  ),
-                  varhaiskasvatuksenJarjestamismuodot: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.map(
-                      (a) => vardajarjestamismuotoKoodisto.uri2SelectOption(a)
-                  ),
-              }
-            : undefined;
         return {
             Uiperustiedot: {
                 nimi: mappingNimi,
@@ -227,7 +197,16 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     oppilaitostyyppiKoodisto.uri2SelectOption(kieliUri)
                 ),
                 vuosiluokat: vuosiluokat.map((kieliUri) => vuosiluokatKoodisto.uri2SelectOption(kieliUri)),
-                varhaiskasvatuksenToimipaikkaTiedot: vaka,
+                varhaiskasvatuksenToimipaikkaTiedot: mapApiVakaToUi({
+                    vaka: rest.varhaiskasvatuksenToimipaikkaTiedot,
+                    koodistot: {
+                        vardatoimintamuotoKoodisto,
+                        vardakasvatusopillinenjarjestelmaKoodisto,
+                        vardatoiminnallinenpainotusKoodisto,
+                        vardajarjestamismuotoKoodisto,
+                        kielikoodisto,
+                    },
+                }),
             },
             UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
