@@ -122,7 +122,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
         } else if (organisaatioNimet.size() > 1) {
-            return organisaatioNimet.stream().filter(foundNimi -> foundNimi.getNimi().getValues() == nimi.getNimi()).findFirst().orElse(null);
+            return organisaatioNimet.stream().filter(foundNimi -> foundNimi.getNimi().getValues().equals(nimi.getNimi())).findFirst().orElse(null);
         }
 
         LOG.debug("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId(), nimi.getAlkuPvm()});

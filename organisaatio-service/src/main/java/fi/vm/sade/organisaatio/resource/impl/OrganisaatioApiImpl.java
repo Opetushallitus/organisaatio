@@ -328,15 +328,13 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioNimiDTO updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDto) {
         Preconditions.checkNotNull(oid);
-        OrganisaatioNimiDTO currentNimiDTO = nimiUpdateDto.getCurrentNimi();
-        OrganisaatioNimiDTO updatedNimiDTO = nimiUpdateDto.getUpdatedNimi();
-        Preconditions.checkNotNull(currentNimiDTO.getAlkuPvm());
+        Preconditions.checkNotNull(nimiUpdateDto.getCurrentNimi().getAlkuPvm());
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(nae);
         }
-        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, currentNimiDTO.getAlkuPvm(), updatedNimiDTO);
+        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, nimiUpdateDto);
         return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTO.class);
     }
 

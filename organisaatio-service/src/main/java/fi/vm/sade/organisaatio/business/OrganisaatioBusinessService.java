@@ -15,6 +15,7 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
@@ -72,7 +73,7 @@ public interface OrganisaatioBusinessService {
      * @param nimidto
      * @return
      */
-    public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTO nimidto);
+    public OrganisaatioNimi updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimidto);
 
     /**
      * @param oid

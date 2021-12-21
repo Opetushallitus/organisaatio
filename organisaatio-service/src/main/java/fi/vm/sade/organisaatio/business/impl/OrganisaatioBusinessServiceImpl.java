@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.*;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
@@ -778,19 +779,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     @Transactional
-    public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date alkuPvm, OrganisaatioNimiDTO nimidto) {
+    public OrganisaatioNimi updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDTO) {
         Organisaatio orgEntity = getOrganisaatio(oid);
-
-        LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
+        OrganisaatioNimiDTO currentNimiDTO = nimiUpdateDTO.getCurrentNimi();
+        OrganisaatioNimiDTO updatedNimiDTO = nimiUpdateDTO.getUpdatedNimi();
+        LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + currentNimiDTO.getAlkuPvm());
         // Haetaan päivitettävä entity objecti
-        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, nimidto);
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, currentNimiDTO);
 
         if (nimiEntityOld == null) {
-            throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
+            throw new OrganisaatioNimiNotFoundException(oid, currentNimiDTO.getAlkuPvm());
         }
 
         // Luodaan tallennettava entity objekti
-        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
+        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(updatedNimiDTO, OrganisaatioNimi.class);
 
         // Asetetaan organisaatio
         nimiEntityNew.setOrganisaatio(orgEntity);
@@ -820,9 +822,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Tarkistetaan, että nimi ei ole nykyinen nimi
         OrganisaatioNimi currentNimiEntity = this.organisaatioNimiRepository.findCurrentNimi(orgEntity);
-
-        // Luodaan poistettava entity objekti
-        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
 
         if (nimiEntity == null) {
             throw new OrganisaatioNimiNotFoundException(oid, nimidto.getAlkuPvm());

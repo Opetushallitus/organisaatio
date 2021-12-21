@@ -5,7 +5,7 @@ import { NimenmuutosLomake } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
-import { LanguageContext } from '../../../contexts/contexts';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 import { Controller } from 'react-hook-form';
 import NimenMuutosFields from './NimenMuutosFields';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
@@ -42,10 +42,10 @@ export default function TNBody(props: TNProps) {
                         name={'muutostyyppi'}
                         render={({ field: { ref, value = 'CREATE', ...rest } }) => (
                             <RadioGroup {...rest} value={value}>
-                                <Radio value={MUUTOSTYYPPI_CREATE}>
+                                <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
                                 </Radio>
-                                <Radio disabled={editDisabled} value={MUUTOSTYYPPI_EDIT}>
+                                <Radio name={MUUTOSTYYPPI_EDIT} disabled={editDisabled} value={MUUTOSTYYPPI_EDIT}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
                                 </Radio>
                             </RadioGroup>

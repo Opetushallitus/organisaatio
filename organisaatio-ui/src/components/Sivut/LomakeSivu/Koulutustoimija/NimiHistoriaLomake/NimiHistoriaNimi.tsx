@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { LanguageContext } from '../../../../../contexts/contexts';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 import { LocalDate, Nimi, OrganisaationNimetNimi } from '../../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import styles from './NimiHistoriaNimi.module.css';
