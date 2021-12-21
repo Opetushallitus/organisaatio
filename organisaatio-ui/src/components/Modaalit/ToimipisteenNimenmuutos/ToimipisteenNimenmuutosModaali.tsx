@@ -67,7 +67,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         return () => {
             return subscription.unsubscribe();
         };
-    }, [watch]);
+    }, [watch, currentNimi, oid, reset]);
 
     watch('muutostyyppi', MUUTOSTYYPPI_CREATE);
 
@@ -79,7 +79,9 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
             if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
                 await createOrganisaatioNimi(oid, newNimi);
             } else if (muutostyyppi === MUUTOSTYYPPI_EDIT && currentNimi) {
-                await updateOrganisaatioNimi(oid, currentNimi, newNimi);
+                const { nimi, alkuPvm } = currentNimi;
+                const oldNimi = { nimi, alkuPvm };
+                await updateOrganisaatioNimi(oid, oldNimi, newNimi);
             }
             props.closeNimenmuutosModaali(true);
         } finally {

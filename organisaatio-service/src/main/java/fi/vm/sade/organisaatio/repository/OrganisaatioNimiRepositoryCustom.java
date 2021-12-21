@@ -15,6 +15,7 @@
 
 package fi.vm.sade.organisaatio.repository;
 
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
@@ -59,19 +60,10 @@ public interface OrganisaatioNimiRepositoryCustom {
      * Haetaan annetun organisaation nimi, annetulla nimen voimassaolon alkupäivämäärällä.
      *
      * @param organisaatio
-     * @param alkuPvm
+     * @param nimi
      * @return
      */
-    public OrganisaatioNimi findNimi(Organisaatio organisaatio, Date alkuPvm);
-
-    /**
-     * Haetaan annetun organisaation (oid) nimi, annetulla nimen voimassaolon alkupäivämäärällä.
-     *
-     * @param organisaatioOid
-     * @param alkuPvm
-     * @return
-     */
-    public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm);
+    public OrganisaatioNimi findNimi(Organisaatio organisaatio, OrganisaatioNimiDTO nimi);
 
     /**
      * Haetaan annetun organisaation nykyinen nimi.

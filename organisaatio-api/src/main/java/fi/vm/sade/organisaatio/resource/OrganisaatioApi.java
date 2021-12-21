@@ -6,9 +6,12 @@ import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +24,8 @@ import java.util.Set;
  * <li>supports varhaiskasvatuksen toimipaikka typed organisations</li>
  * </ul>
  */
+
+@Validated
 public interface OrganisaatioApi {
 
     @PostMapping(path = "/findbyoids", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -165,6 +170,6 @@ public interface OrganisaatioApi {
     OrganisaatioNimiDTO updateOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiUpdateDTO nimiUpdateDto);
 
     // Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
-    @DeleteMapping(path = "/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}")
-    void deleteOrganisaatioNimi(@PathVariable("oid") String oid, @PathVariable("date") DateParam date);
+    @DeleteMapping(path = "/{oid}/nimet")
+    void deleteOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
 };

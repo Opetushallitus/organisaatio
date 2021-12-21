@@ -15,6 +15,7 @@
 
 package fi.vm.sade.organisaatio.repository.impl;
 
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
@@ -94,12 +95,12 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
     }
 
     @Override
-    public OrganisaatioNimi findNimi(Organisaatio organisaatio, Date alkuPvm) {
+    public OrganisaatioNimi findNimi(Organisaatio organisaatio, OrganisaatioNimiDTO nimi) {
         if (organisaatio == null) {
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.info("findNimi({}, {})", new Object[]{organisaatio.getId(), alkuPvm});
+        LOG.debug("findNimi({}, {})", new Object[]{organisaatio.getId(), nimi.getAlkuPvm()});
 
         // Kyselyä kokeilty myös QueryDsl:llä
         // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
@@ -114,25 +115,19 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         TypedQuery q = em.createQuery(s, OrganisaatioNimi.class);
 
-        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", alkuPvm).getResultList();
+        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", nimi.getAlkuPvm()).getResultList();
 
-        LOG.info("findNimi() result size: " + organisaatioNimet.size());
+        LOG.debug("findNimi() result size: " + organisaatioNimet.size());
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
+        } else if (organisaatioNimet.size() > 1) {
+            return organisaatioNimet.stream().filter(foundNimi -> foundNimi.getNimi().getValues() == nimi.getNimi()).findFirst().orElse(null);
         }
 
-        LOG.info("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId(), alkuPvm});
+        LOG.debug("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId(), nimi.getAlkuPvm()});
 
         return null;
-    }
-
-
-    @Override
-    public OrganisaatioNimi findNimi(String organisaatioOid, Date alkuPvm) {
-        Organisaatio organisaatio = organisaatioRepository.customFindByOid(organisaatioOid);
-
-        return this.findNimi(organisaatio, alkuPvm);
     }
 
     @Override

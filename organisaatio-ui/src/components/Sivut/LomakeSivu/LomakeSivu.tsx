@@ -344,7 +344,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
-        lomakkeet.push(<NimiHistoriaLomake key={'nimihistorialomake'} nimet={organisaatioBase?.nimet} />);
+        lomakkeet.push(
+            <NimiHistoriaLomake
+                oid={organisaatioBase.oid}
+                key={'nimihistorialomake'}
+                nimet={organisaatioBase?.nimet}
+                handleNimiMuutos={handleNimiMuutos}
+            />
+        );
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
         if (organisaatioBase?.oid !== ROOT_OID && organisaatioBase?.oid) {
             lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} historia={historia} />);

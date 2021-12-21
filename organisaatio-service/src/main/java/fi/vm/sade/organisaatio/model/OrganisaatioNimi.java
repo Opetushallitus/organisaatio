@@ -31,6 +31,10 @@ import java.util.Date;
         name = "OrganisaatioNimiDAO.findNimet",
         query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"
 )
+@NamedQuery(
+        name = "OrganisaatioNimiDAO.findNimi",
+        query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"
+)
 public class OrganisaatioNimi extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

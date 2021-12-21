@@ -77,6 +77,13 @@ async function updateOrganisaatioNimi(
     });
 }
 
+async function deleteOrganisaatioNimi(oid: string, nimi: OrganisaationNimetNimi) {
+    return errorHandlingWrapper(async () => {
+        await Axios.delete(`${baseUrl}${oid}/nimet`, { data: nimi });
+        success({ message: 'MESSAGE_NIMEN_POISTO_ONNISTUI' });
+    });
+}
+
 async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaOid[]> {
     if (oids.length === 0) return [];
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
@@ -476,4 +483,5 @@ export {
     readOrganisaatioPaivittaja,
     createOrganisaatioNimi,
     updateOrganisaatioNimi,
+    deleteOrganisaatioNimi,
 };

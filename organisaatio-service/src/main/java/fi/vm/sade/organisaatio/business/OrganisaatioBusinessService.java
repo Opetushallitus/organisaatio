@@ -76,9 +76,9 @@ public interface OrganisaatioBusinessService {
 
     /**
      * @param oid
-     * @param date
+     * @param nimi
      */
-    public void deleteOrganisaatioNimi(String oid, Date date);
+    public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimi);
 
     /**
      * Päivitetään organisaatioiden nimet niiltä organisaatioilta, joilla ajastettu nimenmuutos.

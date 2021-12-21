@@ -342,9 +342,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public void deleteOrganisaatioNimi(String oid, DateParam date) {
+    public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Preconditions.checkNotNull(oid);
-        Preconditions.checkNotNull(date);
+        Preconditions.checkNotNull(nimidto.getAlkuPvm());
 
         try {
             permissionChecker.checkUpdateOrganisationName(oid);
@@ -352,7 +352,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             throw new OrganisaatioResourceException(nae);
         }
 
-        organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
+        organisaatioBusinessService.deleteOrganisaatioNimi(oid, nimidto);
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

@@ -782,13 +782,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio orgEntity = getOrganisaatio(oid);
 
         LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + alkuPvm);
-
         // Haetaan päivitettävä entity objecti
-        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, nimidto);
 
         if (nimiEntityOld == null) {
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
         }
+
 
         // Luodaan tallennettava entity objekti
         OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
@@ -813,17 +813,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public void deleteOrganisaatioNimi(String oid, Date alkuPvm) {
+    public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Organisaatio orgEntity = getOrganisaatio(oid);
 
         // Haetaan poistettava entity objecti
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findNimi(orgEntity, nimidto);
 
         // Tarkistetaan, että nimi ei ole nykyinen nimi
         OrganisaatioNimi currentNimiEntity = this.organisaatioNimiRepository.findCurrentNimi(orgEntity);
 
+        // Luodaan poistettava entity objekti
+        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
+
         if (nimiEntity == null) {
-            throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
+            throw new OrganisaatioNimiNotFoundException(oid, nimidto.getAlkuPvm());
         }
 
         // Tarkistetaan ettei poistettava nimi ole organisaation nykyinen nimi
@@ -834,11 +837,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Vain uusimman nimen, jonka voimassaolo ei ole alkanut saa poistaa
-        if (alkuPvm.before(new Date())) {
+        if (nimidto.getAlkuPvm().before(new Date())) {
             throw new OrganisaatioNimiDeleteException();
         }
 
-        LOG.info("deleting " + nimiEntity);
+        LOG.debug("deleting " + nimiEntity);
 
         // Poistetaan
         this.organisaatioNimiRepository.delete(nimiEntity);
