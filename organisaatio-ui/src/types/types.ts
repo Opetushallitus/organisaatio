@@ -1,4 +1,4 @@
-import { ApiOrganisaatio, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
@@ -17,7 +17,10 @@ export type Koodi = {
 
 export type KoodistoSelectOption = {
     value: KoodiUri;
+    arvo: KoodiArvo;
     label: string;
+    versio: number;
+    disabled: boolean;
 };
 
 export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'DELETE';
@@ -52,6 +55,9 @@ export type Yhteystiedot = {
     en: YhteystiedotBase;
     osoitteetOnEri?: boolean;
 };
+export type YhteystietoArvot = {
+    koskiposti?: { fi?: string; sv?: string; en?: string };
+};
 
 export type Nimi = {
     fi?: string;
@@ -80,12 +86,26 @@ export type UiOrganisaatioBase = {
     parentOidPath: string;
     apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
     currentNimi: Nimi; //  needed for merging and combining orgs
+    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
 };
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;
 
 export type NewUiOrganisaatio = Omit<UiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
 
+export type VakaPainotus = {
+    painotus: KoodistoSelectOption;
+    alkupvm: Date;
+    loppupvm?: Date;
+};
+export type VakaToimipaikkaTiedot = {
+    toimintamuoto: KoodistoSelectOption;
+    kasvatusopillinenJarjestelma: KoodistoSelectOption;
+    paikkojenLukumaara: number;
+    varhaiskasvatuksenToiminnallinenpainotukset: VakaPainotus[];
+    varhaiskasvatuksenKielipainotukset: VakaPainotus[];
+    varhaiskasvatuksenJarjestamismuodot: KoodistoSelectOption[];
+};
 export type Perustiedot = {
     ytunnus?: string;
     nimi: Nimi;
@@ -100,6 +120,8 @@ export type Perustiedot = {
     muutOppilaitosTyyppiUris: KoodistoSelectOption[];
     vuosiluokat: KoodistoSelectOption[];
     lakkautusPvm?: LocalDate;
+    varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
+    piilotettu?: boolean;
 };
 
 export type ParentTiedot = {
@@ -160,14 +182,6 @@ export type OrganisaatioHistoria = {
     liittymiset: OrganisaatioSuhde[];
 };
 
-export interface YhteystietoTyyppi {
-    oid?: string;
-    nimi: Nimi;
-    sovellettavatOppilaitostyyppis: string[];
-    sovellettavatOrganisaatios: string[];
-    version: number;
-}
-
 export interface OrganisaatioNimiJaOid {
     oid: string;
     nimi: Nimi;
@@ -196,14 +210,20 @@ export type DynamicField = {
     name: Path<Perustiedot>;
     label: string;
     koodisto: 'vuosiluokatKoodisto';
-    type: 'INPUT' | 'SELECT' | 'MULTI_SELECT';
-    when: { name: Path<Perustiedot>; value: string };
+    type: 'INPUT' | 'SELECT' | 'MULTI_SELECT' | 'LINK';
+    when: [{ field: Path<Perustiedot>; is: string }];
+    value?: string;
+};
+
+type OrganisaatioChildType = {
+    type: string;
+    disabled?: boolean;
 };
 export type ResolvedRakenne = {
     type: string[];
     moveTargetType: string[];
     mergeTargetType: string[];
-    childTypes: string[];
+    childTypes: OrganisaatioChildType[];
     showYtj: boolean;
     dynamicFields: DynamicField[];
 };
@@ -212,7 +232,7 @@ export type Rakenne = {
     type: string;
     moveTargetType: string | null;
     mergeTargetType: string | null;
-    childTypes: string[];
+    childTypes: OrganisaatioChildType[];
     showYtj: boolean;
     dynamicFields: DynamicField[];
 };
@@ -229,10 +249,9 @@ export type Koodisto = {
     arvo2Uri: (arvo: KoodiArvo) => string;
     uri2Nimi: (uri: KoodiUri) => string;
     arvo2Nimi: (arvo: KoodiArvo) => string;
-    nimet: () => string[];
     koodit: () => Koodi[];
     selectOptions: () => KoodistoSelectOption[];
-    uri2SelectOption: (uri: KoodiUri) => KoodistoSelectOption;
+    uri2SelectOption: (uri: KoodiUri, disabled?: boolean) => KoodistoSelectOption;
 };
 
 export type KoodistoContextType = {
@@ -246,6 +265,11 @@ export type KoodistoContextType = {
     maatJaValtiotKoodisto: Koodisto;
     vuosiluokatKoodisto: Koodisto;
     oppilaitostyyppiKoodisto: Koodisto;
+    vardatoimintamuotoKoodisto: Koodisto;
+    vardakasvatusopillinenjarjestelmaKoodisto: Koodisto;
+    vardatoiminnallinenpainotusKoodisto: Koodisto;
+    vardajarjestamismuotoKoodisto: Koodisto;
+    kielikoodisto: Koodisto;
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
@@ -253,3 +277,14 @@ export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
 export type SupportedKieli = 'fi' | 'sv' | 'en';
 
 export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
+
+export type SearchFilters = {
+    filters: Filters;
+    setFilters: (filters: Filters) => void;
+};
+export type Filters = {
+    searchString: string;
+    naytaPassivoidut: boolean;
+    isOPHVirkailija: boolean;
+    omatOrganisaatiotSelected: boolean;
+};

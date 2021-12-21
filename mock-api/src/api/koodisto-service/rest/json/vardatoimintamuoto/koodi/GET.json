@@ -1,0 +1,143 @@
+[
+    {
+        "koodiArvo": "TM01",
+        "koodiUri": "vardatoimintamuoto_tm01",
+        "koodisto": {
+            "koodistoUri": "vardatoimintamuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "P\u00e4iv\u00e4koti",
+                "lyhytNimi": "",
+                "nimi": "P\u00e4iv\u00e4koti",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Daghem",
+                "lyhytNimi": "",
+                "nimi": "Daghem",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-10-30",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoimintamuoto_tm01",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TM02",
+        "koodiUri": "vardatoimintamuoto_tm02",
+        "koodisto": {
+            "koodistoUri": "vardatoimintamuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Familjedagv\u00e5rd",
+                "lyhytNimi": "",
+                "nimi": "Familjedagv\u00e5rd",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Perhep\u00e4iv\u00e4hoito",
+                "lyhytNimi": "",
+                "nimi": "Perhep\u00e4iv\u00e4hoito",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2018-10-30",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoimintamuoto_tm02",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TM03",
+        "koodiUri": "vardatoimintamuoto_tm03",
+        "koodisto": {
+            "koodistoUri": "vardatoimintamuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "",
+                "lyhytNimi": "Private group family daycare provider",
+                "nimi": "Private group family daycare provider",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Gruppfamiljedagv\u00e5rd",
+                "lyhytNimi": "Gruppfamiljedagv\u00e5rd",
+                "nimi": "Gruppfamiljedagv\u00e5rd",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ryhm\u00e4perhep\u00e4iv\u00e4hoito",
+                "lyhytNimi": "Ryhm\u00e4perhep\u00e4iv\u00e4hoito",
+                "nimi": "Ryhm\u00e4perhep\u00e4iv\u00e4hoito",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.25909319372",
+        "paivitysPvm": "2020-09-18",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoimintamuoto_tm03",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    }
+]

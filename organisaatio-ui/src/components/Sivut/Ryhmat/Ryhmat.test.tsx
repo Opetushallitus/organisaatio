@@ -13,6 +13,11 @@ jest.mock('@opetushallitus/virkailija-ui-components/Input', () => () => <input /
 jest.mock('@opetushallitus/virkailija-ui-components/Select', () => () => <select>select</select>);
 jest.mock('axios');
 
+beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
 afterAll(() => {
     jest.clearAllMocks();
 });

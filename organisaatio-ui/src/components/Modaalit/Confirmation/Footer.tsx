@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/contexts';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import styles from './Confirmation.module.css';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 
 type Props = {
     tallennaCallback?: () => void;

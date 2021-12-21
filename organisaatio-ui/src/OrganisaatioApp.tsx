@@ -1,37 +1,33 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { BASE_PATH, I18nImpl, KoodistoContext, KoodistoImpl, LanguageContext } from './contexts/contexts';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
+import { Route, Switch } from 'react-router-dom';
+import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
 import Ryhmat from './components/Sivut/Ryhmat/Ryhmat';
-import Tyypit from './components/Sivut/Tyypit/Tyypit';
-import LisatietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/LisatietotyypinMuokkaus';
-import YhteystietotyypinMuokkaus from './components/Sivut/Tyypit/Muokkaus/YhteystietotyypinMuokkaus';
 import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
-import { useCASLanguage } from './api/kayttooikeus';
+import { useCAS } from './api/kayttooikeus';
 import Loading from './components/Loading/Loading';
 import useKoodisto from './api/koodisto';
 import Notification from './components/Notification/Notification';
 import useLokalisaatio from './api/lokalisaatio';
+import { I18nImpl, LanguageContext } from './contexts/LanguageContext';
+import { SearchFilterContext, SearchFiltersImpl } from './contexts/SearchFiltersContext';
+import { KoodistoContext, KoodistoImpl } from './contexts/KoodistoContext';
+import { CasMeContext, CASMeImpl } from './contexts/CasMeContext';
 
 const theme = createTheme();
-const Error = () => {
-    const { i18n } = useContext(LanguageContext);
-    return <ErrorPage>{i18n.translate('LABEL_ERROR_LOADING_DATA')}</ErrorPage>;
-};
+
 const OrganisaatioApp: React.FC = () => {
     registerLocale('fi', fi);
     registerLocale('sv', sv);
     registerLocale('en', enGB);
 
-    const { data: language, loading: languageLoading, error: languageError } = useCASLanguage();
+    const { data: casData, loading: casDataLoading, error: casDataError } = useCAS();
     const { data: lokalisointi, loading: lokalisointiLoading, error: lokalisointiError } = useLokalisaatio();
     const { data: kunnat, loading: kunnatLoading, error: kunnatError } = useKoodisto('KUNTA');
     const { data: ryhmaTyypit, loading: ryhmaTyypitLoading, error: ryhmaTyypitError } = useKoodisto('RYHMATYYPIT');
@@ -56,11 +52,32 @@ const OrganisaatioApp: React.FC = () => {
         loading: oppilaitoksenOpetuskieletLoading,
         error: oppilaitoksenOpetuskieletError,
     } = useKoodisto('OPPILAITOKSENOPETUSKIELI');
+    const {
+        data: vardatoimintamuoto,
+        loading: vardatoimintamuotoLoading,
+        error: vardatoimintamuotoError,
+    } = useKoodisto('VARDATOIMINTAMUOTO');
+    const {
+        data: vardakasvatusopillinenjarjestelma,
+        loading: vardakasvatusopillinenjarjestelmaLoading,
+        error: vardakasvatusopillinenjarjestelmaError,
+    } = useKoodisto('VARDAKASVATUSOPILLINENJARJESTELMA');
+    const {
+        data: vardatoiminnallinenpainotus,
+        loading: vardatoiminnallinenpainotusLoading,
+        error: vardatoiminnallinenpainotusError,
+    } = useKoodisto('VARDATOIMINNALLINENPAINOTUS');
+    const {
+        data: vardajarjestamismuoto,
+        loading: vardajarjestamismuotoLoading,
+        error: vardajarjestamismuotoError,
+    } = useKoodisto('VARDAJARJESTAMISMUOTO');
+    const { data: kieli, loading: kieliLoading, error: kieliError } = useKoodisto('KIELI');
     const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
     if (
         oppilaitoksenOpetuskieletLoading ||
         maatJaValtiotLoading ||
-        languageLoading ||
+        casDataLoading ||
         lokalisointiLoading ||
         kunnatLoading ||
         ryhmaTyypitLoading ||
@@ -70,13 +87,18 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitLoading ||
         postinumerotLoading ||
         vuosiluokatLoading ||
-        oppilaitostyyppiLoading
+        oppilaitostyyppiLoading ||
+        vardatoimintamuotoLoading ||
+        vardakasvatusopillinenjarjestelmaLoading ||
+        vardatoiminnallinenpainotusLoading ||
+        vardajarjestamismuotoLoading ||
+        kieliLoading
     ) {
         return <Loading />;
     }
     if (
         oppilaitoksenOpetuskieletError ||
-        languageError ||
+        casDataError ||
         lokalisointiError ||
         kunnatError ||
         ryhmaTyypitError ||
@@ -87,67 +109,73 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitError ||
         postinumerotError ||
         vuosiluokatError ||
-        oppilaitostyyppiError
+        oppilaitostyyppiError ||
+        oppilaitostyyppiError ||
+        vardatoimintamuotoError ||
+        vardakasvatusopillinenjarjestelmaError ||
+        vardatoiminnallinenpainotusError ||
+        vardajarjestamismuotoError ||
+        kieliError
     ) {
-        return <Error />;
+        return <VirheSivu />;
     }
-    const i18n = new I18nImpl(lokalisointi, language);
-    const kuntaKoodisto = new KoodistoImpl(kunnat, language);
-    const ryhmaTyypitKoodisto = new KoodistoImpl(ryhmaTyypit, language);
-    const kayttoRyhmatKoodisto = new KoodistoImpl(kayttoRyhmat, language);
-    const organisaatioTyypitKoodisto = new KoodistoImpl(organisaatioTyypit, language);
-    const ryhmanTilaKoodisto = new KoodistoImpl(ryhmanTilat, language);
-    const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
-    const oppilaitoksenOpetuskieletKoodisto = new KoodistoImpl(oppilaitoksenOpetuskielet, language);
-    const postinumerotKoodisto = new KoodistoImpl(postinumerot, language);
-    const vuosiluokatKoodisto = new KoodistoImpl(vuosiluokat, language);
-    const oppilaitostyyppiKoodisto = new KoodistoImpl(oppilaitostyyppi, language);
 
     return (
-        <Router basename={BASE_PATH}>
-            <ThemeProvider theme={theme}>
-                <LanguageContext.Provider value={{ language, i18n }}>
-                    <Notification />
-                    <KoodistoContext.Provider
-                        value={{
-                            postinumerotKoodisto,
-                            oppilaitoksenOpetuskieletKoodisto,
-                            maatJaValtiotKoodisto,
-                            kuntaKoodisto,
-                            ryhmaTyypitKoodisto,
-                            kayttoRyhmatKoodisto,
-                            organisaatioTyypitKoodisto,
-                            ryhmanTilaKoodisto,
-                            vuosiluokatKoodisto,
-                            oppilaitostyyppiKoodisto,
-                        }}
-                    >
-                        <Switch>
-                            <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                            <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
-                            <Route path={'/lomake/:oid'} component={LomakeSivu} />
-                            <Route path={'/ryhmat'} exact component={Ryhmat} />
-                            <Route
-                                path={'/yhteystietotyypit'}
-                                exact
-                                component={() => <Tyypit tyyppi={'yhteystietojentyyppi'} />}
-                            />
-                            <Route path={'/lisatietotyypit/muokkaus/:nimi'} component={LisatietotyypinMuokkaus} />
-                            <Route path={'/yhteystietotyypit/muokkaus'} component={YhteystietotyypinMuokkaus} />
-                            <Route
-                                exact
-                                path={'/ryhmat/uusi'}
-                                component={(props) => <RyhmanMuokkaus {...props} isNew />}
-                            />
-                            <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
-                            <Route path={'*'}>
-                                <ErrorPage>{'ERROR_404'}</ErrorPage>
-                            </Route>
-                        </Switch>
-                    </KoodistoContext.Provider>
+        <ThemeProvider theme={theme}>
+            <CasMeContext.Provider value={{ me: new CASMeImpl(casData) }}>
+                <LanguageContext.Provider
+                    value={{ language: casData.lang, i18n: new I18nImpl(lokalisointi, casData.lang) }}
+                >
+                    <SearchFilterContext.Provider value={{ searchFilters: new SearchFiltersImpl() }}>
+                        <Notification />
+                        <KoodistoContext.Provider
+                            value={{
+                                postinumerotKoodisto: new KoodistoImpl(postinumerot, casData.lang),
+                                oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl(
+                                    oppilaitoksenOpetuskielet,
+                                    casData.lang
+                                ),
+                                maatJaValtiotKoodisto: new KoodistoImpl(maatJaValtiot, casData.lang),
+                                kuntaKoodisto: new KoodistoImpl(kunnat, casData.lang),
+                                ryhmaTyypitKoodisto: new KoodistoImpl(ryhmaTyypit, casData.lang),
+                                kayttoRyhmatKoodisto: new KoodistoImpl(kayttoRyhmat, casData.lang),
+                                organisaatioTyypitKoodisto: new KoodistoImpl(organisaatioTyypit, casData.lang),
+                                ryhmanTilaKoodisto: new KoodistoImpl(ryhmanTilat, casData.lang),
+                                vuosiluokatKoodisto: new KoodistoImpl(vuosiluokat, casData.lang),
+                                oppilaitostyyppiKoodisto: new KoodistoImpl(oppilaitostyyppi, casData.lang),
+                                vardatoimintamuotoKoodisto: new KoodistoImpl(vardatoimintamuoto, casData.lang),
+                                vardakasvatusopillinenjarjestelmaKoodisto: new KoodistoImpl(
+                                    vardakasvatusopillinenjarjestelma,
+                                    casData.lang
+                                ),
+                                vardatoiminnallinenpainotusKoodisto: new KoodistoImpl(
+                                    vardatoiminnallinenpainotus,
+                                    casData.lang
+                                ),
+                                vardajarjestamismuotoKoodisto: new KoodistoImpl(vardajarjestamismuoto, casData.lang),
+                                kielikoodisto: new KoodistoImpl(kieli, casData.lang),
+                            }}
+                        >
+                            <Switch>
+                                <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
+                                <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
+                                <Route path={'/lomake/:oid'} component={LomakeSivu} />
+                                <Route path={'/ryhmat'} exact component={Ryhmat} />
+                                <Route
+                                    exact
+                                    path={'/ryhmat/uusi'}
+                                    component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                                />
+                                <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
+                                <Route path={'*'}>
+                                    <VirheSivu>{'ERROR_404'}</VirheSivu>
+                                </Route>
+                            </Switch>
+                        </KoodistoContext.Provider>
+                    </SearchFilterContext.Provider>
                 </LanguageContext.Provider>
-            </ThemeProvider>
-        </Router>
+            </CasMeContext.Provider>
+        </ThemeProvider>
     );
 };
 

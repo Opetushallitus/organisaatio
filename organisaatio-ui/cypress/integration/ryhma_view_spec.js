@@ -1,4 +1,4 @@
-import { BASE_PATH } from '../../src/contexts/contexts';
+import { BASE_PATH } from '../../src/contexts/constants';
 
 describe('Ryhma view Page', () => {
     it('Can save a new ryhma', () => {
@@ -20,8 +20,8 @@ describe('Ryhma view Page', () => {
     it('Finds just saved Suominimi from table', () => {
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('input').first().type('Suominimi');
-            expect(cy.get('a').first().value).to.have.valueOf('Suominimi');
-            cy.get('a').first().click();
+            expect(cy.get('a').contains('Suomi').first().value).to.have.valueOf('Suominimi');
+            cy.get('a').contains('Suomi').first().click();
         });
     });
 

@@ -8,8 +8,9 @@ import {
     mapUiOrganisaatioToApiToUpdate,
     mapUiOrganisaatioToApiToSave,
     checkAndMapValuesToYhteystiedot,
+    mapApiYhteysTietoArvotToUi,
 } from './organisaatio';
-import { ROOT_OID } from '../contexts/contexts';
+import { ROOT_OID } from '../contexts/constants';
 
 const kieli = 'kieli_fi#1';
 
@@ -91,35 +92,39 @@ const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday }]; // yesterd
 
 const apiOrganisaatio: ApiOrganisaatio = {
     alkuPvm: '2000-10-10',
-    kieletUris: [],
-    kotipaikkaUri: 'kunta_1#1',
-    muutKotipaikatUris: [],
-    maaUri: 'maa_1#1',
+    kieletUris: ['oppilaitoksenopetuskieli_1#1'],
+    lakkautusPvm: undefined,
+    kotipaikkaUri: 'kunta_1',
+    muutKotipaikatUris: ['kunta_2#1'],
+    maaUri: 'maa_1',
     nimet: apinimet,
     nimi: { fi: 'vanhanimi' },
     oid: '1.2.1',
     parentOid: '123.321',
     parentOidPath: '123.321,1.2.1',
     status: 'AKTIIVINEN',
-    tyypit: [],
+    tyypit: ['organisaatiotyyppi_01'],
     yhteystiedot: [...apiYhteystiedot],
     oppilaitosTyyppiUri: 'oppilaitostyyppi_11#1',
     oppilaitosKoodi: '',
-    muutOppilaitosTyyppiUris: [],
+    muutOppilaitosTyyppiUris: ['oppilaitostyyppi_11#1'],
     vuosiluokat: [],
+    yhteystietoArvos: [],
+    ytunnus: undefined,
+    piilotettu: undefined,
 };
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
     alkuPvm: '2000-10-10',
     lakkautusPvm: '',
-    kieletUris: [],
-    kotipaikkaUri: 'kunta_1#1',
-    muutKotipaikatUris: [],
-    maaUri: 'maa_1#1',
+    kieletUris: ['oppilaitoksenopetuskieli_1#1'],
+    kotipaikkaUri: 'kunta_1',
+    muutKotipaikatUris: ['kunta_2#1'],
+    maaUri: 'maa_1',
     nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: '2000-10-10' }],
     nimi: { fi: 'uusinimi' },
     parentOid: '123.321',
-    tyypit: [],
+    tyypit: ['organisaatiotyyppi_01'],
     yhteystiedot: [
         ...apiYhteystiedot,
         {
@@ -132,7 +137,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     ],
     oppilaitosTyyppiUri: 'oppilaitostyyppi_11#1',
     oppilaitosKoodi: '',
-    muutOppilaitosTyyppiUris: [],
+    muutOppilaitosTyyppiUris: ['oppilaitostyyppi_11#1'],
     vuosiluokat: [],
 };
 
@@ -156,25 +161,75 @@ const uiBaseTiedot: UiOrganisaatioBase = {
 
 const uiPerustiedot: Perustiedot = {
     alkuPvm: '2000-10-10',
-    kielet: [],
-    kotipaikka: { label: 'Helsinki', value: 'kunta_1#1' },
-    maa: { label: 'Suomi', value: 'maa_1#1' },
-    muutKotipaikat: [],
+    kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, disabled: false }],
+    kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, disabled: false },
+    maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },
+    muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, disabled: false }],
     nimi: { fi: 'uusinimi' },
-    organisaatioTyypit: [],
-    oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11#1' },
+    organisaatioTyypit: ['organisaatiotyyppi_01'],
+    oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
     oppilaitosKoodi: '',
-    muutOppilaitosTyyppiUris: [],
+    muutOppilaitosTyyppiUris: [
+        { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
+    ],
     vuosiluokat: [],
 };
-
+describe('mapApiYhteysTietoArvotToUi', () => {
+    it('Maps api yhteystietoarvot to Api format', () => {
+        const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' } };
+        expect(
+            mapApiYhteysTietoArvotToUi([
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'fi',
+                    'YhteystietoArvo.kieli': 'kieli_fi#1',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'sv',
+                    'YhteystietoArvo.kieli': 'kieli_sv#1',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'en',
+                    'YhteystietoArvo.kieli': 'kieli_en#12',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+                {
+                    //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'foo',
+                    'YhteystietoArvo.kieli': 'kieli_en#12',
+                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.shouldignore',
+                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
+                    'YhteystietoElementti.pakollinen': false,
+                    'YhteystietoElementti.kaytossa': true,
+                },
+            ])
+        ).toEqual(expected);
+    });
+});
 describe('mapUiYhteystiedotToApi', () => {
     it('Maps api yhteystiedot to Api array format ([yhteystieto, ...]) and removes empty attributes', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
         expect(
-            mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], {
-                ...uiYhteystiedot,
-                osoitteetOnEri: true,
+            mapUiYhteystiedotToApi({
+                postinumerotKoodisto: postinumerotKoodisto as Koodisto,
+                apiYhteystiedot: [...oldApiyhteystiedot],
+                uiYhteystiedot: {
+                    ...uiYhteystiedot,
+                    osoitteetOnEri: true,
+                },
             })
         ).toEqual(expect.arrayContaining(expected));
     });
@@ -182,7 +237,11 @@ describe('mapUiYhteystiedotToApi', () => {
     it('creates kayntiOsoite from postiOsoite when osoitteetOnEri is false', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite];
         expect(
-            mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], { ...uiYhteystiedot })
+            mapUiYhteystiedotToApi({
+                postinumerotKoodisto: postinumerotKoodisto as Koodisto,
+                apiYhteystiedot: [...oldApiyhteystiedot],
+                uiYhteystiedot: { ...uiYhteystiedot },
+            })
         ).toEqual(expect.arrayContaining(expected));
     });
 
@@ -193,9 +252,13 @@ describe('mapUiYhteystiedotToApi', () => {
             sv: { ...uiYhteystiedot.sv, kayntiOsoite: '', kayntiOsoitePostiNro: '' },
             osoitteetOnEri: true,
         };
-        expect(mapUiYhteystiedotToApi(postinumerotKoodisto as Koodisto, [...oldApiyhteystiedot], yhteystiedot)).toEqual(
-            expect.arrayContaining(expected)
-        );
+        expect(
+            mapUiYhteystiedotToApi({
+                postinumerotKoodisto: postinumerotKoodisto as Koodisto,
+                apiYhteystiedot: [...oldApiyhteystiedot],
+                uiYhteystiedot: yhteystiedot,
+            })
+        ).toEqual(expect.arrayContaining(expected));
     });
 });
 
@@ -228,7 +291,8 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             postinumerotKoodisto as Koodisto,
             uiBaseTiedot,
             uiYhteystiedot,
-            uiPerustiedot
+            uiPerustiedot,
+            {}
         );
         mappedApiOrganisaatio.yhteystiedot = mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
         expect(mappedApiOrganisaatio).toEqual({

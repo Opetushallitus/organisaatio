@@ -1,14 +1,22 @@
 import { KoodiUri, Language, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde } from './types';
 
+export type ConfigurableButton =
+    | 'LOMAKE_YHDISTA_ORGANISAATIO'
+    | 'LOMAKE_SIIRRA_ORGANISAATIO'
+    | 'LOMAKE_LISAA_UUSI_TOIMIJA'
+    | 'TAULUKKO_LISAA_UUSI_TOIMIJA'
+    | 'BUTTON_TALLENNA';
 export type CASMe = {
     uid: string;
     oid: string;
     firstName: string;
     lastName: string;
     groups: string[];
-    roles: string;
+    roles: string[];
     lang: Language;
+    canHaveButton: (button: ConfigurableButton) => boolean;
 };
+
 export type OrganisaatioLiitos = {
     alkuPvm: string;
     loppuPvm?: string;
@@ -61,6 +69,30 @@ export type OrganisaatioBase = {
     parentOid: string;
     parentOidPath: string;
 };
+export type ApiYhteystietoArvo = {
+    'YhteystietoArvo.arvoText': string;
+    'YhteystietoArvo.kieli': string;
+    'YhteystietojenTyyppi.oid': string;
+    'YhteystietoElementti.oid': string;
+    'YhteystietoElementti.pakollinen': boolean;
+    'YhteystietoElementti.kaytossa': boolean;
+};
+export type ApiVakaTiedot = {
+    toimintamuoto: KoodiUri;
+    kasvatusopillinenJarjestelma: KoodiUri;
+    paikkojenLukumaara: number;
+    varhaiskasvatuksenToiminnallinenpainotukset: {
+        toiminnallinenpainotus: KoodiUri;
+        alkupvm: LocalDate;
+        loppupvm?: LocalDate;
+    }[];
+    varhaiskasvatuksenKielipainotukset: {
+        kielipainotus: KoodiUri;
+        alkupvm: LocalDate;
+        loppupvm?: LocalDate;
+    }[];
+    varhaiskasvatuksenJarjestamismuodot: KoodiUri[];
+};
 export type ApiOrganisaatio = OrganisaatioBase & {
     alkuPvm: LocalDate;
     lakkautusPvm?: LocalDate;
@@ -80,6 +112,9 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     oppilaitosKoodi: string;
     muutOppilaitosTyyppiUris: string[];
     vuosiluokat: string[];
+    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
+    piilotettu?: boolean;
+    yhteystietoArvos?: ApiYhteystietoArvo[];
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

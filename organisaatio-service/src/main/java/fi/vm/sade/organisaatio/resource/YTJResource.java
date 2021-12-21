@@ -21,9 +21,8 @@ import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
+import fi.vm.sade.organisaatio.ytj.api.exception.YtjExceptionType;
 import io.swagger.v3.oas.annotations.Hidden;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -39,8 +38,6 @@ import java.util.List;
 @RequestMapping({"${server.internal.context-path}/ytj", "${server.rest.context-path}/ytj"})
 public class YTJResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
-
     @Autowired(required = true)
     private YTJService ytjService;
 
@@ -55,17 +52,11 @@ public class YTJResource {
      */
     @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON)
     public YTJDTO findByYTunnus(@PathVariable String ytunnus) {
-        YTJDTO ytj = new YTJDTO();
         try {
-            ytj = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
+            return ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
         } catch (YtjConnectionException ex) {
-            ex.printStackTrace();
-            LOG.error("YtjConnectionException : " + ex.toString());
-
-            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
         }
-
-        return ytj;
     }
 
     @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON)
@@ -83,15 +74,16 @@ public class YTJResource {
 
     @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON)
     public List<YTJDTO> findByYNimi(@RequestParam String nimi) {
-        List<YTJDTO> ytjList = new ArrayList<YTJDTO>();
+        List<YTJDTO> ytjList = new ArrayList<>();
         if (nimi != null && nimi.length() > 0) {
             try {
                 ytjList = ytjService.findByYNimi(nimi.trim(), true, YTJKieli.FI);
             } catch (YtjConnectionException ex) {
-                ex.printStackTrace();
-                LOG.warn("YtjConnectionException : " + ex.toString());
-
-                throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
+                if(ex.getExceptionType().equals(YtjExceptionType.SOAP)){
+                    //assuming fault due to too many results
+                    throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "organisaatio.exception.too.many.results", ex.getExceptionType().name());
+                }
+                throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
             }
         }
         return ytjList;
@@ -101,8 +93,7 @@ public class YTJResource {
 
     @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public List<YTJDTO> findByYTunnusBatch(
-            @PathVariable List<String> ytunnuses) {
+    public List<YTJDTO> findByYTunnusBatch(@PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);
     }
 
@@ -111,10 +102,7 @@ public class YTJResource {
         try {
             ytjListResult = ytjService.findByYTunnusBatch(ytunnuses, YTJKieli.FI);
         } catch (YtjConnectionException ex) {
-            ex.printStackTrace();
-            LOG.error("YtjConnectionException : " + ex.toString());
-
-            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.toString());
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
         }
         return ytjListResult;
     }

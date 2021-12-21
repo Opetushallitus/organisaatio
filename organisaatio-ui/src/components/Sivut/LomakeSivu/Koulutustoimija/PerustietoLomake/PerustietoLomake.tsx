@@ -3,7 +3,6 @@ import { useContext, useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { KoodistoContext } from '../../../../../contexts/contexts';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
@@ -24,11 +23,11 @@ import {
 } from '../../LomakeFields/LomakeFields';
 import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
 import { findCurrentNimi } from '../../../../../tools/mappers';
+import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
     rakenne: ResolvedRakenne | undefined;
-    language: string;
     openYtjModal: () => void;
     validationErrors: FieldErrors<Perustiedot>;
     formRegister: UseFormRegister<Perustiedot>;

@@ -3,7 +3,7 @@ import sad from '../../../img/sad.png';
 import styles from './VirheSivu.module.css';
 
 type Props = {
-    children: React.ReactNode;
+    children?: React.ReactNode;
 };
 
 export default function VirheSivu(props: Props) {

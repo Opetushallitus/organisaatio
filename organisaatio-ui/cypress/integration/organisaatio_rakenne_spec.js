@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/contexts';
+import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT, ROOT_OID } from '../../src/contexts/constants';
 
 describe('Organisaatio Rakenne', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
@@ -21,12 +21,8 @@ describe('Organisaatio Rakenne', () => {
             cy.clickButton('JATKA');
             cy.clickButton('NAYTA_MUUT_KIELET');
             cy.enterAllYhteystiedot('CHILD');
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/${response.body.organisaatio.oid}*`).as('findPath1');
-            cy.intercept('POST', `${PUBLIC_API_CONTEXT}/findbyoids`).as('findPath2');
             cy.clickSaveButton();
-            cy.wait('@findPath1', { timeout: 10000 });
-            cy.wait('@findPath2', { timeout: 10000 });
-            cy.contains('CHILD Suominimi');
+            cy.contains('CHILD Suominimi', { timeout: 10000 });
             cy.clickAccordion('RAKENNE');
 
             cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');

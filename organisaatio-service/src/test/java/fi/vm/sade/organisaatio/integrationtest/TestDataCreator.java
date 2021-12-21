@@ -110,7 +110,6 @@ public class TestDataCreator {
 
             return organisaatio;
         } catch (Exception exp) {
-            exp.printStackTrace();
             return new Organisaatio();
         }
     }

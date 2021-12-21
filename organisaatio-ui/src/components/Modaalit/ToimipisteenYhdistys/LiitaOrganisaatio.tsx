@@ -3,10 +3,10 @@ import * as React from 'react';
 import { useContext, useState } from 'react';
 import { Confirmation } from '../Confirmation/Confirmation';
 import { LiitaOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
-import { LanguageContext } from '../../../contexts/contexts';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import LiitosBody from './LiitosBody';
+import { LanguageContext } from '../../../contexts/LanguageContext';
 
 export function LiitaOrganisaatio({
     liitaOrganisaatioon,

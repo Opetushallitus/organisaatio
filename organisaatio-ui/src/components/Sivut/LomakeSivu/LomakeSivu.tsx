@@ -5,16 +5,16 @@ import Accordion from '../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
-import { KoodistoContext, LanguageContext, rakenne, ROOT_OID } from '../../../contexts/contexts';
+import { rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
     LiitaOrganisaatioon,
     OrganisaatioNimiJaOid,
-    OrganisaatioPaivittaja,
     ParentTiedot,
     Perustiedot,
     ResolvedRakenne,
     UiOrganisaatioBase,
     Yhteystiedot,
+    YhteystietoArvot,
 } from '../../../types/types';
 
 import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomake';
@@ -26,24 +26,24 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
+    mapApiVakaToUi,
     mapApiYhteystiedotToUi,
+    mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToUpdate,
     mergeOrganisaatio,
     readOrganisaatio,
-    readOrganisaatioPaivittaja,
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
 import PerustietolomakeSchema from '../../../ValidationSchemas/PerustietolomakeSchema';
 import YhteystietoLomakeSchema from '../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { LiitaOrganisaatio } from '../../Modaalit/ToimipisteenYhdistys/LiitaOrganisaatio';
-import { resolveOrganisaatio, resolveOrganisaatioTyypit } from '../../../tools/organisaatio';
+import { resolveOrganisaatio, resolveOrganisaatioTyypit, showCreateChildButton } from '../../../tools/organisaatio';
 import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import {
     AlaBanneri,
     LomakeButton,
-    MuokattuKolumni,
     PaaOsio,
     ValiContainer,
     ValiNappulat,
@@ -51,7 +51,12 @@ import {
     VersioContainer,
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
-import moment from 'moment';
+import Muokattu from '../../Muokattu/Muokattu';
+import { LanguageContext } from '../../../contexts/LanguageContext';
+import { KoodistoContext } from '../../../contexts/KoodistoContext';
+import { CasMeContext } from '../../../contexts/CasMeContext';
+import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
+import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -63,6 +68,7 @@ const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const { i18n, language } = useContext(LanguageContext);
+    const { me: casMe } = useContext(CasMeContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
@@ -92,9 +98,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         kuntaKoodisto,
         vuosiluokatKoodisto,
         oppilaitostyyppiKoodisto,
+        vardatoimintamuotoKoodisto,
+        vardakasvatusopillinenjarjestelmaKoodisto,
+        vardatoiminnallinenpainotusKoodisto,
+        vardajarjestamismuotoKoodisto,
+        kielikoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
-    const [organisaatioPaivittaja, setOrganisaatioPaivittaja] = useState<OrganisaatioPaivittaja>({});
     const [nimiIsMuuttunut, setNimiIsMuuttunut] = useState<boolean>(false);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
@@ -104,7 +114,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setValue: setPerustiedotValue,
         getValues: getPerustiedotValues,
         register: registerPerustiedot,
-        formState: { errors: perustiedotValidationErrors },
+        formState: { errors: perustiedotValidationErrors, isDirty },
         handleSubmit: perustiedotHandleSubmit,
         control: perustiedotControl,
         watch: watchPerustiedot,
@@ -123,6 +133,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
     registerPerustiedot('nimi');
+    const {
+        register: yhteystietoArvoRegister,
+        reset: yhteystietoArvoReset,
+        handleSubmit: yhteystietoArvoHandleSubmit,
+    } = useForm<YhteystietoArvot>({
+        defaultValues: {},
+    });
     const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
     const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
     watchPerustiedot('nimi');
@@ -131,9 +148,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         (async function () {
             try {
                 const organisaatio = await readOrganisaatio(params.oid);
-                const paivittaja = await readOrganisaatioPaivittaja(params.oid);
+
                 if (organisaatio) {
-                    await resetOrganisaatio({ ...organisaatio, paivittaja });
+                    await resetOrganisaatio({ ...organisaatio });
                 }
             } finally {
                 nimiIsMuuttunut && setNimiIsMuuttunut(!nimiIsMuuttunut);
@@ -150,12 +167,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setResolvedOrganisaatioRakenne(organisaatioRakenne);
     }, [params.oid, watchOppilaitosTyyppiUri?.value, watchOrganisaatioTyypit]);
     const { historia, historiaLoading, historiaError, executeHistoria } = useOrganisaatioHistoria(params.oid);
+    const [muokattu, setMuokattu] = useState(0);
     const handleLisaaUusiToimija = () => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
     };
 
     const mapOrganisaatioToUi = ({
-        nimi,
+        nimi: mappingNimi,
         maaUri,
         kieletUris,
         kotipaikkaUri,
@@ -168,11 +186,15 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         vuosiluokat,
         yhteystiedot: apiYhteystiedot,
         lakkautusPvm,
+        ytunnus: mappingYtunnus,
+        piilotettu,
+        yhteystietoArvos,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
         Uiyhteystiedot: Yhteystiedot;
+        UIhteysTietoArvot: YhteystietoArvot;
     } => {
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
         const kotipaikka = kuntaKoodisto.uri2SelectOption(kotipaikkaUri);
@@ -181,13 +203,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
         return {
             Uiperustiedot: {
-                nimi,
+                nimi: mappingNimi,
                 maa,
                 kielet,
                 kotipaikka,
                 muutKotipaikat,
                 alkuPvm,
                 lakkautusPvm,
+                ytunnus: mappingYtunnus,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
                 oppilaitosKoodi,
@@ -195,23 +218,38 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     oppilaitostyyppiKoodisto.uri2SelectOption(kieliUri)
                 ),
                 vuosiluokat: vuosiluokat.map((kieliUri) => vuosiluokatKoodisto.uri2SelectOption(kieliUri)),
+                varhaiskasvatuksenToimipaikkaTiedot: mapApiVakaToUi({
+                    vaka: rest.varhaiskasvatuksenToimipaikkaTiedot,
+                    koodistot: {
+                        vardatoimintamuotoKoodisto,
+                        vardakasvatusopillinenjarjestelmaKoodisto,
+                        vardatoiminnallinenpainotusKoodisto,
+                        vardajarjestamismuotoKoodisto,
+                        kielikoodisto,
+                    },
+                }),
+                piilotettu,
             },
-            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: nimi },
+            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
+            UIhteysTietoArvot: mapApiYhteysTietoArvotToUi(yhteystietoArvos),
         };
     };
 
-    async function resetOrganisaatio({ organisaatio, polku, paivittaja }) {
-        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot } = mapOrganisaatioToUi(organisaatio);
+    async function resetOrganisaatio({ organisaatio, polku }) {
+        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
-        setOrganisaatioPaivittaja(paivittaja);
-        const {
-            organisaatio: { tyypit: organisaatioTyypit, oid },
-        } = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
-        setParentTiedot({ organisaatioTyypit, oid });
-        perustiedotReset(Uiperustiedot);
-        yhteystiedotReset(Uiyhteystiedot);
+        const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
+        if (data) {
+            const {
+                organisaatio: { tyypit, oid },
+            } = data;
+            setParentTiedot({ organisaatioTyypit: tyypit, oid });
+            perustiedotReset(Uiperustiedot);
+            yhteystiedotReset(Uiyhteystiedot);
+            yhteystietoArvoReset(UIhteysTietoArvot);
+        }
     }
 
     async function handleOrganisationMerge(props: LiitaOrganisaatioon) {
@@ -223,8 +261,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             if (mergeOrganisaatioResult) {
                 const organisaatioAfterMerge = await readOrganisaatio(params.oid);
                 if (organisaatioAfterMerge) {
-                    const paivittaja = await readOrganisaatioPaivittaja(params.oid);
-                    await resetOrganisaatio({ ...organisaatioAfterMerge, paivittaja });
+                    await resetOrganisaatio({ ...organisaatioAfterMerge });
                     executeHistoria();
                 }
             }
@@ -280,22 +317,25 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             perustiedotHandleSubmit((perustiedotFormValues) => {
                 yhteystiedotHandleSubmit(async (yhteystiedotFormValues) => {
-                    try {
-                        setIsLoading(true);
-                        const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
-                            postinumerotKoodisto,
-                            organisaatioBase,
-                            yhteystiedotFormValues,
-                            perustiedotFormValues
-                        );
-                        const organisaatio = await updateOrganisaatio(apiOrganisaatio);
-                        const paivittaja = await readOrganisaatioPaivittaja(organisaatio.oid);
-                        if (organisaatio) {
-                            await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku, paivittaja });
+                    await yhteystietoArvoHandleSubmit(async (yhteystietoArvoFormValuet) => {
+                        try {
+                            setIsLoading(true);
+                            const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                                postinumerotKoodisto,
+                                organisaatioBase,
+                                yhteystiedotFormValues,
+                                perustiedotFormValues,
+                                yhteystietoArvoFormValuet
+                            );
+                            const organisaatio = await updateOrganisaatio(apiOrganisaatio);
+                            if (organisaatio) {
+                                await resetOrganisaatio({ organisaatio, polku: organisaatioNimiPolku });
+                                setMuokattu(muokattu + 1);
+                            }
+                        } finally {
+                            setIsLoading(false);
                         }
-                    } finally {
-                        setIsLoading(false);
-                    }
+                    })();
                 })();
             })();
         }
@@ -308,7 +348,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
         );
     }
-    const { nimi, ytunnus, organisaatioTyypit } = getPerustiedotValues();
+    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
     const accordionProps = () => {
@@ -325,7 +365,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 key={PERUSTIEDOTID}
                 organisaatioBase={organisaatioBase}
                 rakenne={resolvedOrganisaatioRakenne}
-                language={language}
                 openYtjModal={() => setYTJModaaliAuki(true)}
                 handleNimiTallennus={handleNimiMuutos}
             />
@@ -344,6 +383,23 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
+        if (organisaatioTyypit?.includes('organisaatiotyyppi_08') && varhaiskasvatuksenToimipaikkaTiedot) {
+            lomakkeet.push(
+                <VakaToimipaikka
+                    control={perustiedotControl}
+                    key={'VakaToimipaikka'}
+                    getPerustiedotValues={getPerustiedotValues}
+                    vaka={varhaiskasvatuksenToimipaikkaTiedot}
+                />
+            );
+            otsikot.push(i18n.translate('LOMAKE_VAKA'));
+        }
+        if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
+            lomakkeet.push(
+                <ArvoLomake tyyppiOid={'1.2.246.562.5.79385887983'} yhteystietoArvoRegister={yhteystietoArvoRegister} />
+            );
+            otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));
+        }
         lomakkeet.push(
             <NimiHistoriaLomake
                 oid={organisaatioBase.oid}
@@ -377,43 +433,52 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <div key={o.oid}>
                         <Link to={`${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</Link>
                     </div>,
-                    organisaatioNimiPolku.length - 1 !== index && <div> &gt; </div>,
+                    organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
                 ])}
             </YlaBanneri>
             <ValiContainer>
                 <ValiOtsikko>
                     <h3>
-                        {(organisaatioTyypit &&
-                            organisaatioTyypit[0] &&
+                        {(organisaatioTyypit?.length > 0 &&
                             organisaatioTyypitKoodisto.uri2Nimi(organisaatioTyypit[0])) ||
                             i18n.translate('LABEL_NOT_AVAILABLE')}
                     </h3>
-                    <h1 style={organisaatioBase?.status === 'AKTIIVINEN' ? {} : { textDecoration: 'line-through' }}>
-                        {nimi && (nimi[language] || nimi['fi'] || nimi['sv'] || nimi['en'])}
+                    <h1>
+                        {i18n.translateNimi(nimi)}
+                        {organisaatioBase?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
-                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 && (
-                        <Button
-                            onClick={() => {
-                                setSiirraOrganisaatio({ ...siirraOrganisaatio });
-                                setSiirraOrganisaatioModaaliAuki(true);
-                            }}
-                        >
-                            {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
-                        </Button>
-                    )}
-                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 && (
-                        <Button
-                            onClick={() => {
-                                setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
-                                setYhdistaOrganisaatioModaaliAuki(true);
-                            }}
-                        >
-                            {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
-                        </Button>
-                    )}
-                    <LomakeButton onClick={handleLisaaUusiToimija} label={'LOMAKE_LISAA_UUSI_TOIMIJA'} />
+                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO') && (
+                            <Button
+                                onClick={() => {
+                                    setSiirraOrganisaatio({ ...siirraOrganisaatio });
+                                    setSiirraOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
+                            </Button>
+                        )}
+                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_YHDISTA_ORGANISAATIO') && (
+                            <Button
+                                onClick={() => {
+                                    setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
+                                    setYhdistaOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
+                            </Button>
+                        )}
+                    {showCreateChildButton(resolvedOrganisaatioRakenne) &&
+                        casMe.canHaveButton('LOMAKE_LISAA_UUSI_TOIMIJA') && (
+                            <LomakeButton
+                                disabled={isDirty}
+                                onClick={handleLisaaUusiToimija}
+                                label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
+                            />
+                        )}
                 </ValiNappulat>
             </ValiContainer>
             <PaaOsio>
@@ -421,19 +486,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
             <AlaBanneri>
                 <VersioContainer>
-                    <MuokattuKolumni>
-                        <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>
-                        <span>
-                            {organisaatioPaivittaja?.paivitysPvm
-                                ? moment(new Date(organisaatioPaivittaja.paivitysPvm)).format('D.M.yyyy HH:mm:ss')
-                                : ''}{' '}
-                            {organisaatioPaivittaja?.etuNimet} {organisaatioPaivittaja?.sukuNimi}
-                        </span>
-                    </MuokattuKolumni>
+                    <Muokattu oid={organisaatioBase.oid} muokattu={muokattu} />
                 </VersioContainer>
                 <div>
-                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/')} />
-                    <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
+                    {casMe.canHaveButton('BUTTON_TALLENNA') && (
+                        <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    )}
                 </div>
             </AlaBanneri>
             {yhdistaOrganisaatioModaaliAuki && (

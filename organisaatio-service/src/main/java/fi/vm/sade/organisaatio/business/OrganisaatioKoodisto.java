@@ -20,6 +20,7 @@ public interface OrganisaatioKoodisto {
 
     /**
      * Hakee kaikki oppilaitoskoodit
+     *
      * @return Setti oppilaitoskoodeja
      */
     Set<String> haeOppilaitoskoodit();
@@ -49,7 +50,11 @@ public interface OrganisaatioKoodisto {
         RYHMANTILA("ryhmantila"),
         KAYTTORYHMAT("kayttoryhmat"),
         OPPILAITOSTYYPPI("oppilaitostyyppi"),
-        VUOSILUOKAT("vuosiluokat");
+        VUOSILUOKAT("vuosiluokat"),
+        VARDATOIMINTAMUOTO("vardatoimintamuoto"),
+        VARDAKASVATUSOPILLINENJARJESTELMA("vardakasvatusopillinenjarjestelma"),
+        VARDATOIMINNALLINENPAINOTUS("vardatoiminnallinenpainotus"),
+        VARDAJARJESTAMISMUOTO("vardajarjestamismuoto");
         private final String uri;
 
         KoodistoUri(String koodistoUri) {

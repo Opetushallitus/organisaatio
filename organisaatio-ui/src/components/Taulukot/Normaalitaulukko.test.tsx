@@ -7,14 +7,12 @@ import NormaaliTaulukko, {
     Hakufiltterit,
     chooseTaulukkoData,
 } from './NormaaliTaulukko';
-import { Ryhma, YhteystietoTyyppi } from '../../types/types';
+import { Ryhma } from '../../types/types';
 import { Column } from 'react-table';
 
 const MINIMAL_PROPS: NormaaliTaulukkoProps = {
     ryhmatData: [],
-    yhteystietoTyypitData: [],
     ryhmatColumns: [],
-    yhteystietotyypitColumns: [],
     useHakuFiltteri: false,
 };
 
@@ -26,6 +24,7 @@ const MINIMAL_FILTTERIT_PROPS: FiltteritProps = {
 
 beforeEach(() => {
     jest.resetAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterAll(() => {
@@ -82,39 +81,19 @@ describe('Normaalitaulukko', () => {
             yhteystietoArvos: [],
             yritysmuoto: '',
         };
-        const yhteystietoTyyppi = {
-            allLisatietokenttas: undefined,
-            nimi: undefined,
-            oid: '',
-            sovellettavatOppilaitostyyppis: [],
-            sovellettavatOrganisaatios: [],
-            version: 0,
-        };
+
         const ryhmatColumn = {
             Header: 'nimi',
         } as Column<Ryhma>;
-        const yhteystietoTyypitColumn = {
-            Header: 'ytnimi',
-        } as Column<YhteystietoTyyppi>;
+
         test.each([
             [[ryhma], [ryhmatColumn], [], [], { data: [ryhma], columns: [ryhmatColumn] }],
-            [
-                [],
-                [],
-                [yhteystietoTyyppi],
-                [yhteystietoTyypitColumn],
-                { data: [yhteystietoTyyppi], columns: [yhteystietoTyypitColumn] },
-            ],
+
             [[], [], [], [], { data: [], columns: [] }],
         ])(
             'Returns ryhmatData and ryhmatColumns or yhteystietotyypitData and yhteystietotyypitColumns based on which one has data',
             (ryhmatData, ryhmatColumns, yhteystietotyypitData, yhteystietotyypitColumns, expectedResult) => {
-                const result = chooseTaulukkoData(
-                    ryhmatData,
-                    ryhmatColumns,
-                    yhteystietotyypitData,
-                    yhteystietotyypitColumns
-                );
+                const result = chooseTaulukkoData(ryhmatData, ryhmatColumns);
                 expect(result).toEqual(expectedResult);
             }
         );

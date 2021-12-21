@@ -4,7 +4,7 @@ import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { KoodistoContext, LanguageContext, rakenne } from '../../../../contexts/contexts';
+import { rakenne } from '../../../../contexts/constants';
 import { ParentTiedot, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
@@ -36,6 +36,9 @@ import {
     VersioContainer,
     YlaBanneri,
 } from '../LomakeFields/LomakeFields';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
+import { KoodistoContext } from '../../../../contexts/KoodistoContext';
+import { CasMeContext } from '../../../../contexts/CasMeContext';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -43,6 +46,7 @@ const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
+    const { me: casMe } = useContext(CasMeContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const parentOid = resolveParentOidByQuery(props.location.search);
     const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
@@ -55,10 +59,13 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
 
     useEffect(() => {
         (async function () {
-            const {
-                organisaatio: { tyypit, oid },
-            } = await readOrganisaatio(parentOid, true);
-            setParentTiedot({ organisaatioTyypit: tyypit, oid });
+            const data = await readOrganisaatio(parentOid, true);
+            if (data) {
+                const {
+                    organisaatio: { tyypit, oid },
+                } = data;
+                setParentTiedot({ organisaatioTyypit: tyypit, oid });
+            }
         })();
     }, [parentOid]);
 
@@ -207,7 +214,9 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 </VersioContainer>
                 <div>
                     <LomakeButton label={'BUTTON_SULJE'} onClick={handleCancel} />
-                    <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    {casMe.canHaveButton('BUTTON_TALLENNA') && (
+                        <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    )}
                 </div>
             </AlaBanneri>
             {YTJModaaliAuki && (

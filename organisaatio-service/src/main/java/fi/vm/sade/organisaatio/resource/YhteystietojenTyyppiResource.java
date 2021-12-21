@@ -83,8 +83,8 @@ public class YhteystietojenTyyppiResource {
 
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @Transactional(readOnly = false)
-    public YhteystietojenTyyppiDTO updateYhteystietoTyyppi(YhteystietojenTyyppiDTO dto) {
+    @Transactional
+    public YhteystietojenTyyppiDTO updateYhteystietoTyyppi(@RequestBody YhteystietojenTyyppiDTO dto) {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
@@ -99,14 +99,14 @@ public class YhteystietojenTyyppiResource {
         if (entity == null) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "Entity is null.");
         }
-        yhteystietojenTyyppiRepository.save(entity); //TODO works?
-        return (YhteystietojenTyyppiDTO) converterFactory.convertToDTO(entity);
+        yhteystietojenTyyppiRepository.save(entity);
+        return converterFactory.convertToDTO(entity);
     }
 
     @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @Transactional(rollbackFor = Throwable.class, readOnly = false)
-    public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(YhteystietojenTyyppiDTO yhteystietojenTyyppi) {
+    @Transactional
+    public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(@RequestBody YhteystietojenTyyppiDTO yhteystietojenTyyppi) {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
@@ -136,9 +136,9 @@ public class YhteystietojenTyyppiResource {
         return converterFactory.convertToDTO(entity, YhteystietojenTyyppiDTO.class);
     }
 
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{oid}", produces = MediaType.TEXT_PLAIN_VALUE)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @Transactional(readOnly = false)
+    @Transactional
     public String deleteYhteystietottyypi(@PathVariable String oid, @RequestParam(defaultValue = "false") boolean force) {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
@@ -157,9 +157,7 @@ public class YhteystietojenTyyppiResource {
         YhteystietojenTyyppi tyyppiToRemove = tyypit.get(0);
         List<YhteystietoArvo> arvos = yhteystietoArvoRepository.findByYhteystietojenTyyppi(tyyppiToRemove);
         if (force) {
-            for (YhteystietoArvo arvo : arvos) {
-                this.yhteystietoArvoRepository.delete(arvo);
-            }
+            this.yhteystietoArvoRepository.deleteAll(arvos);
             this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);
         } else if (arvos.isEmpty()) {
             this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);

@@ -3,10 +3,11 @@ import '@testing-library/jest-dom/extend-expect';
 import { History } from 'history';
 
 import RyhmanMuokkaus, { RyhmanMuokausProps } from './RyhmanMuokkaus';
-import { RouteComponentProps, match, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, match, RouteComponentProps } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import { Ryhma } from '../../../../types/types';
 import axios, { AxiosResponse } from 'axios';
+import useAxios from 'axios-hooks';
 
 type DeepPartial<T> = {
     [P in keyof T]?: DeepPartial<T[P]>;
@@ -49,6 +50,12 @@ jest.mock('@opetushallitus/virkailija-ui-components/Button', () => () => <button
 jest.mock('@opetushallitus/virkailija-ui-components/Input', () => () => <input />);
 jest.mock('@opetushallitus/virkailija-ui-components/Select', () => () => <select>select</select>);
 jest.mock('axios');
+jest.mock('axios-hooks');
+
+beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
 
 afterAll(() => {
     jest.clearAllMocks();
@@ -60,6 +67,7 @@ describe('RyhmanMuokkaus', () => {
     } as Partial<AxiosResponse>;
     beforeEach(() => {
         (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
+        ((useAxios as unknown) as jest.Mock).mockReturnValue([{ data: 0 }, () => {}]);
     });
     it('Renders Spinner when there is no ryhma and is not new', () => {
         render(

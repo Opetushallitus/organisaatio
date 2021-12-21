@@ -4,7 +4,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { KoodistoContext, LanguageContext } from '../../../../../contexts/contexts';
+import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
@@ -13,6 +13,7 @@ import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import { Kentta, LomakeButton, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 import DatePickerController from '../../../../Controllers/DatePickerController';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -80,7 +81,13 @@ export default function PerustietoLomake({
                         name={'organisaatioTyypit'}
                         defaultValue={[]}
                         render={({ field: { ref, ...rest } }) => {
-                            return <CheckboxGroup {...rest} options={resolvedTyypit} />;
+                            return (
+                                <CheckboxGroup
+                                    {...rest}
+                                    error={!!validationErrors['organisaatioTyypit']}
+                                    options={resolvedTyypit}
+                                />
+                            );
                         }}
                     />
                 </Kentta>
@@ -88,7 +95,7 @@ export default function PerustietoLomake({
             {rakenne.showYtj && (
                 <>
                     <Rivi>
-                        <Kentta label={''}>
+                        <Kentta isRequired label={''}>
                             <RadioGroup
                                 value={onYunnus.toString()}
                                 options={[
@@ -125,7 +132,7 @@ export default function PerustietoLomake({
             )}
 
             <Rivi>
-                <Kentta label={'PERUSTIETO_PERUSTAMISPAIVA'}>
+                <Kentta isRequired label={'PERUSTIETO_PERUSTAMISPAIVA'}>
                     <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
                         form={formControl}
@@ -134,7 +141,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
+                <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -166,7 +173,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label={'PERUSTIETO_MAA'}>
+                <Kentta isRequired label={'PERUSTIETO_MAA'}>
                     <Controller
                         control={formControl}
                         name={'maa'}
@@ -183,7 +190,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta label={'PERUSTIETO_OPETUSKIELI'}>
+                <Kentta isRequired label={'PERUSTIETO_OPETUSKIELI'}>
                     <Controller
                         control={formControl}
                         name={'kielet'}

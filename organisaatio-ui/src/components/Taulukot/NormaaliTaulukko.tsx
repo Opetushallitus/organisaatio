@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import styles from './NormaaliTaulukko.module.css';
 import {
-    useGlobalFilter,
-    useExpanded,
-    usePagination,
-    useTable,
-    useSortBy,
-    useFilters,
     Column,
-    TableInstance,
     FilterValue,
+    HeaderGroup,
+    TableInstance,
+    useExpanded,
+    useFilters,
+    useGlobalFilter,
+    usePagination,
+    useSortBy,
+    useTable,
 } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
@@ -18,11 +20,10 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { useContext } from 'react';
-import { KoodistoContext, LanguageContext } from '../../contexts/contexts';
-import { useState } from 'react';
-import { Ryhma, SelectOptionType, YhteystietoTyyppi } from '../../types/types';
+import { KoodistoContext } from '../../contexts/KoodistoContext';
+import { Ryhma, SelectOptionType } from '../../types/types';
 import { ValueType } from 'react-select';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 // TODO yhtenäistä!
 const mapPaginationSelectors = (index) => {
@@ -33,8 +34,6 @@ const mapPaginationSelectors = (index) => {
 export type NormaaliTaulukkoProps = {
     ryhmatData?: Ryhma[];
     ryhmatColumns?: Column<Ryhma>[];
-    yhteystietoTyypitData?: YhteystietoTyyppi[];
-    yhteystietotyypitColumns?: Column<YhteystietoTyyppi>[];
     useHakuFiltteri?: boolean;
 };
 
@@ -44,11 +43,9 @@ export type FiltteritProps = {
     globalFilter: string;
 };
 
-export const chooseTaulukkoData = (ryhmatData, ryhmatColumns, yhteystietoTyypitData, yhteystietotyypitColumns) => {
+export const chooseTaulukkoData = (ryhmatData, ryhmatColumns) => {
     if (ryhmatData && ryhmatData.length > 0) {
         return { data: ryhmatData, columns: ryhmatColumns };
-    } else if (yhteystietoTyypitData && yhteystietoTyypitData.length > 0) {
-        return { data: yhteystietoTyypitData, columns: yhteystietotyypitColumns };
     }
     return { data: [], columns: [] };
 };
@@ -158,21 +155,10 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
     );
 };
 
-const NormaaliTaulukko = ({
-    ryhmatData = [],
-    yhteystietoTyypitData = [],
-    ryhmatColumns = [],
-    yhteystietotyypitColumns = [],
-    useHakuFiltteri = false,
-}: NormaaliTaulukkoProps) => {
+const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri = false }: NormaaliTaulukkoProps) => {
     const { i18n } = useContext(LanguageContext);
 
-    const { data, columns } = chooseTaulukkoData(
-        ryhmatData,
-        ryhmatColumns,
-        yhteystietoTyypitData,
-        yhteystietotyypitColumns
-    );
+    const { data, columns } = chooseTaulukkoData(ryhmatData, ryhmatColumns);
     const {
         getTableProps,
         getTableBodyProps,
@@ -211,7 +197,7 @@ const NormaaliTaulukko = ({
         useSortBy,
         useExpanded,
         usePagination
-    ) as TableInstance<YhteystietoTyyppi> | TableInstance<Ryhma>;
+    ) as TableInstance<Ryhma>;
     return (
         <div>
             {useHakuFiltteri && (
@@ -230,7 +216,9 @@ const NormaaliTaulukko = ({
                             {headerGroup.headers.map((column) => (
                                 <th
                                     {...column.getHeaderProps({
-                                        className: column.collapse ? styles.collapse : '',
+                                        className: (column as HeaderGroup<Ryhma> & { collapse: boolean }).collapse
+                                            ? styles.collapse
+                                            : '',
                                     })}
                                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                                 >
@@ -249,7 +237,10 @@ const NormaaliTaulukko = ({
                                     return (
                                         <td
                                             {...cell.getCellProps({
-                                                className: cell.column.collapse ? styles.collapse : '',
+                                                className: (cell.column as HeaderGroup<Ryhma> & { collapse: boolean })
+                                                    .collapse
+                                                    ? styles.collapse
+                                                    : '',
                                             })}
                                             style={{
                                                 background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
@@ -275,9 +266,14 @@ const NormaaliTaulukko = ({
                         <Icon icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
-                        if (option === pageIndex) return <Button onClick={() => gotoPage(option)}>{option + 1}</Button>;
+                        if (option === pageIndex)
+                            return (
+                                <Button key={option} onClick={() => gotoPage(option)}>
+                                    {option + 1}
+                                </Button>
+                            );
                         return (
-                            <Button variant={'text'} color={'secondary'} onClick={() => gotoPage(option)}>
+                            <Button key={option} variant={'text'} color={'secondary'} onClick={() => gotoPage(option)}>
                                 {option + 1}
                             </Button>
                         );

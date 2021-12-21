@@ -3,11 +3,11 @@ import { useContext, useState } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { HistoriaTaulukkoData, OrganisaationNimetNimi } from '../../../../../types/types';
-import { LanguageContext } from '../../../../../contexts/contexts';
 import { Column } from 'react-table';
 import NimiHistoriaNimi from './NimiHistoriaNimi';
 import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
 import Spinner from '../../../../Spinner/Spinner';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 type nimiHistoriaProps = {
     nimet: OrganisaationNimetNimi[];

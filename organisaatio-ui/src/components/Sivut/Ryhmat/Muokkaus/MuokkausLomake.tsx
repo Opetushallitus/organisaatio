@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import styles from './MuokkausLomake.module.css';
 import Icon from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
@@ -7,14 +8,16 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
-import { useContext } from 'react';
-import { KoodistoContext, LanguageContext } from '../../../../contexts/contexts';
+import { KoodistoContext } from '../../../../contexts/KoodistoContext';
 import { mapLocalizedKoodiToLang } from '../../../../tools/mappers';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
-import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
+import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
+import Muokattu from '../../../Muokattu/Muokattu';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -35,10 +38,8 @@ const MuokkausLomake = ({
 }: MuokkausLomakeProps) => {
     const { i18n, language } = useContext(LanguageContext);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
-
     const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
-
     const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri));
     const ryhmaTyypit = ryhma.ryhmatyypit.map((koodiUri) => ryhmaTyypitKoodisto.uri2SelectOption(koodiUri));
     const isDisabled = !ryhma || ryhma.status === 'PASSIIVINEN';
@@ -211,26 +212,19 @@ const MuokkausLomake = ({
                     )}
                 </div>
             </div>
-            <div className={styles.AlaBanneri}>
+            <AlaBanneri>
+                <VersioContainer>{ryhma.oid && <Muokattu oid={ryhma.oid} />}</VersioContainer>
                 <div>
-                    <Button
-                        name={'peruutabutton'}
-                        variant={'outlined'}
-                        className={styles.Versionappula}
-                        onClick={handlePeruuta}
-                    >
-                        {i18n.translate('BUTTON_SULJE')}
-                    </Button>
-                    <Button
+                    <LomakeButton label={'BUTTON_SULJE'} name={'peruutabutton'} onClick={handlePeruuta} />
+                    <LomakeButton
+                        label={'BUTTON_TALLENNA'}
                         disabled={ryhma.status === 'PASSIIVINEN'}
-                        name={'tallennabutton'}
-                        className={styles.Versionappula}
-                        onClick={handleSubmit(handleTallenna)}
-                    >
-                        {i18n.translate('BUTTON_TALLENNA')}
-                    </Button>
+                        onClick={() => {
+                            handleSubmit(handleTallenna)();
+                        }}
+                    />
                 </div>
-            </div>
+            </AlaBanneri>
         </PohjaSivu>
     );
 };

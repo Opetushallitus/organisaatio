@@ -1,5 +1,6 @@
-import { I18nImpl, KoodistoImpl } from './contexts';
+import { KoodistoImpl } from './KoodistoContext';
 import { Koodi, Lokalisointi } from '../types/types';
+import { I18nImpl } from './LanguageContext';
 
 describe('KoodistoImpl', () => {
     const koodit: Koodi[] = [
@@ -44,12 +45,6 @@ describe('KoodistoImpl', () => {
     it('Returns empty nimi when arvo doesnt exist', () => {
         const nimi = impl.arvo2Nimi('0');
         expect(nimi).toEqual('');
-    });
-
-    it('Returns all names', () => {
-        const nimet = impl.nimet();
-        expect(nimet.length).toEqual(1);
-        expect(nimet[0]).toEqual('Koodi');
     });
 
     it('Returns all koodis', () => {

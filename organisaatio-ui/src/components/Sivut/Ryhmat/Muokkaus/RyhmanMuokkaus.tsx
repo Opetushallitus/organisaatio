@@ -5,8 +5,9 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../../api/ryhma';
 import { NewRyhma, Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
-import { LanguageContext, ROOT_OID } from '../../../../contexts/contexts';
+import { ROOT_OID } from '../../../../contexts/constants';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
+import { LanguageContext } from '../../../../contexts/LanguageContext';
 
 export type RyhmanMuokausProps = {
     oid?: string;
@@ -72,8 +73,8 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
                     'kieli_sv#1': kuvaus2Sv,
                     'kieli_en#1': kuvaus2En,
                 },
-                ryhmatyypit: ryhmatyypit.map((rt) => rt.value),
-                kayttoryhmat: kayttoryhmat.map((rt) => rt.value),
+                ryhmatyypit: ryhmatyypit.map((a) => `${a.value}#${a.versio}`),
+                kayttoryhmat: kayttoryhmat.map((a) => `${a.value}#${a.versio}`),
             };
             try {
                 const { organisaatio: updatedRyhma } = onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);

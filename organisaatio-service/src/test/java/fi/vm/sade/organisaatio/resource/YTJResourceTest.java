@@ -5,9 +5,11 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.mock.YTJServiceMock;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +31,7 @@ import static org.mockito.Mockito.spy;
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class YTJResourceTest extends SecurityAwareTestBase {
+class YTJResourceTest extends SecurityAwareTestBase {
 
     @TestConfiguration
     static class TestContextConfiguration {
@@ -55,7 +61,7 @@ public class YTJResourceTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void findByYTunnusV4() {
+    void findByYTunnusV4() {
         OrganisaatioRDTOV4 varhaiskasvatuksenJarjestaja = ytjResource.findByYTunnusV4("2255802-1");
         // lisätään pakolliset tiedot ennen tallennusta
         varhaiskasvatuksenJarjestaja.setTyypit(singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue()));
@@ -81,4 +87,30 @@ public class YTJResourceTest extends SecurityAwareTestBase {
         assertThat(varhaiskasvatuksenToimipaikka).returns(varhaiskasvatuksenJarjestaja.getOid(), OrganisaatioRDTOV4::getParentOid);
     }
 
+    @Test
+    void findByYTunnus() {
+        OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
+            ytjResource.findByYTunnus("");
+        });
+    }
+
+    @Test
+    void findByYNimi1() {
+        OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
+            ytjResource.findByYNimi("-");
+        });
+    }
+
+    @Test
+    void findByYNimi2() {
+        List<YTJDTO> list = ytjResource.findByYNimi("FCG Finnish Consulting Group Oy");
+        assertThat(list.size()).isEqualTo(1);
+    }
+
+    @Test
+    void findByYNimi3() {
+        OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
+            ytjResource.findByYNimi("x");
+        });
+    }
 }

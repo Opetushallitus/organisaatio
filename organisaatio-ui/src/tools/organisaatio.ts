@@ -1,7 +1,8 @@
 import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } from '../types/types';
-import { ROOT_OID } from '../contexts/contexts';
+import { ROOT_OID } from '../contexts/constants';
 import { ApiOrganisaatio } from '../types/apiTypes';
 import queryString from 'query-string';
+
 type ResolvingOrganisaatio = { organisaatioTyypit: KoodiUri[]; oppilaitosTyyppiUri?: string; oid?: string };
 export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingOrganisaatio): ResolvedRakenne => {
     const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.organisaatioTyypit];
@@ -31,7 +32,14 @@ export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingO
                     showYtj: current.showYtj || previous.showYtj,
                 };
             },
-            { type: [], mergeTargetType: [], moveTargetType: [], childTypes: [], dynamicFields: [], showYtj: false }
+            {
+                type: [],
+                mergeTargetType: [],
+                moveTargetType: [],
+                childTypes: [],
+                dynamicFields: [],
+                showYtj: false,
+            }
         );
 };
 export const resolveOrganisaatioTyypit = (
@@ -41,7 +49,7 @@ export const resolveOrganisaatioTyypit = (
 ): KoodistoSelectOption[] => {
     const parentRakenne = resolveOrganisaatio(rakenne, organisaatio);
     return parentRakenne.childTypes
-        .map((tyyppiUri) => koodisto.uri2SelectOption(tyyppiUri))
+        .map((tyyppi) => koodisto.uri2SelectOption(tyyppi.type, tyyppi.disabled))
         .sort((a, b) => a.label.localeCompare(b.label));
 };
 
@@ -60,3 +68,8 @@ export const resolveParentOidByQuery = (searchStr): string => {
     const { parentOid } = queryString.parse(searchStr);
     return (parentOid as string) || ROOT_OID;
 };
+
+export const showCreateChildButton = (organisaatioRakenne: ResolvedRakenne): boolean =>
+    organisaatioRakenne?.type.length > 0 &&
+    organisaatioRakenne?.childTypes.length > 0 &&
+    !!organisaatioRakenne.childTypes.find((resolvedTyyppi) => !resolvedTyyppi.disabled);

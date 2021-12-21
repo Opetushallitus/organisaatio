@@ -1,0 +1,217 @@
+[
+    {
+        "koodiArvo": "JM05",
+        "koodiUri": "vardajarjestamismuoto_jm05",
+        "koodisto": {
+            "koodistoUri": "vardajarjestamismuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Yksityinen varhaiskasvatus ilman yksityisen hoidon tukea",
+                "lyhytNimi": "Yksityinen varhaiskasvatus ilman yksityisen hoidon tukea",
+                "nimi": "Yksityinen varhaiskasvatus ilman yksityisen hoidon tukea",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Privat sm\u00e5barnspedagogik utan st\u00f6d f\u00f6r privat v\u00e5rd av barn",
+                "lyhytNimi": "Privat sm\u00e5barnspedagogik utan st\u00f6d f\u00f6r privat v\u00e5rd av barn",
+                "nimi": "Privat sm\u00e5barnspedagogik utan st\u00f6d f\u00f6r privat v\u00e5rd av barn",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.51871478467",
+        "paivitysPvm": "2020-01-24",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardajarjestamismuoto_jm05",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 1,
+        "voimassaAlkuPvm": "2020-01-27",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "JM01",
+        "koodiUri": "vardajarjestamismuoto_jm01",
+        "koodisto": {
+            "koodistoUri": "vardajarjestamismuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Kunnan tai kuntayhtym\u00e4n j\u00e4rjest\u00e4m\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Kunnan tai kuntayhtym\u00e4n j\u00e4rjest\u00e4m\u00e4",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Anordnas av kommunen eller samkommunen",
+                "lyhytNimi": "",
+                "nimi": "Anordnas av kommunen eller samkommunen",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardajarjestamismuoto_jm01",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "JM02",
+        "koodiUri": "vardajarjestamismuoto_jm02",
+        "koodisto": {
+            "koodistoUri": "vardajarjestamismuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ostopalvelu, kunnan tai kuntayhtym\u00e4n j\u00e4rjest\u00e4m\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Ostopalvelu, kunnan tai kuntayhtym\u00e4n j\u00e4rjest\u00e4m\u00e4",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Anordnas som k\u00f6pt tj\u00e4nst av kommunen eller samkommunen",
+                "lyhytNimi": "",
+                "nimi": "Anordnas som k\u00f6pt tj\u00e4nst av kommunen eller samkommunen",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.51871478467",
+        "paivitysPvm": "2019-11-27",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardajarjestamismuoto_jm02",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "JM03",
+        "koodiUri": "vardajarjestamismuoto_jm03",
+        "koodisto": {
+            "koodistoUri": "vardajarjestamismuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Palveluseteli, kunnan tai kuntayhtym\u00e4n j\u00e4rjest\u00e4m\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Palveluseteli, kunnan tai kuntayhtym\u00e4n j\u00e4rjest\u00e4m\u00e4",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Anordnas med servicesedlar",
+                "lyhytNimi": "",
+                "nimi": "Anordnas med servicesedlar",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.51871478467",
+        "paivitysPvm": "2019-11-27",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardajarjestamismuoto_jm03",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "JM04",
+        "koodiUri": "vardajarjestamismuoto_jm04",
+        "koodisto": {
+            "koodistoUri": "vardajarjestamismuoto",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Anordnas med hj\u00e4lp av st\u00f6det f\u00f6r privat v\u00e5rd av barn",
+                "lyhytNimi": "",
+                "nimi": "Anordnas med hj\u00e4lp av st\u00f6det f\u00f6r privat v\u00e5rd av barn",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Yksityisen hoidon tuella j\u00e4rjestetty",
+                "lyhytNimi": "",
+                "nimi": "Yksityisen hoidon tuella j\u00e4rjestetty",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardajarjestamismuoto_jm04",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    }
+]
