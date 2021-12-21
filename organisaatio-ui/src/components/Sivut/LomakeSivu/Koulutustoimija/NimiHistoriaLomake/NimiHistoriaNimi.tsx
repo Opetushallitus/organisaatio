@@ -4,6 +4,7 @@ import { LanguageContext } from '../../../../../contexts/contexts';
 import { LocalDate, Nimi, OrganisaationNimetNimi } from '../../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import styles from './NimiHistoriaNimi.module.css';
+import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
@@ -19,15 +20,10 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
         handleDeleteNimi({ nimi, alkuPvm });
     }
 
-    const nimiKeys = Object.keys(nimi);
     const isAlkuPvmInFuture = new Date(alkuPvm) > new Date();
     return (
         <div className={styles.NimiHistoriaCell}>
-            {nimiKeys.map((nimiKey, i) => (
-                <span key={`nimihistoria_${nimiKey}`}>{`${nimi[nimiKey]} [${nimiKey}]${
-                    nimiKeys.length - 1 > i ? ', ' : ''
-                }`}</span>
-            ))}
+            <ReadOnlyNimi value={nimi} />
             {isAlkuPvmInFuture && (
                 <div className={styles.DeleteBtn}>
                     <Button color="danger" onClick={handleDeleteClick}>

@@ -23,9 +23,17 @@ const AvainKevyestiBoldattu = ({ label }) => {
 const ReadOnly = ({ value }) => {
     return <span className={styles.Kentta}>{value}</span>;
 };
-const ReadOnlyNimi = ({ value }) => {
-    const { i18n } = useContext(LanguageContext);
-    return <span className={styles.Kentta}>{i18n.translateNimi(value)}</span>;
+const ReadOnlyNimi = ({ value: nimi }) => {
+    const nimiKeys = Object.keys(nimi || {});
+    return (
+        <div>
+            {nimiKeys.map((nimiKey, i) => (
+                <span key={`readOnlyNimi_${nimiKey}`}>{`${nimi[nimiKey]} [${nimiKey}]${
+                    nimiKeys.length - 1 > i ? ', ' : ''
+                }`}</span>
+            ))}
+        </div>
+    );
 };
 const ReadOnlyDate = ({ value }) => {
     const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';

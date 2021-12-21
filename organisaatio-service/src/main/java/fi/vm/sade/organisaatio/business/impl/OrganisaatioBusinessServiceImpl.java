@@ -789,7 +789,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
         }
 
-
         // Luodaan tallennettava entity objekti
         OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
 
