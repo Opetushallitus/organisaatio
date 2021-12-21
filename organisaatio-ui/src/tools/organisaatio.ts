@@ -22,7 +22,9 @@ export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingO
                     type: [current.type, ...previous.type],
                     mergeTargetType: mergeTarget,
                     moveTargetType: moveTarget,
-                    childTypes: [...previous.childTypes, ...current.childTypes],
+                    childTypes: [...previous.childTypes, ...current.childTypes].filter(
+                        (a, i, array) => array.findIndex((b) => b.type === a.type) === i
+                    ),
                     dynamicFields: [
                         ...previous.dynamicFields,
                         ...current.dynamicFields.filter((a) => {

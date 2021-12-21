@@ -1,7 +1,6 @@
 import useAxios from 'axios-hooks';
 import { urls } from 'oph-urls-js';
-import { CASMe } from '../types/apiTypes';
-import { Language } from '../types/types';
+import { CASMe, Language } from '../types/types';
 import { CASMeImpl } from '../contexts/CasMeContext';
 
 type CASMeApi = {

@@ -1,9 +1,9 @@
-import { Language } from '../types/types';
+import { CASMe, ConfigurableButton, Language, OrganisaatioNimiJaOid } from '../types/types';
 import * as React from 'react';
-import { CASMe, ConfigurableButton } from '../types/apiTypes';
+
 type Role = 'APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001' | 'APP_ORGANISAATIOHALLINTA_CRUD';
-function getRoleButtons(myRole: Role, role: Role, buttons: ConfigurableButton[]): ConfigurableButton[] {
-    return myRole === role ? buttons : [];
+function getRoleItems<A>(myRole: Role, role: Role, items: A[]): A[] {
+    return myRole === role ? items : [];
 }
 
 export class CASMeImpl implements CASMe {
@@ -26,17 +26,21 @@ export class CASMeImpl implements CASMe {
         this.allowedButtons = casMe.roles.reduce(
             (p, c) => [
                 ...p,
-                ...getRoleButtons(c, 'APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001', [
-                    'LOMAKE_YHDISTA_ORGANISAATIO',
-                    'LOMAKE_SIIRRA_ORGANISAATIO',
-                    'TAULUKKO_LISAA_UUSI_TOIMIJA',
-                ]),
-                ...getRoleButtons(c, 'APP_ORGANISAATIOHALLINTA_CRUD', ['BUTTON_TALLENNA', 'LOMAKE_LISAA_UUSI_TOIMIJA']),
+                ...getRoleItems<ConfigurableButton>(c, 'APP_ORGANISAATIOHALLINTA_CRUD', ['LOMAKE_LISAA_UUSI_TOIMIJA']),
             ],
-            [] as string[]
+            [] as ConfigurableButton[]
         );
     }
-    canHaveButton = (button: ConfigurableButton) => this.allowedButtons.includes(button);
+    canHaveButton = (button: ConfigurableButton, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
+        if (this.roles.includes('APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')) return true;
+        if (this.roles.includes('APP_ORGANISAATIOHALLINTA_CRUD') && organisaatioNimiPolku.length > 2) return true;
+        return this.allowedButtons.includes(button) && organisaatioNimiPolku.length > 1;
+    };
+    canEditIfParent = (organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
+        if (this.roles.includes('APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')) return true;
+        if (this.roles.includes('APP_ORGANISAATIOHALLINTA_CRUD') && organisaatioNimiPolku.length > 2) return true;
+        return false;
+    };
 }
 type CASMeContextType = {
     me: CASMe;
