@@ -21,7 +21,7 @@ describe('Restrict buttons by roles', () => {
     it('Does not show buttons without required roles', () => {
         cy.intercept('GET', `/kayttooikeus-service/cas/me`, { fixture: 'noRoles.json' });
         cy.visit(`${BASE_PATH}/organisaatiot`);
-        cy.get('h2').contains('TAULUKKO_ORGANISAATIOT', { timeout: 10000 }).should('exist');
+        cy.get('h2', { timeout: 20000 }).contains('TAULUKKO_ORGANISAATIOT').should('exist');
         cy.get('button').contains(taulukkoLisaaUusi).should('not.exist');
 
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parent');
@@ -69,6 +69,7 @@ describe('Restrict buttons by roles', () => {
     it('Shows buttons with CRUD roles', () => {
         cy.intercept('GET', `/kayttooikeus-service/cas/me`, { fixture: 'CRUDRoles.json' });
         cy.visit(`${BASE_PATH}/organisaatiot`);
+        cy.get('h2', { timeout: 20000 }).contains('TAULUKKO_ORGANISAATIOT').should('exist');
         cy.contains(taulukkoLisaaUusi).should('not.exist');
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parent');
         cy.get('@parent').then((parentOrganisaatio) => {
@@ -120,6 +121,7 @@ describe('Restrict buttons by roles', () => {
     it('Shows buttons with OPH roles', () => {
         cy.intercept('GET', `/kayttooikeus-service/cas/me`, { fixture: 'OPHRoles.json' });
         cy.visit(`${BASE_PATH}/organisaatiot`);
+        cy.get('h2', { timeout: 20000 }).contains('TAULUKKO_ORGANISAATIOT').should('exist');
         cy.contains(taulukkoLisaaUusi).should('exist');
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parent');
         cy.get('@parent').then((parentOrganisaatio) => {
