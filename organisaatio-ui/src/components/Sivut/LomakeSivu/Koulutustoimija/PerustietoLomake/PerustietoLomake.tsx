@@ -13,6 +13,7 @@ import DynamicFields from '../DynamicFields/DynamicFields';
 import {
     AvainKevyestiBoldattu,
     Kentta,
+    LabelLink,
     LomakeButton,
     ReadOnly,
     ReadOnlyDate,
@@ -97,12 +98,20 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             )}
 
             {rakenne?.showYtj && (
-                <Rivi>
-                    <Kentta isRequired label={'PERUSTIETO_Y_TUNNUS'}>
-                        <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
-                    </Kentta>
-                    <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
-                </Rivi>
+                <>
+                    <Rivi>
+                        <Kentta isRequired label={'PERUSTIETO_Y_TUNNUS'}>
+                            <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
+                        </Kentta>
+                        <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
+                    </Rivi>
+                    <Rivi>
+                        <LabelLink
+                            value={'PERUSTIETO_YTUNNUS_MUUTOKSET'}
+                            to={'https://www.ytj.fi/index/ilmoittaminen/muutosilmoitus.html'}
+                        />
+                    </Rivi>
+                </>
             )}
             {rakenne?.dynamicFields && (
                 <DynamicFields
