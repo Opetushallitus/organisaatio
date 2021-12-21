@@ -50,7 +50,6 @@ describe('Restrict buttons by roles', () => {
             cy.get('h3', { timeout: 10000 }).contains('Koulutustoimija').should('exist');
             allRestrictedButtons.forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [suljeButton].forEach((a) => cy.get('button').contains(a).should('exist'));
-            cy.pause();
         });
         cy.get('@child').then((org) => {
             cy.log('test for Oppilaitos');
