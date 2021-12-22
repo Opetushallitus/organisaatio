@@ -132,7 +132,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         defaultValues: mapApiYhteystiedotToUi(postinumerotKoodisto),
         resolver: joiResolver(YhteystietoLomakeSchema),
     });
-    registerPerustiedot('nimi');
     const {
         register: yhteystietoArvoRegister,
         reset: yhteystietoArvoReset,
@@ -142,7 +141,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     });
     const watchOrganisaatioTyypit = watchPerustiedot('organisaatioTyypit');
     const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
-    watchPerustiedot('nimi');
 
     useEffect(() => {
         (async function () {
