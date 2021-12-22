@@ -100,7 +100,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.debug("findNimi({}, {})", new Object[]{organisaatio.getId(), nimi.getAlkuPvm()});
+        LOG.debug("findNimi({}, {})",organisaatio.getId(), nimi.getAlkuPvm());
 
         // Kyselyä kokeilty myös QueryDsl:llä
         // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
@@ -117,7 +117,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", nimi.getAlkuPvm()).getResultList();
 
-        LOG.debug("findNimi() result size: " + organisaatioNimet.size());
+        LOG.debug("findNimi() result size: {} ", organisaatioNimet.size());
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
@@ -125,7 +125,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             return organisaatioNimet.stream().filter(foundNimi -> foundNimi.getNimi().getValues().equals(nimi.getNimi())).findFirst().orElse(null);
         }
 
-        LOG.debug("findNimi({}, {}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId(), nimi.getAlkuPvm()});
+        LOG.debug("findNimi({}, {}) --> OrganisaatioNimi not found", organisaatio.getId(), nimi.getAlkuPvm());
 
         return null;
     }
@@ -136,7 +136,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.info("findCurrentNimi({})", new Object[]{organisaatio.getId()});
+        LOG.info("findCurrentNimi({})", organisaatio.getId());
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
@@ -153,13 +153,13 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", new Date()).getResultList();
 
-        LOG.info("findCurrentNimi() result size: " + organisaatioNimet.size());
+        LOG.info("findCurrentNimi() result size: {}", organisaatioNimet.size());
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
         }
 
-        LOG.info("findNimi({}) --> OrganisaatioNimi not found", new Object[]{organisaatio.getId()});
+        LOG.info("findNimi({}) --> OrganisaatioNimi not found", organisaatio.getId());
 
         return null;
     }

@@ -753,7 +753,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) throws OrganisaatioModifiedException {
+    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Organisaatio orgEntity = getOrganisaatio(oid);
 
         // Luodaan tallennettava entity objekti
@@ -781,7 +781,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio orgEntity = getOrganisaatio(oid);
         OrganisaatioNimiDTO currentNimiDTO = nimiUpdateDTO.getCurrentNimi();
         OrganisaatioNimiDTO updatedNimiDTO = nimiUpdateDTO.getUpdatedNimi();
-        LOG.debug("Haetaan organisaation: " + oid + " nimeä alkupäivämäärällä: " + currentNimiDTO.getAlkuPvm());
+        LOG.debug("Haetaan organisaation: {} nimeä alkupäivämäärällä: {}", oid, currentNimiDTO.getAlkuPvm());
         // Haetaan päivitettävä entity objecti
         OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, currentNimiDTO);
 
@@ -800,7 +800,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         nimiEntityNew.getNimi().setId(nimiEntityOld.getNimi().getId());
         nimiEntityNew.getNimi().setVersion(nimiEntityOld.getNimi().getVersion());
 
-        LOG.debug("updating nimi:" + nimiEntityNew);
+        LOG.debug("updating nimi: {}", nimiEntityNew);
 
         // Päivitetään nimi
         organisaatioNimiRepository.save(nimiEntityNew);
@@ -837,7 +837,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioNimiDeleteException();
         }
 
-        LOG.debug("deleting " + nimiEntity);
+        LOG.debug("deleting {}", nimiEntity);
 
         // Poistetaan
         this.organisaatioNimiRepository.delete(nimiEntity);
@@ -845,7 +845,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
-        LOG.debug("bulkUpdatePvm():" + tiedot);
+        LOG.debug("bulkUpdatePvm(): {}", tiedot);
         OrganisaatioMuokkausTulosListaDTO edited = new OrganisaatioMuokkausTulosListaDTO(tiedot.size());
 
         HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData = new HashMap<>(tiedot.size());
@@ -858,7 +858,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Set<String> givenOids = givenData.keySet();
         List<String> oids = new ArrayList<>(givenOids);
 
-        LOG.debug("bulkUpdatePvm(): haetaan oideilla:" + oids);
+        LOG.debug("bulkUpdatePvm(): haetaan oideilla: {}", oids);
         List<Organisaatio> organisaatios = this.organisaatioRepository.findByOidList(oids, oids.size());
 
         for (Organisaatio o : organisaatios) {
@@ -869,7 +869,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             LOG.debug("bulkUpdatePvm(): organisaatiolista tyhjä");
             return edited; // tässä vaiheessa tyhjä lista.
         }
-        LOG.debug("bulkUpdatePvm(): organisaatiolista:" + organisaatios);
+        LOG.debug("bulkUpdatePvm(): organisaatiolista: {}", organisaatios);
 
         batchValidatePvm(givenData, organisaatioMap);
 
