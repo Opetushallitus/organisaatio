@@ -235,12 +235,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
-        const data = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
-        if (data) {
+        const parantData = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
+        if (parantData) {
             const {
-                organisaatio: { tyypit, oid, ytunnus },
-            } = data;
-            setParentTiedot({ organisaatioTyypit: tyypit, oid, isYtj: !!ytunnus });
+                organisaatio: { tyypit: parentTyypit, oid: parentOid, ytunnus: parentYTunnus },
+            } = parantData;
+            setParentTiedot({ organisaatioTyypit: parentTyypit, oid: parentOid, isYtj: !!parentYTunnus });
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
             yhteystietoArvoReset(UIhteysTietoArvot);
