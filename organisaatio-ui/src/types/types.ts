@@ -20,7 +20,7 @@ export type KoodistoSelectOption = {
     arvo: KoodiArvo;
     label: string;
     versio: number;
-    disabled: boolean;
+    disabled?: boolean;
 };
 
 export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'DELETE';

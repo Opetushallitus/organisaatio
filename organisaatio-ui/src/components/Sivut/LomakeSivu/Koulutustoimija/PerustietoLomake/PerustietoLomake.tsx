@@ -93,7 +93,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             control={formControl}
                             name={'organisaatioTyypit'}
                             render={({ field: { ref, ...rest } }) => (
-                                <CheckboxGroup {...rest} options={resolvedTyypit} />
+                                <CheckboxGroup
+                                    {...rest}
+                                    options={resolvedTyypit}
+                                    error={!!validationErrors['organisaatioTyypit']}
+                                />
                             )}
                         />
                     </Kentta>
