@@ -753,7 +753,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    @Transactional
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) throws OrganisaatioModifiedException {
         Organisaatio orgEntity = getOrganisaatio(oid);
 
@@ -778,7 +777,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    @Transactional
     public OrganisaatioNimi updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDTO) {
         Organisaatio orgEntity = getOrganisaatio(oid);
         OrganisaatioNimiDTO currentNimiDTO = nimiUpdateDTO.getCurrentNimi();

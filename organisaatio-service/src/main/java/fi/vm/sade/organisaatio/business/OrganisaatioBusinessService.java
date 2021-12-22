@@ -69,7 +69,6 @@ public interface OrganisaatioBusinessService {
 
     /**
      * @param oid
-     * @param date
      * @param nimidto
      * @return
      */
