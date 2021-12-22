@@ -47,21 +47,21 @@ describe('Restrict buttons by roles', () => {
         cy.get('@parent').then((org) => {
             cy.log('test for Koulutustoimija');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Koulutustoimija').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Koulutustoimija').should('exist');
             allRestrictedButtons.forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [suljeButton].forEach((a) => cy.get('button').contains(a).should('exist'));
         });
         cy.get('@child').then((org) => {
             cy.log('test for Oppilaitos');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Oppilaitos').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Oppilaitos').should('exist');
             allRestrictedButtons.forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [suljeButton].forEach((a) => cy.get('button').contains(a).should('exist'));
         });
         cy.get('@grandchild').then((org) => {
             cy.log('test for Toimipiste');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Toimipiste').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Toimipiste').should('exist');
             allRestrictedButtons.forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [suljeButton].forEach((a) => cy.get('button').contains(a).should('exist'));
         });
@@ -93,14 +93,14 @@ describe('Restrict buttons by roles', () => {
         cy.get('@parent').then((org) => {
             cy.log('test for Koulutustoimija');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Koulutustoimija').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Koulutustoimija').should('exist');
             allRestrictedButtons.forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [suljeButton].forEach((a) => cy.get('button').contains(a).should('exist'));
         });
         cy.get('@child').then((org) => {
             cy.log('test for Oppilaitos');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Oppilaitos').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Oppilaitos').should('exist');
             [...oppilaitosButtons, ...koulutusToimijaButtons, ...generalRestrictedButtons].forEach((a) =>
                 cy.get('button').contains(a).should('not.exist')
             );
@@ -109,7 +109,7 @@ describe('Restrict buttons by roles', () => {
         cy.get('@grandchild').then((org) => {
             cy.log('test for Toimipiste');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Toimipiste').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Toimipiste').should('exist');
             [...oppilaitosButtons, ...koulutusToimijaButtons].forEach((a) =>
                 cy.get('button').contains(a).should('not.exist')
             );
@@ -145,7 +145,7 @@ describe('Restrict buttons by roles', () => {
         cy.get('@parent').then((org) => {
             cy.log('test for Koulutustoimija');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Koulutustoimija').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Koulutustoimija').should('exist');
             [...oppilaitosButtons].forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [...koulutusToimijaButtons, lomakeLisaaUusi, suljeButton, ...generalRestrictedButtons].forEach((a) =>
                 cy.get('button').contains(a).should('exist')
@@ -154,7 +154,7 @@ describe('Restrict buttons by roles', () => {
         cy.get('@child').then((org) => {
             cy.log('test for Oppilaitos');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Oppilaitos').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Oppilaitos').should('exist');
             [...koulutusToimijaButtons].forEach((a) => cy.get('button').contains(a).should('not.exist'));
             [...generalRestrictedButtons, ...oppilaitosButtons, lomakeLisaaUusi, suljeButton].forEach((a) =>
                 cy.get('button').contains(a).should('exist')
@@ -163,7 +163,7 @@ describe('Restrict buttons by roles', () => {
         cy.get('@grandchild').then((org) => {
             cy.log('test for Toimipiste');
             cy.visit(`${BASE_PATH}/lomake/${org.body.organisaatio.oid}`);
-            cy.get('h3', { timeout: 10000 }).contains('Toimipiste').should('exist');
+            cy.get('h3', { timeout: 20000 }).contains('Toimipiste').should('exist');
             [...oppilaitosButtons, ...koulutusToimijaButtons].forEach((a) =>
                 cy.get('button').contains(a).should('not.exist')
             );
