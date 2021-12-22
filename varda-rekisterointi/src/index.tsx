@@ -8,8 +8,11 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 axios.interceptors.request.use(config => {
-    config.headers['Caller-Id'] = '1.2.246.562.10.00000000001.varda-rekisterointi';
-    config.headers['CSRF'] = cookies.get('CSRF');
+    const ophHeaders = {
+        'Caller-Id': '1.2.246.562.10.00000000001.varda-rekisterointi',
+        'CSRF': cookies.get('CSRF')
+    };
+    config.headers = { ...config.headers, ...ophHeaders };
     return config;
 });
 
