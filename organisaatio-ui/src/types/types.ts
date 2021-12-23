@@ -206,7 +206,7 @@ export type DynamicField = {
     value?: string;
 };
 
-type OrganisaatioChildType = {
+export type OrganisaatioChildType = {
     type: string;
     disabled?: boolean;
 };
