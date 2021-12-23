@@ -3,6 +3,7 @@ import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
 import { KoodistoContextType, KoodistoSelectOption, LocalDate, YhteystiedotBase } from '../types/types';
 import { LEGACY_API_CONTEXT } from '../contexts/constants';
+import moment from 'moment';
 
 const baseUrl = `${LEGACY_API_CONTEXT}/ytj/`;
 
@@ -22,7 +23,8 @@ type ytjYtunnus = {
     ytunnus: string;
 };
 
-export type YtjData = YtjAPIData & {
+export type YtjData = Omit<YtjAPIData, 'aloitusPvm'> & {
+    aloitusPvm: LocalDate;
     kunta?: KoodistoSelectOption;
     kieli?: KoodistoSelectOption;
     yhteysTiedot: YhteystiedotBase;
@@ -31,8 +33,9 @@ export type YtjHaku = {
     ytunnus: string;
     nimi: string;
 };
+type YtjDate = `${number}${number}-${number}${number}-${number}${number}${number}${number}`;
 type YtjAPIData = YtjHaku & {
-    aloitusPvm: LocalDate;
+    aloitusPvm: YtjDate;
     yritysmuoto: string;
     yritysmuotoKoodi: string;
     kayntiOsoite?: ytjOsoite;
@@ -62,6 +65,7 @@ const mapApiToUI = (ytj: YtjAPIData, koodistot: KoodistoContextType): YtjData =>
         ...ytj,
         kunta: selectedKuntaSelector,
         kieli: selectedKieli,
+        aloitusPvm: moment(ytj.aloitusPvm, 'DD-MM-YYYY').format('YYYY-MM-DD') as LocalDate,
         yhteysTiedot: {
             postiOsoite: ytj.postiOsoite.katu,
             postiOsoitePostiNro: ytj.postiOsoite.postinumero,
