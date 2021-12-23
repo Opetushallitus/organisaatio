@@ -19,6 +19,7 @@ import DynamicFields from '../DynamicFields/DynamicFields';
 import {
     AvainKevyestiBoldattu,
     Kentta,
+    LabelLink,
     LomakeButton,
     ReadOnly,
     ReadOnlyDate,
@@ -108,19 +109,27 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             )}
 
             {rakenne?.showYtj && (
-                <Rivi>
-                    <Kentta isRequired label={'PERUSTIETO_Y_TUNNUS'}>
-                        <Input
-                            readOnly
-                            error={!!validationErrors['ytunnus']}
-                            id={'ytunnus'}
-                            {...formRegister('ytunnus')}
+                <>
+                    <Rivi>
+                        <Kentta isRequired label={'PERUSTIETO_Y_TUNNUS'}>
+                            <Input
+                                readOnly
+                                error={!!validationErrors['ytunnus']}
+                                id={'ytunnus'}
+                                {...formRegister('ytunnus')}
+                            />
+                        </Kentta>
+                        {casMe.canHaveButton('PERUSTIETO_PAIVITA_YTJ_TIEDOT', organisaatioNimiPolku) && (
+                            <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
+                        )}
+                    </Rivi>
+                    <Rivi>
+                        <LabelLink
+                            value={'PERUSTIETO_YTUNNUS_MUUTOKSET'}
+                            to={'https://www.ytj.fi/index/ilmoittaminen/muutosilmoitus.html'}
                         />
-                    </Kentta>
-                    {casMe.canHaveButton('PERUSTIETO_PAIVITA_YTJ_TIEDOT', organisaatioNimiPolku) && (
-                        <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
-                    )}
-                </Rivi>
+                    </Rivi>
+                </>
             )}
             {rakenne?.dynamicFields && (
                 <DynamicFields
