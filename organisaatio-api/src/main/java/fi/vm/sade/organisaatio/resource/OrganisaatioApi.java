@@ -56,7 +56,7 @@ public interface OrganisaatioApi {
             @Parameter(description = "hidden") @RequestBody OrganisaatioRDTOV4 ordto
     );
 
-    @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Parameter(name = "organisaatio", description = "Luotavan organisaation tiedot json muodossa")
     @Operation(
             summary = "Luo uuden organisaation",
