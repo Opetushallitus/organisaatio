@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useContext, useState } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import { HistoriaTaulukkoData, OrganisaationNimetNimi } from '../../../../../types/types';
+import { HistoriaTaulukkoData, UiOrganisaationNimetNimi } from '../../../../../types/types';
 import { Column } from 'react-table';
 import NimiHistoriaNimi from './NimiHistoriaNimi';
 import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
@@ -10,7 +10,7 @@ import Spinner from '../../../../Spinner/Spinner';
 import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
 type nimiHistoriaProps = {
-    nimet: OrganisaationNimetNimi[];
+    nimet: UiOrganisaationNimetNimi[];
     handleNimiMuutos: () => void;
     oid: string;
 };
@@ -20,7 +20,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
     const { nimet, handleNimiMuutos, oid } = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    async function handleDeleteNimi(nimi: OrganisaationNimetNimi) {
+    async function handleDeleteNimi(nimi: UiOrganisaationNimetNimi) {
         setIsLoading(true);
         try {
             if (window.confirm(i18n.translate('NIMIHISTORIA_CONFIRM_DELETE_SCHEDULED_NIMI'))) {
@@ -44,10 +44,10 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
                     original: { nimi, alkuPvm },
                 },
             }: {
-                row: { original: OrganisaationNimetNimi };
+                row: { original: UiOrganisaationNimetNimi };
             }) => <NimiHistoriaNimi handleDeleteNimi={handleDeleteNimi} nimi={nimi} alkuPvm={alkuPvm} />,
         },
-    ] as Column<OrganisaationNimetNimi | HistoriaTaulukkoData>[];
+    ] as Column<UiOrganisaationNimetNimi | HistoriaTaulukkoData>[];
     if (isLoading) {
         return <Spinner />;
     }

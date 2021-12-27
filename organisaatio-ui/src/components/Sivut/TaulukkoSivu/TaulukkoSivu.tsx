@@ -44,7 +44,11 @@ const TaulukkoSivu = (props) => {
                             },
                         })}
                     >
-                        {row.isExpanded ? <Icon icon={chevronDown} /> : <Icon icon={chevronRight} />}
+                        {row.isExpanded ? (
+                            <Icon fr={undefined} icon={chevronDown} />
+                        ) : (
+                            <Icon fr={undefined} icon={chevronRight} />
+                        )}
                     </span>
                 ) : null,
         },

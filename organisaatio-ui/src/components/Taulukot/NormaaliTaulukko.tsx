@@ -80,7 +80,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                                 setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
                             }}
                             value={globalFilter}
-                            suffix={<Icon color={'#999999'} icon={searchIcon} />}
+                            suffix={<Icon fr={undefined} color={'#999999'} icon={searchIcon} />}
                         />
                     </div>
                 </div>
@@ -263,7 +263,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                         onClick={() => previousPage()}
                         disabled={!canPreviousPage}
                     >
-                        <Icon icon={chevronLeft} />
+                        <Icon fr={undefined} icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
                         if (option === pageIndex)
@@ -279,7 +279,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                         );
                     })}
                     <Button variant={'text'} color={'secondary'} onClick={() => nextPage()} disabled={!canNextPage}>
-                        <Icon icon={chevronRight} />
+                        <Icon fr={undefined} icon={chevronRight} />
                     </Button>
                 </div>
                 <div className={styles.PaginationYhteensa}>

@@ -2,7 +2,12 @@ import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } fro
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
-export type LocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
+
+// DD.MM.yyyy | DD.MM.yyyy HH:mm:ss
+export type LocalDate =
+    | `${number}${number}.${number}${number}.${number}${number}${number}${number}`
+    | `${number}${number}.${number}${number}.${number}${number}${number}${number} ${number}${number}:${number}${number}:${number}${number}`
+    | '';
 export type LocalizableText = Partial<Record<Language, string>>;
 
 // koodisto
@@ -73,7 +78,7 @@ export type NimenmuutosLomake = {
     editDisabled?: boolean;
 };
 
-export type OrganisaationNimetNimi = {
+export type UiOrganisaationNimetNimi = {
     nimi: Nimi;
     alkuPvm: LocalDate;
 };
@@ -81,7 +86,7 @@ export type UiOrganisaatioBase = {
     oid: string;
     status: string;
     yritysmuoto?: string;
-    nimet: OrganisaationNimetNimi[];
+    nimet: UiOrganisaationNimetNimi[];
     parentOid: string;
     parentOidPath: string;
     apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
@@ -144,7 +149,7 @@ export type Ryhma = {
     muutKotipaikatUris?: string[];
     muutOppilaitosTyyppiUris?: string[];
     nimi: Nimi;
-    nimet: OrganisaationNimetNimi[];
+    nimet: UiOrganisaationNimetNimi[];
     parentOid?: string;
     parentOidPath?: string;
     piilotettu?: boolean;

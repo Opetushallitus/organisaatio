@@ -2,7 +2,6 @@ import styles from './LomakeFields.module.css';
 import * as React from 'react';
 import { useContext } from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import moment from 'moment';
 import { LanguageContext } from '../../../../contexts/LanguageContext';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
@@ -44,8 +43,7 @@ const LabelLink = ({ value, to }) => {
     );
 };
 const ReadOnlyDate = ({ value }) => {
-    const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
-    return <div className={styles.Kentta}>{formattedDate}</div>;
+    return <div className={styles.Kentta}>{value}</div>;
 };
 const Kentta = ({ label, children, isRequired = false }) => {
     const { i18n } = useContext(LanguageContext);

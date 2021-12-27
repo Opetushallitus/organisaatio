@@ -1,6 +1,9 @@
+import moment from 'moment';
 import {
     checkHasSomeValueByKieli,
     dropKoodiVersionSuffix,
+    getUiDateStr,
+    formatUiDateStrToApi,
     mapLocalizedKoodiToLang,
     mapVisibleKieletFromOpetuskielet,
 } from './mappers';
@@ -96,5 +99,70 @@ describe('mappers', () => {
         ])('Returns true if some field of yhteystiedot object is set and false if not set', (values, expected) => {
             expect(checkHasSomeValueByKieli(values as YhteystiedotBase)).toEqual(expected);
         });
+    });
+
+    describe('getUiDateStr', () => {
+        const expectedTodayDate = moment().format('D.M.yyyy').toString();
+        const expectedTestDayDate = moment('2020-1-22').format('D.M.yyyy').toString();
+        const expectedTestDayLongDate = moment('2020-10-22').format('D.M.yyyy HH:mm:ss').toString();
+        test.each([
+            ['Handles invalid input to empty string', 'dsdsds', undefined, false, ''],
+            ['Handles empty input to current day in correct format', undefined, undefined, false, expectedTodayDate],
+            [
+                'Handles date input to correct day in correct format',
+                new Date('2020-1-22'),
+                undefined,
+                false,
+                expectedTestDayDate,
+            ],
+            [
+                'Handles valid text input to correct day in correct format',
+                '1-22-2020',
+                undefined,
+                false,
+                expectedTestDayDate,
+            ],
+            [
+                'Handles valid "DD-MM-YYYY" input to correct day in correct format',
+                '1-22-2020',
+                undefined,
+                false,
+                expectedTestDayDate,
+            ],
+            [
+                'Handles valid "MM-DD-YYYY" input to correct day in correct format',
+                '1-22-2020',
+                undefined,
+                false,
+                expectedTestDayDate,
+            ],
+            [
+                'Handles valid "YYYY-MM-DD" input to correct day in correct format',
+                '2020-1-22',
+                undefined,
+                false,
+                expectedTestDayDate,
+            ],
+            [
+                'Handles valid "YYYY-DD-MM" input to correct day in correct format',
+                '2020-22-1',
+                undefined,
+                false,
+                expectedTestDayDate,
+            ],
+            ['Handles valid text whith long formatting', '10-22-2020', undefined, true, expectedTestDayLongDate],
+        ])('%s', (_, input, format, long, expected) =>
+            expect(getUiDateStr(input, format, long)).toStrictEqual(expected)
+        );
+    });
+    describe('formatUiDateStrToApi', () => {
+        const expectedTodayDate = moment().format('yyyy-M-D').toString();
+        const expectedTestDayDate = moment('9-22-2020').format('yyyy-M-D').toString();
+        test.each([
+            ['Handles invalid input to empty string', 'dsdsds', ''],
+            ['Handles empty input to current day in correct format', undefined, expectedTodayDate],
+            ['Handles date input to correct day in correct format', new Date('9.22.2020'), expectedTestDayDate],
+            ['Handles valid text input to correct day in correct format', '22.9.2020', expectedTestDayDate],
+        ])('%s', (_, input, expected) => expect(formatUiDateStrToApi(input)).toStrictEqual(expected));
     });
 });

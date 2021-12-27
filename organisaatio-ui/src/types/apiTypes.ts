@@ -1,4 +1,6 @@
-import { KoodiUri, Language, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde } from './types';
+import { KoodiUri, Language, LocalDate, Nimi, OrganisaatioSuhde } from './types';
+//yyyy-MM-DD
+export type APIEndpontDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
 
 export type ConfigurableButton =
     | 'LOMAKE_YHDISTA_ORGANISAATIO'
@@ -29,6 +31,11 @@ export type APIOrganisaatioHistoria = {
     parentSuhteet: OrganisaatioSuhde[];
     liitokset: OrganisaatioLiitos[];
     liittymiset: OrganisaatioLiitos[];
+};
+
+export type ApiOrganisaationNimetNimi = {
+    nimi: Nimi;
+    alkuPvm: APIEndpontDate;
 };
 
 type YhteystiedotBase = {
@@ -94,15 +101,15 @@ export type ApiVakaTiedot = {
     varhaiskasvatuksenJarjestamismuodot: KoodiUri[];
 };
 export type ApiOrganisaatio = OrganisaatioBase & {
-    alkuPvm: LocalDate;
-    lakkautusPvm?: LocalDate;
+    alkuPvm: APIEndpontDate;
+    lakkautusPvm?: APIEndpontDate;
     parentOid: string;
     parentOidPath: string;
     yritysmuoto?: string;
     ytunnus?: string;
     tyypit: KoodiUri[];
     status: string;
-    nimet: OrganisaationNimetNimi[];
+    nimet: ApiOrganisaationNimetNimi[];
     kotipaikkaUri: KoodiUri;
     muutKotipaikatUris?: KoodiUri[];
     maaUri: KoodiUri;

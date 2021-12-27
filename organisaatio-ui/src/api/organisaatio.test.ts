@@ -1,5 +1,13 @@
+import moment from 'moment';
 import { Koodisto, LocalDate, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
-import { ApiOrganisaatio, ApiYhteystiedot, NewApiOrganisaatio, YhteystiedotOsoite } from '../types/apiTypes';
+
+import {
+    APIEndpontDate,
+    ApiOrganisaatio,
+    ApiYhteystiedot,
+    NewApiOrganisaatio,
+    YhteystiedotOsoite,
+} from '../types/apiTypes';
 import {
     getApiOsoite,
     getApiYhteystieto,
@@ -23,7 +31,8 @@ const postinumerotKoodisto: Partial<Koodisto> = {
     uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
-const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] as LocalDate;
+const Uiyesterday = moment(new Date(Date.now() - 86400000)).format('D.M.yyyy') as LocalDate;
+const Apiyesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] as APIEndpontDate;
 
 const oldApiyhteystiedot = [
     {
@@ -88,12 +97,12 @@ const apiYhteystiedot: ApiYhteystiedot[] = [
     },
 ];
 
-const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday }]; // yesterday
+const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Apiyesterday }]; // yesterday
 
 const apiOrganisaatio: ApiOrganisaatio = {
     alkuPvm: '2000-10-10',
     kieletUris: ['oppilaitoksenopetuskieli_1#1'],
-    lakkautusPvm: undefined,
+    lakkautusPvm: '',
     kotipaikkaUri: 'kunta_1',
     muutKotipaikatUris: ['kunta_2#1'],
     maaUri: 'maa_1',
@@ -152,7 +161,7 @@ const kayntiosoite = {
 const uiBaseTiedot: UiOrganisaatioBase = {
     oid: '1.2.1',
     parentOid: '123.321',
-    nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday }],
+    nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday }],
     parentOidPath: '123.321,1.2.1',
     apiYhteystiedot: oldApiyhteystiedot,
     currentNimi: { fi: 'vanhanimi' },
@@ -160,7 +169,7 @@ const uiBaseTiedot: UiOrganisaatioBase = {
 };
 
 const uiPerustiedot: Perustiedot = {
-    alkuPvm: '2000-10-10',
+    alkuPvm: '10.10.2000',
     kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, disabled: false }],
     kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, disabled: false },
     maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },

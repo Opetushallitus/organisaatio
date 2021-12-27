@@ -1,4 +1,9 @@
-import { Koodi, Nimi, OrganisaationNimetNimi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import { Koodi, LocalDate, Nimi, UiOrganisaationNimetNimi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import moment from 'moment';
+import { APIEndpontDate } from '../types/apiTypes';
+
+moment.locale('fi');
+
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
     if (hasVersioningHashtag !== -1) {
@@ -38,9 +43,32 @@ export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[Supp
     );
 };
 
-export const findCurrentNimi = (nimet: OrganisaationNimetNimi[], nimi: Nimi) => {
+export const findCurrentNimi = (nimet: UiOrganisaationNimetNimi[], nimi: Nimi) => {
     const currentNimi = nimet.find((nimetNimi) => JSON.stringify(nimetNimi.nimi) === JSON.stringify(nimi));
     const editModeDisabled =
         currentNimi && !!nimet.find((nimetNimi) => new Date(nimetNimi.alkuPvm) > new Date(currentNimi.alkuPvm));
     return currentNimi ? { ...currentNimi, disabled: editModeDisabled } : undefined;
+};
+
+const makeDate = (date, format) => {
+    if (date) {
+        return moment(date, format);
+    }
+    return moment();
+};
+
+export const getUiDateStr = (
+    dateStr?: Date | string,
+    format: string[] | string | undefined = ['D-M-YYYY', 'YYYY-M-D', 'YYYY-D-M', 'M-D-YYYY'],
+    long = false
+): LocalDate => {
+    const dateWithoutFormat = makeDate(dateStr, format);
+    return dateWithoutFormat.isValid()
+        ? (dateWithoutFormat.format(`D.M.yyyy${long ? ' HH:mm:ss' : ''}`).toString() as LocalDate)
+        : '';
+};
+
+export const formatUiDateStrToApi = (date?): APIEndpontDate => {
+    const dateWithoutFormat = makeDate(date, 'D.M.YYYY');
+    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-M-D').toString() as APIEndpontDate) : '';
 };

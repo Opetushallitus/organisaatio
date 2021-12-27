@@ -4,10 +4,10 @@ import {
     LiitaOrganisaatioon,
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
-    OrganisaationNimetNimi,
     OrganisaatioPaivittaja,
     Perustiedot,
     UiOrganisaatioBase,
+    UiOrganisaationNimetNimi,
     Yhteystiedot,
     YhteystietoArvot,
 } from '../types/types';
@@ -24,11 +24,13 @@ import {
     YhteystiedotOsoite,
     YhteystiedotPhone,
     YhteystiedotWww,
+    ApiOrganisaationNimetNimi,
 } from '../types/apiTypes';
 import useAxios from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
 import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/constants';
 import { UnpackNestedValue } from 'react-hook-form';
+import { formatUiDateStrToApi } from '../tools/mappers';
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
 type SupportedYhteystietoType = 'www' | 'email' | 'numero';
@@ -63,9 +65,10 @@ async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
     });
 }
 
-async function createOrganisaatioNimi(oid: string, nimi: OrganisaationNimetNimi) {
+async function createOrganisaatioNimi(oid: string, nimi: UiOrganisaationNimetNimi) {
+    const apiNimi = formatUiDateStrToApi(nimi);
     return errorHandlingWrapper(async () => {
-        const { data: nimiData } = await Axios.post<OrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, nimi);
+        const { data: nimiData } = await Axios.post<ApiOrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, apiNimi);
         success({ message: 'MESSAGE_NIMEN_TALLENNUS_ONNISTUI' });
         return nimiData;
     });
@@ -73,20 +76,24 @@ async function createOrganisaatioNimi(oid: string, nimi: OrganisaationNimetNimi)
 
 async function updateOrganisaatioNimi(
     oid: string,
-    currentNimi: OrganisaationNimetNimi,
-    updatedNimi: OrganisaationNimetNimi
+    currentUiNimi: UiOrganisaationNimetNimi,
+    updatedUiNimi: UiOrganisaationNimetNimi
 ) {
-    const requestBody = { currentNimi, updatedNimi };
+    const requestBody = {
+        currentNimi: { ...currentUiNimi, alkuPvm: formatUiDateStrToApi(currentUiNimi.alkuPvm) },
+        updatedNimi: { ...updatedUiNimi, alkuPvm: formatUiDateStrToApi(updatedUiNimi.alkuPvm) },
+    };
     return errorHandlingWrapper(async () => {
-        const { data: nimi } = await Axios.put<OrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, requestBody);
+        const { data: nimi } = await Axios.put<ApiOrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, requestBody);
         success({ message: 'MESSAGE_NIMEN_MUOKKAUS_ONNISTUI' });
         return nimi;
     });
 }
 
-async function deleteOrganisaatioNimi(oid: string, nimi: OrganisaationNimetNimi) {
+async function deleteOrganisaatioNimi(oid: string, { nimi, alkuPvm }: UiOrganisaationNimetNimi) {
+    const data = { nimi, alkuPvm: formatUiDateStrToApi(alkuPvm) };
     return errorHandlingWrapper(async () => {
-        await Axios.delete(`${baseUrl}${oid}/nimet`, { data: nimi });
+        await Axios.delete(`${baseUrl}${oid}/nimet`, { data });
         success({ message: 'MESSAGE_NIMEN_POISTO_ONNISTUI' });
     });
 }
@@ -247,15 +254,16 @@ function mapUiOrganisaatioToApiToSave(
         muutOppilaitosTyyppiUris,
         vuosiluokat,
     } = perustiedotFormValues;
+    const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const nimet = [
         {
             nimi,
-            alkuPvm,
-        } as OrganisaationNimetNimi,
+            alkuPvm: formatUiDateStrToApi(alkuPvm),
+        } as ApiOrganisaationNimetNimi,
     ];
     return {
         ytunnus,
-        alkuPvm,
+        alkuPvm: apiAlkuPvm,
         lakkautusPvm: '',
         tyypit: organisaatioTyypit,
         kotipaikkaUri: kotipaikka.value,
@@ -328,16 +336,18 @@ function mapUiOrganisaatioToApiToUpdate(
         ytunnus,
         piilotettu,
     } = perustiedotFormValues;
-    const { nimet, currentNimi: nimi } = organisaatioBase;
+    const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
+    const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
+    const { nimet: uiNimet, currentNimi: nimi } = organisaatioBase;
     return {
-        lakkautusPvm,
-        alkuPvm,
+        lakkautusPvm: apiLakkautusPvm,
+        alkuPvm: apiAlkuPvm,
         oid,
         parentOid,
         parentOidPath,
         status,
         yhteystiedot,
-        nimet,
+        nimet: uiNimet.map(({ nimi, alkuPvm }) => ({ nimi, alkuPvm: formatUiDateStrToApi(alkuPvm) })),
         ytunnus,
         varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,

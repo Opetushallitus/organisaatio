@@ -99,7 +99,7 @@ function Hakufiltterit({ setOrganisaatiot }: HakufiltteritProps) {
                                     style={{ boxShadow: 'none' }}
                                     onClick={() => setFilters({ ...filters, searchString: '' })}
                                 >
-                                    <Icon color={'#999999'} icon={clearIcon} />
+                                    <Icon fr={undefined} color={'#999999'} icon={clearIcon} />
                                 </Button>
                             )
                         }
@@ -224,7 +224,7 @@ export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: Organisa
                         onClick={() => previousPage()}
                         disabled={!canPreviousPage}
                     >
-                        <Icon icon={chevronLeft} />
+                        <Icon fr={undefined} icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
                         if (option === pageIndex)
@@ -245,7 +245,7 @@ export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: Organisa
                         );
                     })}
                     <Button variant={'text'} color={'secondary'} onClick={() => nextPage()} disabled={!canNextPage}>
-                        <Icon icon={chevronRight} />
+                        <Icon fr={undefined} icon={chevronRight} />
                     </Button>
                 </div>
                 <div className={styles.PaginationYhteensa}>

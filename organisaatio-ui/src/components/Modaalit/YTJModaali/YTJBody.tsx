@@ -73,7 +73,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                         suffix={
                             input && (
                                 <Button variant={'text'} style={{ boxShadow: 'none' }} onClick={() => setInput('')}>
-                                    <Icon color={'#999999'} icon={clearIcon} />
+                                    <Icon fr={undefined} color={'#999999'} icon={clearIcon} />
                                 </Button>
                             )
                         }

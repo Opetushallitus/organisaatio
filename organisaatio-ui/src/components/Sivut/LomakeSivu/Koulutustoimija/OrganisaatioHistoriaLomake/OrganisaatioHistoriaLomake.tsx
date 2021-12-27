@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import {
     HistoriaTaulukkoData,
     OrganisaatioHistoria,
-    OrganisaationNimetNimi,
+    UiOrganisaationNimetNimi,
     OrganisaatioSuhde,
 } from '../../../../../types/types';
 import { OrganisaatioBase } from '../../../../../types/apiTypes';
@@ -63,12 +63,12 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
 export const mapColumnsToTableFormat = (
     i18n,
     orginalColumns: string[][] = []
-): Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[] => {
+): Column<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[] => {
     const columnMapper = (column: string[]) => ({
         Header: i18n.translate(column[0]),
         accessor: column[1] as 'alkuPvm' | 'loppuPvm' | 'nimiHref',
     });
-    return orginalColumns.map(columnMapper) as Column<HistoriaTaulukkoData | OrganisaationNimetNimi>[];
+    return orginalColumns.map(columnMapper) as Column<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[];
 };
 
 export default function OrganisaatioHistoriaLomake({ historia }: { historia: OrganisaatioHistoria }) {

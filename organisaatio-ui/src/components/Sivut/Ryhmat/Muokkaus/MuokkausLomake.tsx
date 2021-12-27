@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useContext } from 'react';
 import styles from './MuokkausLomake.module.css';
-import Icon from '@iconify/react';
+import { Icon } from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
@@ -54,7 +54,7 @@ const MuokkausLomake = ({
             <div className={styles.YlaBanneri}>
                 <div>
                     <Link to={'/ryhmat'}>
-                        <Icon icon={homeIcon} />
+                        <Icon fr={undefined} icon={homeIcon} />
                     </Link>
                 </div>
                 <div>

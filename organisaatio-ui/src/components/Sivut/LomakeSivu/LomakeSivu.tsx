@@ -4,6 +4,7 @@ import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import { Icon } from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import { rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
@@ -21,7 +22,6 @@ import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomak
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
 import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLomake/OrganisaatioHistoriaLomake';
-import Icon from '@iconify/react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -57,6 +57,7 @@ import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
+import { getUiDateStr } from '../../../tools/mappers';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -176,17 +177,18 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         kieletUris,
         kotipaikkaUri,
         muutKotipaikatUris,
-        alkuPvm,
+        alkuPvm: apiAlkuPvm,
         tyypit,
         oppilaitosTyyppiUri,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris,
         vuosiluokat,
         yhteystiedot: apiYhteystiedot,
-        lakkautusPvm,
+        lakkautusPvm: apiLakkautusPvm,
         ytunnus: mappingYtunnus,
         piilotettu,
         yhteystietoArvos,
+        nimet: apiNimet,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -199,6 +201,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
+        const uiNimet = apiNimet.map(({ nimi, alkuPvm }) => ({ nimi, alkuPvm: getUiDateStr(alkuPvm) }));
         return {
             Uiperustiedot: {
                 nimi: mappingNimi,
@@ -206,8 +209,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 kielet,
                 kotipaikka,
                 muutKotipaikat,
-                alkuPvm,
-                lakkautusPvm,
+                alkuPvm: apiAlkuPvm ? getUiDateStr(apiAlkuPvm) : '',
+                lakkautusPvm: apiLakkautusPvm ? getUiDateStr(apiLakkautusPvm) : '',
                 ytunnus: mappingYtunnus,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
@@ -228,7 +231,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 }),
                 piilotettu,
             },
-            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
+            UibaseTiedot: { nimet: uiNimet, apiYhteystiedot, currentNimi: mappingNimi, ...rest },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
             UIhteysTietoArvot: mapApiYhteysTietoArvotToUi(yhteystietoArvos),
         };
@@ -346,9 +349,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
         );
     }
-    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
+    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot, alkuPvm } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
+    console.log('validation', yhteystiedotValidationErrors, perustiedotValidationErrors, alkuPvm);
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -424,7 +428,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             <YlaBanneri>
                 <div>
                     <Link to={'/organisaatiot'}>
-                        <Icon icon={homeIcon} />
+                        <Icon fr={undefined} icon={homeIcon} />
                     </Link>
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [

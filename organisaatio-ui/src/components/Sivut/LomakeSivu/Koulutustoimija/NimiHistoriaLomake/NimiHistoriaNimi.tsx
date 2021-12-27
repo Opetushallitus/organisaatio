@@ -1,19 +1,16 @@
 import * as React from 'react';
-import { useContext } from 'react';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
-import { LocalDate, Nimi, OrganisaationNimetNimi } from '../../../../../types/types';
-import Button from '@opetushallitus/virkailija-ui-components/Button';
+import { LocalDate, Nimi, UiOrganisaationNimetNimi } from '../../../../../types/types';
 import styles from './NimiHistoriaNimi.module.css';
 import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
+import { Icon } from '@iconify/react';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
     alkuPvm: LocalDate;
-    handleDeleteNimi: (nimi: OrganisaationNimetNimi) => void;
+    handleDeleteNimi: (nimi: UiOrganisaationNimetNimi) => void;
 };
 
 export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
-    const { i18n } = useContext(LanguageContext);
     const { nimi, alkuPvm, handleDeleteNimi } = props;
 
     function handleDeleteClick() {
@@ -25,10 +22,13 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
         <div className={styles.NimiHistoriaCell}>
             <ReadOnlyNimi value={nimi} />
             {isAlkuPvmInFuture && (
-                <div className={styles.DeleteBtn}>
-                    <Button color="danger" onClick={handleDeleteClick}>
-                        {i18n.translate('POISTA_AJASTETTU_NIMENMUUTOS')}
-                    </Button>
+                <div className={styles.DeleteBtn} onClick={handleDeleteClick}>
+                    <Icon
+                        fr={undefined}
+                        icon="ic:round-delete-forever"
+                        height={'1.5rem'}
+                        className={styles.DeleteIcon}
+                    />
                 </div>
             )}
         </div>
