@@ -27,4 +27,4 @@ where id in (select mv.id
                and (o.lakkautuspvm is null or o.lakkautuspvm > current_date)
                and o.organisaatiopoistettu = false
                and o.alkupvm < CURRENT_DATE
-               and position(pmv.value || ', ' in mv.value) = 1
+               and position(pmv.value || ', ' in mv.value) = 1);
