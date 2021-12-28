@@ -703,7 +703,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // osoittamaan varmasti samaan monikieliseen tekstiin
             orgEntity.setNimi(nimiEntity.getNimi());
 
-            logger.info("updating {}", orgEntity);
+            logger.debug("newOrganisaatioNimi updating {}", orgEntity);
             try {
                 organisaatioRepository.save(orgEntity); // TODO update works?
             } catch (OptimisticLockException ole) {
@@ -738,7 +738,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         nimiEntityNew.getNimi().setId(nimiEntityOld.getNimi().getId());
         nimiEntityNew.getNimi().setVersion(nimiEntityOld.getNimi().getVersion());
 
-        logger.debug("updating {}", nimiEntityNew);
+        logger.debug("updateOrganisaatioNimi updating {}", nimiEntityNew);
         try {
             // Päivitetään nimi
             organisaatioNimiRepository.save(nimiEntityNew);
@@ -1016,7 +1016,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään organisaation nimi
         organisaatio.setNimi(nimiEntity.getNimi());
 
-        logger.debug("updating {}", organisaatio);
+        logger.debug("updateCurrentNimiToOrganisaatio updating {}", organisaatio);
         try {
             // Päivitetään nimi
             organisaatioRepository.save(organisaatio);
