@@ -85,11 +85,6 @@ public interface OrganisaatioBusinessService {
      */
     public void updateCurrentOrganisaatioNimet();
 
-    /**
-     * @param tiedot
-     * @return
-     */
-    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 
     /**
      * Checks all new organisation relations and updates necessarry changes to tree hierarchy.
