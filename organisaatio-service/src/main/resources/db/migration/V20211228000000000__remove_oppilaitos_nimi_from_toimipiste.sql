@@ -5,7 +5,6 @@ set value = (
                                                                           substring(mv.value from char_length(pmv.value) + 3))
                else mv.value end
     from organisaatio o
-             join organisaatio_tyypit ot on o.id = ot.organisaatio_id
              join monikielinenteksti m on o.nimi_mkt = m.id
              join monikielinenteksti_values mv on m.id = mv.id
              JOIN organisaatio_parent_oids pp ON (pp.organisaatio_id = o.id) and parent_position = 0
