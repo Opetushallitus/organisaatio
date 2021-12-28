@@ -218,9 +218,11 @@ public class OrganisaatioRDTOV4 implements Serializable {
     }
 
     @Schema(description = "Organisaation muiden kotipaikkojen URIt", required = true)
-    public Set<String> getMuutKotipaikatUris(){ return _muutKotipaikatUris; }
+    public Set<String> getMuutKotipaikatUris() {
+        return _muutKotipaikatUris;
+    }
 
-    public void setMuutKotipaikatUris(Set<String> _muutKotipaikatUris){
+    public void setMuutKotipaikatUris(Set<String> _muutKotipaikatUris) {
         this._muutKotipaikatUris = _muutKotipaikatUris;
     }
 
@@ -242,15 +244,10 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     @Schema(description = "LyhytNimi")
     public Map<String, String> getLyhytNimi() {
-        if (_oppilaitos == null) {
-            return _nimi;
+        if (_nimi == null) {
+            _nimi = new HashMap<>();
         }
-        Map<String, String> parentShortName = _oppilaitos.getLyhytNimi();
-        return _nimi.keySet().stream().collect(Collectors.toMap(e -> e, e -> {
-            String parentNimi = String.format("%s, ", parentShortName.getOrDefault(e, ""));
-            String nimi = _nimi.get(e);
-            return nimi.indexOf(parentNimi) == 0 ? nimi.substring(parentNimi.length()) : nimi;
-        }));
+        return _nimi;
     }
 
     @Schema(description = "Oppilaitos")
