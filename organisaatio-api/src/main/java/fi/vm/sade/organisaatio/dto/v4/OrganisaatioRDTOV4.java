@@ -234,9 +234,9 @@ public class OrganisaatioRDTOV4 implements Serializable {
         if (_oppilaitos == null) {
             return _nimi;
         }
-        Map<String, String> parentShortName = _oppilaitos.getLyhytNimi();
+        Map<String, String> parentName = _oppilaitos.getNimi();
         return _nimi.keySet().stream().collect(Collectors.toMap(e -> e, e -> {
-            String parentNimi = String.format("%s, ", parentShortName.getOrDefault(e, ""));
+            String parentNimi = String.format("%s, ", parentName.getOrDefault(e, ""));
             String nimi = _nimi.get(e);
             return nimi.indexOf(parentNimi) != 0 ? String.format("%s%s", parentNimi, nimi) : nimi;
         }));
