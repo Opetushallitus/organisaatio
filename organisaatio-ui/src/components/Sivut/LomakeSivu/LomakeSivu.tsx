@@ -67,7 +67,7 @@ const PERUSTIEDOTID = 'perustietolomake';
 const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
-    const { i18n, language } = useContext(LanguageContext);
+    const { i18n } = useContext(LanguageContext);
     const { me: casMe } = useContext(CasMeContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
@@ -415,7 +415,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [
                     <div key={o.oid}>
-                        <Link to={`${o.oid}`}>{o.nimi[language] || o.nimi['fi'] || o.nimi['sv'] || o.nimi['en']}</Link>
+                        <Link to={`${o.oid}`}>{i18n.translateNimi(o.nimi)}</Link>
                     </div>,
                     organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
                 ])}
