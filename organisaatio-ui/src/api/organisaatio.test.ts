@@ -169,6 +169,7 @@ const uiPerustiedot: Perustiedot = {
     maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },
     muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, disabled: false }],
     nimi: { fi: 'uusinimi' },
+    lyhytNimi: { fi: 'uusinimi' },
     organisaatioTyypit: ['organisaatiotyyppi_01'],
     oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
     oppilaitosKoodi: '',
