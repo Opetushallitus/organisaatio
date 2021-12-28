@@ -54,7 +54,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     private Map<String, String> _nimi = new HashMap<>();
 
-    private OrganisaatioRDTOV4 _oppilaitos;
+    private OrganisaatioRDTOV4 _parentOrganisaatio;
 
     private List<OrganisaatioNimiRDTO> _nimet = new ArrayList<>();
 
@@ -231,10 +231,10 @@ public class OrganisaatioRDTOV4 implements Serializable {
         if (_nimi == null) {
             _nimi = new HashMap<>();
         }
-        if (_oppilaitos == null) {
+        if (_parentOrganisaatio == null) {
             return _nimi;
         }
-        Map<String, String> parentName = _oppilaitos.getNimi();
+        Map<String, String> parentName = _parentOrganisaatio.getNimi();
         return _nimi.keySet().stream().collect(Collectors.toMap(e -> e, e -> {
             String parentNimi = String.format("%s, ", parentName.getOrDefault(e, ""));
             String nimi = _nimi.get(e);
@@ -250,14 +250,8 @@ public class OrganisaatioRDTOV4 implements Serializable {
         return _nimi;
     }
 
-    @Schema(description = "Oppilaitos")
-    public OrganisaatioRDTOV4 getOppilaitos() {
-
-        return _oppilaitos;
-    }
-
-    public void setOppilaitos(OrganisaatioRDTOV4 oppilaitos) {
-        _oppilaitos = oppilaitos;
+    public void setParentOrganisaatio(OrganisaatioRDTOV4 parent) {
+        _parentOrganisaatio = parent;
     }
 
     public void setNimi(Map<String, String> _nimi) {

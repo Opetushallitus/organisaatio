@@ -31,7 +31,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -263,7 +262,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
         OrganisaatioRDTOV4 org = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
         if (org != null && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            org.setOppilaitos(mapToOrganisaatioRdtoV4(organisaatio.getParent()));
+            org.setParentOrganisaatio(mapToOrganisaatioRdtoV4(organisaatio.getParent()));
         }
         return org;
     }
