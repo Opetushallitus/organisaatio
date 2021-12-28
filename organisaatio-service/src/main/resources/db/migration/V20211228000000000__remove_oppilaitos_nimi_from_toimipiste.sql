@@ -1,6 +1,9 @@
 update monikielinenteksti_values
 set value = (
-    select trim(both ' ' from substring(mv.value from char_length(pmv.value) + 3))
+    select case
+               when position(pmv.value || ', ' in mv.value) = 1 then trim(both ' ' from
+                                                                          substring(mv.value from char_length(pmv.value) + 3))
+               else mv.value end
     from organisaatio o
              join organisaatio_tyypit ot on o.id = ot.organisaatio_id
              join monikielinenteksti m on o.nimi_mkt = m.id
@@ -25,4 +28,4 @@ where id in (select mv.id
                and (o.lakkautuspvm is null or o.lakkautuspvm > current_date)
                and o.organisaatiopoistettu = false
                and o.alkupvm < CURRENT_DATE
-               and position(pmv.value || ', ' in mv.value) = 1;
+               and position(pmv.value || ', ' in mv.value) = 1
