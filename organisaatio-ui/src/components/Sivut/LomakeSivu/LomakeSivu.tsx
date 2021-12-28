@@ -166,6 +166,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     const mapOrganisaatioToUi = ({
         nimi: mappingNimi,
+        lyhytNimi: mappingLyhytNimi,
         maaUri,
         kieletUris,
         kotipaikkaUri,
@@ -196,6 +197,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         return {
             Uiperustiedot: {
                 nimi: mappingNimi,
+                lyhytNimi: mappingLyhytNimi,
                 maa,
                 kielet,
                 kotipaikka,
@@ -222,7 +224,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 }),
                 piilotettu,
             },
-            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingNimi },
+            UibaseTiedot: { ...rest, apiYhteystiedot, currentNimi: mappingLyhytNimi },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
             UIhteysTietoArvot: mapApiYhteysTietoArvotToUi(yhteystietoArvos),
         };

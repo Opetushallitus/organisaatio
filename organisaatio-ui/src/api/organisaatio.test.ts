@@ -100,6 +100,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
     maaUri: 'maa_1',
     nimet: apinimet,
     nimi: { fi: 'vanhanimi' },
+    lyhytNimi: { fi: 'vanhanimi' },
     oid: '1.2.1',
     parentOid: '123.321',
     parentOidPath: '123.321,1.2.1',
@@ -124,6 +125,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     maaUri: 'maa_1',
     nimet: [{ nimi: { fi: 'nimenvaihto' }, alkuPvm: today }],
     nimi: { fi: 'nimenvaihto' },
+    lyhytNimi: { fi: 'nimenvaihto' },
     parentOid: '123.321',
     tyypit: ['organisaatiotyyppi_01'],
     yhteystiedot: [
@@ -301,6 +303,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
         expect(mappedApiOrganisaatio).toEqual({
             ...apiOrganisaatio,
             nimi: { fi: 'uusinimi' },
+            lyhytNimi: { fi: 'uusinimi' },
             nimet: expectedNimet,
             yhteystiedot: expectedYhteystiedot,
         });

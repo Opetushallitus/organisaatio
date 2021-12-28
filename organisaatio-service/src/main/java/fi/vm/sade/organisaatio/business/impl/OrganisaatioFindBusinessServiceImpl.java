@@ -161,7 +161,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Organisaatio> findBySearchCriteria (
+    public Set<Organisaatio> findBySearchCriteria(
             Set<String> kieliList,
             Set<String> kuntaList,
             Set<String> oppilaitostyyppiList,
@@ -223,7 +223,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Organisaatio o = this.findById(id);
 
         if (o == null) {
-            LOG.info("Failed to find organisaatio by: " + id);
+            LOG.info("Failed to find organisaatio by: {}", id);
             throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
         }
 
@@ -261,7 +261,11 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     }
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
-        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 org = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        if (organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            org.setOppilaitos(conversionService.convert(organisaatio.getParent(), OrganisaatioRDTOV4.class));
+        }
+        return org;
     }
 
     @Override
