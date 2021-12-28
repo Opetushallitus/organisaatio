@@ -7,7 +7,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { isYTunnus } from '../../../tools/ytj';
 import { getByYTunnus, isYtjData, searchByName, YtjHaku } from '../../../api/ytj';
 import { warning } from '../../Notification/Notification';
-import { Perustiedot, Yhteystiedot } from '../../../types/types';
+import { Nimi, Perustiedot, Yhteystiedot } from '../../../types/types';
 import { UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { Icon } from '@iconify/react';
@@ -15,7 +15,7 @@ import clearIcon from '@iconify/icons-fa-solid/times-circle';
 
 type Props = {
     ytunnus: string;
-    suljeModaali: () => void;
+    suljeModaali: (nimi: Nimi) => void;
     setters: { setPerustiedotValue: UseFormSetValue<Perustiedot>; setYhteystiedotValue: UseFormSetValue<Yhteystiedot> };
 };
 
@@ -25,12 +25,11 @@ const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
     if (ytjData.kieli) setters.setPerustiedotValue('kielet', [ytjData.kieli]);
     else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
     setters.setPerustiedotValue('ytunnus', ytjData.ytunnus);
-    //TODO Nimenmuutokseen ytj:ltä liittyen mitä tehdään? Muokkaus hajottaa nimihistorian
     //setters.setPerustiedotValue('nimi', { fi: ytjData.nimi, sv: ytjData.nimi, en: ytjData.nimi });
     setters.setPerustiedotValue('alkuPvm', ytjData.aloitusPvm);
     setters.setYhteystiedotValue('fi', ytjData.yhteysTiedot);
     setters.setYhteystiedotValue('osoitteetOnEri', !!ytjData.kayntiOsoite);
-    suljeModaali();
+    return suljeModaali({ fi: ytjData.nimi, sv: ytjData.nimi, en: ytjData.nimi });
 };
 
 export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {

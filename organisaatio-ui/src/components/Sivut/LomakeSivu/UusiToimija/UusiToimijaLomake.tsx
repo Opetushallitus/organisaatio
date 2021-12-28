@@ -5,7 +5,7 @@ import Accordion from '../../../Accordion/Accordion';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { rakenne } from '../../../../contexts/constants';
-import { ParentTiedot, Perustiedot } from '../../../../types/types';
+import { Nimi, ParentTiedot, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import { Icon } from '@iconify/react';
@@ -223,7 +223,10 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 <YTJModaali
                     ytunnus={watchPerustiedot('ytunnus') || ''}
                     setters={{ setPerustiedotValue, setYhteystiedotValue }}
-                    suljeModaali={() => setYTJModaaliAuki(false)}
+                    suljeModaali={(nimi?: Nimi) => {
+                        if (nimi) setPerustiedotValue('nimi', nimi);
+                        setYTJModaaliAuki(false);
+                    }}
                 />
             )}
         </PohjaSivu>

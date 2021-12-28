@@ -9,6 +9,7 @@ import homeIcon from '@iconify/icons-fa-solid/home';
 import { rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
     LiitaOrganisaatioon,
+    Nimi,
     OrganisaatioNimiJaOid,
     ParentTiedot,
     Perustiedot,
@@ -291,6 +292,23 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setYhdistaOrganisaatio(initialYhdista);
     }
 
+    function handleNimiFromYtj(nimi: Nimi) {
+        if (organisaatioBase) {
+            const newCurrentNimi = nimi;
+            setPerustiedotValue('nimi', newCurrentNimi);
+            const newNimet = [...organisaatioBase.nimet]
+                .sort((a, b) => new Date(a.alkuPvm).getTime() - new Date(b.alkuPvm).getTime())
+                .reverse();
+            newNimet[0].nimi = newCurrentNimi;
+            const updatedBase = {
+                ...organisaatioBase,
+                nimet: newNimet,
+                currentNimi: newCurrentNimi,
+            } as UiOrganisaatioBase;
+            setOrganisaatioBase(updatedBase);
+        }
+    }
+
     function handleNimiMuutos() {
         setNimiIsMuuttunut(true);
     }
@@ -349,10 +367,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
         );
     }
-    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot, alkuPvm } = getPerustiedotValues();
+    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
+
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
-    console.log('validation', yhteystiedotValidationErrors, perustiedotValidationErrors, alkuPvm);
     const accordionProps = () => {
         const lomakkeet = [] as React.ReactElement[];
         const otsikot = [] as string[];
@@ -545,7 +563,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 <YTJModaali
                     setters={{ setPerustiedotValue, setYhteystiedotValue }}
                     ytunnus={ytunnus || ''}
-                    suljeModaali={() => setYTJModaaliAuki(false)}
+                    suljeModaali={(nimi?) => {
+                        if (nimi) {
+                            handleNimiFromYtj(nimi);
+                        }
+                        setYTJModaaliAuki(false);
+                    }}
                 />
             )}
         </PohjaSivu>
