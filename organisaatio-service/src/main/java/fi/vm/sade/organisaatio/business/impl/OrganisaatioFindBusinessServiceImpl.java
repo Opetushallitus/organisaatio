@@ -250,19 +250,19 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
         return children.stream()
-            .map(child -> {
-                // Jätetään kuva pois, jos sitä ei haluta
-                if (child.getMetadata() != null) {
-                    child.getMetadata().setIncludeImage(includeImage);
-                }
-                return mapToOrganisaatioRdtoV4(child);
-            })
-            .collect(Collectors.toList());
+                .map(child -> {
+                    // Jätetään kuva pois, jos sitä ei haluta
+                    if (child.getMetadata() != null) {
+                        child.getMetadata().setIncludeImage(includeImage);
+                    }
+                    return mapToOrganisaatioRdtoV4(child);
+                })
+                .collect(Collectors.toList());
     }
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
         OrganisaatioRDTOV4 org = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
-        if (organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+        if (org != null && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             org.setOppilaitos(conversionService.convert(organisaatio.getParent(), OrganisaatioRDTOV4.class));
         }
         return org;
