@@ -282,10 +282,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioModifiedException(ole);
         }
 
-        // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
-        if (parentOrg != null && organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
-            updateOrganisaatioNameHierarchy(entity, oldName);
-        }
         // Saving the parent relationship
         entity = saveParentSuhteet(entity, parentOrg, opJarjNro);
 
@@ -681,66 +677,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {
-        updateOrganisaatioNameHierarchy(oppilaitos, oldName, true);
-    }
-
-    @Transactional
-    public void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName, boolean updatePaivittaja) {
-        LOG.debug("updateOrganisaatioNameHierarchy()");
-
-        if (oppilaitos.getId() != null) {
-            List<Organisaatio> children = organisaatioRepository.findChildren(oppilaitos.getId());
-            MonikielinenTeksti newParentNames = oppilaitos.getNimi();
-            for (Organisaatio child : children) {
-                MonikielinenTeksti childnimi = child.getNimi();
-                boolean childChanged = false;
-                for (Map.Entry<String, String> newParentNameEntry : newParentNames.getValues().entrySet()) {
-                    String key = newParentNameEntry.getKey();
-                    String oldParentName = oldName.get(key);
-                    String oldChildName = childnimi.getString(key);
-                    String newParentName = newParentNameEntry.getValue();
-                    if (oldChildName == null) {
-                        // toimipisteellä ei ole oppilaitosta vastaavaa tämänkielistä nimeä
-                        // Pitää lisätä manuaalisesti
-                        LOG.debug("Name[" + key + "] does not exist.");
-                    } else if (oldParentName == null && !oldChildName.startsWith(newParentName)
-                            || oldParentName != null && oldChildName.startsWith(oldParentName)) {
-                        if (oldParentName == null) {
-                            // oppilaitoksen nimi lisätty, muutetaan toimipisteen nimeä
-                            String newChildName = newParentName +
-                                    ", " +
-                                    oldChildName;
-                            childnimi.addString(key, newChildName);
-                        } else {
-                            // päivitetään toimipisteen nimen alkuosa
-                            childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
-                        }
-                        // Päivitetään organisaation päivittäjän tiedot
-                        if (updatePaivittaja) {
-                            try {
-                                child.setPaivittaja(getCurrentUser());
-                            } catch (Throwable t) {
-                                throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
-                            }
-                        }
-                        // child must be dirty in order to update paivitysPvm by @UpdateTimestamp
-                        child.setPaivitysPvm(new Date());
-                        child = organisaatioRepository.save(child);
-                        LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
-                    } else {
-                        // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
-                        // Pitää korjata formaatti manuaalisesti
-                        LOG.debug("Name[" + key + "] is of invalid format: \"" + childnimi.getString(key) + "\".");
-                    }
-                    childChanged = true;
-                }
-                if (childChanged) {
-                    koodistoService.addKoodistoSyncByOid(child.getOid());
-                }
-            }
-        }
-    }
 
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
@@ -1173,11 +1109,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
             organisaatio.setNimihaku(OrganisaatioNimiUtil.createNimihaku(organisaatio.getNimi()));
 
-            // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
-            if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {
-                // Ei päivitetä organisaation päivittäjää nimenmuutoksen yhteydessä
-                updateOrganisaatioNameHierarchy(organisaatio, oldName, false);
-            }
 
             // Päivitetään tiedot koodistoon.
             koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
