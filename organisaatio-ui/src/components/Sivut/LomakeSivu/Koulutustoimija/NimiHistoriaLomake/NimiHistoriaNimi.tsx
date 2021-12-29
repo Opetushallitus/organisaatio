@@ -3,6 +3,7 @@ import { LocalDate, Nimi, UiOrganisaationNimetNimi } from '../../../../../types/
 import styles from './NimiHistoriaNimi.module.css';
 import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
 import { Icon } from '@iconify/react';
+import moment from 'moment';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
@@ -17,7 +18,7 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
         handleDeleteNimi({ nimi, alkuPvm });
     }
 
-    const isAlkuPvmInFuture = new Date(alkuPvm) > new Date();
+    const isAlkuPvmInFuture = moment(alkuPvm, 'D.M.YYYY') > moment();
     return (
         <div className={styles.NimiHistoriaCell}>
             <ReadOnlyNimi value={nimi} />

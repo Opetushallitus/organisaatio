@@ -65,8 +65,8 @@ async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
     });
 }
 
-async function createOrganisaatioNimi(oid: string, nimi: UiOrganisaationNimetNimi) {
-    const apiNimi = formatUiDateStrToApi(nimi);
+async function createOrganisaatioNimi(oid: string, { nimi, alkuPvm }: UiOrganisaationNimetNimi) {
+    const apiNimi = { nimi, alkuPvm: formatUiDateStrToApi(alkuPvm) };
     return errorHandlingWrapper(async () => {
         const { data: nimiData } = await Axios.post<ApiOrganisaationNimetNimi>(`${baseUrl}${oid}/nimet`, apiNimi);
         success({ message: 'MESSAGE_NIMEN_TALLENNUS_ONNISTUI' });

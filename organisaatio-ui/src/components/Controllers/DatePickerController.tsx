@@ -18,15 +18,14 @@ export default function DatePickerController<T>({
         <Controller
             control={form}
             name={name}
-            render={({ field: { ref, ...controllerRest } }) => {
-                return (
-                    <DatePickerInput
-                        dayPickerProps={dayPickerProps}
-                        error={!!validationErrors[name]}
-                        {...controllerRest}
-                    />
-                );
-            }}
+            render={({ field: { ref, value, ...controllerRest } }) => (
+                <DatePickerInput
+                    value={value}
+                    dayPickerProps={dayPickerProps}
+                    error={!!validationErrors[name]}
+                    {...controllerRest}
+                />
+            )}
         />
     );
 }

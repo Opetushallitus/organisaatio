@@ -76,6 +76,7 @@ export type NimenmuutosLomake = {
     muutostyyppi: Nimenmuutostyyppi;
     oid: string;
     editDisabled?: boolean;
+    createDisabled?: boolean;
 };
 
 export type UiOrganisaationNimetNimi = {

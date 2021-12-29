@@ -59,6 +59,7 @@ import { CasMeContext } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr } from '../../../tools/mappers';
+import moment from 'moment';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -297,7 +298,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             const newCurrentNimi = nimi;
             setPerustiedotValue('nimi', newCurrentNimi);
             const newNimet = [...organisaatioBase.nimet]
-                .sort((a, b) => new Date(a.alkuPvm).getTime() - new Date(b.alkuPvm).getTime())
+                .sort((a, b) => moment(a.alkuPvm, 'D.M.YYYY').unix() - moment(b.alkuPvm, 'D.M.YYYY').unix())
                 .reverse();
             newNimet[0].nimi = newCurrentNimi;
             const updatedBase = {
@@ -523,10 +524,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     tallennaCallback={() => {
                         handleYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
                     }}
-                    peruutaCallback={() => {
-                        cancelYhdistaOrganisaatio();
-                    }}
-                    suljeCallback={() => cancelYhdistaOrganisaatio()}
+                    peruutaCallback={cancelYhdistaOrganisaatio}
+                    suljeCallback={cancelYhdistaOrganisaatio}
                     targetType={resolvedOrganisaatioRakenne.mergeTargetType[0]}
                     labels={{
                         title: 'TOIMIPISTEEN_YHDISTYS_TITLE',
@@ -545,10 +544,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     tallennaCallback={() => {
                         handleSiirraOrganisaatio({ ...siirraOrganisaatio });
                     }}
-                    peruutaCallback={() => {
-                        cancelSiirraOrganisaatio();
-                    }}
-                    suljeCallback={() => cancelSiirraOrganisaatio()}
+                    peruutaCallback={cancelSiirraOrganisaatio}
+                    suljeCallback={cancelSiirraOrganisaatio}
                     targetType={resolvedOrganisaatioRakenne.moveTargetType[0]}
                     labels={{
                         title: 'TOIMIPISTEEN_SIIRTO_TITLE',

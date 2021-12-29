@@ -63,7 +63,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     };
     const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
     const currentNimi = findCurrentNimi(organisaatioBase.nimet, nimi);
-
     return (
         <UloinKehys>
             <Rivi>

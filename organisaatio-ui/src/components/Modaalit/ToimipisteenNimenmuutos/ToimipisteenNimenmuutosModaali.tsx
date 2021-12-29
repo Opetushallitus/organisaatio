@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { createOrganisaatioNimi, updateOrganisaatioNimi } from '../../../api/organisaatio';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
 import { getUiDateStr } from '../../../tools/mappers';
+import moment from 'moment';
 
 type ModaaliProps = {
     oid: string;
@@ -21,6 +22,7 @@ type ModaaliProps = {
 export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     const { currentNimi, oid } = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const initialCreateDisabled = currentNimi?.alkuPvm === moment().format('D.M.YYYY');
     const {
         reset,
         getValues,
@@ -31,11 +33,12 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         watch,
     } = useForm<NimenmuutosLomake>({
         defaultValues: {
-            nimi: { fi: '', sv: '', en: '' },
+            nimi: initialCreateDisabled ? currentNimi?.nimi : { fi: '', sv: '', en: '' },
             alkuPvm: getUiDateStr(),
-            muutostyyppi: MUUTOSTYYPPI_CREATE,
+            muutostyyppi: initialCreateDisabled ? MUUTOSTYYPPI_EDIT : MUUTOSTYYPPI_CREATE,
             oid,
             editDisabled: currentNimi?.disabled,
+            createDisabled: initialCreateDisabled,
         },
         resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema),
     });
@@ -43,7 +46,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     React.useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (name === 'muutostyyppi') {
-                const { muutostyyppi, editDisabled } = value;
+                const { muutostyyppi, editDisabled, createDisabled } = value;
                 switch (muutostyyppi) {
                     case MUUTOSTYYPPI_CREATE:
                         reset({
@@ -51,6 +54,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                             alkuPvm: getUiDateStr(),
                             oid,
                             muutostyyppi,
+                            createDisabled,
                         });
                         return;
                     case MUUTOSTYYPPI_EDIT:
@@ -93,7 +97,6 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         reset();
         props.closeNimenmuutosModaali(false);
     };
-
     return (
         <PohjaModaali
             header={<Header label={'TOIMIPISTEEN_NIMENMUUTOS_TITLE'} />}

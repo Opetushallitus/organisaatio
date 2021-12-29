@@ -44,9 +44,27 @@ export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[Supp
 };
 
 export const findCurrentNimi = (nimet: UiOrganisaationNimetNimi[], nimi: Nimi) => {
-    const currentNimi = nimet.find((nimetNimi) => JSON.stringify(nimetNimi.nimi) === JSON.stringify(nimi));
-    const editModeDisabled =
-        currentNimi && !!nimet.find((nimetNimi) => new Date(nimetNimi.alkuPvm) > new Date(currentNimi.alkuPvm));
+    const nowTime = moment().unix();
+    const alkuPvmInFuture = (n) => {
+        return moment(n.alkuPvm, 'D.M.YYYY').unix() > nowTime;
+    };
+    const [futureNimet, pastNimet] = nimet
+        .reduce(
+            (
+                [futureNimet, pastNimet]: [UiOrganisaationNimetNimi[], UiOrganisaationNimetNimi[]],
+                elem
+            ): [futureNimet: UiOrganisaationNimetNimi[], fail: UiOrganisaationNimetNimi[]] => {
+                return alkuPvmInFuture(elem)
+                    ? [[...futureNimet, elem], pastNimet]
+                    : [futureNimet, [...pastNimet, elem]];
+            },
+            [[], []]
+        )
+        .map((nimetArr) =>
+            nimetArr.sort((a, b) => new Date(a.alkuPvm).getTime() - new Date(b.alkuPvm).getTime()).reverse()
+        );
+    const currentNimi = pastNimet.find((pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi));
+    const editModeDisabled = futureNimet.length > 0;
     return currentNimi ? { ...currentNimi, disabled: editModeDisabled } : undefined;
 };
 

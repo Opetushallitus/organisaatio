@@ -32,7 +32,7 @@ export default function TNBody(props: TNProps) {
             </BodyRivi>
         );
     }
-    const { muutostyyppi, editDisabled } = getValues();
+    const { muutostyyppi, editDisabled, createDisabled } = getValues();
     return (
         <>
             <BodyRivi>
@@ -42,7 +42,7 @@ export default function TNBody(props: TNProps) {
                         name={'muutostyyppi'}
                         render={({ field: { ref, value = 'CREATE', ...rest } }) => (
                             <RadioGroup {...rest} value={value}>
-                                <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
+                                <Radio name={MUUTOSTYYPPI_CREATE} disabled={createDisabled} value={MUUTOSTYYPPI_CREATE}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
                                 </Radio>
                                 <Radio name={MUUTOSTYYPPI_EDIT} disabled={editDisabled} value={MUUTOSTYYPPI_EDIT}>
@@ -58,6 +58,15 @@ export default function TNBody(props: TNProps) {
                     <BodyKentta>
                         <Typography variant="body">
                             {i18n.translate('NIMENMUUTOS_MUOKKAUS_DISABLED_HAS_SCHEDULED_CHANGE')}
+                        </Typography>
+                    </BodyKentta>
+                </BodyRivi>
+            )}
+            {createDisabled && (
+                <BodyRivi>
+                    <BodyKentta>
+                        <Typography variant="body">
+                            {i18n.translate('NIMENMUUTOS_LUONTI_DISABLED_SAME_DAY_NIMI')}
                         </Typography>
                     </BodyKentta>
                 </BodyRivi>
