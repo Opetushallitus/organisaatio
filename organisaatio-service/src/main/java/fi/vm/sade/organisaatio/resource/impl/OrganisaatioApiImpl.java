@@ -285,10 +285,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
-        final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
-        tulos.setPaivittaja(org.getPaivittaja());
-        tulos.setPaivitysPvm(org.getPaivitysPvm());
         if (org != null) {
+            final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
+            tulos.setPaivittaja(org.getPaivittaja());
+            tulos.setPaivitysPvm(org.getPaivitysPvm());
             try {
                 OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
                 tulos.setEtuNimet(henkilo.getEtunimet());
