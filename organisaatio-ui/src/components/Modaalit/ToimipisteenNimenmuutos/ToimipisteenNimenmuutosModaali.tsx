@@ -1,13 +1,13 @@
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import TNBody from './TNBody';
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { NimenmuutosLomake, UiOrganisaationNimetNimi } from '../../../types/types';
 import ToimipisteenNimenmuutosModaaliSchema from '../../../ValidationSchemas/ToimipisteenNimenmuutosModaaliSchema';
 import Header from '../Header/Header';
 import Footer from '../Confirmation/Footer';
-import { useState } from 'react';
 import { createOrganisaatioNimi, updateOrganisaatioNimi } from '../../../api/organisaatio';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
 import { getUiDateStr } from '../../../tools/mappers';
@@ -43,7 +43,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema),
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (name === 'muutostyyppi') {
                 const { muutostyyppi, editDisabled, createDisabled } = value;
