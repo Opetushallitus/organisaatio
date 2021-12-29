@@ -27,6 +27,7 @@ export type Props = {
     formControl: Control<Yhteystiedot>;
     watch: UseFormWatch<Yhteystiedot>;
     getYhteystiedotValues: UseFormGetValues<Yhteystiedot>;
+    readOnly?: boolean;
 };
 
 const kaikkiOpetuskielet: SupportedKieli[] = ['fi', 'sv', 'en'];
@@ -45,6 +46,7 @@ const YhteystietoLomake = ({
     formControl,
     setYhteystiedotValue,
     getYhteystiedotValues,
+    readOnly,
 }: Props): React.ReactElement => {
     const { i18n } = useContext(LanguageContext);
     const [naytaMuutKielet, setNaytaMuutKielet] = useState(false);
@@ -71,13 +73,14 @@ const YhteystietoLomake = ({
                             : i18n.translate('YHTEYSTIEDOT_NAYTA_MUUT_KIELET')}
                     </Button>
                 </div>
-                <Checkbox {...formRegister('osoitteetOnEri')} checked={osoitteetOnEri}>
+                <Checkbox disabled={readOnly} {...formRegister('osoitteetOnEri')} checked={osoitteetOnEri}>
                     {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE')}
                 </Checkbox>
             </Rivi>
             <div className={styles.KortitContainer}>
                 {visibleKielet.map((kieli, index) => (
                     <YhteystietoKortti
+                        readOnly={readOnly}
                         key={kieli}
                         yhteystiedotRegister={formRegister}
                         osoitteetOnEri={osoitteetOnEri}
@@ -96,6 +99,7 @@ const YhteystietoLomake = ({
                         .filter((kieli) => !visibleKielet.includes(kieli))
                         .map((kieli) => (
                             <YhteystietoKortti
+                                readOnly={readOnly}
                                 key={kieli}
                                 osoitteetOnEri={osoitteetOnEri}
                                 kieli={kieli}

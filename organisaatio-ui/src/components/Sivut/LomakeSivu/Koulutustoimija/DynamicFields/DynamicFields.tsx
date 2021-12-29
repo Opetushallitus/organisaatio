@@ -13,6 +13,7 @@ type DynamicFieldsProps = {
     formControl: Control<Perustiedot>;
     getPerustiedotValues: () => Perustiedot;
     koodistot: KoodistoContextType;
+    readOnly?: boolean;
 };
 
 export const DynamicFieldMethods = () => {
@@ -34,6 +35,7 @@ export default function DynamicFields({
     formControl,
     validationErrors,
     koodistot,
+    readOnly = false,
 }: DynamicFieldsProps) {
     return (
         <>
@@ -44,6 +46,7 @@ export default function DynamicFields({
                             <Rivi key={field.name}>
                                 <Kentta label={field.label}>
                                     <InputController<Perustiedot>
+                                        disabled={readOnly}
                                         form={formControl}
                                         name={field.name}
                                         validationErrors={validationErrors}
@@ -56,6 +59,7 @@ export default function DynamicFields({
                             <Rivi key={field.name}>
                                 <Kentta label={field.label}>
                                     <SelectController
+                                        disabled={readOnly}
                                         form={formControl}
                                         validationErrors={validationErrors}
                                         name={field.name}
@@ -69,6 +73,7 @@ export default function DynamicFields({
                             <Rivi key={field.name}>
                                 <Kentta label={field.label}>
                                     <MultiSelectController
+                                        disabled={readOnly}
                                         form={formControl}
                                         validationErrors={validationErrors}
                                         name={field.name}

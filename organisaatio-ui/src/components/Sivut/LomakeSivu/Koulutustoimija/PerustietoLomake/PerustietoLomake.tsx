@@ -43,6 +43,7 @@ type PerustietoLomakeProps = {
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
     organisaatioBase: UiOrganisaatioBase;
     organisaatioNimiPolku: OrganisaatioNimiJaOid[];
+    readOnly: boolean;
 };
 
 const OrganisaationNimi = ({ defaultNimi, control }) => {
@@ -63,6 +64,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         rakenne,
         resolvedTyypit,
         organisaatioNimiPolku,
+        readOnly,
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
@@ -101,7 +103,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                             control={formControl}
                             name={'organisaatioTyypit'}
                             render={({ field: { ref, ...rest } }) => (
-                                <CheckboxGroup {...rest} options={resolvedTyypit} />
+                                <CheckboxGroup disabled={readOnly} {...rest} options={resolvedTyypit} />
                             )}
                         />
                     </Kentta>
@@ -113,7 +115,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Rivi>
                         <Kentta isRequired label={'PERUSTIETO_Y_TUNNUS'}>
                             <Input
-                                readOnly
+                                disabled={readOnly}
+                                readOnly={true}
                                 error={!!validationErrors['ytunnus']}
                                 id={'ytunnus'}
                                 {...formRegister('ytunnus')}
@@ -133,6 +136,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             )}
             {rakenne?.dynamicFields && (
                 <DynamicFields
+                    readOnly={readOnly}
                     dynamicFields={rakenne.dynamicFields}
                     getPerustiedotValues={getPerustiedotValues}
                     formControl={formControl}
@@ -143,6 +147,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             <Rivi>
                 <Kentta isRequired label={'PERUSTIETO_PERUSTAMISPAIVA'}>
                     <DatePickerController<Perustiedot>
+                        disabled={readOnly}
                         name={'alkuPvm'}
                         form={formControl}
                         validationErrors={validationErrors}
@@ -167,6 +172,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         name={'kotipaikka'}
                         render={({ field }) => (
                             <Select
+                                isDisabled={readOnly}
                                 id={'PERUSTIETO_PAASIJAINTIKUNTA_SELECT'}
                                 {...field}
                                 ref={undefined}
@@ -182,6 +188,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         name={'muutKotipaikat'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
+                                isDisabled={readOnly}
                                 id={'PERUSTIETO_MUUT_KUNNAT_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['muutKotipaikat']}
@@ -199,6 +206,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         name={'maa'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
+                                isDisabled={readOnly}
                                 id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
                                 error={!!validationErrors['maa']}
@@ -215,6 +223,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         name={'kielet'}
                         render={({ field: { ref, ...rest } }) => (
                             <Select
+                                isDisabled={readOnly}
                                 isMulti
                                 id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
