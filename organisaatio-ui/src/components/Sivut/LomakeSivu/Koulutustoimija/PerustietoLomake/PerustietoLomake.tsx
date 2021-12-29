@@ -3,7 +3,13 @@ import { useContext, useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, UiOrganisaatioBase } from '../../../../../types/types';
+import {
+    KoodistoSelectOption,
+    OrganisaatioNimiJaOid,
+    Perustiedot,
+    ResolvedRakenne,
+    UiOrganisaatioBase,
+} from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Controller, useWatch } from 'react-hook-form';
@@ -24,6 +30,7 @@ import {
 } from '../../LomakeFields/LomakeFields';
 import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
 import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
+import { CasMeContext } from '../../../../../contexts/CasMeContext';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -35,6 +42,7 @@ type PerustietoLomakeProps = {
     setPerustiedotValue: UseFormSetValue<Perustiedot>;
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
     organisaatioBase: UiOrganisaatioBase;
+    organisaatioNimiPolku: OrganisaatioNimiJaOid[];
 };
 
 const OrganisaationNimi = ({ defaultNimi, control }) => {
@@ -43,6 +51,7 @@ const OrganisaationNimi = ({ defaultNimi, control }) => {
 };
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
+    const { me: casMe } = useContext(CasMeContext);
     const {
         organisaatioBase,
         getPerustiedotValues,
@@ -53,6 +62,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         setPerustiedotValue,
         rakenne,
         resolvedTyypit,
+        organisaatioNimiPolku,
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
@@ -76,13 +86,14 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <OrganisaationNimi control={formControl} defaultNimi={nimi} />
                 </Ruudukko>
                 <div>
-                    <LomakeButton
-                        label={'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA'}
-                        onClick={() => setNimenmuutosModaaliAuki(true)}
-                    />
+                    {casMe.canHaveButton('PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA', organisaatioNimiPolku) && (
+                        <LomakeButton
+                            label={'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA'}
+                            onClick={() => setNimenmuutosModaaliAuki(true)}
+                        />
+                    )}
                 </div>
             </Rivi>
-
             {organisaatioTyypit && (
                 <Rivi>
                     <Kentta label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>
@@ -101,9 +112,16 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 <>
                     <Rivi>
                         <Kentta isRequired label={'PERUSTIETO_Y_TUNNUS'}>
-                            <Input error={!!validationErrors['ytunnus']} id={'ytunnus'} {...formRegister('ytunnus')} />
+                            <Input
+                                readOnly
+                                error={!!validationErrors['ytunnus']}
+                                id={'ytunnus'}
+                                {...formRegister('ytunnus')}
+                            />
                         </Kentta>
-                        <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
+                        {casMe.canHaveButton('PERUSTIETO_PAIVITA_YTJ_TIEDOT', organisaatioNimiPolku) && (
+                            <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
+                        )}
                     </Rivi>
                     <Rivi>
                         <LabelLink
@@ -135,10 +153,12 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <ReadOnlyDate value={lakkautusPvm} />
                     </Kentta>
                 )}
-                <LomakeButton
-                    label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
-                    onClick={() => setLakkautusModaaliAuki(true)}
-                />
+                {casMe.canHaveButton('PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI', organisaatioNimiPolku) && (
+                    <LomakeButton
+                        label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
+                        onClick={() => setLakkautusModaaliAuki(true)}
+                    />
+                )}
             </Rivi>
             <Rivi>
                 <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'}>

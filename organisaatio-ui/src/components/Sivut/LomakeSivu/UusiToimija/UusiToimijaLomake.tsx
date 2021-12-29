@@ -38,7 +38,6 @@ import {
 } from '../LomakeFields/LomakeFields';
 import { LanguageContext } from '../../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../../contexts/KoodistoContext';
-import { CasMeContext } from '../../../../contexts/CasMeContext';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -46,13 +45,13 @@ const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const { i18n } = useContext(LanguageContext);
-    const { me: casMe } = useContext(CasMeContext);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const parentOid = resolveParentOidByQuery(props.location.search);
     const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
         organisaatioTyypit: [],
         oid: '',
+        isYtj: true,
     });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,9 +61,9 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             const data = await readOrganisaatio(parentOid, true);
             if (data) {
                 const {
-                    organisaatio: { tyypit, oid },
+                    organisaatio: { tyypit, oid, ytunnus },
                 } = data;
-                setParentTiedot({ organisaatioTyypit: tyypit, oid });
+                setParentTiedot({ organisaatioTyypit: tyypit, oid, isYtj: !!ytunnus });
             }
         })();
     }, [parentOid]);
@@ -214,9 +213,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 </VersioContainer>
                 <div>
                     <LomakeButton label={'BUTTON_SULJE'} onClick={handleCancel} />
-                    {casMe.canHaveButton('BUTTON_TALLENNA') && (
-                        <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
-                    )}
+                    <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
                 </div>
             </AlaBanneri>
             {YTJModaaliAuki && (
