@@ -49,6 +49,7 @@ export type OrganisaatioBase = {
     oid: string;
     status: string;
     nimi: Nimi;
+    lyhytNimi: Nimi;
     parentOid: string;
     parentOidPath: string;
 };

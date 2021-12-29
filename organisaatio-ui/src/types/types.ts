@@ -99,6 +99,7 @@ export type VakaToimipaikkaTiedot = {
 export type Perustiedot = {
     ytunnus?: string;
     nimi: Nimi;
+    lyhytNimi: Nimi;
     organisaatioTyypit: OrganisaatioType[];
     alkuPvm: LocalDate;
     kotipaikka: KoodistoSelectOption;

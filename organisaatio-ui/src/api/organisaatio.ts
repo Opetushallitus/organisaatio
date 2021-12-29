@@ -67,7 +67,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
     return oids.map((oid: string) => ({
         oid,
-        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).nimi,
+        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).lyhytNimi,
     }));
 }
 
@@ -240,6 +240,7 @@ function mapUiOrganisaatioToApiToSave(
         parentOid: parentOid || ROOT_OID,
         nimet,
         nimi,
+        lyhytNimi: nimi,
         oppilaitosTyyppiUri: oppilaitosTyyppiUri && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
@@ -324,6 +325,7 @@ function mapUiOrganisaatioToApiToUpdate(
         varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,
         nimi: uusiNimi,
+        lyhytNimi: uusiNimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),
         kotipaikkaUri: kotipaikka.value,

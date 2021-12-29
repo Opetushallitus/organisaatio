@@ -345,48 +345,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     }
 
-    @Transactional
-    @Test
-    public void updateOppilaitosShouldUpdateToimipisteNames() {
-        //add parent
-        OrganisaatioRDTO koulutustoimija = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
-        OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija);
-
-        //add child
-        OrganisaatioRDTO oppilaitosDTO = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi)", OrganisaatioTyyppi.OPPILAITOS.value(), koulutustoimijaResult1.getOrganisaatio().getOid(), true);
-        Organisaatio oppilaitos = service.saveOrUpdate(oppilaitosDTO).getOrganisaatio();
-
-        //add grandchild
-        OrganisaatioRDTO toimipisteDTO = OrganisaatioRDTOTestUtil.createOrganisaatio("oppilaitos1 (fi), toimipiste1 (fi)", OrganisaatioTyyppi.TOIMIPISTE.value(), oppilaitos.getOid(), true);
-        toimipisteDTO.getNimi().put("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)");
-        toimipisteDTO.getNimi().put("sv", "toimipiste1 (sv)");
-        Organisaatio toimipiste = service.saveOrUpdate(toimipisteDTO).getOrganisaatio();
-
-        Date oppilaitosBefore = organisaatioFindBusinessService.findById(oppilaitos.getOid()).getPaivitysPvm();
-        Date toimipisteBefore = organisaatioFindBusinessService.findById(toimipiste.getOid()).getPaivitysPvm();
-
-        //modify child
-        oppilaitosDTO.setOid(oppilaitos.getOid());
-        oppilaitosDTO.getNimi().put("en", "oppilaitos1-päivitetty (en)");
-        oppilaitosDTO.getNimi().put("fi", "oppilaitos1-päivitetty (fi)");
-        Organisaatio oppilaitosAfterNameSave = service.saveOrUpdate(oppilaitosDTO).getOrganisaatio();
-
-        Date oppilaitosAfter = organisaatioFindBusinessService.findById(oppilaitosAfterNameSave.getOid()).getPaivitysPvm();
-        Date toimipisteAfter = organisaatioFindBusinessService.findById(toimipiste.getOid()).getPaivitysPvm();
-
-        Organisaatio organisaatio = organisaatioFindBusinessService.findById(toimipiste.getOid());
-        Map<String, String> nimet = organisaatio.getNimi().getValues();
-        assertThat(nimet).containsOnly(
-                entry("fi", "oppilaitos1-päivitetty (fi), toimipiste1 (fi)"),
-                entry("en", "oppilaitos1-päivitetty (en), toimipiste1 (en)"),
-                entry("sv", "toimipiste1 (sv)")
-        );
-        assertThat(oppilaitosAfter).isAfter(oppilaitosBefore);
-        // Oppilaitos(child) save also updates toimipiste(grandchild) paivitysPvm
-        assertThat(toimipisteAfter).isAfter(toimipisteBefore);
-    }
-
-    @Test
+       @Test
     public void saveToimipisteShouldGenerateOpetuspisteenJarjNroAndToimipistekoodiWhenEmpty() {
         OrganisaatioRDTO koulutustoimija1 = OrganisaatioRDTOTestUtil.createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA.value(), rootOid, true);
         OrganisaatioResult koulutustoimijaResult1 = service.saveOrUpdate(koulutustoimija1);

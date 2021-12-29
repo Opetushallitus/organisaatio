@@ -31,7 +31,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.OrganisaatioResourceImpl;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -161,7 +160,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Organisaatio> findBySearchCriteria (
+    public Set<Organisaatio> findBySearchCriteria(
             Set<String> kieliList,
             Set<String> kuntaList,
             Set<String> oppilaitostyyppiList,
@@ -223,7 +222,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         Organisaatio o = this.findById(id);
 
         if (o == null) {
-            LOG.info("Failed to find organisaatio by: " + id);
+            LOG.info("Failed to find organisaatio by: {}", id);
             throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
         }
 
@@ -250,18 +249,22 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
         return children.stream()
-            .map(child -> {
-                // Jätetään kuva pois, jos sitä ei haluta
-                if (child.getMetadata() != null) {
-                    child.getMetadata().setIncludeImage(includeImage);
-                }
-                return mapToOrganisaatioRdtoV4(child);
-            })
-            .collect(Collectors.toList());
+                .map(child -> {
+                    // Jätetään kuva pois, jos sitä ei haluta
+                    if (child.getMetadata() != null) {
+                        child.getMetadata().setIncludeImage(includeImage);
+                    }
+                    return mapToOrganisaatioRdtoV4(child);
+                })
+                .collect(Collectors.toList());
     }
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
-        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        OrganisaatioRDTOV4 org = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
+        if (org != null && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            org.setParentOrganisaatio(mapToOrganisaatioRdtoV4(organisaatio.getParent()));
+        }
+        return org;
     }
 
     @Override

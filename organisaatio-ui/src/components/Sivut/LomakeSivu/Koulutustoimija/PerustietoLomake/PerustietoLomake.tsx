@@ -46,7 +46,7 @@ type PerustietoLomakeProps = {
 };
 
 const OrganisaationNimi = ({ defaultNimi, control }) => {
-    const nimi = useWatch({ control, name: 'nimi', defaultValue: defaultNimi });
+    const nimi = useWatch({ control, name: 'lyhytNimi', defaultValue: defaultNimi });
     return <ReadOnlyNimi value={nimi} />;
 };
 
@@ -71,7 +71,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     formRegister('nimi');
-    const { nimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
+    const { lyhytNimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
     return (
         <UloinKehys>
             <Rivi>
@@ -83,7 +83,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
                     ]}
                     <AvainKevyestiBoldattu label={'PERUSTIETO_ORGANISAATION_NIMI'} />
-                    <OrganisaationNimi control={formControl} defaultNimi={nimi} />
+                    <OrganisaationNimi control={formControl} defaultNimi={lyhytNimi} />
                 </Ruudukko>
                 <div>
                     {casMe.canHaveButton('PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA', organisaatioNimiPolku) && (
@@ -228,8 +228,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             {nimenmuutosModaaliAuki && (
                 <ToimipisteenNimenmuutosModaali
                     closeNimenmuutosModaali={() => setNimenmuutosModaaliAuki(false)}
-                    handleNimiTallennus={() => setPerustiedotValue('nimi', nimi)}
-                    nimi={nimi}
+                    handleNimiTallennus={() => setPerustiedotValue('lyhytNimi', lyhytNimi)}
+                    nimi={lyhytNimi}
                 />
             )}
             {lakkautusModaaliAuki && (
