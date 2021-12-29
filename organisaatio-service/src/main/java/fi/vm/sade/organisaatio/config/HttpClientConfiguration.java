@@ -37,6 +37,7 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("kayttooikeus-service.login"))
+                .sessionCookieName("organisaatio-kayttooikeus")
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
@@ -48,6 +49,7 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("oppijanumero-service.login"))
+                .sessionCookieName("organisaatio-oppijanumero")
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
@@ -59,6 +61,7 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password.to.viestinta"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("organisaatio-service.ryhmasahkoposti-service.login"))
+                .sessionCookieName("organisaatio-ryhmasahkoposti")
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
@@ -70,6 +73,7 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password.to.koodisto"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("organisaatio-service.koodisto-service.login"))
+                .sessionCookieName("organisaatio-koodisto")
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
