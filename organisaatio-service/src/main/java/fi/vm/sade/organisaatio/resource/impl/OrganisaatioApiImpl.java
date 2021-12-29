@@ -285,19 +285,19 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
-
+        final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
+        tulos.setPaivittaja(org.getPaivittaja());
+        tulos.setPaivitysPvm(org.getPaivitysPvm());
         if (org != null) {
             try {
                 OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
-                final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
-                tulos.setPaivittaja(org.getPaivittaja());
-                tulos.setPaivitysPvm(org.getPaivitysPvm());
                 tulos.setEtuNimet(henkilo.getEtunimet());
                 tulos.setSukuNimi(henkilo.getSukunimi());
-                return tulos;
+
             } catch (Exception ex) {
-                throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+                tulos.setSukuNimi(org.getPaivittaja());
             }
+            return tulos;
         } else {
             throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "not found");
         }
