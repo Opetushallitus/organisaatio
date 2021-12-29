@@ -5,7 +5,6 @@ import { useContext, useEffect } from 'react';
 import { useOrganisaatioPaivittaja } from '../../api/organisaatio';
 import { LanguageContext } from '../../contexts/LanguageContext';
 import Loading from '../Loading/Loading';
-import VirheSivu from '../Sivut/VirheSivu/VirheSivu';
 
 const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => {
     const { i18n } = useContext(LanguageContext);
@@ -14,7 +13,7 @@ const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => 
         execute();
     }, [execute, muokattu]);
     if (loading) return <Loading />;
-    if (error) return <VirheSivu />;
+    if (error) return <div>{i18n.translate('PAIVITTAJA_KAYTTOOIKEUS_PUUTTUU')}</div>;
 
     return (
         <MuokattuKolumni>
