@@ -1,6 +1,6 @@
 import { showCreateChildButton, resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/constants';
-import { Koodi, Koodisto } from '../types/types';
+import { Koodi, Koodisto, OrganisaatioType } from '../types/types';
 const defaultValues = { arvo: '', disabled: false, versio: 0 };
 const koodisto: Partial<Koodisto> = {
     uri2SelectOption: (uri) => {
@@ -162,7 +162,7 @@ describe('resolveParentOidByQuery', () => {
 
 describe('showCreateChildButton', () => {
     const onlyKoulutustoimijaRakenne = {
-        type: ['organisaatiotyyppi_01'],
+        type: ['organisaatiotyyppi_01'] as OrganisaatioType[],
         childTypes: [
             {
                 type: 'organisaatiotyyppi_02',
@@ -178,7 +178,7 @@ describe('showCreateChildButton', () => {
     };
 
     const onlyDisabledRakene = {
-        type: ['organisaatiotyyppi_08', 'organisaatiotyyppi_07'],
+        type: ['organisaatiotyyppi_08', 'organisaatiotyyppi_07'] as OrganisaatioType[],
         childTypes: [
             {
                 type: 'organisaatiotyyppi_08',
@@ -195,7 +195,7 @@ describe('showCreateChildButton', () => {
         dynamicFields: [],
     };
     const oneDisabledRakenne = {
-        type: ['organisaatiotyyppi_08', 'organisaatiotyyppi_03'],
+        type: ['organisaatiotyyppi_08', 'organisaatiotyyppi_03'] as OrganisaatioType[],
         childTypes: [
             {
                 type: 'organisaatiotyyppi_08',
@@ -212,7 +212,7 @@ describe('showCreateChildButton', () => {
     };
 
     const allValidRakenne = {
-        type: ['organisaatiotyyppi_06', 'organisaatiotyyppi_03'],
+        type: ['organisaatiotyyppi_06', 'organisaatiotyyppi_03'] as OrganisaatioType[],
         childTypes: [
             {
                 type: 'organisaatiotyyppi_06',
@@ -229,7 +229,7 @@ describe('showCreateChildButton', () => {
     };
 
     const emptyTypeRakenne = {
-        type: [],
+        type: [] as OrganisaatioType[],
         childTypes: [
             {
                 type: 'organisaatiotyyppi_06',
@@ -245,7 +245,7 @@ describe('showCreateChildButton', () => {
         dynamicFields: [],
     };
     const emptyChildrenRakenne = {
-        type: ['organisaatiotyyppi_03'],
+        type: ['organisaatiotyyppi_03'] as OrganisaatioType[],
         childTypes: [],
         moveTargetType: [],
         mergeTargetType: [],

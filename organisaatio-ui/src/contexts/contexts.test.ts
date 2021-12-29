@@ -1,6 +1,7 @@
 import { KoodistoImpl } from './KoodistoContext';
 import { Koodi, Lokalisointi } from '../types/types';
 import { I18nImpl } from './LanguageContext';
+import { organisationAllowedInRoles } from './CasMeContext';
 
 describe('KoodistoImpl', () => {
     const koodit: Koodi[] = [
@@ -137,5 +138,18 @@ describe('I18nImpl', () => {
         const i18n = new I18nImpl({} as Lokalisointi, 'fi');
         const trans = i18n.translate('NOT_FOUND');
         expect(trans).toEqual('NOT_FOUND');
+    });
+});
+
+describe('CASMeImpl', () => {
+    it('cheks roles and organisation for button when organisations present', () => {
+        const roles = ['APP_ORGANISAATIOHALLINTA_CRUD_111', 'APP_ORGANISAATIOHALLINTA_CRUD_666'];
+        expect(organisationAllowedInRoles([{ oid: '111', nimi: { fi: '111' } }], roles)).toBeTruthy();
+        expect(organisationAllowedInRoles([{ oid: '666', nimi: { fi: '666' } }], roles)).toBeTruthy();
+        expect(organisationAllowedInRoles([{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+    });
+    it('cheks roles and organisation for button when no organisation', () => {
+        const roles = ['FOO', 'APP_ORGANISAATIOHALLINTA_CRUD'];
+        expect(organisationAllowedInRoles([{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
     });
 });
