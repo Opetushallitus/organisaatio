@@ -7,6 +7,7 @@ export default function DatePickerController<T>(props: {
     form: Control<T>;
     validationErrors: { [x: string]: unknown };
     name: Path<T>;
+    disabled?: boolean;
 }) {
     return (
         <Controller
@@ -14,7 +15,14 @@ export default function DatePickerController<T>(props: {
             name={props.name}
             render={({ field: { ref, value, ...rest } }) => {
                 const formattedDate = value ? moment(new Date(value)).format('D.M.yyyy') : '';
-                return <DatePickerInput value={formattedDate} error={!!props.validationErrors[props.name]} {...rest} />;
+                return (
+                    <DatePickerInput
+                        value={formattedDate}
+                        error={!!props.validationErrors[props.name]}
+                        {...rest}
+                        inputProps={{ disabled: props.disabled }}
+                    />
+                );
             }}
         />
     );

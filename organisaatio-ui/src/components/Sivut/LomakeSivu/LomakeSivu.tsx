@@ -351,6 +351,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const otsikot = [] as string[];
         lomakkeet.push(
             <PerustietoLomake
+                readOnly={readOnly}
                 resolvedTyypit={resolvedTyypit}
                 getPerustiedotValues={getPerustiedotValues}
                 formRegister={registerPerustiedot}
@@ -367,6 +368,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
+                readOnly={readOnly}
                 getYhteystiedotValues={getYhteystiedotValues}
                 opetusKielet={opetusKielet}
                 watch={watchYhteystiedot}
@@ -391,7 +393,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         }
         if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
             lomakkeet.push(
-                <ArvoLomake tyyppiOid={'1.2.246.562.5.79385887983'} yhteystietoArvoRegister={yhteystietoArvoRegister} />
+                <ArvoLomake
+                    readOnly={readOnly}
+                    tyyppiOid={'1.2.246.562.5.79385887983'}
+                    yhteystietoArvoRegister={yhteystietoArvoRegister}
+                />
             );
             otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));
         }
@@ -411,80 +417,78 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     };
     return (
         <PohjaSivu>
-            <fieldset disabled={readOnly} style={{ border: 0, padding: 0, margin: 0 }}>
-                <YlaBanneri>
-                    <div>
-                        <Link to={'/organisaatiot'}>
-                            <Icon icon={homeIcon} />
-                        </Link>
-                    </div>
-                    {organisaatioNimiPolku.map((o, index) => [
-                        <div key={o.oid}>
-                            <Link to={`${o.oid}`}>{i18n.translateNimi(o.nimi)}</Link>
-                        </div>,
-                        organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
-                    ])}
-                </YlaBanneri>
-                <ValiContainer>
-                    <ValiOtsikko>
-                        <h3>
-                            {(organisaatioTyypit?.length > 0 &&
-                                organisaatioTyypitKoodisto.uri2Nimi(organisaatioTyypit[0])) ||
-                                i18n.translate('LABEL_NOT_AVAILABLE')}
-                        </h3>
-                        <h1>
-                            {i18n.translateNimi(nimi)}
-                            {organisaatioBase?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
-                        </h1>
-                    </ValiOtsikko>
-                    <ValiNappulat>
-                        {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
-                            casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO', organisaatioNimiPolku) && (
-                                <Button
-                                    onClick={() => {
-                                        setSiirraOrganisaatio({ ...siirraOrganisaatio });
-                                        setSiirraOrganisaatioModaaliAuki(true);
-                                    }}
-                                >
-                                    {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
-                                </Button>
-                            )}
-                        {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 &&
-                            casMe.canHaveButton('LOMAKE_YHDISTA_ORGANISAATIO', organisaatioNimiPolku) && (
-                                <Button
-                                    onClick={() => {
-                                        setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
-                                        setYhdistaOrganisaatioModaaliAuki(true);
-                                    }}
-                                >
-                                    {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
-                                </Button>
-                            )}
-                        {showCreateChildButton(resolvedOrganisaatioRakenne) &&
-                            casMe.canHaveButton('LOMAKE_LISAA_UUSI_TOIMIJA', organisaatioNimiPolku) && (
-                                <LomakeButton
-                                    disabled={isDirty}
-                                    onClick={handleLisaaUusiToimija}
-                                    label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
-                                />
-                            )}
-                    </ValiNappulat>
-                </ValiContainer>
-                <PaaOsio>
-                    <Accordion {...accordionProps()} />
-                </PaaOsio>
-                <AlaBanneri>
-                    <VersioContainer>
-                        <Muokattu oid={organisaatioBase.oid} muokattu={muokattu} />
-                    </VersioContainer>
-                    <div>
-                        <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
-                        {casMe.canHaveButton('BUTTON_TALLENNA', organisaatioNimiPolku) && (
-                            <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+            <YlaBanneri>
+                <div>
+                    <Link to={'/organisaatiot'}>
+                        <Icon icon={homeIcon} />
+                    </Link>
+                </div>
+                {organisaatioNimiPolku.map((o, index) => [
+                    <div key={o.oid}>
+                        <Link to={`${o.oid}`}>{i18n.translateNimi(o.nimi)}</Link>
+                    </div>,
+                    organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
+                ])}
+            </YlaBanneri>
+            <ValiContainer>
+                <ValiOtsikko>
+                    <h3>
+                        {(organisaatioTyypit?.length > 0 &&
+                            organisaatioTyypitKoodisto.uri2Nimi(organisaatioTyypit[0])) ||
+                            i18n.translate('LABEL_NOT_AVAILABLE')}
+                    </h3>
+                    <h1>
+                        {i18n.translateNimi(nimi)}
+                        {organisaatioBase?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
+                    </h1>
+                </ValiOtsikko>
+                <ValiNappulat>
+                    {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO', organisaatioNimiPolku) && (
+                            <Button
+                                onClick={() => {
+                                    setSiirraOrganisaatio({ ...siirraOrganisaatio });
+                                    setSiirraOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_SIIRRA_ORGANISAATIO')}
+                            </Button>
                         )}
-                    </div>
-                </AlaBanneri>
-            </fieldset>
+                    {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 &&
+                        casMe.canHaveButton('LOMAKE_YHDISTA_ORGANISAATIO', organisaatioNimiPolku) && (
+                            <Button
+                                onClick={() => {
+                                    setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
+                                    setYhdistaOrganisaatioModaaliAuki(true);
+                                }}
+                            >
+                                {i18n.translate('LOMAKE_YHDISTA_ORGANISAATIO')}
+                            </Button>
+                        )}
+                    {showCreateChildButton(resolvedOrganisaatioRakenne) &&
+                        casMe.canHaveButton('LOMAKE_LISAA_UUSI_TOIMIJA', organisaatioNimiPolku) && (
+                            <LomakeButton
+                                disabled={isDirty}
+                                onClick={handleLisaaUusiToimija}
+                                label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
+                            />
+                        )}
+                </ValiNappulat>
+            </ValiContainer>
+            <PaaOsio>
+                <Accordion {...accordionProps()} />
+            </PaaOsio>
+            <AlaBanneri>
+                <VersioContainer>
+                    <Muokattu oid={organisaatioBase.oid} muokattu={muokattu} />
+                </VersioContainer>
+                <div>
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
+                    {casMe.canHaveButton('BUTTON_TALLENNA', organisaatioNimiPolku) && (
+                        <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
+                    )}
+                </div>
+            </AlaBanneri>
             {yhdistaOrganisaatioModaaliAuki && (
                 <LiitaOrganisaatio
                     liitaOrganisaatioon={yhdistaOrganisaatio}

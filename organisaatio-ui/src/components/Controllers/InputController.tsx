@@ -6,17 +6,19 @@ export default function InputController<T>({
     name,
     form,
     validationErrors,
+    disabled,
 }: {
     form: Control<T>;
     validationErrors: { [x: string]: unknown };
     name: Path<T>;
+    disabled: boolean;
 }) {
     return (
         <Controller
             control={form}
             name={name}
             render={({ field: { ref, ...rest } }) => {
-                return <Input id={name} {...rest} error={!!validationErrors[name]} />;
+                return <Input disabled={disabled} id={name} {...rest} error={!!validationErrors[name]} />;
             }}
         />
     );

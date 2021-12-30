@@ -7,24 +7,25 @@ import { YhteystietoArvot } from '../../../../../types/types';
 type Props = {
     tyyppiOid: string;
     yhteystietoArvoRegister: UseFormRegister<YhteystietoArvot>;
+    readOnly: boolean;
 };
-export default function ArvoLomake({ yhteystietoArvoRegister }: Props) {
+export default function ArvoLomake({ yhteystietoArvoRegister, readOnly }: Props) {
     return (
         <UloinKehys>
             <Rivi>
                 <Rivi>
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_fi'}>
-                        <Input id={'koskiposti.fi'} {...yhteystietoArvoRegister('koskiposti.fi')} />
+                        <Input disabled={readOnly} id={'koskiposti.fi'} {...yhteystietoArvoRegister('koskiposti.fi')} />
                     </Kentta>
                 </Rivi>
                 <Rivi>
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_sv'}>
-                        <Input id={'koskiposti.sv'} {...yhteystietoArvoRegister('koskiposti.sv')} />
+                        <Input disabled={readOnly} id={'koskiposti.sv'} {...yhteystietoArvoRegister('koskiposti.sv')} />
                     </Kentta>
                 </Rivi>
                 <Rivi>
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_en'}>
-                        <Input id={'koskiposti.en'} {...yhteystietoArvoRegister('koskiposti.en')} />
+                        <Input disabled={readOnly} id={'koskiposti.en'} {...yhteystietoArvoRegister('koskiposti.en')} />
                     </Kentta>
                 </Rivi>
             </Rivi>
