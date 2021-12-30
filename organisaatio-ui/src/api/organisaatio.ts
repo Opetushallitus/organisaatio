@@ -177,7 +177,9 @@ async function mergeOrganisaatio({
     return errorHandlingWrapper(async () => {
         if (newParent) {
             const response = await Axios.put<never>( //?merge=false&moveDate=2021-09-05
-                `${baseUrl}${oid}/organisaatiosuhde/${newParent.oid}?merge=${merge}&moveDate=${date.toISOString()}`
+                `${baseUrl}${oid}/organisaatiosuhde/${newParent.oid}?merge=${merge}&moveDate=${formatUiDateStrToApi(
+                    date
+                )}`
             );
             success({ message: 'MESSAGE_LIITOS_ONNISTUI' });
             return response;

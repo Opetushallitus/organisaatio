@@ -15,11 +15,12 @@ import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
 import IconWrapper from '../../IconWapper/IconWrapper';
+import moment from 'moment';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
-    const date = new Date();
-    date.setFullYear(date.getFullYear() - 1);
-    return !!tarkastusPvm ? tarkastusPvm - date.getTime() > 0 : false;
+    const date = moment();
+    date.subtract(1, 'years');
+    return !!tarkastusPvm ? tarkastusPvm - date.unix() > 0 : false;
 };
 
 const TaulukkoSivu = (props) => {

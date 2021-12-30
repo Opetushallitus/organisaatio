@@ -78,12 +78,12 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const initialYhdista = {
         merge: true,
-        date: new Date(),
+        date: getUiDateStr(),
         newParent: undefined,
     };
     const initialSiirra = {
         merge: false,
-        date: new Date(),
+        date: getUiDateStr(),
         newParent: undefined,
     };
     const [yhdistaOrganisaatio, setYhdistaOrganisaatio] = useState<LiitaOrganisaatioon>(initialYhdista);

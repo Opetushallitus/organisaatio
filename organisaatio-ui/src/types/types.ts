@@ -176,7 +176,7 @@ export type OrganisaatioSuhde = {
 
 export type LiitaOrganisaatioon = {
     newParent?: ApiOrganisaatio;
-    date: Date;
+    date: LocalDate | Date;
     merge: boolean;
 };
 
@@ -192,7 +192,7 @@ export interface OrganisaatioNimiJaOid {
     nimi: Nimi;
 }
 export type OrganisaatioPaivittaja = {
-    paivitysPvm?: Date;
+    paivitysPvm?: LocalDate;
     etuNimet?: string;
     sukuNimi?: string;
 };
