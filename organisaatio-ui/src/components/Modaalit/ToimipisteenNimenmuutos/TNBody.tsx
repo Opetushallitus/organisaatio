@@ -10,7 +10,6 @@ import { Controller } from 'react-hook-form';
 import NimenMuutosFields from './NimenMuutosFields';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
 import Spinner from '../../Spinner/Spinner';
-import Typography from '@opetushallitus/virkailija-ui-components/Typography';
 
 type TNProps = {
     validationErrors: FieldErrors<NimenmuutosLomake>;
@@ -56,9 +55,9 @@ export default function TNBody(props: TNProps) {
             {foundAmatch && (
                 <BodyRivi>
                     <BodyKentta>
-                        <Typography variant="body">
+                        <span style={{ color: '#e44e4e' }}>
                             {i18n.translate('NIMENMUUTOS_MUOKKAUS_FOUND_NAME_FOR_DATE')}
-                        </Typography>
+                        </span>
                     </BodyKentta>
                 </BodyRivi>
             )}

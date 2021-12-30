@@ -114,9 +114,9 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
             } else if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
                 await createOrganisaatioNimi(oid, newNimi);
             }
-            props.closeNimenmuutosModaali(true);
         } finally {
             setIsLoading(false);
+            props.closeNimenmuutosModaali(true);
         }
     };
     const handlePeruuta = () => {
