@@ -295,6 +295,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 tulos.setSukuNimi(henkilo.getSukunimi());
 
             } catch (Exception ex) {
+                LOG.error(ex.getMessage());
                 tulos.setSukuNimi(org.getPaivittaja());
             }
             return tulos;

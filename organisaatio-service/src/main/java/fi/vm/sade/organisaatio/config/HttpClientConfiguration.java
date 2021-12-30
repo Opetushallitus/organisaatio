@@ -49,7 +49,6 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("oppijanumero-service.login"))
-                .sessionCookieName("organisaatio-oppijanumero")
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
