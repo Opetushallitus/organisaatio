@@ -79,8 +79,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             <Rivi>
                 <Ruudukko>
                     <AvainKevyestiBoldattu label={'LABEL_OID'} />
-                    <ReadOnly value={organisaatioBase?.oid} />
-                    {organisaatioBase?.yritysmuoto && [
+                    <ReadOnly value={organisaatioBase.oid} />
+                    {organisaatioBase.yritysmuoto && [
                         <AvainKevyestiBoldattu key={'yritysmuoto_title'} label={'PERUSTIETO_YRITYSMUOTO'} />,
                         <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
                     ]}
@@ -88,7 +88,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <OrganisaationNimi control={formControl} defaultNimi={lyhytNimi} />
                 </Ruudukko>
                 <div>
-                    {casMe.canHaveButton('PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA', organisaatioNimiPolku) && (
+                    {casMe.canHaveButton(
+                        'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA',
+                        organisaatioBase.oid,
+                        organisaatioNimiPolku
+                    ) && (
                         <LomakeButton
                             label={'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA'}
                             onClick={() => setNimenmuutosModaaliAuki(true)}
@@ -122,9 +126,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 {...formRegister('ytunnus')}
                             />
                         </Kentta>
-                        {casMe.canHaveButton('PERUSTIETO_PAIVITA_YTJ_TIEDOT', organisaatioNimiPolku) && (
-                            <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />
-                        )}
+                        {casMe.canHaveButton(
+                            'PERUSTIETO_PAIVITA_YTJ_TIEDOT',
+                            organisaatioBase.oid,
+                            organisaatioNimiPolku
+                        ) && <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />}
                     </Rivi>
                     <Rivi>
                         <LabelLink
@@ -158,7 +164,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <ReadOnlyDate value={lakkautusPvm} />
                     </Kentta>
                 )}
-                {casMe.canHaveButton('PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI', organisaatioNimiPolku) && (
+                {casMe.canHaveButton(
+                    'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI',
+                    organisaatioBase.oid,
+                    organisaatioNimiPolku
+                ) && (
                     <LomakeButton
                         label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
                         onClick={() => setLakkautusModaaliAuki(true)}

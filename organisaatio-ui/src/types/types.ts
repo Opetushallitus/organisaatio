@@ -309,7 +309,7 @@ export type CASMe = {
     groups: string[];
     roles: string[];
     lang: Language;
-    canHaveButton: (button: ConfigurableButton, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
-    canEditLomake: (lomake: ConfigurableLomake, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
-    canEditIfParent: (organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
+    canHaveButton: (button: ConfigurableButton, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
+    canEditLomake: (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
+    canEditIfParent: (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
 };
