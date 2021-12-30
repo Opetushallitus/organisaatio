@@ -8,7 +8,6 @@ import { rakenne } from '../../../../contexts/constants';
 import { Nimi, ParentTiedot, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
-import { Icon } from '@iconify/react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -39,6 +38,7 @@ import {
 import { LanguageContext } from '../../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../../contexts/CasMeContext';
+import IconWrapper from '../../../IconWapper/IconWrapper';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -192,7 +192,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         <PohjaSivu>
             <YlaBanneri>
                 <Link to={'/organisaatiot'}>
-                    <Icon fr={undefined} icon={homeIcon} />
+                    <IconWrapper icon={homeIcon} />
                     {i18n.translate('UUSI_TOIMIJA_TITLE')}
                 </Link>
             </YlaBanneri>

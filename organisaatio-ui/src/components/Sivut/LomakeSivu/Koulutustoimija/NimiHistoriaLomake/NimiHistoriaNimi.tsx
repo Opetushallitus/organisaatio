@@ -2,8 +2,10 @@ import * as React from 'react';
 import { LocalDate, Nimi, UiOrganisaationNimetNimi } from '../../../../../types/types';
 import styles from './NimiHistoriaNimi.module.css';
 import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
-import { Icon } from '@iconify/react';
 import moment from 'moment';
+import { useContext } from 'react';
+import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import IconWrapper from '../../../../IconWapper/IconWrapper';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
@@ -12,6 +14,8 @@ type nimiHistoriaNimiProps = {
 };
 
 export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
+    const { i18n } = useContext(LanguageContext);
+
     const { nimi, alkuPvm, handleDeleteNimi } = props;
 
     function handleDeleteClick() {
@@ -24,12 +28,9 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
             <ReadOnlyNimi value={nimi} />
             {isAlkuPvmInFuture && (
                 <div className={styles.DeleteBtn} onClick={handleDeleteClick}>
-                    <Icon
-                        fr={undefined}
-                        icon="ic:round-delete-forever"
-                        height={'1.5rem'}
-                        className={styles.DeleteIcon}
-                    />
+                    <IconWrapper icon="ic:round-delete-forever" height={'1.5rem'} className={styles.DeleteIcon}>
+                        {i18n.translate('POISTA_AJASTETTU_NIMENMUUTOS')}
+                    </IconWrapper>
                 </div>
             )}
         </div>

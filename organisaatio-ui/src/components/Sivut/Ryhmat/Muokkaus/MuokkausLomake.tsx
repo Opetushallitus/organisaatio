@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useContext } from 'react';
 import styles from './MuokkausLomake.module.css';
-import { Icon } from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
@@ -18,6 +17,7 @@ import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema
 import { LanguageContext } from '../../../../contexts/LanguageContext';
 import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
 import Muokattu from '../../../Muokattu/Muokattu';
+import IconWrapper from '../../../IconWapper/IconWrapper';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -54,7 +54,7 @@ const MuokkausLomake = ({
             <div className={styles.YlaBanneri}>
                 <div>
                     <Link to={'/ryhmat'}>
-                        <Icon fr={undefined} icon={homeIcon} />
+                        <IconWrapper icon={homeIcon} />
                     </Link>
                 </div>
                 <div>

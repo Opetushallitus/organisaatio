@@ -4,7 +4,6 @@ import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { Icon } from '@iconify/react';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import { rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
@@ -60,6 +59,7 @@ import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr } from '../../../tools/mappers';
 import moment from 'moment';
+import IconWrapper from '../../IconWapper/IconWrapper';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -447,7 +447,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             <YlaBanneri>
                 <div>
                     <Link to={'/organisaatiot'}>
-                        <Icon fr={undefined} icon={homeIcon} />
+                        <IconWrapper icon={homeIcon} />
                     </Link>
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [

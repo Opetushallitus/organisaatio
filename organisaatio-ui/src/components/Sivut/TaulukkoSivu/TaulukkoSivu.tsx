@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import styles from './TaulukkoSivu.module.css';
-import { Icon } from '@iconify/react';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ROOT_OID } from '../../../contexts/constants';
@@ -15,6 +14,7 @@ import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
+import IconWrapper from '../../IconWapper/IconWrapper';
 
 const tarkastaLipunVari = (tarkastusPvm) => {
     const date = new Date();
@@ -44,11 +44,7 @@ const TaulukkoSivu = (props) => {
                             },
                         })}
                     >
-                        {row.isExpanded ? (
-                            <Icon fr={undefined} icon={chevronDown} />
-                        ) : (
-                            <Icon fr={undefined} icon={chevronRight} />
-                        )}
+                        {row.isExpanded ? <IconWrapper icon={chevronDown} /> : <IconWrapper icon={chevronRight} />}
                     </span>
                 ) : null,
         },

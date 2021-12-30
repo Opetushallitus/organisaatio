@@ -10,8 +10,8 @@ import { warning } from '../../Notification/Notification';
 import { Nimi, Perustiedot, Yhteystiedot } from '../../../types/types';
 import { UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
-import { Icon } from '@iconify/react';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
+import IconWrapper from '../../IconWapper/IconWrapper';
 
 type Props = {
     ytunnus: string;
@@ -72,7 +72,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                         suffix={
                             input && (
                                 <Button variant={'text'} style={{ boxShadow: 'none' }} onClick={() => setInput('')}>
-                                    <Icon fr={undefined} color={'#999999'} icon={clearIcon} />
+                                    <IconWrapper color={'#999999'} icon={clearIcon} />
                                 </Button>
                             )
                         }

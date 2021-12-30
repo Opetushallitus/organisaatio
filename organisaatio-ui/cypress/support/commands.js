@@ -180,10 +180,10 @@ const getToday = () => {
 
 Cypress.Commands.add('addNewNimi', (prefix = 'testi', nimi = 'testi', alkuPvm = getToday()) => {
     cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
+    cy.enterDate('ALKUPVM', alkuPvm);
     cy.inputByName('nimi.fi', `${prefix} Suominimi`);
     cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
     cy.inputByName('nimi.en', `${prefix} Enkku`);
-    cy.enterDate('ALKUPVM', alkuPvm);
     cy.clickButton('VAHVISTA');
 });
 

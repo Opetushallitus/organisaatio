@@ -13,7 +13,6 @@ import {
     useTable,
 } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { Icon } from '@iconify/react';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
@@ -24,6 +23,7 @@ import { searchOrganisation } from '../../../api/organisaatio';
 import { Filters } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/LanguageContext';
 import { SearchFilterContext } from '../../../contexts/SearchFiltersContext';
+import IconWrapper from '../../IconWapper/IconWrapper';
 
 const SEARCH_LENGTH = 3;
 const mapPaginationSelectors = (index) => {
@@ -99,7 +99,7 @@ function Hakufiltterit({ setOrganisaatiot }: HakufiltteritProps) {
                                     style={{ boxShadow: 'none' }}
                                     onClick={() => setFilters({ ...filters, searchString: '' })}
                                 >
-                                    <Icon fr={undefined} color={'#999999'} icon={clearIcon} />
+                                    <IconWrapper color={'#999999'} icon={clearIcon} />
                                 </Button>
                             )
                         }
@@ -224,7 +224,7 @@ export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: Organisa
                         onClick={() => previousPage()}
                         disabled={!canPreviousPage}
                     >
-                        <Icon fr={undefined} icon={chevronLeft} />
+                        <IconWrapper icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
                         if (option === pageIndex)
@@ -245,7 +245,7 @@ export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: Organisa
                         );
                     })}
                     <Button variant={'text'} color={'secondary'} onClick={() => nextPage()} disabled={!canNextPage}>
-                        <Icon fr={undefined} icon={chevronRight} />
+                        <IconWrapper icon={chevronRight} />
                     </Button>
                 </div>
                 <div className={styles.PaginationYhteensa}>

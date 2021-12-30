@@ -31,7 +31,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
 
         const getAfterOneYear = () => {
             const date = new Date();
-            return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear() + 1}`;
+            return `1.${date.getMonth() + 1}.${date.getFullYear() + 1}`;
         };
 
         cy.get('@parentOrganisaatio1').then((organisaatio) => {
@@ -52,7 +52,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
 
         const getAfterOneYear = () => {
             const date = new Date();
-            return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear() + 1}`;
+            return `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`;
         };
 
         cy.get('@parentOrganisaatio1').then((organisaatio) => {
@@ -64,7 +64,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
             cy.clickAccordion('NIMIHISTORIA');
             cy.contains('delete testi', { timeout: 10000 }).should('exist');
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
-            cy.clickButton('POISTA');
+            cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
             cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
         });
     });
