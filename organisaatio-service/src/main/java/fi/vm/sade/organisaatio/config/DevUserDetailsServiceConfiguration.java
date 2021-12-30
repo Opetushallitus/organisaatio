@@ -21,6 +21,12 @@ public class DevUserDetailsServiceConfiguration {
     private static final SimpleGrantedAuthority[] RESTRICTED_AUTHORITIES = new SimpleGrantedAuthority[]{
             new SimpleGrantedAuthority("ROLE_APP_ORGANISAATIOHALLINTA")
     };
+    private static final SimpleGrantedAuthority[] ESPOO_AUTHORITIES = new SimpleGrantedAuthority[]{
+            new SimpleGrantedAuthority("APP_ORGANISAATIOHALLINTA"),
+            new SimpleGrantedAuthority("APP_ORGANISAATIOHALLINTA_CRUD"),
+            new SimpleGrantedAuthority("APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.90008375488"),
+    };
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,6 +52,12 @@ public class DevUserDetailsServiceConfiguration {
                 case "restricted":
                     return User.builder()
                             .authorities(List.of(RESTRICTED_AUTHORITIES))
+                            .password(this.passwordEncoder.encode(username))
+                            .username(username)
+                            .build();
+                case "espoo":
+                    return User.builder()
+                            .authorities(List.of(ESPOO_AUTHORITIES))
                             .password(this.passwordEncoder.encode(username))
                             .username(username)
                             .build();

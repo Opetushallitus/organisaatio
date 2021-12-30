@@ -316,7 +316,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             { nimi: { fi: 'nimenvaihto' }, alkuPvm: today },
         ];
         const { nimet, ...rest } = uiBaseTiedot;
-        uiPerustiedot.nimi = { fi: 'nimenvaihto' };
+        uiPerustiedot.lyhytNimi = { fi: 'nimenvaihto' };
         const { nimet: mappedNimet } = mapUiOrganisaatioToApiToUpdate(
             postinumerotKoodisto as Koodisto,
             { nimet, ...rest },
