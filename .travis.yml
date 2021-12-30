@@ -68,7 +68,7 @@ jobs:
       script:
         - ./gradlew clean build -x test -x uiTest -x lint -x checkFormatting -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
         - cd mock-api && npm run mock-api &
-        - java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice organisaatio-service/build/libs/organisaatio-service.jar &
+        - java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service organisaatio-service/build/libs/organisaatio-service.jar &
         - cd organisaatio-ui && npm run cypress:ci && cd -
         - kill $(jobs -p) || true
         - cp -R $TRAVIS_BUILD_DIR/organisaatio-ui/cypress-coverage ~/$TRAVIS_BUILD_NUMBER/
