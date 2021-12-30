@@ -47,7 +47,7 @@ describe('VAKA specific fields', () => {
         });
         cy.get('@child').then((child) => {
             cy.visit(`${BASE_PATH}/lomake/${child.body.organisaatio.oid}`);
-            cy.contains('Varhaiskasvatuksen toimipaikka', { timeout: 10000 }).should('exist');
+            cy.contains('Varhaiskasvatuksen toimipaikka', { timeout: 1000000 }).should('exist');
             cy.contains('LOMAKE_VAKA').should('exist');
             cy.clickAccordion('LOMAKE_VAKA');
             cy.contains('VAKA_TOIMINTAMUOTO').should('exist').next().contains('Perhepäivähoito').should('exist');
