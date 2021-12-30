@@ -32,7 +32,7 @@ export default function TNBody(props: TNProps) {
             </BodyRivi>
         );
     }
-    const { muutostyyppi, editDisabled, createDisabled } = getValues();
+    const { muutostyyppi, foundAmatch } = getValues();
     return (
         <>
             <BodyRivi>
@@ -42,10 +42,10 @@ export default function TNBody(props: TNProps) {
                         name={'muutostyyppi'}
                         render={({ field: { ref, value = 'CREATE', ...rest } }) => (
                             <RadioGroup {...rest} value={value}>
-                                <Radio name={MUUTOSTYYPPI_CREATE} disabled={createDisabled} value={MUUTOSTYYPPI_CREATE}>
+                                <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
                                 </Radio>
-                                <Radio name={MUUTOSTYYPPI_EDIT} disabled={editDisabled} value={MUUTOSTYYPPI_EDIT}>
+                                <Radio name={MUUTOSTYYPPI_EDIT} value={MUUTOSTYYPPI_EDIT}>
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
                                 </Radio>
                             </RadioGroup>
@@ -53,27 +53,17 @@ export default function TNBody(props: TNProps) {
                     />
                 </BodyKentta>
             </BodyRivi>
-            {editDisabled && (
+            {foundAmatch && (
                 <BodyRivi>
                     <BodyKentta>
                         <Typography variant="body">
-                            {i18n.translate('NIMENMUUTOS_MUOKKAUS_DISABLED_HAS_SCHEDULED_CHANGE')}
-                        </Typography>
-                    </BodyKentta>
-                </BodyRivi>
-            )}
-            {createDisabled && (
-                <BodyRivi>
-                    <BodyKentta>
-                        <Typography variant="body">
-                            {i18n.translate('NIMENMUUTOS_LUONTI_DISABLED_SAME_DAY_NIMI')}
+                            {i18n.translate('NIMENMUUTOS_MUOKKAUS_FOUND_NAME_FOR_DATE')}
                         </Typography>
                     </BodyKentta>
                 </BodyRivi>
             )}
             <BodyRivi>
                 <NimenMuutosFields
-                    disabled={editDisabled && muutostyyppi === MUUTOSTYYPPI_EDIT}
                     edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
                     validationErrors={validationErrors}
                     formControl={formControl}

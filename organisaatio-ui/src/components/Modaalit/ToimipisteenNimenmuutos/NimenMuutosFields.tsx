@@ -15,13 +15,12 @@ type UusiNimiProps = {
 };
 
 export default function NimenMuutosFields(props: UusiNimiProps) {
-    const { validationErrors, register, edit, formControl, disabled } = props;
+    const { validationErrors, register, edit, formControl } = props;
     return (
         <BodyRivi>
             <BodyKentta>
                 <BodyKentta isRequired label={'LABEL_SUOMEKSI'}>
                     <Input
-                        disabled={disabled}
                         error={!!validationErrors['nimi']?.fi}
                         id={'organisaation_nimiFi'}
                         {...register('nimi.fi')}
@@ -29,7 +28,6 @@ export default function NimenMuutosFields(props: UusiNimiProps) {
                 </BodyKentta>
                 <BodyKentta isRequired label={'LABEL_RUOTSIKSI'}>
                     <Input
-                        disabled={disabled}
                         error={!!validationErrors['nimi']?.sv}
                         id={'organisaation_nimiSv'}
                         {...register('nimi.sv')}
@@ -37,7 +35,6 @@ export default function NimenMuutosFields(props: UusiNimiProps) {
                 </BodyKentta>
                 <BodyKentta isRequired label={'LABEL_ENGLANNIKSI'}>
                     <Input
-                        disabled={disabled}
                         error={!!validationErrors['nimi']?.en}
                         id={'organisaation_nimiEn'}
                         {...register('nimi.en')}
@@ -48,12 +45,6 @@ export default function NimenMuutosFields(props: UusiNimiProps) {
                 <BodyRivi>
                     <BodyKentta isRequired label={'LABEL_NIMI_ALKUPVM'}>
                         <DatePickerController<NimenmuutosLomake>
-                            dayPickerProps={{
-                                disabledDays: [{ before: new Date() }],
-                                onDayClick: (day, { disabled }, e) => {
-                                    disabled && e.preventDefault();
-                                },
-                            }}
                             name={'alkuPvm'}
                             form={formControl}
                             validationErrors={validationErrors}

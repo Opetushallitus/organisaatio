@@ -208,6 +208,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     closeNimenmuutosModaali={handleNimenMuutosModaaliClose}
                     currentNimi={currentNimi}
                     oid={organisaatioBase.oid}
+                    nimet={organisaatioBase.nimet}
                 />
             )}
             {lakkautusModaaliAuki && (

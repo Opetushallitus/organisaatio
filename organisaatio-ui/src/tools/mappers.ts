@@ -82,11 +82,11 @@ export const getUiDateStr = (
 ): LocalDate => {
     const dateWithoutFormat = makeDate(dateStr, format);
     return dateWithoutFormat.isValid()
-        ? (dateWithoutFormat.format(`D.M.yyyy${long ? ' HH:mm:ss' : ''}`).toString() as LocalDate)
+        ? (dateWithoutFormat.format(`D.M.yyyy${long ? ' HH:mm:ss' : ''}`) as LocalDate)
         : '';
 };
 
 export const formatUiDateStrToApi = (date?): APIEndpontDate => {
     const dateWithoutFormat = makeDate(date, 'D.M.YYYY');
-    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-M-D').toString() as APIEndpontDate) : '';
+    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-M-D') as APIEndpontDate) : '';
 };

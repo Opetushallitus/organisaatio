@@ -4,25 +4,32 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { NimenmuutosLomake, UiOrganisaationNimetNimi } from '../../../types/types';
+import { LocalDate, NimenmuutosLomake, UiOrganisaationNimetNimi } from '../../../types/types';
 import ToimipisteenNimenmuutosModaaliSchema from '../../../ValidationSchemas/ToimipisteenNimenmuutosModaaliSchema';
 import Header from '../Header/Header';
 import Footer from '../Confirmation/Footer';
 import { createOrganisaatioNimi, updateOrganisaatioNimi } from '../../../api/organisaatio';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
 import { getUiDateStr } from '../../../tools/mappers';
-import moment from 'moment';
 
 type ModaaliProps = {
+    nimet: UiOrganisaationNimetNimi[];
     oid: string;
     currentNimi?: UiOrganisaationNimetNimi & { disabled: boolean | undefined };
     closeNimenmuutosModaali: (nimiIsUpdated: boolean) => void;
 };
 
+const todayUiDateStr = getUiDateStr();
+
+const findNimiByAlkuPvm = (
+    nimet: UiOrganisaationNimetNimi[],
+    alkuPvm: LocalDate
+): UiOrganisaationNimetNimi | undefined => nimet.find((nimi) => nimi.alkuPvm === getUiDateStr(alkuPvm));
+
 export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
-    const { currentNimi, oid } = props;
+    const { currentNimi, oid, nimet } = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const initialCreateDisabled = currentNimi?.alkuPvm === moment().format('D.M.YYYY');
+    const matchingNimi = findNimiByAlkuPvm(nimet, todayUiDateStr);
     const {
         reset,
         getValues,
@@ -33,12 +40,11 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         watch,
     } = useForm<NimenmuutosLomake>({
         defaultValues: {
-            nimi: initialCreateDisabled ? currentNimi?.nimi : { fi: '', sv: '', en: '' },
-            alkuPvm: getUiDateStr(),
-            muutostyyppi: initialCreateDisabled ? MUUTOSTYYPPI_EDIT : MUUTOSTYYPPI_CREATE,
+            nimi: matchingNimi?.nimi || { fi: '', sv: '', en: '' },
+            alkuPvm: todayUiDateStr,
+            muutostyyppi: MUUTOSTYYPPI_CREATE,
             oid,
-            editDisabled: currentNimi?.disabled,
-            createDisabled: initialCreateDisabled,
+            foundAmatch: !!matchingNimi,
         },
         resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema),
     });
@@ -46,15 +52,16 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (name === 'muutostyyppi') {
-                const { muutostyyppi, editDisabled, createDisabled } = value;
+                const { muutostyyppi } = value;
+                const foundNimiForToday = findNimiByAlkuPvm(nimet, todayUiDateStr);
                 switch (muutostyyppi) {
                     case MUUTOSTYYPPI_CREATE:
                         reset({
-                            nimi: { fi: '', sv: '', en: '' },
-                            alkuPvm: getUiDateStr(),
+                            nimi: foundNimiForToday?.nimi || { fi: '', sv: '', en: '' },
+                            alkuPvm: todayUiDateStr,
                             oid,
                             muutostyyppi,
-                            createDisabled,
+                            foundAmatch: !!foundNimiForToday,
                         });
                         return;
                     case MUUTOSTYYPPI_EDIT:
@@ -63,30 +70,49 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                             alkuPvm: getUiDateStr(currentNimi?.alkuPvm),
                             muutostyyppi,
                             oid,
-                            editDisabled,
+                            foundAmatch: false,
                         });
                         return;
+                }
+            } else if (name === 'alkuPvm') {
+                const matchingNimi = findNimiByAlkuPvm(nimet, value.alkuPvm);
+                if (!!matchingNimi) {
+                    reset({
+                        nimi: matchingNimi.nimi,
+                        alkuPvm: matchingNimi.alkuPvm,
+                        muutostyyppi: MUUTOSTYYPPI_CREATE,
+                        oid,
+                        foundAmatch: true,
+                    });
+                } else {
+                    reset({
+                        nimi: { fi: '', sv: '', en: '' },
+                        alkuPvm: value.alkuPvm,
+                        muutostyyppi: MUUTOSTYYPPI_CREATE,
+                        oid,
+                        foundAmatch: false,
+                    });
                 }
             }
         });
         return () => {
             return subscription.unsubscribe();
         };
-    }, [watch, currentNimi, oid, reset]);
-
-    watch('muutostyyppi', MUUTOSTYYPPI_CREATE);
+    }, [watch, currentNimi, oid, reset, nimet]);
 
     const handleTallenna = async () => {
         setIsLoading(true);
         try {
-            const { muutostyyppi, nimi, alkuPvm: newAlkuPvm, oid } = getValues();
+            const { muutostyyppi, nimi, alkuPvm: newAlkuPvm, oid, foundAmatch } = getValues();
             const newNimi = { nimi, alkuPvm: newAlkuPvm };
-            if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
-                await createOrganisaatioNimi(oid, newNimi);
-            } else if (muutostyyppi === MUUTOSTYYPPI_EDIT && currentNimi) {
-                const { nimi, alkuPvm } = currentNimi;
+            if ((muutostyyppi === MUUTOSTYYPPI_EDIT || foundAmatch) && currentNimi) {
+                const { nimi, alkuPvm } = foundAmatch
+                    ? (findNimiByAlkuPvm(nimet, newAlkuPvm) as UiOrganisaationNimetNimi)
+                    : currentNimi;
                 const oldNimi = { nimi, alkuPvm };
                 await updateOrganisaatioNimi(oid, oldNimi, newNimi);
+            } else if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
+                await createOrganisaatioNimi(oid, newNimi);
             }
             props.closeNimenmuutosModaali(true);
         } finally {

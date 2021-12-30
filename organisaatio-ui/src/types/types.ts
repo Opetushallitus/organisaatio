@@ -3,7 +3,7 @@ import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
 
-// DD.MM.yyyy | DD.MM.yyyy HH:mm:ss
+// D.M.yyyy | D.M.yyyy HH:mm:ss
 export type LocalDate =
     | `${number}${number}.${number}${number}.${number}${number}${number}${number}`
     | `${number}${number}.${number}${number}.${number}${number}${number}${number} ${number}${number}:${number}${number}:${number}${number}`
@@ -75,8 +75,7 @@ export type NimenmuutosLomake = {
     alkuPvm: LocalDate;
     muutostyyppi: Nimenmuutostyyppi;
     oid: string;
-    editDisabled?: boolean;
-    createDisabled?: boolean;
+    foundAmatch?: boolean;
 };
 
 export type UiOrganisaationNimetNimi = {

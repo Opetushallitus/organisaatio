@@ -9,7 +9,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
             cy.wait(['@getCurrent'], { timeout: 10000 });
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
-            cy.addNewNimi('pöllö');
+            cy.addNewNimi('pöllö', 'pöllö');
             cy.contains('pöllö', { timeout: 10000 }).should('exist');
         });
     });

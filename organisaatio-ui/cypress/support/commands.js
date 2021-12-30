@@ -178,7 +178,7 @@ const getToday = () => {
     return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()}`;
 };
 
-Cypress.Commands.add('addNewNimi', (prefix = 'testi', nimi, alkuPvm = getToday()) => {
+Cypress.Commands.add('addNewNimi', (prefix = 'testi', nimi = 'testi', alkuPvm = getToday()) => {
     cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
     cy.inputByName('nimi.fi', `${prefix} Suominimi`);
     cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
