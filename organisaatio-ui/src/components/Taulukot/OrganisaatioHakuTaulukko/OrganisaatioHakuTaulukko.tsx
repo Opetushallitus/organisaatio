@@ -97,7 +97,10 @@ function Hakufiltterit({ setOrganisaatiot }: HakufiltteritProps) {
                                 <Button
                                     variant={'text'}
                                     style={{ boxShadow: 'none' }}
-                                    onClick={() => setFilters({ ...filters, searchString: '' })}
+                                    onClick={() => {
+                                        setSearchString('');
+                                        setFilters({ ...filters, searchString: '' });
+                                    }}
                                 >
                                     <Icon color={'#999999'} icon={clearIcon} />
                                 </Button>
