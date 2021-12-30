@@ -4,8 +4,8 @@ import { BASE_PATH } from '../../src/contexts/constants';
 describe('Oppilaitos specific fields', () => {
     it('Shows specific fields when oppilaitos is chosen', () => {
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
-        cy.get('@parentOrganisaatio1').then((child) => {
-            cy.visit(`${BASE_PATH}/lomake/uusi?parentOid=${child.body.organisaatio.oid}`);
+        cy.get('@parentOrganisaatio1').then((parent) => {
+            cy.visit(`${BASE_PATH}/lomake/uusi?parentOid=${parent.body.organisaatio.oid}`);
             cy.contains('Oppilaitos', { timeout: 10000 }).should('exist');
             cy.clickRadioOrCheckbox('Oppilaitos');
             cy.contains('PERUSTIETO_OPPILAITOSKOODI').should('exist');

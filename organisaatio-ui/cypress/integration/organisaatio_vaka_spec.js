@@ -2,7 +2,7 @@ import { organisaatio } from '../support/data';
 import { BASE_PATH } from '../../src/contexts/constants';
 import * as React from 'react';
 
-describe('Oppilaitos specific fields', () => {
+describe('VAKA specific fields', () => {
     it('Shows specific fields when oppilaitos is chosen', () => {
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_07`] }), 'parentOrganisaatio1');
         cy.get('@parentOrganisaatio1').then((parentOrganisaatio) => {
