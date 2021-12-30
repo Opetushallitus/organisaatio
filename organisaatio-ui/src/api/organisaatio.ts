@@ -214,7 +214,7 @@ function mapUiOrganisaatioToApiToSave(
         muutKotipaikat,
         organisaatioTyypit,
         alkuPvm,
-        lyhytNimi,
+        nimi,
         ytunnus,
         oppilaitosTyyppiUri,
         oppilaitosKoodi,
@@ -223,7 +223,7 @@ function mapUiOrganisaatioToApiToSave(
     } = perustiedotFormValues;
     const nimet = [
         {
-            nimi: lyhytNimi,
+            nimi: nimi,
             alkuPvm: new Date().toISOString().split('T')[0],
         },
     ];
@@ -239,8 +239,8 @@ function mapUiOrganisaatioToApiToSave(
         yhteystiedot,
         parentOid: parentOid || ROOT_OID,
         nimet,
-        nimi: lyhytNimi,
-        lyhytNimi: lyhytNimi,
+        nimi: nimi,
+        lyhytNimi: nimi,
         oppilaitosTyyppiUri: oppilaitosTyyppiUri && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
