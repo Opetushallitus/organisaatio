@@ -300,6 +300,7 @@ export type ConfigurableButton =
     | 'PERUSTIETO_PAIVITA_YTJ_TIEDOT'
     | 'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'
     | 'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA';
+export type ConfigurableLomake = 'LOMAKE_KOSKI_POSTI' | 'LOMAKE_YHTEYSTIEDOT';
 export type CASMe = {
     uid: string;
     oid: string;
@@ -309,5 +310,6 @@ export type CASMe = {
     roles: string[];
     lang: Language;
     canHaveButton: (button: ConfigurableButton, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
+    canEditLomake: (lomake: ConfigurableLomake, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     canEditIfParent: (organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
 };

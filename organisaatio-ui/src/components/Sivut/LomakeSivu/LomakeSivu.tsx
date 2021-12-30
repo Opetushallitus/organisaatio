@@ -341,7 +341,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
         );
     }
-
+    console.log(casMe.canEditLomake('LOMAKE_YHTEYSTIEDOT', organisaatioNimiPolku));
     registerPerustiedot('nimi');
     const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
@@ -368,7 +368,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
             <YhteystietoLomake
-                readOnly={readOnly}
+                readOnly={readOnly && !casMe.canEditLomake('LOMAKE_YHTEYSTIEDOT', organisaatioNimiPolku)}
                 getYhteystiedotValues={getYhteystiedotValues}
                 opetusKielet={opetusKielet}
                 watch={watchYhteystiedot}
@@ -394,7 +394,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
             lomakkeet.push(
                 <ArvoLomake
-                    readOnly={readOnly}
+                    readOnly={readOnly && !casMe.canEditLomake('LOMAKE_KOSKI_POSTI', organisaatioNimiPolku)}
                     tyyppiOid={'1.2.246.562.5.79385887983'}
                     yhteystietoArvoRegister={yhteystietoArvoRegister}
                 />
