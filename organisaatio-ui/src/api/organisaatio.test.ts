@@ -123,9 +123,9 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     kotipaikkaUri: 'kunta_1',
     muutKotipaikatUris: ['kunta_2#1'],
     maaUri: 'maa_1',
-    nimet: [{ nimi: { fi: 'nimenvaihto' }, alkuPvm: today }],
-    nimi: { fi: 'nimenvaihto' },
-    lyhytNimi: { fi: 'nimenvaihto' },
+    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: today }],
+    nimi: { fi: 'uusinimi' },
+    lyhytNimi: { fi: 'uusinimi' },
     parentOid: '123.321',
     tyypit: ['organisaatiotyyppi_01'],
     yhteystiedot: [
@@ -316,7 +316,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             { nimi: { fi: 'nimenvaihto' }, alkuPvm: today },
         ];
         const { nimet, ...rest } = uiBaseTiedot;
-        uiPerustiedot.nimi = { fi: 'nimenvaihto' };
+        uiPerustiedot.lyhytNimi = { fi: 'nimenvaihto' };
         const { nimet: mappedNimet } = mapUiOrganisaatioToApiToUpdate(
             postinumerotKoodisto as Koodisto,
             { nimet, ...rest },

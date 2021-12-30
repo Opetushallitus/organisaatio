@@ -64,8 +64,8 @@ cas.sendRenew=false
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 cas.callback.tarjonta-service=http://{{ cluster_tarjonta_host | default("${server.name}") }}:{{ cluster_tarjonta_port | default("8302") }}/tarjonta-service
-cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio
-cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio
+cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio-service
+cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
 cas.service.tarjonta-service=https\://${host.virkailija}/tarjonta-service
 flyway.initOnMigrate=true
 flyway.validateOnMigrate=false
@@ -85,7 +85,7 @@ organisaatio-ui.cas.url=https://${host.virkailija}/cas/myroles
 koodisto-service.url.rest=https://${host.virkailija}/koodisto-service/rest/
 lokalisointi.url.rest=https://${host.virkailija}/lokalisointi/cxf/rest
 organisaatio-service.url.rest=https://${host.virkailija}/organisaatio-service/rest/
-organisaatio-ui.organisaatio-ui-url=https://${host.virkailija}/organisaatio/
+organisaatio-ui.organisaatio-ui-url=https://${host.virkailija}/organisaatio-service/organisaatiot
 root.organisaatio.oid=1.2.246.562.10.00000000001
 user.home.conf=${user.home}/oph-configuration
 web.url.cas=https\://${host.cas}/cas

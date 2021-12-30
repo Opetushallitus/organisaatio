@@ -223,7 +223,7 @@ function mapUiOrganisaatioToApiToSave(
     } = perustiedotFormValues;
     const nimet = [
         {
-            nimi,
+            nimi: nimi,
             alkuPvm: new Date().toISOString().split('T')[0],
         },
     ];
@@ -239,7 +239,7 @@ function mapUiOrganisaatioToApiToSave(
         yhteystiedot,
         parentOid: parentOid || ROOT_OID,
         nimet,
-        nimi,
+        nimi: nimi,
         lyhytNimi: nimi,
         oppilaitosTyyppiUri: oppilaitosTyyppiUri && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
         oppilaitosKoodi,
@@ -305,7 +305,7 @@ function mapUiOrganisaatioToApiToUpdate(
     } = perustiedotFormValues;
     const today = new Date().toISOString().split('T')[0];
     const nimet = organisaatioBase.nimet;
-    const uusiNimi = { ...perustiedotFormValues.nimi };
+    const uusiNimi = { ...perustiedotFormValues.lyhytNimi };
     const sameDayNimiIdx = organisaatioBase.nimet.findIndex((nimi: OrganisaationNimetNimi) => nimi.alkuPvm === today);
     if (sameDayNimiIdx > -1) {
         nimet[sameDayNimiIdx].nimi = uusiNimi;
