@@ -297,9 +297,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         if (organisaatioBase) {
             const newCurrentNimi = nimi;
             setPerustiedotValue('nimi', newCurrentNimi);
-            const newNimet = [...organisaatioBase.nimet]
-                .sort((a, b) => moment(a.alkuPvm, 'D.M.YYYY').unix() - moment(b.alkuPvm, 'D.M.YYYY').unix())
-                .reverse();
+            const newNimet = [...organisaatioBase.nimet].sort((a, b) => {
+                return moment(a.alkuPvm, 'D.M.YYYY').isAfter(moment(b.alkuPvm, 'D.M.YYYY')) ? -1 : 1;
+            });
             newNimet[0].nimi = newCurrentNimi;
             const updatedBase = {
                 ...organisaatioBase,
