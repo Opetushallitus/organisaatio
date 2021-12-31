@@ -49,7 +49,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
     testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.1'
     implementation 'com.google.guava:guava:29.0-jre'
-    implementation 'fi.vm.sade.java-utils:opintopolku-spring-security:0.2.0-SNAPSHOT'
+    //implementation 'fi.vm.sade.java-utils:opintopolku-spring-security:0.2.0-SNAPSHOT'
     implementation 'fi.vm.sade.java-utils:java-http:0.6.1-SNAPSHOT'
     implementation 'fi.vm.sade.java-utils:oid-generator:0.1.0-SNAPSHOT'
     implementation 'fi.vm.sade.java-utils:opintopolku-cas-servlet-filter:0.1.2-SNAPSHOT'
