@@ -144,12 +144,13 @@ describe('I18nImpl', () => {
 describe('CASMeImpl', () => {
     it('cheks roles and organisation for button when organisations present', () => {
         const roles = ['APP_ORGANISAATIOHALLINTA_CRUD_111', 'APP_ORGANISAATIOHALLINTA_CRUD_666'];
-        expect(organisationAllowedInRoles([{ oid: '111', nimi: { fi: '111' } }], roles)).toBeTruthy();
-        expect(organisationAllowedInRoles([{ oid: '666', nimi: { fi: '666' } }], roles)).toBeTruthy();
-        expect(organisationAllowedInRoles([{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+        expect(organisationAllowedInRoles('333', [{ oid: '111', nimi: { fi: '111' } }], roles)).toBeTruthy();
+        expect(organisationAllowedInRoles('333', [{ oid: '666', nimi: { fi: '666' } }], roles)).toBeTruthy();
+        expect(organisationAllowedInRoles('666', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeTruthy();
+        expect(organisationAllowedInRoles('333', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
     });
     it('cheks roles and organisation for button when no organisation', () => {
         const roles = ['FOO', 'APP_ORGANISAATIOHALLINTA_CRUD'];
-        expect(organisationAllowedInRoles([{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+        expect(organisationAllowedInRoles('111', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
     });
 });
