@@ -108,8 +108,8 @@ const TaulukkoSivu = (props) => {
         <PohjaSivu>
             <div className={styles.PaaOsio}>
                 <div className={styles.OtsikkoContainer}>
-                    <h2>Organisaatiot</h2>
-                    {casMe.canHaveButton('TAULUKKO_LISAA_UUSI_TOIMIJA') && (
+                    <h2> {i18n.translate('TAULUKKO_ORGANISAATIOT')}</h2>
+                    {casMe.canHaveButton('TAULUKKO_LISAA_UUSI_TOIMIJA', []) && (
                         <Button style={{ height: '3rem' }} onClick={handleLisaaUusiToimija}>
                             {' '}
                             + {i18n.translate('TAULUKKO_LISAA_UUSI_TOIMIJA')}

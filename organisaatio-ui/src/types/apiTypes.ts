@@ -1,23 +1,7 @@
-import { KoodiUri, Language, LocalDate, Nimi, OrganisaatioSuhde } from './types';
+import { KoodiUri, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde, OrganisaatioType } from './types';
+
 //yyyy-MM-DD
 export type APIEndpontDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
-
-export type ConfigurableButton =
-    | 'LOMAKE_YHDISTA_ORGANISAATIO'
-    | 'LOMAKE_SIIRRA_ORGANISAATIO'
-    | 'LOMAKE_LISAA_UUSI_TOIMIJA'
-    | 'TAULUKKO_LISAA_UUSI_TOIMIJA'
-    | 'BUTTON_TALLENNA';
-export type CASMe = {
-    uid: string;
-    oid: string;
-    firstName: string;
-    lastName: string;
-    groups: string[];
-    roles: string[];
-    lang: Language;
-    canHaveButton: (button: ConfigurableButton) => boolean;
-};
 
 export type OrganisaatioLiitos = {
     alkuPvm: string;
@@ -73,6 +57,7 @@ export type OrganisaatioBase = {
     oid: string;
     status: string;
     nimi: Nimi;
+    lyhytNimi: Nimi;
     parentOid: string;
     parentOidPath: string;
 };
@@ -107,7 +92,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     parentOidPath: string;
     yritysmuoto?: string;
     ytunnus?: string;
-    tyypit: KoodiUri[];
+    tyypit: OrganisaatioType[];
     status: string;
     nimet: ApiOrganisaationNimetNimi[];
     kotipaikkaUri: KoodiUri;

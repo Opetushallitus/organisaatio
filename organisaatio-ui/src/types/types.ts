@@ -114,7 +114,8 @@ export type VakaToimipaikkaTiedot = {
 export type Perustiedot = {
     ytunnus?: string;
     nimi: Nimi;
-    organisaatioTyypit: KoodiUri[];
+    lyhytNimi: Nimi;
+    organisaatioTyypit: OrganisaatioType[];
     alkuPvm: LocalDate;
     kotipaikka: KoodistoSelectOption;
     maa: KoodistoSelectOption;
@@ -130,8 +131,9 @@ export type Perustiedot = {
 };
 
 export type ParentTiedot = {
-    organisaatioTyypit: KoodiUri[];
+    organisaatioTyypit: OrganisaatioType[];
     oid: string;
+    isYtj: boolean;
 };
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
@@ -220,12 +222,12 @@ export type DynamicField = {
     value?: string;
 };
 
-type OrganisaatioChildType = {
+export type OrganisaatioChildType = {
     type: string;
     disabled?: boolean;
 };
 export type ResolvedRakenne = {
-    type: string[];
+    type: OrganisaatioType[];
     moveTargetType: string[];
     mergeTargetType: string[];
     childTypes: OrganisaatioChildType[];
@@ -234,7 +236,7 @@ export type ResolvedRakenne = {
 };
 export type Rakenne = {
     description: string;
-    type: string;
+    type: OrganisaatioType;
     moveTargetType: string | null;
     mergeTargetType: string | null;
     childTypes: OrganisaatioChildType[];
@@ -292,4 +294,35 @@ export type Filters = {
     naytaPassivoidut: boolean;
     isOPHVirkailija: boolean;
     omatOrganisaatiotSelected: boolean;
+};
+export type OrganisaatioType =
+    | 'opetushallitus'
+    | 'organisaatiotyyppi_01'
+    | 'organisaatiotyyppi_02'
+    | 'organisaatiotyyppi_03'
+    | 'organisaatiotyyppi_04'
+    | 'organisaatiotyyppi_05'
+    | 'organisaatiotyyppi_06'
+    | 'organisaatiotyyppi_07'
+    | 'organisaatiotyyppi_08'
+    | 'organisaatiotyyppi_09';
+export type ConfigurableButton =
+    | 'LOMAKE_YHDISTA_ORGANISAATIO'
+    | 'LOMAKE_SIIRRA_ORGANISAATIO'
+    | 'LOMAKE_LISAA_UUSI_TOIMIJA'
+    | 'TAULUKKO_LISAA_UUSI_TOIMIJA'
+    | 'BUTTON_TALLENNA'
+    | 'PERUSTIETO_PAIVITA_YTJ_TIEDOT'
+    | 'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'
+    | 'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA';
+export type CASMe = {
+    uid: string;
+    oid: string;
+    firstName: string;
+    lastName: string;
+    groups: string[];
+    roles: string[];
+    lang: Language;
+    canHaveButton: (button: ConfigurableButton, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
+    canEditIfParent: (organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
 };

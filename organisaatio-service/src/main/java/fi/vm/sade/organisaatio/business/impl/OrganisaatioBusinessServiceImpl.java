@@ -26,8 +26,6 @@ import fi.vm.sade.organisaatio.business.exception.*;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -63,7 +61,7 @@ import java.util.stream.Collectors;
 @Service("organisaatioBusinessService")
 public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessService {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private OrganisaatioRepository organisaatioRepository;
@@ -117,7 +115,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
-    private static final String parentSeparator = "|";
+    private static final String PARENT_SEPARATOR = "|";
 
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
         try {
@@ -191,7 +189,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public OrganisaatioResult saveOrUpdate(OrganisaatioRDTOV3 model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if (entity.getOid() != null) {
+        if (entity != null && entity.getOid() != null) {
             return update(entity, model.getParentOid());
         }
         return save(entity, model.getParentOid());
@@ -201,7 +199,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if(entity == null) {
+        if (entity == null) {
             throw new ValidationException("validation.organisaatio.convert.error");
         }
         OrganisaatioResult organisaatioResult;
@@ -229,7 +227,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (oldOrg.isOrganisaatioPoistettu()) {
             throw new ValidationException("validation.Organisaatio.poistettu");
         }
-        Map<String, String> oldName = new HashMap<>(oldOrg.getNimi().getValues());
 
         // Asetetaan parent path
         setParentPath(entity, parentOid);
@@ -283,10 +280,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioModifiedException(ole);
         }
 
-        // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
-        if (parentOrg != null && organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
-            updateOrganisaatioNameHierarchy(entity, oldName);
-        }
         // Saving the parent relationship
         entity = saveParentSuhteet(entity, parentOrg, opJarjNro);
 
@@ -407,7 +400,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Tarkistetaan organisaatiohierarkia jos hierarkia muuttunut (onko parent muuttunut)
         if (!parentOid.equals(oldOrg.getParent().getOid())) {
-            LOG.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
+            logger.info("Hierarkia muuttunut, tarkastetaan hierarkia.");
             checker.checkOrganisaatioHierarchy(entity, parentOid);
             oldParent = oldOrg.getParent();
         }
@@ -415,13 +408,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
         if (!entity.getTyypit().containsAll(oldOrg.getTyypit())
                 || !oldOrg.getTyypit().containsAll(entity.getTyypit())) {
-            LOG.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
+            logger.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
             checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
 
         // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
         if (!OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), oldOrg.getLakkautusPvm())) {
-            LOG.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
+            logger.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
             checker.checkLakkautusAlkavatKoulutukset(entity);
         }
         return oldParent;
@@ -583,7 +576,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
         if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
                 && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            LOG.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})",
+            logger.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})",
                     entity.getOid(), tyypit);
             return null;
         }
@@ -591,7 +584,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Haetaan parent oppilaitos
         Organisaatio parentOppilaitos = findParentOppilaitos(entity, parent);
         if (parentOppilaitos == null) {
-            LOG.warn("Oppilaitos not found in parents");
+            logger.warn("Oppilaitos not found in parents");
             return null;
         }
 
@@ -601,12 +594,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for (int i = nextVal; i < 100; i++) {
             jarjNro = (i < 10) ? String.format("%s%s", "0", i) : String.format("%s", i);
             if (checker.checkToimipistekoodiIsUniqueAndNotUsed(parentOppilaitos.getOppilaitosKoodi() + jarjNro)) {
-                LOG.debug("Generoitu opetuspisteen järjestysnumero: {} / {}", parentOppilaitos.getOppilaitosKoodi(), jarjNro);
+                logger.debug("Generoitu opetuspisteen järjestysnumero: {} / {}", parentOppilaitos.getOppilaitosKoodi(), jarjNro);
                 return jarjNro;
             }
         }
 
-        LOG.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi=" + parentOppilaitos.getOppilaitosKoodi() + ")");
+        logger.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi={})", parentOppilaitos.getOppilaitosKoodi());
         return null;
 
     }
@@ -620,11 +613,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         List<String> parentOids = new ArrayList<>();
         for (Organisaatio curParent : parents) {
             parentOids.add(curParent.getOid());
-            parentIdPath.append(parentSeparator).append(curParent.getId());
+            parentIdPath.append(PARENT_SEPARATOR).append(curParent.getId());
         }
         Collections.reverse(parentOids);
         if (!parents.isEmpty()) {
-            parentIdPath.append(parentSeparator);
+            parentIdPath.append(PARENT_SEPARATOR);
         }
         entity.setParentOids(parentOids);
         entity.setParentIdPath(parentIdPath.toString());
@@ -682,66 +675,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName) {
-        updateOrganisaatioNameHierarchy(oppilaitos, oldName, true);
-    }
-
-    @Transactional
-    public void updateOrganisaatioNameHierarchy(Organisaatio oppilaitos, Map<String, String> oldName, boolean updatePaivittaja) {
-        LOG.debug("updateOrganisaatioNameHierarchy()");
-
-        if (oppilaitos.getId() != null) {
-            List<Organisaatio> children = organisaatioRepository.findChildren(oppilaitos.getId());
-            MonikielinenTeksti newParentNames = oppilaitos.getNimi();
-            for (Organisaatio child : children) {
-                MonikielinenTeksti childnimi = child.getNimi();
-                boolean childChanged = false;
-                for (Map.Entry<String, String> newParentNameEntry : newParentNames.getValues().entrySet()) {
-                    String key = newParentNameEntry.getKey();
-                    String oldParentName = oldName.get(key);
-                    String oldChildName = childnimi.getString(key);
-                    String newParentName = newParentNameEntry.getValue();
-                    if (oldChildName == null) {
-                        // toimipisteellä ei ole oppilaitosta vastaavaa tämänkielistä nimeä
-                        // Pitää lisätä manuaalisesti
-                        LOG.debug("Name[" + key + "] does not exist.");
-                    } else if (oldParentName == null && !oldChildName.startsWith(newParentName)
-                            || oldParentName != null && oldChildName.startsWith(oldParentName)) {
-                        if (oldParentName == null) {
-                            // oppilaitoksen nimi lisätty, muutetaan toimipisteen nimeä
-                            String newChildName = newParentName +
-                                    ", " +
-                                    oldChildName;
-                            childnimi.addString(key, newChildName);
-                        } else {
-                            // päivitetään toimipisteen nimen alkuosa
-                            childnimi.addString(key, oldChildName.replace(oldChildName.substring(0, oldParentName.length()), newParentName));
-                        }
-                        // Päivitetään organisaation päivittäjän tiedot
-                        if (updatePaivittaja) {
-                            try {
-                                child.setPaivittaja(getCurrentUser());
-                            } catch (Throwable t) {
-                                throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
-                            }
-                        }
-                        // child must be dirty in order to update paivitysPvm by @UpdateTimestamp
-                        child.setPaivitysPvm(new Date());
-                        child = organisaatioRepository.save(child);
-                        LOG.debug("Name[" + key + "] updated to \"" + childnimi.getString(key) + "\".");
-                    } else {
-                        // nimen formaatti on muu kuin "oppilaitoksennimi, toimipisteennimi"
-                        // Pitää korjata formaatti manuaalisesti
-                        LOG.debug("Name[" + key + "] is of invalid format: \"" + childnimi.getString(key) + "\".");
-                    }
-                    childChanged = true;
-                }
-                if (childChanged) {
-                    koodistoService.addKoodistoSyncByOid(child.getOid());
-                }
-            }
-        }
-    }
 
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
@@ -781,7 +714,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio orgEntity = getOrganisaatio(oid);
         OrganisaatioNimiDTO currentNimiDTO = nimiUpdateDTO.getCurrentNimi();
         OrganisaatioNimiDTO updatedNimiDTO = nimiUpdateDTO.getUpdatedNimi();
-        LOG.debug("Haetaan organisaation: {} nimeä alkupäivämäärällä: {}", oid, currentNimiDTO.getAlkuPvm());
+        logger.debug("Haetaan organisaation: {} nimeä alkupäivämäärällä: {}", oid, currentNimiDTO.getAlkuPvm());
         // Haetaan päivitettävä entity objecti
         OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, currentNimiDTO);
 
@@ -800,7 +733,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         nimiEntityNew.getNimi().setId(nimiEntityOld.getNimi().getId());
         nimiEntityNew.getNimi().setVersion(nimiEntityOld.getNimi().getVersion());
 
-        LOG.debug("updating nimi: {}", nimiEntityNew);
+        logger.debug("updating nimi: {}", nimiEntityNew);
 
         // Päivitetään nimi
         organisaatioNimiRepository.save(nimiEntityNew);
@@ -837,72 +770,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioNimiDeleteException();
         }
 
-        LOG.debug("deleting {}", nimiEntity);
+        logger.debug("deleting {}", nimiEntity);
 
         // Poistetaan
         this.organisaatioNimiRepository.delete(nimiEntity);
     }
 
-    @Override
-    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
-        LOG.debug("bulkUpdatePvm(): {}", tiedot);
-        OrganisaatioMuokkausTulosListaDTO edited = new OrganisaatioMuokkausTulosListaDTO(tiedot.size());
-
-        HashMap<String, OrganisaatioMuokkausTiedotDTO> givenData = new HashMap<>(tiedot.size());
-        HashMap<String, Organisaatio> organisaatioMap = new HashMap<>(tiedot.size());
-
-        for (OrganisaatioMuokkausTiedotDTO tieto : tiedot) {
-            givenData.put(tieto.getOid(), tieto);
-        }
-
-        Set<String> givenOids = givenData.keySet();
-        List<String> oids = new ArrayList<>(givenOids);
-
-        LOG.debug("bulkUpdatePvm(): haetaan oideilla: {}", oids);
-        List<Organisaatio> organisaatios = this.organisaatioRepository.findByOidList(oids, oids.size());
-
-        for (Organisaatio o : organisaatios) {
-            organisaatioMap.put(o.getOid(), o);
-        }
-
-        if (organisaatios.isEmpty()) {
-            LOG.debug("bulkUpdatePvm(): organisaatiolista tyhjä");
-            return edited; // tässä vaiheessa tyhjä lista.
-        }
-        LOG.debug("bulkUpdatePvm(): organisaatiolista: {}", organisaatios);
-
-        batchValidatePvm(givenData, organisaatioMap);
-
-        for (String oid : organisaatioMap.keySet()) {
-            OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
-            Organisaatio org = organisaatioMap.get(oid);
-
-            if (tieto != null) {
-                LOG.debug(String.format("bulkUpdatePvm(): ennen päivitystä: oid %s, version %s", org.getOid(), org.getVersion()));
-                org.setAlkuPvm(tieto.getAlkuPvm());
-                org.setLakkautusPvm(tieto.getLoppuPvm());
-                try {
-                    organisaatioRepository.save(org); // TODO worrks?
-                    koodistoService.addKoodistoSyncByOid(org.getOid());
-                } catch (OptimisticLockException ole) {
-                    LOG.error(String.format("Organisaation (oid %s) muokkaus epäonnistui versionumeron muuttumisen takia", org.getOid()));
-                    throw new AliorganisaatioModifiedException(ole);
-                }
-
-                LOG.debug(String.format("bulkUpdatePvm(): päivityksen jälkeen: oid %s, version %s", org.getOid(), org.getVersion()));
-
-                OrganisaatioMuokkausTulosDTO tulos = new OrganisaatioMuokkausTulosDTO();
-                tulos.setAlkuPvm(org.getAlkuPvm());
-                tulos.setLoppuPvm(org.getLakkautusPvm());
-                tulos.setOid(org.getOid());
-                tulos.setVersion(org.getVersion());
-
-                edited.lisaaTulos(tulos);
-            }
-        }
-
-        return edited;
-    }
 
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -913,7 +786,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // etsitään juuriorganisaatiot, eli ne, joiden vanhempaa ei löydy annetuista oideista
         for (Organisaatio o : organisaatioMap.values()) {
-            LOG.debug("bulkUpdatePvm(): käsitellään organisaatio:" + o + ",oid:" + o.getOid());
+            logger.debug("bulkUpdatePvm(): käsitellään organisaatio:{},oid:{}", o, o.getOid());
             while (!processed.contains(o.getOid())) {
                 processed.add(o.getOid());
 
@@ -925,26 +798,26 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 o = o.getParent();
             }
         }
-        LOG.debug("bulkUpdatePvm(): processed:" + processed);
+        logger.debug("bulkUpdatePvm(): processed:{}", processed);
 
         String virheViesti = "";
         // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
         for (Organisaatio o : roots) {
             virheViesti = checker.checkPvmConstraints(o, null, null, givenData);
             if (!virheViesti.equals("")) {
-                LOG.error(String.format("bulkUpdatePvm() error: %s", virheViesti));
+                logger.error("bulkUpdatePvm() error: {}", virheViesti);
                 throw new OrganisaatioDateException();
             }
         }
-        for (String oid : organisaatioMap.keySet()) {
+        for (Map.Entry<String, Organisaatio> entry : organisaatioMap.entrySet()) {
+            String oid = entry.getKey();
             OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
-            Organisaatio org = organisaatioMap.get(oid);
+            Organisaatio org = entry.getValue();
 
             if (tieto != null) {
-                LOG.debug(String.format("bulkUpdatePvm(): testataan onko Organisaatiolla (oid %s) koulutuksia loppupäivämäärän %s jälkeen", org.getOid(), tieto.getLoppuPvm()));
+                logger.debug("bulkUpdatePvm(): testataan onko Organisaatiolla (oid {}) koulutuksia loppupäivämäärän {} jälkeen", org.getOid(), tieto.getLoppuPvm());
                 if ((tieto.getLoppuPvm() != null) && !tieto.getLoppuPvm().equals(org.getLakkautusPvm()) && (organisaatioTarjonta.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
-                    String virhe = String.format("Organisaatiolla (oid %s) koulutuksia jotka alkavat lakkautuspäivämäärän (%s) jälkeen", oid, tieto.getLoppuPvm());
-                    LOG.error(String.format(virhe));
+                    logger.error("Organisaatiolla (oid {}) koulutuksia jotka alkavat lakkautuspäivämäärän ({}) jälkeen", oid, tieto.getLoppuPvm());
                     throw new AliorganisaatioLakkautusKoulutuksiaException();
                 }
             }
@@ -956,7 +829,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Set<Organisaatio> results = new HashSet<>();
         List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeRepository.findForDay(new Date());
         for (OrganisaatioSuhde os : suhdeList) {
-            LOG.info("Processing {}", os);
+            logger.info("Processing {}", os);
 
             Organisaatio child = os.getChild();
             // Liitos ei muuta parenttia (kts. Organisaatio#getParent)
@@ -975,7 +848,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     @Override
     public void mergeOrganisaatio(String organisaatio, String newParent, Optional<Date> inputDate, boolean merge) {
-        Date date = inputDate.orElseGet(()->new Date());
+        Date date = inputDate.orElseGet(Date::new);
         Organisaatio child = getOrganisaatio(organisaatio);
         Organisaatio parent = getOrganisaatio(newParent);
         if (merge)
@@ -1025,6 +898,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään tiedot koodistoon.
         koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
     }
+
     @Override
     public void changeOrganisaatioParent(Organisaatio organisaatio, Organisaatio newParent, Date date) {
         // Organisaatiota ei saa siirtää nykyisen parentin alle
@@ -1112,7 +986,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         oldParentNimiMap.forEach((oldParentNimikey, oldParentNimivalue) -> {
             String newParentNimi = newParentNimiMap.get(oldParentNimikey) != null ? newParentNimiMap.get(oldParentNimikey) : "";
             String currentNimi = currentNimiMap.get(oldParentNimikey);
-            if (currentNimi != null && newParentNimi != "") {
+            if (currentNimi != null && !newParentNimi.isEmpty()) {
                 if (currentNimi.startsWith(oldParentNimivalue)) {
                     String changeName = currentNimi.replaceAll(oldParentNimivalue, newParentNimi);
                     currentNimiMap.put(oldParentNimikey, changeName);
@@ -1134,7 +1008,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Päivitetään organisaation nimi
         organisaatio.setNimi(nimiEntity.getNimi());
 
-        LOG.info("updating " + organisaatio);
+        logger.debug("updateCurrentNimiToOrganisaatio updating {}", organisaatio);
         try {
             // Päivitetään nimi
             organisaatioRepository.save(organisaatio);
@@ -1152,24 +1026,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         List<Organisaatio> organisaatiot = this.organisaatioNimiRepository.findNimiNotCurrentOrganisaatiot();
 
         if (organisaatiot.isEmpty()) {
-            LOG.info("Orgnisaatioiden nimet kunnossa");
+            logger.info("Orgnisaatioiden nimet kunnossa");
         }
 
         for (Organisaatio organisaatio : organisaatiot) {
-            Map<String, String> oldName;
-            oldName = new HashMap<>(organisaatio.getNimi().getValues());
-
-            LOG.info("Organisaation nimen update tarve: " + organisaatio);
+            logger.debug("Organisaation nimen update tarve: {}", organisaatio);
 
             // Päiviteään organisaatiolle nimihistorian current nimi
             organisaatio = this.updateCurrentNimiToOrganisaatio(organisaatio);
             organisaatio.setNimihaku(OrganisaatioNimiUtil.createNimihaku(organisaatio.getNimi()));
 
-            // Tarkistetaan ja päivitetään oppilaitoksen alla olevien opetuspisteiden nimet
-            if (organisaatioIsOfType(organisaatio, OrganisaatioTyyppi.OPPILAITOS)) {
-                // Ei päivitetä organisaation päivittäjää nimenmuutoksen yhteydessä
-                updateOrganisaatioNameHierarchy(organisaatio, oldName, false);
-            }
 
             // Päivitetään tiedot koodistoon.
             koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
@@ -1184,9 +1050,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private boolean checkIfVarhaiskasvatuksenToimipaikka(Organisaatio entity) {
-        boolean isVarhaiskasvatuksenToimipaikka = entity.getTyypit().stream()
+        return entity.getTyypit().stream()
                 .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
-        return isVarhaiskasvatuksenToimipaikka;
     }
 
     // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
@@ -1275,7 +1140,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setPaivittaja(getCurrentUser());
             entity.setPaivitysPvm(new Date());
         } catch (Throwable t) {
-            LOG.error("Could not set updater for organisation!", t);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
         }
     }

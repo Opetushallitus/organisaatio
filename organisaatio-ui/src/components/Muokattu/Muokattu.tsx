@@ -4,7 +4,6 @@ import { useContext, useEffect } from 'react';
 import { useOrganisaatioPaivittaja } from '../../api/organisaatio';
 import { LanguageContext } from '../../contexts/LanguageContext';
 import Loading from '../Loading/Loading';
-import VirheSivu from '../Sivut/VirheSivu/VirheSivu';
 import { getUiDateStr } from '../../tools/mappers';
 
 const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => {
@@ -14,7 +13,8 @@ const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => 
         execute();
     }, [execute, muokattu]);
     if (loading) return <Loading />;
-    if (error) return <VirheSivu />;
+    if (error) return <div>{i18n.translate('PAIVITTAJA_KAYTTOOIKEUS_PUUTTUU')}</div>;
+
     return (
         <MuokattuKolumni>
             <span style={{ color: '#999999' }}>{i18n.translate('VERSIOHISTORIA_MUOKATTU_VIIMEKSI')}</span>

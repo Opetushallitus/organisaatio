@@ -8,10 +8,12 @@ export default function DatePickerController<T>({
     form,
     validationErrors,
     dayPickerProps,
+    disabled,
 }: {
     form: Control<T>;
     validationErrors: { [x: string]: unknown };
     name: Path<T>;
+    disabled?: boolean;
     dayPickerProps?: DayPickerProps;
 }) {
     return (
@@ -21,8 +23,9 @@ export default function DatePickerController<T>({
             render={({ field: { ref, value, ...controllerRest } }) => (
                 <DatePickerInput
                     value={value}
-                    dayPickerProps={dayPickerProps}
                     error={!!validationErrors[name]}
+                    dayPickerProps={dayPickerProps}
+                    inputProps={{ disabled }}
                     {...controllerRest}
                 />
             )}

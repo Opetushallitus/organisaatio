@@ -9,11 +9,13 @@ export default function MultiSelectController<T>({
     form,
     validationErrors,
     koodisto,
+    disabled,
 }: {
     form: Control<T>;
     validationErrors: { [x: string]: unknown };
     name: Path<T>;
     koodisto: Koodisto;
+    disabled: boolean;
 }) {
     return (
         <Controller
@@ -22,6 +24,7 @@ export default function MultiSelectController<T>({
             render={({ field: { ref, value, ...rest } }) => {
                 return (
                     <Select
+                        isDisabled={disabled}
                         isMulti
                         value={value as ValueType<{ label: string; value: string }>}
                         id={name}

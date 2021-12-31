@@ -103,7 +103,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
     return oids.map((oid: string) => ({
         oid,
-        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).nimi,
+        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).lyhytNimi,
     }));
 }
 
@@ -153,12 +153,15 @@ async function searchOrganisation({
     return data.organisaatiot;
 }
 
-async function readOrganisaatio(oid: string, parent?: boolean) {
+async function readOrganisaatio(
+    oid: string,
+    parent?: boolean
+): Promise<{ organisaatio: ApiOrganisaatio; polku: OrganisaatioNimiJaOid[] } | undefined> {
     return errorHandlingWrapper(async () => {
         const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
         const organisaatio = response.data;
         if (!!parent) {
-            return { organisaatio, polku: '' };
+            return { organisaatio, polku: [] };
         }
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
@@ -275,7 +278,8 @@ function mapUiOrganisaatioToApiToSave(
         yhteystiedot,
         parentOid: parentOid || ROOT_OID,
         nimet,
-        nimi,
+        nimi: nimi,
+        lyhytNimi: nimi,
         oppilaitosTyyppiUri: oppilaitosTyyppiUri && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
@@ -354,6 +358,7 @@ function mapUiOrganisaatioToApiToUpdate(
         varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,
         nimi,
+        lyhytNimi: nimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),
         kotipaikkaUri: kotipaikka.value,

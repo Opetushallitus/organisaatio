@@ -1,4 +1,11 @@
-import { Koodisto, KoodistoSelectOption, KoodiUri, Rakenne, ResolvedRakenne } from '../types/types';
+import {
+    Koodisto,
+    KoodistoSelectOption,
+    KoodiUri,
+    OrganisaatioChildType,
+    Rakenne,
+    ResolvedRakenne,
+} from '../types/types';
 import { ROOT_OID } from '../contexts/constants';
 import { ApiOrganisaatio } from '../types/apiTypes';
 import queryString from 'query-string';
@@ -6,6 +13,8 @@ import queryString from 'query-string';
 type ResolvingOrganisaatio = { organisaatioTyypit: KoodiUri[]; oppilaitosTyyppiUri?: string; oid?: string };
 export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingOrganisaatio): ResolvedRakenne => {
     const tyypit = organisaatio.oid === ROOT_OID ? ['opetushallitus'] : [...organisaatio.organisaatioTyypit];
+    const distinctTypeFilter = (a: OrganisaatioChildType, i: number, array: OrganisaatioChildType[]): boolean =>
+        array.findIndex((b) => b.type === a.type) === i;
     return rakenne
         .filter((a) => {
             return tyypit.includes(a.type);
@@ -22,7 +31,7 @@ export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingO
                     type: [current.type, ...previous.type],
                     mergeTargetType: mergeTarget,
                     moveTargetType: moveTarget,
-                    childTypes: [...previous.childTypes, ...current.childTypes],
+                    childTypes: [...previous.childTypes, ...current.childTypes].filter(distinctTypeFilter),
                     dynamicFields: [
                         ...previous.dynamicFields,
                         ...current.dynamicFields.filter((a) => {
