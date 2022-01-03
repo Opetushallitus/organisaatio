@@ -312,7 +312,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             const updatedBase = {
                 ...organisaatioBase,
                 nimet: [...nimet],
-                currentNimi: newCurrentNimi,
+                currentNimi: nimet[currentNimiIdx],
                 nimi: newCurrentNimi,
             } as UiOrganisaatioBase;
             setOrganisaatioBase(updatedBase);
