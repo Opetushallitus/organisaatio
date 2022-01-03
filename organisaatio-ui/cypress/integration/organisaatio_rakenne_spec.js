@@ -22,10 +22,12 @@ describe('Organisaatio Rakenne', () => {
             cy.clickButton('NAYTA_MUUT_KIELET');
             cy.enterAllYhteystiedot('CHILD');
             cy.clickSaveButton();
-            cy.contains('CHILD Suominimi', { timeout: 10000 });
-            cy.clickAccordion('RAKENNE');
-
-            cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
+            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
+            cy.wait('@getCurrent', { timeout: 10000 }).then(() => {
+                cy.contains('CHILD Suominimi', { timeout: 10000 });
+                cy.clickAccordion('RAKENNE');
+                cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
+            });
         });
     });
 });
