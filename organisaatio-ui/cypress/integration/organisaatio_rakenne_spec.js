@@ -23,8 +23,9 @@ describe('Organisaatio Rakenne', () => {
             cy.enterAllYhteystiedot('CHILD');
             cy.clickSaveButton();
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
-            cy.wait('@getCurrent', { timeout: 10000 }).then(() => {
-                cy.contains('CHILD Suominimi', { timeout: 10000 });
+            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getPaivittaja');
+            cy.wait(['@getCurrent', '@getPaivittaja'], { timeout: 10000 }).then(() => {
+                cy.contains('CHILD Suominimi').should('exist');
                 cy.clickAccordion('RAKENNE');
                 cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
             });
