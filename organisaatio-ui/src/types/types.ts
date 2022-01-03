@@ -79,6 +79,7 @@ export type NimenmuutosLomake = {
 };
 
 export type UiOrganisaationNimetNimi = {
+    isCurrentNimi?: boolean;
     nimi: Nimi;
     alkuPvm: LocalDate;
 };
@@ -89,8 +90,9 @@ export type UiOrganisaatioBase = {
     nimet: UiOrganisaationNimetNimi[];
     parentOid: string;
     parentOidPath: string;
-    apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
-    currentNimi: Nimi; //  needed for merging and combining orgs
+    apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values before update
+    currentNimi: UiOrganisaationNimetNimi; //  needed for merging and combining orgs
+    nimi: Nimi; // long nimi for toimipistes
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
 };
 
@@ -113,8 +115,6 @@ export type VakaToimipaikkaTiedot = {
 };
 export type Perustiedot = {
     ytunnus?: string;
-    nimi: Nimi;
-    lyhytNimi: Nimi;
     organisaatioTyypit: OrganisaatioType[];
     alkuPvm: LocalDate;
     kotipaikka: KoodistoSelectOption;
@@ -128,6 +128,7 @@ export type Perustiedot = {
     lakkautusPvm?: LocalDate;
     varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
     piilotettu?: boolean;
+    nimi?: Nimi;
 };
 
 export type ParentTiedot = {

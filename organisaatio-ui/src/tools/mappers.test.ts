@@ -102,9 +102,9 @@ describe('mappers', () => {
     });
 
     describe('getUiDateStr', () => {
-        const expectedTodayDate = moment().format('D.M.yyyy').toString();
-        const expectedTestDayDate = moment('2020-1-22').format('D.M.yyyy').toString();
-        const expectedTestDayLongDate = moment('2020-10-22').format('D.M.yyyy HH:mm:ss').toString();
+        const expectedTodayDate = moment().format('D.M.yyyy');
+        const expectedTestDayDate = moment('2020-1-22').format('D.M.yyyy');
+        const expectedTestDayLongDate = moment('2020-10-22').format('D.M.yyyy HH:mm:ss');
         test.each([
             ['Handles invalid input to empty string', 'dsdsds', undefined, false, ''],
             ['Handles empty input to current day in correct format', undefined, undefined, false, expectedTodayDate],
@@ -117,7 +117,7 @@ describe('mappers', () => {
             ],
             [
                 'Handles valid text input to correct day in correct format',
-                '1-22-2020',
+                '01-22-2020',
                 undefined,
                 false,
                 expectedTestDayDate,
@@ -156,8 +156,8 @@ describe('mappers', () => {
         );
     });
     describe('formatUiDateStrToApi', () => {
-        const expectedTodayDate = moment().format('yyyy-M-D').toString();
-        const expectedTestDayDate = moment('9-22-2020').format('yyyy-M-D').toString();
+        const expectedTodayDate = moment().format('yyyy-MM-DD');
+        const expectedTestDayDate = moment('09-22-2020').format('yyyy-MM-DD');
         test.each([
             ['Handles invalid input to empty string', 'dsdsds', ''],
             ['Handles empty input to current day in correct format', undefined, expectedTodayDate],

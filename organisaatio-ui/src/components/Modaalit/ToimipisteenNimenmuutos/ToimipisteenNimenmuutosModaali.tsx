@@ -15,7 +15,7 @@ import { getUiDateStr } from '../../../tools/mappers';
 type ModaaliProps = {
     nimet: UiOrganisaationNimetNimi[];
     oid: string;
-    currentNimi?: UiOrganisaationNimetNimi & { disabled: boolean | undefined };
+    currentNimi?: UiOrganisaationNimetNimi;
     closeNimenmuutosModaali: (nimiIsUpdated: boolean) => void;
 };
 

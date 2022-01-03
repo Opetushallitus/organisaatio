@@ -131,7 +131,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     kotipaikkaUri: 'kunta_1',
     muutKotipaikatUris: ['kunta_2#1'],
     maaUri: 'maa_1',
-    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: today }],
+    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: '2000-10-10' }],
     nimi: { fi: 'uusinimi' },
     lyhytNimi: { fi: 'uusinimi' },
     parentOid: '123.321',
@@ -166,8 +166,9 @@ const uiBaseTiedot: UiOrganisaatioBase = {
     nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday }],
     parentOidPath: '123.321,1.2.1',
     apiYhteystiedot: oldApiyhteystiedot,
-    currentNimi: { fi: 'vanhanimi' },
+    currentNimi: { nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday },
     status: 'AKTIIVINEN',
+    nimi: { fi: 'uusinimi' },
 };
 
 const uiPerustiedot: Perustiedot = {
@@ -176,8 +177,6 @@ const uiPerustiedot: Perustiedot = {
     kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, disabled: false },
     maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },
     muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, disabled: false }],
-    nimi: { fi: 'uusinimi' },
-    lyhytNimi: { fi: 'uusinimi' },
     organisaatioTyypit: ['organisaatiotyyppi_01'],
     oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
     oppilaitosKoodi: '',
@@ -333,7 +332,7 @@ describe('mapUiOrganisaatioToApiToSave', () => {
         const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(
             postinumerotKoodisto as Koodisto,
             uiYhteystiedot,
-            uiPerustiedot,
+            { ...uiPerustiedot, nimi: { fi: 'uusinimi' } },
             '123.321'
         );
         mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);

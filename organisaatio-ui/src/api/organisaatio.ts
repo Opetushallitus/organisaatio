@@ -252,7 +252,7 @@ function mapUiOrganisaatioToApiToSave(
         muutKotipaikat,
         organisaatioTyypit,
         alkuPvm,
-        nimi,
+        nimi = {},
         ytunnus,
         oppilaitosTyyppiUri,
         oppilaitosKoodi,
@@ -263,7 +263,7 @@ function mapUiOrganisaatioToApiToSave(
     const nimet = [
         {
             nimi,
-            alkuPvm: formatUiDateStrToApi(alkuPvm),
+            alkuPvm: apiAlkuPvm,
         } as ApiOrganisaationNimetNimi,
     ];
     return {
@@ -344,7 +344,7 @@ function mapUiOrganisaatioToApiToUpdate(
     } = perustiedotFormValues;
     const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
-    const { nimet: uiNimet, currentNimi: nimi } = organisaatioBase;
+    const { nimet: uiNimet, currentNimi } = organisaatioBase;
     return {
         lakkautusPvm: apiLakkautusPvm,
         alkuPvm: apiAlkuPvm,
@@ -357,8 +357,8 @@ function mapUiOrganisaatioToApiToUpdate(
         ytunnus,
         varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,
-        nimi,
-        lyhytNimi: nimi,
+        nimi: currentNimi.nimi,
+        lyhytNimi: currentNimi.nimi,
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),
         kotipaikkaUri: kotipaikka.value,

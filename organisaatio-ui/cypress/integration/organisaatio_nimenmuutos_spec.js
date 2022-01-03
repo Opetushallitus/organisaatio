@@ -37,12 +37,13 @@ describe('Organisaation nimenmuutosmodaali', () => {
         cy.get('@parentOrganisaatio1').then((organisaatio) => {
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
-            cy.wait(['@getCurrent'], { timeout: 10000 });
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
-            cy.addNewNimi('pöllö ajastettu', 'pöpi', getAfterOneYear());
-            cy.clickAccordion('NIMIHISTORIA');
-            cy.contains('pöllö ajastettu', { timeout: 10000 }).should('exist');
-            cy.contains('POISTA_AJASTETTU_NIMENMUUTOS', { timeout: 10000 }).should('exist');
+            cy.wait(['@getCurrent'], { timeout: 10000 }).then(() => {
+                cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
+                cy.addNewNimi('pöllö ajastettu', 'pöpi', getAfterOneYear());
+                cy.clickAccordion('NIMIHISTORIA');
+                cy.contains('pöllö ajastettu', { timeout: 10000 }).should('exist');
+                cy.contains('POISTA_AJASTETTU_NIMENMUUTOS', { timeout: 10000 }).should('exist');
+            });
         });
     });
 
@@ -59,13 +60,14 @@ describe('Organisaation nimenmuutosmodaali', () => {
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
             cy.wait(['@getCurrent'], { timeout: 10000 });
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
             cy.addNewNimi('delete testi', 'pöllö', getAfterOneYear());
-            cy.clickAccordion('NIMIHISTORIA');
-            cy.contains('delete testi', { timeout: 10000 }).should('exist');
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
-            cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
-            cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
+            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent2');
+            cy.wait(['@getCurrent2'], { timeout: 10000 }).then(() => {
+                cy.clickAccordion('NIMIHISTORIA');
+                cy.contains('delete testi', { timeout: 10000 }).should('exist');
+                cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
+                cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
+            });
         });
     });
 });

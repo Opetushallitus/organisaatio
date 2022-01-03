@@ -43,10 +43,17 @@ export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[Supp
     );
 };
 
-export const findCurrentNimi = (nimet: UiOrganisaationNimetNimi[], nimi: Nimi) => {
-    const nowTime = moment().unix();
+export const sortNimet = (
+    nimet: UiOrganisaationNimetNimi[],
+    nimi: Nimi
+): {
+    currentNimi: UiOrganisaationNimetNimi;
+    pastNimet: UiOrganisaationNimetNimi[];
+    futureNimet: UiOrganisaationNimetNimi[];
+} => {
+    const nowTime = moment();
     const alkuPvmInFuture = (n) => {
-        return moment(n.alkuPvm, 'D.M.YYYY').unix() > nowTime;
+        return moment(n.alkuPvm, 'D.M.YYYY').isAfter(nowTime);
     };
     const [futureNimet, pastNimet] = nimet
         .reduce(
@@ -61,11 +68,15 @@ export const findCurrentNimi = (nimet: UiOrganisaationNimetNimi[], nimi: Nimi) =
             [[], []]
         )
         .map((nimetArr) =>
-            nimetArr.sort((a, b) => new Date(a.alkuPvm).getTime() - new Date(b.alkuPvm).getTime()).reverse()
+            nimetArr.sort((a, b) => {
+                return moment(a.alkuPvm, 'D.M.YYYY').isAfter(moment(b.alkuPvm, 'D.M.YYYY')) ? -1 : 1;
+            })
         );
-    const currentNimi = pastNimet.find((pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi));
-    const editModeDisabled = futureNimet.length > 0;
-    return currentNimi ? { ...currentNimi, disabled: editModeDisabled } : undefined;
+    const currentNimiIndex = pastNimet.findIndex((pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi));
+    if (currentNimiIndex === 0) {
+        pastNimet[0].isCurrentNimi = true;
+    }
+    return { currentNimi: { ...pastNimet[0] }, pastNimet, futureNimet };
 };
 
 const makeDate = (date, format) => {
@@ -87,6 +98,6 @@ export const getUiDateStr = (
 };
 
 export const formatUiDateStrToApi = (date?): APIEndpontDate => {
-    const dateWithoutFormat = makeDate(date, 'D.M.YYYY');
-    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-M-D') as APIEndpontDate) : '';
+    const dateWithoutFormat = makeDate(date, 'DD.MM.YYYY');
+    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-MM-DD') as APIEndpontDate) : '';
 };

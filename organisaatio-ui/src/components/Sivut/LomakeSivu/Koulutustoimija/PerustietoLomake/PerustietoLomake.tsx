@@ -29,7 +29,6 @@ import {
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
 import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
-import { findCurrentNimi } from '../../../../../tools/mappers';
 import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../../../contexts/CasMeContext';
 
@@ -74,8 +73,8 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
         nimiIsUpdated && handleNimiTallennus();
         setNimenmuutosModaaliAuki(false);
     };
-    const { lyhytNimi, organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
-    const currentNimi = findCurrentNimi(organisaatioBase.nimet, lyhytNimi);
+    const { organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
+    const { currentNimi } = organisaatioBase;
     return (
         <UloinKehys>
             <Rivi>
@@ -87,7 +86,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
                     ]}
                     <AvainKevyestiBoldattu label={'PERUSTIETO_ORGANISAATION_NIMI'} />
-                    <ReadOnlyNimi value={lyhytNimi} />
+                    <ReadOnlyNimi value={currentNimi?.nimi} />
                 </Ruudukko>
                 <div>
                     {casMe.canHaveButton('PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA', organisaatioNimiPolku) && (

@@ -58,8 +58,7 @@ import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
-import { getUiDateStr } from '../../../tools/mappers';
-import moment from 'moment';
+import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import { Icon } from '@iconify/react';
 
 type LomakeSivuProps = {
@@ -200,18 +199,17 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
         Uiyhteystiedot: Yhteystiedot;
-        UIhteysTietoArvot: YhteystietoArvot;
+        UIYhteysTietoArvot: YhteystietoArvot;
     } => {
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
         const kotipaikka = kuntaKoodisto.uri2SelectOption(kotipaikkaUri);
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
-        const uiNimet = apiNimet.map(({ nimi, alkuPvm }) => ({ nimi, alkuPvm: getUiDateStr(alkuPvm) }));
+        const apiNimetWithUIDate = apiNimet.map(({ nimi, alkuPvm }) => ({ nimi, alkuPvm: getUiDateStr(alkuPvm) }));
+        const { currentNimi, pastNimet, futureNimet } = sortNimet(apiNimetWithUIDate, mappingLyhytNimi);
         return {
             Uiperustiedot: {
-                nimi: mappingNimi,
-                lyhytNimi: mappingLyhytNimi,
                 maa,
                 kielet,
                 kotipaikka,
@@ -238,14 +236,20 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 }),
                 piilotettu,
             },
-            UibaseTiedot: { nimet: uiNimet, apiYhteystiedot, currentNimi: mappingLyhytNimi, ...rest },
+            UibaseTiedot: {
+                nimet: [...pastNimet, ...futureNimet],
+                apiYhteystiedot,
+                currentNimi,
+                nimi: mappingNimi,
+                ...rest,
+            },
             Uiyhteystiedot: mapApiYhteystiedotToUi(postinumerotKoodisto, apiYhteystiedot),
-            UIhteysTietoArvot: mapApiYhteysTietoArvotToUi(yhteystietoArvos),
+            UIYhteysTietoArvot: mapApiYhteysTietoArvotToUi(yhteystietoArvos),
         };
     };
 
     async function resetOrganisaatio({ organisaatio, polku }) {
-        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
+        const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIYhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);
         const parantData = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
@@ -256,7 +260,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             setParentTiedot({ organisaatioTyypit: parentTyypit, oid: parentOid, isYtj: !!parentYTunnus });
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
-            yhteystietoArvoReset(UIhteysTietoArvot);
+            yhteystietoArvoReset(UIYhteysTietoArvot);
         }
     }
 
@@ -298,18 +302,18 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         setYhdistaOrganisaatio(initialYhdista);
     }
 
-    function handleNimiFromYtj(nimi: Nimi) {
+    function handleNimiFromYtj(newCurrentNimi: Nimi) {
         if (organisaatioBase) {
-            const newCurrentNimi = nimi;
-            setPerustiedotValue('nimi', newCurrentNimi);
-            const newNimet = [...organisaatioBase.nimet].sort((a, b) => {
-                return moment(a.alkuPvm, 'D.M.YYYY').isAfter(moment(b.alkuPvm, 'D.M.YYYY')) ? -1 : 1;
-            });
-            newNimet[0].nimi = newCurrentNimi;
+            const { nimet } = organisaatioBase;
+            const currentNimiIdx = nimet.findIndex((nimi) => nimi.isCurrentNimi);
+            if (currentNimiIdx > -1) {
+                nimet[currentNimiIdx].nimi = newCurrentNimi;
+            }
             const updatedBase = {
                 ...organisaatioBase,
-                nimet: newNimet,
+                nimet: [...nimet],
                 currentNimi: newCurrentNimi,
+                nimi: newCurrentNimi,
             } as UiOrganisaatioBase;
             setOrganisaatioBase(updatedBase);
         }
@@ -373,7 +377,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             </PaaOsio>
         );
     }
-    const { nimi, ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
+    const { ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
 
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
@@ -477,7 +481,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                             i18n.translate('LABEL_NOT_AVAILABLE')}
                     </h3>
                     <h1>
-                        {i18n.translateNimi(nimi)}
+                        {i18n.translateNimi(organisaatioBase.nimi)}
                         {organisaatioBase?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
                     </h1>
                 </ValiOtsikko>

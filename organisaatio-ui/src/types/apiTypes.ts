@@ -1,4 +1,4 @@
-import { KoodiUri, LocalDate, Nimi, OrganisaationNimetNimi, OrganisaatioSuhde, OrganisaatioType } from './types';
+import { KoodiUri, LocalDate, Nimi, OrganisaatioSuhde, OrganisaatioType } from './types';
 
 //yyyy-MM-DD
 export type APIEndpontDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';

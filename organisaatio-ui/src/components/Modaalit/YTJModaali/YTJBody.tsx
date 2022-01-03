@@ -12,6 +12,7 @@ import { UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import IconWrapper from '../../IconWapper/IconWrapper';
+import { getUiDateStr } from '../../../tools/mappers';
 
 type Props = {
     ytunnus: string;
@@ -25,7 +26,7 @@ const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
     if (ytjData.kieli) setters.setPerustiedotValue('kielet', [ytjData.kieli]);
     else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
     setters.setPerustiedotValue('ytunnus', ytjData.ytunnus);
-    setters.setPerustiedotValue('alkuPvm', ytjData.aloitusPvm);
+    setters.setPerustiedotValue('alkuPvm', getUiDateStr(ytjData.aloitusPvm));
     setters.setYhteystiedotValue('fi', ytjData.yhteysTiedot);
     setters.setYhteystiedotValue('osoitteetOnEri', !!ytjData.kayntiOsoite);
     return suljeModaali({ fi: ytjData.nimi, sv: ytjData.nimi, en: ytjData.nimi });

@@ -19,12 +19,7 @@ const perustietoOptionSchemaOptional = Joi.object({
 });
 
 export default Joi.object({
-    lyhytNimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).required(),
-    nimi: Joi.object({
-        fi: Joi.string(),
-        sv: Joi.string(),
-        en: Joi.string(),
-    }).optional(),
+    nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
     ytunnus: Joi.string().allow(''),
     alkuPvm: Joi.date().format(['D.M.YYYY']).required(),
     organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not('organisaatiotyyppi_09').required()),
