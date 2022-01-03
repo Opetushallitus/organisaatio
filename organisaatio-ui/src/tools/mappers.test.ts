@@ -6,8 +6,9 @@ import {
     formatUiDateStrToApi,
     mapLocalizedKoodiToLang,
     mapVisibleKieletFromOpetuskielet,
+    sortNimet,
 } from './mappers';
-import { YhteystiedotBase } from '../types/types';
+import { LocalDate, YhteystiedotBase } from '../types/types';
 
 describe('mappers', () => {
     const koodiWithVersion = 'kieli_fi#1';
@@ -98,6 +99,29 @@ describe('mappers', () => {
             ],
         ])('Returns true if some field of yhteystiedot object is set and false if not set', (values, expected) => {
             expect(checkHasSomeValueByKieli(values as YhteystiedotBase)).toEqual(expected);
+        });
+    });
+
+    describe('sortNimet', () => {
+        it('Sorts nimet based on alkupvm date to past and future and setsCurrentName', () => {
+            const pastNimi = {
+                nimi: { fi: 'mennyt' },
+                alkuPvm: moment().subtract(1, 'days').format('D.M.yyyy') as LocalDate,
+            };
+            const futureNimi = {
+                nimi: { fi: 'tuleva' },
+                alkuPvm: moment().add(1, 'days').format('D.M.yyyy') as LocalDate,
+            };
+            const expectedPastNimet = [pastNimi];
+            const expectedFutureNimet = [futureNimi];
+            const nimet = [pastNimi, futureNimi];
+            const { currentNimi, pastNimet, futureNimet } = sortNimet(nimet, pastNimi.nimi);
+            expect(currentNimi).toStrictEqual(pastNimi);
+            expect(currentNimi.isCurrentNimi).toBe(true);
+            expect(pastNimet[0].isCurrentNimi).toBe(true);
+            expect(pastNimet).toStrictEqual(expectedPastNimet);
+            expect(futureNimet).toStrictEqual(expectedFutureNimet);
+            expect(futureNimet[0].isCurrentNimi).toBe(undefined);
         });
     });
 
