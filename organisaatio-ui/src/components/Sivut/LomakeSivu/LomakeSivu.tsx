@@ -109,7 +109,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         kielikoodisto,
     } = useContext(KoodistoContext);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
-    const [nimiIsMuuttunut, setNimiIsMuuttunut] = useState<boolean>(false);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })
     );
@@ -148,18 +147,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     useEffect(() => {
         (async function () {
-            try {
-                const organisaatio = await readOrganisaatio(params.oid);
-
-                if (organisaatio) {
-                    await resetOrganisaatio({ ...organisaatio });
-                }
-            } finally {
-                nimiIsMuuttunut && setNimiIsMuuttunut(!nimiIsMuuttunut);
+            const organisaatio = await readOrganisaatio(params.oid);
+            if (organisaatio) {
+                await resetOrganisaatio({ ...organisaatio });
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params.oid, nimiIsMuuttunut]);
+    }, [params.oid]);
     useEffect(() => {
         const organisaatioRakenne = resolveOrganisaatio(rakenne, {
             organisaatioTyypit: watchOrganisaatioTyypit || [],
@@ -319,8 +313,11 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         }
     }
 
-    function handleNimiMuutos() {
-        setNimiIsMuuttunut(true);
+    async function handleNimiMuutos() {
+        const organisaatio = await readOrganisaatio(params.oid);
+        if (organisaatio) {
+            await resetOrganisaatio({ ...organisaatio });
+        }
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);

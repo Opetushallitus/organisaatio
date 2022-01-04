@@ -73,7 +73,6 @@ export const sortNimet = (
             })
         );
     const currentNimiIndex = pastNimet.findIndex((pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi));
-    console.log('fdsdassda', currentNimiIndex);
     if (currentNimiIndex === 0) {
         pastNimet[0].isCurrentNimi = true;
     }
