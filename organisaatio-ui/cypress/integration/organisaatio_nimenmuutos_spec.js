@@ -67,7 +67,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
                 cy.clickAccordion('NIMIHISTORIA');
                 cy.contains('delete testi', { timeout: 10000 }).should('exist');
                 cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent3');
-                cy.wait(['@getCurrent2'], { timeout: 10000 }).then(() => {
+                cy.wait(['@getCurrent3'], { timeout: 10000 }).then(() => {
                     cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
                     cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
                 });
