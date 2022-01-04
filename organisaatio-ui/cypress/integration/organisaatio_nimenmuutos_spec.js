@@ -15,8 +15,8 @@ describe('Organisaation nimenmuutosmodaali', () => {
     });
 
     it('Edit name', () => {
-        cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
-        cy.get('@parentOrganisaatio1').then((organisaatio) => {
+        cy.persistOrganisaatio(organisaatio('PARENT2', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio2');
+        cy.get('@parentOrganisaatio2').then((organisaatio) => {
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
             cy.wait(['@getCurrent'], { timeout: 10000 });
@@ -27,14 +27,14 @@ describe('Organisaation nimenmuutosmodaali', () => {
     });
 
     it('Schedule a name change', () => {
-        cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
+        cy.persistOrganisaatio(organisaatio('PARENT3', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio3');
 
         const getAfterOneYear = () => {
             const date = new Date();
             return `1.${date.getMonth() + 1}.${date.getFullYear() + 1}`;
         };
 
-        cy.get('@parentOrganisaatio1').then((organisaatio) => {
+        cy.get('@parentOrganisaatio3').then((organisaatio) => {
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
             cy.wait(['@getCurrent'], { timeout: 10000 }).then(() => {
@@ -49,14 +49,14 @@ describe('Organisaation nimenmuutosmodaali', () => {
 
     it('Delete a name change', () => {
         cy.on('window:confirm', () => true);
-        cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio1');
+        cy.persistOrganisaatio(organisaatio('PARENT4', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio4');
 
         const getAfterOneYear = () => {
             const date = new Date();
             return `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`;
         };
 
-        cy.get('@parentOrganisaatio1').then((organisaatio) => {
+        cy.get('@parentOrganisaatio4').then((organisaatio) => {
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
             cy.wait(['@getCurrent'], { timeout: 10000 });
@@ -66,11 +66,8 @@ describe('Organisaation nimenmuutosmodaali', () => {
             cy.wait(['@getCurrent2', '@getPaivittaja'], { timeout: 10000 }).then(() => {
                 cy.clickAccordion('NIMIHISTORIA');
                 cy.contains('delete testi', { timeout: 10000 }).should('exist');
-                cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent3');
-                cy.wait(['@getCurrent3'], { timeout: 10000 }).then(() => {
-                    cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
-                    cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
-                });
+                cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
+                cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
             });
         });
     });
