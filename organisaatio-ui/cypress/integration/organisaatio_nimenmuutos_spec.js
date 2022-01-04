@@ -62,8 +62,8 @@ describe('Organisaation nimenmuutosmodaali', () => {
             cy.wait(['@getCurrent'], { timeout: 10000 });
             cy.addNewNimi('delete testi', 'pöllö', getAfterOneYear());
             cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent2');
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getPaivittaja');
-            cy.wait(['@getCurrent2', '@getPaivittaja'], { timeout: 10000 }).then(() => {
+            cy.intercept('POST', `${PUBLIC_API_CONTEXT}/*`).as('findByOids');
+            cy.wait(['@getCurrent2', '@findByOids'], { timeout: 10000 }).then(() => {
                 cy.clickAccordion('NIMIHISTORIA');
                 cy.contains('delete testi', { timeout: 10000 }).should('exist');
                 cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
