@@ -353,7 +353,7 @@ function mapUiOrganisaatioToApiToUpdate(
         parentOidPath,
         status,
         yhteystiedot,
-        nimet: uiNimet.map(({ nimi, alkuPvm }) => ({ nimi, alkuPvm: formatUiDateStrToApi(alkuPvm) })),
+        nimet: uiNimet.map(({ nimi, alkuPvm: ap }) => ({ nimi, alkuPvm: formatUiDateStrToApi(ap) })),
         ytunnus,
         varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,

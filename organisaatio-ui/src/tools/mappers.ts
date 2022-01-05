@@ -55,7 +55,7 @@ export const sortNimet = (
     const alkuPvmInFuture = (n) => {
         return moment(n.alkuPvm, 'D.M.YYYY').isAfter(nowTime);
     };
-    const [futureNimet, pastNimet] = nimet
+    const [mappedFutureNimet, mappedPastNimet] = nimet
         .reduce(
             (
                 [futureNimet, pastNimet]: [UiOrganisaationNimetNimi[], UiOrganisaationNimetNimi[]],
@@ -68,15 +68,17 @@ export const sortNimet = (
             [[], []]
         )
         .map((nimetArr) =>
-            nimetArr.sort((a, b) => {
+            [...nimetArr].sort((a, b) => {
                 return moment(a.alkuPvm, 'D.M.YYYY').isAfter(moment(b.alkuPvm, 'D.M.YYYY')) ? -1 : 1;
             })
         );
-    const currentNimiIndex = pastNimet.findIndex((pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi));
+    const currentNimiIndex = mappedPastNimet.findIndex(
+        (pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi)
+    );
     if (currentNimiIndex === 0) {
-        pastNimet[0].isCurrentNimi = true;
+        mappedPastNimet[0].isCurrentNimi = true;
     }
-    return { currentNimi: { ...pastNimet[0] }, pastNimet, futureNimet };
+    return { currentNimi: { ...mappedPastNimet[0] }, pastNimet: mappedPastNimet, futureNimet: mappedFutureNimet };
 };
 
 const makeDate = (date, format) => {

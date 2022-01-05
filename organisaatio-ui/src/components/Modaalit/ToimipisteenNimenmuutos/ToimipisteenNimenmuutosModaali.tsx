@@ -75,11 +75,11 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                         return;
                 }
             } else if (name === 'alkuPvm') {
-                const matchingNimi = findNimiByAlkuPvm(nimet, value.alkuPvm);
-                if (!!matchingNimi) {
+                const nimiMatch = findNimiByAlkuPvm(nimet, value.alkuPvm);
+                if (!!nimiMatch) {
                     reset({
-                        nimi: matchingNimi.nimi,
-                        alkuPvm: matchingNimi.alkuPvm,
+                        nimi: nimiMatch.nimi,
+                        alkuPvm: nimiMatch.alkuPvm,
                         muutostyyppi: MUUTOSTYYPPI_CREATE,
                         oid,
                         foundAmatch: true,
@@ -103,16 +103,16 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
     const handleTallenna = async () => {
         setIsLoading(true);
         try {
-            const { muutostyyppi, nimi, alkuPvm: newAlkuPvm, oid, foundAmatch } = getValues();
+            const { muutostyyppi, nimi, alkuPvm: newAlkuPvm, oid: oidValue, foundAmatch } = getValues();
             const newNimi = { nimi, alkuPvm: newAlkuPvm };
             if ((muutostyyppi === MUUTOSTYYPPI_EDIT || foundAmatch) && currentNimi) {
-                const { nimi, alkuPvm } = foundAmatch
+                const { nimi: matchNimi, alkuPvm } = foundAmatch
                     ? (findNimiByAlkuPvm(nimet, newAlkuPvm) as UiOrganisaationNimetNimi)
                     : currentNimi;
-                const oldNimi = { nimi, alkuPvm };
-                await updateOrganisaatioNimi(oid, oldNimi, newNimi);
+                const oldNimi = { nimi: matchNimi, alkuPvm };
+                await updateOrganisaatioNimi(oidValue, oldNimi, newNimi);
             } else if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
-                await createOrganisaatioNimi(oid, newNimi);
+                await createOrganisaatioNimi(oidValue, newNimi);
             }
         } finally {
             setIsLoading(false);

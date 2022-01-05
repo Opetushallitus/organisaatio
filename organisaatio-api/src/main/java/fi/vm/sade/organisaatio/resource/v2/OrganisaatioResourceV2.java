@@ -70,7 +70,7 @@ public interface OrganisaatioResourceV2 {
     OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@PathVariable("oid") String oid) throws Exception;
 
     @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid) throws Exception;
+    List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid);
 
     @GetMapping(path = "/{id}/LOP", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@PathVariable("id") String oid);

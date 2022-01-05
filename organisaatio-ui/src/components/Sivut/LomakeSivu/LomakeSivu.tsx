@@ -146,12 +146,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const watchOppilaitosTyyppiUri = watchPerustiedot('oppilaitosTyyppiUri');
 
     useEffect(() => {
-        (async function () {
-            const organisaatio = await readOrganisaatio(params.oid);
-            if (organisaatio) {
-                await resetOrganisaatio({ ...organisaatio });
-            }
-        })();
+        findAndResetOrganisaatio(params.oid);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.oid]);
     useEffect(() => {
@@ -242,6 +237,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         };
     };
 
+    async function findAndResetOrganisaatio(oid) {
+        const organisaatio = await readOrganisaatio(oid);
+        if (organisaatio) {
+            await resetOrganisaatio({ ...organisaatio });
+        }
+    }
+
     async function resetOrganisaatio({ organisaatio, polku }) {
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIYhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
@@ -314,10 +316,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     }
 
     async function handleNimiMuutos() {
-        const organisaatio = await readOrganisaatio(params.oid);
-        if (organisaatio) {
-            await resetOrganisaatio({ ...organisaatio });
-        }
+        await findAndResetOrganisaatio(params.oid);
     }
 
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTID);

@@ -1,8 +1,5 @@
 package fi.vm.sade.organisaatio.dto;
 
-import java.util.Date;
-import java.util.Map;
-
 public class OrganisaatioNimiUpdateDTO {
 
     private OrganisaatioNimiDTO currentNimi;

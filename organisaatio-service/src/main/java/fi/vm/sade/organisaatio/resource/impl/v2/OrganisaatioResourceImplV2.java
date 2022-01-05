@@ -296,7 +296,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/nimet
     @Override
-    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid) throws Exception {
+    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid){
         Preconditions.checkNotNull(oid);
 
         try {

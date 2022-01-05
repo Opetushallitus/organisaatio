@@ -6,9 +6,7 @@ import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -170,4 +168,4 @@ public interface OrganisaatioApi {
     // Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
     @DeleteMapping(path = "/{oid}/nimet")
     void deleteOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
-};
+}
