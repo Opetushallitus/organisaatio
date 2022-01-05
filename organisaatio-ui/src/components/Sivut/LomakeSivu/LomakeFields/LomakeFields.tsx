@@ -23,8 +23,8 @@ const ReadOnly = ({ value }) => {
     return <span className={styles.Kentta}>{value}</span>;
 };
 const ReadOnlyNimi = ({ value: nimi }) => {
-    const nimiKeys = Object.keys(nimi || {})
-        .map((nimiKey) => `${nimi[nimiKey]} [${nimiKey}]`)
+    const nimiKeys = Object.entries(nimi || {})
+        .map(([key, value]) => `${value} [${key}]`)
         .join(', ');
     return (
         <div>
