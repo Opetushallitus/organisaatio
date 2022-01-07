@@ -119,6 +119,13 @@ const OrganisaatioApp: React.FC = () => {
     ) {
         return <VirheSivu />;
     }
+    const virkailijaRaamitUrl = '/virkailija-raamit/apply-raamit.js';
+    if (!document.getElementById('raamienId')) {
+        const scriptElement = document.createElement('script');
+        scriptElement.src = virkailijaRaamitUrl;
+        scriptElement.id = 'raamienId';
+        document.body.appendChild(scriptElement);
+    }
 
     return (
         <ThemeProvider theme={theme}>

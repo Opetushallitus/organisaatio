@@ -8,7 +8,6 @@ import { BASE_PATH, ROOT_OID } from './contexts/constants';
 import useFrontProperties from './api/config';
 import Loading from './components/Loading/Loading';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import Raamit from './components/Raamit/Raamit';
 import { BrowserRouter } from 'react-router-dom';
 
 const cookies = new Cookies();
@@ -21,19 +20,9 @@ axios.interceptors.request.use((config) => {
 const InitGate = ({ children }) => {
     const { loading: frontPropertiesLoading, error: frontPropertiesError } = useFrontProperties();
     if (frontPropertiesLoading) {
-        return (
-            <>
-                <Raamit />
-                <Loading />
-            </>
-        );
+        return <Loading />;
     } else if (frontPropertiesError) {
-        return (
-            <>
-                <Raamit />
-                <ErrorPage>Service unavailable.</ErrorPage>
-            </>
-        );
+        return <ErrorPage>Service unavailable.</ErrorPage>;
     } else {
         return children;
     }
@@ -42,7 +31,6 @@ ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter basename={BASE_PATH}>
             <InitGate>
-                <Raamit />
                 <OrganisaatioApp />
             </InitGate>
         </BrowserRouter>
