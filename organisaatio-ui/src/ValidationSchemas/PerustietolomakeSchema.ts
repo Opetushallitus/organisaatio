@@ -1,4 +1,7 @@
-import Joi from 'joi';
+import JoiLess from 'joi';
+import JoiDate from '@joi/date';
+
+const Joi = JoiLess.extend(JoiDate);
 
 const perustietoOptionSchemaRequired = Joi.object({
     label: Joi.string().required(),
@@ -16,10 +19,9 @@ const perustietoOptionSchemaOptional = Joi.object({
 });
 
 export default Joi.object({
-    lyhytNimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
     ytunnus: Joi.string().allow(''),
-    alkuPvm: Joi.date().required(),
+    alkuPvm: Joi.date().format(['D.M.YYYY']).required(),
     organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not('organisaatiotyyppi_09').required()),
     kotipaikka: perustietoOptionSchemaRequired,
     muutKotipaikat: Joi.array(),
@@ -29,7 +31,7 @@ export default Joi.object({
     oppilaitosKoodi: Joi.string().allow(''),
     muutOppilaitosTyyppiUris: Joi.array().min(0),
     vuosiluokat: Joi.array().min(0),
-    lakkautusPvm: Joi.date().allow(''),
+    lakkautusPvm: Joi.date().format(['D.M.YYYY']).allow(''),
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
     piilotettu: Joi.optional(),
 });

@@ -8,6 +8,7 @@ import MuokkausLomake from './MuokkausLomake';
 import { ROOT_OID } from '../../../../contexts/constants';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { LanguageContext } from '../../../../contexts/LanguageContext';
+import { formatUiDateStrToApi } from '../../../../tools/mappers';
 
 export type RyhmanMuokausProps = {
     oid?: string;
@@ -26,8 +27,6 @@ const emptyRyhma: Partial<NewRyhma> = {
     status: 'AKTIIVINEN',
     tyypit: ['Ryhma'],
 };
-
-export const currentDateToStr = () => new Date().toISOString().split('T')[0];
 
 const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuokausProps> & { isNew?: boolean }) => {
     const { i18n } = useContext(LanguageContext);
@@ -103,7 +102,7 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
         const { status } = ryhma as Ryhma;
         let newRyhma;
         if (status === 'AKTIIVINEN') {
-            newRyhma = { ...ryhma, lakkautusPvm: currentDateToStr() };
+            newRyhma = { ...ryhma, lakkautusPvm: formatUiDateStrToApi() };
         } else {
             const { lakkautusPvm, ...rest } = ryhma;
             newRyhma = rest;

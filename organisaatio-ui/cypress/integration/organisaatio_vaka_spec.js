@@ -2,6 +2,8 @@ import { organisaatio } from '../support/data';
 import { BASE_PATH } from '../../src/contexts/constants';
 import * as React from 'react';
 
+const VAKA_TOIMIJA_ORGANISAATIOTYYPPI = 'organisaatiotyyppi_08';
+
 describe('VAKA specific fields', () => {
     it('Shows specific fields when oppilaitos is chosen', () => {
         cy.persistOrganisaatio(organisaatio('PARENT1', { tyypit: [`organisaatiotyyppi_07`] }), 'parentOrganisaatio1');
@@ -48,6 +50,7 @@ describe('VAKA specific fields', () => {
         cy.get('@child').then((child) => {
             cy.visit(`${BASE_PATH}/lomake/${child.body.organisaatio.oid}`);
             cy.contains('Varhaiskasvatuksen toimipaikka', { timeout: 1000000 }).should('exist');
+            cy.get(`input[name="${VAKA_TOIMIJA_ORGANISAATIOTYYPPI}"]`).should('be.disabled').should('be.checked');
             cy.contains('LOMAKE_VAKA').should('exist');
             cy.clickAccordion('LOMAKE_VAKA');
             cy.contains('VAKA_TOIMINTAMUOTO').should('exist').next().contains('Perhepäivähoito').should('exist');

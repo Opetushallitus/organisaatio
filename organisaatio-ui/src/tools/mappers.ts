@@ -1,4 +1,9 @@
-import { Koodi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import { Koodi, LocalDate, Nimi, UiOrganisaationNimetNimi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import moment from 'moment';
+import { APIEndpontDate } from '../types/apiTypes';
+
+moment.locale('fi');
+
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
     if (hasVersioningHashtag !== -1) {
@@ -36,4 +41,65 @@ export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[Supp
         Object.keys(KielisetYhteystiedot).filter((yhteystietokentta) => KielisetYhteystiedot[yhteystietokentta])
             .length > 0
     );
+};
+
+export const sortNimet = (
+    nimet: UiOrganisaationNimetNimi[],
+    nimi: Nimi
+): {
+    currentNimi: UiOrganisaationNimetNimi;
+    pastNimet: UiOrganisaationNimetNimi[];
+    futureNimet: UiOrganisaationNimetNimi[];
+} => {
+    const nowTime = moment();
+    const alkuPvmInFuture = (n) => {
+        return moment(n.alkuPvm, 'D.M.YYYY').isAfter(nowTime);
+    };
+    const [mappedFutureNimet, mappedPastNimet] = nimet
+        .reduce(
+            (
+                [futureNimet, pastNimet]: [UiOrganisaationNimetNimi[], UiOrganisaationNimetNimi[]],
+                elem
+            ): [futureNimet: UiOrganisaationNimetNimi[], fail: UiOrganisaationNimetNimi[]] => {
+                return alkuPvmInFuture(elem)
+                    ? [[...futureNimet, elem], pastNimet]
+                    : [futureNimet, [...pastNimet, elem]];
+            },
+            [[], []]
+        )
+        .map((nimetArr) =>
+            [...nimetArr].sort((a, b) => {
+                return moment(a.alkuPvm, 'D.M.YYYY').isAfter(moment(b.alkuPvm, 'D.M.YYYY')) ? -1 : 1;
+            })
+        );
+    const currentNimiIndex = mappedPastNimet.findIndex(
+        (pastNimi) => JSON.stringify(pastNimi.nimi) === JSON.stringify(nimi)
+    );
+    if (currentNimiIndex === 0) {
+        mappedPastNimet[0].isCurrentNimi = true;
+    }
+    return { currentNimi: { ...mappedPastNimet[0] }, pastNimet: mappedPastNimet, futureNimet: mappedFutureNimet };
+};
+
+const makeDate = (date, format) => {
+    if (date) {
+        return moment(date, format);
+    }
+    return moment();
+};
+
+export const getUiDateStr = (
+    dateStr?: Date | string,
+    format: string[] | string | undefined = ['D-M-YYYY', 'YYYY-M-D', 'YYYY-D-M', 'M-D-YYYY'],
+    long = false
+): LocalDate => {
+    const dateWithoutFormat = makeDate(dateStr, format);
+    return dateWithoutFormat.isValid()
+        ? (dateWithoutFormat.format(`D.M.yyyy${long ? ' HH:mm:ss' : ''}`) as LocalDate)
+        : '';
+};
+
+export const formatUiDateStrToApi = (date?): APIEndpontDate => {
+    const dateWithoutFormat = makeDate(date, 'DD.MM.YYYY');
+    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-MM-DD') as APIEndpontDate) : '';
 };
