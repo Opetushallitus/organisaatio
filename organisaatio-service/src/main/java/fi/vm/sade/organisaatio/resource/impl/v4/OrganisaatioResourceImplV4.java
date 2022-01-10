@@ -11,14 +11,11 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.impl.OrganisaatioApiImpl;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.ws.rs.core.Response;
 
 @RestController
 @RequestMapping("${server.rest.context-path}/organisaatio/v4")
@@ -35,15 +32,15 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         try {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            logger.warn("Not authorized to delete organisation: " + oid);
+            LOG.warn("Not authorized to delete organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            logger.info("Deleted organisaatio: " + oid +" under parent: " + parent.getOid());
+            LOG.info("Deleted organisaatio: " + oid +" under parent: " + parent.getOid());
         } catch (SadeBusinessException sbe) {
-            logger.warn("Error deleting org", sbe);
+            LOG.warn("Error deleting org", sbe);
             throw new OrganisaatioResourceException(sbe);
         }
 

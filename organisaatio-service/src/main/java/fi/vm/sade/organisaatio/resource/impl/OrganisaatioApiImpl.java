@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("${server.api.context-path}")
 public class OrganisaatioApiImpl implements OrganisaatioApi {
-    protected static final Logger logger = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
     private final OppijanumeroClient oppijanumeroClient;
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
@@ -107,26 +107,26 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public ResultRDTOV4 updateOrganisaatio(String oid, OrganisaatioRDTOV4 ordto) {
-        logger.info("Saving {}", oid);
+        LOG.info("Saving {}", oid);
         try {
             permissionChecker.checkSaveOrganisation(ordto, true);
         } catch (NotAuthorizedException nae) {
-            logger.warn("NotAuthorizedException for {}", oid);
+            LOG.warn("NotAuthorizedException for {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            logger.warn("ValidationException while saving {}", oid);
+            LOG.warn("ValidationException while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            logger.warn("SadeBusinessException while saving {}", oid);
+            LOG.warn("SadeBusinessException while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     sbe.getMessage(), "organisaatio.business.virhe");
         } catch (Exception t) {
-            logger.warn("Throwable while saving {}", oid);
+            LOG.warn("Throwable while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
@@ -141,20 +141,20 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkSaveOrganisation(ordto, false);
         } catch (NotAuthorizedException nae) {
-            logger.warn("Not authorized to create child organisation for {}", ordto.getParentOid());
+            LOG.warn("Not authorized to create child organisation for {}", ordto.getParentOid());
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            logger.warn("ValidationException saving new org");
+            LOG.warn("ValidationException saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            logger.warn("SadeBusinessException saving new org");
+            LOG.warn("SadeBusinessException saving new org");
             throw new OrganisaatioResourceException(sbe);
         } catch (Exception t) {
-            logger.warn("Throwable saving new org");
+            LOG.warn("Throwable saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
@@ -187,7 +187,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            logger.warn("Not authorized to read organisation {}", oid);
+            LOG.warn("Not authorized to read organisation {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         if (oid.equals(rootOrganisaatioOid)) {
@@ -224,7 +224,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             try {
                 permissionChecker.checkReadOrganisation(oid);
             } catch (NotAuthorizedException nae) {
-                logger.warn("Not authorized to read organisation: {}", oid);
+                LOG.warn("Not authorized to read organisation: {}", oid);
                 throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
             }
         }
@@ -238,7 +238,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
         } catch (SadeBusinessException sbe) {
-            logger.warn("Error merging organizations {}, {}, {}", oid, parentOid, merge);
+            LOG.warn("Error merging organizations {}, {}, {}", oid, parentOid, merge);
             throw new OrganisaatioResourceException(sbe);
         }
         return this.organisaatioFindBusinessService.findByIdV4(oid, false);
@@ -253,18 +253,18 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            logger.warn("Not authorized to delete organisation: {}", oid);
+            LOG.warn("Not authorized to delete organisation: {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.UNAUTHORIZED, nae);
         }
         try {
             Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            logger.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
+            LOG.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
         } catch (OrganisaatioNotFoundException e) {
             throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, e);
         } catch (OrganisaatioBusinessException e) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, e);
         } catch (SadeBusinessException sbe) {
-            logger.warn("Error deleting org {} ", oid);
+            LOG.warn("Error deleting org {} ", oid);
             throw new OrganisaatioResourceException(sbe);
         }
     }
@@ -281,7 +281,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            logger.warn("Not authorized to read organisation: {}", oid);
+            LOG.warn("Not authorized to read organisation: {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
@@ -295,7 +295,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 tulos.setSukuNimi(henkilo.getSukunimi());
 
             } catch (Exception ex) {
-                logger.error(ex.getMessage());
+                LOG.error(ex.getMessage());
                 tulos.setSukuNimi(org.getPaivittaja());
             }
             return tulos;
