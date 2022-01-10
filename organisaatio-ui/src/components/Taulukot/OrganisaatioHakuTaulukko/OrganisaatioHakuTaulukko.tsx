@@ -24,7 +24,7 @@ import { Filters } from '../../../types/types';
 import { LanguageContext } from '../../../contexts/LanguageContext';
 import { SearchFilterContext } from '../../../contexts/SearchFiltersContext';
 import IconWrapper from '../../IconWapper/IconWrapper';
-
+const MAX_EXPAND_ROWS = 10;
 const SEARCH_LENGTH = 3;
 const mapPaginationSelectors = (index) => {
     if (index < 3) return [0, 5];
@@ -124,6 +124,16 @@ function Hakufiltterit({ setOrganisaatiot }: HakufiltteritProps) {
         </div>
     );
 }
+const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {}) => {
+    return data.reduce((p, c, i) => {
+        const me = parent ? `${parent}.${i}` : `${i}`;
+        if (!!c.subRows && c.subRows.length <= MAX_EXPAND_ROWS) {
+            p[me] = true;
+            expandData(c.subRows, me, p);
+        }
+        return p;
+    }, initial);
+};
 
 export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: OrganisaatioHakuTaulukkoProps) {
     const { i18n } = useContext(LanguageContext);
@@ -132,6 +142,8 @@ export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: Organisa
 
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => organisaatiot, [organisaatiot]);
+    const initialExpanded = React.useMemo(() => expandData(data), [data]);
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -160,6 +172,7 @@ export default function OrganisaatioHakuTaulukko({ tableColumns = [] }: Organisa
                         desc: false,
                     },
                 ],
+                expanded: initialExpanded,
             },
             paginateExpandedRows: false,
         },
