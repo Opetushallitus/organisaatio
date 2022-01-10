@@ -60,6 +60,7 @@ import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import { Icon } from '@iconify/react';
+import IconWrapper from '../../IconWapper/IconWrapper';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -459,7 +460,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             <YlaBanneri>
                 <div>
                     <Link to={'/organisaatiot'}>
-                        <Icon fr={0} icon={homeIcon} />
+                        <IconWrapper icon={homeIcon} />
                     </Link>
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [
