@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl;
 
+import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -7,14 +8,16 @@ import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
+import fi.vm.sade.organisaatio.business.exception.*;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -42,6 +45,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
     private final OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper;
+    private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+
 
     protected final PermissionChecker permissionChecker;
     @Autowired
@@ -58,13 +63,15 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                                PermissionChecker permissionChecker,
                                OrganisaatioBusinessService organisaatioBusinessService,
                                OrganisaatioFindBusinessService organisaatioFindBusinessService,
-                               OppijanumeroClient oppijanumeroClient) {
+                               OppijanumeroClient oppijanumeroClient,
+                               OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioResourceV2 = organisaatioResourceV2;
         this.organisaatioDTOV4ModelMapper = organisaatioDTOV4ModelMapper;
         this.permissionChecker = permissionChecker;
         this.organisaatioBusinessService = organisaatioBusinessService;
         this.organisaatioFindBusinessService = organisaatioFindBusinessService;
         this.oppijanumeroClient = oppijanumeroClient;
+        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
     /**
@@ -304,6 +311,48 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         }
 
     }
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public OrganisaatioNimiDTO newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
+        Preconditions.checkNotNull(oid);
+        try {
+            permissionChecker.checkUpdateOrganisationName(oid);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(nae);
+        }
+
+        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.newOrganisaatioNimi(oid, nimidto);
+        return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTO.class);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public OrganisaatioNimiDTO updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDto) {
+        Preconditions.checkNotNull(oid);
+        Preconditions.checkNotNull(nimiUpdateDto.getCurrentNimi().getAlkuPvm());
+        try {
+            permissionChecker.checkUpdateOrganisationName(oid);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(nae);
+        }
+        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, nimiUpdateDto);
+        return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTO.class);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
+        Preconditions.checkNotNull(oid);
+        Preconditions.checkNotNull(nimidto.getAlkuPvm());
+
+        try {
+            permissionChecker.checkUpdateOrganisationName(oid);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(nae);
+        }
+
+        organisaatioBusinessService.deleteOrganisaatioNimi(oid, nimidto);
+    }
 
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
@@ -377,4 +426,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         Collections.reverse(parentOidsList);
         return String.join("/", parentOidsList);
     }
+
+
 }

@@ -1,5 +1,13 @@
-import { Koodisto, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
-import { ApiOrganisaatio, ApiYhteystiedot, NewApiOrganisaatio, YhteystiedotOsoite } from '../types/apiTypes';
+import moment from 'moment';
+import { Koodisto, LocalDate, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+
+import {
+    APIEndpontDate,
+    ApiOrganisaatio,
+    ApiYhteystiedot,
+    NewApiOrganisaatio,
+    YhteystiedotOsoite,
+} from '../types/apiTypes';
 import {
     getApiOsoite,
     getApiYhteystieto,
@@ -23,8 +31,8 @@ const postinumerotKoodisto: Partial<Koodisto> = {
     uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
-const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-const today = new Date().toISOString().split('T')[0];
+const Uiyesterday = moment(new Date(Date.now() - 86400000)).format('D.M.yyyy') as LocalDate;
+const Apiyesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] as APIEndpontDate;
 
 const oldApiyhteystiedot = [
     {
@@ -89,12 +97,12 @@ const apiYhteystiedot: ApiYhteystiedot[] = [
     },
 ];
 
-const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday }]; // yesterday
+const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Apiyesterday }]; // yesterday
 
 const apiOrganisaatio: ApiOrganisaatio = {
     alkuPvm: '2000-10-10',
     kieletUris: ['oppilaitoksenopetuskieli_1#1'],
-    lakkautusPvm: undefined,
+    lakkautusPvm: '',
     kotipaikkaUri: 'kunta_1',
     muutKotipaikatUris: ['kunta_2#1'],
     maaUri: 'maa_1',
@@ -123,7 +131,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     kotipaikkaUri: 'kunta_1',
     muutKotipaikatUris: ['kunta_2#1'],
     maaUri: 'maa_1',
-    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: today }],
+    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: '2000-10-10' }],
     nimi: { fi: 'uusinimi' },
     lyhytNimi: { fi: 'uusinimi' },
     parentOid: '123.321',
@@ -155,21 +163,20 @@ const kayntiosoite = {
 const uiBaseTiedot: UiOrganisaatioBase = {
     oid: '1.2.1',
     parentOid: '123.321',
-    nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday }],
+    nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday }],
     parentOidPath: '123.321,1.2.1',
     apiYhteystiedot: oldApiyhteystiedot,
-    currentNimi: { fi: 'vanhanimi' },
+    currentNimi: { nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday },
     status: 'AKTIIVINEN',
+    nimi: { fi: 'uusinimi' },
 };
 
 const uiPerustiedot: Perustiedot = {
-    alkuPvm: '2000-10-10',
+    alkuPvm: '10.10.2000',
     kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, disabled: false }],
     kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, disabled: false },
     maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },
     muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, disabled: false }],
-    nimi: { fi: 'uusinimi' },
-    lyhytNimi: { fi: 'uusinimi' },
     organisaatioTyypit: ['organisaatiotyyppi_01'],
     oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
     oppilaitosKoodi: '',
@@ -291,8 +298,6 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             : 0 || a.kieli.localeCompare(b.kieli);
     it('Maps Ui organisaatio to api for update', () => {
         const expectedYhteystiedot = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite].sort(YhteystiedotsortCb);
-        const expectedNimet = [...apiOrganisaatio.nimet];
-        expectedNimet.push({ nimi: { fi: 'uusinimi' }, alkuPvm: today });
         const mappedApiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
             postinumerotKoodisto as Koodisto,
             uiBaseTiedot,
@@ -303,28 +308,8 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
         mappedApiOrganisaatio.yhteystiedot = mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
         expect(mappedApiOrganisaatio).toEqual({
             ...apiOrganisaatio,
-            nimi: { fi: 'uusinimi' },
-            lyhytNimi: { fi: 'uusinimi' },
-            nimet: expectedNimet,
             yhteystiedot: expectedYhteystiedot,
         });
-    });
-
-    it('Updates nimet nimi to be same as nimi if update is done on the same day', () => {
-        const expectedNimet = [
-            { nimi: { fi: 'vanhanimi' }, alkuPvm: yesterday },
-            { nimi: { fi: 'nimenvaihto' }, alkuPvm: today },
-        ];
-        const { nimet, ...rest } = uiBaseTiedot;
-        uiPerustiedot.lyhytNimi = { fi: 'nimenvaihto' };
-        const { nimet: mappedNimet } = mapUiOrganisaatioToApiToUpdate(
-            postinumerotKoodisto as Koodisto,
-            { nimet, ...rest },
-            uiYhteystiedot,
-            uiPerustiedot,
-            {}
-        );
-        expect(mappedNimet).toEqual(expectedNimet);
     });
 });
 
@@ -344,15 +329,13 @@ describe('mapUiOrganisaatioToApiToSave', () => {
                 : b.hasOwnProperty('email')
                 ? 1
                 : 0 || a.kieli.localeCompare(b.kieli);
-        uiBaseTiedot.nimet = [];
         const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(
             postinumerotKoodisto as Koodisto,
             uiYhteystiedot,
-            uiPerustiedot,
+            { ...uiPerustiedot, nimi: { fi: 'uusinimi' } },
             '123.321'
         );
         mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
-        expect(mappedApiOrganisaatio.nimet[0].alkuPvm).toEqual(today);
         expect(mappedApiOrganisaatio).toEqual({
             ...newApiOrganisaatio,
             yhteystiedot: newApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb),

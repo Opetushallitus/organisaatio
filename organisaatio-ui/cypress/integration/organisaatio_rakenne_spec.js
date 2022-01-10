@@ -21,11 +21,14 @@ describe('Organisaatio Rakenne', () => {
             cy.clickButton('JATKA');
             cy.clickButton('NAYTA_MUUT_KIELET');
             cy.enterAllYhteystiedot('CHILD');
+            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/${response.body.organisaatio.oid}*`).as('getOrganisaatio');
+            cy.intercept('POST', `${PUBLIC_API_CONTEXT}/*`).as('findByOids');
             cy.clickSaveButton();
-            cy.contains('CHILD Suominimi', { timeout: 10000 });
-            cy.clickAccordion('RAKENNE');
-
-            cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
+            cy.wait(['@getOrganisaatio', '@findByOids']).then(() => {
+                cy.contains('CHILD Suominimi').should('exist');
+                cy.clickAccordion('RAKENNE');
+                cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
+            });
         });
     });
 });

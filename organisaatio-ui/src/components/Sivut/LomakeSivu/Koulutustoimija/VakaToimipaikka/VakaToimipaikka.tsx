@@ -47,7 +47,6 @@ export default function VakaToimipaikka({
     control: Control<Perustiedot>;
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
 }) {
-    console.log(getPerustiedotValues());
     return (
         <UloinKehys>
             <Rivi>

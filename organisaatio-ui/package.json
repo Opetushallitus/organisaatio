@@ -4,8 +4,9 @@
     "private": true,
     "dependencies": {
         "@hookform/resolvers": "^2.5.2",
-        "@iconify/icons-fa-solid": "1.0.11",
-        "@iconify/react": "1.1.3",
+        "@iconify/icons-fa-solid": "1.1.1",
+        "@iconify/react": "3.1.0",
+        "@joi/date": "^2.1.0",
         "@opetushallitus/virkailija-ui-components": "^0.4.5",
         "axios": "^0.21.1",
         "axios-hooks": "1.10.0",

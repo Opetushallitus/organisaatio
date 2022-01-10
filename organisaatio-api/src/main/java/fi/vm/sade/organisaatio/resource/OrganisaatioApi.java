@@ -1,6 +1,8 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.api.DateParam;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +21,7 @@ import java.util.Set;
  * <li>supports varhaiskasvatuksen toimipaikka typed organisations</li>
  * </ul>
  */
+
 public interface OrganisaatioApi {
 
     @PostMapping(path = "/findbyoids", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -148,7 +151,21 @@ public interface OrganisaatioApi {
     void deleteOrganisaatio(
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid
     );
+
     @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(@PathVariable("oid") String oid);
 
+    // nimen muokkausta varten alla:
+
+    // Operaatio luo uuden nimen organisaatiolle annetusta JSON:sta.
+    @PostMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    OrganisaatioNimiDTO newOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
+
+    // Operaatio päivittää oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
+    @PutMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    OrganisaatioNimiDTO updateOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiUpdateDTO nimiUpdateDto);
+
+    // Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
+    @DeleteMapping(path = "/{oid}/nimet")
+    void deleteOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
 }

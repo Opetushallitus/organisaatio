@@ -1,9 +1,9 @@
-package fi.vm.sade.organisaatio.dto.v2;
+package fi.vm.sade.organisaatio.dto;
 
 import java.util.Date;
 import java.util.Map;
 
-public class OrganisaatioNimiDTOV2 {
+public class OrganisaatioNimiDTO {
     private String oid;
     private Map<String, String> nimi;
     private Date alkuPvm;
