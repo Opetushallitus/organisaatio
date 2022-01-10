@@ -75,7 +75,7 @@ Cypress.Commands.add('selectFromList', (list, contains, input) => {
 });
 
 Cypress.Commands.add('enterDate', (label, date) => {
-    cy.contains(label).parent().find('input').type(date);
+    cy.contains(label).parent().find('input').clear().type(date);
     cy.contains(label).click();
 });
 
@@ -149,6 +149,7 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
         cy.inputByName('nimi.fi', `${prefix} Suominimi`);
         cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
         cy.inputByName('nimi.en', `${prefix} Enkku`);
+        cy.enterDate('alkuPvm', '2.9.2021');
         cy.clickButton('VAHVISTA');
     }
 
@@ -170,4 +171,27 @@ Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {
         'GET',
         `${PUBLIC_API_CONTEXT}/hae?searchStr=${ytunnus}&aktiiviset=true&suunnitellut=true&lakkautetut=false`
     ).as(key);
+});
+
+const getToday = () => {
+    const date = new Date();
+    return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+};
+
+Cypress.Commands.add('addNewNimi', (prefix = 'testi', nimi = 'testi', alkuPvm = getToday()) => {
+    cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
+    cy.enterDate('ALKUPVM', alkuPvm);
+    cy.inputByName('nimi.fi', `${prefix} Suominimi`);
+    cy.inputByName('nimi.sv', `${prefix} Ruotsi`);
+    cy.inputByName('nimi.en', `${prefix} Enkku`);
+    cy.clickButton('VAHVISTA');
+});
+
+Cypress.Commands.add('editNimi', (prefix = 'testi') => {
+    cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
+    cy.get(`input[value="EDIT"]`).parent().click();
+    cy.inputByName('nimi.fi', `${prefix} Suominimi muokattu`);
+    cy.inputByName('nimi.sv', `${prefix} Ruotsi muokattu`);
+    cy.inputByName('nimi.en', `${prefix} Enkku muokattu`);
+    cy.clickButton('VAHVISTA');
 });

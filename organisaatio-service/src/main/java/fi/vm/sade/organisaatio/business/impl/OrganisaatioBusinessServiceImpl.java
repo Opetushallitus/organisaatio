@@ -23,9 +23,10 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.*;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
@@ -685,7 +686,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) {
+    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Organisaatio orgEntity = getOrganisaatio(oid);
 
         // Luodaan tallennettava entity objekti
@@ -702,68 +703,59 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Asetetaan organisaation nimi ja nimihistorian nykyinen nimi
             // osoittamaan varmasti samaan monikieliseen tekstiin
             orgEntity.setNimi(nimiEntity.getNimi());
-
-            logger.debug("newOrganisaatioNimi updating {}", orgEntity);
-            try {
-                organisaatioRepository.save(orgEntity); // TODO update works?
-            } catch (OptimisticLockException ole) {
-                throw new OrganisaatioModifiedException(ole);
-            }
+            organisaatioRepository.save(orgEntity);
         }
 
         return nimiEntity;
     }
 
     @Override
-    public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date alkuPvm, OrganisaatioNimiDTOV2 nimidto) {
+    public OrganisaatioNimi updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDTO) {
         Organisaatio orgEntity = getOrganisaatio(oid);
-
-        logger.debug("Haetaan organisaation: {} nimeä alkupäivämäärällä: {}", oid, alkuPvm);
-
+        OrganisaatioNimiDTO currentNimiDTO = nimiUpdateDTO.getCurrentNimi();
+        OrganisaatioNimiDTO updatedNimiDTO = nimiUpdateDTO.getUpdatedNimi();
+        logger.debug("Haetaan organisaation: {} nimeä alkupäivämäärällä: {}", oid, currentNimiDTO.getAlkuPvm());
         // Haetaan päivitettävä entity objecti
-        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
+        OrganisaatioNimi nimiEntityOld = this.organisaatioNimiRepository.findNimi(orgEntity, currentNimiDTO);
 
         if (nimiEntityOld == null) {
-            throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
+            throw new OrganisaatioNimiNotFoundException(oid, currentNimiDTO.getAlkuPvm());
         }
 
         // Luodaan tallennettava entity objekti
-        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(nimidto, OrganisaatioNimi.class);
+        OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(updatedNimiDTO, OrganisaatioNimi.class);
 
         // Asetetaan organisaatio
         nimiEntityNew.setOrganisaatio(orgEntity);
 
-        // Päivitystapauksessa pitaa asetta id:t, ettei luoda uusia rivejä
+        // Päivitystapauksessa asetetaan id:t, ettei luoda uusia rivejä
         nimiEntityNew.setId(nimiEntityOld.getId());
         nimiEntityNew.getNimi().setId(nimiEntityOld.getNimi().getId());
         nimiEntityNew.getNimi().setVersion(nimiEntityOld.getNimi().getVersion());
 
-        logger.debug("updateOrganisaatioNimi updating {}", nimiEntityNew);
-        try {
-            // Päivitetään nimi
-            organisaatioNimiRepository.save(nimiEntityNew);
-        } catch (OptimisticLockException ole) {
-            throw new OrganisaatioNimiModifiedException(ole);
-        }
+        logger.debug("updating nimi: {}", nimiEntityNew);
+
+        // Päivitetään nimi
+        organisaatioNimiRepository.save(nimiEntityNew);
 
         // Palautetaan päivitetty nini
-        nimiEntityNew = organisaatioNimiRepository.findById(nimiEntityNew.getId()).orElseThrow(); //TODO works?
+        nimiEntityNew = organisaatioNimiRepository.findById(nimiEntityNew.getId()).orElseThrow();
 
         return nimiEntityNew;
     }
 
     @Override
-    public void deleteOrganisaatioNimi(String oid, Date alkuPvm) {
+    public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Organisaatio orgEntity = getOrganisaatio(oid);
 
         // Haetaan poistettava entity objecti
-        OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findNimi(orgEntity, alkuPvm);
+        OrganisaatioNimi nimiEntity = this.organisaatioNimiRepository.findNimi(orgEntity, nimidto);
 
         // Tarkistetaan, että nimi ei ole nykyinen nimi
         OrganisaatioNimi currentNimiEntity = this.organisaatioNimiRepository.findCurrentNimi(orgEntity);
 
         if (nimiEntity == null) {
-            throw new OrganisaatioNimiNotFoundException(oid, alkuPvm);
+            throw new OrganisaatioNimiNotFoundException(oid, nimidto.getAlkuPvm());
         }
 
         // Tarkistetaan ettei poistettava nimi ole organisaation nykyinen nimi
@@ -774,7 +766,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Vain uusimman nimen, jonka voimassaolo ei ole alkanut saa poistaa
-        if (alkuPvm.before(new Date())) {
+        if (nimidto.getAlkuPvm().before(new Date())) {
             throw new OrganisaatioNimiDeleteException();
         }
 

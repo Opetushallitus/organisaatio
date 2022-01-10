@@ -21,7 +21,7 @@ export class KoodistoImpl implements Koodisto {
     }
 
     uri2SelectOption(uri: KoodiUri, disabled = false): KoodistoSelectOption {
-        return this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`));
+        return { ...this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`)), disabled };
     }
 
     uri2Nimi(uri: KoodiUri): string {
@@ -55,7 +55,6 @@ export class KoodistoImpl implements Koodisto {
     private kielistettyNimi(koodi?: Koodi): KoodistoSelectOption {
         return {
             arvo: koodi?.arvo || '',
-            disabled: false,
             value: koodi?.uri || '',
             versio: koodi?.versio || 0,
             label: koodi?.nimi[this.kieli] || (this.kieli === 'fi' ? '' : koodi?.nimi['fi'] || ''),

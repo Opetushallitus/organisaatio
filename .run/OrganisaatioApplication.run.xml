@@ -20,6 +20,7 @@
       <env name="host.virkailija" value="localhost:9000" />
       <env name="url-ytj" value="http://localhost:9000/ytj" />
       <env name="url-oidservice" value="http://localhost:9000/oidservice" />
+      <env name="cas.service.organisaatio-service" value="http://localhost:8080/organisaatio-service" />
     </envs>
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="-x test" />

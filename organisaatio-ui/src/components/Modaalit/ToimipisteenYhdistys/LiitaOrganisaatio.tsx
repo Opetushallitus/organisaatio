@@ -29,6 +29,7 @@ export function LiitaOrganisaatio({
 }) {
     const { i18n } = useContext(LanguageContext);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
+    const { oid, currentNimi } = organisaatioBase;
     return (
         <>
             {!confirmationModaaliAuki && (
@@ -59,7 +60,7 @@ export function LiitaOrganisaatio({
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(organisaatioBase.currentNimi)} (${organisaatioBase.oid})`,
+                            value: `${i18n.translateNimi(currentNimi?.nimi)} (${oid})`,
                         },
                         {
                             key: 'to',

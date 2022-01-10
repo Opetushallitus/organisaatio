@@ -5,10 +5,9 @@ import Accordion from '../../../Accordion/Accordion';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { rakenne } from '../../../../contexts/constants';
-import { ParentTiedot, Perustiedot } from '../../../../types/types';
+import { Nimi, ParentTiedot, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
-import Icon from '@iconify/react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -38,6 +37,7 @@ import {
 } from '../LomakeFields/LomakeFields';
 import { LanguageContext } from '../../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../../contexts/KoodistoContext';
+import IconWrapper from '../../../IconWapper/IconWrapper';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -191,7 +191,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
         <PohjaSivu>
             <YlaBanneri>
                 <Link to={'/organisaatiot'}>
-                    <Icon icon={homeIcon} />
+                    <IconWrapper icon={homeIcon} />
                     {i18n.translate('UUSI_TOIMIJA_TITLE')}
                 </Link>
             </YlaBanneri>
@@ -220,7 +220,10 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 <YTJModaali
                     ytunnus={watchPerustiedot('ytunnus') || ''}
                     setters={{ setPerustiedotValue, setYhteystiedotValue }}
-                    suljeModaali={() => setYTJModaaliAuki(false)}
+                    suljeModaali={(nimi?: Nimi) => {
+                        if (nimi) setPerustiedotValue('nimi', nimi);
+                        setYTJModaaliAuki(false);
+                    }}
                 />
             )}
         </PohjaSivu>

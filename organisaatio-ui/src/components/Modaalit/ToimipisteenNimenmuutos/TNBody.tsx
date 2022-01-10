@@ -1,30 +1,74 @@
-import React from 'react';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
-import { Nimi } from '../../../types/types';
+import React, { useContext } from 'react';
+import Radio from '@opetushallitus/virkailija-ui-components/Radio';
+import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
+import { NimenmuutosLomake } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { UseFormRegister } from 'react-hook-form/dist/types/form';
-import { BodyKehys, BodyKentta } from '../ModalFields/ModalFields';
+import { Control, UseFormGetValues, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { LanguageContext } from '../../../contexts/LanguageContext';
+import { Controller } from 'react-hook-form';
+import NimenMuutosFields from './NimenMuutosFields';
+import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
+import Spinner from '../../Spinner/Spinner';
 
 type TNProps = {
-    validationErrors: FieldErrors<Nimi>;
-    register: UseFormRegister<Nimi>;
+    validationErrors: FieldErrors<NimenmuutosLomake>;
+    register: UseFormRegister<NimenmuutosLomake>;
+    formControl: Control<NimenmuutosLomake>;
+    getValues: UseFormGetValues<NimenmuutosLomake>;
+    isLoading: boolean;
 };
 
 export default function TNBody(props: TNProps) {
-    const { validationErrors, register } = props;
+    const { validationErrors, register, formControl, getValues, isLoading } = props;
+    const { i18n } = useContext(LanguageContext);
+    if (isLoading) {
+        return (
+            <BodyRivi>
+                <BodyKentta>
+                    <Spinner />
+                </BodyKentta>
+            </BodyRivi>
+        );
+    }
+    const { muutostyyppi, foundAmatch } = getValues();
     return (
-        <BodyKehys>
-            <BodyKentta>
-                <BodyKentta isRequired label={'LABEL_SUOMEKSI'}>
-                    <Input error={!!validationErrors['fi']} id={'organisaation_nimiFi'} {...register('fi')} />
+        <>
+            <BodyRivi>
+                <BodyKentta>
+                    <Controller
+                        control={formControl}
+                        name={'muutostyyppi'}
+                        render={({ field: { ref, value = 'CREATE', ...rest } }) => (
+                            <RadioGroup {...rest} value={value}>
+                                <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
+                                    {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
+                                </Radio>
+                                <Radio name={MUUTOSTYYPPI_EDIT} value={MUUTOSTYYPPI_EDIT}>
+                                    {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
+                                </Radio>
+                            </RadioGroup>
+                        )}
+                    />
                 </BodyKentta>
-                <BodyKentta isRequired label={'LABEL_RUOTSIKSI'}>
-                    <Input error={!!validationErrors['sv']} id={'organisaation_nimiSv'} {...register('sv')} />
-                </BodyKentta>
-                <BodyKentta isRequired label={'LABEL_ENGLANNIKSI'}>
-                    <Input error={!!validationErrors['en']} id={'organisaation_nimiEn'} {...register('en')} />
-                </BodyKentta>
-            </BodyKentta>
-        </BodyKehys>
+            </BodyRivi>
+            {foundAmatch && (
+                <BodyRivi>
+                    <BodyKentta>
+                        <span style={{ color: '#e44e4e' }}>
+                            {i18n.translate('NIMENMUUTOS_MUOKKAUS_FOUND_NAME_FOR_DATE')}
+                        </span>
+                    </BodyKentta>
+                </BodyRivi>
+            )}
+            <BodyRivi>
+                <NimenMuutosFields
+                    edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
+                    validationErrors={validationErrors}
+                    formControl={formControl}
+                    register={register}
+                />
+            </BodyRivi>
+        </>
     );
 }

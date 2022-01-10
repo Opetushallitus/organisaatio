@@ -80,15 +80,13 @@ export default function PerustietoLomake({
                         control={formControl}
                         name={'organisaatioTyypit'}
                         defaultValue={[]}
-                        render={({ field: { ref, ...rest } }) => {
-                            return (
-                                <CheckboxGroup
-                                    {...rest}
-                                    error={!!validationErrors['organisaatioTyypit']}
-                                    options={resolvedTyypit}
-                                />
-                            );
-                        }}
+                        render={({ field: { ref, ...rest } }) => (
+                            <CheckboxGroup
+                                {...rest}
+                                error={!!validationErrors['organisaatioTyypit']}
+                                options={resolvedTyypit}
+                            />
+                        )}
                     />
                 </Kentta>
             </Rivi>

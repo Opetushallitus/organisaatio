@@ -236,9 +236,10 @@ public class OrganisaatioRDTOV4 implements Serializable {
         }
         Map<String, String> parentName = _parentOrganisaatio.getNimi();
         return _nimi.keySet().stream().collect(Collectors.toMap(e -> e, e -> {
-            String parentNimi = String.format("%s, ", parentName.getOrDefault(e, ""));
+            String parentNimi = parentName.getOrDefault(e, "");
+            String parentNimiWithSep = String.format("%s, ", parentName.getOrDefault(e, ""));
             String nimi = _nimi.get(e);
-            return nimi.indexOf(parentNimi) != 0 ? String.format("%s%s", parentNimi, nimi) : nimi;
+            return nimi.equals(parentNimi) ? nimi : String.format("%s%s", parentNimiWithSep, nimi);
         }));
     }
 

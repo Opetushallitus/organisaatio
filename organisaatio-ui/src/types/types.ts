@@ -2,7 +2,12 @@ import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } fro
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
-export type LocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
+
+// D.M.yyyy | D.M.yyyy HH:mm:ss
+export type LocalDate =
+    | `${number}${number}.${number}${number}.${number}${number}${number}${number}`
+    | `${number}${number}.${number}${number}.${number}${number}${number}${number} ${number}${number}:${number}${number}:${number}${number}`
+    | '';
 export type LocalizableText = Partial<Record<Language, string>>;
 
 // koodisto
@@ -20,8 +25,10 @@ export type KoodistoSelectOption = {
     arvo: KoodiArvo;
     label: string;
     versio: number;
-    disabled: boolean;
+    disabled?: boolean;
 };
+
+export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'DELETE';
 
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
@@ -63,19 +70,29 @@ export type Nimi = {
     en?: string;
 };
 
-export type OrganisaationNimetNimi = {
+export type NimenmuutosLomake = {
     nimi: Nimi;
-    alkuPvm?: string;
+    alkuPvm: LocalDate;
+    muutostyyppi: Nimenmuutostyyppi;
+    oid: string;
+    foundAmatch?: boolean;
+};
+
+export type UiOrganisaationNimetNimi = {
+    isCurrentNimi?: boolean;
+    nimi: Nimi;
+    alkuPvm: LocalDate;
 };
 export type UiOrganisaatioBase = {
     oid: string;
     status: string;
     yritysmuoto?: string;
-    nimet: OrganisaationNimetNimi[];
+    nimet: UiOrganisaationNimetNimi[];
     parentOid: string;
     parentOidPath: string;
-    apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values befor update
-    currentNimi: Nimi; //  needed for merging and combining orgs
+    apiYhteystiedot: ApiYhteystiedot[]; // this is needed for combining the values before update
+    currentNimi: UiOrganisaationNimetNimi; //  needed for merging and combining orgs
+    nimi: Nimi; // long nimi for toimipistes
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
 };
 
@@ -98,8 +115,6 @@ export type VakaToimipaikkaTiedot = {
 };
 export type Perustiedot = {
     ytunnus?: string;
-    nimi: Nimi;
-    lyhytNimi: Nimi;
     organisaatioTyypit: OrganisaatioType[];
     alkuPvm: LocalDate;
     kotipaikka: KoodistoSelectOption;
@@ -113,6 +128,7 @@ export type Perustiedot = {
     lakkautusPvm?: LocalDate;
     varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
     piilotettu?: boolean;
+    nimi?: Nimi;
 };
 
 export type ParentTiedot = {
@@ -136,7 +152,7 @@ export type Ryhma = {
     muutKotipaikatUris?: string[];
     muutOppilaitosTyyppiUris?: string[];
     nimi: Nimi;
-    nimet: OrganisaationNimetNimi[];
+    nimet: UiOrganisaationNimetNimi[];
     parentOid?: string;
     parentOidPath?: string;
     piilotettu?: boolean;
@@ -163,7 +179,7 @@ export type OrganisaatioSuhde = {
 
 export type LiitaOrganisaatioon = {
     newParent?: ApiOrganisaatio;
-    date: Date;
+    date: LocalDate | Date;
     merge: boolean;
 };
 
@@ -179,7 +195,7 @@ export interface OrganisaatioNimiJaOid {
     nimi: Nimi;
 }
 export type OrganisaatioPaivittaja = {
-    paivitysPvm?: Date;
+    paivitysPvm?: LocalDate;
     etuNimet?: string;
     sukuNimi?: string;
 };
