@@ -141,7 +141,7 @@ public interface OrganisaatioApi {
             @Parameter(description = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = true) @RequestParam("moveDate") DateParam moveDate
     );
 
-    @DeleteMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{oid}")
     @Operation(
             summary = "Poistaa oid:n määrittämän organisaation",
             description = "Operaatio poistaa organisaation annetulla oid:llä.")
