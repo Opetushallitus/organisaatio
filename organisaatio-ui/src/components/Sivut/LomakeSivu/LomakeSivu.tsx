@@ -59,7 +59,6 @@ import { CasMeContext } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
-import { Icon } from '@iconify/react';
 import IconWrapper from '../../IconWapper/IconWrapper';
 
 type LomakeSivuProps = {
