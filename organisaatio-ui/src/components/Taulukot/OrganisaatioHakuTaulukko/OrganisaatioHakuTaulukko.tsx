@@ -124,7 +124,7 @@ function Hakufiltterit({ setOrganisaatiot }: HakufiltteritProps) {
         </div>
     );
 }
-const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {}) => {
+export const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {}) => {
     return data.reduce((p, c, i) => {
         const me = parent ? `${parent}.${i}` : `${i}`;
         if (!!c.subRows && c.subRows.length <= MAX_EXPAND_ROWS) {
