@@ -14,7 +14,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
         });
     });
 
-    it.only('Edit name', () => {
+    it('Edit name', () => {
         cy.persistOrganisaatio(organisaatio('PARENT2', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio2');
         cy.get('@parentOrganisaatio2').then((organisaatio) => {
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
