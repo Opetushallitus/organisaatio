@@ -14,13 +14,11 @@ describe('Organisaation nimenmuutosmodaali', () => {
         });
     });
 
-    it('Edit name', () => {
+    it.only('Edit name', () => {
         cy.persistOrganisaatio(organisaatio('PARENT2', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio2');
         cy.get('@parentOrganisaatio2').then((organisaatio) => {
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/*`).as('getCurrent');
             cy.visit(`${BASE_PATH}/lomake/${organisaatio.body.organisaatio.oid}`);
-            cy.wait(['@getCurrent'], { timeout: 10000 });
-            cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
+            cy.contains('PARENT2', { timeout: 10000 }).should('exist');
             cy.editNimi('pöllö2');
             cy.contains('pöllö2', { timeout: 10000 }).should('exist');
         });
