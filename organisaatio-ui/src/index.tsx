@@ -1,14 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './index.css';
-import OrganisaatioApp from './OrganisaatioApp';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import { BASE_PATH, ROOT_OID } from './contexts/constants';
-import useFrontProperties from './api/config';
-import Loading from './components/Loading/Loading';
-import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import { BrowserRouter } from 'react-router-dom';
+import { ROOT_OID } from './contexts/constants';
+import InitializeApp from './components/InitializeApp/InitializeApp';
+import OrganisaatioApp from './OrganisaatioApp';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
@@ -17,23 +14,11 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-const InitGate = ({ children }) => {
-    const { loading: frontPropertiesLoading, error: frontPropertiesError } = useFrontProperties();
-    if (frontPropertiesLoading) {
-        return <Loading />;
-    } else if (frontPropertiesError) {
-        return <ErrorPage>Service unavailable.</ErrorPage>;
-    } else {
-        return children;
-    }
-};
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter basename={BASE_PATH}>
-            <InitGate>
-                <OrganisaatioApp />
-            </InitGate>
-        </BrowserRouter>
+        <InitializeApp>
+            <OrganisaatioApp />
+        </InitializeApp>
     </React.StrictMode>,
     document.getElementById('root')
 );

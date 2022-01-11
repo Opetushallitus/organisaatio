@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
@@ -19,6 +19,7 @@ import { I18nImpl, LanguageContext } from './contexts/LanguageContext';
 import { SearchFilterContext, SearchFiltersImpl } from './contexts/SearchFiltersContext';
 import { KoodistoContext, KoodistoImpl } from './contexts/KoodistoContext';
 import { CasMeContext, CASMeImpl } from './contexts/CasMeContext';
+import { BASE_PATH } from './contexts/constants';
 
 const theme = createTheme();
 
@@ -119,13 +120,6 @@ const OrganisaatioApp: React.FC = () => {
     ) {
         return <VirheSivu />;
     }
-    const virkailijaRaamitUrl = '/virkailija-raamit/apply-raamit.js';
-    if (!document.getElementById('raamienId')) {
-        const scriptElement = document.createElement('script');
-        scriptElement.src = virkailijaRaamitUrl;
-        scriptElement.id = 'raamienId';
-        document.body.appendChild(scriptElement);
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -163,21 +157,23 @@ const OrganisaatioApp: React.FC = () => {
                                 kielikoodisto: new KoodistoImpl(kieli, casData.lang),
                             }}
                         >
-                            <Switch>
-                                <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                                <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
-                                <Route path={'/lomake/:oid'} component={LomakeSivu} />
-                                <Route path={'/ryhmat'} exact component={Ryhmat} />
-                                <Route
-                                    exact
-                                    path={'/ryhmat/uusi'}
-                                    component={(props) => <RyhmanMuokkaus {...props} isNew />}
-                                />
-                                <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
-                                <Route path={'*'}>
-                                    <VirheSivu>{'ERROR_404'}</VirheSivu>
-                                </Route>
-                            </Switch>
+                            <BrowserRouter basename={BASE_PATH}>
+                                <Switch>
+                                    <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
+                                    <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
+                                    <Route path={'/lomake/:oid'} component={LomakeSivu} />
+                                    <Route path={'/ryhmat'} exact component={Ryhmat} />
+                                    <Route
+                                        exact
+                                        path={'/ryhmat/uusi'}
+                                        component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                                    />
+                                    <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
+                                    <Route path={'*'}>
+                                        <VirheSivu>{'ERROR_404'}</VirheSivu>
+                                    </Route>
+                                </Switch>
+                            </BrowserRouter>
                         </KoodistoContext.Provider>
                     </SearchFilterContext.Provider>
                 </LanguageContext.Provider>
