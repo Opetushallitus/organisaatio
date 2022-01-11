@@ -38,7 +38,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
         });
     });
 
-    it('Delete a name change', () => {
+    it.only('Delete a name change', () => {
         cy.on('window:confirm', () => true);
         cy.persistOrganisaatio(organisaatio('PARENT4', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio4');
         cy.get('@parentOrganisaatio4').then((organisaatio) => {
@@ -48,7 +48,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
             cy.contains('PARENT4', { timeout: 10000 }).should('exist');
             cy.clickAccordion('NIMIHISTORIA');
             cy.contains('delete testi', { timeout: 10000 }).should('exist');
-            cy.clickButton('POISTA_AJASTETTU_NIMENMUUTOS');
+            cy.clickButtonByName('POISTA_AJASTETTU_NIMENMUUTOS');
             cy.contains('delete testi', { timeout: 5000 }).should('not.exist');
         });
     });

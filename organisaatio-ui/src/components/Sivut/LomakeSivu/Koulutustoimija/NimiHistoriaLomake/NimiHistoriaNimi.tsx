@@ -28,7 +28,13 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
             <ReadOnlyNimi value={nimi} />
             {isAlkuPvmInFuture && (
                 <div className={styles.DeleteBtn} onClick={handleDeleteClick}>
-                    <IconWrapper icon="ic:round-delete-forever" height={'1.5rem'} className={styles.DeleteIcon}>
+                    <IconWrapper
+                        icon="ic:round-delete-forever"
+                        height={'1.5rem'}
+                        className={styles.DeleteIcon}
+                        name={'POISTA_AJASTETTU_NIMENMUUTOS'}
+                        alt={i18n.translate('POISTA_AJASTETTU_NIMENMUUTOS')}
+                    >
                         {i18n.translate('POISTA_AJASTETTU_NIMENMUUTOS')}
                     </IconWrapper>
                 </div>

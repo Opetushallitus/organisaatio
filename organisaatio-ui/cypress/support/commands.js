@@ -38,7 +38,15 @@ Cypress.Commands.add('clickButton', (contains) => {
             cy.log(`${contains} button clicked`);
         });
 });
-
+Cypress.Commands.add('clickButtonByName', (name) => {
+    return cy
+        .get(`[name="${name}"]`, { timeout: 10000 })
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${name} button clicked`);
+        });
+});
 Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
     return cy
         .get('label')
