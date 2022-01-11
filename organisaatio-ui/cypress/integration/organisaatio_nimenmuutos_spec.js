@@ -38,7 +38,7 @@ describe('Organisaation nimenmuutosmodaali', () => {
         });
     });
 
-    it.only('Delete a name change', () => {
+    it('Delete a name change', () => {
         cy.on('window:confirm', () => true);
         cy.persistOrganisaatio(organisaatio('PARENT4', { tyypit: [`organisaatiotyyppi_01`] }), 'parentOrganisaatio4');
         cy.get('@parentOrganisaatio4').then((organisaatio) => {
