@@ -27,8 +27,17 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
         <div className={styles.NimiHistoriaCell}>
             <ReadOnlyNimi value={nimi} />
             {isAlkuPvmInFuture && (
-                <div className={styles.DeleteBtn} onClick={handleDeleteClick}>
-                    <IconWrapper icon="ic:round-delete-forever" height={'1.5rem'} className={styles.DeleteIcon}>
+                <div
+                    className={styles.DeleteBtn}
+                    onClick={handleDeleteClick}
+                    title={i18n.translate('POISTA_AJASTETTU_NIMENMUUTOS')}
+                >
+                    <IconWrapper
+                        icon="ic:round-delete-forever"
+                        height={'1.5rem'}
+                        className={styles.DeleteIcon}
+                        name={'POISTA_AJASTETTU_NIMENMUUTOS'}
+                    >
                         {i18n.translate('POISTA_AJASTETTU_NIMENMUUTOS')}
                     </IconWrapper>
                 </div>
