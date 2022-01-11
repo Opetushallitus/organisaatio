@@ -1,20 +1,26 @@
-import { KoodiUri, LocalDate, Nimi, OrganisaatioSuhde, OrganisaatioType } from './types';
+import { KoodiUri, LocalDate, Nimi, OrganisaatioType } from './types';
 
 //yyyy-MM-DD
 export type APIEndpontDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
 
-export type OrganisaatioLiitos = {
-    alkuPvm: string;
-    loppuPvm?: string;
+export type APIOrganisaatioLiitos = {
+    alkuPvm: APIEndpontDate;
+    loppuPvm?: APIEndpontDate;
     kohde: OrganisaatioBase;
     organisaatio: OrganisaatioBase;
 };
+export type APIOrganisaatioSuhde = {
+    alkuPvm: APIEndpontDate;
+    loppuPvm?: APIEndpontDate;
+    child: OrganisaatioBase;
+    parent: OrganisaatioBase;
+};
 
 export type APIOrganisaatioHistoria = {
-    childSuhteet: OrganisaatioSuhde[];
-    parentSuhteet: OrganisaatioSuhde[];
-    liitokset: OrganisaatioLiitos[];
-    liittymiset: OrganisaatioLiitos[];
+    childSuhteet: APIOrganisaatioSuhde[];
+    parentSuhteet: APIOrganisaatioSuhde[];
+    liitokset: APIOrganisaatioLiitos[];
+    liittymiset: APIOrganisaatioLiitos[];
 };
 
 export type ApiOrganisaationNimetNimi = {
