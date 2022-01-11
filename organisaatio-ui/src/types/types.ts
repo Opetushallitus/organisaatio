@@ -176,12 +176,6 @@ export type OrganisaatioSuhde = {
     child: OrganisaatioBase;
     parent: OrganisaatioBase;
 };
-export type OrganisaatioLiitos = {
-    alkuPvm: LocalDate;
-    loppuPvm?: LocalDate;
-    child: OrganisaatioBase;
-    parent: OrganisaatioBase;
-};
 
 export type LiitaOrganisaatioon = {
     newParent?: ApiOrganisaatio;

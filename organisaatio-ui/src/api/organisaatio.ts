@@ -6,7 +6,6 @@ import {
     OrganisaatioNimiJaOid,
     OrganisaatioPaivittaja,
     OrganisaatioSuhde,
-    OrganisaatioLiitos,
     Perustiedot,
     UiOrganisaatioBase,
     UiOrganisaationNimetNimi,
@@ -532,7 +531,7 @@ export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYht
 };
 
 function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
-    function liitosMapper(a: APIOrganisaatioLiitos): OrganisaatioLiitos {
+    function liitosMapper(a: APIOrganisaatioLiitos): OrganisaatioSuhde {
         return {
             alkuPvm: getUiDateStr(a.alkuPvm),
             loppuPvm: getUiDateStr(a.loppuPvm),
