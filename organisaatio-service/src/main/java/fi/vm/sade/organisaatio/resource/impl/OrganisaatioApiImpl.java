@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("${server.api.context-path}")
 public class OrganisaatioApiImpl implements OrganisaatioApi {
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
     private final OppijanumeroClient oppijanumeroClient;
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
@@ -48,9 +48,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
 
-    private final PermissionChecker permissionChecker;
+    protected final PermissionChecker permissionChecker;
     @Autowired
-    private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
+    protected OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
 
