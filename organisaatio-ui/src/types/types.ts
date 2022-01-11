@@ -171,8 +171,14 @@ export type RyhmanKuvaus = {
     'kieli_en#1'?: string;
 };
 export type OrganisaatioSuhde = {
-    alkuPvm: string;
-    loppuPvm?: string;
+    alkuPvm: LocalDate;
+    loppuPvm?: LocalDate;
+    child: OrganisaatioBase;
+    parent: OrganisaatioBase;
+};
+export type OrganisaatioLiitos = {
+    alkuPvm: LocalDate;
+    loppuPvm?: LocalDate;
     child: OrganisaatioBase;
     parent: OrganisaatioBase;
 };

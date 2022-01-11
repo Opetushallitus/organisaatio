@@ -5,6 +5,8 @@ import {
     OrganisaatioHistoria,
     OrganisaatioNimiJaOid,
     OrganisaatioPaivittaja,
+    OrganisaatioSuhde,
+    OrganisaatioLiitos,
     Perustiedot,
     UiOrganisaatioBase,
     UiOrganisaationNimetNimi,
@@ -13,24 +15,24 @@ import {
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
 import {
-    ApiYhteystietoArvo,
     ApiOrganisaatio,
     APIOrganisaatioHistoria,
+    APIOrganisaatioLiitos,
+    ApiOrganisaationNimetNimi,
+    APIOrganisaatioSuhde,
     ApiYhteystiedot,
+    ApiYhteystietoArvo,
     NewApiOrganisaatio,
-    OrganisaatioBase,
-    OrganisaatioLiitos,
     YhteystiedotEmail,
     YhteystiedotOsoite,
     YhteystiedotPhone,
     YhteystiedotWww,
-    ApiOrganisaationNimetNimi,
 } from '../types/apiTypes';
 import useAxios from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
 import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/constants';
 import { UnpackNestedValue } from 'react-hook-form';
-import { formatUiDateStrToApi } from '../tools/mappers';
+import { formatUiDateStrToApi, getUiDateStr } from '../tools/mappers';
 
 type SupportedOsoiteType = 'kaynti' | 'posti';
 type SupportedYhteystietoType = 'www' | 'email' | 'numero';
@@ -530,20 +532,21 @@ export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYht
 };
 
 function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
-    function liitosMapper(
-        a: OrganisaatioLiitos
-    ): {
-        alkuPvm: string;
-        parent: OrganisaatioBase;
-        loppuPvm: string | undefined;
-        child: OrganisaatioBase;
-    } {
-        return { alkuPvm: a.alkuPvm, loppuPvm: a.loppuPvm, child: a.kohde, parent: a.organisaatio };
+    function liitosMapper(a: APIOrganisaatioLiitos): OrganisaatioLiitos {
+        return {
+            alkuPvm: getUiDateStr(a.alkuPvm),
+            loppuPvm: getUiDateStr(a.loppuPvm),
+            child: a.kohde,
+            parent: a.organisaatio,
+        };
+    }
+    function suhdeMapper(a: APIOrganisaatioSuhde): OrganisaatioSuhde {
+        return { ...a, alkuPvm: getUiDateStr(a.alkuPvm), loppuPvm: getUiDateStr(a.loppuPvm) };
     }
 
     return {
-        childSuhteet: data.childSuhteet,
-        parentSuhteet: data.parentSuhteet,
+        childSuhteet: data.childSuhteet.map(suhdeMapper),
+        parentSuhteet: data.parentSuhteet.map(suhdeMapper),
         liitokset: data.liitokset.map(liitosMapper),
         liittymiset: data.liittymiset.map(liitosMapper),
     };
