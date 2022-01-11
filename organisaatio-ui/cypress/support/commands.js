@@ -26,24 +26,32 @@ const { API_CONTEXT, PUBLIC_API_CONTEXT } = require('../../src/contexts/constant
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('inputByName', (name, value) => {
-    return cy.get(`input[name="${name}"]`).clear().type(value);
+    return cy.get(`input[name="${name}"]`, { timeout: 10000 }).clear().type(value);
 });
 
 Cypress.Commands.add('clickButton', (contains) => {
     return cy
-        .contains(contains)
+        .contains(contains, { timeout: 10000 })
         .scrollIntoView()
         .click()
         .then(() => {
             cy.log(`${contains} button clicked`);
         });
 });
-
+Cypress.Commands.add('clickButtonByName', (name) => {
+    return cy
+        .get(`[name="${name}"]`, { timeout: 10000 })
+        .scrollIntoView()
+        .click()
+        .then(() => {
+            cy.log(`${name} button clicked`);
+        });
+});
 Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
     return cy
         .get('label')
         .parent()
-        .contains(contains)
+        .contains(contains, { timeout: 10000 })
         .scrollIntoView()
         .click()
         .then(() => {
@@ -53,7 +61,7 @@ Cypress.Commands.add('clickRadioOrCheckbox', (contains) => {
 
 Cypress.Commands.add('clickAccordion', (contains) => {
     return cy
-        .contains(contains)
+        .contains(contains, { timeout: 10000 })
         .scrollIntoView()
         .click()
         .then(() => {
@@ -66,7 +74,7 @@ Cypress.Commands.add('selectFromList', (list, contains, input) => {
         cy.contains(list).parent().find('input').type(input);
     } else cy.contains(list).parent().find('svg').last().scrollIntoView().click();
     return cy
-        .contains(contains)
+        .contains(contains, { timeout: 10000 })
         .scrollIntoView()
         .click()
         .then(() => {

@@ -49,7 +49,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
     testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.1'
     implementation 'com.google.guava:guava:29.0-jre'
-    implementation 'fi.vm.sade.java-utils:opintopolku-spring-security:0.2.0-SNAPSHOT'
+    //implementation 'fi.vm.sade.java-utils:opintopolku-spring-security:0.2.0-SNAPSHOT'
     implementation 'fi.vm.sade.java-utils:java-http:0.6.1-SNAPSHOT'
     implementation 'fi.vm.sade.java-utils:oid-generator:0.1.0-SNAPSHOT'
     implementation 'fi.vm.sade.java-utils:opintopolku-cas-servlet-filter:0.1.2-SNAPSHOT'
@@ -71,6 +71,7 @@ dependencies {
     }
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compile('fi.vm.sade.viestintapalvelu:ryhmasahkoposti-api:14.8-SNAPSHOT') {
+        exclude group: 'fi.vm.sade.generic', module: 'generic-common'
         // TODO exclusions
         exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_3.0_spec'
     }
@@ -83,6 +84,7 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
         exclude group: 'org.slf4j', module: 'log4j'
+        exclude group: 'fi.vm.sade.generic', module: 'generic-common'
     }
     compile('fi.vm.sade.oid:oid-api:8.0') {
         exclude group: 'org.slf4j', module: 'slf4j-api'

@@ -1,4 +1,4 @@
-import { CASMe, ConfigurableButton, Language, OrganisaatioNimiJaOid } from '../types/types';
+import { CASMe, ConfigurableButton, ConfigurableLomake, Language, OrganisaatioNimiJaOid } from '../types/types';
 import * as React from 'react';
 import { ROOT_OID } from './constants';
 
@@ -8,12 +8,16 @@ const getRoleItems = <A>(myRole: string, role: string, items: A[]): A[] => {
     return myRole === role ? items : [];
 };
 export const organisationAllowedInRoles = (
+    oid: string,
     organisaatioNimiPolku: OrganisaatioNimiJaOid[],
     roles: string[]
 ): boolean => {
     const oidsFromRoles = roles
         .filter((a) => a.startsWith(`${ORGANISAATIO_CRUD}_`))
         .map((a) => a.substr(ORGANISAATIO_CRUD.length + 1));
+    if (oidsFromRoles.includes(oid)) {
+        return true;
+    }
     const isAllowed = oidsFromRoles.reduce((p, c) => {
         return p || !!organisaatioNimiPolku.find((a) => a.oid === c);
     }, false);
@@ -28,7 +32,8 @@ export class CASMeImpl implements CASMe {
     oid: string;
     roles: string[];
     uid: string;
-    allowedButtons: string[];
+    allowedButtons: ConfigurableButton[];
+    allowedLomakes: ConfigurableLomake[];
     constructor(casMe) {
         this.firstName = casMe.firstName;
         this.groups = casMe.groups;
@@ -38,23 +43,50 @@ export class CASMeImpl implements CASMe {
         this.roles = casMe.roles;
         this.uid = casMe.uid;
         this.allowedButtons = casMe.roles.reduce(
-            (p, c) => [...p, ...getRoleItems<ConfigurableButton>(c, ORGANISAATIO_CRUD, ['LOMAKE_LISAA_UUSI_TOIMIJA'])],
+            (p, c) => [
+                ...p,
+                ...getRoleItems<ConfigurableButton>(c, ORGANISAATIO_CRUD, [
+                    'LOMAKE_LISAA_UUSI_TOIMIJA',
+                    'BUTTON_TALLENNA',
+                ]),
+            ],
             [] as ConfigurableButton[]
         );
+        this.allowedLomakes = casMe.roles.reduce(
+            (p, c) => [
+                ...p,
+                ...getRoleItems<ConfigurableLomake>(c, ORGANISAATIO_CRUD, [
+                    'LOMAKE_KOSKI_POSTI',
+                    'LOMAKE_YHTEYSTIEDOT',
+                ]),
+            ],
+            [] as ConfigurableLomake[]
+        );
     }
-    canHaveButton = (button: ConfigurableButton, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
+    canHaveButton = (button: ConfigurableButton, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
-        if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(organisaatioNimiPolku, this.roles))
+        if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
             return true;
         return (
             organisaatioNimiPolku.length > 1 &&
-            organisationAllowedInRoles(organisaatioNimiPolku, this.roles) &&
+            organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
             this.allowedButtons.includes(button)
         );
     };
-    canEditIfParent = (organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
+    canEditLomake = (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
-        if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(organisaatioNimiPolku, this.roles))
+        if (
+            organisaatioNimiPolku.length > 1 &&
+            organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
+            this.allowedLomakes.includes(lomake)
+        ) {
+            return true;
+        }
+        return false;
+    };
+    canEditIfParent = (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
+        if (this.roles.includes(OPH_CRUD)) return true;
+        if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
             return true;
         return false;
     };
