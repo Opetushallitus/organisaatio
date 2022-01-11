@@ -107,6 +107,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
     piilotettu?: boolean;
     yhteystietoArvos?: ApiYhteystietoArvo[];
+    subRows?: ApiOrganisaatio[];
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
