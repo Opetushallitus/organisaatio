@@ -5,11 +5,20 @@ export default function devRaamit(document) {
     if (!element) {
         const container = document.createElement('div');
         container.id = 'devraamit';
-        container.style.cssText = 'height: 5rem;background: blue; display: flex; flex-direction: column; color: white;';
+        container.style.cssText = `
+            font-size: 14px;
+            height: 100px;
+            color: white;
+            box-sizing: border-box;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            background-color: #040066;
+            `;
         const headingElement = document.createElement('h4');
         headingElement.append('OrganisaatioPalvelu DEV!');
-        const magentaStyleText = 'color: magenta';
-        const whiteStyleText = 'color: white';
+        const magentaStyleText = 'color: white';
+        const linkstyle = 'color: rgb(229, 57, 53)';
         headingElement.style.cssText = magentaStyleText;
         const a1 = document.createElement('a');
         a1.href = '/organisaatiot';
@@ -17,8 +26,8 @@ export default function devRaamit(document) {
         const a2 = document.createElement('a');
         a2.href = '/ryhmat';
         a2.text = '/ryhmat';
-        a1.style.cssText = whiteStyleText;
-        a2.style.cssText = whiteStyleText;
+        a1.style.cssText = linkstyle;
+        a2.style.cssText = linkstyle;
         container.appendChild(headingElement);
         container.appendChild(a1);
         container.appendChild(a2);
