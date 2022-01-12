@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
 import {
     Cell,
@@ -198,10 +198,10 @@ export default function OrganisaatioHakuTaulukko() {
         useExpanded,
         usePagination
     );
-    const filterResults = (omatOrganisaatiotSelected: boolean): void => {
+    const filterResults = useCallback((omatOrganisaatiotSelected: boolean): void => {
         if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
         else setFilter('containingOids', []);
-    };
+    }, []);
     return (
         <div>
             <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} filterResults={filterResults} />

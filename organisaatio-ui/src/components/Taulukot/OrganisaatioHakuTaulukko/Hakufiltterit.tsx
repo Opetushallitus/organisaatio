@@ -40,7 +40,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, filterResults }: H
                 setLoading(false);
             })();
         }
-    }, [filters, searchFilters, setLoading, setOrganisaatiot]);
+    }, [filterResults, filters, searchFilters, setLoading, setOrganisaatiot]);
 
     return (
         <div>
