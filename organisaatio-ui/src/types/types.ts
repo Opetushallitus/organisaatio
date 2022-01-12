@@ -334,5 +334,5 @@ export type CASMe = {
     canHaveButton: (button: ConfigurableButton, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     canEditLomake: (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     canEditIfParent: (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
-    getCRUSOids: () => string[];
+    getCRUDOids: () => string[];
 };

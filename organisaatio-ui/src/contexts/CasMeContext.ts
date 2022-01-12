@@ -93,7 +93,7 @@ export class CASMeImpl implements CASMe {
             return true;
         return false;
     };
-    getCRUSOids = () => {
+    getCRUDOids = () => {
         return getOidsFromRoles(this.roles);
     };
 }

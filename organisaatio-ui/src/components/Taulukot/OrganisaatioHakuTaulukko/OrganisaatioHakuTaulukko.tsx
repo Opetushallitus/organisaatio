@@ -198,7 +198,7 @@ export default function OrganisaatioHakuTaulukko() {
     );
     const filterResults = (omatOrganisaatiotSelected: boolean): void => {
         if (omatOrganisaatiotSelected) {
-            const crudOids = casMe.getCRUSOids();
+            const crudOids = casMe.getCRUDOids();
             setFilter('containingOids', crudOids);
         } else {
             setFilter('containingOids', undefined);
