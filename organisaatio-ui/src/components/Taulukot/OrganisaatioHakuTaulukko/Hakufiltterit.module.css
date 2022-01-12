@@ -1,0 +1,31 @@
+.FiltteriContainer {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 2rem;
+    justify-content: space-between;
+}
+
+.FiltteriInputOsa {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 60vw;
+    align-items: center;
+}
+
+.FiltteriInputOsa > div {
+    width: 100vw;
+}
+
+.FiltteriInputOsa > label {
+    padding-left: 2rem;
+}
+
+.LisatiedotNappi.LisatiedotNappi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+}

@@ -12,7 +12,6 @@ export class SearchFiltersImpl implements SearchFilters {
             searchString: '',
         };
         this.localFilters = {
-            searchString: '',
             omatOrganisaatiotSelected: true,
         };
     }

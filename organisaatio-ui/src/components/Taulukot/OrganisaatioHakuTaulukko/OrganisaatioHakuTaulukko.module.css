@@ -18,6 +18,7 @@ th.collapse.collapse {
 .PaginationSivunvaihto {
     margin: auto;
 }
+
 .PaginationYhteensa {
     align-self: flex-end;
 }
@@ -34,49 +35,6 @@ th.collapse.collapse {
     background-position-x: 0.7rem;
 }
 
-.FiltteriContainer {
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 2rem;
-    justify-content: space-between;
-}
-
-.FiltteriInputOsa {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    max-width: 60vw;
-    align-items: center;
-}
-.FiltteriInputOsa > div {
-    width: 100vw;
-}
-
-.FiltteriInputOsa > label {
-    padding-left: 2rem;
-}
-
-.LisatiedotNappi.LisatiedotNappi {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100%;
-    width: 2rem;
-    height: 2rem;
-}
-
-.KoulutustoimijaNappi:first-of-type {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    height: 3rem;
-}
-
-.KoulutustoimijaNappi:last-of-type {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    height: 3rem;
-    margin-bottom: 2rem;
-}
 .LippuNappi {
     display: flex;
     justify-content: center;
@@ -89,6 +47,7 @@ th.collapse.collapse {
 .SininenTausta {
     background: #159ecb;
 }
+
 .PunainenTausta {
     background: #e44e4e;
 }

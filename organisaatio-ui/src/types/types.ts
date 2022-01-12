@@ -299,7 +299,6 @@ export type Filters = {
     omatOrganisaatiotSelected: boolean;
 };
 export type LocalFilters = {
-    searchString: string;
     omatOrganisaatiotSelected: boolean;
 };
 export type OrganisaatioType =

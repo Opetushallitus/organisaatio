@@ -57,6 +57,7 @@ const tarkastaLipunVari = (tarkastusPvm) => {
 export default function OrganisaatioHakuTaulukko() {
     const { i18n } = useContext(LanguageContext);
     const { me: casMe } = useContext(CasMeContext);
+    const crudOids = casMe.getCRUDOids();
     const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -144,7 +145,7 @@ export default function OrganisaatioHakuTaulukko() {
                 },
                 hidden: true,
                 filter: (rows, id, filterValue) => {
-                    if (!filterValue) return true;
+                    if (filterValue.length === 0) return rows;
                     return rows.filter((row) => {
                         const rowValue = row.values[id];
                         return rowValue.some((r) => filterValue.includes(r));
@@ -188,6 +189,7 @@ export default function OrganisaatioHakuTaulukko() {
                 ],
                 expanded: initialExpanded,
                 hiddenColumns: ['containingOids'],
+                filters: [{ id: 'containingOids', value: crudOids }],
             },
             paginateExpandedRows: false,
         },
@@ -197,12 +199,8 @@ export default function OrganisaatioHakuTaulukko() {
         usePagination
     );
     const filterResults = (omatOrganisaatiotSelected: boolean): void => {
-        if (omatOrganisaatiotSelected) {
-            const crudOids = casMe.getCRUDOids();
-            setFilter('containingOids', crudOids);
-        } else {
-            setFilter('containingOids', undefined);
-        }
+        if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
+        else setFilter('containingOids', []);
     };
     return (
         <div>

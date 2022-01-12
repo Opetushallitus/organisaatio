@@ -4,7 +4,7 @@ import { LanguageContext } from '../../../contexts/LanguageContext';
 import { SearchFilterContext } from '../../../contexts/SearchFiltersContext';
 import { Filters } from '../../../types/types';
 import { searchOrganisation } from '../../../api/organisaatio';
-import styles from './OrganisaatioHakuTaulukko.module.css';
+import styles from './Hakufiltterit.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import IconWrapper from '../../IconWapper/IconWrapper';
@@ -22,7 +22,10 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, filterResults }: H
     const { i18n } = useContext(LanguageContext);
     const { searchFilters } = useContext(SearchFilterContext);
     const [filters, setFilters] = useState<Filters>(searchFilters.filters);
-    const [localFilters, setLocalFilters] = useState(searchFilters.localFilters);
+    const [localFilters, setLocalFilters] = useState({
+        searchString: searchFilters.filters.searchString,
+        omatOrganisaatiotSelected: searchFilters.localFilters.omatOrganisaatiotSelected,
+    });
     useEffect(() => {
         searchFilters.setFilters(filters);
         if (filters.searchString.length >= SEARCH_LENGTH) {
@@ -83,6 +86,10 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, filterResults }: H
                         checked={localFilters.omatOrganisaatiotSelected}
                         onChange={(e) => {
                             setLocalFilters({ ...localFilters, omatOrganisaatiotSelected: e.target.checked });
+                            searchFilters.setLocalFilters({
+                                ...localFilters,
+                                omatOrganisaatiotSelected: e.target.checked,
+                            });
                             filterResults(e.target.checked);
                         }}
                     >
