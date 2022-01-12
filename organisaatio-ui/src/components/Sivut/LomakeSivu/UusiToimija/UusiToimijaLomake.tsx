@@ -51,7 +51,6 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
         organisaatioTyypit: [],
         oid: '',
-        isYtj: true,
     });
     const [lomakeAvoinna, setLomakeAvoinna] = useState<string>(PERUSTIEDOTUUID);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,9 +60,9 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
             const data = await readOrganisaatio(parentOid, true);
             if (data) {
                 const {
-                    organisaatio: { tyypit, oid, ytunnus },
+                    organisaatio: { tyypit, oid },
                 } = data;
-                setParentTiedot({ organisaatioTyypit: tyypit, oid, isYtj: !!ytunnus });
+                setParentTiedot({ organisaatioTyypit: tyypit, oid });
             }
         })();
     }, [parentOid]);
@@ -175,6 +174,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                 hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
                 formRegister={registerYhteystiedot}
                 key={YHTEYSTIEDOTUUID}
+                isYtj={!!getPerustiedotValues('ytunnus')}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));

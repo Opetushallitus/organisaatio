@@ -28,6 +28,7 @@ export type Props = {
     watch: UseFormWatch<Yhteystiedot>;
     getYhteystiedotValues: UseFormGetValues<Yhteystiedot>;
     readOnly?: boolean;
+    isYtj: boolean;
 };
 
 const kaikkiOpetuskielet: SupportedKieli[] = ['fi', 'sv', 'en'];
@@ -47,6 +48,7 @@ const YhteystietoLomake = ({
     setYhteystiedotValue,
     getYhteystiedotValues,
     readOnly,
+    isYtj,
 }: Props): React.ReactElement => {
     const { i18n } = useContext(LanguageContext);
     const [naytaMuutKielet, setNaytaMuutKielet] = useState(false);
@@ -80,6 +82,7 @@ const YhteystietoLomake = ({
             <div className={styles.KortitContainer}>
                 {visibleKielet.map((kieli, index) => (
                     <YhteystietoKortti
+                        isYtj={isYtj}
                         readOnly={readOnly}
                         key={kieli}
                         yhteystiedotRegister={formRegister}
@@ -111,6 +114,7 @@ const YhteystietoLomake = ({
                                         : { value: yhteystiedotValues }
                                 }
                                 formControl={formControl}
+                                isYtj={false}
                             />
                         ))}
             </div>
