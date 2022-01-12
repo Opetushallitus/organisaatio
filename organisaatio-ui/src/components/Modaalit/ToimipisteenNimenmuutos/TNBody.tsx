@@ -9,7 +9,7 @@ import { LanguageContext } from '../../../contexts/LanguageContext';
 import { Controller } from 'react-hook-form';
 import NimenMuutosFields from './NimenMuutosFields';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
-import Spinner from '../../Spinner/Spinner';
+import Loading from '../../Loading/Loading';
 
 type TNProps = {
     validationErrors: FieldErrors<NimenmuutosLomake>;
@@ -26,7 +26,7 @@ export default function TNBody(props: TNProps) {
         return (
             <BodyRivi>
                 <BodyKentta>
-                    <Spinner />
+                    <Loading />
                 </BodyKentta>
             </BodyRivi>
         );
