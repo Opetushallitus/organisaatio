@@ -6,8 +6,8 @@ import { HistoriaTaulukkoData, UiOrganisaationNimetNimi } from '../../../../../t
 import { Column } from 'react-table';
 import NimiHistoriaNimi from './NimiHistoriaNimi';
 import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
-import Spinner from '../../../../Spinner/Spinner';
 import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import Loading from '../../../../Loading/Loading';
 
 type nimiHistoriaProps = {
     nimet: UiOrganisaationNimetNimi[];
@@ -49,7 +49,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
         },
     ] as Column<UiOrganisaationNimetNimi | HistoriaTaulukkoData>[];
     if (isLoading) {
-        return <Spinner />;
+        return <Loading />;
     }
     return (
         <div className={styles.UloinKehys}>
