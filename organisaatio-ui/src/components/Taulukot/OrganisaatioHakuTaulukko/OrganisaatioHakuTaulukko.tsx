@@ -54,6 +54,10 @@ const tarkastaLipunVari = (tarkastusPvm) => {
     date.subtract(1, 'years');
     return !!tarkastusPvm ? tarkastusPvm - date.unix() > 0 : false;
 };
+const ExpandIcon = ({ isExpanded }) => {
+    if (isExpanded) return <IconWrapper icon={chevronDown} />;
+    return <IconWrapper icon={chevronRight} />;
+};
 export default function OrganisaatioHakuTaulukko() {
     const { i18n } = useContext(LanguageContext);
     const { me: casMe } = useContext(CasMeContext);
@@ -77,7 +81,7 @@ export default function OrganisaatioHakuTaulukko() {
                                 },
                             })}
                         >
-                            {row.isExpanded ? <IconWrapper icon={chevronDown} /> : <IconWrapper icon={chevronRight} />}
+                            <ExpandIcon isExpanded={row.isExpanded} />
                         </span>
                     ) : null,
             },
