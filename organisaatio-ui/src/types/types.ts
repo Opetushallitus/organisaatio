@@ -134,7 +134,6 @@ export type Perustiedot = {
 export type ParentTiedot = {
     organisaatioTyypit: OrganisaatioType[];
     oid: string;
-    isYtj: boolean;
 };
 
 export type NewRyhma = Omit<Ryhma, 'oid'>;
