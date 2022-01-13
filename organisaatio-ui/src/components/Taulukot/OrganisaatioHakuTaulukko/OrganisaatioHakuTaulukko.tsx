@@ -1,17 +1,7 @@
 import * as React from 'react';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
-import {
-    Cell,
-    Column,
-    HeaderGroup,
-    Row,
-    useExpanded,
-    useFilters,
-    usePagination,
-    useSortBy,
-    useTable,
-} from 'react-table';
+import { Cell, Column, HeaderGroup, Row, useExpanded, useFilters, usePagination, useTable } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
@@ -44,7 +34,7 @@ export const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {
     }, initial);
 };
 export const allOids = (data: ApiOrganisaatio[]) => {
-    return data.reduce((p: string[], c, i) => {
+    return data.reduce((p: string[], c) => {
         const subs = !!c.subRows ? allOids(c.subRows) : [];
         return [...p, ...subs, c.oid];
     }, []);
@@ -61,10 +51,9 @@ const ExpandIcon = ({ isExpanded }) => {
 export default function OrganisaatioHakuTaulukko() {
     const { i18n } = useContext(LanguageContext);
     const { me: casMe } = useContext(CasMeContext);
-    const crudOids = casMe.getCRUDOids();
+    const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
     const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-
     const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
     const columns = React.useMemo<Column<ApiOrganisaatio>[]>(
         () => [
@@ -87,7 +76,7 @@ export default function OrganisaatioHakuTaulukko() {
             },
             {
                 Header: i18n.translate('TAULUKKO_NIMI'),
-                id: 'Nimi',
+                id: 'nimi',
                 accessor: (values) => {
                     return i18n.translateNimi(values.nimi);
                 },
@@ -159,7 +148,19 @@ export default function OrganisaatioHakuTaulukko() {
         ],
         [i18n, kuntaKoodisto, organisaatioTyypitKoodisto]
     );
-    const data = React.useMemo(() => organisaatiot, [organisaatiot]);
+    const sortOrganisations = useMemo(
+        () => (nodes: ApiOrganisaatio[]): ApiOrganisaatio[] => {
+            nodes.sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi)));
+            nodes.forEach(function (node) {
+                if (node?.subRows && node.subRows.length > 0) {
+                    sortOrganisations(node.subRows);
+                }
+            });
+            return nodes;
+        },
+        [i18n]
+    );
+    const data = React.useMemo(() => sortOrganisations(organisaatiot), [organisaatiot, sortOrganisations]);
     const initialExpanded = React.useMemo(() => expandData(data), [data]);
 
     const {
@@ -185,12 +186,6 @@ export default function OrganisaatioHakuTaulukko() {
             data,
             initialState: {
                 pageIndex: 0,
-                sortBy: [
-                    {
-                        id: 'Nimi',
-                        desc: false,
-                    },
-                ],
                 expanded: initialExpanded,
                 hiddenColumns: ['containingOids'],
                 filters: [{ id: 'containingOids', value: crudOids }],
@@ -198,14 +193,16 @@ export default function OrganisaatioHakuTaulukko() {
             paginateExpandedRows: false,
         },
         useFilters,
-        useSortBy,
         useExpanded,
         usePagination
     );
-    const filterResults = useCallback((omatOrganisaatiotSelected: boolean): void => {
-        if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
-        else setFilter('containingOids', []);
-    }, []);
+    const filterResults = useCallback(
+        (omatOrganisaatiotSelected: boolean): void => {
+            if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
+            else setFilter('containingOids', []);
+        },
+        [crudOids, setFilter]
+    );
     return (
         <div>
             <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} filterResults={filterResults} />
