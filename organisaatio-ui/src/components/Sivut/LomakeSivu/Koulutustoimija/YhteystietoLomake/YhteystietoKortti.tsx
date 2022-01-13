@@ -202,7 +202,7 @@ export const YhteystietoKortti = ({
             </RiviKentta>
             <RiviKentta label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE" isRequired>
                 <Input
-                    disabled={readOnly || ytjReadOnly}
+                    disabled={readOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.email` as const)}
                     error={error.lang === kortinKieli && error.name === 'email'}
                 />
