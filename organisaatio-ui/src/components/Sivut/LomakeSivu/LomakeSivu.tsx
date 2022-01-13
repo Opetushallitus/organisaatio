@@ -92,7 +92,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
         organisaatioTyypit: [] as OrganisaatioType[],
         oid: ROOT_OID,
-        isYtj: true,
     });
     const {
         organisaatioTyypitKoodisto,
@@ -251,9 +250,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const parantData = await readOrganisaatio(organisaatio.parentOid || ROOT_OID, true);
         if (parantData) {
             const {
-                organisaatio: { tyypit: parentTyypit, oid: parentOid, ytunnus: parentYTunnus },
+                organisaatio: { tyypit: parentTyypit, oid: parentOid },
             } = parantData;
-            setParentTiedot({ organisaatioTyypit: parentTyypit, oid: parentOid, isYtj: !!parentYTunnus });
+            setParentTiedot({ organisaatioTyypit: parentTyypit, oid: parentOid });
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
             yhteystietoArvoReset(UIYhteysTietoArvot);
@@ -409,6 +408,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
                 formRegister={yhteystiedotRegister}
                 key={YHTEYSTIEDOTID}
+                isYtj={!!ytunnus}
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));

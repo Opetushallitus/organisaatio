@@ -111,7 +111,9 @@ export default function OrganisaatioHakuTaulukko() {
             },
             {
                 Header: i18n.translate('TAULUKKO_TUNNISTE'),
-                accessor: 'ytunnus',
+                accessor: (values) => {
+                    return values.ytunnus || values.oppilaitosKoodi;
+                },
             },
             {
                 Header: i18n.translate('LABEL_OID'),

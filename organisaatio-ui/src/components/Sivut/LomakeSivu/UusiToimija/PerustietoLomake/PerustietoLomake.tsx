@@ -108,6 +108,7 @@ export default function PerustietoLomake({
                         <Rivi>
                             <Kentta isRequired label="Y-TUNNUS">
                                 <Input
+                                    readOnly={true}
                                     error={!!validationErrors['ytunnus']}
                                     id={'ytunnus'}
                                     {...formRegister('ytunnus')}

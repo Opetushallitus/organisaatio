@@ -8,10 +8,10 @@ import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../../tools/
 import { getRyhmat } from '../../../api/ryhma';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
-import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Column } from 'react-table';
 import { Link, useHistory } from 'react-router-dom';
 import { LanguageContext } from '../../../contexts/LanguageContext';
+import Loading from '../../Loading/Loading';
 
 const Ryhmat = () => {
     const { i18n, language } = useContext(LanguageContext);
@@ -104,7 +104,7 @@ const Ryhmat = () => {
     };
 
     if (ryhmat.length === 0) {
-        return <Spin />;
+        return <Loading />;
     }
 
     return (
