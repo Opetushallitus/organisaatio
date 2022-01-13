@@ -1,5 +1,6 @@
 import JoiLess from 'joi';
 import JoiDate from '@joi/date';
+import { ytunnusJoiValidator } from './YtunnusValidator';
 
 const Joi = JoiLess.extend(JoiDate);
 
@@ -20,7 +21,7 @@ const perustietoOptionSchemaOptional = Joi.object({
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
-    ytunnus: Joi.string().allow(''),
+    ytunnus: Joi.custom(ytunnusJoiValidator),
     alkuPvm: Joi.date().format(['D.M.YYYY']).required(),
     organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not('organisaatiotyyppi_09').required()),
     kotipaikka: perustietoOptionSchemaRequired,
