@@ -3,15 +3,15 @@
         <ytj:wmYritysTiedotV2Response>
             <ytj:wmYritysTiedotV2Result>
                 <ytj:Toiminimi>
-                    <ytj:Toiminimi>Hameen ammatti-instituutti Oy 4</ytj:Toiminimi>
-                    <ytj:AlkuPvm>18.01.1980</ytj:AlkuPvm>
+                    <ytj:Toiminimi>Hameen ammatti-instituutti Oy</ytj:Toiminimi>
+                    <ytj:AlkuPvm>07.08.2014</ytj:AlkuPvm>
                 </ytj:Toiminimi>
                 <ytj:YritysTunnus>
                     <ytj:Status>2</ytj:Status>
-                    <ytj:Alkupvm>19.6.2014</ytj:Alkupvm>
+                    <ytj:Alkupvm>19.06.2014</ytj:Alkupvm>
                     <ytj:Loppupvm></ytj:Loppupvm>
                     <ytj:YritysLopetettu>false</ytj:YritysLopetettu>
-                    <ytj:YTunnus>2627679-5</ytj:YTunnus>
+                    <ytj:YTunnus>1572860-0</ytj:YTunnus>
                 </ytj:YritysTunnus>
                 <ytj:Yritysmuoto>
                     <ytj:Seloste>Osakeyhtio</ytj:Seloste>
@@ -57,7 +57,7 @@
                     </ytj:YrityksenYhteystietoDTO>
                     <ytj:YrityksenYhteystietoDTO>
                         <ytj:Laji>4</ytj:Laji>
-                        <ytj:YhteysTieto>https://www.hami.fi</ytj:YhteysTieto>
+                        <ytj:YhteysTieto>www.hami.fi</ytj:YhteysTieto>
                     </ytj:YrityksenYhteystietoDTO>
                 </ytj:YrityksenYhteystiedot>
                 <ytj:YritysEnnakkoperintaRekisterissa>false</ytj:YritysEnnakkoperintaRekisterissa>
