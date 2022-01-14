@@ -288,11 +288,16 @@ export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm
 export type SearchFilters = {
     filters: Filters;
     setFilters: (filters: Filters) => void;
+    localFilters: LocalFilters;
+    setLocalFilters: (localFilters: LocalFilters) => void;
 };
 export type Filters = {
     searchString: string;
     naytaPassivoidut: boolean;
     isOPHVirkailija: boolean;
+    omatOrganisaatiotSelected: boolean;
+};
+export type LocalFilters = {
     omatOrganisaatiotSelected: boolean;
 };
 export type OrganisaatioType =
@@ -327,4 +332,5 @@ export type CASMe = {
     canHaveButton: (button: ConfigurableButton, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     canEditLomake: (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     canEditIfParent: (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
+    getCRUDOids: () => string[];
 };

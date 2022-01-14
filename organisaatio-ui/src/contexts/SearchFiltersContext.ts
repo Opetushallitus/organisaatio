@@ -1,19 +1,27 @@
-import { Filters, SearchFilters } from '../types/types';
+import { Filters, LocalFilters, SearchFilters } from '../types/types';
 import * as React from 'react';
 
 export class SearchFiltersImpl implements SearchFilters {
     filters: Filters;
+    localFilters: LocalFilters;
     constructor(isOPHVirkailija = false) {
         this.filters = {
             isOPHVirkailija: isOPHVirkailija,
             naytaPassivoidut: false,
-            omatOrganisaatiotSelected: false,
+            omatOrganisaatiotSelected: true,
             searchString: '',
+        };
+        this.localFilters = {
+            omatOrganisaatiotSelected: true,
         };
     }
 
     setFilters(filters: Filters): void {
         this.filters = filters;
+    }
+
+    setLocalFilters(localFilters: LocalFilters): void {
+        this.localFilters = localFilters;
     }
 }
 

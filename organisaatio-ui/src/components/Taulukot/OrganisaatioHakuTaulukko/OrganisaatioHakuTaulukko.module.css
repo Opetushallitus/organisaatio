@@ -3,7 +3,8 @@ td {
     width: 1%;
 }
 
-td.collapse.collapse, th.collapse.collapse {
+td.collapse.collapse,
+th.collapse.collapse {
     width: 0.0000000001%;
 }
 
@@ -14,64 +15,43 @@ td.collapse.collapse, th.collapse.collapse {
     justify-content: center;
 }
 
-.PaginationSivunvaihto  {
+.PaginationSivunvaihto {
     margin: auto;
 }
+
 .PaginationYhteensa {
     align-self: flex-end;
 }
 
 .NaytaSivullaSelect {
-    border:none;
+    border: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     -ms-appearance: none;
     width: 2rem;
-    background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat right;
+    background: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>")
+        no-repeat right;
     background-position-x: 0.7rem;
 }
 
-.FiltteriContainer {
-    display: flex;
-    flex-direction:row;
-    padding-bottom: 2rem;
-    justify-content: space-between;
-}
-
-.FiltteriInputOsa {
-    display: flex;
-    flex-direction:row;
-    justify-content: space-between;
-    max-width: 60vw;
-    align-items: center;
-}
-.FiltteriInputOsa > div {
-    width: 100vw;
-}
-
-.FiltteriInputOsa > label {
-    padding-left: 2rem;
-}
-
-.LisatiedotNappi.LisatiedotNappi {
+.LippuNappi {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 100%;
+    border-radius: 50%;
     width: 2rem;
     height: 2rem;
 }
 
-.KoulutustoimijaNappi:first-of-type {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    height: 3rem;
+.SininenTausta {
+    background: #159ecb;
 }
 
-.KoulutustoimijaNappi:last-of-type {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    height: 3rem;
-    margin-bottom: 2rem;
+.PunainenTausta {
+    background: #e44e4e;
+}
+
+.Expander.Expander {
+    padding-right: 1rem;
 }

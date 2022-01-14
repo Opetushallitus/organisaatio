@@ -7,14 +7,17 @@ const OPH_CRUD = `${ORGANISAATIO_CRUD}_${ROOT_OID}`;
 const getRoleItems = <A>(myRole: string, role: string, items: A[]): A[] => {
     return myRole === role ? items : [];
 };
+const getOidsFromRoles = (roles: string[]): string[] => {
+    return roles
+        .filter((a) => a.startsWith(`${ORGANISAATIO_CRUD}_`))
+        .map((a) => a.substr(ORGANISAATIO_CRUD.length + 1));
+};
 export const organisationAllowedInRoles = (
     oid: string,
     organisaatioNimiPolku: OrganisaatioNimiJaOid[],
     roles: string[]
 ): boolean => {
-    const oidsFromRoles = roles
-        .filter((a) => a.startsWith(`${ORGANISAATIO_CRUD}_`))
-        .map((a) => a.substr(ORGANISAATIO_CRUD.length + 1));
+    const oidsFromRoles = getOidsFromRoles(roles);
     if (oidsFromRoles.includes(oid)) {
         return true;
     }
@@ -89,6 +92,9 @@ export class CASMeImpl implements CASMe {
         if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
             return true;
         return false;
+    };
+    getCRUDOids = () => {
+        return getOidsFromRoles(this.roles);
     };
 }
 type CASMeContextType = {
