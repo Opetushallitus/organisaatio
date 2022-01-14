@@ -195,7 +195,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
         const muutKotipaikat =
             muutKotipaikatUris?.map((muuKotipaikkaUri) => kuntaKoodisto.uri2SelectOption(muuKotipaikkaUri)) || [];
-        const apiNimetWithUIDate = apiNimet.map(({ nimi, alkuPvm }) => ({ nimi, alkuPvm: getUiDateStr(alkuPvm) }));
+        const apiNimetWithUIDate = apiNimet.map(({ nimi, alkuPvm: mapAlkuPvm }) => ({
+            nimi,
+            alkuPvm: getUiDateStr(mapAlkuPvm),
+        }));
         const { currentNimi, pastNimet, futureNimet } = sortNimet(apiNimetWithUIDate, mappingLyhytNimi);
         return {
             Uiperustiedot: {
