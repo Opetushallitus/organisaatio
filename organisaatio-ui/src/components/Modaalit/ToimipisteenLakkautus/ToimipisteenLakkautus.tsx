@@ -5,6 +5,7 @@ import { LocalDate } from '../../../types/types';
 import Header from '../Header/Header';
 import TLBody from './TLBody';
 import Footer from '../Footer/Footer';
+import moment from 'moment';
 
 type ModaaliProps = {
     date?: LocalDate;
@@ -22,7 +23,8 @@ export default function ToimipisteenLakkautus(props: ModaaliProps) {
 
     const handleTallenna = () => {
         const { date } = getValues();
-        props.handleTallennus(date);
+        const formattedDate = date ? moment(new Date(date)).format('DD.MM.yyyy') : '';
+        props.handleTallennus(formattedDate);
         return props.closeModaali();
     };
     const handlePeruuta = () => {

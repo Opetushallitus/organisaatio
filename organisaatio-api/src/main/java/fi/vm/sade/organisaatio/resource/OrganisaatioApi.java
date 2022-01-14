@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
@@ -168,4 +169,11 @@ public interface OrganisaatioApi {
     // Operaatio poistaa oid:n määrittämän organisaation nimen, jonka aikaisempi alkupäivämäärä on annettu date.
     @DeleteMapping(path = "/{oid}/nimet")
     void deleteOrganisaatioNimi(@PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
+
+    @Operation(
+            summary = "Päivittää organisaation tarkastusPvm nykyhetkeen.")
+    @PutMapping(path = "/{oid}/tarkista", produces = MediaType.APPLICATION_JSON_VALUE)
+    Timestamp updateTarkistusPvm(@PathVariable("oid") String oid);
+
+
 }

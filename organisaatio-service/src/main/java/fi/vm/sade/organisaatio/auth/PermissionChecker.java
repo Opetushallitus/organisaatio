@@ -63,22 +63,15 @@ public class PermissionChecker {
         checkPermission(permissionService.userCanEditName(authContext));
     }
 
-    public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
-    }
-
-    public void checkSaveOrganisation(OrganisaatioRDTOV3 organisaatio, boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
-    }
-
     public void checkSaveOrganisation(OrganisaatioRDTOV4 organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
                 organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
+    }
+
+    public void checkUpdateOrganisation(String oid) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(oid);
+        checkPermission(permissionService.userCanUpdateOrganisation(authContext));
     }
 
     private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,

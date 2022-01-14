@@ -18,6 +18,7 @@
 .YlaBanneri > div {
     padding-right: 1rem;
 }
+
 .PaaOsio {
     margin: 0 10rem;
     display: flex;
@@ -26,12 +27,14 @@
     align-items: center;
     justify-content: space-between;
 }
+
 .ValiContainer {
     margin: 1rem 10rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
 }
+
 .ValiOtsikko {
     display: flex;
     flex-direction: column;
@@ -67,6 +70,7 @@
     margin-right: 2rem;
     width: 26rem;
 }
+
 .KenttaLyhyt {
     margin-right: 2rem;
     max-width: 50%;
@@ -81,27 +85,29 @@
     -webkit-appearance: none;
     border: none;
 }
-
-.Nappi {
-    height: 2.5rem;
+.ValiNappulat > Button {
     margin-right: 0.5rem;
 }
-.Nappi > button:last-child {
+
+.ValiNappulat > Button:last-child {
     margin-right: 0rem;
 }
+
+.IconContainer {
+    padding-right: 0.5rem;
+}
+
 .VersioContainer {
     display: flex;
     flex-direction: row;
 }
+
 .MuokattuKolumni {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
 }
-.ValiNappulat > button {
-    margin-right: 1rem;
-    height: 3rem;
-}
+
 @media (min-width: 900px) {
     .AvainKevyestiBoldattu {
         white-space: nowrap;

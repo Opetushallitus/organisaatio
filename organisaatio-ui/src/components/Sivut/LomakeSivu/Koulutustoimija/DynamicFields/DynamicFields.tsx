@@ -84,13 +84,13 @@ export default function DynamicFields({
                         );
                     case 'LINK':
                         return (
-                            <>
+                            <div key={field.name}>
                                 {field.value && (
-                                    <Rivi key={field.name}>
+                                    <Rivi>
                                         <LabelLink value={field.label} to={field.value} />
                                     </Rivi>
                                 )}
-                            </>
+                            </div>
                         );
                     default:
                         return <></>;
