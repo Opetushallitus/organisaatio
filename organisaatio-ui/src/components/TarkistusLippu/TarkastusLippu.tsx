@@ -10,7 +10,7 @@ const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;
     return isNumber(input) ? moment.unix(input / 1000) : moment(input, 'DD.MM.yyyy');
 };
-const hasWarning = ({
+export const hasWarning = ({
     tarkastusDate,
     alkuDate,
     lakkautusDate,
