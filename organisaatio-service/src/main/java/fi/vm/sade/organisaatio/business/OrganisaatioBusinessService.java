@@ -130,5 +130,5 @@ public interface OrganisaatioBusinessService {
      * @param oid Oid of organisaatio that has been checked
      * @return Timestamp when organisaatio was checked
      */
-    Timestamp updateTarkistusPvm(String oid);
+    Timestamp updateTarkastusPvm(String oid);
 }

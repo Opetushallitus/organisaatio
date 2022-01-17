@@ -172,8 +172,8 @@ public interface OrganisaatioApi {
 
     @Operation(
             summary = "Päivittää organisaation tarkastusPvm nykyhetkeen.")
-    @PutMapping(path = "/{oid}/tarkista", produces = MediaType.APPLICATION_JSON_VALUE)
-    Timestamp updateTarkistusPvm(@PathVariable("oid") String oid);
+    @PutMapping(path = "/{oid}/tarkasta", produces = MediaType.APPLICATION_JSON_VALUE)
+    Timestamp updateTarkastusPvm(@PathVariable("oid") String oid);
 
 
 }

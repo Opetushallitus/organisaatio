@@ -887,7 +887,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public Timestamp updateTarkistusPvm(String oid) {
+    public Timestamp updateTarkastusPvm(String oid) {
         Organisaatio org = getOrganisaatio(oid);
         org.setTarkastusPvm(new Date());
         return new Timestamp(org.getTarkastusPvm().getTime());

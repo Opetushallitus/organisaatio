@@ -14,7 +14,7 @@ import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
-import TarkistusLippu from '../../TarkistusLippu/TarkistusLippu';
+import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
 
 const MAX_EXPAND_ROWS = 10;
 const mapPaginationSelectors = (index) => {
@@ -114,11 +114,11 @@ export default function OrganisaatioHakuTaulukko() {
                 accessor: 'oid',
             },
             {
-                Header: i18n.translate('TAULUKKO_TARKISTUS'),
+                Header: i18n.translate('TAULUKKO_TARKASTUS'),
                 id: 'tarkistus',
                 Cell: ({ row }) => {
                     return (
-                        <TarkistusLippu
+                        <TarkastusLippu
                             tarkastusPvm={row.original.tarkastusPvm}
                             lakkautusPvm={row.original.lakkautusPvm}
                             alkuPvm={row.original.alkuPvm}

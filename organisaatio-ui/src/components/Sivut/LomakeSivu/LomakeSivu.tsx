@@ -32,7 +32,7 @@ import {
     mapUiOrganisaatioToApiToUpdate,
     mergeOrganisaatio,
     readOrganisaatio,
-    setTarkistusPvm,
+    setTarkastusPvm,
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
@@ -60,7 +60,7 @@ import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import IconWrapper from '../../IconWapper/IconWrapper';
-import TarkistusLippu from '../../TarkistusLippu/TarkistusLippu';
+import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -496,14 +496,14 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <LomakeButton
                         label={'LOMAKE_MERKITSE_TARKISTUS'}
                         icon={() => (
-                            <TarkistusLippu
+                            <TarkastusLippu
                                 tarkastusPvm={organisaatioBase.tarkastusPvm}
                                 alkuPvm={alkuPvm}
                                 lakkautusPvm={lakkautusPvm}
                             />
                         )}
                         onClick={async () => {
-                            const doodle = await setTarkistusPvm(organisaatioBase.oid);
+                            const doodle = await setTarkastusPvm(organisaatioBase.oid);
                             setOrganisaatioBase({ ...organisaatioBase, tarkastusPvm: doodle });
                         }}
                     />

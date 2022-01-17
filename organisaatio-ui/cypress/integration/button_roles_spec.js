@@ -1,6 +1,5 @@
-import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH } from '../../src/contexts/constants';
 import { organisaatio } from '../support/data';
-import exp from 'constants';
 
 describe('Restrict buttons by roles', () => {
     const baseCasMe = {

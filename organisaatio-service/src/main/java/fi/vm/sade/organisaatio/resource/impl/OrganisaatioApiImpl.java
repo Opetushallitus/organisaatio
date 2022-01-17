@@ -357,7 +357,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     /**
-     * PUT /{oid}/tarkista
+     * PUT /{oid}/tarkasta
      *
      * @param oid of organisationthat was checked
      * @return timestamp when information was checked
@@ -365,13 +365,13 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public Timestamp updateTarkistusPvm(String oid) {
+    public Timestamp updateTarkastusPvm(String oid) {
         try {
             permissionChecker.checkUpdateOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(nae);
         }
-        return organisaatioBusinessService.updateTarkistusPvm(oid);
+        return organisaatioBusinessService.updateTarkastusPvm(oid);
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

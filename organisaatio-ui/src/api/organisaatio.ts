@@ -153,10 +153,10 @@ async function searchOrganisation({
 
     return data.organisaatiot;
 }
-async function setTarkistusPvm(oid: string) {
+async function setTarkastusPvm(oid: string) {
     return errorHandlingWrapper(async () => {
-        const { data: newTarkistusPvm } = await Axios.put<number>(`${baseUrl}${oid}/tarkista`);
-        success({ message: 'MESSAGE_TARKISTUS_AIKA_TALLENNETTU' });
+        const { data: newTarkistusPvm } = await Axios.put<number>(`${baseUrl}${oid}/tarkasta`);
+        success({ message: 'MESSAGE_TARKASTUS_AIKA_TALLENNETTU' });
         if (newTarkistusPvm) return newTarkistusPvm;
     });
 }
@@ -625,5 +625,5 @@ export {
     createOrganisaatioNimi,
     updateOrganisaatioNimi,
     deleteOrganisaatioNimi,
-    setTarkistusPvm,
+    setTarkastusPvm,
 };

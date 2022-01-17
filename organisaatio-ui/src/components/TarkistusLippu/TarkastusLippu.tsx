@@ -27,7 +27,7 @@ const hasWarning = ({
     return !tarkastusOk && !!activeNow;
 };
 
-const TarkistusLippu = ({
+const TarkastusLippu = ({
     tarkastusPvm,
     alkuPvm,
     lakkautusPvm,
@@ -61,4 +61,4 @@ const TarkistusLippu = ({
     );
 };
 
-export default TarkistusLippu;
+export default TarkastusLippu;
