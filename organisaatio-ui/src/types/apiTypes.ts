@@ -66,6 +66,7 @@ export type OrganisaatioBase = {
     lyhytNimi: Nimi;
     parentOid: string;
     parentOidPath: string;
+    tarkastusPvm?: number;
 };
 export type ApiYhteystietoArvo = {
     'YhteystietoArvo.arvoText': string;

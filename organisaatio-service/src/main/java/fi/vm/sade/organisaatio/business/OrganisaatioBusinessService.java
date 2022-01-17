@@ -27,6 +27,7 @@ import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.validation.ValidationException;
+import java.sql.Timestamp;
 import java.util.*;
 
 public interface OrganisaatioBusinessService {
@@ -123,4 +124,11 @@ public interface OrganisaatioBusinessService {
      * @Param newParentNimiMap language-name mappings for the new parent name
      */
     void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap);
+
+    /**
+     * Update the tarkastusPvm of organisaatio
+     * @param oid Oid of organisaatio that has been checked
+     * @return Timestamp when organisaatio was checked
+     */
+    Timestamp updateTarkastusPvm(String oid);
 }

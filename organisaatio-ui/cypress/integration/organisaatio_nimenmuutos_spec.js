@@ -1,5 +1,6 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH } from '../../src/contexts/constants';
+
 const getAfterOneYear = () => {
     const date = new Date();
     return `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`;

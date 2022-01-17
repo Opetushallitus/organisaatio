@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { BASE_PATH, LEGACY_API_CONTEXT, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/constants';
 
 describe('Oppilaitos koski posti', () => {
     before(() => {

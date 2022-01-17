@@ -1,5 +1,5 @@
 import { organisaatio } from '../support/data';
-import { API_CONTEXT, BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
 
 describe('Organisaatiosiirto', () => {
     it('Can move organisaatio', () => {

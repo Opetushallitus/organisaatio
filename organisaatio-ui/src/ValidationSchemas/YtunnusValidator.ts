@@ -18,7 +18,7 @@ export function ytunnusJoiValidator(ytunnus: string | undefined): string {
     const remainder = sum % 11;
     if (remainder === 1) throw validationError;
     const checksum = remainder === 0 ? 0 : 11 - remainder;
-    if (checksum != parseInt(ytunnus[8], 10)) throw validationError;
+    if (checksum !== parseInt(ytunnus[8], 10)) throw validationError;
 
     return ytunnus;
 }

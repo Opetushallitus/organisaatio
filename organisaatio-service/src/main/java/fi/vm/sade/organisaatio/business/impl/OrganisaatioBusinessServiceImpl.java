@@ -23,10 +23,10 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
 import fi.vm.sade.organisaatio.business.exception.*;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
@@ -54,6 +54,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.OptimisticLockException;
 import javax.validation.ValidationException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -304,7 +305,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         if (entity.getOppilaitosKoodi() != null && entity.getOppilaitosKoodi().length() > 0) {
             if (checker.checkLearningInstitutionCodeIsUniqueAndNotUsed(entity)) {
-                throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
+            throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
             }
         }
         Organisaatio parentOrg = fetchParentOrg(parentOid);
@@ -373,25 +374,19 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {
-        Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = entity.getOrganisaatioLisatietotyypit().stream()
-                .map(lisatietotyyppi -> this.lisatietoTyyppiRepository.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi())
-                        .orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi()))))
-                .map(lisatietotyyppi -> {
-                    OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
-                    organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
-                    organisaatioLisatietotyyppi.setOrganisaatio(entity);
-                    return organisaatioLisatietotyyppi;
-                })
-                .collect(Collectors.toSet());
+        Set<OrganisaatioLisatietotyyppi> persistedLisatietotyypit = entity.getOrganisaatioLisatietotyypit().stream().map(lisatietotyyppi -> this.lisatietoTyyppiRepository.findByNimi(lisatietotyyppi.getLisatietotyyppi().getNimi()).orElseThrow(() -> new ValidationException(String.format("Lisätietoa %s ei löytynyt", lisatietotyyppi.getLisatietotyyppi().getNimi())))).map(lisatietotyyppi -> {
+            OrganisaatioLisatietotyyppi organisaatioLisatietotyyppi = new OrganisaatioLisatietotyyppi();
+            organisaatioLisatietotyyppi.setLisatietotyyppi(lisatietotyyppi);
+            organisaatioLisatietotyyppi.setOrganisaatio(entity);
+            return organisaatioLisatietotyyppi;
+        }).collect(Collectors.toSet());
         entity.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
     }
 
     private void setVarhaiskasvatuksenToimipaikkaTietoRelations(Organisaatio entity, boolean isVarhaiskasvatuksenToimipaikka) {
         if (isVarhaiskasvatuksenToimipaikka) {
-            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset()
-                    .forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
-            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset()
-                    .forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset().forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset().forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
         }
     }
 
@@ -406,8 +401,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         // Tarkistetaan organisaatiohierarkia jos organisaatiotyypit muutuneet
-        if (!entity.getTyypit().containsAll(oldOrg.getTyypit())
-                || !oldOrg.getTyypit().containsAll(entity.getTyypit())) {
+        if (!entity.getTyypit().containsAll(oldOrg.getTyypit()) || !oldOrg.getTyypit().containsAll(entity.getTyypit())) {
             logger.info("Organisaation tyypit muuttuneet, tarkastetaan hierarkia.");
             checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
@@ -434,8 +428,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return this.organisaatioRepository.customFindByOid(child.getOid());
     }
 
-    private Set<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, Set<YhteystietoArvo> nys,
-                                                       boolean updating) {
+    private Set<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, Set<YhteystietoArvo> nys, boolean updating) {
 
         Map<String, YhteystietoArvo> ov = new HashMap<>();
 
@@ -574,10 +567,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private String generateOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent, Set<String> tyypit) {
         // Opetuspisteen jarjestysnumero generoidaan vain toimipisteille,
         // mutta jos organisaatio on samalla oppilaitos, niin ei generoida
-        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())
-                && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            logger.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})",
-                    entity.getOid(), tyypit);
+        if (tyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue()) && !tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            logger.debug("Organisaatio {} ei toimipiste -> ei tarvetta opetuspisteen järjestysnumerolle ({})", entity.getOid(), tyypit);
             return null;
         }
 
@@ -643,8 +634,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private boolean isAllowed(Organisaatio org, YhteystietojenTyyppi yad) {
-        if (org.getOppilaitosTyyppi() != null
-                && yad.getSovellettavatOppilaitostyyppis().contains(org.getOppilaitosTyyppi())) {
+        if (org.getOppilaitosTyyppi() != null && yad.getSovellettavatOppilaitostyyppis().contains(org.getOppilaitosTyyppi())) {
             return true;
         }
         for (String otype : org.getTyypit()) {
@@ -761,8 +751,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Tarkistetaan ettei poistettava nimi ole organisaation nykyinen nimi
         if (currentNimiEntity != null) {
             if (currentNimiEntity.getId().equals(nimiEntity.getId())) {
-                throw new OrganisaatioNimiDeleteException();
-            }
+            throw new OrganisaatioNimiDeleteException();
+        }
         }
 
         // Vain uusimman nimen, jonka voimassaolo ei ole alkanut saa poistaa
@@ -851,10 +841,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Date date = inputDate.orElseGet(Date::new);
         Organisaatio child = getOrganisaatio(organisaatio);
         Organisaatio parent = getOrganisaatio(newParent);
-        if (merge)
-            mergeOrganisaatio(child, parent, date);
-        else
-            changeOrganisaatioParent(child, parent, date);
+        if (merge) mergeOrganisaatio(child, parent, date);
+        else changeOrganisaatioParent(child, parent, date);
     }
 
     @Override
@@ -886,8 +874,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         organisaatioSuhdeRepository.addLiitos(organisaatio, newParent, date);
 
         // Siirretään kaikki aktiiviset aliorganisaatiot uuden parentin alle
-        final List<OrganisaatioSuhde> suhteet =
-                organisaatioSuhdeRepository.findChildrenTo(organisaatio.getId(), date);
+        final List<OrganisaatioSuhde> suhteet = organisaatioSuhdeRepository.findChildrenTo(organisaatio.getId(), date);
         for (OrganisaatioSuhde suhde : suhteet) {
             Organisaatio child = suhde.getChild();
             if (!OrganisaatioUtil.isPassive(child)) {
@@ -897,6 +884,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitetään tiedot koodistoon.
         koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
+    }
+
+    @Override
+    public Timestamp updateTarkastusPvm(String oid) {
+        Organisaatio org = getOrganisaatio(oid);
+        org.setTarkastusPvm(new Date());
+        return new Timestamp(org.getTarkastusPvm().getTime());
     }
 
     @Override
@@ -1044,22 +1038,18 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private Organisaatio fetchParentOrg(String parentOid) {
         // Haetaan parent organisaatio
-        return (parentOid != null && !parentOid.equalsIgnoreCase(rootOrganisaatioOid))
-                ? organisaatioRepository.customFindByOid(parentOid) : null;
+        return (parentOid != null && !parentOid.equalsIgnoreCase(rootOrganisaatioOid)) ? organisaatioRepository.customFindByOid(parentOid) : null;
 
     }
 
     private boolean checkIfVarhaiskasvatuksenToimipaikka(Organisaatio entity) {
-        return entity.getTyypit().stream()
-                .anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
+        return entity.getTyypit().stream().anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
     }
 
     // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
 
     private void checkToimipisteNimiFormat(Organisaatio entity, Organisaatio parentOrg) {
-        if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE)
-                || organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE)) &&
-                !organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
+        if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE) || organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE)) && !organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
             checker.checkToimipisteNimiFormat(entity, parentOrg.getNimi());
         }
     }

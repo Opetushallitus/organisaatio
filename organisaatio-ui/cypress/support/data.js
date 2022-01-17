@@ -22,8 +22,8 @@ export const organisaatio = (prefix = '', override) => {
             kieletUris: [`oppilaitoksenopetuskieli_2#2`],
             yhteystiedot: [
                 { kieli: `kieli_fi#1`, tyyppi: `puhelin`, numero: `09123456` },
-                { kieli: `kieli_fi#1`, email: `${prefix}-FI.noreply@test.com` },
-                { kieli: `kieli_fi#1`, www: `http://${prefix}-test.com` },
+                { kieli: `kieli_fi#1`, email: `${prefix.replaceAll(' ', '')}-FI.noreply@test.com` },
+                { kieli: `kieli_fi#1`, www: `http://${prefix.replaceAll(' ', '-')}-test.com` },
                 {
                     kieli: `kieli_fi#1`,
                     osoiteTyyppi: `posti`,
@@ -39,8 +39,8 @@ export const organisaatio = (prefix = '', override) => {
                     postitoimipaikka: ``,
                 },
                 { kieli: `kieli_sv#1`, tyyppi: `puhelin`, numero: `09123456` },
-                { kieli: `kieli_sv#1`, email: `${prefix}-SV.noreply@test.com` },
-                { kieli: `kieli_sv#1`, www: `http://${prefix}-test.com` },
+                { kieli: `kieli_sv#1`, email: `${prefix.replaceAll(' ', '')}-SV.noreply@test.com` },
+                { kieli: `kieli_sv#1`, www: `http://${prefix.replaceAll(' ', '-')}-test.com` },
                 {
                     kieli: `kieli_sv#1`,
                     osoiteTyyppi: `posti`,
@@ -56,8 +56,8 @@ export const organisaatio = (prefix = '', override) => {
                     postitoimipaikka: ``,
                 },
                 { kieli: `kieli_en#1`, tyyppi: `puhelin`, numero: `09123456` },
-                { kieli: `kieli_en#1`, email: `${prefix}-EN.noreply@test.com` },
-                { kieli: `kieli_en#1`, www: `http://${prefix}-test.com` },
+                { kieli: `kieli_en#1`, email: `${prefix.replaceAll(' ', '')}-EN.noreply@test.com` },
+                { kieli: `kieli_en#1`, www: `http://${prefix.replaceAll(' ', '-')}-test.com` },
                 {
                     kieli: `kieli_en#1`,
                     osoiteTyyppi: `posti`,

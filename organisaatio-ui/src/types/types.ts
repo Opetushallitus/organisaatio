@@ -94,6 +94,7 @@ export type UiOrganisaatioBase = {
     currentNimi: UiOrganisaationNimetNimi; //  needed for merging and combining orgs
     nimi: Nimi; // long nimi for toimipistes
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
+    tarkastusPvm?: number;
 };
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;

@@ -12,10 +12,9 @@ import { Hakufiltterit } from './Hakufiltterit';
 import Loading from '../../Loading/Loading';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
-import { ReactComponent as LippuIkoni } from '../../../img/outlined_flag-white-18dp.svg';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import moment from 'moment';
 import { CasMeContext } from '../../../contexts/CasMeContext';
+import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
 
 const MAX_EXPAND_ROWS = 10;
 const mapPaginationSelectors = (index) => {
@@ -38,11 +37,6 @@ export const allOids = (data: ApiOrganisaatio[]) => {
         const subs = !!c.subRows ? allOids(c.subRows) : [];
         return [...p, ...subs, c.oid];
     }, []);
-};
-const tarkastaLipunVari = (tarkastusPvm) => {
-    const date = moment();
-    date.subtract(1, 'years');
-    return !!tarkastusPvm ? tarkastusPvm - date.unix() > 0 : false;
 };
 const ExpandIcon = ({ isExpanded }) => {
     if (isExpanded) return <IconWrapper icon={chevronDown} />;
@@ -120,17 +114,17 @@ export default function OrganisaatioHakuTaulukko() {
                 accessor: 'oid',
             },
             {
-                Header: i18n.translate('TAULUKKO_TARKISTUS'),
+                Header: i18n.translate('TAULUKKO_TARKASTUS'),
                 id: 'tarkistus',
-                Cell: ({ row }) => (
-                    <div
-                        className={`${styles.LippuNappi} ${
-                            tarkastaLipunVari(row.original.tarkastusPvm) ? styles.SininenTausta : styles.PunainenTausta
-                        }`}
-                    >
-                        <LippuIkoni />
-                    </div>
-                ),
+                Cell: ({ row }) => {
+                    return (
+                        <TarkastusLippu
+                            tarkastusPvm={row.original.tarkastusPvm}
+                            lakkautusPvm={row.original.lakkautusPvm}
+                            alkuPvm={row.original.alkuPvm}
+                        />
+                    );
+                },
             },
             {
                 Header: 'containingOids',

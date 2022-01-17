@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -311,6 +312,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         }
 
     }
+
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public OrganisaatioNimiDTO newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
@@ -352,6 +354,24 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         }
 
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, nimidto);
+    }
+
+    /**
+     * PUT /{oid}/tarkasta
+     *
+     * @param oid of organisationthat was checked
+     * @return timestamp when information was checked
+     */
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public Timestamp updateTarkastusPvm(String oid) {
+        try {
+            permissionChecker.checkUpdateOrganisation(oid);
+        } catch (NotAuthorizedException nae) {
+            throw new OrganisaatioResourceException(nae);
+        }
+        return organisaatioBusinessService.updateTarkastusPvm(oid);
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

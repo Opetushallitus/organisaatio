@@ -18,12 +18,9 @@ package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.base.Objects;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
@@ -63,22 +60,15 @@ public class PermissionChecker {
         checkPermission(permissionService.userCanEditName(authContext));
     }
 
-    public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
-    }
-
-    public void checkSaveOrganisation(OrganisaatioRDTOV3 organisaatio, boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
-    }
-
     public void checkSaveOrganisation(OrganisaatioRDTOV4 organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
                 organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
+    }
+
+    public void checkUpdateOrganisation(String oid) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(oid);
+        checkPermission(permissionService.userCanUpdateOrganisation(authContext));
     }
 
     private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,
