@@ -10,6 +10,7 @@ import {
     UiOrganisaatioBase,
     UiOrganisaationNimetNimi,
     Yhteystiedot,
+    YhteystiedotBase,
     YhteystietoArvot,
 } from '../types/types';
 import { success, warning } from '../components/Notification/Notification';
@@ -153,6 +154,7 @@ async function searchOrganisation({
 
     return data.organisaatiot;
 }
+
 async function setTarkastusPvm(oid: string) {
     return errorHandlingWrapper(async () => {
         const { data: newTarkistusPvm } = await Axios.put<number>(`${baseUrl}${oid}/tarkasta`);
@@ -160,6 +162,7 @@ async function setTarkastusPvm(oid: string) {
         if (newTarkistusPvm) return newTarkistusPvm;
     });
 }
+
 async function readOrganisaatio(
     oid: string,
     parent?: boolean
@@ -294,7 +297,10 @@ function mapUiOrganisaatioToApiToSave(
     };
 }
 
-function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot): ApiYhteystietoArvo[] {
+function mapUIYhteystietoArvotToApi(
+    yhteystietoArvoFormValuet: YhteystietoArvot,
+    originalOrganisaatioArvot: ApiYhteystietoArvo[]
+): ApiYhteystietoArvo[] {
     const arvot = [] as ApiYhteystietoArvo[];
     if (yhteystietoArvoFormValuet.koskiposti?.fi) {
         arvot.push({
@@ -317,10 +323,21 @@ function mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet: YhteystietoArvot)
             'YhteystietoArvo.kieli': 'kieli_en#1',
         });
     }
+    originalOrganisaatioArvot.forEach((a) => {
+        const found = arvot.find((b) => {
+            return (
+                a['YhteystietoElementti.oid'] === b['YhteystietoElementti.oid'] &&
+                a['YhteystietojenTyyppi.oid'] === b['YhteystietojenTyyppi.oid'] &&
+                a['YhteystietoArvo.kieli'] === b['YhteystietoArvo.kieli']
+            );
+        });
+        if (!found) arvot.push(a);
+    });
     return arvot;
 }
 
 function mapUiOrganisaatioToApiToUpdate(
+    originalOrganisaatio: ApiOrganisaatio,
     postinumerotKoodisto: Koodisto,
     organisaatioBase: UiOrganisaatioBase,
     yhteystiedotFormValues: UnpackNestedValue<Yhteystiedot>,
@@ -333,7 +350,10 @@ function mapUiOrganisaatioToApiToUpdate(
         apiYhteystiedot: organisaatioBase.apiYhteystiedot,
         uiYhteystiedot: yhteystiedotFormValues,
     });
-    const yhteystietoArvos = mapUIYhteystietoArvotToApi(yhteystietoArvoFormValuet);
+    const yhteystietoArvos = mapUIYhteystietoArvotToApi(
+        yhteystietoArvoFormValuet,
+        originalOrganisaatio.yhteystietoArvos || []
+    );
     const {
         kotipaikka,
         maa,
@@ -353,6 +373,7 @@ function mapUiOrganisaatioToApiToUpdate(
     const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
     const { nimet: uiNimet, currentNimi } = organisaatioBase;
     return {
+        ...originalOrganisaatio,
         lakkautusPvm: apiLakkautusPvm,
         alkuPvm: apiAlkuPvm,
         oid,
@@ -371,7 +392,7 @@ function mapUiOrganisaatioToApiToUpdate(
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
         kieletUris: kielet.map((a) => `${a.value}#${a.versio}`),
-        oppilaitosTyyppiUri: oppilaitosTyyppiUri && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
+        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.arvo && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
         vuosiluokat: vuosiluokat?.map((a) => `${a.value}#${a.versio}`),
@@ -379,36 +400,42 @@ function mapUiOrganisaatioToApiToUpdate(
     };
 }
 
+function kayntiOnEri(yhteysTieto: YhteystiedotBase): boolean {
+    return (
+        yhteysTieto?.postiOsoite !== yhteysTieto?.kayntiOsoite ||
+        yhteysTieto?.postiOsoitePostiNro !== yhteysTieto?.kayntiOsoitePostiNro
+    );
+}
 function mapApiYhteystiedotToUi(
     postinumerotKoodisto: Koodisto,
     yhteystiedot: ApiYhteystiedot[] = [],
     kielet = ['fi', 'sv', 'en']
 ): Yhteystiedot {
-    return {
-        ...kielet.reduce((uiYhteystiedot, kieli) => {
-            const apiKieli = `kieli_${kieli}#1`;
-            return (
-                (uiYhteystiedot[kieli] = {
-                    postiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'posti').osoite,
-                    postiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
-                        getApiOsoite(yhteystiedot, apiKieli, 'posti').postinumeroUri
-                    ),
-                    postiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'posti').postitoimipaikka,
-                    kayntiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').osoite,
-                    kayntiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
-                        getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postinumeroUri
-                    ),
-                    kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postitoimipaikka,
-                    puhelinnumero: getApiYhteystieto(yhteystiedot, apiKieli, NAME_PHONE)[NAME_PHONE],
-                    email: getApiYhteystieto(yhteystiedot, apiKieli, NAME_EMAIL)[NAME_EMAIL],
-                    www: getApiYhteystieto(yhteystiedot, apiKieli, NAME_WWW)[NAME_WWW],
-                }),
-                uiYhteystiedot
-            );
-        }, {} as Yhteystiedot),
-        osoitteetOnEri: false,
-    };
+    const yhteysTiedot = kielet.reduce((uiYhteystiedot, kieli) => {
+        const apiKieli = `kieli_${kieli}#1`;
+        return (
+            (uiYhteystiedot[kieli] = {
+                postiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'posti').osoite,
+                postiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
+                    getApiOsoite(yhteystiedot, apiKieli, 'posti').postinumeroUri
+                ),
+                postiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'posti').postitoimipaikka,
+                kayntiOsoite: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').osoite,
+                kayntiOsoitePostiNro: postinumerotKoodisto.uri2Arvo(
+                    getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postinumeroUri
+                ),
+                kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postitoimipaikka,
+                puhelinnumero: getApiYhteystieto(yhteystiedot, apiKieli, NAME_PHONE)[NAME_PHONE],
+                email: getApiYhteystieto(yhteystiedot, apiKieli, NAME_EMAIL)[NAME_EMAIL],
+                www: getApiYhteystieto(yhteystiedot, apiKieli, NAME_WWW)[NAME_WWW],
+            }),
+            uiYhteystiedot
+        );
+    }, {} as Yhteystiedot);
+    const osoitteetOnEri = kayntiOnEri(yhteysTiedot.fi) || kayntiOnEri(yhteysTiedot.sv);
+    return { ...yhteysTiedot, osoitteetOnEri };
 }
+
 function mapApiVakaToUi({
     vaka: varhaiskasvatuksenToimipaikkaTiedot,
     koodistot: {
@@ -468,6 +495,7 @@ function mapApiYhteysTietoArvotToUi(yhteystietoArvos) {
             }, {}),
     };
 }
+
 function mapUiYhteystiedotToApi({
     postinumerotKoodisto,
     apiYhteystiedot = [],
@@ -545,6 +573,7 @@ function transformData(data: APIOrganisaatioHistoria): OrganisaatioHistoria {
             parent: a.organisaatio,
         };
     }
+
     function suhdeMapper(a: APIOrganisaatioSuhde): OrganisaatioSuhde {
         return { ...a, alkuPvm: getUiDateStr(a.alkuPvm), loppuPvm: getUiDateStr(a.loppuPvm) };
     }

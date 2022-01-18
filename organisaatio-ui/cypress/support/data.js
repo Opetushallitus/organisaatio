@@ -185,7 +185,7 @@ export const helsinki = (override) => {
                 yhteystietoOid: '1.2.246.562.5.23670884842',
                 id: '9365895',
                 postitoimipaikka: 'HELSINKI',
-                osoite: 'Töysänkatu 2 D',
+                osoite: 'kaynti FI Töysänkatu 2 D',
             },
             {
                 osoiteTyyppi: 'posti',
@@ -194,7 +194,7 @@ export const helsinki = (override) => {
                 yhteystietoOid: '1.2.246.562.5.75901871253',
                 id: '9365900',
                 postitoimipaikka: 'HELSINGIN KAUPUNKI',
-                osoite: 'PL 1',
+                osoite: 'posti FI PL 1',
                 ytjPaivitysPvm: '2017-04-18',
             },
             {
@@ -223,7 +223,7 @@ export const helsinki = (override) => {
                 yhteystietoOid: '1.2.246.562.5.38653121071',
                 id: '9365899',
                 postitoimipaikka: 'HELSINGFORS',
-                osoite: 'Hämeentie 11 A',
+                osoite: 'SV Hämeentie 11 A',
             },
             {
                 osoiteTyyppi: 'posti',
@@ -232,7 +232,7 @@ export const helsinki = (override) => {
                 yhteystietoOid: '1.2.246.562.5.41036958387',
                 id: '9365897',
                 postitoimipaikka: 'HELSINGFORS STAD',
-                osoite: 'PL 3000',
+                osoite: 'SV PL 3000',
             },
         ],
         nimi: {
@@ -263,7 +263,7 @@ export const helsinki = (override) => {
             osoiteTyyppi: 'posti',
             yhteystietoOid: '1.2.246.562.5.75901871253',
             postitoimipaikka: 'HELSINGIN KAUPUNKI',
-            osoite: 'PL 1',
+            osoite: 'posti FI PL 1',
             ytjPaivitysPvm: '2017-04-18',
         },
         yritysmuoto: 'Kunta',
@@ -273,11 +273,11 @@ export const helsinki = (override) => {
         ytjpaivitysPvm: '2021-10-01',
         ytunnus: FinnishBusinessIds.generateBusinessId(), //'0201256-6',
         kayntiosoite: {
-            postinumeroUri: 'posti_00530',
+            postinumeroUri: 'posti_00510',
             osoiteTyyppi: 'kaynti',
-            yhteystietoOid: '1.2.246.562.5.38653121071',
-            postitoimipaikka: 'HELSINGFORS',
-            osoite: 'Hämeentie 11 A',
+            yhteystietoOid: '1.2.246.562.5.23670884842',
+            postitoimipaikka: 'HELSINKI',
+            osoite: 'kaynti FI Töysänkatu 2 D',
         },
         kotipaikkaUri: 'kunta_091',
         maaUri: 'maatjavaltiot1_fin',
@@ -289,7 +289,6 @@ export const helsinki = (override) => {
         lisatiedot: [],
         version: 0,
         status: 'AKTIIVINEN',
-        oppilaitosTyyppiUri: '',
         ...override,
     };
 };

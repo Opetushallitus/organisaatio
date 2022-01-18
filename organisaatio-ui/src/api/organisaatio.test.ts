@@ -161,6 +161,7 @@ const kayntiosoite = {
 };
 
 const uiBaseTiedot: UiOrganisaatioBase = {
+    apiOrganisaatio: {} as ApiOrganisaatio,
     oid: '1.2.1',
     parentOid: '123.321',
     nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday }],
@@ -299,6 +300,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
     it('Maps Ui organisaatio to api for update', () => {
         const expectedYhteystiedot = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite].sort(YhteystiedotsortCb);
         const mappedApiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+            {} as ApiOrganisaatio,
             postinumerotKoodisto as Koodisto,
             uiBaseTiedot,
             uiYhteystiedot,
