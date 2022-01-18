@@ -278,6 +278,7 @@ describe('mapApiYhteystiedotToUi', () => {
     it('Maps api yhteystiedot to ui object format ({ lang: { ...values },...}) and generates empty attributes', () => {
         expect(mapApiYhteystiedotToUi(postinumerotKoodisto as Koodisto, [...apiYhteystiedot])).toEqual({
             ...uiYhteystiedot,
+            osoitteetOnEri: true,
         });
     });
 });
