@@ -170,6 +170,9 @@ Cypress.Commands.add('enterPerustiedot', (prefix, tyyppi, isNew = false) => {
 Cypress.Commands.add('persistOrganisaatio', (organisaatio, key) => {
     cy.request('POST', `${PUBLIC_API_CONTEXT}/`, organisaatio).as(key);
 });
+Cypress.Commands.add('getOrganisaatio', (oid, key) => {
+    cy.request('GET', `${PUBLIC_API_CONTEXT}/${oid}`).as(key);
+});
 Cypress.Commands.add('updateOrganisaatio', (organisaatio, key) => {
     cy.request('PUT', `${PUBLIC_API_CONTEXT}/${organisaatio.oid}`, organisaatio).as(key);
 });

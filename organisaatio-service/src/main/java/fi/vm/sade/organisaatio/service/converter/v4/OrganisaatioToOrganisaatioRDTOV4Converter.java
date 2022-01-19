@@ -100,7 +100,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter implements Converter<Orga
 
         Optional.ofNullable(s.getVarhaiskasvatuksenToimipaikkaTiedot()).map(this::varhaiskasvatuksenToimipaikkaTiedotEntityToDto).ifPresent(t::setVarhaiskasvatuksenToimipaikkaTiedot);
 
-        LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
+        LOG.debug("convert: {} --> {} in {} ms", t.getClass().getSimpleName(), s, System.currentTimeMillis() - qstarted);
 
         return t;
     }
