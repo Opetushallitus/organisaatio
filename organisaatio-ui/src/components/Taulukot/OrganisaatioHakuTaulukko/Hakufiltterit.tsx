@@ -11,6 +11,7 @@ import IconWrapper from '../../IconWapper/IconWrapper';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
+import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 
 const SEARCH_LENGTH = 3;
 type HakufiltteritProps = {
@@ -96,9 +97,9 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, filterResults }: H
                         {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
                     </Checkbox>
                 </div>
-                <Button variant={'outlined'} className={styles.LisatiedotNappi}>
+                <a href={LISATIEDOT_EXTERNAL_URI} className={styles.LisatiedotLinkki}>
                     ?
-                </Button>
+                </a>
             </div>
         </div>
     );

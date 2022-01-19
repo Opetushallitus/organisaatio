@@ -1,4 +1,4 @@
-import { BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH, PUBLIC_API_CONTEXT, LISATIEDOT_EXTERNAL_URI } from '../../src/contexts/constants';
 
 describe('Organisaatiot Page', () => {
     it('Renders table of organisations', () => {
@@ -15,20 +15,9 @@ describe('Organisaatiot Page', () => {
             expect(cy.get('a').value).to.have.valueOf('Opetushallitus');
         });
     });
-    /* TODO it('finds passive organisations too', () => {
-    cy.get('table')
-      .then(($table) => {
-        cy.get('input').last().click();
-        cy.get('table', { timeout: 30000});
-      })
-  })*/
-
-    /*it('Can open Opetushallitus organisation', () => {
-    cy.get('table')
-      .then(($table) => {
-        cy.get('input').first().clear().type('Opetushallitus');
-        expect(cy.get('a').value).to.have.valueOf('Opetushallitus')
-        cy.get('a').click()
-      })
-  })*/
+    it('Shows lisätiedot link with correct uri as href', () => {
+        cy.visit(`${BASE_PATH}/organisaatiot`);
+        cy.get('table', { timeout: 30000 });
+        cy.contains('?').should('have.attr', 'href').should('not.be.empty').and('contain', LISATIEDOT_EXTERNAL_URI);
+    });
 });
