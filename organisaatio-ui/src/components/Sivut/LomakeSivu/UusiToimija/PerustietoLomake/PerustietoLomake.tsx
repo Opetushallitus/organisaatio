@@ -132,7 +132,7 @@ export default function PerustietoLomake({
                 <Rivi>
                     <Ruudukko>
                         <AvainKevyestiBoldattu key={'yritysmuoto_title'} label={'PERUSTIETO_YRITYSMUOTO'} />
-                        <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={yritysmuoto} />
+                        <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={yritysmuoto} translate={false} />
                     </Ruudukko>
                 </Rivi>
             )}

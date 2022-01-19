@@ -15,9 +15,9 @@ const ValiNappulat = (props) => <div className={styles.ValiNappulat}>{props.chil
 const MuokattuKolumni = (props) => <div className={styles.MuokattuKolumni}>{props.children}</div>;
 const Ruudukko = (props) => <div className={styles.Ruudukko}>{props.children}</div>;
 const Rivi = (props) => <div className={styles.Rivi}>{props.children}</div>;
-const AvainKevyestiBoldattu = ({ label }) => {
+const AvainKevyestiBoldattu = ({ label, translate = true }) => {
     const { i18n } = useContext(LanguageContext);
-    return <span className={styles.AvainKevyestiBoldattu}>{i18n.translate(label)}</span>;
+    return <span className={styles.AvainKevyestiBoldattu}>{translate ? i18n.translate(label) : label}</span>;
 };
 const ReadOnly = ({ value }) => {
     return <span className={styles.Kentta}>{value}</span>;
