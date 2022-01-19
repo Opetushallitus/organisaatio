@@ -183,6 +183,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         piilotettu,
         yhteystietoArvos,
         nimet: apiNimet,
+        virastoTunnus,
         ...rest
     }: ApiOrganisaatio): {
         Uiperustiedot: Perustiedot;
@@ -227,6 +228,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     },
                 }),
                 piilotettu,
+                virastoTunnus,
             },
             UibaseTiedot: {
                 nimet: [...pastNimet, ...futureNimet],

@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { format } = require('@fast-csv/format');
 const input = 'localisation.json';
 const output = 'localisation.csv';
 const encodingOut = 'utf16le';
@@ -15,7 +14,7 @@ fs.readFile(input, 'utf8', function (err, data) {
         output,
         '\ufeff' +
             //'sep=, \n' +
-            `"category"${separator}"key"${separator}"value_fi"${separator}"value_sv"${separator}"value_en"`,
+            `"category"${separator}"key"${separator}"value_fi"${separator}"value_sv"${separator}"value_en"\n`,
         { encoding: encodingOut },
         function (err) {
             if (err) throw err;
@@ -27,12 +26,11 @@ fs.readFile(input, 'utf8', function (err, data) {
     organisaatio2Data
         .filter((a) => a.locale === 'fi')
         .forEach((a) => {
+            const fi = a.value || '';
             const sv = organisaatio2Data.find((b) => b.key === a.key && b.locale === 'sv')?.value || '';
             const en = organisaatio2Data.find((b) => b.key === a.key && b.locale === 'en')?.value || '';
 
-            const line = `"${a.category}"${separator}"${a.key}${separator}"${
-                a.value || ''
-            }"${separator}"${sv}"${separator}"${en}"\n`;
+            const line = `"${a.category}"${separator}"${a.key}"${separator}"${fi}"${separator}"${sv}"${separator}"${en}"\n`;
             fs.appendFile(output, line, { encoding: encodingOut }, function (err) {
                 if (err) throw err;
             });

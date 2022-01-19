@@ -130,6 +130,8 @@ export type Perustiedot = {
     varhaiskasvatuksenToimipaikkaTiedot?: VakaToimipaikkaTiedot;
     piilotettu?: boolean;
     nimi?: Nimi;
+    yritysmuoto?: string;
+    virastoTunnus;
 };
 
 export type ParentTiedot = {

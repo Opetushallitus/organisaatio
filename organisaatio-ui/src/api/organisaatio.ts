@@ -265,6 +265,7 @@ function mapUiOrganisaatioToApiToSave(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris,
         vuosiluokat,
+        virastoTunnus,
     } = perustiedotFormValues;
     const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const nimet = [
@@ -291,6 +292,7 @@ function mapUiOrganisaatioToApiToSave(
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
         vuosiluokat: vuosiluokat?.map((a) => `${a.value}#${a.versio}`),
+        virastoTunnus,
     };
 }
 
@@ -348,6 +350,7 @@ function mapUiOrganisaatioToApiToUpdate(
         lakkautusPvm,
         ytunnus,
         piilotettu,
+        virastoTunnus,
     } = perustiedotFormValues;
     const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
@@ -376,6 +379,7 @@ function mapUiOrganisaatioToApiToUpdate(
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
         vuosiluokat: vuosiluokat?.map((a) => `${a.value}#${a.versio}`),
         yhteystietoArvos,
+        virastoTunnus,
     };
 }
 
