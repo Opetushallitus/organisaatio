@@ -84,6 +84,7 @@ export type UiOrganisaationNimetNimi = {
     alkuPvm: LocalDate;
 };
 export type UiOrganisaatioBase = {
+    apiOrganisaatio: ApiOrganisaatio;
     oid: string;
     status: string;
     yritysmuoto?: string;

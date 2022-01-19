@@ -1,15 +1,16 @@
-import { BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH } from '../../src/contexts/constants';
 import { helsinki } from '../support/data';
 
-function doSort(input) {
-    input.yhteystiedot.sort((a, b) => {
-        if (a.email) return 1;
-        if (a.tyyppi) return 1;
-        if (a.osoiteTyyppi != b.osoiteTyyppi) return -1;
-        else return a.osoiteTyyppi?.localeCompare(b.osoiteTyyppi) || 0;
+//yhteystiedot element get id fields updated on each save, also the order of members are not guaranteed
+
+function removeUnwanted(input) {
+    return { ...input, yhteystiedot: input.yhteystiedot?.length || 0 };
+}
+
+function stripId(yhteystiedot) {
+    return yhteystiedot.map((a) => {
+        return { ...a, id: undefined };
     });
-    return Object.keys(input);
-    // return input.yhteystietoArvos;
 }
 
 describe('Save organisaatio through UI', () => {
@@ -21,22 +22,24 @@ describe('Save organisaatio through UI', () => {
                 cy.getOrganisaatio(interHel.body.organisaatio.oid, 'actualHelsinki').then((actualHelsinkiResponse) => {
                     const actualHelsinki = actualHelsinkiResponse.body;
                     cy.visit(`${BASE_PATH}/lomake/${actualHelsinki.oid}`);
-
                     cy.get('h3').contains('Koulutustoimija', { timeout: 10000 }).should('exist');
                     cy.clickRadioOrCheckbox('Kunta');
-
                     cy.clickSaveButton();
                     cy.get('h3').contains('Koulutustoimija', { timeout: 10000 }).should('exist');
                     cy.getOrganisaatio(actualHelsinki.oid, 'whatNowHelsinki');
                     cy.get('@whatNowHelsinki').then((whatNowHelsinki) => {
-                        const actual = whatNowHelsinki.body;
+                        const actual = {
+                            ...whatNowHelsinki.body,
+                        };
                         const expected = {
                             ...actualHelsinki,
                             tyypit: ['organisaatiotyyppi_01', 'organisaatiotyyppi_07', 'organisaatiotyyppi_09'],
                             version: 3,
+                            oppilaitosTyyppiUri: '',
                         };
-
-                        assert.deepEqual(doSort(actual), doSort(expected));
+                        expect(Object.keys(actual)).to.have.members(Object.keys(expected));
+                        expect(removeUnwanted(actual)).to.deep.equal(removeUnwanted(expected));
+                        expect(stripId(actual.yhteystiedot)).to.have.deep.members(stripId(expected.yhteystiedot));
                     });
                 });
             });

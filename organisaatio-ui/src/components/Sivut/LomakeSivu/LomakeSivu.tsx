@@ -164,33 +164,36 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
     };
 
-    const mapOrganisaatioToUi = ({
-        nimi: mappingNimi,
-        lyhytNimi: mappingLyhytNimi,
-        maaUri,
-        kieletUris,
-        kotipaikkaUri,
-        muutKotipaikatUris,
-        alkuPvm: apiAlkuPvm,
-        tyypit,
-        oppilaitosTyyppiUri,
-        oppilaitosKoodi,
-        muutOppilaitosTyyppiUris,
-        vuosiluokat,
-        yhteystiedot: apiYhteystiedot,
-        lakkautusPvm: apiLakkautusPvm,
-        ytunnus: mappingYtunnus,
-        piilotettu,
-        yhteystietoArvos,
-        nimet: apiNimet,
-        virastoTunnus,
-        ...rest
-    }: ApiOrganisaatio): {
+    const mapOrganisaatioToUi = (
+        apiOrganisaatio: ApiOrganisaatio
+    ): {
         Uiperustiedot: Perustiedot;
         UibaseTiedot: UiOrganisaatioBase;
         Uiyhteystiedot: Yhteystiedot;
         UIYhteysTietoArvot: YhteystietoArvot;
     } => {
+        const {
+            nimi: mappingNimi,
+            lyhytNimi: mappingLyhytNimi,
+            maaUri,
+            kieletUris,
+            kotipaikkaUri,
+            muutKotipaikatUris,
+            alkuPvm: apiAlkuPvm,
+            tyypit,
+            oppilaitosTyyppiUri,
+            oppilaitosKoodi,
+            muutOppilaitosTyyppiUris,
+            vuosiluokat,
+            yhteystiedot: apiYhteystiedot,
+            lakkautusPvm: apiLakkautusPvm,
+            ytunnus: mappingYtunnus,
+            piilotettu,
+            yhteystietoArvos,
+            nimet: apiNimet,
+            virastoTunnus,
+            ...rest
+        } = apiOrganisaatio;
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
         const kotipaikka = kuntaKoodisto.uri2SelectOption(kotipaikkaUri);
         const kielet = kieletUris.map((kieliUri) => oppilaitoksenOpetuskieletKoodisto.uri2SelectOption(kieliUri));
@@ -231,6 +234,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 virastoTunnus,
             },
             UibaseTiedot: {
+                apiOrganisaatio,
                 nimet: [...pastNimet, ...futureNimet],
                 apiYhteystiedot,
                 currentNimi,
@@ -351,6 +355,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                         try {
                             setIsLoading(true);
                             const apiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
+                                organisaatioBase.apiOrganisaatio,
                                 postinumerotKoodisto,
                                 organisaatioBase,
                                 yhteystiedotFormValues,
