@@ -1,10 +1,12 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
@@ -51,6 +53,9 @@ public class OrganisaatioRDTO implements Serializable {
     private Set<String> _kayttoryhmat;
 
     private Map<String, String> _nimi;
+
+
+    private OrganisaatioRDTO _parentOrganisaatio;
 
     private List<OrganisaatioNimiRDTO> _nimet;
 
@@ -198,11 +203,22 @@ public class OrganisaatioRDTO implements Serializable {
     @Schema(description = "Nimi", required = true)
     public Map<String, String> getNimi() {
         if (_nimi == null) {
-            _nimi = new HashMap<String, String>();
+            _nimi = new HashMap<>();
         }
-        return _nimi;
+        if (_parentOrganisaatio == null) {
+            return _nimi;
+        }
+        Map<String, String> parentName = _parentOrganisaatio.getNimi();
+        return _nimi.keySet().stream().collect(Collectors.toMap(e -> e, e -> {
+            String parentNimi = parentName.getOrDefault(e, "");
+            String parentNimiWithSep = String.format("%s, ", parentName.getOrDefault(e, ""));
+            String nimi = _nimi.get(e);
+            return nimi.equals(parentNimi) ? nimi : String.format("%s%s", parentNimiWithSep, nimi);
+        }));
     }
-
+    public void setParentOrganisaatio(OrganisaatioRDTO parent) {
+        _parentOrganisaatio = parent;
+    }
     public void setNimi(Map<String, String> _nimi) {
         this._nimi = _nimi;
     }

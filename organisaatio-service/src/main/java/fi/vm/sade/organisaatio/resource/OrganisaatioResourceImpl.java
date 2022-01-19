@@ -15,6 +15,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
@@ -228,12 +229,18 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             o.getMetadata().setIncludeImage(includeImage);
         }
 
-        OrganisaatioRDTO result = conversionService.convert(o, OrganisaatioRDTO.class);
+        OrganisaatioRDTO result = mapToOrganisaatioRdto(o);
 
         LOG.debug("  result={}", result);
         return result;
     }
-
+    private OrganisaatioRDTO mapToOrganisaatioRdto(Organisaatio organisaatio) {
+        OrganisaatioRDTO org = conversionService.convert(organisaatio, OrganisaatioRDTO.class);
+        if (org != null && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            org.setParentOrganisaatio(mapToOrganisaatioRdto(organisaatio.getParent()));
+        }
+        return org;
+    }
     // GET /organisaatio/yhteystietometadata
     @Override
     @Transactional(readOnly = true)
