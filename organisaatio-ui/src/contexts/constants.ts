@@ -8,3 +8,5 @@ export const API_CONTEXT = `${homepage}/internal`;
 export const PUBLIC_API_CONTEXT = `${homepage}/api`;
 export const LEGACY_API_CONTEXT = `${homepage}/rest`;
 export const rakenne = organisaatioRakenne as Rakenne[];
+export const LISATIEDOT_EXTERNAL_URI =
+    'https://wiki.eduuni.fi/display/OPHPALV/Ohjeet+ja+yhteystiedot#Ohjeetjayhteystiedot-Organisaatioidentiedot(Organisaatiopalvelu)';
