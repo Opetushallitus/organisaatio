@@ -36,6 +36,6 @@ export default Joi.object({
     lakkautusPvm: Joi.date().format(['D.M.YYYY']).allow(''),
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
     piilotettu: Joi.optional(),
-    yritysmuoto: Joi.optional,
+    yritysmuoto: Joi.optional(),
     virastoTunnus: virastoTunnus.optional(),
 });

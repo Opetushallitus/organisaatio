@@ -6,12 +6,10 @@ beforeEach(() => {
     cy.deleteByYTunnus(Y_TUNNUS);
 });
 describe('New organisaatio from YTJ', () => {
-    it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
+    it.only('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
         cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
-    });
-    it('Can fetch from YTJ', () => {
         cy.clickRadioOrCheckbox('Koulutustoimija');
         cy.clickButton('HAE_YTJ_TIEDOT');
         cy.inputByName('ytjinput', Y_TUNNUS);
@@ -21,7 +19,7 @@ describe('New organisaatio from YTJ', () => {
         cy.clickButton('Hameen ammatti');
         cy.clickButton('BUTTON_JATKA');
         cy.clickSaveButton();
-        cy.contains('Hameen ammatti-instituutti', { timeout: 10000 }).should('exist');
+        cy.get('h1').contains('Hameen ammatti-instituutti', { timeout: 10000 }).should('exist');
     });
 });
 describe('Edit organisaatio from YTJ', () => {
