@@ -12,10 +12,17 @@ BEGIN
              where mv1.id is null)
             RETURNING 1
     )
-    SELECT CONCAT(count(*),' names inserted ') INTO _rows FROM rows;
+    SELECT CONCAT(count(*), ' names inserted ')
+    INTO _rows
+    FROM rows;
 END;
 $$ LANGUAGE plpgsql;
-
+SELECT count(*), ' before delete'
+from monikielinenteksti_values mv
+where exists(select 1
+             from organisaatio o
+                      join monikielinenteksti m on m.id = o.nimi_mkt
+             where m.id = mv.id);
 delete
 from monikielinenteksti_values mv
 where TRIM(mv.value) = ''
@@ -23,7 +30,19 @@ where TRIM(mv.value) = ''
                                   from organisaatio o
                                            join monikielinenteksti m on m.id = o.nimi_mkt
                                   where m.id = mv.id);
-SELECT migrate_organisaatio_names('fi', 'sv'),': sv --> fi';
-SELECT migrate_organisaatio_names('fi', 'en'),': en --> fi';
-SELECT migrate_organisaatio_names('sv', 'fi'),': fi --> sv';
-SELECT migrate_organisaatio_names('en', 'fi'),': fi --> en';
+SELECT count(*), ' after delete'
+from monikielinenteksti_values mv
+where exists(select 1
+             from organisaatio o
+                      join monikielinenteksti m on m.id = o.nimi_mkt
+             where m.id = mv.id);
+SELECT migrate_organisaatio_names('fi', 'sv'), ': sv --> fi';
+SELECT migrate_organisaatio_names('fi', 'en'), ': en --> fi';
+SELECT migrate_organisaatio_names('sv', 'fi'), ': fi --> sv';
+SELECT migrate_organisaatio_names('en', 'fi'), ': fi --> en';
+SELECT count(*), ' after migration'
+from monikielinenteksti_values mv
+where exists(select 1
+             from organisaatio o
+                      join monikielinenteksti m on m.id = o.nimi_mkt
+             where m.id = mv.id);
