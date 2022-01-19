@@ -15,7 +15,12 @@ export class I18nImpl implements I18n {
     }
 
     translateWithLang(key: string, language: Language): string {
-        return this._data[language]?.[key] || key;
+        const translation = this._data[language]?.[key];
+        if (!translation) {
+            console.info(`Translation is missing for ${key} in language ${language}`);
+            return key;
+        }
+        return translation;
     }
 
     translateNimi = (nimi: Nimi | undefined) => {
