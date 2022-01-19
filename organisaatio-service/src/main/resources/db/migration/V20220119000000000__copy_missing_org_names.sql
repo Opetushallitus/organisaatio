@@ -27,4 +27,4 @@ SELECT migrate_organisaatio_names('fi', 'sv'),': sv --> fi';
 SELECT migrate_organisaatio_names('fi', 'en'),': en --> fi';
 SELECT migrate_organisaatio_names('sv', 'fi'),': fi --> sv';
 SELECT migrate_organisaatio_names('en', 'fi'),': fi --> en';
-DROP FUNCTION migrate_organisaatio_names(_to varchar, _from varchar, _rows varchar);
+DROP FUNCTION migrate_organisaatio_names;
