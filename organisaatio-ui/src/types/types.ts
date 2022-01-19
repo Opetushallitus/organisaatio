@@ -132,7 +132,7 @@ export type Perustiedot = {
     piilotettu?: boolean;
     nimi?: Nimi;
     yritysmuoto?: string;
-    virastoTunnus;
+    virastoTunnus?: string;
 };
 
 export type ParentTiedot = {
@@ -144,7 +144,6 @@ export type NewRyhma = Omit<Ryhma, 'oid'>;
 
 export type Ryhma = {
     oid?: string;
-    yritysmuoto?: string; // TODO Tuleeko nämä???
     kuvaus?: string; // TODO Tuleeko nämä???
     kayntiosoite?: Osoite;
     kayttoryhmat: KoodiUri[];
