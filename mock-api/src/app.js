@@ -7,8 +7,7 @@ const xmlparser = require('express-xml-bodyparser');
 const port = 9000;
 const app = express();
 const cors = require('cors');
-cons;
-debug = false;
+const debug = false;
 if (debug) {
     app.use(xmlparser());
     app.use(bodyParser.json());
