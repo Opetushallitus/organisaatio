@@ -26,6 +26,7 @@ const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
     if (ytjData.kieli) setters.setPerustiedotValue('kielet', [ytjData.kieli]);
     else warning({ message: 'YTJ_DATA_UNKNOWN_KIELI' });
     setters.setPerustiedotValue('ytunnus', ytjData.ytunnus);
+    setters.setPerustiedotValue('yritysmuoto', ytjData.yritysmuoto);
     setters.setPerustiedotValue('alkuPvm', getUiDateStr(ytjData.aloitusPvm));
     setters.setYhteystiedotValue('fi', ytjData.yhteysTiedot);
     setters.setYhteystiedotValue('osoitteetOnEri', !!ytjData.kayntiOsoite);

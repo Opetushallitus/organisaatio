@@ -11,7 +11,14 @@ import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-h
 import { Controller } from 'react-hook-form';
 import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
-import { Kentta, LomakeButton, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
+import {
+    AvainKevyestiBoldattu,
+    Kentta,
+    LomakeButton,
+    Rivi,
+    Ruudukko,
+    UloinKehys,
+} from '../../LomakeFields/LomakeFields';
 import DatePickerController from '../../../../Controllers/DatePickerController';
 import { LanguageContext } from '../../../../../contexts/LanguageContext';
 
@@ -42,6 +49,7 @@ export default function PerustietoLomake({
     const { i18n } = useContext(LanguageContext);
     const koodistot = useContext(KoodistoContext);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
+    const { yritysmuoto } = getPerustiedotValues();
     return (
         <UloinKehys>
             <Rivi>
@@ -119,6 +127,14 @@ export default function PerustietoLomake({
                         </Rivi>
                     )}
                 </>
+            )}
+            {yritysmuoto && (
+                <Rivi>
+                    <Ruudukko>
+                        <AvainKevyestiBoldattu key={'yritysmuoto_title'} label={'PERUSTIETO_YRITYSMUOTO'} />
+                        <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={yritysmuoto} translate={false} />
+                    </Ruudukko>
+                </Rivi>
             )}
             {rakenne?.dynamicFields && (
                 <DynamicFields

@@ -191,6 +191,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             piilotettu,
             yhteystietoArvos,
             nimet: apiNimet,
+            virastoTunnus,
             ...rest
         } = apiOrganisaatio;
         const maa = maatJaValtiotKoodisto.uri2SelectOption(maaUri);
@@ -230,6 +231,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     },
                 }),
                 piilotettu,
+                virastoTunnus,
             },
             UibaseTiedot: {
                 apiOrganisaatio,

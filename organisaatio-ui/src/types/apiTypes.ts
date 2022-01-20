@@ -115,6 +115,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     piilotettu?: boolean;
     yhteystietoArvos?: ApiYhteystietoArvo[];
     subRows?: ApiOrganisaatio[];
+    virastoTunnus?: string;
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

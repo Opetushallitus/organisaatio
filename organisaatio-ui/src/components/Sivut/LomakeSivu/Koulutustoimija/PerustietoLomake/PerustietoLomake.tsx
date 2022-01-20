@@ -83,7 +83,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <ReadOnly value={organisaatioBase.oid} />
                     {organisaatioBase.yritysmuoto && [
                         <AvainKevyestiBoldattu key={'yritysmuoto_title'} label={'PERUSTIETO_YRITYSMUOTO'} />,
-                        <AvainKevyestiBoldattu key={'yritysmuoto_arvo'} label={organisaatioBase.yritysmuoto} />,
+                        <AvainKevyestiBoldattu
+                            key={'yritysmuoto_arvo'}
+                            label={organisaatioBase.yritysmuoto}
+                            translate={false}
+                        />,
                     ]}
                     <AvainKevyestiBoldattu label={'PERUSTIETO_ORGANISAATION_NIMI'} />
                     <ReadOnlyNimi value={currentNimi?.nimi} />

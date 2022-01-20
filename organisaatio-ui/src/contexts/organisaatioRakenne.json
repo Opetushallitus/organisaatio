@@ -38,7 +38,13 @@
                 "type": "organisaatiotyyppi_04"
             }
         ],
-        "dynamicFields": []
+        "dynamicFields": [
+            {
+                "name": "virastoTunnus",
+                "label": "PERUSTIETO_VIRASTOTUNNUS",
+                "type": "INPUT"
+            }
+        ]
     },
     {
         "description": "Oppilaitos",
