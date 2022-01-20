@@ -168,7 +168,7 @@ async function readOrganisaatio(
     parent?: boolean
 ): Promise<{ organisaatio: ApiOrganisaatio; polku: OrganisaatioNimiJaOid[] } | undefined> {
     return errorHandlingWrapper(async () => {
-        const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
+        const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}`);
         const organisaatio = response.data;
         if (!!parent) {
             return { organisaatio, polku: [] };

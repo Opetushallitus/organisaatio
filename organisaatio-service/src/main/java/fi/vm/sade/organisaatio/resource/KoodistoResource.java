@@ -15,15 +15,13 @@ import java.util.Optional;
 
 @Hidden
 @RestController
-@RequestMapping({"${server.internal.context-path}/koodisto", "${server.rest.context-path}/koodisto"})
+@RequestMapping({"${server.rest.context-path}/koodisto"})
 public class KoodistoResource {
 
     private final KoodistoService koodistoService;
-    private final OrganisaatioKoodisto organisaatioKoodisto;
 
-    public KoodistoResource(KoodistoService koodistoService, OrganisaatioKoodisto organisaatioKoodisto) {
+    public KoodistoResource(KoodistoService koodistoService) {
         this.koodistoService = koodistoService;
-        this.organisaatioKoodisto = organisaatioKoodisto;
     }
 
     @PostMapping(path = "/sync/v4", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -48,14 +46,6 @@ public class KoodistoResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     public void removeKoodistoSyncByOid(@PathVariable String oid) {
         koodistoService.removeKoodistoSyncByOid(oid);
-    }
-
-    @GetMapping("/{koodisto}/koodi")
-    List<Koodi> getKoodi(@PathVariable OrganisaatioKoodisto.KoodistoUri koodisto,
-                         @RequestParam(required = false) Optional<Integer> versio,
-                         @RequestParam(required = false) Optional<Boolean> onlyValid
-    ) {
-        return organisaatioKoodisto.haeKoodit(koodisto, versio, onlyValid);
     }
 
 }
