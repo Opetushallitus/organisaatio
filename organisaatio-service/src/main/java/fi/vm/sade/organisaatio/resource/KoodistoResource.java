@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
-import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
 import fi.vm.sade.organisaatio.service.KoodistoService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -10,8 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @Hidden
 @RestController
