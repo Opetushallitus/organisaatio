@@ -9,7 +9,7 @@ import java.io.IOException;
 @Component
 public class CacheFilter implements Filter {
     private static final boolean IS_PUBLIC = true;
-    private static final int MAX_AGE = 60 * 60;
+    private static final int MAX_AGE = 60 * 60 * 24;
 
 
     @Override

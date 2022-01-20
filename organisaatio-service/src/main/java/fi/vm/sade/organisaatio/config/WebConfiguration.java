@@ -35,9 +35,9 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Bean
     public FilterRegistrationBean<CacheFilter> filterRegistrationBean() {
-        FilterRegistrationBean < CacheFilter > registrationBean = new FilterRegistrationBean();
-        CacheFilter customURLFilter = new CacheFilter();
-        registrationBean.setFilter(customURLFilter);
+        FilterRegistrationBean < CacheFilter > registrationBean = new FilterRegistrationBean<>();
+        CacheFilter filter = new CacheFilter();
+        registrationBean.setFilter(filter);
         registrationBean.addUrlPatterns("/internal/koodisto/*");
         registrationBean.addUrlPatterns("/internal/lokalisointi/*");
         registrationBean.addUrlPatterns("/internal/config/*");
