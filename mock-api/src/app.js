@@ -7,12 +7,13 @@ const xmlparser = require('express-xml-bodyparser');
 const port = 9000;
 const app = express();
 const cors = require('cors');
-
-app.use(xmlparser());
-app.use(bodyParser.json());
-
-// hook morganBody to express app
-morganBody(app);
+cons;
+debug = false;
+if (debug) {
+    app.use(xmlparser());
+    app.use(bodyParser.json());
+    morganBody(app);
+}
 app.use(cors());
 app.use('/', apiMocker('src/api'));
 
