@@ -60,7 +60,7 @@ import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import IconWrapper from '../../IconWapper/IconWrapper';
-import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
+import { TarkastusLippuButton } from '../../TarkistusLippu/TarkastusLippu';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -500,23 +500,23 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
-                    <LomakeButton
-                        label={'LOMAKE_MERKITSE_TARKISTUS'}
-                        icon={() => (
-                            <TarkastusLippu
-                                tarkastusPvm={organisaatioBase.tarkastusPvm}
-                                alkuPvm={alkuPvm}
-                                lakkautusPvm={lakkautusPvm}
-                            />
-                        )}
+                    <TarkastusLippuButton
+                        alkuPvm={alkuPvm}
+                        lakkautusPvm={lakkautusPvm}
+                        tarkastusPvm={organisaatioBase.tarkastusPvm}
+                        organisaatioTyypit={organisaatioTyypit}
+                        isDirty={isDirty}
                         onClick={async () => {
-                            const doodle = await setTarkastusPvm(organisaatioBase.oid);
-                            setOrganisaatioBase({ ...organisaatioBase, tarkastusPvm: doodle });
+                            setOrganisaatioBase({
+                                ...organisaatioBase,
+                                tarkastusPvm: await setTarkastusPvm(organisaatioBase.oid),
+                            });
                         }}
                     />
                     {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
                         casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO', params.oid, organisaatioNimiPolku) && (
                             <LomakeButton
+                                disabled={isDirty}
                                 onClick={() => {
                                     setSiirraOrganisaatio({ ...siirraOrganisaatio });
                                     setSiirraOrganisaatioModaaliAuki(true);
@@ -527,6 +527,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     {resolvedOrganisaatioRakenne?.mergeTargetType.length > 0 &&
                         casMe.canHaveButton('LOMAKE_YHDISTA_ORGANISAATIO', params.oid, organisaatioNimiPolku) && (
                             <LomakeButton
+                                disabled={isDirty}
                                 onClick={() => {
                                     setYhdistaOrganisaatio({ ...yhdistaOrganisaatio });
                                     setYhdistaOrganisaatioModaaliAuki(true);

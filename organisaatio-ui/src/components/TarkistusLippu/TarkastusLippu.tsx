@@ -5,6 +5,7 @@ import isNumber from '@opetushallitus/virkailija-ui-components/utils/isNumber';
 import IconWrapper from '../IconWapper/IconWrapper';
 import { getUiDateStr } from '../../tools/mappers';
 import { LanguageContext } from '../../contexts/LanguageContext';
+import { LomakeButton } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 
 const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;
@@ -26,17 +27,22 @@ export const hasWarning = ({
     const activeNow = alkuDate && alkuDate.isBefore(now) && (!lakkautusDate || lakkautusDate.isAfter(now));
     return !tarkastusOk && !!activeNow;
 };
-
-const TarkastusLippu = ({
-    tarkastusPvm,
-    alkuPvm,
-    lakkautusPvm,
-}: {
+type TarkastusLippuProps = {
     tarkastusPvm?: number;
     alkuPvm: number | LocalDate;
     lakkautusPvm?: number | LocalDate;
+    organisaatioTyypit: string[];
+};
+const TarkastusLippu: React.FC<TarkastusLippuProps> = ({
+    tarkastusPvm,
+    alkuPvm,
+    lakkautusPvm,
+    organisaatioTyypit = [],
 }) => {
     const { i18n } = useContext(LanguageContext);
+    if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === 'organisaatiotyyppi_08') {
+        return <></>;
+    }
     const tarkastusDate = inputToDate(tarkastusPvm);
     const alkuDate = inputToDate(alkuPvm);
     const lakkautusDate = inputToDate(lakkautusPvm);
@@ -60,5 +66,36 @@ const TarkastusLippu = ({
         </div>
     );
 };
+type TarkastusLippuButtonProps = TarkastusLippuProps & {
+    isDirty: boolean;
+    onClick: () => void;
+};
+const TarkastusLippuButton: React.FC<TarkastusLippuButtonProps> = ({
+    tarkastusPvm,
+    alkuPvm,
+    lakkautusPvm,
+    organisaatioTyypit = [],
+    isDirty,
+    onClick,
+}) => {
+    if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === 'organisaatiotyyppi_08') {
+        return <></>;
+    }
+    return (
+        <LomakeButton
+            disabled={isDirty}
+            label={'LOMAKE_MERKITSE_TARKISTUS'}
+            icon={() => (
+                <TarkastusLippu
+                    tarkastusPvm={tarkastusPvm}
+                    alkuPvm={alkuPvm}
+                    lakkautusPvm={lakkautusPvm}
+                    organisaatioTyypit={organisaatioTyypit}
+                />
+            )}
+            onClick={onClick}
+        />
+    );
+};
 
-export default TarkastusLippu;
+export { TarkastusLippu, TarkastusLippuButton };
