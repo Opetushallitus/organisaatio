@@ -49,7 +49,11 @@ describe('Organisaatioyhdistys', () => {
                 cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hae*`).as('getParents');
                 cy.clickButton('LOMAKE_YHDISTA_ORGANISAATIO');
                 cy.wait(['@getParents'], { timeout: 10000 });
-                cy.selectFromList('ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO', child3.body.organisaatio.oid, 'CHILD');
+                cy.selectFromList(
+                    'ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO',
+                    child3.body.organisaatio.ytunnus,
+                    'CHILD'
+                );
 
                 cy.intercept('PUT', `${PUBLIC_API_CONTEXT}/${child2.body.organisaatio.oid}/organisaatiosuhde/*`).as(
                     'merge'
