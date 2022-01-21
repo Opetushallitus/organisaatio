@@ -14,9 +14,11 @@ public class CacheFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
-        ((HttpServletResponse) servletResponse).setHeader("cache-control",
-                String.format("%s, max-age=%s", IS_PUBLIC ? "public" : "private", MAX_AGE));
+        ((HttpServletResponse) servletResponse).setHeader("cache-control", getCacheHeaderValue());
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    String getCacheHeaderValue() {
+        return String.format("%s, max-age=%s", IS_PUBLIC ? "public" : "private", MAX_AGE);
     }
 }

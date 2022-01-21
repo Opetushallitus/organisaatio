@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -27,16 +26,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableGlobalMethodSecurity(jsr250Enabled = false, prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private CasProperties casProperties;
-    private OphProperties ophProperties;
-    private Environment environment;
-    private UserDetailsService userDetailsService;
+    private final CasProperties casProperties;
+    private final OphProperties ophProperties;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfiguration(CasProperties casProperties, OphProperties ophProperties, Environment environment, UserDetailsService userDetailsService) {
+    public WebSecurityConfiguration(CasProperties casProperties, OphProperties ophProperties, UserDetailsService userDetailsService) {
         this.casProperties = casProperties;
         this.ophProperties = ophProperties;
-        this.environment = environment;
         this.userDetailsService = userDetailsService;
     }
 
