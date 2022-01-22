@@ -11,31 +11,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
-    @Value("${server.ui.context-path}")
-    private String uiPath;
     @Value("${server.swagger.context-path}")
     private String swaggerPath;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController(String.format("%s", uiPath))
+        registry.addViewController("/")
                 .setViewName("forward:/index.html");
-        registry.addViewController(String.format("%s/", uiPath))
+        registry.addViewController("/{spring:\\w+}")
                 .setViewName("forward:/index.html");
-        registry.addViewController(String.format("%s/{spring:\\w+}", uiPath))
-                .setViewName("forward:/index.html");
-        registry.addViewController(String.format("%s/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}", uiPath))
+        registry.addViewController(("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}"))
                 .setViewName("forward:/index.html");
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(String.format("%s/static/**", uiPath)).addResourceLocations("/static/");
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
     }
 
     @Bean
     public FilterRegistrationBean<CacheFilter> filterRegistrationBean() {
-        FilterRegistrationBean < CacheFilter > registrationBean = new FilterRegistrationBean<>();
+        FilterRegistrationBean<CacheFilter> registrationBean = new FilterRegistrationBean<>();
         CacheFilter filter = new CacheFilter();
         registrationBean.setFilter(filter);
         registrationBean.addUrlPatterns("/internal/koodisto/*");
