@@ -120,8 +120,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(casAuthenticationFilter())
                 .exceptionHandling()
                 .authenticationEntryPoint(casAuthenticationEntryPoint())
-//                .and()
-//                .headers().cacheControl().disable()
                 .and()
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class);
     }
