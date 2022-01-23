@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
 import { Cell, Column, HeaderGroup, Row, useExpanded, useFilters, usePagination, useTable } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -15,6 +15,8 @@ import { Link } from 'react-router-dom';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { CasMeContext } from '../../../contexts/CasMeContext';
 import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
+import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
+import { useAtom } from 'jotai';
 
 const MAX_EXPAND_ROWS = 10;
 const mapPaginationSelectors = (index) => {
@@ -192,16 +194,14 @@ export default function OrganisaatioHakuTaulukko() {
         useExpanded,
         usePagination
     );
-    const filterResults = useCallback(
-        (omatOrganisaatiotSelected: boolean): void => {
-            if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
-            else setFilter('containingOids', []);
-        },
-        [crudOids, setFilter]
-    );
+    const [{ omatOrganisaatiotSelected }] = useAtom(localFiltersAtom);
+    useEffect(() => {
+        if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
+        else setFilter('containingOids', []);
+    }, [data, crudOids, setFilter, omatOrganisaatiotSelected]);
     return (
         <div>
-            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} filterResults={filterResults} />
+            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
 
             {(loading && <Loading />) || (
                 <>

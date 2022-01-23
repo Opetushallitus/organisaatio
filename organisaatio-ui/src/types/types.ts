@@ -297,10 +297,12 @@ export type SearchFilters = {
 export type Filters = {
     searchString: string;
     naytaPassivoidut: boolean;
-    isOPHVirkailija: boolean;
-    omatOrganisaatiotSelected: boolean;
 };
 export type LocalFilters = {
+    omatOrganisaatiotSelected: boolean;
+};
+export type LocalFiltersAtom = {
+    searchString: string;
     omatOrganisaatiotSelected: boolean;
 };
 export type OrganisaatioType =
