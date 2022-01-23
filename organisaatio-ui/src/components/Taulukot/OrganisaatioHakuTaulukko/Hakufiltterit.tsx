@@ -20,21 +20,21 @@ type HakufiltteritProps = {
 };
 export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
     const { i18n } = useContext(LanguageContext);
-    const [filters, setFilters] = useAtom(remoteFiltersAtom);
-    const [localFilters, setLocalFiltersAtom] = useAtom(localFiltersAtom);
+    const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
+    const [localFilters, setLocalFilters] = useAtom(localFiltersAtom);
     useEffect(() => {
-        if (filters.searchString.length >= SEARCH_LENGTH) {
+        if (remoteFilters.searchString.length >= SEARCH_LENGTH) {
             (async () => {
                 setLoading(true);
                 const searchResult = await searchOrganisation({
-                    searchStr: filters.searchString,
-                    lakkautetut: filters.naytaPassivoidut,
+                    searchStr: remoteFilters.searchString,
+                    lakkautetut: remoteFilters.naytaPassivoidut,
                 });
                 setOrganisaatiot(searchResult);
                 setLoading(false);
             })();
         }
-    }, [filters, setLoading, setOrganisaatiot]);
+    }, [remoteFilters, setLoading, setOrganisaatiot]);
     return (
         <div>
             <div className={styles.FiltteriContainer}>
@@ -42,24 +42,20 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                     <Input
                         placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
                         value={localFilters.searchString || ''}
-                        onChange={(e) => {
-                            setLocalFiltersAtom({ ...localFilters, searchString: e.target.value });
-                            //setLocalFilters({ ...localFilters, searchString: e.target.value });
-                        }}
+                        onChange={(e) => setLocalFilters({ ...localFilters, searchString: e.target.value })}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                setFilters({ ...filters, searchString: localFilters.searchString });
+                                setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString });
                             }
                         }}
                         suffix={
-                            filters.searchString && (
+                            remoteFilters.searchString && (
                                 <Button
                                     variant={'text'}
                                     style={{ boxShadow: 'none' }}
                                     onClick={() => {
-                                        setLocalFiltersAtom({ ...localFilters, searchString: 'ß' });
-                                        //  setLocalFilters({ ...localFilters, searchString: '' });
-                                        setFilters({ ...filters, searchString: '' });
+                                        setLocalFilters({ ...localFilters, searchString: '' });
+                                        setRemoteFilters({ ...remoteFilters, searchString: '' });
                                     }}
                                 >
                                     <IconWrapper color={'#999999'} icon={clearIcon} />
@@ -69,19 +65,17 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                     />
                     <Checkbox
                         type={'checkbox'}
-                        checked={filters.naytaPassivoidut}
-                        onChange={(e) => {
-                            setFilters({ ...filters, naytaPassivoidut: e.target.checked });
-                        }}
+                        checked={remoteFilters.naytaPassivoidut}
+                        onChange={(e) => setRemoteFilters({ ...remoteFilters, naytaPassivoidut: e.target.checked })}
                     >
                         {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
                     </Checkbox>
                     <Checkbox
                         type={'checkbox'}
                         checked={localFilters.omatOrganisaatiotSelected}
-                        onChange={(e) => {
-                            setLocalFiltersAtom({ ...localFilters, omatOrganisaatiotSelected: e.target.checked });
-                        }}
+                        onChange={(e) =>
+                            setLocalFilters({ ...localFilters, omatOrganisaatiotSelected: e.target.checked })
+                        }
                     >
                         {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
                     </Checkbox>
