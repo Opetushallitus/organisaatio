@@ -288,20 +288,11 @@ export type SupportedKieli = 'fi' | 'sv' | 'en';
 
 export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
 
-export type SearchFilters = {
-    filters: Filters;
-    setFilters: (filters: Filters) => void;
-    localFilters: LocalFilters;
-    setLocalFilters: (localFilters: LocalFilters) => void;
-};
-export type Filters = {
+export type RemoteFilters = {
     searchString: string;
     naytaPassivoidut: boolean;
 };
 export type LocalFilters = {
-    omatOrganisaatiotSelected: boolean;
-};
-export type LocalFiltersAtom = {
     searchString: string;
     omatOrganisaatiotSelected: boolean;
 };

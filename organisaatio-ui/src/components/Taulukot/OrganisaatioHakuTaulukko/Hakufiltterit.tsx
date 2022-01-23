@@ -48,8 +48,9 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                                 setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString });
                             }
                         }}
+                        onBlur={() => setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString })}
                         suffix={
-                            remoteFilters.searchString && (
+                            localFilters.searchString && (
                                 <Button
                                     variant={'text'}
                                     style={{ boxShadow: 'none' }}
