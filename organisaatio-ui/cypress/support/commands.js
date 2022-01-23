@@ -1,5 +1,6 @@
 const { FinnishBusinessIds } = require('finnish-business-ids');
 const { API_CONTEXT, PUBLIC_API_CONTEXT } = require('../../src/contexts/constants');
+const moment = require('moment');
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -185,8 +186,7 @@ Cypress.Commands.add('searchOrganisaatio', (ytunnus, key) => {
 });
 
 const getToday = () => {
-    const date = new Date();
-    return `${date.getDay()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+    return moment().format('D.M.yyyy');
 };
 
 Cypress.Commands.add('addNewNimi', (prefix = 'testi', nimi = 'testi', alkuPvm = getToday()) => {

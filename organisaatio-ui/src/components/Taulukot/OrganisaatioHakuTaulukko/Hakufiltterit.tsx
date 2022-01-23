@@ -48,7 +48,10 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                                 setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString });
                             }
                         }}
-                        onBlur={() => setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString })}
+                        onBlur={() =>
+                            remoteFilters.searchString != localFilters.searchString &&
+                            setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString })
+                        }
                         suffix={
                             localFilters.searchString && (
                                 <Button
