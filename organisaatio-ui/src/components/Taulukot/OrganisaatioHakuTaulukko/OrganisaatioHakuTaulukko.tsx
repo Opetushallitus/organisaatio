@@ -6,14 +6,14 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import { languageAtom } from '../../../contexts/LanguageContext';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import Loading from '../../Loading/Loading';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import { CasMeContext } from '../../../contexts/CasMeContext';
+import { casMeAtom } from '../../../contexts/CasMeContext';
 import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
 import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { useAtom } from 'jotai';
@@ -45,8 +45,8 @@ const ExpandIcon = ({ isExpanded }) => {
     return <IconWrapper icon={chevronRight} />;
 };
 export default function OrganisaatioHakuTaulukko() {
-    const { i18n } = useContext(LanguageContext);
-    const { me: casMe } = useContext(CasMeContext);
+    const [i18n] = useAtom(languageAtom);
+    const [casMe] = useAtom(casMeAtom);
     const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
     const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);

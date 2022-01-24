@@ -10,7 +10,8 @@ import { useWatch } from 'react-hook-form';
 import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
 
 const postiOsoiteToimipaikkaFiName = 'fi.postiOsoiteToimipaikka';
 const postiOsoiteToimipaikkaSvName = 'sv.postiOsoiteToimipaikka';
@@ -61,7 +62,7 @@ const PostinumeroKentta = ({ children, toimipaikkaName: name, control, label, is
 };
 
 const OtsikkoRivi = ({ label }) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.EnsimmainenRivi}>
             <h3>{i18n.translate(label)}</h3>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './ModalFields.module.css';
-import { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import { languageAtom } from '../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
 
 const BodyKehys = (props) => <div className={styles.BodyKehys}>{props.children}</div>;
 const BodyRivi = (props) => <div className={styles.BodyRivi}>{props.children}</div>;
@@ -14,7 +14,7 @@ const BodyKentta = ({
     children: React.ReactNode;
     isRequired?: boolean;
 }) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.BodyKentta}>
             {label && (

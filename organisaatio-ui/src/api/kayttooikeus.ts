@@ -1,7 +1,6 @@
-import useAxios from 'axios-hooks';
-import { urls } from 'oph-urls-js';
 import { CASMe, Language } from '../types/types';
 import { CASMeImpl } from '../contexts/CasMeContext';
+import axios from 'axios';
 
 type CASMeApi = {
     uid: string;
@@ -17,24 +16,7 @@ export const mapApiToUI = (api: CASMeApi): CASMe => {
     return new CASMeImpl({ ...api, roles: JSON.parse(api?.roles || '[]'), lang: (api?.lang || 'fi') as Language });
 };
 
-export function useCAS(): { data: CASMe; loading: boolean; error: undefined } {
-    const virkailija = urls.url('urlVirkailija');
-    const baseUrl = `${virkailija}/kayttooikeus-service/`;
-    const [{ data, loading, error }] = useAxios<CASMeApi>(`${baseUrl}cas/me`);
-    if (error) {
-        return {
-            data: new CASMeImpl({
-                uid: '',
-                oid: '',
-                firstName: '',
-                lastName: '',
-                groups: [],
-                roles: [],
-                lang: 'fi' as Language,
-            }),
-            loading: false,
-            error: undefined,
-        };
-    }
-    return { data: mapApiToUI(data), loading, error };
-}
+export const cas = async (url) => {
+    const { data } = await axios.get<CASMeApi>(`${url}cas/me`);
+    return mapApiToUI(data);
+};

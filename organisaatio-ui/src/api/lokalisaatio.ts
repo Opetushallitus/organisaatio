@@ -1,10 +1,10 @@
-import useAxios from 'axios-hooks';
 import { Lokalisointi } from '../types/types';
 import { API_CONTEXT } from '../contexts/constants';
+import axios from 'axios';
 
 const baseUrl = `${API_CONTEXT}/lokalisointi/`;
 
-export default function useLokalisaatio() {
-    const [{ data, loading, error }] = useAxios<Lokalisointi>(baseUrl);
-    return { data, loading, error };
-}
+export const lokalisaatio = async () => {
+    const { data } = await axios.get<Lokalisointi>(baseUrl);
+    return data;
+};

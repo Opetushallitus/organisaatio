@@ -20,7 +20,8 @@ import {
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
 import DatePickerController from '../../../../Controllers/DatePickerController';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -46,7 +47,7 @@ export default function PerustietoLomake({
     resolvedTyypit,
     getPerustiedotValues,
 }: UusiOrgPerustiedotProps) {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const koodistot = useContext(KoodistoContext);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     const { yritysmuoto } = getPerustiedotValues();

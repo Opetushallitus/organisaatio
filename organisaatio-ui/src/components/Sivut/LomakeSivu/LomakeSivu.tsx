@@ -53,14 +53,15 @@ import {
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
 import Muokattu from '../../Muokattu/Muokattu';
-import { LanguageContext } from '../../../contexts/LanguageContext';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import { CasMeContext } from '../../../contexts/CasMeContext';
+import { casMeAtom } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../contexts/LanguageContext';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -71,8 +72,8 @@ const PERUSTIEDOTID = 'perustietolomake';
 const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
-    const { i18n } = useContext(LanguageContext);
-    const { me: casMe } = useContext(CasMeContext);
+    const [i18n] = useAtom(languageAtom);
+    const [casMe] = useAtom(casMeAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);

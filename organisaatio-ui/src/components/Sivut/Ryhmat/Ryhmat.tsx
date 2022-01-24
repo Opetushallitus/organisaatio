@@ -4,17 +4,18 @@ import styles from './Ryhmat.module.css';
 import TyypitJaRyhmatKehys from '../TyypitJaRyhmatKehys/TyypitJaRyhmatKehys';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { dropKoodiVersionSuffix, mapLocalizedKoodiToLang } from '../../../tools/mappers';
+import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import { getRyhmat } from '../../../api/ryhma';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import { Column } from 'react-table';
 import { Link, useHistory } from 'react-router-dom';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import { languageAtom } from '../../../contexts/LanguageContext';
 import Loading from '../../Loading/Loading';
+import { useAtom } from 'jotai';
 
 const Ryhmat = () => {
-    const { i18n, language } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
     const [ryhmat, setRyhmat] = useState<Ryhma[]>([]);
     const history = useHistory();
@@ -27,12 +28,12 @@ const Ryhmat = () => {
                 Cell: ({ row }) => {
                     return (
                         <Link to={`/ryhmat/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
-                            {mapLocalizedKoodiToLang(language, 'nimi', row.original)}
+                            {i18n.translateNimi(row.original.nimi)}
                         </Link>
                     );
                 },
                 accessor: (values) => {
-                    return mapLocalizedKoodiToLang(language, 'nimi', values);
+                    return i18n.translateNimi(values.nimi);
                 },
             },
             {
@@ -84,7 +85,7 @@ const Ryhmat = () => {
                 accessor: 'oid',
             },
         ],
-        [i18n, kayttoRyhmatKoodisto, language, ryhmaTyypitKoodisto]
+        [i18n, kayttoRyhmatKoodisto, ryhmaTyypitKoodisto]
     );
 
     useEffect(() => {

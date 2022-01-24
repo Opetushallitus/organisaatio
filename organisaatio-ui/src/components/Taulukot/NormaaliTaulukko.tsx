@@ -22,8 +22,9 @@ import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { KoodistoContext } from '../../contexts/KoodistoContext';
 import { Ryhma, SelectOptionType } from '../../types/types';
 import { ValueType } from 'react-select';
-import { LanguageContext } from '../../contexts/LanguageContext';
+import { languageAtom } from '../../contexts/LanguageContext';
 import IconWrapper from '../IconWapper/IconWrapper';
+import { useAtom } from 'jotai';
 
 // TODO yhtenäistä!
 const mapPaginationSelectors = (index) => {
@@ -51,7 +52,7 @@ export const chooseTaulukkoData = (ryhmatData, ryhmatColumns) => {
 };
 
 export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: FiltteritProps) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto, ryhmanTilaKoodisto } = useContext(KoodistoContext);
     const [tyyppiFiltteri, setTyyppiFiltteri] = useState<
         ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
@@ -156,7 +157,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
 };
 
 const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri = false }: NormaaliTaulukkoProps) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
 
     const { data, columns } = chooseTaulukkoData(ryhmatData, ryhmatColumns);
     const {

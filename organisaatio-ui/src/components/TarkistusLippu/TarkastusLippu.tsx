@@ -1,10 +1,11 @@
 import moment, { Moment } from 'moment';
-import React, { useContext } from 'react';
+import React from 'react';
 import { LocalDate } from '../../types/types';
 import isNumber from '@opetushallitus/virkailija-ui-components/utils/isNumber';
 import IconWrapper from '../IconWapper/IconWrapper';
 import { getUiDateStr } from '../../tools/mappers';
-import { LanguageContext } from '../../contexts/LanguageContext';
+import { languageAtom } from '../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
 
 const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;
@@ -36,7 +37,7 @@ const TarkastusLippu = ({
     alkuPvm: number | LocalDate;
     lakkautusPvm?: number | LocalDate;
 }) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const tarkastusDate = inputToDate(tarkastusPvm);
     const alkuDate = inputToDate(alkuPvm);
     const lakkautusDate = inputToDate(lakkautusPvm);

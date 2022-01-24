@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import MuokkausLomake, { MuokkausLomakeProps } from './MuokkausLomake';
 
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
+import { useAtom } from 'jotai';
 
 const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     handlePeruuta: jest.fn(),
@@ -27,7 +28,7 @@ const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
         tyypit: [],
     },
 };
-
+jest.mock('jotai');
 let testProps = { ...MINIMAL_PROPS };
 
 afterAll(() => {
@@ -37,6 +38,7 @@ afterAll(() => {
 beforeEach(() => {
     testProps = { ...MINIMAL_PROPS };
     jest.resetAllMocks();
+    (useAtom as jest.Mock).mockReturnValue([{ translate: (a) => a, translateNimi: (a) => a }]);
 });
 
 describe('MuokkausLomake', () => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import type { SupportedKieli, Yhteystiedot } from '../../../../../types/types';
 import { enAltSchema, fiAltSchema, svAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
@@ -16,7 +16,8 @@ import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 import { Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 import { useFormState } from 'react-hook-form';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
 
 export type Props = {
     opetusKielet: string[];
@@ -50,7 +51,7 @@ const YhteystietoLomake = ({
     readOnly,
     isYtj,
 }: Props): React.ReactElement => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const [naytaMuutKielet, setNaytaMuutKielet] = useState(false);
 
     const osoitteetOnEri = watch('osoitteetOnEri') || false;

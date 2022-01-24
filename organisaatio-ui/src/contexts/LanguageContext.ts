@@ -1,5 +1,7 @@
 import { I18n, Language, Lokalisointi, Nimi } from '../types/types';
-import * as React from 'react';
+import { atom } from 'jotai';
+import { lokalisaatio } from '../api/lokalisaatio';
+import { casMeAtom } from './CasMeContext';
 
 export class I18nImpl implements I18n {
     _data: Lokalisointi;
@@ -34,11 +36,8 @@ export class I18nImpl implements I18n {
     };
 }
 
-export type LanguageContextType = {
-    language: Language;
-    i18n: I18n;
-};
-export const LanguageContext = React.createContext<LanguageContextType>({
-    language: 'fi',
-    i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
+export const languageAtom = atom(async (get) => {
+    const lokals = await lokalisaatio();
+    const casData = get(casMeAtom);
+    return new I18nImpl(lokals, casData.lang);
 });

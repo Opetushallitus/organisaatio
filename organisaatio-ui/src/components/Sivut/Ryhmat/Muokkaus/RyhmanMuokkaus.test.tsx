@@ -8,6 +8,7 @@ import { render, screen } from '@testing-library/react';
 import { Ryhma } from '../../../../types/types';
 import axios, { AxiosResponse } from 'axios';
 import useAxios from 'axios-hooks';
+import Loading from '../../../Loading/Loading';
 
 type DeepPartial<T> = {
     [P in keyof T]?: DeepPartial<T[P]>;
@@ -66,32 +67,45 @@ describe('RyhmanMuokkaus', () => {
         data: testiRyhma as Partial<Ryhma>,
     } as Partial<AxiosResponse>;
     beforeEach(() => {
-        (axios.get as jest.Mock).mockImplementationOnce(() => Promise.resolve(axiosResponse));
+        (axios.get as jest.Mock).mockImplementation(async (a) => {
+            if (a.startsWith) {
+                if (a.startsWith('/organisaatio-service/api/1234')) return Promise.resolve(axiosResponse);
+                if (a.startsWith('/organisaatio-service/internal/lokalisointi')) return { data: {} };
+                if (a.startsWith('/organisaatio-service/internal/config/frontproperties')) return { data: {} };
+            }
+            return { data: {} };
+        });
         ((useAxios as unknown) as jest.Mock).mockReturnValue([{ data: 0 }, () => {}]);
     });
     it('Renders Spinner when there is no ryhma and is not new', () => {
         render(
-            <BrowserRouter basename={'/organisaatio'}>
-                <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
-            </BrowserRouter>
+            <React.Suspense fallback={<Loading />}>
+                <BrowserRouter basename={'/organisaatio'}>
+                    <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+                </BrowserRouter>
+            </React.Suspense>
         );
         expect(screen.getByText('Spin')).toBeInTheDocument();
     });
 
     it('Renders form after there is ryhma when is not new', async () => {
         render(
-            <BrowserRouter basename={'/organisaatio'}>
-                <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
-            </BrowserRouter>
+            <React.Suspense fallback={<Loading />}>
+                <BrowserRouter basename={'/organisaatio'}>
+                    <RyhmanMuokkaus {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+                </BrowserRouter>
+            </React.Suspense>
         );
         expect(await screen.findByText('Suominimi')).toBeInTheDocument();
     });
 
     it('Renders new ryhma form using empty ryhma when isNew prop is added', async () => {
         render(
-            <BrowserRouter basename={'/organisaatio'}>
-                <RyhmanMuokkaus isNew {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
-            </BrowserRouter>
+            <React.Suspense fallback={<Loading />}>
+                <BrowserRouter basename={'/organisaatio'}>
+                    <RyhmanMuokkaus isNew {...(MINIMAL_PROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+                </BrowserRouter>
+            </React.Suspense>
         );
         const alinRivi = screen.queryAllByRole('generic').find((div) => div.className === 'AlinRivi');
         const alaBanneri = screen.queryAllByRole('generic').find((div) => div.className === 'AlaBanneri');
@@ -104,9 +118,11 @@ describe('RyhmanMuokkaus', () => {
             history: { location: { pathname: '/uusi' }, push: jest.fn() },
         };
         render(
-            <BrowserRouter basename={'/organisaatio'}>
-                <RyhmanMuokkaus {...(UUSIPROPS as RouteComponentProps<RyhmanMuokausProps>)} />
-            </BrowserRouter>
+            <React.Suspense fallback={<Loading />}>
+                <BrowserRouter basename={'/organisaatio'}>
+                    <RyhmanMuokkaus {...(UUSIPROPS as RouteComponentProps<RyhmanMuokausProps>)} />
+                </BrowserRouter>
+            </React.Suspense>
         );
         const alinRivi = screen.queryAllByRole('generic').find((div) => div.className === 'AlinRivi');
         const alaBanneri = screen.queryAllByRole('generic').find((div) => div.className === 'AlaBanneri');

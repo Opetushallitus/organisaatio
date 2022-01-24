@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../../api/ryhma';
@@ -7,8 +7,9 @@ import { NewRyhma, Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
 import { ROOT_OID } from '../../../../contexts/constants';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { LanguageContext } from '../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../contexts/LanguageContext';
 import { formatUiDateStrToApi } from '../../../../tools/mappers';
+import { useAtom } from 'jotai';
 
 export type RyhmanMuokausProps = {
     oid?: string;
@@ -29,7 +30,7 @@ const emptyRyhma: Partial<NewRyhma> = {
 };
 
 const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuokausProps> & { isNew?: boolean }) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const [ryhma, setRyhma] = useState<Ryhma>();
     const onUusi = isNew || history.location.pathname.includes('uusi');
 

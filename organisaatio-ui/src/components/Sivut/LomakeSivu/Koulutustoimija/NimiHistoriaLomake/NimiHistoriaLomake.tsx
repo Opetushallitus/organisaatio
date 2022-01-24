@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { HistoriaTaulukkoData, UiOrganisaationNimetNimi } from '../../../../../types/types';
 import { Column } from 'react-table';
 import NimiHistoriaNimi from './NimiHistoriaNimi';
 import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../../contexts/LanguageContext';
 import Loading from '../../../../Loading/Loading';
+import { useAtom } from 'jotai';
 
 type nimiHistoriaProps = {
     nimet: UiOrganisaationNimetNimi[];
@@ -16,7 +17,7 @@ type nimiHistoriaProps = {
 };
 
 export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const { nimet, handleNimiMuutos, oid } = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

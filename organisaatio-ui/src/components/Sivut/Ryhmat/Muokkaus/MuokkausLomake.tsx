@@ -8,16 +8,16 @@ import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { KoodistoContext } from '../../../../contexts/KoodistoContext';
-import { mapLocalizedKoodiToLang } from '../../../../tools/mappers';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
-import { LanguageContext } from '../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../contexts/LanguageContext';
 import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
 import Muokattu from '../../../Muokattu/Muokattu';
 import IconWrapper from '../../../IconWapper/IconWrapper';
+import { useAtom } from 'jotai';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -36,7 +36,7 @@ const MuokkausLomake = ({
     handlePoista,
     handleTallenna,
 }: MuokkausLomakeProps) => {
-    const { i18n, language } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
     const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
@@ -65,7 +65,7 @@ const MuokkausLomake = ({
                 <div className={styles.ValiContainer}>
                     <div className={styles.ValiOtsikko}>
                         <h3>{i18n.translate('RYHMAT_RYHMA')}</h3>
-                        <h1>{mapLocalizedKoodiToLang(language, 'nimi', ryhma)}</h1>
+                        <h1>{i18n.translateNimi(ryhma.nimi)}</h1>
                     </div>
                 </div>
                 <div className={styles.PaaOsio}>

@@ -30,7 +30,8 @@ import {
 } from '../../LomakeFields/LomakeFields';
 import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
 import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
-import { CasMeContext } from '../../../../../contexts/CasMeContext';
+import { casMeAtom } from '../../../../../contexts/CasMeContext';
+import { useAtom } from 'jotai';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -48,7 +49,7 @@ type PerustietoLomakeProps = {
 };
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
-    const { me: casMe } = useContext(CasMeContext);
+    const [casMe] = useAtom(casMeAtom);
     const {
         organisaatioBase,
         getPerustiedotValues,

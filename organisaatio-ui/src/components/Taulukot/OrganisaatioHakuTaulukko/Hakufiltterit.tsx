@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useContext, useEffect } from 'react';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import { useEffect } from 'react';
+import { languageAtom } from '../../../contexts/LanguageContext';
 import { localFiltersAtom, remoteFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { searchOrganisation } from '../../../api/organisaatio';
 import styles from './Hakufiltterit.module.css';
@@ -19,7 +19,7 @@ type HakufiltteritProps = {
     setLoading: (loading: boolean) => void;
 };
 export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
     const [localFilters, setLocalFilters] = useAtom(localFiltersAtom);
     useEffect(() => {
@@ -49,7 +49,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                             }
                         }}
                         onBlur={() =>
-                            remoteFilters.searchString != localFilters.searchString &&
+                            remoteFilters.searchString !== localFilters.searchString &&
                             setRemoteFilters({ ...remoteFilters, searchString: localFilters.searchString })
                         }
                         suffix={

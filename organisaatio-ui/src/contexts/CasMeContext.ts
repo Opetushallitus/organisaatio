@@ -1,6 +1,8 @@
 import { CASMe, ConfigurableButton, ConfigurableLomake, Language, OrganisaatioNimiJaOid } from '../types/types';
-import * as React from 'react';
 import { ROOT_OID } from './constants';
+import { atom } from 'jotai';
+import { cas } from '../api/kayttooikeus';
+import { frontPropertiesAtom } from '../api/config';
 
 const ORGANISAATIO_CRUD = 'APP_ORGANISAATIOHALLINTA_CRUD';
 const OPH_CRUD = `${ORGANISAATIO_CRUD}_${ROOT_OID}`;
@@ -97,10 +99,7 @@ export class CASMeImpl implements CASMe {
         return getOidsFromRoles(this.roles);
     };
 }
-type CASMeContextType = {
-    me: CASMe;
-};
 
-export const CasMeContext = React.createContext<CASMeContextType>({
-    me: new CASMeImpl({ firstName: '', groups: [], lang: 'fi' as Language, lastName: '', oid: '', roles: [], uid: '' }),
+export const casMeAtom = atom(async (get) => {
+    return cas(`${get(frontPropertiesAtom).urlVirkailija}/kayttooikeus-service/`);
 });

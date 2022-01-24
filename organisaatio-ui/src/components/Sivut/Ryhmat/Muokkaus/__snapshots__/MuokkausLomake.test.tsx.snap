@@ -41,7 +41,7 @@ exports[`MuokkausLomake Rendering Renders without crashing 1`] = `
           RYHMAT_RYHMA
         </h3>
         <h1>
-          Suominimi
+          <Component />
         </h1>
       </div>
     </div>

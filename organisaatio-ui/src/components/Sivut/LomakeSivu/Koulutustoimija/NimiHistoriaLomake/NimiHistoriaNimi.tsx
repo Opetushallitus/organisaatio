@@ -3,9 +3,9 @@ import { LocalDate, Nimi, UiOrganisaationNimetNimi } from '../../../../../types/
 import styles from './NimiHistoriaNimi.module.css';
 import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
 import moment from 'moment';
-import { useContext } from 'react';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { languageAtom } from '../../../../../contexts/LanguageContext';
 import IconWrapper from '../../../../IconWapper/IconWrapper';
+import { useAtom } from 'jotai';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
@@ -14,14 +14,11 @@ type nimiHistoriaNimiProps = {
 };
 
 export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
-    const { i18n } = useContext(LanguageContext);
-
+    const [i18n] = useAtom(languageAtom);
     const { nimi, alkuPvm, handleDeleteNimi } = props;
-
     function handleDeleteClick() {
         handleDeleteNimi({ nimi, alkuPvm });
     }
-
     const isAlkuPvmInFuture = moment(alkuPvm, 'D.M.YYYY') > moment();
     return (
         <div className={styles.NimiHistoriaCell}>
