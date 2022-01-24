@@ -10,7 +10,6 @@ import fi.vm.sade.organisaatio.service.converter.v4.OrganisaatioRDTOV4ToOrganisa
 import fi.vm.sade.organisaatio.service.converter.v4.OrganisaatioToOrganisaatioRDTOV4Converter;
 import fi.vm.sade.organisaatio.service.converter.v4.YtjDtoToOrganisaatioConverter;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,11 +17,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ConverterConfig implements WebMvcConfigurer {
 
-    @Autowired
-    OrganisaatioNimiModelMapper orgNimiMapper;
+    private final OrganisaatioNimiModelMapper orgNimiMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    ModelMapper modelMapper;
+    public ConverterConfig(OrganisaatioNimiModelMapper orgNimiMapper, ModelMapper modelMapper) {
+        this.orgNimiMapper = orgNimiMapper;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
