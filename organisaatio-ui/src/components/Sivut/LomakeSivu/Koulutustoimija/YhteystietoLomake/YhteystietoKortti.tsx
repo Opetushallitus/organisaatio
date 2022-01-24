@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
@@ -7,7 +6,7 @@ import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoL
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Yhteystiedot } from '../../../../../types/types';
 import { useWatch } from 'react-hook-form';
-import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
+import { postinumerotKoodistoAtom } from '../../../../../contexts/KoodistoContext';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
 import { languageAtom } from '../../../../../contexts/LanguageContext';
@@ -90,7 +89,7 @@ export const YhteystietoKortti = ({
     readOnly,
     isYtj,
 }: props) => {
-    const { postinumerotKoodisto } = useContext(KoodistoContext);
+    const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const ytjReadOnly = isYtj && kortinKieli === 'fi';
     const registerToimipaikkaUpdate = (toimipaikkaName, { onChange: originalOnchange, ...rest }) => {
         const koodit = postinumerotKoodisto.koodit();

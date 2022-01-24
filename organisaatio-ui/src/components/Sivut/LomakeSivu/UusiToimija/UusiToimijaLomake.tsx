@@ -36,7 +36,7 @@ import {
     YlaBanneri,
 } from '../LomakeFields/LomakeFields';
 import { languageAtom } from '../../../../contexts/LanguageContext';
-import { KoodistoContext } from '../../../../contexts/KoodistoContext';
+import { KoodistoContext, postinumerotKoodistoAtom } from '../../../../contexts/KoodistoContext';
 import IconWrapper from '../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
 
@@ -48,7 +48,8 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const [i18n] = useAtom(languageAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const parentOid = resolveParentOidByQuery(props.location.search);
-    const { organisaatioTyypitKoodisto, postinumerotKoodisto } = useContext(KoodistoContext);
+    const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
         organisaatioTyypit: [],
         oid: '',

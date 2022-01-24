@@ -271,7 +271,6 @@ export type KoodistoContextType = {
     organisaatioTyypitKoodisto: Koodisto;
     ryhmanTilaKoodisto: Koodisto;
     oppilaitoksenOpetuskieletKoodisto: Koodisto;
-    postinumerotKoodisto: Koodisto;
     maatJaValtiotKoodisto: Koodisto;
     vuosiluokatKoodisto: Koodisto;
     oppilaitostyyppiKoodisto: Koodisto;

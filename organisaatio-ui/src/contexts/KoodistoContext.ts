@@ -8,6 +8,9 @@ import {
     Language,
 } from '../types/types';
 import * as React from 'react';
+import { atom } from 'jotai';
+import { koodisto } from '../api/koodisto';
+import { casMeAtom } from './CasMeContext';
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];
@@ -69,7 +72,6 @@ export const KoodistoContext = React.createContext<KoodistoContextType>({
     organisaatioTyypitKoodisto: new KoodistoImpl([], 'fi'),
     ryhmanTilaKoodisto: new KoodistoImpl([], 'fi'),
     oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl([], 'fi'),
-    postinumerotKoodisto: new KoodistoImpl([], 'fi'),
     maatJaValtiotKoodisto: new KoodistoImpl([], 'fi'),
     vuosiluokatKoodisto: new KoodistoImpl([], 'fi'),
     oppilaitostyyppiKoodisto: new KoodistoImpl([], 'fi'),
@@ -78,4 +80,8 @@ export const KoodistoContext = React.createContext<KoodistoContextType>({
     vardatoiminnallinenpainotusKoodisto: new KoodistoImpl([], 'fi'),
     vardajarjestamismuotoKoodisto: new KoodistoImpl([], 'fi'),
     kielikoodisto: new KoodistoImpl([], 'fi'),
+});
+export const postinumerotKoodistoAtom = atom(async (get) => {
+    const koodit = await koodisto('POSTI', true);
+    return new KoodistoImpl(koodit, get(casMeAtom).lang);
 });

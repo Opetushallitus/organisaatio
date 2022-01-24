@@ -53,7 +53,7 @@ import {
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
 import Muokattu from '../../Muokattu/Muokattu';
-import { KoodistoContext } from '../../../contexts/KoodistoContext';
+import { KoodistoContext, postinumerotKoodistoAtom } from '../../../contexts/KoodistoContext';
 import { casMeAtom } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
@@ -99,7 +99,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         organisaatioTyypitKoodisto,
         maatJaValtiotKoodisto,
         oppilaitoksenOpetuskieletKoodisto,
-        postinumerotKoodisto,
         kuntaKoodisto,
         vuosiluokatKoodisto,
         oppilaitostyyppiKoodisto,
@@ -109,6 +108,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         vardajarjestamismuotoKoodisto,
         kielikoodisto,
     } = useContext(KoodistoContext);
+    const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })

@@ -73,7 +73,6 @@ const OrganisaatioApp: React.FC = () => {
         error: vardajarjestamismuotoError,
     } = useKoodisto('VARDAJARJESTAMISMUOTO');
     const { data: kieli, loading: kieliLoading, error: kieliError } = useKoodisto('KIELI');
-    const { data: postinumerot, loading: postinumerotLoading, error: postinumerotError } = useKoodisto('POSTI', true);
     if (
         oppilaitoksenOpetuskieletLoading ||
         maatJaValtiotLoading ||
@@ -83,7 +82,6 @@ const OrganisaatioApp: React.FC = () => {
         organisaatioTyypitLoading ||
         ryhmanTilatLoading ||
         organisaatioTyypitLoading ||
-        postinumerotLoading ||
         vuosiluokatLoading ||
         oppilaitostyyppiLoading ||
         vardatoimintamuotoLoading ||
@@ -103,7 +101,6 @@ const OrganisaatioApp: React.FC = () => {
         ryhmanTilatError ||
         maatJaValtiotError ||
         organisaatioTyypitError ||
-        postinumerotError ||
         vuosiluokatError ||
         oppilaitostyyppiError ||
         oppilaitostyyppiError ||
@@ -121,7 +118,6 @@ const OrganisaatioApp: React.FC = () => {
             <Notification />
             <KoodistoContext.Provider
                 value={{
-                    postinumerotKoodisto: new KoodistoImpl(postinumerot, casData.lang),
                     oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl(oppilaitoksenOpetuskielet, casData.lang),
                     maatJaValtiotKoodisto: new KoodistoImpl(maatJaValtiot, casData.lang),
                     kuntaKoodisto: new KoodistoImpl(kunnat, casData.lang),
