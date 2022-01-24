@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
@@ -29,9 +29,9 @@ import {
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
 import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/ToimipisteenLakkautus';
-import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
-import { casMeAtom } from '../../../../../contexts/CasMeContext';
 import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../../../api/kayttooikeus';
+import { koodistotAtom } from '../../../../../api/koodisto';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -50,6 +50,7 @@ type PerustietoLomakeProps = {
 
 export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const [casMe] = useAtom(casMeAtom);
+    const [koodistot] = useAtom(koodistotAtom);
     const {
         organisaatioBase,
         getPerustiedotValues,
@@ -67,7 +68,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
 
-    const koodistot = useContext(KoodistoContext);
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     const handleNimenMuutosModaaliClose = (nimiIsUpdated: boolean) => {

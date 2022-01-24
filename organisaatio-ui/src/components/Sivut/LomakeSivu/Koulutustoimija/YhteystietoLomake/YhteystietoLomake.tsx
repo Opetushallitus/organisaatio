@@ -16,8 +16,8 @@ import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 import { Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 import { useFormState } from 'react-hook-form';
-import { languageAtom } from '../../../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 export type Props = {
     opetusKielet: string[];

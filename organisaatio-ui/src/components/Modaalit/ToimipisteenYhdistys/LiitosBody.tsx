@@ -7,7 +7,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { useAtom } from 'jotai';
-import { casMeAtom } from '../../../contexts/CasMeContext';
+import { casMeAtom } from '../../../api/kayttooikeus';
 
 type TSProps = {
     liitaOrganisaatio: LiitaOrganisaatioon;

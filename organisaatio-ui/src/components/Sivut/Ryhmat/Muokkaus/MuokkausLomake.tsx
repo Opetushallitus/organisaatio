@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import styles from './MuokkausLomake.module.css';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
@@ -7,17 +6,17 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
-import { KoodistoContext } from '../../../../contexts/KoodistoContext';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
-import { languageAtom } from '../../../../contexts/LanguageContext';
 import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
 import Muokattu from '../../../Muokattu/Muokattu';
 import IconWrapper from '../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../api/lokalisaatio';
+import { kayttoRyhmatKoodistoAtom, ryhmaTyypitKoodistoAtom } from '../../../../api/koodisto';
 
 export type MuokkausLomakeProps = {
     onUusi: boolean;
@@ -37,7 +36,8 @@ const MuokkausLomake = ({
     handleTallenna,
 }: MuokkausLomakeProps) => {
     const [i18n] = useAtom(languageAtom);
-    const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
+    const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
+    const [ryhmaTyypitKoodisto] = useAtom(ryhmaTyypitKoodistoAtom);
     const ryhmaTyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
     const kayttoRyhmat = ryhma.kayttoryhmat.map((koodiUri) => kayttoRyhmatKoodisto.uri2SelectOption(koodiUri));

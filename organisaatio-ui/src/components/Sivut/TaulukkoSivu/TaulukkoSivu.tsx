@@ -4,9 +4,9 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ROOT_OID } from '../../../contexts/constants';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/OrganisaatioHakuTaulukko';
-import { languageAtom } from '../../../contexts/LanguageContext';
-import { casMeAtom } from '../../../contexts/CasMeContext';
 import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../api/kayttooikeus';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 const TaulukkoSivu = (props) => {
     const handleLisaaUusiToimija = () => {

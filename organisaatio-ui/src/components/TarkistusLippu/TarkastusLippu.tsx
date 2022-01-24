@@ -4,9 +4,9 @@ import { LocalDate } from '../../types/types';
 import isNumber from '@opetushallitus/virkailija-ui-components/utils/isNumber';
 import IconWrapper from '../IconWapper/IconWrapper';
 import { getUiDateStr } from '../../tools/mappers';
-import { languageAtom } from '../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
 import { LomakeButton } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
+import { languageAtom } from '../../api/lokalisaatio';
 
 const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;

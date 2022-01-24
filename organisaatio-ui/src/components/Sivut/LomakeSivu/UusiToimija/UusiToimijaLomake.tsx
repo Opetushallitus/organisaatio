@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import Accordion from '../../../Accordion/Accordion';
 import homeIcon from '@iconify/icons-fa-solid/home';
@@ -35,10 +35,10 @@ import {
     VersioContainer,
     YlaBanneri,
 } from '../LomakeFields/LomakeFields';
-import { languageAtom } from '../../../../contexts/LanguageContext';
-import { KoodistoContext, postinumerotKoodistoAtom } from '../../../../contexts/KoodistoContext';
 import IconWrapper from '../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
+import { organisaatioTyypitKoodistoAtom, postinumerotKoodistoAtom } from '../../../../api/koodisto';
+import { languageAtom } from '../../../../api/lokalisaatio';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
@@ -48,7 +48,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     const [i18n] = useAtom(languageAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const parentOid = resolveParentOidByQuery(props.location.search);
-    const { organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
     const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
         organisaatioTyypit: [],

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactNotification, { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
-import { languageAtom } from '../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../api/lokalisaatio';
 
 const DEFAULT_TIMEOUT = 5000;
 const MESSAGE_DEFAULTS = {

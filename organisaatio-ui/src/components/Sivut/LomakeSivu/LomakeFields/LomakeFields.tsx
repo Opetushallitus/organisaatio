@@ -1,8 +1,8 @@
 import styles from './LomakeFields.module.css';
 import * as React from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { languageAtom } from '../../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../api/lokalisaatio';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props) => <div className={styles.YlaBanneri}>{props.children}</div>;

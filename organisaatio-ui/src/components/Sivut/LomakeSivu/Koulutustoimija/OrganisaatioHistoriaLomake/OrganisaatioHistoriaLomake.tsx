@@ -10,8 +10,8 @@ import {
 } from '../../../../../types/types';
 import { OrganisaatioBase } from '../../../../../types/apiTypes';
 import { Column } from 'react-table';
-import { languageAtom } from '../../../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],

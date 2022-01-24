@@ -7,9 +7,9 @@ import { NewRyhma, Ryhma } from '../../../../types/types';
 import MuokkausLomake from './MuokkausLomake';
 import { ROOT_OID } from '../../../../contexts/constants';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { languageAtom } from '../../../../contexts/LanguageContext';
 import { formatUiDateStrToApi } from '../../../../tools/mappers';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../api/lokalisaatio';
 
 export type RyhmanMuokausProps = {
     oid?: string;

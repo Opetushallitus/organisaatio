@@ -3,9 +3,9 @@ import { LocalDate, Nimi, UiOrganisaationNimetNimi } from '../../../../../types/
 import styles from './NimiHistoriaNimi.module.css';
 import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
 import moment from 'moment';
-import { languageAtom } from '../../../../../contexts/LanguageContext';
 import IconWrapper from '../../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;

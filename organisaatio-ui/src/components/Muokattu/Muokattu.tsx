@@ -2,10 +2,10 @@ import { MuokattuKolumni } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useOrganisaatioPaivittaja } from '../../api/organisaatio';
-import { languageAtom } from '../../contexts/LanguageContext';
 import Loading from '../Loading/Loading';
 import { getUiDateStr } from '../../tools/mappers';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../api/lokalisaatio';
 
 const Muokattu = ({ oid, muokattu = 0 }: { oid: string; muokattu?: number }) => {
     const [i18n] = useAtom(languageAtom);

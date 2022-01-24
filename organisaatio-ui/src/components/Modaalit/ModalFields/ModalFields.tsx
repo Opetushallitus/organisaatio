@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './ModalFields.module.css';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 const BodyKehys = (props) => <div className={styles.BodyKehys}>{props.children}</div>;
 const BodyRivi = (props) => <div className={styles.BodyRivi}>{props.children}</div>;

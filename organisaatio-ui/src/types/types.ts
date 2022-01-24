@@ -264,21 +264,22 @@ export type Koodisto = {
     uri2SelectOption: (uri: KoodiUri, disabled?: boolean) => KoodistoSelectOption;
 };
 
-export type KoodistoContextType = {
+export type Koodistot = {
     kuntaKoodisto: Koodisto;
+    maatJaValtiotKoodisto: Koodisto;
+    oppilaitoksenOpetuskieletKoodisto: Koodisto;
+    oppilaitostyyppiKoodisto: Koodisto;
+    vuosiluokatKoodisto: Koodisto;
     kayttoRyhmatKoodisto: Koodisto;
     ryhmaTyypitKoodisto: Koodisto;
     organisaatioTyypitKoodisto: Koodisto;
     ryhmanTilaKoodisto: Koodisto;
-    oppilaitoksenOpetuskieletKoodisto: Koodisto;
-    maatJaValtiotKoodisto: Koodisto;
-    vuosiluokatKoodisto: Koodisto;
-    oppilaitostyyppiKoodisto: Koodisto;
     vardatoimintamuotoKoodisto: Koodisto;
     vardakasvatusopillinenjarjestelmaKoodisto: Koodisto;
     vardatoiminnallinenpainotusKoodisto: Koodisto;
     vardajarjestamismuotoKoodisto: Koodisto;
     kielikoodisto: Koodisto;
+    postinumerotKoodisto: Koodisto;
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';

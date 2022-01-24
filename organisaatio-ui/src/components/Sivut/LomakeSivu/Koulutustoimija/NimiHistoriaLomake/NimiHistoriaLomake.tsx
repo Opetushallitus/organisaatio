@@ -6,9 +6,9 @@ import { HistoriaTaulukkoData, UiOrganisaationNimetNimi } from '../../../../../t
 import { Column } from 'react-table';
 import NimiHistoriaNimi from './NimiHistoriaNimi';
 import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
-import { languageAtom } from '../../../../../contexts/LanguageContext';
 import Loading from '../../../../Loading/Loading';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 type nimiHistoriaProps = {
     nimet: UiOrganisaationNimetNimi[];

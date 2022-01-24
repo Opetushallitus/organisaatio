@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import styles from './NormaaliTaulukko.module.css';
 import {
     Column,
@@ -19,12 +19,12 @@ import searchIcon from '@iconify/icons-fa-solid/search';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { KoodistoContext } from '../../contexts/KoodistoContext';
 import { Ryhma, SelectOptionType } from '../../types/types';
 import { ValueType } from 'react-select';
-import { languageAtom } from '../../contexts/LanguageContext';
 import IconWrapper from '../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../api/lokalisaatio';
+import { kayttoRyhmatKoodistoAtom, ryhmanTilaKoodistoAtom, ryhmaTyypitKoodistoAtom } from '../../api/koodisto';
 
 // TODO yhtenäistä!
 const mapPaginationSelectors = (index) => {
@@ -53,7 +53,9 @@ export const chooseTaulukkoData = (ryhmatData, ryhmatColumns) => {
 
 export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: FiltteritProps) => {
     const [i18n] = useAtom(languageAtom);
-    const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto, ryhmanTilaKoodisto } = useContext(KoodistoContext);
+    const [ryhmaTyypitKoodisto] = useAtom(ryhmaTyypitKoodistoAtom);
+    const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
+    const [ryhmanTilaKoodisto] = useAtom(ryhmanTilaKoodistoAtom);
     const [tyyppiFiltteri, setTyyppiFiltteri] = useState<
         ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
     >();

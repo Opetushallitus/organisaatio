@@ -1,7 +1,4 @@
 import { I18n, Language, Lokalisointi, Nimi } from '../types/types';
-import { atom } from 'jotai';
-import { lokalisaatio } from '../api/lokalisaatio';
-import { casMeAtom } from './CasMeContext';
 
 export class I18nImpl implements I18n {
     _data: Lokalisointi;
@@ -35,9 +32,3 @@ export class I18nImpl implements I18n {
         }, this.translate(key));
     };
 }
-
-export const languageAtom = atom(async (get) => {
-    const lokals = await lokalisaatio();
-    const casData = get(casMeAtom);
-    return new I18nImpl(lokals, casData.lang);
-});

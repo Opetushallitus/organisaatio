@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Confirmation.module.css';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 export default function Body({
     messageKey,

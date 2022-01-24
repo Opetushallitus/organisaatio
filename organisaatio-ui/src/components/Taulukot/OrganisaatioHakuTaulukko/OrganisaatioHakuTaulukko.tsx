@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
 import { Cell, Column, HeaderGroup, Row, useExpanded, useFilters, usePagination, useTable } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import Loading from '../../Loading/Loading';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
-import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import { casMeAtom } from '../../../contexts/CasMeContext';
 import { TarkastusLippu } from '../../TarkistusLippu/TarkastusLippu';
 import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../api/kayttooikeus';
+import { languageAtom } from '../../../api/lokalisaatio';
+import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 
 const MAX_EXPAND_ROWS = 10;
 const mapPaginationSelectors = (index) => {
@@ -50,7 +50,8 @@ export default function OrganisaatioHakuTaulukko() {
     const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
     const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
+    const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
     const columns = React.useMemo<Column<ApiOrganisaatio>[]>(
         () => [
             {

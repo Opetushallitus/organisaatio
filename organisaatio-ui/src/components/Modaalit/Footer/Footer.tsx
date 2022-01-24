@@ -1,8 +1,8 @@
 import React from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import styles from './Footer.module.css';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 type Props = {
     tallennaCallback?: () => void;

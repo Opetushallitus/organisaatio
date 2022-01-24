@@ -6,11 +6,11 @@ import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoL
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Yhteystiedot } from '../../../../../types/types';
 import { useWatch } from 'react-hook-form';
-import { postinumerotKoodistoAtom } from '../../../../../contexts/KoodistoContext';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
-import { languageAtom } from '../../../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { postinumerotKoodistoAtom } from '../../../../../api/koodisto';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 const postiOsoiteToimipaikkaFiName = 'fi.postiOsoiteToimipaikka';
 const postiOsoiteToimipaikkaSvName = 'sv.postiOsoiteToimipaikka';

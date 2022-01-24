@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import { localFiltersAtom, remoteFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { searchOrganisation } from '../../../api/organisaatio';
 import styles from './Hakufiltterit.module.css';
@@ -12,6 +11,7 @@ import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 const SEARCH_LENGTH = 3;
 type HakufiltteritProps = {

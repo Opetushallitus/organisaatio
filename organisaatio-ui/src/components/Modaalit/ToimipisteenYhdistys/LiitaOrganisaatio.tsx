@@ -6,8 +6,8 @@ import { LiitaOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import LiitosBody from './LiitosBody';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 export function LiitaOrganisaatio({
     liitaOrganisaatioon,

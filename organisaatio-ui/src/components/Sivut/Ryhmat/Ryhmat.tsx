@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Ryhmat.module.css';
 import TyypitJaRyhmatKehys from '../TyypitJaRyhmatKehys/TyypitJaRyhmatKehys';
-import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import { getRyhmat } from '../../../api/ryhma';
@@ -10,13 +9,15 @@ import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import { Column } from 'react-table';
 import { Link, useHistory } from 'react-router-dom';
-import { languageAtom } from '../../../contexts/LanguageContext';
 import Loading from '../../Loading/Loading';
 import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
+import { kayttoRyhmatKoodistoAtom, ryhmaTyypitKoodistoAtom } from '../../../api/koodisto';
 
 const Ryhmat = () => {
     const [i18n] = useAtom(languageAtom);
-    const { ryhmaTyypitKoodisto, kayttoRyhmatKoodisto } = useContext(KoodistoContext);
+    const [ryhmaTyypitKoodisto] = useAtom(ryhmaTyypitKoodistoAtom);
+    const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
     const [ryhmat, setRyhmat] = useState<Ryhma[]>([]);
     const history = useHistory();
     const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
