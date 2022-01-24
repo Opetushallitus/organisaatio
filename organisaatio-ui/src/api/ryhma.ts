@@ -14,8 +14,7 @@ export const postRyhma = async (ryhma: NewRyhma) =>
 export const deleteRyhma = async (ryhma: Ryhma) =>
     errorHandlingWrapper(async () => getResponseData(await axios.delete(`${baseUrl}${ryhma.oid}`)));
 export const getRyhma = async (oid: string) =>
-    errorHandlingWrapper(async () => getResponseData(await axios.get(`${baseUrl}${oid}?includeImage=true`)));
-
+    errorHandlingWrapper(async () => getResponseData(await axios.get(`${baseUrl}${oid}`)));
 export const getRyhmat = async () =>
     errorHandlingWrapper(async () =>
         getResponseData(await axios.get(`${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat?aktiivinen=true`))

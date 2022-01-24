@@ -4,11 +4,8 @@ describe('Ryhmat Page', () => {
     beforeEach(() => {});
     it('Renders table of Ryhmat', () => {
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/koodisto/POSTI/koodi*`).as('postikoodit');
-        cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/ryhmat`);
-        cy.wait(['@getConfig'], { timeout: 10000 });
-        cy.wait('@postikoodit', { timeout: 10000 });
+        cy.get('h3').contains('RYHMAT_OTSIKKO', { timeout: 30000 }).should('exist');
         cy.get('table', { timeout: 30000 });
     });
 
@@ -30,11 +27,7 @@ describe('Ryhmat Page', () => {
 
     it('Can use table pagination', () => {
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/koodisto/POSTI/koodi*`).as('postikoodit');
-        cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/ryhmat`);
-        cy.wait(['@getConfig'], { timeout: 10000 });
-        cy.wait('@postikoodit', { timeout: 10000 });
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('tbody').children().should('have.length', 10);
             cy.get('button').contains('2').should('have.attr', 'color', 'secondary').click();
@@ -53,11 +46,7 @@ describe('Ryhmat Page', () => {
 
     it('Can transition to create a new ryhma organisation', () => {
         cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/koodisto/POSTI/koodi*`).as('postikoodit');
-        cy.intercept('GET', `${API_CONTEXT}/config/frontproperties`).as('getConfig');
         cy.visit(`${BASE_PATH}/ryhmat`);
-        cy.wait(['@getConfig'], { timeout: 10000 });
-        cy.wait('@postikoodit', { timeout: 10000 });
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('button').first().click();
             expect(cy.get('h1').value).to.have.valueOf('');

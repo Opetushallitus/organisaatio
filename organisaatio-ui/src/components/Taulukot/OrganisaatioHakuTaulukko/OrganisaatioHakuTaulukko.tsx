@@ -14,7 +14,7 @@ import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
 import { KoodistoContext } from '../../../contexts/KoodistoContext';
 import { casMeAtom } from '../../../contexts/CasMeContext';
-import TarkastusLippu from '../../TarkistusLippu/TarkastusLippu';
+import { TarkastusLippu } from '../../TarkistusLippu/TarkastusLippu';
 import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { useAtom } from 'jotai';
 
@@ -124,6 +124,7 @@ export default function OrganisaatioHakuTaulukko() {
                             tarkastusPvm={row.original.tarkastusPvm}
                             lakkautusPvm={row.original.lakkautusPvm}
                             alkuPvm={row.original.alkuPvm}
+                            organisaatioTyypit={row.original.organisaatiotyypit}
                         />
                     );
                 },

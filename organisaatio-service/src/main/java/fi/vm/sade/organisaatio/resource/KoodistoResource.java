@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
-import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
 import fi.vm.sade.organisaatio.service.KoodistoService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -10,20 +8,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 @Hidden
 @RestController
-@RequestMapping({"${server.internal.context-path}/koodisto", "${server.rest.context-path}/koodisto"})
+@RequestMapping({"${server.rest.context-path}/koodisto"})
 public class KoodistoResource {
 
     private final KoodistoService koodistoService;
-    private final OrganisaatioKoodisto organisaatioKoodisto;
 
-    public KoodistoResource(KoodistoService koodistoService, OrganisaatioKoodisto organisaatioKoodisto) {
+    public KoodistoResource(KoodistoService koodistoService) {
         this.koodistoService = koodistoService;
-        this.organisaatioKoodisto = organisaatioKoodisto;
     }
 
     @PostMapping(path = "/sync/v4", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -48,14 +42,6 @@ public class KoodistoResource {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001')")
     public void removeKoodistoSyncByOid(@PathVariable String oid) {
         koodistoService.removeKoodistoSyncByOid(oid);
-    }
-
-    @GetMapping("/{koodisto}/koodi")
-    List<Koodi> getKoodi(@PathVariable OrganisaatioKoodisto.KoodistoUri koodisto,
-                         @RequestParam(required = false) Optional<Integer> versio,
-                         @RequestParam(required = false) Optional<Boolean> onlyValid
-    ) {
-        return organisaatioKoodisto.haeKoodit(koodisto, versio, onlyValid);
     }
 
 }
