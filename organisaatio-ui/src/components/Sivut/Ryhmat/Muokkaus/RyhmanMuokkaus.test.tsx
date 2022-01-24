@@ -56,6 +56,7 @@ jest.mock('axios-hooks');
 beforeEach(() => {
     jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'info').mockImplementation(() => {});
 });
 
 afterAll(() => {
@@ -72,6 +73,7 @@ describe('RyhmanMuokkaus', () => {
                 if (a.startsWith('/organisaatio-service/api/1234')) return Promise.resolve(axiosResponse);
                 if (a.startsWith('/organisaatio-service/internal/lokalisointi')) return { data: {} };
                 if (a.startsWith('/organisaatio-service/internal/config/frontproperties')) return { data: {} };
+                if (a.startsWith('/organisaatio-service/internal/koodisto/')) return { data: [] };
             }
             return { data: {} };
         });

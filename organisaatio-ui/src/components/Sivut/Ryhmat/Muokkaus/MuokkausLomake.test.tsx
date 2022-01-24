@@ -6,6 +6,7 @@ import MuokkausLomake, { MuokkausLomakeProps } from './MuokkausLomake';
 
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
 import { useAtom } from 'jotai';
+import axios from 'axios';
 
 const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     handlePeruuta: jest.fn(),
@@ -29,6 +30,7 @@ const MINIMAL_PROPS: Partial<MuokkausLomakeProps> = {
     },
 };
 jest.mock('jotai');
+jest.mock('axios');
 let testProps = { ...MINIMAL_PROPS };
 
 afterAll(() => {
@@ -38,7 +40,26 @@ afterAll(() => {
 beforeEach(() => {
     testProps = { ...MINIMAL_PROPS };
     jest.resetAllMocks();
-    (useAtom as jest.Mock).mockReturnValue([{ translate: (a) => a, translateNimi: (a) => a }]);
+    (useAtom as jest.Mock).mockReturnValue([
+        {
+            translate: (a) => a,
+            translateNimi: (a) => a,
+            selectOptions: () => {},
+            uri2SelectOption: () => ({
+                arvo: '',
+                disabled: false,
+                label: '',
+                value: '',
+                versio: 0,
+            }),
+        },
+    ]);
+    (axios.get as jest.Mock).mockImplementation(async (a) => {
+        if (a.startsWith) {
+            if (a.startsWith('/organisaatio-service/internal/koodisto/')) return { data: [] };
+        }
+        return { data: {} };
+    });
 });
 
 describe('MuokkausLomake', () => {

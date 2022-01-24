@@ -31,6 +31,7 @@ beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'info').mockImplementation(() => {});
     (axios.get as jest.Mock).mockImplementation(async (a) => {
         if (a.startsWith) {
             if (a.startsWith('/organisaatio-service/rest/organisaatio/v3/ryhmat'))
@@ -38,7 +39,11 @@ beforeEach(() => {
             if (a.startsWith('/organisaatio-service/internal/lokalisointi')) return { data: [] };
             if (a.startsWith('/organisaatio-service/internal/config/frontproperties')) return { data: {} };
             if (a.includes('/kayttooikeus-service/cas/me')) return { data: {} };
+            if (a.startsWith('/organisaatio-service/internal/koodisto/RYHMATYYPIT/koodi')) return { data: [] };
+            if (a.startsWith('/organisaatio-service/internal/koodisto/KAYTTORYHMAT/koodi')) return { data: [] };
+            if (a.startsWith('/organisaatio-service/internal/koodisto/RYHMANTILA/koodi')) return { data: [] };
         }
+        console.log(a);
         return { data: {} };
     });
 });
