@@ -19,6 +19,7 @@ import { I18nImpl, LanguageContext } from './contexts/LanguageContext';
 import { KoodistoContext, KoodistoImpl } from './contexts/KoodistoContext';
 import { CasMeContext, CASMeImpl } from './contexts/CasMeContext';
 import { BASE_PATH } from './contexts/constants';
+import { Provider } from 'jotai';
 
 const theme = createTheme();
 
@@ -121,61 +122,63 @@ const OrganisaatioApp: React.FC = () => {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <CasMeContext.Provider value={{ me: new CASMeImpl(casData) }}>
-                <LanguageContext.Provider
-                    value={{ language: casData.lang, i18n: new I18nImpl(lokalisointi, casData.lang) }}
-                >
-                    <Notification />
-                    <KoodistoContext.Provider
-                        value={{
-                            postinumerotKoodisto: new KoodistoImpl(postinumerot, casData.lang),
-                            oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl(
-                                oppilaitoksenOpetuskielet,
-                                casData.lang
-                            ),
-                            maatJaValtiotKoodisto: new KoodistoImpl(maatJaValtiot, casData.lang),
-                            kuntaKoodisto: new KoodistoImpl(kunnat, casData.lang),
-                            ryhmaTyypitKoodisto: new KoodistoImpl(ryhmaTyypit, casData.lang),
-                            kayttoRyhmatKoodisto: new KoodistoImpl(kayttoRyhmat, casData.lang),
-                            organisaatioTyypitKoodisto: new KoodistoImpl(organisaatioTyypit, casData.lang),
-                            ryhmanTilaKoodisto: new KoodistoImpl(ryhmanTilat, casData.lang),
-                            vuosiluokatKoodisto: new KoodistoImpl(vuosiluokat, casData.lang),
-                            oppilaitostyyppiKoodisto: new KoodistoImpl(oppilaitostyyppi, casData.lang),
-                            vardatoimintamuotoKoodisto: new KoodistoImpl(vardatoimintamuoto, casData.lang),
-                            vardakasvatusopillinenjarjestelmaKoodisto: new KoodistoImpl(
-                                vardakasvatusopillinenjarjestelma,
-                                casData.lang
-                            ),
-                            vardatoiminnallinenpainotusKoodisto: new KoodistoImpl(
-                                vardatoiminnallinenpainotus,
-                                casData.lang
-                            ),
-                            vardajarjestamismuotoKoodisto: new KoodistoImpl(vardajarjestamismuoto, casData.lang),
-                            kielikoodisto: new KoodistoImpl(kieli, casData.lang),
-                        }}
+        <Provider>
+            <ThemeProvider theme={theme}>
+                <CasMeContext.Provider value={{ me: new CASMeImpl(casData) }}>
+                    <LanguageContext.Provider
+                        value={{ language: casData.lang, i18n: new I18nImpl(lokalisointi, casData.lang) }}
                     >
-                        <BrowserRouter basename={BASE_PATH}>
-                            <Switch>
-                                <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                                <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
-                                <Route path={'/lomake/:oid'} component={LomakeSivu} />
-                                <Route path={'/ryhmat'} exact component={Ryhmat} />
-                                <Route
-                                    exact
-                                    path={'/ryhmat/uusi'}
-                                    component={(props) => <RyhmanMuokkaus {...props} isNew />}
-                                />
-                                <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
-                                <Route path={'*'}>
-                                    <VirheSivu>{'ERROR_404'}</VirheSivu>
-                                </Route>
-                            </Switch>
-                        </BrowserRouter>
-                    </KoodistoContext.Provider>
-                </LanguageContext.Provider>
-            </CasMeContext.Provider>
-        </ThemeProvider>
+                        <Notification />
+                        <KoodistoContext.Provider
+                            value={{
+                                postinumerotKoodisto: new KoodistoImpl(postinumerot, casData.lang),
+                                oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl(
+                                    oppilaitoksenOpetuskielet,
+                                    casData.lang
+                                ),
+                                maatJaValtiotKoodisto: new KoodistoImpl(maatJaValtiot, casData.lang),
+                                kuntaKoodisto: new KoodistoImpl(kunnat, casData.lang),
+                                ryhmaTyypitKoodisto: new KoodistoImpl(ryhmaTyypit, casData.lang),
+                                kayttoRyhmatKoodisto: new KoodistoImpl(kayttoRyhmat, casData.lang),
+                                organisaatioTyypitKoodisto: new KoodistoImpl(organisaatioTyypit, casData.lang),
+                                ryhmanTilaKoodisto: new KoodistoImpl(ryhmanTilat, casData.lang),
+                                vuosiluokatKoodisto: new KoodistoImpl(vuosiluokat, casData.lang),
+                                oppilaitostyyppiKoodisto: new KoodistoImpl(oppilaitostyyppi, casData.lang),
+                                vardatoimintamuotoKoodisto: new KoodistoImpl(vardatoimintamuoto, casData.lang),
+                                vardakasvatusopillinenjarjestelmaKoodisto: new KoodistoImpl(
+                                    vardakasvatusopillinenjarjestelma,
+                                    casData.lang
+                                ),
+                                vardatoiminnallinenpainotusKoodisto: new KoodistoImpl(
+                                    vardatoiminnallinenpainotus,
+                                    casData.lang
+                                ),
+                                vardajarjestamismuotoKoodisto: new KoodistoImpl(vardajarjestamismuoto, casData.lang),
+                                kielikoodisto: new KoodistoImpl(kieli, casData.lang),
+                            }}
+                        >
+                            <BrowserRouter basename={BASE_PATH}>
+                                <Switch>
+                                    <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
+                                    <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
+                                    <Route path={'/lomake/:oid'} component={LomakeSivu} />
+                                    <Route path={'/ryhmat'} exact component={Ryhmat} />
+                                    <Route
+                                        exact
+                                        path={'/ryhmat/uusi'}
+                                        component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                                    />
+                                    <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
+                                    <Route path={'*'}>
+                                        <VirheSivu>{'ERROR_404'}</VirheSivu>
+                                    </Route>
+                                </Switch>
+                            </BrowserRouter>
+                        </KoodistoContext.Provider>
+                    </LanguageContext.Provider>
+                </CasMeContext.Provider>
+            </ThemeProvider>
+        </Provider>
     );
 };
 
