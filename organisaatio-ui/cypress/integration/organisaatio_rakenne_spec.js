@@ -21,8 +21,12 @@ describe('Organisaatio Rakenne', () => {
             cy.enterAllYhteystiedot('CHILD');
             cy.clickSaveButton();
             cy.contains('CHILD Suominimi').should('exist');
+            cy.get('div', { timeout: 10000 }).contains('MESSAGE_TALLENNUS_ONNISTUI').should('not.exist');
             cy.clickAccordion('RAKENNE');
-            cy.get('h2').contains('RAKENNE_YLEMMAN_TASON_OTSIKKO').parent().contains('PARENT Suominimi');
+            cy.get('h2', { timeout: 30000 })
+                .contains('RAKENNE_YLEMMAN_TASON_OTSIKKO')
+                .parent()
+                .contains('PARENT Suominimi');
         });
     });
 });
