@@ -7,14 +7,14 @@ import { KoodistoImpl } from '../contexts/KoodistoContext';
 
 const baseUrl = `${API_CONTEXT}/koodisto/`;
 
-const koodisto = async (koodisto: string, onlyValid?: boolean): Promise<Koodi[]> => {
+const getKoodisto = async (koodisto: string, onlyValid?: boolean): Promise<Koodi[]> => {
     const validParameter = onlyValid ? '?onlyValid=true' : '';
     const url = `${baseUrl}${koodisto}/koodi${validParameter}`;
     const response = await axios.get<Koodi[]>(url);
     return response.data;
 };
 const createKoodisto = async (get, koodi, onlyValid = false) =>
-    new KoodistoImpl(await koodisto(koodi, onlyValid), get(casMeAtom).lang);
+    new KoodistoImpl(await getKoodisto(koodi, onlyValid), get(casMeAtom).lang);
 
 export const kuntaKoodistoAtom = atom(async (get) => createKoodisto(get, 'KUNTA'));
 export const kayttoRyhmatKoodistoAtom = atom(async (get) => createKoodisto(get, 'KAYTTORYHMAT'));
