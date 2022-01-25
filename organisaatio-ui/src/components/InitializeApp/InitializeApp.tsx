@@ -12,5 +12,5 @@ export default function InitializeApp({ children }) {
         scriptElement.id = 'virkailija-raamit-Script';
         document.body.appendChild(scriptElement);
     }
-    return <>children</>;
+    return <>{children}</>;
 }
