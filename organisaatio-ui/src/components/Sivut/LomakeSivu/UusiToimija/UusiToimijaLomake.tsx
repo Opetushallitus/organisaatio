@@ -37,7 +37,7 @@ import {
 } from '../LomakeFields/LomakeFields';
 import IconWrapper from '../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
-import { organisaatioTyypitKoodistoAtom, postinumerotKoodistoAtom } from '../../../../api/koodisto';
+import { koodistotAtom, organisaatioTyypitKoodistoAtom, postinumerotKoodistoAtom } from '../../../../api/koodisto';
 import { languageAtom } from '../../../../api/lokalisaatio';
 
 const PERUSTIEDOTUUID = 'perustietolomake';
@@ -46,6 +46,7 @@ const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
     const history = useHistory();
     const [i18n] = useAtom(languageAtom);
+    useAtom(koodistotAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const parentOid = resolveParentOidByQuery(props.location.search);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
