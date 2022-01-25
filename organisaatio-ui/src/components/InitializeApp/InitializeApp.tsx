@@ -1,3 +1,4 @@
+import React from 'react';
 import devRaamit from '../../tools/devRaamit';
 
 const virkailijaRaamitUrl = '/virkailija-raamit/apply-raamit.js';
@@ -11,5 +12,5 @@ export default function InitializeApp({ children }) {
         scriptElement.id = 'virkailija-raamit-Script';
         document.body.appendChild(scriptElement);
     }
-    return children;
+    return <>children</>;
 }
