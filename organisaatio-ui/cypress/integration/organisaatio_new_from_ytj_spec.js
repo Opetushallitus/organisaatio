@@ -6,7 +6,7 @@ beforeEach(() => {
     cy.deleteByYTunnus(Y_TUNNUS);
 });
 describe('New organisaatio from YTJ', () => {
-    it.only('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
+    it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
         cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
