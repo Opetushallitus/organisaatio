@@ -109,10 +109,10 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                 const { nimi: matchNimi, alkuPvm } = foundAmatch
                     ? (findNimiByAlkuPvm(nimet, newAlkuPvm) as UiOrganisaationNimetNimi)
                     : currentNimi;
-                const oldNimi = { nimi: matchNimi, alkuPvm };
-                await updateOrganisaatioNimi(oidValue, oldNimi, newNimi);
+                const oldNimi = { nimi: matchNimi, alkuPvm, version: currentNimi.version };
+                await updateOrganisaatioNimi(oidValue, oldNimi, { ...newNimi, version: currentNimi.version });
             } else if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
-                await createOrganisaatioNimi(oidValue, newNimi);
+                await createOrganisaatioNimi(oidValue, { ...newNimi, version: 0 });
             }
         } finally {
             setIsLoading(false);

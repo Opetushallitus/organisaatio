@@ -275,7 +275,8 @@ function mapUiOrganisaatioToApiToSave(
         {
             nimi,
             alkuPvm: apiAlkuPvm,
-        } as ApiOrganisaationNimetNimi,
+            version: 0,
+        },
     ];
     return {
         ytunnus,

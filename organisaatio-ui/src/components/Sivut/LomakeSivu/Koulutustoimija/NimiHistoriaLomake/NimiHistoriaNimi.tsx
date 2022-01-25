@@ -19,7 +19,7 @@ export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
     const { nimi, alkuPvm, handleDeleteNimi } = props;
 
     function handleDeleteClick() {
-        handleDeleteNimi({ nimi, alkuPvm });
+        handleDeleteNimi({ nimi, alkuPvm, version: 0 });
     }
 
     const isAlkuPvmInFuture = moment(alkuPvm, 'D.M.YYYY') > moment();
