@@ -39,15 +39,15 @@ class ErrorBoundary extends React.Component<unknown, { hasError: boolean }> {
 
 ReactDOM.render(
     <React.StrictMode>
-        <Provider>
-            <ErrorBoundary>
-                <React.Suspense fallback={<Loading />}>
-                    <InitializeApp>
+        <InitializeApp>
+            <Provider>
+                <ErrorBoundary>
+                    <React.Suspense fallback={<Loading />}>
                         <OrganisaatioApp />
-                    </InitializeApp>
-                </React.Suspense>
-            </ErrorBoundary>
-        </Provider>
+                    </React.Suspense>
+                </ErrorBoundary>
+            </Provider>
+        </InitializeApp>
     </React.StrictMode>,
     document.getElementById('root')
 );
