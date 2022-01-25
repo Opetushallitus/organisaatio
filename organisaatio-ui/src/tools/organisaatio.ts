@@ -66,7 +66,7 @@ export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language
     if (o)
         return {
             value: `${o.oid}`,
-            label: `${o.nimi[language]} ${o.oid}`,
+            label: `${o.nimi[language]} (${o.ytunnus || o.oppilaitosKoodi || o.oid})`,
         };
     else return { value: '', label: '' };
 };
