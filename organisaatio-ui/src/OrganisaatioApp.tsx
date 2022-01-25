@@ -14,11 +14,13 @@ import Notification from './components/Notification/Notification';
 import { BASE_PATH } from './contexts/constants';
 import { useAtom } from 'jotai';
 import { frontPropertiesAtom } from './api/config';
+import { casMeAtom } from './api/kayttooikeus';
 
 const theme = createTheme();
 
 const OrganisaatioApp: React.FC = () => {
     useAtom(frontPropertiesAtom);
+    useAtom(casMeAtom);
     registerLocale('fi', fi);
     registerLocale('sv', sv);
     registerLocale('en', enGB);
