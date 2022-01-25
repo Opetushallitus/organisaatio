@@ -62,6 +62,7 @@ import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import {
     kielikoodistoAtom,
+    koodistotAtom,
     kuntaKoodistoAtom,
     maatJaValtiotKoodistoAtom,
     oppilaitoksenOpetuskieletKoodistoAtom,
@@ -87,6 +88,7 @@ const YHTEYSTIEDOTID = 'yhteystietolomake';
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
+    useAtom(koodistotAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
