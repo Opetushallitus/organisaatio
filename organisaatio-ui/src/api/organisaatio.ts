@@ -168,7 +168,7 @@ async function readOrganisaatio(
     parent?: boolean
 ): Promise<{ organisaatio: ApiOrganisaatio; polku: OrganisaatioNimiJaOid[] } | undefined> {
     return errorHandlingWrapper(async () => {
-        const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}?includeImage=true`);
+        const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}`);
         const organisaatio = response.data;
         if (!!parent) {
             return { organisaatio, polku: [] };
@@ -346,7 +346,6 @@ function mapUiOrganisaatioToApiToUpdate(
     perustiedotFormValues: UnpackNestedValue<Perustiedot>,
     yhteystietoArvoFormValuet: UnpackNestedValue<YhteystietoArvot>
 ): ApiOrganisaatio {
-    const { oid, parentOid, parentOidPath, status } = organisaatioBase;
     const yhteystiedot = mapUiYhteystiedotToApi({
         postinumerotKoodisto,
         apiYhteystiedot: organisaatioBase.apiYhteystiedot,
@@ -374,19 +373,13 @@ function mapUiOrganisaatioToApiToUpdate(
     } = perustiedotFormValues;
     const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
-    const { nimet: uiNimet, currentNimi } = organisaatioBase;
+    const { currentNimi } = organisaatioBase;
     return {
         ...originalOrganisaatio,
         lakkautusPvm: apiLakkautusPvm,
         alkuPvm: apiAlkuPvm,
-        oid,
-        parentOid,
-        parentOidPath,
-        status,
         yhteystiedot,
-        nimet: uiNimet.map(({ nimi, alkuPvm: ap }) => ({ nimi, alkuPvm: formatUiDateStrToApi(ap) })),
         ytunnus,
-        varhaiskasvatuksenToimipaikkaTiedot: organisaatioBase.varhaiskasvatuksenToimipaikkaTiedot,
         piilotettu,
         nimi: currentNimi.nimi,
         lyhytNimi: currentNimi.nimi,

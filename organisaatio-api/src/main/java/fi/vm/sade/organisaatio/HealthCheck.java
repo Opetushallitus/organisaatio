@@ -6,5 +6,4 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface HealthCheck {
     @GetMapping(path = "/", produces = MediaType.TEXT_PLAIN_VALUE)
     String hello();
-
 }

@@ -301,7 +301,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
     it('Maps Ui organisaatio to api for update', () => {
         const expectedYhteystiedot = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite].sort(YhteystiedotsortCb);
         const mappedApiOrganisaatio = mapUiOrganisaatioToApiToUpdate(
-            {} as ApiOrganisaatio,
+            { ...apiOrganisaatio } as ApiOrganisaatio,
             postinumerotKoodisto as Koodisto,
             uiBaseTiedot,
             uiYhteystiedot,

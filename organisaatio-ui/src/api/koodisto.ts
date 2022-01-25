@@ -1,7 +1,8 @@
 import useAxios from 'axios-hooks';
 import { Koodi } from '../types/types';
-import { LEGACY_API_CONTEXT } from '../contexts/constants';
-const baseUrl = `${LEGACY_API_CONTEXT}/koodisto/`;
+import { API_CONTEXT } from '../contexts/constants';
+
+const baseUrl = `${API_CONTEXT}/koodisto/`;
 
 export default function useKoodisto(koodisto: string, onlyValid?: boolean) {
     const validParameter = onlyValid ? '?onlyValid=true' : '';
