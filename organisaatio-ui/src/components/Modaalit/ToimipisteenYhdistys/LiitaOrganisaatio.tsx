@@ -30,7 +30,12 @@ export function LiitaOrganisaatio({
 }) {
     const [i18n] = useAtom(languageAtom);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
-    const { oid, currentNimi } = organisaatioBase;
+    const { currentNimi, apiOrganisaatio, oid } = organisaatioBase;
+    const fromIdentifier = apiOrganisaatio.ytunnus || apiOrganisaatio.oppilaitosKoodi || oid;
+    const toIdentifier =
+        liitaOrganisaatioon.newParent?.ytunnus ||
+        liitaOrganisaatioon.newParent?.oppilaitosKoodi ||
+        liitaOrganisaatioon.newParent?.oid;
     return (
         <>
             {!confirmationModaaliAuki && (
@@ -61,13 +66,12 @@ export function LiitaOrganisaatio({
                     replacements={[
                         {
                             key: 'from',
-                            value: `${i18n.translateNimi(currentNimi?.nimi)} (${oid})`,
+                            value: `${i18n.translateNimi(currentNimi?.nimi)} (${fromIdentifier})
+                            }`,
                         },
                         {
                             key: 'to',
-                            value: `${i18n.translateNimi(liitaOrganisaatioon.newParent?.nimi)} (${
-                                liitaOrganisaatioon.newParent?.oid || ''
-                            })`,
+                            value: `${i18n.translateNimi(liitaOrganisaatioon.newParent?.nimi)} (${toIdentifier})`,
                         },
                     ]}
                     tallennaCallback={() => {

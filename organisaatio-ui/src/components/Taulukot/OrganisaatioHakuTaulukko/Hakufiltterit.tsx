@@ -84,7 +84,12 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                         {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
                     </Checkbox>
                 </div>
-                <a href={LISATIEDOT_EXTERNAL_URI} className={styles.LisatiedotLinkki}>
+                <a
+                    href={LISATIEDOT_EXTERNAL_URI}
+                    target={'_blank'}
+                    rel={'noreferrer'}
+                    className={styles.LisatiedotLinkki}
+                >
                     ?
                 </a>
             </div>

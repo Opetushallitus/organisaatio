@@ -82,6 +82,7 @@ export type UiOrganisaationNimetNimi = {
     isCurrentNimi?: boolean;
     nimi: Nimi;
     alkuPvm: LocalDate;
+    version: number;
 };
 export type UiOrganisaatioBase = {
     apiOrganisaatio: ApiOrganisaatio;

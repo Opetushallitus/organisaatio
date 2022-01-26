@@ -33,7 +33,7 @@ describe('Organisaatiosiirto', () => {
                 );
                 cy.selectFromList(
                     'ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO',
-                    parentOrganisaatio3.body.organisaatio.oid,
+                    parentOrganisaatio3.body.organisaatio.ytunnus,
                     'PARENT'
                 );
                 cy.intercept('PUT', `${PUBLIC_API_CONTEXT}/${child.body.organisaatio.oid}/organisaatiosuhde/*`).as(
