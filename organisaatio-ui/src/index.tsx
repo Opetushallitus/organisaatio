@@ -17,7 +17,7 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-class ErrorBoundary extends React.Component<unknown, { hasError: boolean }> {
+export class ErrorBoundary extends React.Component<unknown, { hasError: boolean }> {
     constructor(props) {
         super(props);
         this.state = { hasError: false };
@@ -39,15 +39,15 @@ class ErrorBoundary extends React.Component<unknown, { hasError: boolean }> {
 
 ReactDOM.render(
     <React.StrictMode>
-        <InitializeApp>
-            <Provider>
-                <ErrorBoundary>
-                    <React.Suspense fallback={<Loading />}>
-                        <OrganisaatioApp />
-                    </React.Suspense>
-                </ErrorBoundary>
-            </Provider>
-        </InitializeApp>
+        <Provider>
+            <ErrorBoundary>
+                <React.Suspense fallback={<Loading />}>
+                    <InitializeApp>
+                        <OrganisaatioApp />{' '}
+                    </InitializeApp>
+                </React.Suspense>
+            </ErrorBoundary>
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
 );

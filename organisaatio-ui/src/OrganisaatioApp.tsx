@@ -15,6 +15,8 @@ import { BASE_PATH } from './contexts/constants';
 import { useAtom } from 'jotai';
 import { frontPropertiesAtom } from './api/config';
 import { casMeAtom } from './api/kayttooikeus';
+import Loading from './components/Loading/Loading';
+import { ErrorBoundary } from './index';
 
 const theme = createTheme();
 
@@ -26,22 +28,30 @@ const OrganisaatioApp: React.FC = () => {
     registerLocale('en', enGB);
 
     return (
-        <ThemeProvider theme={theme}>
-            <Notification />
-            <BrowserRouter basename={BASE_PATH}>
-                <Switch>
-                    <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                    <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
-                    <Route path={'/lomake/:oid'} component={LomakeSivu} />
-                    <Route path={'/ryhmat'} exact component={Ryhmat} />
-                    <Route exact path={'/ryhmat/uusi'} component={(props) => <RyhmanMuokkaus {...props} isNew />} />
-                    <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
-                    <Route path={'*'}>
-                        <VirheSivu>{'ERROR_404'}</VirheSivu>
-                    </Route>
-                </Switch>
-            </BrowserRouter>
-        </ThemeProvider>
+        <ErrorBoundary>
+            <React.Suspense fallback={<Loading />}>
+                <ThemeProvider theme={theme}>
+                    <Notification />
+                    <BrowserRouter basename={BASE_PATH}>
+                        <Switch>
+                            <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
+                            <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
+                            <Route path={'/lomake/:oid'} component={LomakeSivu} />
+                            <Route path={'/ryhmat'} exact component={Ryhmat} />
+                            <Route
+                                exact
+                                path={'/ryhmat/uusi'}
+                                component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                            />
+                            <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
+                            <Route path={'*'}>
+                                <VirheSivu>{'ERROR_404'}</VirheSivu>
+                            </Route>
+                        </Switch>
+                    </BrowserRouter>
+                </ThemeProvider>
+            </React.Suspense>
+        </ErrorBoundary>
     );
 };
 

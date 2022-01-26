@@ -1,11 +1,16 @@
 import React from 'react';
-import devRaamit from '../../tools/devRaamit';
+import { frontPropertiesAtom } from '../../api/config';
+import { useAtom } from 'jotai';
 
 const virkailijaRaamitUrl = '/virkailija-raamit/apply-raamit.js';
 
 export default function InitializeApp({ children }) {
-    if (process.env.NODE_ENV === 'development') {
-        devRaamit(document);
+    useAtom(frontPropertiesAtom);
+    if (process.env.NODE_ENV === 'development' && !document.getElementById('virkailija-raamit-Script')) {
+        const scriptElement = document.createElement('script');
+        scriptElement.src = '/organisaatio-service/dev-raamit.js';
+        scriptElement.id = 'virkailija-raamit-Script';
+        document.body.appendChild(scriptElement);
     } else if (!document.getElementById('virkailija-raamit-Script')) {
         const scriptElement = document.createElement('script');
         scriptElement.src = virkailijaRaamitUrl;
