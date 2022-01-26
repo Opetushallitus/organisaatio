@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import React from 'react';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { LiitaOrganisaatioon, Option, UiOrganisaatioBase } from '../../../types/types';
@@ -7,6 +6,8 @@ import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../api/kayttooikeus';
 
 type TSProps = {
     liitaOrganisaatio: LiitaOrganisaatioon;
@@ -17,7 +18,7 @@ type TSProps = {
 };
 
 export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaatioBase, targetType, labels }: TSProps) {
-    const { language } = useContext(LanguageContext);
+    const [{ lang: language }] = useAtom(casMeAtom);
 
     const { organisaatiot, organisaatiotLoading, organisaatiotError } = useOrganisaatioHaku({
         organisaatiotyyppi: targetType,

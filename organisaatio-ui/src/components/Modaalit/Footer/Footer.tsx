@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import styles from './Footer.module.css';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 type Props = {
     tallennaCallback?: () => void;
@@ -9,7 +10,7 @@ type Props = {
 };
 
 export default function Footer({ tallennaCallback, peruutaCallback }: Props) {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.FooterRivi}>
             <Button className={styles.FooterButton} variant={'outlined'} onClick={() => peruutaCallback()}>

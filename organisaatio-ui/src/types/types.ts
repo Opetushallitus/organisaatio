@@ -265,22 +265,22 @@ export type Koodisto = {
     uri2SelectOption: (uri: KoodiUri, disabled?: boolean) => KoodistoSelectOption;
 };
 
-export type KoodistoContextType = {
+export type Koodistot = {
     kuntaKoodisto: Koodisto;
+    maatJaValtiotKoodisto: Koodisto;
+    oppilaitoksenOpetuskieletKoodisto: Koodisto;
+    oppilaitostyyppiKoodisto: Koodisto;
+    vuosiluokatKoodisto: Koodisto;
     kayttoRyhmatKoodisto: Koodisto;
     ryhmaTyypitKoodisto: Koodisto;
     organisaatioTyypitKoodisto: Koodisto;
     ryhmanTilaKoodisto: Koodisto;
-    oppilaitoksenOpetuskieletKoodisto: Koodisto;
-    postinumerotKoodisto: Koodisto;
-    maatJaValtiotKoodisto: Koodisto;
-    vuosiluokatKoodisto: Koodisto;
-    oppilaitostyyppiKoodisto: Koodisto;
     vardatoimintamuotoKoodisto: Koodisto;
     vardakasvatusopillinenjarjestelmaKoodisto: Koodisto;
     vardatoiminnallinenpainotusKoodisto: Koodisto;
     vardajarjestamismuotoKoodisto: Koodisto;
     kielikoodisto: Koodisto;
+    postinumerotKoodisto: Koodisto;
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
@@ -289,19 +289,12 @@ export type SupportedKieli = 'fi' | 'sv' | 'en';
 
 export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
 
-export type SearchFilters = {
-    filters: Filters;
-    setFilters: (filters: Filters) => void;
-    localFilters: LocalFilters;
-    setLocalFilters: (localFilters: LocalFilters) => void;
-};
-export type Filters = {
+export type RemoteFilters = {
     searchString: string;
     naytaPassivoidut: boolean;
-    isOPHVirkailija: boolean;
-    omatOrganisaatiotSelected: boolean;
 };
 export type LocalFilters = {
+    searchString: string;
     omatOrganisaatiotSelected: boolean;
 };
 export type OrganisaatioType =

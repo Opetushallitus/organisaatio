@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DynamicField, KoodistoContextType, Perustiedot } from '../../../../../types/types';
+import { DynamicField, Koodistot, Perustiedot } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control } from 'react-hook-form/dist/types/form';
 import { Kentta, LabelLink, Rivi } from '../../LomakeFields/LomakeFields';
@@ -12,7 +12,7 @@ type DynamicFieldsProps = {
     validationErrors: FieldErrors<Perustiedot>;
     formControl: Control<Perustiedot>;
     getPerustiedotValues: () => Perustiedot;
-    koodistot: KoodistoContextType;
+    koodistot: Koodistot;
     readOnly?: boolean;
 };
 

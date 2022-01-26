@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
@@ -20,7 +19,9 @@ import {
     UloinKehys,
 } from '../../LomakeFields/LomakeFields';
 import DatePickerController from '../../../../Controllers/DatePickerController';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../../api/lokalisaatio';
+import { koodistotAtom } from '../../../../../api/koodisto';
 
 type UusiOrgPerustiedotProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -46,8 +47,8 @@ export default function PerustietoLomake({
     resolvedTyypit,
     getPerustiedotValues,
 }: UusiOrgPerustiedotProps) {
-    const { i18n } = useContext(LanguageContext);
-    const koodistot = useContext(KoodistoContext);
+    const [i18n] = useAtom(languageAtom);
+    const [koodistot] = useAtom(koodistotAtom);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     const { yritysmuoto } = getPerustiedotValues();
     return (

@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { Link } from 'react-router-dom';
 import {
     HistoriaTaulukkoData,
     OrganisaatioHistoria,
-    UiOrganisaationNimetNimi,
     OrganisaatioSuhde,
+    UiOrganisaationNimetNimi,
 } from '../../../../../types/types';
 import { OrganisaatioBase } from '../../../../../types/apiTypes';
 import { Column } from 'react-table';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],
@@ -37,13 +37,10 @@ const historiaSorter = (a: OrganisaatioSuhde, b: OrganisaatioSuhde) => {
 };
 
 const OrganisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) => {
-    const { i18n, language } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     return (
         <Link to={`/lomake/${organisaatio.oid}`}>
-            {(organisaatio.nimi[language] ||
-                organisaatio.nimi['fi'] ||
-                organisaatio.nimi['sv'] ||
-                organisaatio.nimi['en']) +
+            {i18n.translateNimi(organisaatio.nimi) +
                 (organisaatio.status !== 'AKTIIVINEN'
                     ? `(${i18n.translate('LABEL_' + organisaatio.status.toUpperCase())})`
                     : '')}
@@ -72,7 +69,7 @@ export const mapColumnsToTableFormat = (
 };
 
 export default function OrganisaatioHistoriaLomake({ historia }: { historia: OrganisaatioHistoria }) {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
 
     const liittyneetData = historia.liitokset.sort(historiaSorter).map((a) => historiaMapper(a, 'parent'));
 

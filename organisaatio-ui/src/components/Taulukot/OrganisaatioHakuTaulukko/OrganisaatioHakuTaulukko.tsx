@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './OrganisaatioHakuTaulukko.module.css';
 import { Cell, Column, HeaderGroup, Row, useExpanded, useFilters, usePagination, useTable } from 'react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
-import { LanguageContext } from '../../../contexts/LanguageContext';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import Loading from '../../Loading/Loading';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
-import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import { CasMeContext } from '../../../contexts/CasMeContext';
 import { TarkastusLippu } from '../../TarkistusLippu/TarkastusLippu';
+import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
+import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../api/kayttooikeus';
+import { languageAtom } from '../../../api/lokalisaatio';
+import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 
 const MAX_EXPAND_ROWS = 10;
 const mapPaginationSelectors = (index) => {
@@ -43,12 +45,13 @@ const ExpandIcon = ({ isExpanded }) => {
     return <IconWrapper icon={chevronRight} />;
 };
 export default function OrganisaatioHakuTaulukko() {
-    const { i18n } = useContext(LanguageContext);
-    const { me: casMe } = useContext(CasMeContext);
+    const [i18n] = useAtom(languageAtom);
+    const [casMe] = useAtom(casMeAtom);
     const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
     const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const { kuntaKoodisto, organisaatioTyypitKoodisto } = useContext(KoodistoContext);
+    const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
+    const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
     const columns = React.useMemo<Column<ApiOrganisaatio>[]>(
         () => [
             {
@@ -193,16 +196,14 @@ export default function OrganisaatioHakuTaulukko() {
         useExpanded,
         usePagination
     );
-    const filterResults = useCallback(
-        (omatOrganisaatiotSelected: boolean): void => {
-            if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
-            else setFilter('containingOids', []);
-        },
-        [crudOids, setFilter]
-    );
+    const [{ omatOrganisaatiotSelected }] = useAtom(localFiltersAtom);
+    useEffect(() => {
+        if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
+        else setFilter('containingOids', []);
+    }, [data, crudOids, setFilter, omatOrganisaatiotSelected]);
     return (
         <div>
-            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} filterResults={filterResults} />
+            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
 
             {(loading && <Loading />) || (
                 <>

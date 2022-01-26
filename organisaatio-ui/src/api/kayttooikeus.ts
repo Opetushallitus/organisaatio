@@ -1,7 +1,8 @@
-import useAxios from 'axios-hooks';
-import { urls } from 'oph-urls-js';
 import { CASMe, Language } from '../types/types';
 import { CASMeImpl } from '../contexts/CasMeContext';
+import axios from 'axios';
+import { atom } from 'jotai';
+import { frontPropertiesAtom } from './config';
 
 type CASMeApi = {
     uid: string;
@@ -17,24 +18,8 @@ export const mapApiToUI = (api: CASMeApi): CASMe => {
     return new CASMeImpl({ ...api, roles: JSON.parse(api?.roles || '[]'), lang: (api?.lang || 'fi') as Language });
 };
 
-export function useCAS(): { data: CASMe; loading: boolean; error: undefined } {
-    const virkailija = urls.url('urlVirkailija');
-    const baseUrl = `${virkailija}/kayttooikeus-service/`;
-    const [{ data, loading, error }] = useAxios<CASMeApi>(`${baseUrl}cas/me`);
-    if (error) {
-        return {
-            data: new CASMeImpl({
-                uid: '',
-                oid: '',
-                firstName: '',
-                lastName: '',
-                groups: [],
-                roles: [],
-                lang: 'fi' as Language,
-            }),
-            loading: false,
-            error: undefined,
-        };
-    }
-    return { data: mapApiToUI(data), loading, error };
-}
+const urlAtom = atom((get) => `${get(frontPropertiesAtom).urlVirkailija}/kayttooikeus-service/`);
+export const casMeAtom = atom(async (get) => {
+    const { data } = await axios.get<CASMeApi>(`${get(urlAtom)}cas/me`);
+    return mapApiToUI(data);
+});

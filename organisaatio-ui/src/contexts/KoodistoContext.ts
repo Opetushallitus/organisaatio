@@ -1,13 +1,4 @@
-import {
-    Koodi,
-    KoodiArvo,
-    Koodisto,
-    KoodistoContextType,
-    KoodistoSelectOption,
-    KoodiUri,
-    Language,
-} from '../types/types';
-import * as React from 'react';
+import { Koodi, KoodiArvo, Koodisto, KoodistoSelectOption, KoodiUri, Language } from '../types/types';
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];
@@ -61,21 +52,3 @@ export class KoodistoImpl implements Koodisto {
         };
     }
 }
-
-export const KoodistoContext = React.createContext<KoodistoContextType>({
-    kuntaKoodisto: new KoodistoImpl([], 'fi'),
-    kayttoRyhmatKoodisto: new KoodistoImpl([], 'fi'),
-    ryhmaTyypitKoodisto: new KoodistoImpl([], 'fi'),
-    organisaatioTyypitKoodisto: new KoodistoImpl([], 'fi'),
-    ryhmanTilaKoodisto: new KoodistoImpl([], 'fi'),
-    oppilaitoksenOpetuskieletKoodisto: new KoodistoImpl([], 'fi'),
-    postinumerotKoodisto: new KoodistoImpl([], 'fi'),
-    maatJaValtiotKoodisto: new KoodistoImpl([], 'fi'),
-    vuosiluokatKoodisto: new KoodistoImpl([], 'fi'),
-    oppilaitostyyppiKoodisto: new KoodistoImpl([], 'fi'),
-    vardatoimintamuotoKoodisto: new KoodistoImpl([], 'fi'),
-    vardakasvatusopillinenjarjestelmaKoodisto: new KoodistoImpl([], 'fi'),
-    vardatoiminnallinenpainotusKoodisto: new KoodistoImpl([], 'fi'),
-    vardajarjestamismuotoKoodisto: new KoodistoImpl([], 'fi'),
-    kielikoodisto: new KoodistoImpl([], 'fi'),
-});

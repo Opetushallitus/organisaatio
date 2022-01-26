@@ -73,7 +73,7 @@ describe('Organisaatiotarkastus', () => {
     it('Shows list of orgs with updated tarkastusflag', () => {
         cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('h2', { timeout: 20000 }).contains('TAULUKKO_ORGANISAATIOT').should('exist');
-        cy.get('input').first().type(`${prefix}{enter}`);
+        cy.get('input').first().clear().type(`${prefix}{enter}`);
         cy.get('td')
             .contains('TARKASTUS IS CHECKED LONG AGO')
             .parents('tr')

@@ -1,18 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styles from './TaulukkoSivu.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ROOT_OID } from '../../../contexts/constants';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/OrganisaatioHakuTaulukko';
-import { LanguageContext } from '../../../contexts/LanguageContext';
-import { CasMeContext } from '../../../contexts/CasMeContext';
+import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../api/kayttooikeus';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 const TaulukkoSivu = (props) => {
     const handleLisaaUusiToimija = () => {
         return props.history.push(`/lomake/uusi?parentOid=${ROOT_OID}`);
     };
-    const { i18n } = useContext(LanguageContext);
-    const { me: casMe } = useContext(CasMeContext);
+    const [i18n] = useAtom(languageAtom);
+    const [casMe] = useAtom(casMeAtom);
 
     return (
         <PohjaSivu>
@@ -21,8 +22,7 @@ const TaulukkoSivu = (props) => {
                     <h2> {i18n.translate('TAULUKKO_ORGANISAATIOT')}</h2>
                     {casMe.canHaveButton('TAULUKKO_LISAA_UUSI_TOIMIJA', '', []) && (
                         <Button style={{ height: '3rem' }} onClick={handleLisaaUusiToimija}>
-                            {' '}
-                            + {i18n.translate('TAULUKKO_LISAA_UUSI_TOIMIJA')}
+                            {i18n.translate('TAULUKKO_LISAA_UUSI_TOIMIJA')}
                         </Button>
                     )}
                 </div>

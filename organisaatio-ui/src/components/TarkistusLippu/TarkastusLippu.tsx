@@ -1,11 +1,12 @@
 import moment, { Moment } from 'moment';
-import React, { useContext } from 'react';
+import React from 'react';
 import { LocalDate } from '../../types/types';
 import isNumber from '@opetushallitus/virkailija-ui-components/utils/isNumber';
 import IconWrapper from '../IconWapper/IconWrapper';
 import { getUiDateStr } from '../../tools/mappers';
-import { LanguageContext } from '../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
 import { LomakeButton } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
+import { languageAtom } from '../../api/lokalisaatio';
 
 const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;
@@ -39,7 +40,7 @@ const TarkastusLippu: React.FC<TarkastusLippuProps> = ({
     lakkautusPvm,
     organisaatioTyypit = [],
 }) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === 'organisaatiotyyppi_08') {
         return <></>;
     }

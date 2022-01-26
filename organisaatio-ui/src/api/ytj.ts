@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
-import { KoodistoContextType, KoodistoSelectOption, LocalDate, YhteystiedotBase } from '../types/types';
+import { KoodistoSelectOption, Koodistot, LocalDate, YhteystiedotBase } from '../types/types';
 import { LEGACY_API_CONTEXT } from '../contexts/constants';
 import moment from 'moment';
 
@@ -52,7 +52,7 @@ type YtjAPIData = YtjHaku & {
     yritysTunnus: ytjYtunnus;
 };
 
-const mapApiToUI = (ytj: YtjAPIData, koodistot: KoodistoContextType): YtjData => {
+const mapApiToUI = (ytj: YtjAPIData, koodistot: Koodistot): YtjData => {
     const { kuntaKoodisto, oppilaitoksenOpetuskieletKoodisto } = koodistot;
     const selectedKunta = kuntaKoodisto.koodit().find((a) => a.arvo === ytj.kotiPaikkaKoodi);
     const selectedKuntaSelector = kuntaKoodisto
@@ -80,7 +80,7 @@ const mapApiToUI = (ytj: YtjAPIData, koodistot: KoodistoContextType): YtjData =>
     };
 };
 
-async function getByYTunnus(yTunnus: string, koodistot: KoodistoContextType): Promise<YtjData | undefined> {
+async function getByYTunnus(yTunnus: string, koodistot: Koodistot): Promise<YtjData | undefined> {
     return errorHandlingWrapper(async () => {
         if (!isYTunnus(yTunnus)) {
             console.error('Function should only be called with valid y-tunnus.');

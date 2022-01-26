@@ -2,13 +2,14 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
 import NormaaliTaulukko, {
-    NormaaliTaulukkoProps,
+    chooseTaulukkoData,
     FiltteritProps,
     Hakufiltterit,
-    chooseTaulukkoData,
+    NormaaliTaulukkoProps,
 } from './NormaaliTaulukko';
 import { Ryhma } from '../../types/types';
 import { Column } from 'react-table';
+import { useAtom } from 'jotai';
 
 const MINIMAL_PROPS: NormaaliTaulukkoProps = {
     ryhmatData: [],
@@ -22,9 +23,11 @@ const MINIMAL_FILTTERIT_PROPS: FiltteritProps = {
     globalFilter: '',
 };
 
+jest.mock('jotai');
 beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    (useAtom as jest.Mock).mockReturnValue([{ translate: (a) => a, translateNimi: (a) => a, koodit: () => [] }]);
 });
 
 afterAll(() => {

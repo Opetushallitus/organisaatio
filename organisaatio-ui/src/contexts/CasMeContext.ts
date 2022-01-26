@@ -1,5 +1,4 @@
 import { CASMe, ConfigurableButton, ConfigurableLomake, Language, OrganisaatioNimiJaOid } from '../types/types';
-import * as React from 'react';
 import { ROOT_OID } from './constants';
 
 const ORGANISAATIO_CRUD = 'APP_ORGANISAATIOHALLINTA_CRUD';
@@ -97,10 +96,3 @@ export class CASMeImpl implements CASMe {
         return getOidsFromRoles(this.roles);
     };
 }
-type CASMeContextType = {
-    me: CASMe;
-};
-
-export const CasMeContext = React.createContext<CASMeContextType>({
-    me: new CASMeImpl({ firstName: '', groups: [], lang: 'fi' as Language, lastName: '', oid: '', roles: [], uid: '' }),
-});

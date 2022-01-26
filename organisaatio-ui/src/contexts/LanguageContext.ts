@@ -1,5 +1,4 @@
 import { I18n, Language, Lokalisointi, Nimi } from '../types/types';
-import * as React from 'react';
 
 export class I18nImpl implements I18n {
     _data: Lokalisointi;
@@ -33,12 +32,3 @@ export class I18nImpl implements I18n {
         }, this.translate(key));
     };
 }
-
-export type LanguageContextType = {
-    language: Language;
-    i18n: I18n;
-};
-export const LanguageContext = React.createContext<LanguageContextType>({
-    language: 'fi',
-    i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
-});

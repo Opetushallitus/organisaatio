@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
@@ -7,10 +6,11 @@ import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoL
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { Yhteystiedot } from '../../../../../types/types';
 import { useWatch } from 'react-hook-form';
-import { KoodistoContext } from '../../../../../contexts/KoodistoContext';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
-import { LanguageContext } from '../../../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
+import { postinumerotKoodistoAtom } from '../../../../../api/koodisto';
+import { languageAtom } from '../../../../../api/lokalisaatio';
 
 const postiOsoiteToimipaikkaFiName = 'fi.postiOsoiteToimipaikka';
 const postiOsoiteToimipaikkaSvName = 'sv.postiOsoiteToimipaikka';
@@ -61,7 +61,7 @@ const PostinumeroKentta = ({ children, toimipaikkaName: name, control, label, is
 };
 
 const OtsikkoRivi = ({ label }) => {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.EnsimmainenRivi}>
             <h3>{i18n.translate(label)}</h3>
@@ -89,7 +89,7 @@ export const YhteystietoKortti = ({
     readOnly,
     isYtj,
 }: props) => {
-    const { postinumerotKoodisto } = useContext(KoodistoContext);
+    const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const ytjReadOnly = isYtj && kortinKieli === 'fi';
     const registerToimipaikkaUpdate = (toimipaikkaName, { onChange: originalOnchange, ...rest }) => {
         const koodit = postinumerotKoodisto.koodit();

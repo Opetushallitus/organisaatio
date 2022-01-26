@@ -1,15 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Radio from '@opetushallitus/virkailija-ui-components/Radio';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { NimenmuutosLomake } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister } from 'react-hook-form/dist/types/form';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
-import { LanguageContext } from '../../../contexts/LanguageContext';
 import { Controller } from 'react-hook-form';
 import NimenMuutosFields from './NimenMuutosFields';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
 import Loading from '../../Loading/Loading';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 type TNProps = {
     validationErrors: FieldErrors<NimenmuutosLomake>;
@@ -21,7 +22,7 @@ type TNProps = {
 
 export default function TNBody(props: TNProps) {
     const { validationErrors, register, formControl, getValues, isLoading } = props;
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     if (isLoading) {
         return (
             <BodyRivi>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
@@ -53,14 +53,29 @@ import {
     YlaBanneri,
 } from './LomakeFields/LomakeFields';
 import Muokattu from '../../Muokattu/Muokattu';
-import { LanguageContext } from '../../../contexts/LanguageContext';
-import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import { CasMeContext } from '../../../contexts/CasMeContext';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { TarkastusLippuButton } from '../../TarkistusLippu/TarkastusLippu';
+import { useAtom } from 'jotai';
+import { casMeAtom } from '../../../api/kayttooikeus';
+import {
+    kielikoodistoAtom,
+    koodistotAtom,
+    kuntaKoodistoAtom,
+    maatJaValtiotKoodistoAtom,
+    oppilaitoksenOpetuskieletKoodistoAtom,
+    oppilaitostyyppiKoodistoAtom,
+    organisaatioTyypitKoodistoAtom,
+    postinumerotKoodistoAtom,
+    vardajarjestamismuotoKoodistoAtom,
+    vardakasvatusopillinenjarjestelmaKoodistoAtom,
+    vardatoiminnallinenpainotusKoodistoAtom,
+    vardatoimintamuotoKoodistoAtom,
+    vuosiluokatKoodistoAtom,
+} from '../../../api/koodisto';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -71,8 +86,9 @@ const PERUSTIEDOTID = 'perustietolomake';
 const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
-    const { i18n } = useContext(LanguageContext);
-    const { me: casMe } = useContext(CasMeContext);
+    const [i18n] = useAtom(languageAtom);
+    const [casMe] = useAtom(casMeAtom);
+    useAtom(koodistotAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
@@ -94,20 +110,19 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         organisaatioTyypit: [] as OrganisaatioType[],
         oid: ROOT_OID,
     });
-    const {
-        organisaatioTyypitKoodisto,
-        maatJaValtiotKoodisto,
-        oppilaitoksenOpetuskieletKoodisto,
-        postinumerotKoodisto,
-        kuntaKoodisto,
-        vuosiluokatKoodisto,
-        oppilaitostyyppiKoodisto,
-        vardatoimintamuotoKoodisto,
-        vardakasvatusopillinenjarjestelmaKoodisto,
-        vardatoiminnallinenpainotusKoodisto,
-        vardajarjestamismuotoKoodisto,
-        kielikoodisto,
-    } = useContext(KoodistoContext);
+    const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
+    const [maatJaValtiotKoodisto] = useAtom(maatJaValtiotKoodistoAtom);
+    const [oppilaitoksenOpetuskieletKoodisto] = useAtom(oppilaitoksenOpetuskieletKoodistoAtom);
+    const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
+    const [vuosiluokatKoodisto] = useAtom(vuosiluokatKoodistoAtom);
+    const [oppilaitostyyppiKoodisto] = useAtom(oppilaitostyyppiKoodistoAtom);
+    const [vardatoimintamuotoKoodisto] = useAtom(vardatoimintamuotoKoodistoAtom);
+    const [vardakasvatusopillinenjarjestelmaKoodisto] = useAtom(vardakasvatusopillinenjarjestelmaKoodistoAtom);
+    const [vardajarjestamismuotoKoodisto] = useAtom(vardajarjestamismuotoKoodistoAtom);
+    const [vardatoiminnallinenpainotusKoodisto] = useAtom(vardatoiminnallinenpainotusKoodistoAtom);
+    const [kielikoodisto] = useAtom(kielikoodistoAtom);
+    const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
+
     const [organisaatioNimiPolku, setOrganisaatioNimiPolku] = useState<OrganisaatioNimiJaOid[]>([]);
     const [resolvedOrganisaatioRakenne, setResolvedOrganisaatioRakenne] = useState<ResolvedRakenne>(
         resolveOrganisaatio(rakenne, { organisaatioTyypit: [], oid: '' })

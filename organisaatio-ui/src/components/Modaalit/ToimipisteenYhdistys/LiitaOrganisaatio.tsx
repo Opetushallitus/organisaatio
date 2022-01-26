@@ -1,12 +1,13 @@
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Confirmation } from '../Confirmation/Confirmation';
 import { LiitaOrganisaatioon, UiOrganisaatioBase } from '../../../types/types';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import LiitosBody from './LiitosBody';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
 
 export function LiitaOrganisaatio({
     liitaOrganisaatioon,
@@ -27,7 +28,7 @@ export function LiitaOrganisaatio({
     targetType: string;
     labels: { title: string; confirmTitle: string; confirmMessage: string; otherOrg: string; liitosPvm: string };
 }) {
-    const { i18n } = useContext(LanguageContext);
+    const [i18n] = useAtom(languageAtom);
     const [confirmationModaaliAuki, setConfirmationModaaliAuki] = useState<boolean>(false);
     const { currentNimi, apiOrganisaatio, oid } = organisaatioBase;
     const fromIdentifier = apiOrganisaatio.ytunnus || apiOrganisaatio.oppilaitosKoodi || oid;

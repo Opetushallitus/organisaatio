@@ -1,6 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { KoodistoContext } from '../../../contexts/KoodistoContext';
-import { LanguageContext } from '../../../contexts/LanguageContext';
+import React, { useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
@@ -13,6 +11,9 @@ import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { getUiDateStr } from '../../../tools/mappers';
+import { useAtom } from 'jotai';
+import { languageAtom } from '../../../api/lokalisaatio';
+import { koodistotAtom } from '../../../api/koodisto';
 
 type Props = {
     ytunnus: string;
@@ -34,8 +35,8 @@ const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
 };
 
 export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
-    const { i18n } = useContext(LanguageContext);
-    const koodistot = useContext(KoodistoContext);
+    const [i18n] = useAtom(languageAtom);
+    const [koodistot] = useAtom(koodistotAtom);
     const [input, setInput] = useState(ytunnus);
     const [ytjTiedot, setYtjTiedot] = useState<YtjHaku[]>([]);
 
