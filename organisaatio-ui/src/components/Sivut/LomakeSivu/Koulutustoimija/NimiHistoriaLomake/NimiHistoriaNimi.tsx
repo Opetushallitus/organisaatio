@@ -10,16 +10,15 @@ import IconWrapper from '../../../../IconWapper/IconWrapper';
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
     alkuPvm: LocalDate;
+    version: number;
     handleDeleteNimi: (nimi: UiOrganisaationNimetNimi) => void;
 };
 
-export default function NimiHistoriaNimi(props: nimiHistoriaNimiProps) {
+export default function NimiHistoriaNimi({ nimi, alkuPvm, version, handleDeleteNimi }: nimiHistoriaNimiProps) {
     const { i18n } = useContext(LanguageContext);
 
-    const { nimi, alkuPvm, handleDeleteNimi } = props;
-
     function handleDeleteClick() {
-        handleDeleteNimi({ nimi, alkuPvm });
+        handleDeleteNimi({ nimi, alkuPvm, version });
     }
 
     const isAlkuPvmInFuture = moment(alkuPvm, 'D.M.YYYY') > moment();

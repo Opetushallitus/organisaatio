@@ -41,11 +41,13 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
             Header: i18n.translate('NIMIHISTORIA_NIMI'),
             Cell: ({
                 row: {
-                    original: { nimi, alkuPvm },
+                    original: { nimi, alkuPvm, version },
                 },
             }: {
                 row: { original: UiOrganisaationNimetNimi };
-            }) => <NimiHistoriaNimi handleDeleteNimi={handleDeleteNimi} nimi={nimi} alkuPvm={alkuPvm} />,
+            }) => (
+                <NimiHistoriaNimi handleDeleteNimi={handleDeleteNimi} nimi={nimi} alkuPvm={alkuPvm} version={version} />
+            ),
         },
     ] as Column<UiOrganisaationNimetNimi | HistoriaTaulukkoData>[];
     if (isLoading) {
