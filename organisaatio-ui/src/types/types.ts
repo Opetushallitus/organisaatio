@@ -18,6 +18,7 @@ export type Koodi = {
     arvo: KoodiArvo;
     nimi: LocalizableText;
     versio: number;
+    tila: 'PASSIIVINEN' | 'LUONNOS' | 'HYVAKSYTTY';
 };
 
 export type KoodistoSelectOption = {
@@ -25,7 +26,7 @@ export type KoodistoSelectOption = {
     arvo: KoodiArvo;
     label: string;
     versio: number;
-    disabled?: boolean;
+    isDisabled?: boolean;
 };
 
 export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'DELETE';

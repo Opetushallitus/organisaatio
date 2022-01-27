@@ -580,6 +580,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodi.setUri(koodiType.getKoodiUri());
             koodi.setVersio(koodiType.getVersio());
             koodi.setNimi(metadataTo(koodiType.getMetadata(), metadata -> metadata.getNimi()));
+            koodi.setTila(koodiType.getTila());
             return koodi;
         }
 

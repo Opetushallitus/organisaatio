@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.dto;
 
+import fi.vm.sade.koodisto.service.types.common.TilaType;
+
 import java.util.Map;
 
 public class Koodi {
@@ -8,6 +10,7 @@ public class Koodi {
     private String uri;
     private int versio;
     public Map<String, String> nimi;
+    private TilaType tila;
 
     public Koodi() {
     }
@@ -23,6 +26,14 @@ public class Koodi {
         this.versio = versio;
         this.nimi = nimi;
     }
+    public Koodi(String arvo, String uri, int versio, Map<String, String> nimi, TilaType tila) {
+        this.arvo = arvo;
+        this.uri = uri;
+        this.versio = versio;
+        this.nimi = nimi;
+        this.tila = tila;
+    }
+
 
 
     public String getArvo() {
@@ -57,4 +68,11 @@ public class Koodi {
         this.nimi = nimi;
     }
 
+    public TilaType getTila() {
+        return tila;
+    }
+
+    public void setTila(TilaType tila) {
+        this.tila = tila;
+    }
 }

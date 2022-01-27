@@ -14,6 +14,7 @@ describe('KoodistoImpl', () => {
             },
             arvo: '1',
             versio: 1,
+            tila: 'LUONNOS' as const,
         },
     ];
     const impl = new KoodistoImpl(koodit, 'fi');
@@ -71,6 +72,7 @@ describe('KoodistoImpl no version', () => {
             },
             arvo: '1',
             versio: 1,
+            tila: 'LUONNOS' as const,
         },
         {
             uri: 'koodi_10',
@@ -81,6 +83,7 @@ describe('KoodistoImpl no version', () => {
             },
             arvo: '10',
             versio: 1,
+            tila: 'LUONNOS' as const,
         },
     ];
     const impl = new KoodistoImpl(koodit, 'fi');
