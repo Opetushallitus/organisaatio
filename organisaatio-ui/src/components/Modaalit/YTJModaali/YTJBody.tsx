@@ -14,6 +14,7 @@ import { getUiDateStr } from '../../../tools/mappers';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { koodistotAtom } from '../../../api/koodisto';
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 type Props = {
     ytunnus: string;
@@ -38,9 +39,11 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
     const [i18n] = useAtom(languageAtom);
     const [koodistot] = useAtom(koodistotAtom);
     const [input, setInput] = useState(ytunnus);
+    const [isLoading, setIsLoading] = useState(false);
     const [ytjTiedot, setYtjTiedot] = useState<YtjHaku[]>([]);
 
     async function haeYtjTiedot() {
+        setIsLoading(true);
         if (isYTunnus(input)) {
             const data = await getByYTunnus(input, koodistot);
             if (data) setYtjTiedot([data]);
@@ -48,11 +51,13 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
             const data = await searchByName(input);
             if (data) setYtjTiedot(data);
         }
+        setIsLoading(false);
     }
 
     async function handleClick(ytjHaku: YtjHaku) {
         if (isYtjData(ytjHaku)) korvaaOrganisaatio({ ytjData: ytjHaku, setters, suljeModaali });
         else {
+            setIsLoading(true);
             const ytj = await getByYTunnus(ytjHaku.ytunnus, koodistot);
             if (ytj) korvaaOrganisaatio({ ytjData: ytj, setters, suljeModaali });
         }
@@ -81,19 +86,27 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                     />
                 </BodyKentta>
                 <BodyKentta>
-                    <Button onClick={haeYtjTiedot}>{i18n.translate('HAE_YTJTIEDOT')}</Button>
+                    <Button disabled={isLoading} onClick={haeYtjTiedot}>
+                        {i18n.translate('HAE_YTJTIEDOT')}
+                    </Button>
                 </BodyKentta>
             </BodyRivi>
             <BodyRivi>
-                {ytjTiedot.map((ytj) => {
-                    return (
-                        <BodyKentta key={ytj.ytunnus}>
-                            <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant={'text'}>
-                                {`${ytj.nimi} ${ytj.ytunnus}`}
-                            </Button>
-                        </BodyKentta>
-                    );
-                })}
+                {isLoading && (
+                    <BodyKentta>
+                        <Spin />
+                    </BodyKentta>
+                )}
+                {!isLoading &&
+                    ytjTiedot.map((ytj) => {
+                        return (
+                            <BodyKentta key={ytj.ytunnus}>
+                                <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant={'text'}>
+                                    {`${ytj.nimi} ${ytj.ytunnus}`}
+                                </Button>
+                            </BodyKentta>
+                        );
+                    })}
             </BodyRivi>
         </BodyKehys>
     );
