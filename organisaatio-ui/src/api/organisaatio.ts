@@ -384,7 +384,11 @@ function mapUiOrganisaatioToApiToUpdate(
         piilotettu,
         nimi: currentNimi.nimi,
         lyhytNimi: currentNimi.nimi,
-        nimet: nimet.map(({ nimi, alkuPvm, version }) => ({ nimi, alkuPvm: formatUiDateStrToApi(alkuPvm), version })),
+        nimet: nimet.map((a) => ({
+            nimi: a.nimi,
+            alkuPvm: formatUiDateStrToApi(a.alkuPvm),
+            version: a.version,
+        })),
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),
         kotipaikkaUri: kotipaikka.value,
