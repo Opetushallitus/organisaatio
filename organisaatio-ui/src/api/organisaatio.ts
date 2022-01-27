@@ -374,7 +374,7 @@ function mapUiOrganisaatioToApiToUpdate(
     } = perustiedotFormValues;
     const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
-    const { currentNimi } = organisaatioBase;
+    const { currentNimi, nimet } = organisaatioBase;
     return {
         ...originalOrganisaatio,
         lakkautusPvm: apiLakkautusPvm,
@@ -384,6 +384,7 @@ function mapUiOrganisaatioToApiToUpdate(
         piilotettu,
         nimi: currentNimi.nimi,
         lyhytNimi: currentNimi.nimi,
+        nimet: nimet.map(({ nimi, alkuPvm, version }) => ({ nimi, alkuPvm: formatUiDateStrToApi(alkuPvm), version })),
         tyypit: organisaatioTyypit,
         muutKotipaikatUris: muutKotipaikat.map((a) => `${a.value}#${a.versio}`),
         kotipaikkaUri: kotipaikka.value,

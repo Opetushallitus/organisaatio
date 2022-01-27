@@ -45,7 +45,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
 
     useEffect(() => {
         inputRef.current?.select();
-    }, [inputRef.current]);
+    }, []);
 
     async function haeYtjTiedot() {
         setIsLoading(true);
