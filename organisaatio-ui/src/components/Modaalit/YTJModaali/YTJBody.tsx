@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
@@ -41,6 +41,11 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
     const [input, setInput] = useState(ytunnus);
     const [isLoading, setIsLoading] = useState(false);
     const [ytjTiedot, setYtjTiedot] = useState<YtjHaku[]>([]);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef.current?.select();
+    }, [inputRef.current]);
 
     async function haeYtjTiedot() {
         setIsLoading(true);
@@ -68,6 +73,7 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
             <BodyRivi>
                 <BodyKentta>
                     <Input
+                        ref={inputRef}
                         name={'ytjinput'}
                         onChange={(e) => setInput(e.target.value)}
                         value={input}
@@ -92,21 +98,18 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                 </BodyKentta>
             </BodyRivi>
             <BodyRivi>
-                {isLoading && (
+                {(isLoading && (
                     <BodyKentta>
                         <Spin />
                     </BodyKentta>
-                )}
-                {!isLoading &&
-                    ytjTiedot.map((ytj) => {
-                        return (
-                            <BodyKentta key={ytj.ytunnus}>
-                                <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant={'text'}>
-                                    {`${ytj.nimi} ${ytj.ytunnus}`}
-                                </Button>
-                            </BodyKentta>
-                        );
-                    })}
+                )) ||
+                    ytjTiedot.map((ytj) => (
+                        <BodyKentta key={ytj.ytunnus}>
+                            <Button key={ytj.ytunnus} onClick={() => handleClick(ytj)} variant={'text'}>
+                                {`${ytj.nimi} ${ytj.ytunnus}`}
+                            </Button>
+                        </BodyKentta>
+                    ))}
             </BodyRivi>
         </BodyKehys>
     );
