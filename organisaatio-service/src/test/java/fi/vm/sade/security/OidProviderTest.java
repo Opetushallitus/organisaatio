@@ -56,13 +56,20 @@ class OidProviderTest {
     @Test
     @DisplayName(value = "Test getSelfAndParentOids when oid is not found")
     void testGetSelfAndParentOids3() {
-
         OidProvider instance = new OidProvider();
         ReflectionTestUtils.setField(instance, "rootOrganisaatioOid", "rootDef");
         ReflectionTestUtils.setField(instance, "organisaatioFindBusinessService", organisaatioFindBusinessService);
-
         when(organisaatioFindBusinessService.findById(any(String.class))).thenAnswer(foo -> null);
         assertThat(instance.getSelfAndParentOids("bar").stream().collect(Collectors.joining("/"))).isEqualTo("rootDef/bar");
+    }
+
+    @Test
+    @DisplayName(value = "Test null input")
+    void testGetSelfAndParentOids4() {
+        OidProvider instance = new OidProvider();
+        ReflectionTestUtils.setField(instance, "rootOrganisaatioOid", "rootDef");
+        ReflectionTestUtils.setField(instance, "organisaatioFindBusinessService", organisaatioFindBusinessService);
+        assertThat(instance.getSelfAndParentOids(null).stream().collect(Collectors.joining("/"))).isEqualTo("rootDef");
     }
 
 }
