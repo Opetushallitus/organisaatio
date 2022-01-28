@@ -7,13 +7,14 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
-import { Controller } from 'react-hook-form';
-import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import { Controller, Path } from 'react-hook-form';
+import { KoodistoSelectOption, Nimi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import {
     AvainKevyestiBoldattu,
     Kentta,
     LomakeButton,
+    NimiKentta,
     Rivi,
     Ruudukko,
     UloinKehys,
@@ -46,42 +47,46 @@ export default function PerustietoLomake({
     rakenne,
     resolvedTyypit,
     getPerustiedotValues,
+    setPerustiedotValue,
 }: UusiOrgPerustiedotProps) {
     const [i18n] = useAtom(languageAtom);
     const [koodistot] = useAtom(koodistotAtom);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     const { yritysmuoto } = getPerustiedotValues();
+    const copyToNames = (field: Path<Nimi>): void => {
+        const perustiedot = getPerustiedotValues();
+        setPerustiedotValue('nimi.sv', perustiedot.nimi?.[field]);
+        setPerustiedotValue('nimi.en', perustiedot.nimi?.[field]);
+    };
     return (
         <UloinKehys>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_SUOMEKSI'}>
-                    <Input
-                        error={!!validationErrors.nimi?.fi}
-                        id={'organisaation_nimiFi'}
-                        {...formRegister('nimi.fi')}
-                        defaultValue={''}
-                    />
-                </Kentta>
+                <NimiKentta
+                    label={'PERUSTIETO_NIMI_SUOMEKSI'}
+                    error={validationErrors.nimi?.fi}
+                    id={'organisaation_nimiFi'}
+                    field={'fi'}
+                    formRegister={formRegister}
+                    copyToNames={copyToNames}
+                />
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_RUOTSIKSI'}>
-                    <Input
-                        error={!!validationErrors.nimi?.sv}
-                        id={'organisaation_nimiSv'}
-                        {...formRegister('nimi.sv')}
-                        defaultValue={''}
-                    />
-                </Kentta>
+                <NimiKentta
+                    label={'PERUSTIETO_NIMI_RUOTSIKSI'}
+                    error={validationErrors.nimi?.sv}
+                    id={'organisaation_nimiSv'}
+                    field={'sv'}
+                    formRegister={formRegister}
+                />
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_ENGLANNIKSI'}>
-                    <Input
-                        error={!!validationErrors.nimi?.en}
-                        id={'organisaation_nimiEn'}
-                        {...formRegister('nimi.en')}
-                        defaultValue={''}
-                    />
-                </Kentta>
+                <NimiKentta
+                    label={'PERUSTIETO_NIMI_ENGLANNIKSI'}
+                    error={validationErrors.nimi?.en}
+                    id={'organisaation_nimiEn'}
+                    field={'en'}
+                    formRegister={formRegister}
+                />
             </Rivi>
             <Rivi>
                 <Kentta isRequired label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>

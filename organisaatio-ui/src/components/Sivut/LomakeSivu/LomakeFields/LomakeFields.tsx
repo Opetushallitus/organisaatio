@@ -3,6 +3,10 @@ import * as React from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
+import IconWrapper from '../../../IconWapper/IconWrapper';
+import { FieldError, Path } from 'react-hook-form';
+import { Nimi } from '../../../../types/types';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props) => <div className={styles.YlaBanneri}>{props.children}</div>;
@@ -54,6 +58,45 @@ const Kentta = ({ label, children, isRequired = false }) => {
         </div>
     );
 };
+const NimiKentta = ({
+    label,
+    id,
+    formRegister,
+    field,
+    error,
+    copyToNames,
+}: {
+    label: string;
+    id: string;
+    field: Path<Nimi>;
+    formRegister: any;
+    error?: FieldError;
+    copyToNames?: (field: Path<Nimi>) => void;
+}) => {
+    const [i18n] = useAtom(languageAtom);
+    return (
+        <Kentta isRequired label={label}>
+            <Input
+                error={!!error}
+                id={id}
+                {...formRegister(`nimi.${field}`)}
+                defaultValue={''}
+                suffix={
+                    copyToNames && (
+                        <div title={i18n.translate('KOPIOI_MUIHIN_NIMIIN')} onClick={() => copyToNames(field)}>
+                            <IconWrapper
+                                icon="ci:copy"
+                                color={'gray'}
+                                height={'1.5rem'}
+                                name={'KOPIOI_MUIHIN_NIMIIN'}
+                            />
+                        </div>
+                    )
+                }
+            />
+        </Kentta>
+    );
+};
 const KenttaLyhyt = ({ label, children, isRequired = false }) => {
     const [i18n] = useAtom(languageAtom);
     return (
@@ -92,6 +135,7 @@ export {
     Rivi,
     Kentta,
     KenttaLyhyt,
+    NimiKentta,
     AvainKevyestiBoldattu,
     ReadOnly,
     ReadOnlyNimi,

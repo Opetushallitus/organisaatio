@@ -1,10 +1,11 @@
 import React from 'react';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { NimenmuutosLomake } from '../../../types/types';
-import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { NimenmuutosLomake, Nimi } from '../../../types/types';
+import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import DatePickerController from '../../Controllers/DatePickerController';
+import { NimiKentta } from '../../Sivut/LomakeSivu/LomakeFields/LomakeFields';
+import { Path } from 'react-hook-form';
 
 type UusiNimiProps = {
     validationErrors: FieldErrors<NimenmuutosLomake>;
@@ -12,34 +13,45 @@ type UusiNimiProps = {
     edit: boolean;
     disabled?: boolean;
     formControl: Control<NimenmuutosLomake>;
+    getValues: UseFormGetValues<NimenmuutosLomake>;
+    setValue: UseFormSetValue<NimenmuutosLomake>;
 };
 
-export default function NimenMuutosFields(props: UusiNimiProps) {
-    const { validationErrors, register, edit, formControl } = props;
+export default function NimenMuutosFields({
+    validationErrors,
+    register,
+    edit,
+    formControl,
+    getValues,
+    setValue,
+}: UusiNimiProps) {
+    const copyToNames = (field: Path<Nimi>): void => {
+        const muutosTiedot = getValues();
+        setValue('nimi.sv', muutosTiedot.nimi?.[field]);
+        setValue('nimi.en', muutosTiedot.nimi?.[field]);
+    };
     return (
         <BodyRivi>
             <BodyKentta>
-                <BodyKentta isRequired label={'LABEL_SUOMEKSI'}>
-                    <Input
-                        error={!!validationErrors['nimi']?.fi}
-                        id={'organisaation_nimiFi'}
-                        {...register('nimi.fi')}
-                    />
-                </BodyKentta>
-                <BodyKentta isRequired label={'LABEL_RUOTSIKSI'}>
-                    <Input
-                        error={!!validationErrors['nimi']?.sv}
-                        id={'organisaation_nimiSv'}
-                        {...register('nimi.sv')}
-                    />
-                </BodyKentta>
-                <BodyKentta isRequired label={'LABEL_ENGLANNIKSI'}>
-                    <Input
-                        error={!!validationErrors['nimi']?.en}
-                        id={'organisaation_nimiEn'}
-                        {...register('nimi.en')}
-                    />
-                </BodyKentta>
+                <NimiKentta
+                    label={'LABEL_SUOMEKSI'}
+                    id={'organisaation_nimiFi'}
+                    field={'fi'}
+                    formRegister={register}
+                    copyToNames={copyToNames}
+                />
+                <NimiKentta
+                    label={'LABEL_RUOTSIKSI'}
+                    id={'organisaation_nimiSv'}
+                    field={'sv'}
+                    formRegister={register}
+                />
+                <NimiKentta
+                    label={'LABEL_ENGLANNIKSI'}
+                    id={'organisaation_nimiEn'}
+                    field={'en'}
+                    formRegister={register}
+                />
             </BodyKentta>
             {!edit && (
                 <BodyRivi>
