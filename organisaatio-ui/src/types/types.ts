@@ -29,6 +29,7 @@ export type KoodistoSelectOption = {
     label: string;
     versio: number;
     isDisabled?: boolean;
+    disabled?: boolean;
 };
 
 export type Nimenmuutostyyppi = 'CREATE' | 'EDIT' | 'DELETE';

@@ -25,7 +25,11 @@ export class KoodistoImpl implements Koodisto {
     }
 
     uri2SelectOption(uri: KoodiUri, disabled = false): KoodistoSelectOption {
-        return { ...this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`)), isDisabled: disabled };
+        return {
+            ...this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`)),
+            isDisabled: disabled,
+            disabled,
+        };
     }
 
     uri2Nimi(uri: KoodiUri): string {

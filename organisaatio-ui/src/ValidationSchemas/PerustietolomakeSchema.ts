@@ -10,6 +10,7 @@ const perustietoOptionSchemaRequired = Joi.object({
     arvo: Joi.string().required(),
     versio: Joi.number().optional(),
     isDisabled: Joi.boolean().optional(),
+    disabled: Joi.boolean().optional(),
 }).required();
 const perustietoOptionSchemaOptional = Joi.object({
     label: Joi.string().allow(''),
@@ -17,6 +18,7 @@ const perustietoOptionSchemaOptional = Joi.object({
     arvo: Joi.string().allow(''),
     versio: Joi.number().optional(),
     isDisabled: Joi.boolean().optional(),
+    disabled: Joi.boolean().optional(),
 });
 const virastoTunnus = Joi.string().pattern(/^\d{6}.*$/);
 
