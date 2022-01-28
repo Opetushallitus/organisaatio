@@ -14,7 +14,6 @@ export class KoodistoImpl implements Koodisto {
         kieli: Language;
         disableOption?: (Koodi) => boolean;
     }) {
-        koodisto.sort((a, b) => a.uri.localeCompare(b.uri));
         this.koodisto = koodisto;
         this.kieli = kieli;
         this.KoodistoOptionValues = koodisto.map((koodi: Koodi) =>
