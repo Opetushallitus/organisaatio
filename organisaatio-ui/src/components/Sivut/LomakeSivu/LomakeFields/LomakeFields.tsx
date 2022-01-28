@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import IconWrapper from '../../../IconWapper/IconWrapper';
-import { FieldError, Path } from 'react-hook-form';
+import { FieldError, Path, UseFormRegisterReturn } from 'react-hook-form';
 import { Nimi } from '../../../../types/types';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
@@ -61,7 +61,7 @@ const Kentta = ({ label, children, isRequired = false }) => {
 const NimiKentta = ({
     label,
     id,
-    formRegister,
+    formRegisterReturn,
     field,
     error,
     copyToNames,
@@ -69,7 +69,7 @@ const NimiKentta = ({
     label: string;
     id: string;
     field: Path<Nimi>;
-    formRegister: any;
+    formRegisterReturn: UseFormRegisterReturn;
     error?: FieldError;
     copyToNames?: (field: Path<Nimi>) => void;
 }) => {
@@ -79,7 +79,7 @@ const NimiKentta = ({
             <Input
                 error={!!error}
                 id={id}
-                {...formRegister(`nimi.${field}`)}
+                {...formRegisterReturn}
                 defaultValue={''}
                 suffix={
                     copyToNames && (

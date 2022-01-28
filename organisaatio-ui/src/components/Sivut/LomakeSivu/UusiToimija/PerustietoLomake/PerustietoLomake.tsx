@@ -66,7 +66,7 @@ export default function PerustietoLomake({
                     error={validationErrors.nimi?.fi}
                     id={'organisaation_nimiFi'}
                     field={'fi'}
-                    formRegister={formRegister}
+                    formRegisterReturn={formRegister('nimi.fi')}
                     copyToNames={copyToNames}
                 />
             </Rivi>
@@ -76,7 +76,7 @@ export default function PerustietoLomake({
                     error={validationErrors.nimi?.sv}
                     id={'organisaation_nimiSv'}
                     field={'sv'}
-                    formRegister={formRegister}
+                    formRegisterReturn={formRegister('nimi.sv')}
                 />
             </Rivi>
             <Rivi>
@@ -85,7 +85,7 @@ export default function PerustietoLomake({
                     error={validationErrors.nimi?.en}
                     id={'organisaation_nimiEn'}
                     field={'en'}
-                    formRegister={formRegister}
+                    formRegisterReturn={formRegister('nimi.en')}
                 />
             </Rivi>
             <Rivi>

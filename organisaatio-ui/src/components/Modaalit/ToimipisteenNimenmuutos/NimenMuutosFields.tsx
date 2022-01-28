@@ -37,20 +37,20 @@ export default function NimenMuutosFields({
                     label={'LABEL_SUOMEKSI'}
                     id={'organisaation_nimiFi'}
                     field={'fi'}
-                    formRegister={register}
+                    formRegisterReturn={register('nimi.fi')}
                     copyToNames={copyToNames}
                 />
                 <NimiKentta
                     label={'LABEL_RUOTSIKSI'}
                     id={'organisaation_nimiSv'}
                     field={'sv'}
-                    formRegister={register}
+                    formRegisterReturn={register('nimi.sv')}
                 />
                 <NimiKentta
                     label={'LABEL_ENGLANNIKSI'}
                     id={'organisaation_nimiEn'}
                     field={'en'}
-                    formRegister={register}
+                    formRegisterReturn={register('nimi.en')}
                 />
             </BodyKentta>
             {!edit && (
