@@ -17,7 +17,7 @@ describe('KoodistoImpl', () => {
             tila: 'LUONNOS' as const,
         },
     ];
-    const impl = new KoodistoImpl(koodit, 'fi');
+    const impl = new KoodistoImpl({ koodisto: koodit, kieli: 'fi' });
 
     it('Finds name using a uri', () => {
         const nimi = impl.uri2Nimi(koodit[0].uri);
@@ -86,7 +86,7 @@ describe('KoodistoImpl no version', () => {
             tila: 'LUONNOS' as const,
         },
     ];
-    const impl = new KoodistoImpl(koodit, 'fi');
+    const impl = new KoodistoImpl({ koodisto: koodit, kieli: 'fi' });
     it('Returns all selectOptions', () => {
         const options = impl.selectOptions();
         expect(options.length).toEqual(2);

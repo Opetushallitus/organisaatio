@@ -1,4 +1,4 @@
-import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import { APIEndpontDate, ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
@@ -19,6 +19,8 @@ export type Koodi = {
     nimi: LocalizableText;
     versio: number;
     tila: 'PASSIIVINEN' | 'LUONNOS' | 'HYVAKSYTTY';
+    voimassaLoppuPvm?: APIEndpontDate;
+    voimassaAlkuPvm?: APIEndpontDate;
 };
 
 export type KoodistoSelectOption = {

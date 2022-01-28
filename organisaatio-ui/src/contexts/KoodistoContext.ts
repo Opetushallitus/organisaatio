@@ -5,11 +5,23 @@ export class KoodistoImpl implements Koodisto {
     private readonly kieli: Language;
     private readonly KoodistoOptionValues: KoodistoSelectOption[];
 
-    constructor(koodisto: Koodi[], kieli: Language) {
-        this.koodisto = koodisto.sort((a, b) => a.uri.localeCompare(b.uri));
+    constructor({
+        koodisto,
+        kieli,
+        disableOption = (koodi) => koodi.tila === 'PASSIIVINEN',
+    }: {
+        koodisto: Koodi[];
+        kieli: Language;
+        disableOption?: (Koodi) => boolean;
+    }) {
+        koodisto.sort((a, b) => a.uri.localeCompare(b.uri));
+        this.koodisto = koodisto;
         this.kieli = kieli;
         this.KoodistoOptionValues = koodisto.map((koodi: Koodi) =>
-            this.uri2SelectOption(koodi.uri, koodi.tila === 'PASSIIVINEN')
+            this.uri2SelectOption(koodi.uri, disableOption(koodi))
+        );
+        this.KoodistoOptionValues.sort((a, b) =>
+            a.isDisabled === b.isDisabled ? a.value.localeCompare(b.value) : a.isDisabled ? 1 : -1
         );
     }
 

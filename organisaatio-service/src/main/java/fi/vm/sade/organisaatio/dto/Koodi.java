@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.dto;
 
 import fi.vm.sade.koodisto.service.types.common.TilaType;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Koodi {
@@ -11,6 +12,8 @@ public class Koodi {
     private int versio;
     public Map<String, String> nimi;
     private TilaType tila;
+    private Date voimassaAlkuPvm;
+    private Date voimassaLoppuPvm;
 
     public Koodi() {
     }
@@ -20,20 +23,13 @@ public class Koodi {
         this.uri = uri;
         this.versio = versio;
     }
+
     public Koodi(String arvo, String uri, int versio, Map<String, String> nimi) {
         this.arvo = arvo;
         this.uri = uri;
         this.versio = versio;
         this.nimi = nimi;
     }
-    public Koodi(String arvo, String uri, int versio, Map<String, String> nimi, TilaType tila) {
-        this.arvo = arvo;
-        this.uri = uri;
-        this.versio = versio;
-        this.nimi = nimi;
-        this.tila = tila;
-    }
-
 
 
     public String getArvo() {
@@ -68,11 +64,27 @@ public class Koodi {
         this.nimi = nimi;
     }
 
+    public void setTila(TilaType tila) {
+        this.tila = tila;
+    }
+
+    public void setVoimassaAlkuPvm(Date voimassaAlkuPvm) {
+        this.voimassaAlkuPvm = voimassaAlkuPvm;
+    }
+
+    public void setVoimassaLoppuPvm(Date voimassaLoppuPvm) {
+        this.voimassaLoppuPvm = voimassaLoppuPvm;
+    }
+
     public TilaType getTila() {
         return tila;
     }
 
-    public void setTila(TilaType tila) {
-        this.tila = tila;
+    public Date getVoimassaAlkuPvm() {
+        return voimassaAlkuPvm;
+    }
+
+    public Date getVoimassaLoppuPvm() {
+        return voimassaLoppuPvm;
     }
 }
