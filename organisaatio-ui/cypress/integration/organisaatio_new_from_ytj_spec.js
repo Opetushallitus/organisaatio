@@ -9,13 +9,13 @@ describe('New organisaatio from YTJ', () => {
     it('shows UUDEN_TOIMIJAN_LISAAMINEN', () => {
         cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('button').contains('LISAA_UUSI_TOIMIJA').click();
-        expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
+        cy.get('h1').contains('UUDEN_TOIMIJAN_LISAAMINEN').should('exist');
         cy.clickRadioOrCheckbox('Koulutustoimija');
         cy.clickButton('HAE_YTJ_TIEDOT');
+        cy.get('button').contains('HAE_YTJTIEDOT').should('exist');
         cy.inputByName('ytjinput', Y_TUNNUS);
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/${Y_TUNNUS}`, { fixture: 'ytjHameen.json' }).as('findYtj');
+        cy.intercept('GET', `${LEGACY_API_CONTEXT}/ytj/${Y_TUNNUS}`, { fixture: 'ytjHameen.json' });
         cy.clickButton('HAE_YTJTIEDOT');
-        cy.wait(['@findYtj'], { timeout: 10000 });
         cy.clickButton('Hameen ammatti');
         cy.clickButton('BUTTON_JATKA');
         cy.clickSaveButton();
@@ -36,7 +36,7 @@ describe('Edit organisaatio from YTJ', () => {
             cy.wait(['@findYtj'], { timeout: 10000 });
             cy.clickButton('Hameen ammatti');
             cy.clickSaveButton();
-            cy.contains('Hameen ammatti-instituutti', { timeout: 10000 }).should('exist');
+            cy.get('h1').contains('Hameen ammatti-instituutti', { timeout: 10000 }).should('exist');
         });
     });
 });
