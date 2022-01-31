@@ -27,7 +27,12 @@ export default function NimenMuutosFields({
     return (
         <BodyRivi>
             <BodyKentta>
-                <NimiGroup error={undefined} register={register} getValues={getValues} setValue={setValue} />
+                <NimiGroup
+                    error={validationErrors.nimi}
+                    register={register}
+                    getValues={getValues}
+                    setValue={setValue}
+                />
             </BodyKentta>
             {!edit && (
                 <BodyRivi>
