@@ -225,7 +225,9 @@ export type DynamicField = {
     when: [{ field: Path<Perustiedot>; is: string }];
     value?: string;
 };
-
+export type KenttaError = {
+    message?: string;
+};
 export type OrganisaatioChildType = {
     type: string;
     disabled?: boolean;

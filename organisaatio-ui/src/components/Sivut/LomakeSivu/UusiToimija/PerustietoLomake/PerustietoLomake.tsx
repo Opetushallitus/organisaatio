@@ -8,7 +8,13 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
-import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import {
+    KenttaError,
+    KoodistoSelectOption,
+    Perustiedot,
+    ResolvedRakenne,
+    Yhteystiedot,
+} from '../../../../../types/types';
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import {
     AvainKevyestiBoldattu,
@@ -84,7 +90,11 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>
+                <Kentta
+                    isRequired
+                    label={'PERUSTIETO_ORGANISAATIOTYYPPI'}
+                    error={validationErrors.organisaatioTyypit as KenttaError[]}
+                >
                     <Controller
                         control={formControl}
                         name={'organisaatioTyypit'}
@@ -102,7 +112,7 @@ export default function PerustietoLomake({
             {rakenne.showYtj && (
                 <>
                     <Rivi>
-                        <Kentta isRequired label={''}>
+                        <Kentta label={''}>
                             <RadioGroup
                                 value={onYunnus.toString()}
                                 options={[
@@ -115,7 +125,7 @@ export default function PerustietoLomake({
                     </Rivi>
                     {onYunnus && (
                         <Rivi>
-                            <Kentta isRequired label="Y-TUNNUS">
+                            <Kentta isRequired label="Y-TUNNUS" error={validationErrors.ytunnus}>
                                 <Input
                                     readOnly={true}
                                     error={!!validationErrors['ytunnus']}
@@ -148,7 +158,7 @@ export default function PerustietoLomake({
             )}
 
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_PERUSTAMISPAIVA'}>
+                <Kentta isRequired label={'PERUSTIETO_PERUSTAMISPAIVA'} error={validationErrors.alkuPvm}>
                     <DatePickerController<Perustiedot>
                         name={'alkuPvm'}
                         form={formControl}
@@ -157,7 +167,11 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
+                <Kentta
+                    isRequired
+                    label={'PERUSTIETO_PAASIJAINTIKUNTA'}
+                    error={validationErrors.kotipaikka as KenttaError}
+                >
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -189,7 +203,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_MAA'}>
+                <Kentta isRequired label={'PERUSTIETO_MAA'} error={validationErrors.maa as KenttaError}>
                     <Controller
                         control={formControl}
                         name={'maa'}
@@ -206,7 +220,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_OPETUSKIELI'}>
+                <Kentta isRequired label={'PERUSTIETO_OPETUSKIELI'} error={validationErrors.kielet as KenttaError}>
                     <Controller
                         control={formControl}
                         name={'kielet'}

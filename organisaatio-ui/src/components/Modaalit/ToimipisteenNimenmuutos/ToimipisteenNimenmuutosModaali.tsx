@@ -1,7 +1,7 @@
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import TNBody from './TNBody';
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { LocalDate, NimenmuutosLomake, UiOrganisaationNimetNimi } from '../../../types/types';
@@ -48,7 +48,6 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         },
         resolver: joiResolver(ToimipisteenNimenmuutosModaaliSchema),
     });
-
     useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (name === 'muutostyyppi') {
