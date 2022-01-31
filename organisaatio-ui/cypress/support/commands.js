@@ -206,3 +206,10 @@ Cypress.Commands.add('editNimi', (prefix = 'testi') => {
     cy.inputByName('nimi.en', `${prefix} Enkku muokattu`);
     cy.clickButton('VAHVISTA');
 });
+Cypress.Commands.add('editNimiWithCopy', (prefix = 'testi') => {
+    cy.clickButton('MUOKKAA_ORGANISAATION_NIMEA');
+    cy.get(`input[value="EDIT"]`).parent().click();
+    cy.inputByName('nimi.fi', `${prefix} Suominimi kopioitava`);
+    cy.get('svg[name="KOPIOI_MUIHIN_NIMIIN"]').click();
+    cy.clickButton('VAHVISTA');
+});

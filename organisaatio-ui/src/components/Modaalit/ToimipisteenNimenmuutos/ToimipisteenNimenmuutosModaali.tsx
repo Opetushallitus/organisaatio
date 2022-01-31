@@ -38,6 +38,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         handleSubmit,
         control: formControl,
         watch,
+        setValue,
     } = useForm<NimenmuutosLomake>({
         defaultValues: {
             nimi: matchingNimi?.nimi || { fi: '', sv: '', en: '' },
@@ -133,6 +134,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                     validationErrors={validationErrors}
                     register={register}
                     formControl={formControl}
+                    setValue={setValue}
                 />
             }
             footer={<Footer tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}
