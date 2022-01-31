@@ -295,6 +295,8 @@ export type RemoteFilters = {
 export type LocalFilters = {
     searchString: string;
     omatOrganisaatiotSelected: boolean;
+    organisaatioTyyppi: SelectOptionType[];
+    oppilaitosTyyppi: SelectOptionType[];
 };
 export type OrganisaatioType =
     | 'opetushallitus'

@@ -12,16 +12,35 @@ import { ApiOrganisaatio } from '../../../types/apiTypes';
 import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
+import Select from '@opetushallitus/virkailija-ui-components/Select';
+import { oppilaitostyyppiKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
+import { SelectOptionType } from '../../../types/types';
+import { ValueType } from 'react-select';
+
+const ORGANISAATIOTYYPPI_OPPILAITOS_VALUE = 'organisaatiotyyppi_02';
 
 const SEARCH_LENGTH = 3;
+
 type HakufiltteritProps = {
     setOrganisaatiot: (data: ApiOrganisaatio[]) => void;
     setLoading: (loading: boolean) => void;
 };
+
+export const mapTyyppiFilter = (
+    selectedOptions: ValueType<SelectOptionType> | ValueType<SelectOptionType>[] | undefined
+): SelectOptionType[] => {
+    return selectedOptions ? ([] as SelectOptionType[]).concat(selectedOptions as SelectOptionType[]) : [];
+};
+
+const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[]) =>
+    !!organisaatioTyyppi.find((ot) => ot.value === ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
+
 export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
     const [i18n] = useAtom(languageAtom);
     const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
     const [localFilters, setLocalFilters] = useAtom(localFiltersAtom);
+    const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
+    const [oppilaitosTyypitKoodisto] = useAtom(oppilaitostyyppiKoodistoAtom);
     useEffect(() => {
         if (remoteFilters.searchString.length >= SEARCH_LENGTH) {
             (async () => {
@@ -37,7 +56,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
     }, [remoteFilters, setLoading, setOrganisaatiot]);
     return (
         <div>
-            <div className={styles.FiltteriContainer}>
+            <div className={styles.FiltteriRivi}>
                 <div className={styles.FiltteriInputOsa}>
                     <Input
                         placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
@@ -84,9 +103,50 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                         {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
                     </Checkbox>
                 </div>
-                <a href={LISATIEDOT_EXTERNAL_URI} className={styles.LisatiedotLinkki}>
-                    ?
-                </a>
+            </div>
+            <div className={styles.FiltteriRivi}>
+                <div className={styles.DropdownContainer}>
+                    <div className={styles.Kentta}>
+                        <label>{i18n.translate('TAULUKKO_ORGANISAATIOTYYPPI')}</label>
+                        <Select
+                            id={'ORGANISAATIOHAKU_TYYPPI_SELECT'}
+                            onChange={(values) => {
+                                const organisaatioTyyppi = mapTyyppiFilter(values);
+                                setLocalFilters({
+                                    ...localFilters,
+                                    organisaatioTyyppi,
+                                    oppilaitosTyyppi: checkIsOppilaitosTyyppiAllowed(organisaatioTyyppi)
+                                        ? localFilters.oppilaitosTyyppi
+                                        : [],
+                                });
+                            }}
+                            isMulti
+                            value={localFilters.organisaatioTyyppi}
+                            options={organisaatioTyypitKoodisto.selectOptions()}
+                        />
+                    </div>
+                    <div className={styles.Kentta}>
+                        <label>{i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}</label>
+                        <Select
+                            id={'ORGANISAATIOHAKU_OPPILAITOSTYYPPI_SELECT'}
+                            onChange={(values) => {
+                                setLocalFilters({
+                                    ...localFilters,
+                                    oppilaitosTyyppi: mapTyyppiFilter(values),
+                                });
+                            }}
+                            isDisabled={!checkIsOppilaitosTyyppiAllowed(localFilters.organisaatioTyyppi)}
+                            isMulti
+                            value={localFilters.oppilaitosTyyppi}
+                            options={oppilaitosTyypitKoodisto.selectOptions()}
+                        />
+                    </div>
+                </div>
+                <div className={styles.LisatiedotLinkkiKentta}>
+                    <a href={LISATIEDOT_EXTERNAL_URI} className={styles.LisatiedotLinkki}>
+                        ?
+                    </a>
+                </div>
             </div>
         </div>
     );

@@ -1,8 +1,13 @@
-.FiltteriContainer {
+.FiltteriRivi {
     display: flex;
     flex-direction: row;
-    padding-bottom: 2rem;
+    padding: 1.5rem 0;
     justify-content: space-between;
+}
+
+.DropdownContainer {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .FiltteriInputOsa {
@@ -20,6 +25,9 @@
 .FiltteriInputOsa > label {
     padding-left: 2rem;
 }
+.LisatiedotLinkkiKentta {
+    padding-top: 1rem;
+}
 
 a.LisatiedotLinkki,
 a.LisatiedotLinkki:visited {
@@ -34,4 +42,9 @@ a.LisatiedotLinkki:visited {
     color: #0a789c;
     font-weight: bolder;
     font-size: 1.7rem;
+}
+
+.Kentta {
+    margin-right: 1rem;
+    width: 26rem;
 }

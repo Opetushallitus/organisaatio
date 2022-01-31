@@ -100,6 +100,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     yritysmuoto?: string;
     ytunnus?: string;
     tyypit: OrganisaatioType[];
+    organisaatiotyypit?: OrganisaatioType[];
     status: string;
     nimet: ApiOrganisaationNimetNimi[];
     kotipaikkaUri: KoodiUri;
