@@ -7,14 +7,14 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
-import { Controller, Path } from 'react-hook-form';
-import { KoodistoSelectOption, Nimi, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
+import { Controller } from 'react-hook-form';
+import { KoodistoSelectOption, Perustiedot, ResolvedRakenne, Yhteystiedot } from '../../../../../types/types';
 import DynamicFields from '../../Koulutustoimija/DynamicFields/DynamicFields';
 import {
     AvainKevyestiBoldattu,
     Kentta,
     LomakeButton,
-    NimiKentta,
+    NimiGroup,
     Rivi,
     Ruudukko,
     UloinKehys,
@@ -53,39 +53,14 @@ export default function PerustietoLomake({
     const [koodistot] = useAtom(koodistotAtom);
     const [onYunnus, setOnYtunnus] = useState<boolean>(true);
     const { yritysmuoto } = getPerustiedotValues();
-    const copyToNames = (field: Path<Nimi>): void => {
-        const perustiedot = getPerustiedotValues();
-        setPerustiedotValue('nimi.sv', perustiedot.nimi?.[field]);
-        setPerustiedotValue('nimi.en', perustiedot.nimi?.[field]);
-    };
     return (
         <UloinKehys>
             <Rivi>
-                <NimiKentta
-                    label={'PERUSTIETO_NIMI_SUOMEKSI'}
-                    error={validationErrors.nimi?.fi}
-                    id={'organisaation_nimiFi'}
-                    field={'fi'}
-                    formRegisterReturn={formRegister('nimi.fi')}
-                    copyToNames={copyToNames}
-                />
-            </Rivi>
-            <Rivi>
-                <NimiKentta
-                    label={'PERUSTIETO_NIMI_RUOTSIKSI'}
-                    error={validationErrors.nimi?.sv}
-                    id={'organisaation_nimiSv'}
-                    field={'sv'}
-                    formRegisterReturn={formRegister('nimi.sv')}
-                />
-            </Rivi>
-            <Rivi>
-                <NimiKentta
-                    label={'PERUSTIETO_NIMI_ENGLANNIKSI'}
-                    error={validationErrors.nimi?.en}
-                    id={'organisaation_nimiEn'}
-                    field={'en'}
-                    formRegisterReturn={formRegister('nimi.en')}
+                <NimiGroup
+                    error={validationErrors.nimi}
+                    register={formRegister}
+                    getValues={getPerustiedotValues}
+                    setValue={setPerustiedotValue}
                 />
             </Rivi>
             <Rivi>

@@ -1,11 +1,10 @@
 import React from 'react';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { NimenmuutosLomake, Nimi } from '../../../types/types';
+import { NimenmuutosLomake } from '../../../types/types';
 import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import DatePickerController from '../../Controllers/DatePickerController';
-import { NimiKentta } from '../../Sivut/LomakeSivu/LomakeFields/LomakeFields';
-import { Path } from 'react-hook-form';
+import { NimiGroup } from '../../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 
 type UusiNimiProps = {
     validationErrors: FieldErrors<NimenmuutosLomake>;
@@ -25,33 +24,10 @@ export default function NimenMuutosFields({
     getValues,
     setValue,
 }: UusiNimiProps) {
-    const copyToNames = (field: Path<Nimi>): void => {
-        const muutosTiedot = getValues();
-        setValue('nimi.sv', muutosTiedot.nimi?.[field]);
-        setValue('nimi.en', muutosTiedot.nimi?.[field]);
-    };
     return (
         <BodyRivi>
             <BodyKentta>
-                <NimiKentta
-                    label={'LABEL_SUOMEKSI'}
-                    id={'organisaation_nimiFi'}
-                    field={'fi'}
-                    formRegisterReturn={register('nimi.fi')}
-                    copyToNames={copyToNames}
-                />
-                <NimiKentta
-                    label={'LABEL_RUOTSIKSI'}
-                    id={'organisaation_nimiSv'}
-                    field={'sv'}
-                    formRegisterReturn={register('nimi.sv')}
-                />
-                <NimiKentta
-                    label={'LABEL_ENGLANNIKSI'}
-                    id={'organisaation_nimiEn'}
-                    field={'en'}
-                    formRegisterReturn={register('nimi.en')}
-                />
+                <NimiGroup error={undefined} register={register} getValues={getValues} setValue={setValue} />
             </BodyKentta>
             {!edit && (
                 <BodyRivi>

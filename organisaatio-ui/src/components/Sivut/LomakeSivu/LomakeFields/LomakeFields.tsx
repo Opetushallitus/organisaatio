@@ -97,6 +97,40 @@ const NimiKentta = ({
         </Kentta>
     );
 };
+const NimiGroup = ({ error, register, getValues, setValue }) => {
+    const copyToNames = (field: Path<Nimi>): void => {
+        const muutosTiedot = getValues();
+        setValue('nimi.sv', muutosTiedot.nimi?.[field]);
+        setValue('nimi.en', muutosTiedot.nimi?.[field]);
+    };
+    return (
+        <>
+            {' '}
+            <NimiKentta
+                label={'LABEL_SUOMEKSI'}
+                error={error?.fi}
+                id={'organisaation_nimiFi'}
+                field={'fi'}
+                formRegisterReturn={register('nimi.fi')}
+                copyToNames={copyToNames}
+            />
+            <NimiKentta
+                label={'LABEL_RUOTSIKSI'}
+                error={error?.sv}
+                id={'organisaation_nimiSv'}
+                field={'sv'}
+                formRegisterReturn={register('nimi.sv')}
+            />
+            <NimiKentta
+                label={'LABEL_ENGLANNIKSI'}
+                error={error?.en}
+                id={'organisaation_nimiEn'}
+                field={'en'}
+                formRegisterReturn={register('nimi.en')}
+            />
+        </>
+    );
+};
 const KenttaLyhyt = ({ label, children, isRequired = false }) => {
     const [i18n] = useAtom(languageAtom);
     return (
@@ -136,6 +170,7 @@ export {
     Kentta,
     KenttaLyhyt,
     NimiKentta,
+    NimiGroup,
     AvainKevyestiBoldattu,
     ReadOnly,
     ReadOnlyNimi,
