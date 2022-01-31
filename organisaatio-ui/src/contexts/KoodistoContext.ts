@@ -1,4 +1,4 @@
-import { Koodi, KoodiArvo, Koodisto, KoodistoSelectOption, KoodiUri, Language } from '../types/types';
+import { Koodi, Koodisto, KoodistoSelectOption, KoodiUri, Language } from '../types/types';
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];
@@ -26,7 +26,7 @@ export class KoodistoImpl implements Koodisto {
 
     uri2SelectOption(uri: KoodiUri, disabled = false): KoodistoSelectOption {
         return {
-            ...this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`)),
+            ...this.nimi((koodi) => koodi.uri === uri),
             isDisabled: disabled,
             disabled,
         };
@@ -38,10 +38,6 @@ export class KoodistoImpl implements Koodisto {
 
     uri2Arvo(uri: KoodiUri): string {
         return this.koodit().find((koodi) => koodi.uri === uri)?.arvo || '';
-    }
-
-    arvo2Nimi(arvo: KoodiArvo): string {
-        return this.nimi((koodi) => koodi.arvo === arvo).label;
     }
 
     arvo2Uri(arvo: string): string {

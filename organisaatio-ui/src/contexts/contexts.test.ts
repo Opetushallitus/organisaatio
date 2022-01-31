@@ -39,16 +39,6 @@ describe('KoodistoImpl', () => {
         expect(nimi).toEqual('');
     });
 
-    it('Finds nimi using koodiarvo', () => {
-        const nimi = impl.arvo2Nimi(koodit[0].arvo);
-        expect(nimi).toEqual(koodit[0].nimi.fi);
-    });
-
-    it('Returns empty nimi when arvo doesnt exist', () => {
-        const nimi = impl.arvo2Nimi('0');
-        expect(nimi).toEqual('');
-    });
-
     it('Returns all koodis', () => {
         const koodit = impl.koodit();
         expect(koodit.length).toEqual(1);
