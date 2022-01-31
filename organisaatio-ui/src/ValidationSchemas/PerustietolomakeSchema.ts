@@ -18,7 +18,9 @@ const perustietoOptionSchemaOptional = Joi.object({
     versio: Joi.number().optional(),
     disabled: Joi.boolean().optional(),
 });
-const virastoTunnus = Joi.string().pattern(/^\d{6}.*$/);
+const virastoTunnus = Joi.string()
+    .pattern(/^\d{6}.*$/)
+    .allow('', null);
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
@@ -37,5 +39,5 @@ export default Joi.object({
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
     piilotettu: Joi.optional(),
     yritysmuoto: Joi.optional(),
-    virastoTunnus: virastoTunnus.optional(),
+    virastoTunnus: virastoTunnus,
 });
