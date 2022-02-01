@@ -3,7 +3,7 @@ ymp='untuvaopintopolku'
 folder='../src/api'
 for koodisto in 'kayttoryhmat' 'kunta' 'maatjavaltiot1' 'oppilaitoksenopetuskieli' 'organisaatiotyyppi' 'posti' 'ryhmantila' 'ryhmatyypit' 'kieli' 'vuosiluokat' 'oppilaitostyyppi' 'vardatoimintamuoto' 'vardakasvatusopillinenjarjestelma' 'vardatoiminnallinenpainotus' 'vardajarjestamismuoto'
 do
-  url="https://virkailija.$ymp.fi/koodisto-service/rest/json/$koodisto/koodi?onlyValidKoodis=true"
+  url="https://virkailija.$ymp.fi/koodisto-service/rest/json/$koodisto/koodi"
   echo fetching $koodisto from $url
   rm -rf $folder/koodisto-service/rest/json/$koodisto
   mkdir -p $folder/koodisto-service/rest/json/$koodisto/koodi

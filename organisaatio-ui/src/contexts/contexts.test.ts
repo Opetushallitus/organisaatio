@@ -14,9 +14,10 @@ describe('KoodistoImpl', () => {
             },
             arvo: '1',
             versio: 1,
+            tila: 'LUONNOS' as const,
         },
     ];
-    const impl = new KoodistoImpl(koodit, 'fi');
+    const impl = new KoodistoImpl({ koodisto: koodit, kieli: 'fi' });
 
     it('Finds name using a uri', () => {
         const nimi = impl.uri2Nimi(koodit[0].uri);
@@ -35,16 +36,6 @@ describe('KoodistoImpl', () => {
 
     it('Returns empty nimi when uri doesnt exist', () => {
         const nimi = impl.uri2Nimi('eioo_1#1');
-        expect(nimi).toEqual('');
-    });
-
-    it('Finds nimi using koodiarvo', () => {
-        const nimi = impl.arvo2Nimi(koodit[0].arvo);
-        expect(nimi).toEqual(koodit[0].nimi.fi);
-    });
-
-    it('Returns empty nimi when arvo doesnt exist', () => {
-        const nimi = impl.arvo2Nimi('0');
         expect(nimi).toEqual('');
     });
 
@@ -71,6 +62,7 @@ describe('KoodistoImpl no version', () => {
             },
             arvo: '1',
             versio: 1,
+            tila: 'LUONNOS' as const,
         },
         {
             uri: 'koodi_10',
@@ -81,9 +73,10 @@ describe('KoodistoImpl no version', () => {
             },
             arvo: '10',
             versio: 1,
+            tila: 'LUONNOS' as const,
         },
     ];
-    const impl = new KoodistoImpl(koodit, 'fi');
+    const impl = new KoodistoImpl({ koodisto: koodit, kieli: 'fi' });
     it('Returns all selectOptions', () => {
         const options = impl.selectOptions();
         expect(options.length).toEqual(2);

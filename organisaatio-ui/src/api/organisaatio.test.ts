@@ -174,15 +174,21 @@ const uiBaseTiedot: UiOrganisaatioBase = {
 
 const uiPerustiedot: Perustiedot = {
     alkuPvm: '10.10.2000',
-    kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, disabled: false }],
-    kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, disabled: false },
-    maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },
-    muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, disabled: false }],
+    kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, isDisabled: false }],
+    kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, isDisabled: false },
+    maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, isDisabled: false },
+    muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, isDisabled: false }],
     organisaatioTyypit: ['organisaatiotyyppi_01'],
-    oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
+    oppilaitosTyyppiUri: {
+        label: 'Peruskoulut',
+        value: 'oppilaitostyyppi_11',
+        arvo: '11',
+        versio: 1,
+        isDisabled: false,
+    },
     oppilaitosKoodi: '',
     muutOppilaitosTyyppiUris: [
-        { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
+        { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, isDisabled: false },
     ],
     vuosiluokat: [],
 };
