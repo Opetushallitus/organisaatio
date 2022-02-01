@@ -11,12 +11,16 @@ const perustietoOptionSchemaRequired = Joi.object({
 })
     .required()
     .options({ allowUnknown: true });
+
 const perustietoOptionSchemaOptional = Joi.object({
     label: Joi.string().allow(''),
     value: Joi.string().allow(''),
     arvo: Joi.string().allow(''),
 }).options({ allowUnknown: true });
-const virastoTunnus = Joi.string().pattern(/^\d{6}.*$/);
+
+const virastoTunnus = Joi.string()
+    .pattern(/^\d{6}.*$/)
+    .allow('', null);
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
@@ -35,5 +39,5 @@ export default Joi.object({
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
     piilotettu: Joi.optional(),
     yritysmuoto: Joi.optional(),
-    virastoTunnus: virastoTunnus.optional(),
+    virastoTunnus: virastoTunnus,
 });
