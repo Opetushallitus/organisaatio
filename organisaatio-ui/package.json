@@ -7,7 +7,7 @@
         "@iconify/icons-fa-solid": "1.1.1",
         "@iconify/react": "3.1.0",
         "@joi/date": "^2.1.0",
-        "@opetushallitus/virkailija-ui-components": "^0.4.5",
+        "@opetushallitus/virkailija-ui-components": "^0.4.6",
         "axios": "^0.21.1",
         "axios-hooks": "1.10.0",
         "joi": "^17.4.0",

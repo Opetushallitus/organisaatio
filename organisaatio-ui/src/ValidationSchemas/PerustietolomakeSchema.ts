@@ -8,16 +8,16 @@ const perustietoOptionSchemaRequired = Joi.object({
     label: Joi.string().required(),
     value: Joi.string().required(),
     arvo: Joi.string().required(),
-    versio: Joi.number().optional(),
-    disabled: Joi.boolean().optional(),
-}).required();
+})
+    .required()
+    .options({ allowUnknown: true });
+
 const perustietoOptionSchemaOptional = Joi.object({
     label: Joi.string().allow(''),
     value: Joi.string().allow(''),
     arvo: Joi.string().allow(''),
-    versio: Joi.number().optional(),
-    disabled: Joi.boolean().optional(),
-});
+}).options({ allowUnknown: true });
+
 const virastoTunnus = Joi.string()
     .pattern(/^\d{6}.*$/)
     .allow('', null);
