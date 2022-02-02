@@ -143,7 +143,12 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                     </div>
                 </div>
                 <div className={styles.LisatiedotLinkkiKentta}>
-                    <a href={LISATIEDOT_EXTERNAL_URI} className={styles.LisatiedotLinkki}>
+                    <a
+                        href={LISATIEDOT_EXTERNAL_URI}
+                        target={'_blank'}
+                        rel={'noreferrer'}
+                        className={styles.LisatiedotLinkki}
+                    >
                         ?
                     </a>
                 </div>

@@ -258,6 +258,7 @@ export default function OrganisaatioHakuTaulukko() {
     return (
         <div>
             <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
+
             {(loading && <Loading />) || (
                 <div className={styles.TaulukkoContainer}>
                     <table {...getTableProps()} className={styles.Taulukko}>

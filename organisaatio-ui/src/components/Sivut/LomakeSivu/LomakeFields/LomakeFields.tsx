@@ -3,6 +3,10 @@ import * as React from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
+import IconWrapper from '../../../IconWapper/IconWrapper';
+import { FieldError, Path, UseFormRegisterReturn } from 'react-hook-form';
+import { Nimi } from '../../../../types/types';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props) => <div className={styles.YlaBanneri}>{props.children}</div>;
@@ -54,6 +58,79 @@ const Kentta = ({ label, children, isRequired = false }) => {
         </div>
     );
 };
+const NimiKentta = ({
+    label,
+    id,
+    formRegisterReturn,
+    field,
+    error,
+    copyToNames,
+}: {
+    label: string;
+    id: string;
+    field: Path<Nimi>;
+    formRegisterReturn: UseFormRegisterReturn;
+    error?: FieldError;
+    copyToNames?: (field: Path<Nimi>) => void;
+}) => {
+    const [i18n] = useAtom(languageAtom);
+    return (
+        <Kentta isRequired label={label}>
+            <Input
+                error={!!error}
+                id={id}
+                {...formRegisterReturn}
+                defaultValue={''}
+                suffix={
+                    copyToNames && (
+                        <div title={i18n.translate('KOPIOI_MUIHIN_NIMIIN')} onClick={() => copyToNames(field)}>
+                            <IconWrapper
+                                icon="ci:copy"
+                                color={'gray'}
+                                height={'1.5rem'}
+                                name={'KOPIOI_MUIHIN_NIMIIN'}
+                            />
+                        </div>
+                    )
+                }
+            />
+        </Kentta>
+    );
+};
+const NimiGroup = ({ error, register, getValues, setValue }) => {
+    const copyToNames = (field: Path<Nimi>): void => {
+        const muutosTiedot = getValues();
+        setValue('nimi.sv', muutosTiedot.nimi?.[field]);
+        setValue('nimi.en', muutosTiedot.nimi?.[field]);
+    };
+    return (
+        <>
+            {' '}
+            <NimiKentta
+                label={'LABEL_SUOMEKSI'}
+                error={error?.fi}
+                id={'organisaation_nimiFi'}
+                field={'fi'}
+                formRegisterReturn={register('nimi.fi')}
+                copyToNames={copyToNames}
+            />
+            <NimiKentta
+                label={'LABEL_RUOTSIKSI'}
+                error={error?.sv}
+                id={'organisaation_nimiSv'}
+                field={'sv'}
+                formRegisterReturn={register('nimi.sv')}
+            />
+            <NimiKentta
+                label={'LABEL_ENGLANNIKSI'}
+                error={error?.en}
+                id={'organisaation_nimiEn'}
+                field={'en'}
+                formRegisterReturn={register('nimi.en')}
+            />
+        </>
+    );
+};
 const KenttaLyhyt = ({ label, children, isRequired = false }) => {
     const [i18n] = useAtom(languageAtom);
     return (
@@ -92,6 +169,8 @@ export {
     Rivi,
     Kentta,
     KenttaLyhyt,
+    NimiKentta,
+    NimiGroup,
     AvainKevyestiBoldattu,
     ReadOnly,
     ReadOnlyNimi,

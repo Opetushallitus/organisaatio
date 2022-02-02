@@ -17,7 +17,7 @@ export default function YTJModaali({ ytunnus, suljeModaali, setters }: ModaaliPr
             header={<Header label={'VALITSE_ORGANISAATIO'} />}
             body={<YTJBody setters={setters} ytunnus={ytunnus} suljeModaali={(nimi) => suljeModaali(nimi)} />}
             footer={<Footer peruutaCallback={suljeModaali} />}
-            suljeCallback={suljeModaali}
+            suljeCallback={() => suljeModaali()}
         />
     );
 }

@@ -1,10 +1,10 @@
 import React from 'react';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { NimenmuutosLomake } from '../../../types/types';
-import { Control, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import DatePickerController from '../../Controllers/DatePickerController';
+import { NimiGroup } from '../../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 
 type UusiNimiProps = {
     validationErrors: FieldErrors<NimenmuutosLomake>;
@@ -12,34 +12,27 @@ type UusiNimiProps = {
     edit: boolean;
     disabled?: boolean;
     formControl: Control<NimenmuutosLomake>;
+    getValues: UseFormGetValues<NimenmuutosLomake>;
+    setValue: UseFormSetValue<NimenmuutosLomake>;
 };
 
-export default function NimenMuutosFields(props: UusiNimiProps) {
-    const { validationErrors, register, edit, formControl } = props;
+export default function NimenMuutosFields({
+    validationErrors,
+    register,
+    edit,
+    formControl,
+    getValues,
+    setValue,
+}: UusiNimiProps) {
     return (
         <BodyRivi>
             <BodyKentta>
-                <BodyKentta isRequired label={'LABEL_SUOMEKSI'}>
-                    <Input
-                        error={!!validationErrors['nimi']?.fi}
-                        id={'organisaation_nimiFi'}
-                        {...register('nimi.fi')}
-                    />
-                </BodyKentta>
-                <BodyKentta isRequired label={'LABEL_RUOTSIKSI'}>
-                    <Input
-                        error={!!validationErrors['nimi']?.sv}
-                        id={'organisaation_nimiSv'}
-                        {...register('nimi.sv')}
-                    />
-                </BodyKentta>
-                <BodyKentta isRequired label={'LABEL_ENGLANNIKSI'}>
-                    <Input
-                        error={!!validationErrors['nimi']?.en}
-                        id={'organisaation_nimiEn'}
-                        {...register('nimi.en')}
-                    />
-                </BodyKentta>
+                <NimiGroup
+                    error={validationErrors.nimi}
+                    register={register}
+                    getValues={getValues}
+                    setValue={setValue}
+                />
             </BodyKentta>
             {!edit && (
                 <BodyRivi>

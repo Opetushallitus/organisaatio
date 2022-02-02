@@ -27,6 +27,7 @@ describe('mappers', () => {
             sv: 'ruotsikuvaus',
         },
         emptyprop: {},
+        tila: 'LUONNOS' as const,
     };
     describe('dropKoodiVersionSuffix', () => {
         it('Drops koodi version suffix #', () => {
@@ -107,10 +108,12 @@ describe('mappers', () => {
             const pastNimi = {
                 nimi: { fi: 'mennyt' },
                 alkuPvm: moment().subtract(1, 'days').format('D.M.yyyy') as LocalDate,
+                version: 0,
             };
             const futureNimi = {
                 nimi: { fi: 'tuleva' },
                 alkuPvm: moment().add(1, 'days').format('D.M.yyyy') as LocalDate,
+                version: 0,
             };
             const expectedPastNimet = [pastNimi];
             const expectedFutureNimet = [futureNimi];

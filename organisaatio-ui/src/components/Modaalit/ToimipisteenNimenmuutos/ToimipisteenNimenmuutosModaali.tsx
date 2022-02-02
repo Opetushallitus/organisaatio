@@ -38,6 +38,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         handleSubmit,
         control: formControl,
         watch,
+        setValue,
     } = useForm<NimenmuutosLomake>({
         defaultValues: {
             nimi: matchingNimi?.nimi || { fi: '', sv: '', en: '' },
@@ -109,10 +110,10 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                 const { nimi: matchNimi, alkuPvm } = foundAmatch
                     ? (findNimiByAlkuPvm(nimet, newAlkuPvm) as UiOrganisaationNimetNimi)
                     : currentNimi;
-                const oldNimi = { nimi: matchNimi, alkuPvm };
-                await updateOrganisaatioNimi(oidValue, oldNimi, newNimi);
+                const oldNimi = { nimi: matchNimi, alkuPvm, version: currentNimi.version };
+                await updateOrganisaatioNimi(oidValue, oldNimi, { ...newNimi, version: currentNimi.version });
             } else if (muutostyyppi === MUUTOSTYYPPI_CREATE) {
-                await createOrganisaatioNimi(oidValue, newNimi);
+                await createOrganisaatioNimi(oidValue, { ...newNimi, version: 0 });
             }
         } finally {
             setIsLoading(false);
@@ -133,6 +134,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                     validationErrors={validationErrors}
                     register={register}
                     formControl={formControl}
+                    setValue={setValue}
                 />
             }
             footer={<Footer tallennaCallback={handleSubmit(handleTallenna)} peruutaCallback={handlePeruuta} />}

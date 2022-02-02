@@ -26,6 +26,7 @@ export type APIOrganisaatioHistoria = {
 export type ApiOrganisaationNimetNimi = {
     nimi: Nimi;
     alkuPvm: APIEndpontDate;
+    version: number;
 };
 
 type YhteystiedotBase = {

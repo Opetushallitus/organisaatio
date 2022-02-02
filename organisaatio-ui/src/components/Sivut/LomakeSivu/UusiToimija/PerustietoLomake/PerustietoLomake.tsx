@@ -14,6 +14,7 @@ import {
     AvainKevyestiBoldattu,
     Kentta,
     LomakeButton,
+    NimiGroup,
     Rivi,
     Ruudukko,
     UloinKehys,
@@ -46,6 +47,7 @@ export default function PerustietoLomake({
     rakenne,
     resolvedTyypit,
     getPerustiedotValues,
+    setPerustiedotValue,
 }: UusiOrgPerustiedotProps) {
     const [i18n] = useAtom(languageAtom);
     const [koodistot] = useAtom(koodistotAtom);
@@ -54,34 +56,12 @@ export default function PerustietoLomake({
     return (
         <UloinKehys>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_SUOMEKSI'}>
-                    <Input
-                        error={!!validationErrors.nimi?.fi}
-                        id={'organisaation_nimiFi'}
-                        {...formRegister('nimi.fi')}
-                        defaultValue={''}
-                    />
-                </Kentta>
-            </Rivi>
-            <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_RUOTSIKSI'}>
-                    <Input
-                        error={!!validationErrors.nimi?.sv}
-                        id={'organisaation_nimiSv'}
-                        {...formRegister('nimi.sv')}
-                        defaultValue={''}
-                    />
-                </Kentta>
-            </Rivi>
-            <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_ENGLANNIKSI'}>
-                    <Input
-                        error={!!validationErrors.nimi?.en}
-                        id={'organisaation_nimiEn'}
-                        {...formRegister('nimi.en')}
-                        defaultValue={''}
-                    />
-                </Kentta>
+                <NimiGroup
+                    error={validationErrors.nimi}
+                    register={formRegister}
+                    getValues={getPerustiedotValues}
+                    setValue={setPerustiedotValue}
+                />
             </Rivi>
             <Rivi>
                 <Kentta isRequired label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>

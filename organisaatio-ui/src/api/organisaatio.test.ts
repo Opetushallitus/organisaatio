@@ -97,7 +97,7 @@ const apiYhteystiedot: ApiYhteystiedot[] = [
     },
 ];
 
-const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Apiyesterday }]; // yesterday
+const apinimet = [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Apiyesterday, version: 0 }]; // yesterday
 
 const apiOrganisaatio: ApiOrganisaatio = {
     alkuPvm: '2000-10-10',
@@ -131,7 +131,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     kotipaikkaUri: 'kunta_1',
     muutKotipaikatUris: ['kunta_2#1'],
     maaUri: 'maa_1',
-    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: '2000-10-10' }],
+    nimet: [{ nimi: { fi: 'uusinimi' }, alkuPvm: '2000-10-10', version: 0 }],
     nimi: { fi: 'uusinimi' },
     lyhytNimi: { fi: 'uusinimi' },
     parentOid: '123.321',
@@ -164,25 +164,31 @@ const uiBaseTiedot: UiOrganisaatioBase = {
     apiOrganisaatio: {} as ApiOrganisaatio,
     oid: '1.2.1',
     parentOid: '123.321',
-    nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday }],
+    nimet: [{ nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday, version: 0 }],
     parentOidPath: '123.321,1.2.1',
     apiYhteystiedot: oldApiyhteystiedot,
-    currentNimi: { nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday },
+    currentNimi: { nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday, version: 0 },
     status: 'AKTIIVINEN',
     nimi: { fi: 'uusinimi' },
 };
 
 const uiPerustiedot: Perustiedot = {
     alkuPvm: '10.10.2000',
-    kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, disabled: false }],
-    kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, disabled: false },
-    maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, disabled: false },
-    muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, disabled: false }],
+    kielet: [{ label: 'suomi', value: 'oppilaitoksenopetuskieli_1', arvo: '1', versio: 1, isDisabled: false }],
+    kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, isDisabled: false },
+    maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, isDisabled: false },
+    muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, isDisabled: false }],
     organisaatioTyypit: ['organisaatiotyyppi_01'],
-    oppilaitosTyyppiUri: { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
+    oppilaitosTyyppiUri: {
+        label: 'Peruskoulut',
+        value: 'oppilaitostyyppi_11',
+        arvo: '11',
+        versio: 1,
+        isDisabled: false,
+    },
     oppilaitosKoodi: '',
     muutOppilaitosTyyppiUris: [
-        { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, disabled: false },
+        { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, isDisabled: false },
     ],
     vuosiluokat: [],
 };

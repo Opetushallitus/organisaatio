@@ -27,14 +27,16 @@ public class OidProvider {
 
 
     public List<String> getSelfAndParentOids(String organisaatioOid) {
-        return Optional.ofNullable(organisaatioFindBusinessService.findById(organisaatioOid))
-                .map(organisaatio -> Optional.ofNullable(organisaatio.getParentOids())
-                        .map(parentOids -> {
-                            List<String> a = new ArrayList<>(parentOids);
-                            a.add(organisaatioOid);
-                            return a;
-                        })
-                        .orElseGet(() -> Arrays.asList(organisaatioOid)))
-                .orElseGet(() -> Arrays.asList(rootOrganisaatioOid, organisaatioOid));
+        return Optional.ofNullable(organisaatioOid).map(oid ->
+                        Optional.ofNullable(organisaatioFindBusinessService.findById(oid))
+                                .map(organisaatio -> Optional.ofNullable(organisaatio.getParentOids())
+                                        .map(parentOids -> {
+                                            List<String> a = new ArrayList<>(parentOids);
+                                            a.add(organisaatioOid);
+                                            return a;
+                                        })
+                                        .orElseGet(() -> Arrays.asList(organisaatioOid)))
+                                .orElseGet(() -> Arrays.asList(rootOrganisaatioOid, organisaatioOid)))
+                .orElseGet(() -> Arrays.asList(rootOrganisaatioOid));
     }
 }
