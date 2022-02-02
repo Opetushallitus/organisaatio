@@ -296,8 +296,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter implements Converter<Organi
         if (s != null) {
             try {
                 if (s.containsKey("kieli") == false) {
-                    // TODO: Kieli missing, what to do
-                    // 1. raise exception, 2. only log, 3. use default 'kielivalikoima_fi'
                     LOG.warn("missing kieli from yhteystieto");
                 }
                 if (s.get("email") != null) {

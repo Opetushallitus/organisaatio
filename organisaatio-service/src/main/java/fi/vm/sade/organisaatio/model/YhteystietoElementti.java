@@ -44,7 +44,6 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
 //    private MonikielinenTeksti nimi2;
 
 
-    // TODO remove after MonikielinenTeksti is enabled
     @NotNull
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
     private String nimi;  // TODO XSS filtteri

@@ -47,7 +47,6 @@ public class TestDataCreator {
 
     public void createInitialTestData() {
 
-        // create initial test organisations - TODO: for testing purposes
         Calendar futureStart = Calendar.getInstance();
         futureStart.set(2013, 5, 29);
         Calendar pastStop = Calendar.getInstance();
