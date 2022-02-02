@@ -42,6 +42,21 @@ export const allOids = (data: ApiOrganisaatio[]) => {
         return [...p, ...subs, c.oid];
     }, []);
 };
+
+export const enrichWithAllOrganisaatioTyypit = (data: ApiOrganisaatio[]) => {
+    const allOrganisaatioTyyppis = (data: ApiOrganisaatio[]) => {
+        return data.reduce((p: string[], c) => {
+            const organisaatiotyypit = c.organisaatiotyypit || [];
+            const subs = !!c.subRows ? allOrganisaatioTyyppis(c.subRows) : [];
+            return [...p, ...subs, ...organisaatiotyypit];
+        }, []);
+    };
+    return data.map((organisaatio) => ({
+        ...organisaatio,
+        allOrganisaatioTyypit: allOrganisaatioTyyppis([organisaatio]),
+    }));
+};
+
 const ExpandIcon = ({ isExpanded }) => {
     if (isExpanded) return <IconWrapper icon={chevronDown} />;
     return <IconWrapper icon={chevronRight} />;
@@ -143,6 +158,7 @@ export default function OrganisaatioHakuTaulukko() {
                 Header: 'containingOids',
                 id: 'containingOids',
                 accessor: (values) => {
+                    console.log('dsada', ...values.parentOidPath.split('/'), ...allOids([values]));
                     return [...values.parentOidPath.split('/'), ...allOids([values])];
                 },
                 hidden: true,

@@ -119,4 +119,31 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     virastoTunnus?: string;
 };
 
+export type OrganisaatioHakuOrganisaatio = OrganisaatioBase & {
+    alkuPvm: APIEndpontDate;
+    lakkautusPvm?: APIEndpontDate;
+    parentOid: string;
+    parentOidPath: string;
+    yritysmuoto?: string;
+    ytunnus?: string;
+    tyypit: OrganisaatioType[];
+    organisaatiotyypit?: OrganisaatioType[];
+    status: string;
+    nimet: ApiOrganisaationNimetNimi[];
+    kotipaikkaUri: KoodiUri;
+    muutKotipaikatUris?: KoodiUri[];
+    maaUri: KoodiUri;
+    kieletUris: KoodiUri[];
+    yhteystiedot: ApiYhteystiedot[];
+    oppilaitosTyyppiUri: KoodiUri;
+    oppilaitosKoodi: string;
+    muutOppilaitosTyyppiUris: string[];
+    vuosiluokat: string[];
+    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
+    piilotettu?: boolean;
+    yhteystietoArvos?: ApiYhteystietoArvo[];
+    subRows?: ApiOrganisaatio[];
+    virastoTunnus?: string;
+};
+
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
