@@ -27,7 +27,9 @@ jest.mock('jotai');
 beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    (useAtom as jest.Mock).mockReturnValue([{ translate: (a) => a, translateNimi: (a) => a, koodit: () => [] }]);
+    (useAtom as jest.Mock).mockReturnValue([
+        { translate: (a) => a, translateNimi: (a) => a, koodit: () => [], selectOptions: () => [] },
+    ]);
 });
 
 afterAll(() => {
