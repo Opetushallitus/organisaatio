@@ -49,7 +49,7 @@
         <log4j.version>2.17.0</log4j.version>
 
         <!-- Database -->
-        <postgresql.version>42.2.5</postgresql.version>
+        <postgresql.version>42.2.25</postgresql.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <hsqldb.version>2.0.0</hsqldb.version>
