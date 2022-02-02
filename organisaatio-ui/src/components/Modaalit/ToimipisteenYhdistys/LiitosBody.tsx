@@ -5,9 +5,10 @@ import { LiitaOrganisaatioon, Option, UiOrganisaatioBase } from '../../../types/
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
-import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { BodyBreak, BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
+import LiitosDescription from './LiitosDescription';
 
 type TSProps = {
     liitaOrganisaatio: LiitaOrganisaatioon;
@@ -27,11 +28,11 @@ export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaat
     if (organisaatiotLoading || organisaatiotError) {
         return <Spin />;
     }
-
     const newParent = organisaatiot.find((o) => o.oid === liitaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
         <BodyKehys>
+            <LiitosDescription sourceOid={organisaatioBase.oid} />
             <BodyRivi>
                 <BodyKentta label={labels.otherOrg}>
                     <Select
@@ -51,6 +52,7 @@ export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaat
                         }}
                     />
                 </BodyKentta>
+                <BodyBreak />
                 <BodyKentta label={labels.liitosPvm}>
                     <DatePickerInput
                         value={liitaOrganisaatio.date}

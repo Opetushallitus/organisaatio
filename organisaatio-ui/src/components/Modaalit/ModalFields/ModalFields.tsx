@@ -5,6 +5,7 @@ import { languageAtom } from '../../../api/lokalisaatio';
 
 const BodyKehys = (props) => <div className={styles.BodyKehys}>{props.children}</div>;
 const BodyRivi = (props) => <div className={styles.BodyRivi}>{props.children}</div>;
+const BodyBreak = () => <div className={styles.break}></div>;
 const BodyKentta = ({
     label,
     children,
@@ -27,4 +28,4 @@ const BodyKentta = ({
     );
 };
 
-export { BodyKehys, BodyRivi, BodyKentta };
+export { BodyKehys, BodyRivi, BodyKentta, BodyBreak };

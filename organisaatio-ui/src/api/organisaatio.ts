@@ -133,25 +133,27 @@ function useOrganisaatioPaivittaja(
 
 async function searchOrganisation({
     searchStr,
+    oid,
     aktiiviset = true,
     lakkautetut = false,
     suunnitellut = true,
 }: {
-    searchStr: string;
+    searchStr?: string;
+    oid?: string;
     aktiiviset?: boolean;
     lakkautetut?: boolean;
     suunnitellut?: boolean;
 }): Promise<ApiOrganisaatio[]> {
-    if (searchStr.length < 3) return [];
+    if (searchStr?.length && searchStr.length < 3) return [];
     const { data } = await Axios.get<{ organisaatiot: ApiOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
             aktiiviset,
             lakkautetut,
             searchStr,
+            oid,
             suunnitellut,
         },
     });
-
     return data.organisaatiot;
 }
 
