@@ -36,7 +36,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 
-//TODO combine permission service tests and make this a proper unit test
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest
