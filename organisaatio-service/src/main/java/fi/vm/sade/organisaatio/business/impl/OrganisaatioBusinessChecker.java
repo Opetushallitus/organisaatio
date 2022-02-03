@@ -173,40 +173,6 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
-    public void checkToimipisteNimiFormat(Organisaatio entity, MonikielinenTeksti parentNimi) {
-        LOG.debug("checkToimipisteNimiFormat");
-        MonikielinenTeksti nimi = entity.getNimi();
-        for (String key : nimi.getValues().keySet()) {
-            String p = parentNimi.getString(key);
-            String n = nimi.getString(key);
-            if (p != null && !p.isEmpty() && n != null) {
-                if (!n.startsWith(p)) {
-                    // TODO: Korjataanko formatti (1), palautetaan virhe (2) vai hyväksytään (3)?
-                    /* 1
-                     // Korjataan nimi oikeaan formaattiin
-                     nimi.addString(key, n.isEmpty() ? p : p + ", " + n);
-                     LOG.debug("Name[" + key + "] fixed from \"" + n + "\" to \"" + nimi.getString(key) + "\".");
-                     */
-                    LOG.warn("Invalid organisation name format: For toimipiste, name must be prefixed with parent name (lang:" + key
-                            + ", name:" + n + ", parentname:" + p + ")");
-                    /* 2
-                    throw new OrganisaatioNameFormatException();
-                    */
-                    /* 3
-                    OK
-                    */
-                } else {
-                    // OK
-                    LOG.debug("Name format OK for lang " + key);
-                }
-            } else {
-                // TODO: Heitetäänkö poikkeus vai hyväksytäänkö?
-                LOG.warn("Organisation name missing: For toimipiste, name must be given in all languages parent name exists (lang:" + key
-                        + ", name:" + n + ", parentname:" + p + ")");
-                //throw new OrganisaatioNameEmptyException();
-            }
-        }
-    }
 
     /*
     Validate min and max dates. Check the suborganisation chain too.
