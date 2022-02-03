@@ -208,15 +208,13 @@ public class OrganisaatioToOrganisaatioRDTOConverter implements Converter<Organi
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        // TODO t.set(s.getYhteystiedot());
         for (Yhteystieto yhteystieto : s.getYhteystiedot()) {
             t.getYhteystiedot().add(convertYhteystietoGeneric(yhteystieto));
         }
 
 
         for (NamedMonikielinenTeksti namedMonikielinenTeksti : s.getValues()) {
-            // TODO how about namedMonikielinenTeksti.getNimi ???
-            t.addByKey(namedMonikielinenTeksti.getKey(), convertMKTToMap(namedMonikielinenTeksti.getValue()));
+             t.addByKey(namedMonikielinenTeksti.getKey(), convertMKTToMap(namedMonikielinenTeksti.getValue()));
         }
 
         return t;

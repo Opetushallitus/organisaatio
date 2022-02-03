@@ -16,8 +16,6 @@
  */
 package fi.vm.sade.organisaatio.repository.impl;
 
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
-import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +33,10 @@ public class YhteystietojenTyyppiRepositoryImpl implements YhteystietojenTyyppiR
     @Autowired
     EntityManager em;
 
-    // TODO rename findLisatietoMetadataForOrganisaatioTyyppis
-    
+
     private static final String QUERY1 =
             "SELECT distinct ol FROM YhteystietojenTyyppi ol " + 
             "join fetch ol.sovellettavatOrganisaatioTyyppis as so WHERE so in (:organisaatioTyyppis)";
-            //"join ol.sovellettavatOrganisaatioTyyppis as so join ol.sovellettavatOppilaitostyyppis as sol WHERE so in (:organisaatioTyyppis) OR sol in (:organisaatioTyyppis)";        
-            //"WHERE ol.sovellettavatOrganisaatioTyyppis in (:organisaatioTyyppis)"     
     private static final String QUERY2 =
             "SELECT distinct ol FROM YhteystietojenTyyppi ol " + 
             "join fetch ol.sovellettavatOppilaitostyyppis as so WHERE so in (:organisaatioTyyppis)";
@@ -49,9 +44,7 @@ public class YhteystietojenTyyppiRepositoryImpl implements YhteystietojenTyyppiR
     @Override
     public List<YhteystietojenTyyppi> findLisatietoMetadataForOrganisaatio(Collection<String> organisaatioTyyppis) {
         
-        // TODO: vaihda käyttämään criteria apia JPA2 jälkeen
         Query query = em.createQuery(QUERY1);
-        // "SELECT ol FROM YhteystietojenTyyppi ol join fetch ol.sovellettavatOrganisaatios as so WHERE so in (:tyypit)");
         query.setParameter("organisaatioTyyppis", organisaatioTyyppis);
         List<YhteystietojenTyyppi> matches = query.getResultList();
         query = em.createQuery(QUERY2);
