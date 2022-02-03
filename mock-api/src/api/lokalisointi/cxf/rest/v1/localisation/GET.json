@@ -9,9 +9,9 @@
         "id": 29076,
         "key": "BUTTON_HAE_YTJ_TIEDOT",
         "locale": "en",
-        "modified": 1639136147028,
+        "modified": 1630991219202,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae"
+        "value": "BUTTON_HAE_YTJ_TIEDOT_EN"
     },
     {
         "accesscount": 0,
@@ -23,9 +23,9 @@
         "id": 29077,
         "key": "BUTTON_JATKA",
         "locale": "en",
-        "modified": 1639136147429,
+        "modified": 1630991219298,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Jatka"
+        "value": "BUTTON_JATKA_EN"
     },
     {
         "accesscount": 0,
@@ -51,9 +51,9 @@
         "id": 29079,
         "key": "BUTTON_PERUUTA",
         "locale": "en",
-        "modified": 1639145027181,
+        "modified": 1630991219302,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sulje tallentamatta"
+        "value": "BUTTON_PERUUTA_EN"
     },
     {
         "accesscount": 0,
@@ -65,9 +65,9 @@
         "id": 29080,
         "key": "BUTTON_SULJE",
         "locale": "en",
-        "modified": 1639145027182,
+        "modified": 1630991219304,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sulje tallentamatta"
+        "value": "BUTTON_SULJE_EN"
     },
     {
         "accesscount": 0,
@@ -79,9 +79,9 @@
         "id": 29081,
         "key": "BUTTON_TALLENNA",
         "locale": "en",
-        "modified": 1639136147428,
+        "modified": 1630991219398,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tallenna"
+        "value": "BUTTON_TALLENNA_EN"
     },
     {
         "accesscount": 0,
@@ -93,9 +93,9 @@
         "id": 29082,
         "key": "BUTTON_VAHVISTA",
         "locale": "en",
-        "modified": 1639136147336,
+        "modified": 1630991219400,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Vahvista muutos"
+        "value": "BUTTON_VAHVISTA_EN"
     },
     {
         "accesscount": 0,
@@ -107,9 +107,9 @@
         "id": 29083,
         "key": "BUTTON_VERSIOHISTORIA",
         "locale": "en",
-        "modified": 1639136147236,
+        "modified": 1630991219403,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e4ivityshistoria"
+        "value": "BUTTON_VERSIOHISTORIA_EN"
     },
     {
         "accesscount": 0,
@@ -135,9 +135,9 @@
         "id": 29085,
         "key": "HAE_YTJTIEDOT",
         "locale": "en",
-        "modified": 1639136147237,
+        "modified": 1630991219501,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae tiedot"
+        "value": "HAE_YTJTIEDOT_EN"
     },
     {
         "accesscount": 0,
@@ -149,23 +149,9 @@
         "id": 29086,
         "key": "LABEL_ENGLANNIKSI",
         "locale": "en",
-        "modified": 1639136147233,
+        "modified": 1630991219618,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Englanniksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474362109,
-        "category": "organisaatio2",
-        "created": 1639474362109,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29838,
-        "key": "LABEL_ERROR_LOADING_DATA",
-        "locale": "en",
-        "modified": 1639474362109,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_ERROR_LOADING_DATA_EN"
+        "value": "LABEL_ENGLANNIKSI_EN"
     },
     {
         "accesscount": 0,
@@ -183,20 +169,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639474362206,
-        "category": "organisaatio2",
-        "created": 1639474362206,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29839,
-        "key": "LABEL_NOT_AVAILABLE",
-        "locale": "en",
-        "modified": 1639474362206,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_NOT_AVAILABLE_EN"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991219622,
         "category": "organisaatio2",
         "created": 1630991219622,
@@ -205,9 +177,9 @@
         "id": 29088,
         "key": "LABEL_OID",
         "locale": "en",
-        "modified": 1639136147436,
+        "modified": 1630991219622,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation OID"
+        "value": "LABEL_OID_EN"
     },
     {
         "accesscount": 0,
@@ -239,34 +211,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639474362210,
-        "category": "organisaatio2",
-        "created": 1639474362210,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29841,
-        "key": "LABEL_PASSIIVINEN",
-        "locale": "en",
-        "modified": 1639655405476,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautettu"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639578290896,
-        "category": "organisaatio2",
-        "created": 1639578290896,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29926,
-        "key": "LABEL_POISTETTU",
-        "locale": "en",
-        "modified": 1639578290896,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatio on poistettu"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991219701,
         "category": "organisaatio2",
         "created": 1630991219701,
@@ -275,9 +219,9 @@
         "id": 29091,
         "key": "LABEL_RUOTSIKSI",
         "locale": "en",
-        "modified": 1639136147139,
+        "modified": 1630991219701,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ruotsiksi"
+        "value": "LABEL_RUOTSIKSI_EN"
     },
     {
         "accesscount": 0,
@@ -289,9 +233,9 @@
         "id": 29092,
         "key": "LABEL_SUOMEKSI",
         "locale": "en",
-        "modified": 1639136146737,
+        "modified": 1630991219703,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Suomeksi"
+        "value": "LABEL_SUOMEKSI_EN"
     },
     {
         "accesscount": 0,
@@ -303,9 +247,9 @@
         "id": 29093,
         "key": "LOMAKE_HISTORIA",
         "locale": "en",
-        "modified": 1639136147240,
+        "modified": 1630991219798,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaationrakenne"
+        "value": "LOMAKE_HISTORIA_EN"
     },
     {
         "accesscount": 0,
@@ -317,23 +261,9 @@
         "id": 29094,
         "key": "LOMAKE_LISAA_UUSI_OPPILAITOS",
         "locale": "en",
-        "modified": 1639644869291,
+        "modified": 1630991219800,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi oppilaitos"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639578435656,
-        "category": "organisaatio2",
-        "created": 1639578435656,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29927,
-        "key": "LOMAKE_LISAA_UUSI_TOIMIJA",
-        "locale": "en",
-        "modified": 1639578435656,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "LOMAKE_LISAA_UUSI_OPPILAITOS_EN"
     },
     {
         "accesscount": 0,
@@ -345,9 +275,9 @@
         "id": 29095,
         "key": "LOMAKE_NIMIHISTORIA",
         "locale": "en",
-        "modified": 1639136147227,
+        "modified": 1630991219802,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimihistoria"
+        "value": "LOMAKE_NIMIHISTORIA_EN"
     },
     {
         "accesscount": 0,
@@ -359,37 +289,9 @@
         "id": 29096,
         "key": "LOMAKE_PERUSTIEDOT",
         "locale": "en",
-        "modified": 1639150655504,
+        "modified": 1630991219804,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Perustiedot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474362405,
-        "category": "organisaatio2",
-        "created": 1639474362405,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29846,
-        "key": "LOMAKE_RAKENNE",
-        "locale": "en",
-        "modified": 1639578513008,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Historia ja rakenne"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474362408,
-        "category": "organisaatio2",
-        "created": 1639474362408,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29847,
-        "key": "LOMAKE_SIIRRA_ORGANISAATIO",
-        "locale": "en",
-        "modified": 1639578539235,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Siirr\u00e4 oppilaitos"
+        "value": "LOMAKE_PERUSTIEDOT_EN"
     },
     {
         "accesscount": 0,
@@ -401,9 +303,9 @@
         "id": 29097,
         "key": "LOMAKE_YHDISTA_ORGANISAATIO",
         "locale": "en",
-        "modified": 1639149977010,
+        "modified": 1630991219900,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhdist\u00e4 oppilaitos"
+        "value": "LOMAKE_YHDISTA_ORGANISAATIO_EN"
     },
     {
         "accesscount": 0,
@@ -415,37 +317,9 @@
         "id": 29098,
         "key": "LOMAKE_YHTEYSTIEDOT",
         "locale": "en",
-        "modified": 1639136147433,
+        "modified": 1630991219903,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhteystiedot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639578617818,
-        "category": "organisaatio2",
-        "created": 1639578617818,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29928,
-        "key": "MESSAGE_LATAUS_ONNISTUI",
-        "locale": "en",
-        "modified": 1639578617818,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lataus onnistui"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639578672218,
-        "category": "organisaatio2",
-        "created": 1639578672218,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29929,
-        "key": "MESSAGE_TALLENNUS_ONNISTUI",
-        "locale": "en",
-        "modified": 1639578672218,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tallennus onnistui"
+        "value": "LOMAKE_YHTEYSTIEDOT_EN"
     },
     {
         "accesscount": 0,
@@ -457,9 +331,9 @@
         "id": 29099,
         "key": "NIMIHISTORIA_NIMEN_VOIMASSAOLO",
         "locale": "en",
-        "modified": 1639136147129,
+        "modified": 1630991219905,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimen alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "NIMIHISTORIA_NIMEN_VOIMASSAOLO_EN"
     },
     {
         "accesscount": 0,
@@ -471,9 +345,9 @@
         "id": 29100,
         "key": "NIMIHISTORIA_NIMI",
         "locale": "en",
-        "modified": 1639136147438,
+        "modified": 1630991219999,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimi"
+        "value": "NIMIHISTORIA_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -485,9 +359,9 @@
         "id": 29101,
         "key": "PERUSTIETO_EI_YTUNNUS",
         "locale": "en",
-        "modified": 1639397966548,
+        "modified": 1630991220058,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ei Y-tunnusta"
+        "value": "PERUSTIETO_EI_YTUNNUS_EN"
     },
     {
         "accesscount": 0,
@@ -499,9 +373,9 @@
         "id": 29117,
         "key": "PERUSTIETO__LAKKAUTUSPAIVA",
         "locale": "en",
-        "modified": 1639136146933,
+        "modified": 1630991220502,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautusp\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "PERUSTIETO__LAKKAUTUSPAIVA_EN"
     },
     {
         "accesscount": 0,
@@ -513,9 +387,9 @@
         "id": 29102,
         "key": "PERUSTIETO_MAA",
         "locale": "en",
-        "modified": 1639136147036,
+        "modified": 1630991220104,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Maa"
+        "value": "PERUSTIETO_MAA_EN"
     },
     {
         "accesscount": 0,
@@ -527,9 +401,9 @@
         "id": 29103,
         "key": "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI",
         "locale": "en",
-        "modified": 1639150875008,
+        "modified": 1630991220114,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkauttaminen"
+        "value": "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI_EN"
     },
     {
         "accesscount": 0,
@@ -541,9 +415,9 @@
         "id": 29104,
         "key": "PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA",
         "locale": "en",
-        "modified": 1639150823039,
+        "modified": 1630991220128,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimenmuutos"
+        "value": "PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA_EN"
     },
     {
         "accesscount": 0,
@@ -555,9 +429,9 @@
         "id": 29105,
         "key": "PERUSTIETO_MUUT_KUNNAT",
         "locale": "en",
-        "modified": 1639136147036,
+        "modified": 1630991220135,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Muut kunnat"
+        "value": "PERUSTIETO_MUUT_KUNNAT_EN"
     },
     {
         "accesscount": 0,
@@ -569,9 +443,9 @@
         "id": 29106,
         "key": "PERUSTIETO_ON_YTUNNUS",
         "locale": "en",
-        "modified": 1639397945548,
+        "modified": 1630991220199,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "On Y-tunnus"
+        "value": "PERUSTIETO_ON_YTUNNUS_EN"
     },
     {
         "accesscount": 0,
@@ -583,9 +457,9 @@
         "id": 29107,
         "key": "PERUSTIETO_OPETUSKIELI",
         "locale": "en",
-        "modified": 1639136147230,
+        "modified": 1630991220203,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Opetuskielet"
+        "value": "PERUSTIETO_OPETUSKIELI_EN"
     },
     {
         "accesscount": 0,
@@ -597,9 +471,9 @@
         "id": 29108,
         "key": "PERUSTIETO_ORGANISAATION_NIMI",
         "locale": "en",
-        "modified": 1639136147335,
+        "modified": 1630991220208,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation nimi"
+        "value": "PERUSTIETO_ORGANISAATION_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -611,9 +485,9 @@
         "id": 29109,
         "key": "PERUSTIETO_ORGANISAATIOTYYPPI",
         "locale": "en",
-        "modified": 1639136147435,
+        "modified": 1630991220210,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
+        "value": "PERUSTIETO_ORGANISAATIOTYYPPI_EN"
     },
     {
         "accesscount": 0,
@@ -625,9 +499,9 @@
         "id": 29110,
         "key": "PERUSTIETO_ORGANISAATIO_TYYPPI",
         "locale": "en",
-        "modified": 1639136147332,
+        "modified": 1630991220300,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
+        "value": "PERUSTIETO_ORGANISAATIO_TYYPPI_EN"
     },
     {
         "accesscount": 0,
@@ -639,9 +513,9 @@
         "id": 29111,
         "key": "PERUSTIETO_PAASIJAINTIKUNTA",
         "locale": "en",
-        "modified": 1639136146837,
+        "modified": 1630991220303,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e4\u00e4sijaintikunta"
+        "value": "PERUSTIETO_PAASIJAINTIKUNTA_EN"
     },
     {
         "accesscount": 0,
@@ -653,9 +527,9 @@
         "id": 29112,
         "key": "PERUSTIETO_PAIVITA_YTJ_TIEDOT",
         "locale": "en",
-        "modified": 1639151024192,
+        "modified": 1630991220305,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e4ivit\u00e4 tiedot YTJ-palvelusta"
+        "value": "PERUSTIETO_PAIVITA_YTJ_TIEDOT_EN"
     },
     {
         "accesscount": 0,
@@ -667,9 +541,9 @@
         "id": 29113,
         "key": "PERUSTIETO_PERUSTAMISPAIVA",
         "locale": "en",
-        "modified": 1639136147437,
+        "modified": 1630991220401,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Perustamisp\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "PERUSTIETO_PERUSTAMISPAIVA_EN"
     },
     {
         "accesscount": 0,
@@ -695,9 +569,9 @@
         "id": 29115,
         "key": "PERUSTIETO_YRITYSMUOTO",
         "locale": "en",
-        "modified": 1639136147536,
+        "modified": 1630991220405,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yritysmuoto"
+        "value": "PERUSTIETO_YRITYSMUOTO_EN"
     },
     {
         "accesscount": 0,
@@ -709,9 +583,9 @@
         "id": 29116,
         "key": "PERUSTIETO_Y_TUNNUS",
         "locale": "en",
-        "modified": 1639136147228,
+        "modified": 1630991220500,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Y-tunnus"
+        "value": "PERUSTIETO_Y_TUNNUS_EN"
     },
     {
         "accesscount": 0,
@@ -723,9 +597,9 @@
         "id": 29118,
         "key": "RAKENNE_ALKUPVM",
         "locale": "en",
-        "modified": 1639136147329,
+        "modified": 1630991220504,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "RAKENNE_ALKUPVM_EN"
     },
     {
         "accesscount": 0,
@@ -737,9 +611,9 @@
         "id": 29119,
         "key": "RAKENNE_LIITOKSET_OTSIKKO",
         "locale": "en",
-        "modified": 1639147020394,
+        "modified": 1630991220600,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation rakenteen muutokset"
+        "value": "RAKENNE_LIITOKSET_OTSIKKO_EN"
     },
     {
         "accesscount": 0,
@@ -751,9 +625,9 @@
         "id": 29120,
         "key": "RAKENNE_LIITOSPVM",
         "locale": "en",
-        "modified": 1639135060773,
+        "modified": 1630991220602,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "RAKENNE_LIITOSPVM_EN"
     },
     {
         "accesscount": 0,
@@ -765,9 +639,9 @@
         "id": 29121,
         "key": "RAKENNE_LIITTYNEET_NIMI",
         "locale": "en",
-        "modified": 1639148187455,
+        "modified": 1630991220604,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "T\u00e4h\u00e4n oppilaitokseen liittyneet oppilaitokset"
+        "value": "RAKENNE_LIITTYNEET_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -779,9 +653,9 @@
         "id": 29122,
         "key": "RAKENNE_LOPPUPVM",
         "locale": "en",
-        "modified": 1639136147142,
+        "modified": 1630991220606,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Loppup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "RAKENNE_LOPPUPVM_EN"
     },
     {
         "accesscount": 0,
@@ -793,9 +667,9 @@
         "id": 29123,
         "key": "RAKENNE_SISALTYVAT_NIMI",
         "locale": "en",
-        "modified": 1639136146933,
+        "modified": 1630991220701,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation nimi"
+        "value": "RAKENNE_SISALTYVAT_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -807,9 +681,9 @@
         "id": 29124,
         "key": "RAKENNE_SISALTYVAT_OTSIKKO",
         "locale": "en",
-        "modified": 1639136147333,
+        "modified": 1630991220703,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sis\u00e4ltyv\u00e4t organisaatiot"
+        "value": "RAKENNE_SISALTYVAT_OTSIKKO_EN"
     },
     {
         "accesscount": 0,
@@ -821,9 +695,9 @@
         "id": 29125,
         "key": "RAKENNE_YHDISTETTY_NIMI",
         "locale": "en",
-        "modified": 1639148033281,
+        "modified": 1630991220705,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhdistetty oppilaitokseen"
+        "value": "RAKENNE_YHDISTETTY_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -835,9 +709,9 @@
         "id": 29126,
         "key": "RAKENNE_YLEMMAN_TASON_NIMI",
         "locale": "en",
-        "modified": 1639136147038,
+        "modified": 1630991220803,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ylemm\u00e4n organisaation nimi"
+        "value": "RAKENNE_YLEMMAN_TASON_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -849,9 +723,9 @@
         "id": 29127,
         "key": "RAKENNE_YLEMMAN_TASON_OTSIKKO",
         "locale": "en",
-        "modified": 1639136147145,
+        "modified": 1630991220805,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ylempi organisaatio"
+        "value": "RAKENNE_YLEMMAN_TASON_OTSIKKO_EN"
     },
     {
         "accesscount": 0,
@@ -863,9 +737,9 @@
         "id": 29128,
         "key": "RYHMAT_AKTIVOI_RYHMA",
         "locale": "en",
-        "modified": 1639136147434,
+        "modified": 1630991220807,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Aktivoi passivoitu ryhm\u00e4"
+        "value": "RYHMAT_AKTIVOI_RYHMA_EN"
     },
     {
         "accesscount": 0,
@@ -877,9 +751,9 @@
         "id": 29129,
         "key": "RYHMAT_HAKU_PLACEHOLDER",
         "locale": "en",
-        "modified": 1639136147333,
+        "modified": 1630991220901,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae ryhm\u00e4"
+        "value": "RYHMAT_HAKU_PLACEHOLDER_EN"
     },
     {
         "accesscount": 0,
@@ -891,9 +765,9 @@
         "id": 29130,
         "key": "RYHMAT_KAIKKI_RYHMAT",
         "locale": "en",
-        "modified": 1639394668758,
+        "modified": 1630991220903,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kaikki ryhm\u00e4t"
+        "value": "RYHMAT_KAIKKI_RYHMAT_EN"
     },
     {
         "accesscount": 0,
@@ -905,9 +779,9 @@
         "id": 29131,
         "key": "RYHMAT_KAYTTOTARKOITUS",
         "locale": "en",
-        "modified": 1639136147334,
+        "modified": 1630991220906,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "K\u00e4ytt\u00f6tarkoitus"
+        "value": "RYHMAT_KAYTTOTARKOITUS_EN"
     },
     {
         "accesscount": 0,
@@ -919,9 +793,9 @@
         "id": 29132,
         "key": "RYHMAT_LISAA_UUSI",
         "locale": "en",
-        "modified": 1639136146745,
+        "modified": 1630991220907,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi ryhm\u00e4"
+        "value": "RYHMAT_LISAA_UUSI_EN"
     },
     {
         "accesscount": 0,
@@ -933,9 +807,9 @@
         "id": 29133,
         "key": "RYHMAT_OTSIKKO",
         "locale": "en",
-        "modified": 1639406378517,
+        "modified": 1630991221004,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yll\u00e4pid\u00e4 ryhmi\u00e4"
+        "value": "RYHMAT_OTSIKKO_EN"
     },
     {
         "accesscount": 0,
@@ -947,9 +821,9 @@
         "id": 29134,
         "key": "RYHMAT_PASSIVOI_RYHMA",
         "locale": "en",
-        "modified": 1639136147326,
+        "modified": 1630991221006,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Passivoi tarpeeton ryhm\u00e4"
+        "value": "RYHMAT_PASSIVOI_RYHMA_EN"
     },
     {
         "accesscount": 0,
@@ -961,9 +835,9 @@
         "id": 29135,
         "key": "RYHMAT_POISTA_RYHMA",
         "locale": "en",
-        "modified": 1639394703542,
+        "modified": 1630991221008,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Poista ryhm\u00e4"
+        "value": "RYHMAT_POISTA_RYHMA_EN"
     },
     {
         "accesscount": 0,
@@ -989,9 +863,9 @@
         "id": 29137,
         "key": "RYHMAT_RYHMA",
         "locale": "en",
-        "modified": 1639394624081,
+        "modified": 1630991221104,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4t"
+        "value": "RYHMAT_RYHMA_EN"
     },
     {
         "accesscount": 0,
@@ -1003,9 +877,9 @@
         "id": 29138,
         "key": "RYHMAT_RYHMAN_KAYTTOTARKOITUS",
         "locale": "en",
-        "modified": 1639136147134,
+        "modified": 1630991221105,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "K\u00e4ytt\u00f6tarkoitus"
+        "value": "RYHMAT_RYHMAN_KAYTTOTARKOITUS_EN"
     },
     {
         "accesscount": 0,
@@ -1017,9 +891,9 @@
         "id": 29139,
         "key": "RYHMAT_RYHMAN_KUVAUS",
         "locale": "en",
-        "modified": 1639136147236,
+        "modified": 1630991221202,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n kuvaus"
+        "value": "RYHMAT_RYHMAN_KUVAUS_EN"
     },
     {
         "accesscount": 0,
@@ -1031,9 +905,9 @@
         "id": 29140,
         "key": "RYHMAT_RYHMAN_NIMI",
         "locale": "en",
-        "modified": 1639136147126,
+        "modified": 1630991221205,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n nimi"
+        "value": "RYHMAT_RYHMAN_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -1045,9 +919,9 @@
         "id": 29141,
         "key": "RYHMAT_RYHMAN_TIEDOT_OTSIKKO",
         "locale": "en",
-        "modified": 1639136147238,
+        "modified": 1630991221207,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n tiedot"
+        "value": "RYHMAT_RYHMAN_TIEDOT_OTSIKKO_EN"
     },
     {
         "accesscount": 0,
@@ -1059,9 +933,9 @@
         "id": 29142,
         "key": "RYHMAT_RYHMAN_TILA",
         "locale": "en",
-        "modified": 1639136147332,
+        "modified": 1630991221209,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tila"
+        "value": "RYHMAT_RYHMAN_TILA_EN"
     },
     {
         "accesscount": 0,
@@ -1073,9 +947,9 @@
         "id": 29143,
         "key": "RYHMAT_RYHMAN_TYYPPI",
         "locale": "en",
-        "modified": 1639136147229,
+        "modified": 1630991221301,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Valitse ryhm\u00e4n tyyppi"
+        "value": "RYHMAT_RYHMAN_TYYPPI_EN"
     },
     {
         "accesscount": 0,
@@ -1087,9 +961,9 @@
         "id": 29144,
         "key": "RYHMAT_RYHMAT_TILA",
         "locale": "en",
-        "modified": 1639136147329,
+        "modified": 1630991221303,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tila"
+        "value": "RYHMAT_RYHMAT_TILA_EN"
     },
     {
         "accesscount": 0,
@@ -1101,9 +975,9 @@
         "id": 29145,
         "key": "TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT",
         "locale": "en",
-        "modified": 1639136147435,
+        "modified": 1630991221305,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "N\u00e4yt\u00e4 passivoidut"
+        "value": "TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT_EN"
     },
     {
         "accesscount": 0,
@@ -1115,9 +989,9 @@
         "id": 29146,
         "key": "TAULUKKO_KAIKKI_ORGANISAATIOT",
         "locale": "en",
-        "modified": 1639146694294,
+        "modified": 1630991221401,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kaikki organisaatiot"
+        "value": "TAULUKKO_KAIKKI_ORGANISAATIOT_EN"
     },
     {
         "accesscount": 0,
@@ -1129,9 +1003,9 @@
         "id": 29147,
         "key": "TAULUKKO_KUNTA",
         "locale": "en",
-        "modified": 1639136147027,
+        "modified": 1630991221403,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kunta"
+        "value": "TAULUKKO_KUNTA_EN"
     },
     {
         "accesscount": 0,
@@ -1143,9 +1017,9 @@
         "id": 29148,
         "key": "TAULUKKO_LISAA_UUSI_TOIMIJA",
         "locale": "en",
-        "modified": 1639151099875,
+        "modified": 1630991221405,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 Y-tunnuksellinen toimija"
+        "value": "TAULUKKO_LISAA_UUSI_TOIMIJA_EN"
     },
     {
         "accesscount": 0,
@@ -1157,9 +1031,9 @@
         "id": 29149,
         "key": "TAULUKKO_NAYTA_SIVULLA",
         "locale": "en",
-        "modified": 1639136147425,
+        "modified": 1630991221501,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "N\u00e4yt\u00e4 sivulla"
+        "value": "TAULUKKO_NAYTA_SIVULLA_EN"
     },
     {
         "accesscount": 0,
@@ -1171,9 +1045,9 @@
         "id": 29150,
         "key": "TAULUKKO_NIMI",
         "locale": "en",
-        "modified": 1639136147232,
+        "modified": 1630991221503,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation nimi"
+        "value": "TAULUKKO_NIMI_EN"
     },
     {
         "accesscount": 0,
@@ -1185,9 +1059,9 @@
         "id": 29151,
         "key": "TAULUKKO_OMAT_ORGANISAATIOT",
         "locale": "en",
-        "modified": 1639146658833,
+        "modified": 1630991221505,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Omat organisaatiot"
+        "value": "TAULUKKO_OMAT_ORGANISAATIOT_EN"
     },
     {
         "accesscount": 0,
@@ -1199,9 +1073,9 @@
         "id": 29152,
         "key": "TAULUKKO_TARKISTUS",
         "locale": "en",
-        "modified": 1639136147238,
+        "modified": 1630991221602,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tarkista tiedot"
+        "value": "TAULUKKO_TARKISTUS_EN"
     },
     {
         "accesscount": 0,
@@ -1213,9 +1087,9 @@
         "id": 29153,
         "key": "TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER",
         "locale": "en",
-        "modified": 1639132192516,
+        "modified": 1630991221605,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae organisaatio"
+        "value": "TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER_EN"
     },
     {
         "accesscount": 0,
@@ -1227,9 +1101,9 @@
         "id": 29154,
         "key": "TAULUKKO_TUNNISTE",
         "locale": "en",
-        "modified": 1639136147434,
+        "modified": 1630991221607,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tunniste"
+        "value": "TAULUKKO_TUNNISTE_EN"
     },
     {
         "accesscount": 0,
@@ -1241,23 +1115,9 @@
         "id": 29155,
         "key": "TAULUKKO_TYYPPI",
         "locale": "en",
-        "modified": 1639136147435,
+        "modified": 1630991221609,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474363510,
-        "category": "organisaatio2",
-        "created": 1639474363510,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29884,
-        "key": "TAULUKKO_TYYPPIX",
-        "locale": "en",
-        "modified": 1639474363510,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "TAULUKKO_TYYPPIX_EN"
+        "value": "TAULUKKO_TYYPPI_EN"
     },
     {
         "accesscount": 0,
@@ -1269,9 +1129,9 @@
         "id": 29156,
         "key": "TOIMIPISTEEN_LAKKAUTUS_PVM",
         "locale": "en",
-        "modified": 1639152138706,
+        "modified": 1630991221705,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautus tulee voimaan annetusta p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4st\u00e4 lukien"
+        "value": "TOIMIPISTEEN_LAKKAUTUS_PVM_EN"
     },
     {
         "accesscount": 0,
@@ -1283,9 +1143,9 @@
         "id": 29157,
         "key": "TOIMIPISTEEN_LAKKAUTUS_TITLE",
         "locale": "en",
-        "modified": 1639150198710,
+        "modified": 1630991221708,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautuksen voimaantulo"
+        "value": "TOIMIPISTEEN_LAKKAUTUS_TITLE_EN"
     },
     {
         "accesscount": 0,
@@ -1759,9 +1619,9 @@
         "id": 29191,
         "key": "UUSI_TOIMIJA_TITLE",
         "locale": "en",
-        "modified": 1639151699759,
+        "modified": 1630991222805,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "UUSI_TOIMIJA_TITLE_EN"
     },
     {
         "accesscount": 0,
@@ -1773,9 +1633,9 @@
         "id": 29192,
         "key": "UUSI_TOIMIJA_TOIMIJA_TITLE",
         "locale": "en",
-        "modified": 1639151699762,
+        "modified": 1630991222807,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "UUSI_TOIMIJA_TOIMIJA_TITLE_EN"
     },
     {
         "accesscount": 0,
@@ -1787,9 +1647,9 @@
         "id": 29193,
         "key": "UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN",
         "locale": "en",
-        "modified": 1639151699762,
+        "modified": 1630991222809,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN_EN"
     },
     {
         "accesscount": 0,
@@ -1801,9 +1661,9 @@
         "id": 29194,
         "key": "VALITSE_ORGANISAATIO",
         "locale": "en",
-        "modified": 1639404123087,
+        "modified": 1630991222904,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae organisaatio YTJ palvelusta"
+        "value": "VALITSE_ORGANISAATIO_EN"
     },
     {
         "accesscount": 0,
@@ -1815,9 +1675,9 @@
         "id": 29195,
         "key": "VERSIOHISTORIA_MUOKATTU_VIIMEKSI",
         "locale": "en",
-        "modified": 1639136146431,
+        "modified": 1630991222906,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Viimeisin p\u00e4ivitys ja p\u00e4ivitt\u00e4j\u00e4"
+        "value": "VERSIOHISTORIA_MUOKATTU_VIIMEKSI_EN"
     },
     {
         "accesscount": 0,
@@ -1871,65 +1731,9 @@
         "id": 29199,
         "key": "YHTEYSTIEDOT_KAYNTIOSOITE",
         "locale": "en",
-        "modified": 1639136146726,
+        "modified": 1630991223015,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "K\u00e4yntiosoite"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639644118028,
-        "category": "organisaatio2",
-        "created": 1639644118028,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29930,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_en",
-        "locale": "en",
-        "modified": 1639644118028,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Muun kieliset yhteystiedot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474363809,
-        "category": "organisaatio2",
-        "created": 1639474363809,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29893,
-        "key": "YHTEYSTIEDOT_NAYTA_MUUT_KIELET",
-        "locale": "en",
-        "modified": 1639474363809,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "YHTEYSTIEDOT_NAYTA_MUUT_KIELET_EN"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639134028178,
-        "category": "organisaatio2",
-        "created": 1639134028178,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29671,
-        "key": "YHTEYSTIEDOT_OTSIKKO_en",
-        "locale": "en",
-        "modified": 1639134028178,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhteystiedot englanniksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474363812,
-        "category": "organisaatio2",
-        "created": 1639474363812,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29894,
-        "key": "YHTEYSTIEDOT_PIILOTA_MUUT_KIELET",
-        "locale": "en",
-        "modified": 1639474363812,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "YHTEYSTIEDOT_PIILOTA_MUUT_KIELET_EN"
+        "value": "YHTEYSTIEDOT_KAYNTIOSOITE_EN"
     },
     {
         "accesscount": 0,
@@ -1941,9 +1745,9 @@
         "id": 29200,
         "key": "YHTEYSTIEDOT_POSTINUMERO",
         "locale": "en",
-        "modified": 1639136146632,
+        "modified": 1630991223105,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postinumero"
+        "value": "YHTEYSTIEDOT_POSTINUMERO_EN"
     },
     {
         "accesscount": 0,
@@ -1955,23 +1759,9 @@
         "id": 29201,
         "key": "YHTEYSTIEDOT_POSTIOSOITE",
         "locale": "en",
-        "modified": 1639136146630,
+        "modified": 1630991223108,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postiosoite"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474363907,
-        "category": "organisaatio2",
-        "created": 1639474363907,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29895,
-        "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE",
-        "locale": "en",
-        "modified": 1639494138889,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postiosoite on eri kun k\u00e4yntiosoite"
+        "value": "YHTEYSTIEDOT_POSTIOSOITE_EN"
     },
     {
         "accesscount": 0,
@@ -1983,9 +1773,9 @@
         "id": 29202,
         "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE",
         "locale": "en",
-        "modified": 1639145118207,
+        "modified": 1630991223113,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postiosoite on sama kun k\u00e4yntiosoite"
+        "value": "YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE_EN"
     },
     {
         "accesscount": 0,
@@ -1997,9 +1787,9 @@
         "id": 29203,
         "key": "YHTEYSTIEDOT_PUHELINNUMERO",
         "locale": "en",
-        "modified": 1639136146728,
+        "modified": 1630991223205,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Puhelinnumero"
+        "value": "YHTEYSTIEDOT_PUHELINNUMERO_EN"
     },
     {
         "accesscount": 0,
@@ -2011,9 +1801,9 @@
         "id": 29204,
         "key": "YHTEYSTIEDOT_SAHKOPOSTIOSOITE",
         "locale": "en",
-        "modified": 1639136146630,
+        "modified": 1630991223207,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "S\u00e4hk\u00f6postiosoite"
+        "value": "YHTEYSTIEDOT_SAHKOPOSTIOSOITE_EN"
     },
     {
         "accesscount": 0,
@@ -2025,9 +1815,9 @@
         "id": 29205,
         "key": "YHTEYSTIEDOT_WWW_OSOITE",
         "locale": "en",
-        "modified": 1639136146731,
+        "modified": 1630991223209,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "www osoite"
+        "value": "YHTEYSTIEDOT_WWW_OSOITE_EN"
     },
     {
         "accesscount": 0,
@@ -2053,9 +1843,9 @@
         "id": 28814,
         "key": "BUTTON_HAE_YTJ_TIEDOT",
         "locale": "fi",
-        "modified": 1638274248009,
+        "modified": 1630991211090,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae"
+        "value": "BUTTON_HAE_YTJ_TIEDOT_FI"
     },
     {
         "accesscount": 0,
@@ -2067,9 +1857,9 @@
         "id": 28815,
         "key": "BUTTON_JATKA",
         "locale": "fi",
-        "modified": 1638443302867,
+        "modified": 1630991211093,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Jatka"
+        "value": "BUTTON_JATKA_FI"
     },
     {
         "accesscount": 0,
@@ -2081,9 +1871,9 @@
         "id": 28816,
         "key": "BUTTON_MUOKKAA_ORGANISAATION_NIMEA",
         "locale": "fi",
-        "modified": 1639476934926,
+        "modified": 1630991211095,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Muokkaa organisaation nime\u00e4"
+        "value": "BUTTON_MUOKKAA_ORGANISAATION_NIMEA_FI"
     },
     {
         "accesscount": 0,
@@ -2095,9 +1885,9 @@
         "id": 28817,
         "key": "BUTTON_PERUUTA",
         "locale": "fi",
-        "modified": 1639145027145,
+        "modified": 1630991211185,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sulje tallentamatta"
+        "value": "BUTTON_PERUUTA_FI"
     },
     {
         "accesscount": 0,
@@ -2109,9 +1899,9 @@
         "id": 28818,
         "key": "BUTTON_SULJE",
         "locale": "fi",
-        "modified": 1639145027154,
+        "modified": 1630991211188,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sulje tallentamatta"
+        "value": "BUTTON_SULJE_FI"
     },
     {
         "accesscount": 0,
@@ -2123,9 +1913,9 @@
         "id": 28819,
         "key": "BUTTON_TALLENNA",
         "locale": "fi",
-        "modified": 1638276619425,
+        "modified": 1630991211190,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tallenna"
+        "value": "BUTTON_TALLENNA_FI"
     },
     {
         "accesscount": 0,
@@ -2137,9 +1927,9 @@
         "id": 28820,
         "key": "BUTTON_VAHVISTA",
         "locale": "fi",
-        "modified": 1638435568218,
+        "modified": 1630991211285,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Vahvista muutos"
+        "value": "BUTTON_VAHVISTA_FI"
     },
     {
         "accesscount": 0,
@@ -2151,9 +1941,9 @@
         "id": 28821,
         "key": "BUTTON_VERSIOHISTORIA",
         "locale": "fi",
-        "modified": 1638435568219,
+        "modified": 1630991211288,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e4ivityshistoria"
+        "value": "BUTTON_VERSIOHISTORIA_FI"
     },
     {
         "accesscount": 0,
@@ -2179,9 +1969,9 @@
         "id": 28823,
         "key": "HAE_YTJTIEDOT",
         "locale": "fi",
-        "modified": 1638274248009,
+        "modified": 1630991211292,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae tiedot"
+        "value": "HAE_YTJTIEDOT_FI"
     },
     {
         "accesscount": 0,
@@ -2193,23 +1983,9 @@
         "id": 28824,
         "key": "LABEL_ENGLANNIKSI",
         "locale": "fi",
-        "modified": 1638442150871,
+        "modified": 1630991211387,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Englanniksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474358201,
-        "category": "organisaatio2",
-        "created": 1639474358201,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29708,
-        "key": "LABEL_ERROR_LOADING_DATA",
-        "locale": "fi",
-        "modified": 1639474358201,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_ERROR_LOADING_DATA_FI"
+        "value": "LABEL_ENGLANNIKSI_FI"
     },
     {
         "accesscount": 0,
@@ -2221,23 +1997,9 @@
         "id": 28825,
         "key": "LABEL_KAYTOSSA",
         "locale": "fi",
-        "modified": 1639493336997,
+        "modified": 1630991211389,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_KAYTOSSA"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474358204,
-        "category": "organisaatio2",
-        "created": 1639474358204,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29709,
-        "key": "LABEL_NOT_AVAILABLE",
-        "locale": "fi",
-        "modified": 1639493336999,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_NOT_AVAILABLE"
+        "value": "LABEL_KAYTOSSA_FI"
     },
     {
         "accesscount": 0,
@@ -2249,9 +2011,9 @@
         "id": 28826,
         "key": "LABEL_OID",
         "locale": "fi",
-        "modified": 1638272592568,
+        "modified": 1630991211486,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation OID"
+        "value": "LABEL_OID_FI"
     },
     {
         "accesscount": 0,
@@ -2283,34 +2045,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639397231360,
-        "category": "organisaatio2",
-        "created": 1639397231360,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29687,
-        "key": "LABEL_PASSIIVINEN",
-        "locale": "fi",
-        "modified": 1639655376834,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautettu"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639402278086,
-        "category": "organisaatio2",
-        "created": 1639402278086,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29691,
-        "key": "LABEL_POISTETTU",
-        "locale": "fi",
-        "modified": 1639402278086,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatio on poistettu"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991211587,
         "category": "organisaatio2",
         "created": 1630991211587,
@@ -2319,9 +2053,9 @@
         "id": 28829,
         "key": "LABEL_RUOTSIKSI",
         "locale": "fi",
-        "modified": 1638442150869,
+        "modified": 1630991211587,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ruotsiksi"
+        "value": "LABEL_RUOTSIKSI_FI"
     },
     {
         "accesscount": 0,
@@ -2333,9 +2067,9 @@
         "id": 28830,
         "key": "LABEL_SUOMEKSI",
         "locale": "fi",
-        "modified": 1638442096628,
+        "modified": 1630991211589,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Suomeksi"
+        "value": "LABEL_SUOMEKSI_FI"
     },
     {
         "accesscount": 0,
@@ -2347,23 +2081,9 @@
         "id": 28831,
         "key": "LOMAKE_HISTORIA",
         "locale": "fi",
-        "modified": 1638273152897,
+        "modified": 1630991211591,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaationrakenne"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639984469048,
-        "category": "organisaatio2",
-        "created": 1639984469048,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29939,
-        "key": "LOMAKE_KOSKI_POSTI",
-        "locale": "fi",
-        "modified": 1639984469048,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "KOSKI-palvelun omien tietojen virheilmoituksen s\u00e4hk\u00f6postiosoite"
+        "value": "LOMAKE_HISTORIA_FI"
     },
     {
         "accesscount": 0,
@@ -2375,37 +2095,9 @@
         "id": 28832,
         "key": "LOMAKE_LISAA_UUSI_OPPILAITOS",
         "locale": "fi",
-        "modified": 1639644869288,
+        "modified": 1630991211593,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi oppilaitos"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130542007,
-        "category": "organisaatio2",
-        "created": 1639130542007,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29637,
-        "key": "LOMAKE_LISAA_UUSI_TOIMIJA",
-        "locale": "fi",
-        "modified": 1639151612626,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1642163719698,
-        "category": "organisaatio2",
-        "created": 1642163719698,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29954,
-        "key": "LOMAKE_MERKITSE_TARKISTUS",
-        "locale": "fi",
-        "modified": 1642163719698,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Tarkista organisaatio"
+        "value": "LOMAKE_LISAA_UUSI_OPPILAITOS_FI"
     },
     {
         "accesscount": 0,
@@ -2417,9 +2109,9 @@
         "id": 28833,
         "key": "LOMAKE_NIMIHISTORIA",
         "locale": "fi",
-        "modified": 1638273152899,
+        "modified": 1630991211687,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimihistoria"
+        "value": "LOMAKE_NIMIHISTORIA_FI"
     },
     {
         "accesscount": 0,
@@ -2431,37 +2123,9 @@
         "id": 28834,
         "key": "LOMAKE_PERUSTIEDOT",
         "locale": "fi",
-        "modified": 1639150655498,
+        "modified": 1630991211689,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Perustiedot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130632886,
-        "category": "organisaatio2",
-        "created": 1639130632886,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29638,
-        "key": "LOMAKE_RAKENNE",
-        "locale": "fi",
-        "modified": 1639150749980,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Historia ja rakenne"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131898569,
-        "category": "organisaatio2",
-        "created": 1639131898569,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29649,
-        "key": "LOMAKE_SIIRRA_ORGANISAATIO",
-        "locale": "fi",
-        "modified": 1639149887966,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Siirr\u00e4 oppilaitos"
+        "value": "LOMAKE_PERUSTIEDOT_FI"
     },
     {
         "accesscount": 0,
@@ -2473,9 +2137,9 @@
         "id": 28835,
         "key": "LOMAKE_YHDISTA_ORGANISAATIO",
         "locale": "fi",
-        "modified": 1639149902629,
+        "modified": 1630991211691,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhdist\u00e4 oppilaitos"
+        "value": "LOMAKE_YHDISTA_ORGANISAATIO_FI"
     },
     {
         "accesscount": 0,
@@ -2487,9 +2151,9 @@
         "id": 28836,
         "key": "LOMAKE_YHTEYSTIEDOT",
         "locale": "fi",
-        "modified": 1638273152905,
+        "modified": 1630991211786,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhteystiedot"
+        "value": "LOMAKE_YHTEYSTIEDOT_FI"
     },
     {
         "accesscount": 0,
@@ -2515,9 +2179,9 @@
         "id": 29303,
         "key": "MESSAGE_TALLENNUS_ONNISTUI",
         "locale": "fi",
-        "modified": 1639146658832,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tallennus onnistui"
+        "modified": 1632150213388,
+        "modifiedBy": "1.2.246.562.24.69633009338",
+        "value": "MESSAGE_TALLENNUS_ONNISTUI_FI"
     },
     {
         "accesscount": 0,
@@ -2529,9 +2193,9 @@
         "id": 28837,
         "key": "NIMIHISTORIA_NIMEN_VOIMASSAOLO",
         "locale": "fi",
-        "modified": 1638275766722,
+        "modified": 1630991211788,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimen alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "NIMIHISTORIA_NIMEN_VOIMASSAOLO_FI"
     },
     {
         "accesscount": 0,
@@ -2543,9 +2207,9 @@
         "id": 28838,
         "key": "NIMIHISTORIA_NIMI",
         "locale": "fi",
-        "modified": 1638275766722,
+        "modified": 1630991211790,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimi"
+        "value": "NIMIHISTORIA_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -2563,62 +2227,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639133022847,
-        "category": "organisaatio2",
-        "created": 1639133022847,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29655,
-        "key": "ORGANISAATIO_SIIRTO_PVM",
-        "locale": "fi",
-        "modified": 1639152209140,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Siirto tulee voimaa annetusta p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4st\u00e4 lukien"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639132472721,
-        "category": "organisaatio2",
-        "created": 1639132472721,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29653,
-        "key": "ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO",
-        "locale": "fi",
-        "modified": 1639491528050,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Siirto tulee voimaa annetusta p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4st\u00e4 lukien"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133517469,
-        "category": "organisaatio2",
-        "created": 1639133517469,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29661,
-        "key": "ORGANISAATIO_YHDISTYS_PVM",
-        "locale": "fi",
-        "modified": 1639152250200,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhdistyminen tulee voimaan annetusta p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4st\u00e4 lukien"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133435946,
-        "category": "organisaatio2",
-        "created": 1639133435946,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29659,
-        "key": "ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO",
-        "locale": "fi",
-        "modified": 1639149767447,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Valitse oppilaitos johon yhdistet\u00e4\u00e4n"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991211886,
         "category": "organisaatio2",
         "created": 1630991211886,
@@ -2627,23 +2235,9 @@
         "id": 28839,
         "key": "PERUSTIETO_EI_YTUNNUS",
         "locale": "fi",
-        "modified": 1639397966329,
+        "modified": 1630991211886,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ei Y-tunnusta"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639492083922,
-        "category": "organisaatio2",
-        "created": 1639492083922,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29907,
-        "key": "PERUSTIETO_LAKKAUTUSPAIVA",
-        "locale": "fi",
-        "modified": 1639492083922,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautusp\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "PERUSTIETO_EI_YTUNNUS_FI"
     },
     {
         "accesscount": 0,
@@ -2655,9 +2249,9 @@
         "id": 28855,
         "key": "PERUSTIETO__LAKKAUTUSPAIVA",
         "locale": "fi",
-        "modified": 1638273325221,
+        "modified": 1630991212387,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautusp\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "PERUSTIETO__LAKKAUTUSPAIVA_FI"
     },
     {
         "accesscount": 0,
@@ -2669,9 +2263,9 @@
         "id": 28840,
         "key": "PERUSTIETO_MAA",
         "locale": "fi",
-        "modified": 1638273325202,
+        "modified": 1630991211888,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Maa"
+        "value": "PERUSTIETO_MAA_FI"
     },
     {
         "accesscount": 0,
@@ -2683,9 +2277,9 @@
         "id": 28841,
         "key": "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI",
         "locale": "fi",
-        "modified": 1639150875000,
+        "modified": 1630991211890,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkauttaminen"
+        "value": "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI_FI"
     },
     {
         "accesscount": 0,
@@ -2697,9 +2291,9 @@
         "id": 28842,
         "key": "PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA",
         "locale": "fi",
-        "modified": 1639150823038,
+        "modified": 1630991211987,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimenmuutos"
+        "value": "PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA_FI"
     },
     {
         "accesscount": 0,
@@ -2711,65 +2305,9 @@
         "id": 28843,
         "key": "PERUSTIETO_MUUT_KUNNAT",
         "locale": "fi",
-        "modified": 1638273647499,
+        "modified": 1630991211989,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Muut kunnat"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133723012,
-        "category": "organisaatio2",
-        "created": 1639133723012,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29667,
-        "key": "PERUSTIETO_MUUT_OPPILAITOSTYYPPI",
-        "locale": "fi",
-        "modified": 1639133723012,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Muut oppilaitostyypit"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130905784,
-        "category": "organisaatio2",
-        "created": 1639130905784,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29641,
-        "key": "PERUSTIETO_NIMI_ENGLANNIKSI",
-        "locale": "fi",
-        "modified": 1639130905784,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimi englanniksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130853881,
-        "category": "organisaatio2",
-        "created": 1639130853881,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29640,
-        "key": "PERUSTIETO_NIMI_RUOTSIKSI",
-        "locale": "fi",
-        "modified": 1639130853881,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimi ruotsiksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130801371,
-        "category": "organisaatio2",
-        "created": 1639130801371,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29639,
-        "key": "PERUSTIETO_NIMI_SUOMEKSI",
-        "locale": "fi",
-        "modified": 1639130801371,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimi suomeksi"
+        "value": "PERUSTIETO_MUUT_KUNNAT_FI"
     },
     {
         "accesscount": 0,
@@ -2781,9 +2319,9 @@
         "id": 28844,
         "key": "PERUSTIETO_ON_YTUNNUS",
         "locale": "fi",
-        "modified": 1639397945540,
+        "modified": 1630991211992,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "On Y-tunnus"
+        "value": "PERUSTIETO_ON_YTUNNUS_FI"
     },
     {
         "accesscount": 0,
@@ -2795,51 +2333,9 @@
         "id": 28845,
         "key": "PERUSTIETO_OPETUSKIELI",
         "locale": "fi",
-        "modified": 1638273325208,
+        "modified": 1630991211994,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Opetuskielet"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133604300,
-        "category": "organisaatio2",
-        "created": 1639133604300,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29663,
-        "key": "PERUSTIETO_OPPILAITOSKOODI",
-        "locale": "fi",
-        "modified": 1639133604300,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tilastokeskuksen oppilaitoskoodi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1640071293391,
-        "category": "organisaatio2",
-        "created": 1640071293391,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29944,
-        "key": "PERUSTIETO_OPPILAITOS_MUUTOKSET",
-        "locale": "fi",
-        "modified": 1640071293391,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Ilmoita oppilaitosta koskevat muutokset t\u00e4st\u00e4 linkist\u00e4"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133677195,
-        "category": "organisaatio2",
-        "created": 1639133677195,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29665,
-        "key": "PERUSTIETO_OPPILAITOSTYYPPI",
-        "locale": "fi",
-        "modified": 1639133677195,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Oppilaitostyyppi"
+        "value": "PERUSTIETO_OPETUSKIELI_FI"
     },
     {
         "accesscount": 0,
@@ -2851,9 +2347,9 @@
         "id": 28846,
         "key": "PERUSTIETO_ORGANISAATION_NIMI",
         "locale": "fi",
-        "modified": 1638273325207,
+        "modified": 1630991212087,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation nimi"
+        "value": "PERUSTIETO_ORGANISAATION_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -2865,9 +2361,9 @@
         "id": 28847,
         "key": "PERUSTIETO_ORGANISAATIOTYYPPI",
         "locale": "fi",
-        "modified": 1638273439036,
+        "modified": 1630991212089,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
+        "value": "PERUSTIETO_ORGANISAATIOTYYPPI_FI"
     },
     {
         "accesscount": 0,
@@ -2879,9 +2375,9 @@
         "id": 28848,
         "key": "PERUSTIETO_ORGANISAATIO_TYYPPI",
         "locale": "fi",
-        "modified": 1638273325215,
+        "modified": 1630991212091,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
+        "value": "PERUSTIETO_ORGANISAATIO_TYYPPI_FI"
     },
     {
         "accesscount": 0,
@@ -2893,9 +2389,9 @@
         "id": 28849,
         "key": "PERUSTIETO_PAASIJAINTIKUNTA",
         "locale": "fi",
-        "modified": 1638273439037,
+        "modified": 1630991212189,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e4\u00e4sijaintikunta"
+        "value": "PERUSTIETO_PAASIJAINTIKUNTA_FI"
     },
     {
         "accesscount": 0,
@@ -2907,9 +2403,9 @@
         "id": 28850,
         "key": "PERUSTIETO_PAIVITA_YTJ_TIEDOT",
         "locale": "fi",
-        "modified": 1639151024192,
+        "modified": 1630991212191,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e4ivit\u00e4 tiedot YTJ-palvelusta"
+        "value": "PERUSTIETO_PAIVITA_YTJ_TIEDOT_FI"
     },
     {
         "accesscount": 0,
@@ -2921,9 +2417,9 @@
         "id": 28851,
         "key": "PERUSTIETO_PERUSTAMISPAIVA",
         "locale": "fi",
-        "modified": 1638273439050,
+        "modified": 1630991212193,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Perustamisp\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "PERUSTIETO_PERUSTAMISPAIVA_FI"
     },
     {
         "accesscount": 0,
@@ -2941,20 +2437,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639480854378,
-        "category": "organisaatio2",
-        "created": 1639480854378,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29698,
-        "key": "PERUSTIETO_VUOSILUOKAT",
-        "locale": "fi",
-        "modified": 1639480854378,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Vuosiluokat"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991212291,
         "category": "organisaatio2",
         "created": 1630991212291,
@@ -2963,9 +2445,9 @@
         "id": 28853,
         "key": "PERUSTIETO_YRITYSMUOTO",
         "locale": "fi",
-        "modified": 1638273647499,
+        "modified": 1630991212291,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yritysmuoto"
+        "value": "PERUSTIETO_YRITYSMUOTO_FI"
     },
     {
         "accesscount": 0,
@@ -2977,23 +2459,9 @@
         "id": 28854,
         "key": "PERUSTIETO_Y_TUNNUS",
         "locale": "fi",
-        "modified": 1639478819652,
+        "modified": 1630991212294,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Y-tunnus"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1640071354752,
-        "category": "organisaatio2",
-        "created": 1640071354752,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29945,
-        "key": "PERUSTIETO_YTUNNUS_MUUTOKSET",
-        "locale": "fi",
-        "modified": 1640071354752,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Ilmoita muutokset YTJ-palveluun t\u00e4st\u00e4 linkist\u00e4."
+        "value": "PERUSTIETO_Y_TUNNUS_FI"
     },
     {
         "accesscount": 0,
@@ -3005,9 +2473,9 @@
         "id": 28856,
         "key": "RAKENNE_ALKUPVM",
         "locale": "fi",
-        "modified": 1638274863443,
+        "modified": 1630991212389,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "RAKENNE_ALKUPVM_FI"
     },
     {
         "accesscount": 0,
@@ -3019,23 +2487,9 @@
         "id": 28857,
         "key": "RAKENNE_LIITOKSET_OTSIKKO",
         "locale": "fi",
-        "modified": 1639147020385,
+        "modified": 1630991212391,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation rakenteen muutokset"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133866694,
-        "category": "organisaatio2",
-        "created": 1639133866694,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29669,
-        "key": "RAKENNE_LIITOKSET_OTSIKKO_FI",
-        "locale": "fi",
-        "modified": 1639133866694,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation muutokset"
+        "value": "RAKENNE_LIITOKSET_OTSIKKO_FI"
     },
     {
         "accesscount": 0,
@@ -3047,23 +2501,9 @@
         "id": 28858,
         "key": "RAKENNE_LIITOSPVM",
         "locale": "fi",
-        "modified": 1639135060765,
+        "modified": 1630991212393,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639134769337,
-        "category": "organisaatio2",
-        "created": 1639134769337,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29672,
-        "key": "RAKENNE_LIITOSPVM_FI",
-        "locale": "fi",
-        "modified": 1639134769337,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alkup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "RAKENNE_LIITOSPVM_FI"
     },
     {
         "accesscount": 0,
@@ -3075,9 +2515,9 @@
         "id": 28859,
         "key": "RAKENNE_LIITTYNEET_NIMI",
         "locale": "fi",
-        "modified": 1639148187450,
+        "modified": 1630991212488,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "T\u00e4h\u00e4n oppilaitokseen liittyneet oppilaitokset"
+        "value": "RAKENNE_LIITTYNEET_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -3089,9 +2529,9 @@
         "id": 28860,
         "key": "RAKENNE_LOPPUPVM",
         "locale": "fi",
-        "modified": 1638274863444,
+        "modified": 1630991212491,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Loppup\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "value": "RAKENNE_LOPPUPVM_FI"
     },
     {
         "accesscount": 0,
@@ -3103,9 +2543,9 @@
         "id": 28861,
         "key": "RAKENNE_SISALTYVAT_NIMI",
         "locale": "fi",
-        "modified": 1638275896448,
+        "modified": 1630991212492,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation nimi"
+        "value": "RAKENNE_SISALTYVAT_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -3117,9 +2557,9 @@
         "id": 28862,
         "key": "RAKENNE_SISALTYVAT_OTSIKKO",
         "locale": "fi",
-        "modified": 1638275896449,
+        "modified": 1630991212587,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sis\u00e4ltyv\u00e4t organisaatiot"
+        "value": "RAKENNE_SISALTYVAT_OTSIKKO_FI"
     },
     {
         "accesscount": 0,
@@ -3131,9 +2571,9 @@
         "id": 28863,
         "key": "RAKENNE_YHDISTETTY_NIMI",
         "locale": "fi",
-        "modified": 1639148274624,
+        "modified": 1630991212590,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "T\u00e4m\u00e4 oppilaitos on yhdistetty oppilaitokseen"
+        "value": "RAKENNE_YHDISTETTY_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -3145,9 +2585,9 @@
         "id": 28864,
         "key": "RAKENNE_YLEMMAN_TASON_NIMI",
         "locale": "fi",
-        "modified": 1638276449405,
+        "modified": 1630991212592,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ylemm\u00e4n organisaation nimi"
+        "value": "RAKENNE_YLEMMAN_TASON_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -3159,9 +2599,9 @@
         "id": 28865,
         "key": "RAKENNE_YLEMMAN_TASON_OTSIKKO",
         "locale": "fi",
-        "modified": 1639144650860,
+        "modified": 1630991212687,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ylin organisaatio"
+        "value": "RAKENNE_YLEMMAN_TASON_OTSIKKO_FI"
     },
     {
         "accesscount": 0,
@@ -3173,9 +2613,9 @@
         "id": 28866,
         "key": "RYHMAT_AKTIVOI_RYHMA",
         "locale": "fi",
-        "modified": 1638442426018,
+        "modified": 1630991212690,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Aktivoi passivoitu ryhm\u00e4"
+        "value": "RYHMAT_AKTIVOI_RYHMA_FI"
     },
     {
         "accesscount": 0,
@@ -3187,9 +2627,9 @@
         "id": 28867,
         "key": "RYHMAT_HAKU_PLACEHOLDER",
         "locale": "fi",
-        "modified": 1638441780283,
+        "modified": 1630991212691,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae ryhm\u00e4"
+        "value": "RYHMAT_HAKU_PLACEHOLDER_FI"
     },
     {
         "accesscount": 0,
@@ -3201,9 +2641,9 @@
         "id": 28868,
         "key": "RYHMAT_KAIKKI_RYHMAT",
         "locale": "fi",
-        "modified": 1639394668750,
+        "modified": 1630991212693,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kaikki ryhm\u00e4t"
+        "value": "RYHMAT_KAIKKI_RYHMAT_FI"
     },
     {
         "accesscount": 0,
@@ -3215,9 +2655,9 @@
         "id": 28869,
         "key": "RYHMAT_KAYTTOTARKOITUS",
         "locale": "fi",
-        "modified": 1638441949430,
+        "modified": 1630991212788,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "K\u00e4ytt\u00f6tarkoitus"
+        "value": "RYHMAT_KAYTTOTARKOITUS_FI"
     },
     {
         "accesscount": 0,
@@ -3229,9 +2669,9 @@
         "id": 28870,
         "key": "RYHMAT_LISAA_UUSI",
         "locale": "fi",
-        "modified": 1638441780282,
+        "modified": 1630991212790,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi ryhm\u00e4"
+        "value": "RYHMAT_LISAA_UUSI_FI"
     },
     {
         "accesscount": 0,
@@ -3243,9 +2683,9 @@
         "id": 28871,
         "key": "RYHMAT_OTSIKKO",
         "locale": "fi",
-        "modified": 1639405391600,
+        "modified": 1630991212792,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yll\u00e4pid\u00e4 ryhmi\u00e4"
+        "value": "RYHMAT_OTSIKKO_FI"
     },
     {
         "accesscount": 0,
@@ -3257,9 +2697,9 @@
         "id": 28872,
         "key": "RYHMAT_PASSIVOI_RYHMA",
         "locale": "fi",
-        "modified": 1638442327886,
+        "modified": 1630991212888,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Passivoi tarpeeton ryhm\u00e4"
+        "value": "RYHMAT_PASSIVOI_RYHMA_FI"
     },
     {
         "accesscount": 0,
@@ -3271,9 +2711,9 @@
         "id": 28873,
         "key": "RYHMAT_POISTA_RYHMA",
         "locale": "fi",
-        "modified": 1639394703535,
+        "modified": 1630991212890,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Poista ryhm\u00e4"
+        "value": "RYHMAT_POISTA_RYHMA_FI"
     },
     {
         "accesscount": 0,
@@ -3285,9 +2725,9 @@
         "id": 28874,
         "key": "RYHMAT_POISTO_VARMISTUSTEKSTI",
         "locale": "fi",
-        "modified": 1639464539598,
+        "modified": 1630991212892,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Haluatko varmasti poistaa ryhm\u00e4n?"
+        "value": "RYHMAT_POISTO_VARMISTUSTEKSTI_FI"
     },
     {
         "accesscount": 0,
@@ -3299,9 +2739,9 @@
         "id": 28875,
         "key": "RYHMAT_RYHMA",
         "locale": "fi",
-        "modified": 1639405444728,
+        "modified": 1630991212988,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yll\u00e4pid\u00e4 ryhmi\u00e4"
+        "value": "RYHMAT_RYHMA_FI"
     },
     {
         "accesscount": 0,
@@ -3313,9 +2753,9 @@
         "id": 28876,
         "key": "RYHMAT_RYHMAN_KAYTTOTARKOITUS",
         "locale": "fi",
-        "modified": 1638441819318,
+        "modified": 1630991212990,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "K\u00e4ytt\u00f6tarkoitus"
+        "value": "RYHMAT_RYHMAN_KAYTTOTARKOITUS_FI"
     },
     {
         "accesscount": 0,
@@ -3327,9 +2767,9 @@
         "id": 28877,
         "key": "RYHMAT_RYHMAN_KUVAUS",
         "locale": "fi",
-        "modified": 1638442205269,
+        "modified": 1630991212992,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n kuvaus"
+        "value": "RYHMAT_RYHMAN_KUVAUS_FI"
     },
     {
         "accesscount": 0,
@@ -3341,9 +2781,9 @@
         "id": 28878,
         "key": "RYHMAT_RYHMAN_NIMI",
         "locale": "fi",
-        "modified": 1638441780290,
+        "modified": 1630991212994,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n nimi"
+        "value": "RYHMAT_RYHMAN_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -3355,9 +2795,9 @@
         "id": 28879,
         "key": "RYHMAT_RYHMAN_TIEDOT_OTSIKKO",
         "locale": "fi",
-        "modified": 1638442045070,
+        "modified": 1630991213088,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n tiedot"
+        "value": "RYHMAT_RYHMAN_TIEDOT_OTSIKKO_FI"
     },
     {
         "accesscount": 0,
@@ -3369,9 +2809,9 @@
         "id": 28880,
         "key": "RYHMAT_RYHMAN_TILA",
         "locale": "fi",
-        "modified": 1638441949430,
+        "modified": 1630991213090,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tila"
+        "value": "RYHMAT_RYHMAN_TILA_FI"
     },
     {
         "accesscount": 0,
@@ -3383,9 +2823,9 @@
         "id": 28881,
         "key": "RYHMAT_RYHMAN_TYYPPI",
         "locale": "fi",
-        "modified": 1639396694080,
+        "modified": 1630991213092,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ryhm\u00e4n tyyppi"
+        "value": "RYHMAT_RYHMAN_TYYPPI_FI"
     },
     {
         "accesscount": 0,
@@ -3397,23 +2837,9 @@
         "id": 28882,
         "key": "RYHMAT_RYHMAT_TILA",
         "locale": "fi",
-        "modified": 1638441819321,
+        "modified": 1630991213189,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tila"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1642162046866,
-        "category": "organisaatio2",
-        "created": 1642162046866,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29952,
-        "key": "TARKASTUS_PUUTTUU",
-        "locale": "fi",
-        "modified": 1642162046866,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Tarkastusp\u00e4iv\u00e4m\u00e4\u00e4r\u00e4 puuttuu organisaatiolta"
+        "value": "RYHMAT_RYHMAT_TILA_FI"
     },
     {
         "accesscount": 0,
@@ -3425,23 +2851,9 @@
         "id": 28883,
         "key": "TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT",
         "locale": "fi",
-        "modified": 1638272517895,
+        "modified": 1630991213191,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "N\u00e4yt\u00e4 passivoidut"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1642080016946,
-        "category": "organisaatio2",
-        "created": 1642080016946,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29951,
-        "key": "TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT",
-        "locale": "fi",
-        "modified": 1642080016946,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Vain omat organisaatiot"
+        "value": "TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT_FI"
     },
     {
         "accesscount": 0,
@@ -3453,9 +2865,9 @@
         "id": 28884,
         "key": "TAULUKKO_KAIKKI_ORGANISAATIOT",
         "locale": "fi",
-        "modified": 1639146694286,
+        "modified": 1630991213193,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kaikki organisaatiot"
+        "value": "TAULUKKO_KAIKKI_ORGANISAATIOT_FI"
     },
     {
         "accesscount": 0,
@@ -3467,9 +2879,9 @@
         "id": 28885,
         "key": "TAULUKKO_KUNTA",
         "locale": "fi",
-        "modified": 1638272517893,
+        "modified": 1630991213289,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kunta"
+        "value": "TAULUKKO_KUNTA_FI"
     },
     {
         "accesscount": 0,
@@ -3481,9 +2893,9 @@
         "id": 28886,
         "key": "TAULUKKO_LISAA_UUSI_TOIMIJA",
         "locale": "fi",
-        "modified": 1639151099869,
+        "modified": 1630991213292,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 Y-tunnuksellinen toimija"
+        "value": "TAULUKKO_LISAA_UUSI_TOIMIJA_FI"
     },
     {
         "accesscount": 0,
@@ -3495,9 +2907,9 @@
         "id": 28887,
         "key": "TAULUKKO_NAYTA_SIVULLA",
         "locale": "fi",
-        "modified": 1638272886019,
+        "modified": 1630991213293,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "N\u00e4yt\u00e4 sivulla"
+        "value": "TAULUKKO_NAYTA_SIVULLA_FI"
     },
     {
         "accesscount": 0,
@@ -3509,9 +2921,9 @@
         "id": 28888,
         "key": "TAULUKKO_NIMI",
         "locale": "fi",
-        "modified": 1638272517897,
+        "modified": 1630991213390,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaation nimi"
+        "value": "TAULUKKO_NIMI_FI"
     },
     {
         "accesscount": 0,
@@ -3523,23 +2935,9 @@
         "id": 28889,
         "key": "TAULUKKO_OMAT_ORGANISAATIOT",
         "locale": "fi",
-        "modified": 1639146658820,
+        "modified": 1630991213393,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Omat organisaatiot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1642079986525,
-        "category": "organisaatio2",
-        "created": 1642079986525,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29950,
-        "key": "TAULUKKO_ORGANISAATIOT",
-        "locale": "fi",
-        "modified": 1642079986525,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Hae Organisaatioita"
+        "value": "TAULUKKO_OMAT_ORGANISAATIOT_FI"
     },
     {
         "accesscount": 0,
@@ -3551,9 +2949,9 @@
         "id": 28890,
         "key": "TAULUKKO_TARKISTUS",
         "locale": "fi",
-        "modified": 1638272517905,
+        "modified": 1630991213395,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tarkista tiedot"
+        "value": "TAULUKKO_TARKISTUS_FI"
     },
     {
         "accesscount": 0,
@@ -3565,9 +2963,9 @@
         "id": 28891,
         "key": "TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER",
         "locale": "fi",
-        "modified": 1638272517903,
+        "modified": 1630991213396,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae organisaatio"
+        "value": "TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER_FI"
     },
     {
         "accesscount": 0,
@@ -3579,9 +2977,9 @@
         "id": 28892,
         "key": "TAULUKKO_TUNNISTE",
         "locale": "fi",
-        "modified": 1638272517906,
+        "modified": 1630991213489,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Tunniste"
+        "value": "TAULUKKO_TUNNISTE_FI"
     },
     {
         "accesscount": 0,
@@ -3593,23 +2991,9 @@
         "id": 28893,
         "key": "TAULUKKO_TYYPPI",
         "locale": "fi",
-        "modified": 1638272517915,
+        "modified": 1630991213491,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474359601,
-        "category": "organisaatio2",
-        "created": 1639474359601,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29754,
-        "key": "TAULUKKO_TYYPPIX",
-        "locale": "fi",
-        "modified": 1639492333076,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaatiotyyppi"
+        "value": "TAULUKKO_TYYPPI_FI"
     },
     {
         "accesscount": 0,
@@ -3621,9 +3005,9 @@
         "id": 28894,
         "key": "TOIMIPISTEEN_LAKKAUTUS_PVM",
         "locale": "fi",
-        "modified": 1639152138701,
+        "modified": 1630991213493,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautus tulee voimaan annetusta p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4st\u00e4 lukien"
+        "value": "TOIMIPISTEEN_LAKKAUTUS_PVM_FI"
     },
     {
         "accesscount": 0,
@@ -3635,9 +3019,9 @@
         "id": 28895,
         "key": "TOIMIPISTEEN_LAKKAUTUS_TITLE",
         "locale": "fi",
-        "modified": 1639150198710,
+        "modified": 1630991213590,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautuksen voimaantulo"
+        "value": "TOIMIPISTEEN_LAKKAUTUS_TITLE_FI"
     },
     {
         "accesscount": 0,
@@ -3649,51 +3033,9 @@
         "id": 28896,
         "key": "TOIMIPISTEEN_NIMENMUUTOS_TITLE",
         "locale": "fi",
-        "modified": 1639150823039,
+        "modified": 1630991213592,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimenmuutos"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639138647685,
-        "category": "organisaatio2",
-        "created": 1639138647685,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29675,
-        "key": "TOIMIPISTEEN_NIMENMUUTOS_TITLE_FI",
-        "locale": "fi",
-        "modified": 1639150823042,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Nimenmuutos"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639490986312,
-        "category": "organisaatio2",
-        "created": 1639490986312,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29905,
-        "key": "TOIMIPISTEEN_NIMENMUUTOS_TITLE_SV",
-        "locale": "fi",
-        "modified": 1639491038423,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namnbyte"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639132272426,
-        "category": "organisaatio2",
-        "created": 1639132272426,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29651,
-        "key": "TOIMIPISTEEN_SIIRTO_TITLE",
-        "locale": "fi",
-        "modified": 1639491439053,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Oppilaitoksen ja mahdollisten toimipisteiden siirto uudelle yll\u00e4pit\u00e4j\u00e4lle"
+        "value": "TOIMIPISTEEN_NIMENMUUTOS_TITLE_FI"
     },
     {
         "accesscount": 0,
@@ -3711,59 +3053,437 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639400344363,
+        "accessed": 1630991213594,
         "category": "organisaatio2",
-        "created": 1639400344363,
+        "created": 1630991213594,
         "createdBy": "1.2.246.562.24.39768521067",
         "force": false,
-        "id": 29690,
-        "key": "TOIMIPISTEEN_SIIRTO_VAHVISTUS_TITLE",
+        "id": 28897,
+        "key": "TYYPIT_KAIKKI",
         "locale": "fi",
-        "modified": 1639400344363,
+        "modified": 1630991213594,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Oppilaitoksen ja sen mahdollisten toimipisteiden siirto uudelle toimijalle"
+        "value": "TYYPIT_KAIKKI_FI"
     },
     {
         "accesscount": 0,
-        "accessed": 1639133251670,
+        "accessed": 1630991213689,
         "category": "organisaatio2",
-        "created": 1639133251670,
+        "created": 1630991213689,
         "createdBy": "1.2.246.562.24.39768521067",
         "force": false,
-        "id": 29657,
-        "key": "TOIMIPISTEEN_YHDISTYS_TITLE",
+        "id": 28898,
+        "key": "TYYPIT_KAIKKI_LISATIETOTYYPIT",
         "locale": "fi",
-        "modified": 1639402421962,
+        "modified": 1630991213689,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Oppilaitoksen ja mahdollisten toimipisteiden yhdist\u00e4minen toiseen oppilaitokseen"
+        "value": "TYYPIT_KAIKKI_LISATIETOTYYPIT_FI"
     },
     {
         "accesscount": 0,
-        "accessed": 1639483298831,
+        "accessed": 1630991213691,
         "category": "organisaatio2",
-        "created": 1639483298831,
-        "createdBy": "1.2.246.562.24.69633009338",
+        "created": 1630991213691,
+        "createdBy": "1.2.246.562.24.39768521067",
         "force": false,
-        "id": 29897,
-        "key": "TOIMIPISTEEN_YHDISTYS_VAHVISTUS_{from}_TO_{to}",
+        "id": 28899,
+        "key": "TYYPIT_KAIKKI_YHTEYSTIETOTYYPIT",
         "locale": "fi",
-        "modified": 1639483298831,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "TOIMIPISTEEN_YHDISTYS_VAHVISTUS_{from}_TO_{to}"
+        "modified": 1630991213691,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_KAIKKI_YHTEYSTIETOTYYPIT_FI"
     },
     {
         "accesscount": 0,
-        "accessed": 1639399393639,
+        "accessed": 1630991213794,
         "category": "organisaatio2",
-        "created": 1639399393639,
+        "created": 1630991213794,
         "createdBy": "1.2.246.562.24.39768521067",
         "force": false,
-        "id": 29689,
-        "key": "TOIMIPISTEEN_YHDISTYS_VAHVISTUS_TITLE",
+        "id": 28903,
+        "key": "TYYPIT_LIS\u00c4TIETOTYYPIT_LISAA_UUSI",
         "locale": "fi",
-        "modified": 1639399393639,
+        "modified": 1630991213794,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Oppilaitoksen ja sen mahdollisten toimipisteiden yhdist\u00e4minen"
+        "value": "TYYPIT_LIS\u00c4TIETOTYYPIT_LISAA_UUSI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213889,
+        "category": "organisaatio2",
+        "created": 1630991213889,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28904,
+        "key": "TYYPIT_LIS\u00c4TIETOTYYPIT_OTSIKKO",
+        "locale": "fi",
+        "modified": 1630991213889,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_LIS\u00c4TIETOTYYPIT_OTSIKKO_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213693,
+        "category": "organisaatio2",
+        "created": 1630991213693,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28900,
+        "key": "TYYPIT_LISATIETOTYYPPI",
+        "locale": "fi",
+        "modified": 1630991213693,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_LISATIETOTYYPPI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213790,
+        "category": "organisaatio2",
+        "created": 1630991213790,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28901,
+        "key": "TYYPIT_LISATIETOTYYPPI_LISAA_UUSI_OTSIKKO",
+        "locale": "fi",
+        "modified": 1630991213790,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_LISATIETOTYYPPI_LISAA_UUSI_OTSIKKO_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213792,
+        "category": "organisaatio2",
+        "created": 1630991213792,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28902,
+        "key": "TYYPIT_LISATIETOTYYPPI_NIMI",
+        "locale": "fi",
+        "modified": 1630991213792,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_LISATIETOTYYPPI_NIMI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213891,
+        "category": "organisaatio2",
+        "created": 1630991213891,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28905,
+        "key": "TYYPIT_NIMI",
+        "locale": "fi",
+        "modified": 1630991213891,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_NIMI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213893,
+        "category": "organisaatio2",
+        "created": 1630991213893,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28906,
+        "key": "TYYPIT_NIMITIEDOT_NIMI",
+        "locale": "fi",
+        "modified": 1630991213893,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_NIMITIEDOT_NIMI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213895,
+        "category": "organisaatio2",
+        "created": 1630991213895,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28907,
+        "key": "TYYPIT_NIMITIEDOT_NIMIKE",
+        "locale": "fi",
+        "modified": 1630991213895,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_NIMITIEDOT_NIMIKE_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213990,
+        "category": "organisaatio2",
+        "created": 1630991213990,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28908,
+        "key": "TYYPIT_OPPILAITOSTYYPIT",
+        "locale": "fi",
+        "modified": 1630991213990,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_OPPILAITOSTYYPIT_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213992,
+        "category": "organisaatio2",
+        "created": 1630991213992,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28909,
+        "key": "TYYPIT_OSOITTEET_KAYNTIOSOITE",
+        "locale": "fi",
+        "modified": 1630991213992,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_OSOITTEET_KAYNTIOSOITE_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991213994,
+        "category": "organisaatio2",
+        "created": 1630991213994,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28910,
+        "key": "TYYPIT_OSOITTEET_LISAA_UUSI",
+        "locale": "fi",
+        "modified": 1630991213994,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_OSOITTEET_LISAA_UUSI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214091,
+        "category": "organisaatio2",
+        "created": 1630991214091,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28911,
+        "key": "TYYPIT_OSOITTEET_POSTIOSOITE",
+        "locale": "fi",
+        "modified": 1630991214091,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_OSOITTEET_POSTIOSOITE_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214098,
+        "category": "organisaatio2",
+        "created": 1630991214098,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28912,
+        "key": "TYYPIT_OSOITTEET_ULKOMAAN_OSOITE",
+        "locale": "fi",
+        "modified": 1630991214098,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_OSOITTEET_ULKOMAAN_OSOITE_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214104,
+        "category": "organisaatio2",
+        "created": 1630991214104,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28913,
+        "key": "TYYPIT_RAJATUT_OPPILAITOSTYYPIT",
+        "locale": "fi",
+        "modified": 1630991214104,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_RAJATUT_OPPILAITOSTYYPIT_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214190,
+        "category": "organisaatio2",
+        "created": 1630991214190,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28914,
+        "key": "TYYPIT_SAHKOISET_LISAA_UUSI",
+        "locale": "fi",
+        "modified": 1630991214190,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_SAHKOISET_LISAA_UUSI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214192,
+        "category": "organisaatio2",
+        "created": 1630991214192,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28915,
+        "key": "TYYPIT_SAHKOISET_SAHKOPOSTIOSOITE",
+        "locale": "fi",
+        "modified": 1630991214192,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_SAHKOISET_SAHKOPOSTIOSOITE_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214194,
+        "category": "organisaatio2",
+        "created": 1630991214194,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28916,
+        "key": "TYYPIT_SAHKOISET_WWW_OSOITE",
+        "locale": "fi",
+        "modified": 1630991214194,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_SAHKOISET_WWW_OSOITE_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214290,
+        "category": "organisaatio2",
+        "created": 1630991214290,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28917,
+        "key": "TYYPIT_SALLITUT_OPPILAITOSTYYPIT",
+        "locale": "fi",
+        "modified": 1630991214290,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_SALLITUT_OPPILAITOSTYYPIT_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214292,
+        "category": "organisaatio2",
+        "created": 1630991214292,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28918,
+        "key": "TYYPIT_TARVITTAVAT_NIMITIEDOT",
+        "locale": "fi",
+        "modified": 1630991214292,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_TARVITTAVAT_NIMITIEDOT_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214294,
+        "category": "organisaatio2",
+        "created": 1630991214294,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28919,
+        "key": "TYYPIT_TARVITTAVAT_OSOITTEET",
+        "locale": "fi",
+        "modified": 1630991214294,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_TARVITTAVAT_OSOITTEET_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214391,
+        "category": "organisaatio2",
+        "created": 1630991214391,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28920,
+        "key": "TYYPIT_TARVITTAVAT_SAHKOISET_YHTEYSTIEDOT",
+        "locale": "fi",
+        "modified": 1630991214391,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_TARVITTAVAT_SAHKOISET_YHTEYSTIEDOT_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214393,
+        "category": "organisaatio2",
+        "created": 1630991214393,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28921,
+        "key": "TYYPIT_UUDEN_LISATIETOTYYPIN_LISAAMINEN",
+        "locale": "fi",
+        "modified": 1630991214393,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_UUDEN_LISATIETOTYYPIN_LISAAMINEN_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214396,
+        "category": "organisaatio2",
+        "created": 1630991214396,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28922,
+        "key": "TYYPIT_UUDEN_YHTEYSTIETOTYYPIN_LISAAMINEN",
+        "locale": "fi",
+        "modified": 1630991214396,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_UUDEN_YHTEYSTIETOTYYPIN_LISAAMINEN_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214493,
+        "category": "organisaatio2",
+        "created": 1630991214493,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28923,
+        "key": "TYYPIT_YHTEYSTIETOTYYPIT_LISAA_UUSI",
+        "locale": "fi",
+        "modified": 1630991214493,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_YHTEYSTIETOTYYPIT_LISAA_UUSI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214495,
+        "category": "organisaatio2",
+        "created": 1630991214495,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28924,
+        "key": "TYYPIT_YHTEYSTIETOTYYPIT_OTSIKKO",
+        "locale": "fi",
+        "modified": 1630991214495,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_YHTEYSTIETOTYYPIT_OTSIKKO_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214496,
+        "category": "organisaatio2",
+        "created": 1630991214496,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28925,
+        "key": "TYYPIT_YHTEYSTIETOTYYPPI",
+        "locale": "fi",
+        "modified": 1630991214496,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_YHTEYSTIETOTYYPPI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214592,
+        "category": "organisaatio2",
+        "created": 1630991214592,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28926,
+        "key": "TYYPIT_YHTEYSTIETOTYYPPI_NIMI",
+        "locale": "fi",
+        "modified": 1630991214592,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_YHTEYSTIETOTYYPPI_NIMI_FI"
+    },
+    {
+        "accesscount": 0,
+        "accessed": 1630991214594,
+        "category": "organisaatio2",
+        "created": 1630991214594,
+        "createdBy": "1.2.246.562.24.39768521067",
+        "force": false,
+        "id": 28927,
+        "key": "TYYPIT_YHTEYSTIETOTYYPPI_TIEDOT_OTSIKKO",
+        "locale": "fi",
+        "modified": 1630991214594,
+        "modifiedBy": "1.2.246.562.24.39768521067",
+        "value": "TYYPIT_YHTEYSTIETOTYYPPI_TIEDOT_OTSIKKO_FI"
     },
     {
         "accesscount": 0,
@@ -3789,9 +3509,9 @@
         "id": 28929,
         "key": "UUSI_TOIMIJA_TITLE",
         "locale": "fi",
-        "modified": 1639151699748,
+        "modified": 1630991214598,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "UUSI_TOIMIJA_TITLE_FI"
     },
     {
         "accesscount": 0,
@@ -3803,9 +3523,9 @@
         "id": 28930,
         "key": "UUSI_TOIMIJA_TOIMIJA_TITLE",
         "locale": "fi",
-        "modified": 1639151699747,
+        "modified": 1630991214691,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "UUSI_TOIMIJA_TOIMIJA_TITLE_FI"
     },
     {
         "accesscount": 0,
@@ -3817,9 +3537,9 @@
         "id": 28931,
         "key": "UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN",
         "locale": "fi",
-        "modified": 1639151699755,
+        "modified": 1630991214693,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lis\u00e4\u00e4 uusi organisaatio"
+        "value": "UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN_FI"
     },
     {
         "accesscount": 0,
@@ -3831,9 +3551,9 @@
         "id": 28932,
         "key": "VALITSE_ORGANISAATIO",
         "locale": "fi",
-        "modified": 1639404123084,
+        "modified": 1630991214695,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae organisaatio YTJ palvelusta"
+        "value": "VALITSE_ORGANISAATIO_FI"
     },
     {
         "accesscount": 0,
@@ -3845,23 +3565,9 @@
         "id": 28933,
         "key": "VERSIOHISTORIA_MUOKATTU_VIIMEKSI",
         "locale": "fi",
-        "modified": 1638436171490,
+        "modified": 1630991214791,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Viimeisin p\u00e4ivitys ja p\u00e4ivitt\u00e4j\u00e4"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1642162078770,
-        "category": "organisaatio2",
-        "created": 1642162078770,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29953,
-        "key": "VIIMEINEN_TARKASTUS_{tarkastusPvm}",
-        "locale": "fi",
-        "modified": 1642162078770,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "Viimenen tarkastus tehty {tarkastusPvm}"
+        "value": "VERSIOHISTORIA_MUOKATTU_VIIMEKSI_FI"
     },
     {
         "accesscount": 0,
@@ -3915,79 +3621,9 @@
         "id": 28937,
         "key": "YHTEYSTIEDOT_KAYNTIOSOITE",
         "locale": "fi",
-        "modified": 1638276077987,
+        "modified": 1630991214893,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "K\u00e4yntiosoite"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639136224809,
-        "category": "organisaatio2",
-        "created": 1639136224809,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29674,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_en",
-        "locale": "fi",
-        "modified": 1639644024062,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Muun kieliset yhteystiedot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131155082,
-        "category": "organisaatio2",
-        "created": 1639131155082,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29645,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_fi",
-        "locale": "fi",
-        "modified": 1639131155082,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhteystiedot suomeksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131190173,
-        "category": "organisaatio2",
-        "created": 1639131190173,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29646,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_sv",
-        "locale": "fi",
-        "modified": 1639131190173,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhteystiedot ruotsiksi"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639144897193,
-        "category": "organisaatio2",
-        "created": 1639144897193,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29677,
-        "key": "YHTEYSTIEDOT_NAYTA_MUUT_KIELET",
-        "locale": "fi",
-        "modified": 1639144897193,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "N\u00e4yt\u00e4 muun kieliset osoitteet"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639146035007,
-        "category": "organisaatio2",
-        "created": 1639146035006,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29679,
-        "key": "YHTEYSTIEDOT_PIILOTA_MUUT_KIELET",
-        "locale": "fi",
-        "modified": 1639488782147,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Piilota muunkieliset yhteystiedot"
+        "value": "YHTEYSTIEDOT_KAYNTIOSOITE_FI"
     },
     {
         "accesscount": 0,
@@ -3999,23 +3635,9 @@
         "id": 28938,
         "key": "YHTEYSTIEDOT_POSTINUMERO",
         "locale": "fi",
-        "modified": 1638274568845,
+        "modified": 1630991214895,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postinumero"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639146478815,
-        "category": "organisaatio2",
-        "created": 1639146478815,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29682,
-        "key": "YHTEYSTIEDOT_POSTINUMERO'",
-        "locale": "fi",
-        "modified": 1639146478815,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postinumero"
+        "value": "YHTEYSTIEDOT_POSTINUMERO_FI"
     },
     {
         "accesscount": 0,
@@ -4027,37 +3649,9 @@
         "id": 28939,
         "key": "YHTEYSTIEDOT_POSTIOSOITE",
         "locale": "fi",
-        "modified": 1638274568847,
+        "modified": 1630991214991,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postiosoite"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639145713503,
-        "category": "organisaatio2",
-        "created": 1639145713503,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29678,
-        "key": "YHTEYSTIEDOT_POSTIOSOITE_MUU",
-        "locale": "fi",
-        "modified": 1639146122381,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Yhteystiedot"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639146327600,
-        "category": "organisaatio2",
-        "created": 1639146327600,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29681,
-        "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE",
-        "locale": "fi",
-        "modified": 1639494138887,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postiosoite on eri kun k\u00e4yntiosoite"
+        "value": "YHTEYSTIEDOT_POSTIOSOITE_FI"
     },
     {
         "accesscount": 0,
@@ -4069,9 +3663,9 @@
         "id": 28940,
         "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE",
         "locale": "fi",
-        "modified": 1639144751223,
+        "modified": 1630991214993,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postiosoite on sama kun k\u00e4yntiosoite"
+        "value": "YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE_FI"
     },
     {
         "accesscount": 0,
@@ -4083,9 +3677,9 @@
         "id": 28941,
         "key": "YHTEYSTIEDOT_PUHELINNUMERO",
         "locale": "fi",
-        "modified": 1638274568846,
+        "modified": 1630991214995,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Puhelinnumero"
+        "value": "YHTEYSTIEDOT_PUHELINNUMERO_FI"
     },
     {
         "accesscount": 0,
@@ -4097,9 +3691,9 @@
         "id": 28942,
         "key": "YHTEYSTIEDOT_SAHKOPOSTIOSOITE",
         "locale": "fi",
-        "modified": 1638274568847,
+        "modified": 1630991215091,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "S\u00e4hk\u00f6postiosoite"
+        "value": "YHTEYSTIEDOT_SAHKOPOSTIOSOITE_FI"
     },
     {
         "accesscount": 0,
@@ -4111,9 +3705,9 @@
         "id": 28943,
         "key": "YHTEYSTIEDOT_WWW_OSOITE",
         "locale": "fi",
-        "modified": 1638274568848,
+        "modified": 1630991215093,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "www osoite"
+        "value": "YHTEYSTIEDOT_WWW_OSOITE_FI"
     },
     {
         "accesscount": 0,
@@ -4131,20 +3725,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639490073101,
-        "category": "organisaatio2",
-        "created": 1639490073101,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29901,
-        "key": "Y-TUNNUS",
-        "locale": "fi",
-        "modified": 1639490073101,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Y-tunnus"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991215192,
         "category": "organisaatio2",
         "created": 1630991215192,
@@ -4153,9 +3733,9 @@
         "id": 28945,
         "key": "BUTTON_HAE_YTJ_TIEDOT",
         "locale": "sv",
-        "modified": 1639478215468,
+        "modified": 1630991215192,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "S\u00f6k"
+        "value": "BUTTON_HAE_YTJ_TIEDOT_SV"
     },
     {
         "accesscount": 0,
@@ -4167,9 +3747,9 @@
         "id": 28946,
         "key": "BUTTON_JATKA",
         "locale": "sv",
-        "modified": 1639478149285,
+        "modified": 1630991215194,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Jack"
+        "value": "BUTTON_JATKA_SV"
     },
     {
         "accesscount": 0,
@@ -4181,9 +3761,9 @@
         "id": 28947,
         "key": "BUTTON_MUOKKAA_ORGANISAATION_NIMEA",
         "locale": "sv",
-        "modified": 1639476934926,
+        "modified": 1630991215196,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Bearbeta namnet"
+        "value": "BUTTON_MUOKKAA_ORGANISAATION_NIMEA_SV"
     },
     {
         "accesscount": 0,
@@ -4195,9 +3775,9 @@
         "id": 28948,
         "key": "BUTTON_PERUUTA",
         "locale": "sv",
-        "modified": 1639477386522,
+        "modified": 1630991215197,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "St\u00e4ng utan att spara"
+        "value": "BUTTON_PERUUTA_SV"
     },
     {
         "accesscount": 0,
@@ -4209,9 +3789,9 @@
         "id": 28949,
         "key": "BUTTON_SULJE",
         "locale": "sv",
-        "modified": 1639464137332,
+        "modified": 1630991215295,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "St\u00e4ng utan att spara"
+        "value": "BUTTON_SULJE_SV"
     },
     {
         "accesscount": 0,
@@ -4223,9 +3803,9 @@
         "id": 28950,
         "key": "BUTTON_TALLENNA",
         "locale": "sv",
-        "modified": 1639407091690,
+        "modified": 1630991215297,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Spara"
+        "value": "BUTTON_TALLENNA_SV"
     },
     {
         "accesscount": 0,
@@ -4237,9 +3817,9 @@
         "id": 28951,
         "key": "BUTTON_VAHVISTA",
         "locale": "sv",
-        "modified": 1639491144175,
+        "modified": 1630991215299,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Bekr\u00e4fta \u00e4ndringen"
+        "value": "BUTTON_VAHVISTA_SV"
     },
     {
         "accesscount": 0,
@@ -4251,9 +3831,9 @@
         "id": 28952,
         "key": "BUTTON_VERSIOHISTORIA",
         "locale": "sv",
-        "modified": 1639477386586,
+        "modified": 1630991215392,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Uppdatera historik"
+        "value": "BUTTON_VERSIOHISTORIA_SV"
     },
     {
         "accesscount": 0,
@@ -4279,9 +3859,9 @@
         "id": 28954,
         "key": "HAE_YTJTIEDOT",
         "locale": "sv",
-        "modified": 1639477386535,
+        "modified": 1630991215396,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "F\u00e5 YTJ-information"
+        "value": "HAE_YTJTIEDOT_SV"
     },
     {
         "accesscount": 0,
@@ -4293,23 +3873,9 @@
         "id": 28955,
         "key": "LABEL_ENGLANNIKSI",
         "locale": "sv",
-        "modified": 1639406683842,
+        "modified": 1630991215493,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e5 engelska"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474360203,
-        "category": "organisaatio2",
-        "created": 1639474360203,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29773,
-        "key": "LABEL_ERROR_LOADING_DATA",
-        "locale": "sv",
-        "modified": 1639474360203,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_ERROR_LOADING_DATA_SV"
+        "value": "LABEL_ENGLANNIKSI_SV"
     },
     {
         "accesscount": 0,
@@ -4327,20 +3893,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639474360205,
-        "category": "organisaatio2",
-        "created": 1639474360205,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29774,
-        "key": "LABEL_NOT_AVAILABLE",
-        "locale": "sv",
-        "modified": 1639474360205,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "LABEL_NOT_AVAILABLE_SV"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991215497,
         "category": "organisaatio2",
         "created": 1630991215497,
@@ -4349,9 +3901,9 @@
         "id": 28957,
         "key": "LABEL_OID",
         "locale": "sv",
-        "modified": 1639463972346,
+        "modified": 1630991215497,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisation OID"
+        "value": "LABEL_OID_SV"
     },
     {
         "accesscount": 0,
@@ -4383,34 +3935,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639397274791,
-        "category": "organisaatio2",
-        "created": 1639397274791,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29688,
-        "key": "LABEL_PASSIIVINEN",
-        "locale": "sv",
-        "modified": 1639477386520,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Avskaffas"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639402298337,
-        "category": "organisaatio2",
-        "created": 1639402298337,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29692,
-        "key": "LABEL_POISTETTU",
-        "locale": "sv",
-        "modified": 1639477386581,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisationen har tagits bort"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991215596,
         "category": "organisaatio2",
         "created": 1630991215596,
@@ -4419,9 +3943,9 @@
         "id": 28960,
         "key": "LABEL_RUOTSIKSI",
         "locale": "sv",
-        "modified": 1639406662552,
+        "modified": 1630991215596,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e5 svenska"
+        "value": "LABEL_RUOTSIKSI_SV"
     },
     {
         "accesscount": 0,
@@ -4433,9 +3957,9 @@
         "id": 28961,
         "key": "LABEL_SUOMEKSI",
         "locale": "sv",
-        "modified": 1639406639739,
+        "modified": 1630991215692,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "P\u00e5 finska"
+        "value": "LABEL_SUOMEKSI_SV"
     },
     {
         "accesscount": 0,
@@ -4447,23 +3971,9 @@
         "id": 28962,
         "key": "LOMAKE_HISTORIA",
         "locale": "sv",
-        "modified": 1639136146637,
+        "modified": 1630991215694,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisaationrakenne"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639984519025,
-        "category": "organisaatio2",
-        "created": 1639984519025,
-        "createdBy": "1.2.246.562.24.69633009338",
-        "force": false,
-        "id": 29940,
-        "key": "LOMAKE_KOSKI_POSTI",
-        "locale": "sv",
-        "modified": 1639984519025,
-        "modifiedBy": "1.2.246.562.24.69633009338",
-        "value": "E-postadress f\u00f6r felanm\u00e4lan i egna uppgifter i KOSKI-tj\u00e4nsten"
+        "value": "LOMAKE_HISTORIA_SV"
     },
     {
         "accesscount": 0,
@@ -4475,23 +3985,9 @@
         "id": 28963,
         "key": "LOMAKE_LISAA_UUSI_OPPILAITOS",
         "locale": "sv",
-        "modified": 1639644869292,
+        "modified": 1630991215697,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "L\u00e4gg till en ny institution"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639148731037,
-        "category": "organisaatio2",
-        "created": 1639148731037,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29683,
-        "key": "LOMAKE_LISAA_UUSI_TOIMIJA",
-        "locale": "sv",
-        "modified": 1639477386523,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "L\u00e4gg till en ny organisation"
+        "value": "LOMAKE_LISAA_UUSI_OPPILAITOS_SV"
     },
     {
         "accesscount": 0,
@@ -4503,9 +3999,9 @@
         "id": 28964,
         "key": "LOMAKE_NIMIHISTORIA",
         "locale": "sv",
-        "modified": 1639477386523,
+        "modified": 1630991215699,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namnhistorik"
+        "value": "LOMAKE_NIMIHISTORIA_SV"
     },
     {
         "accesscount": 0,
@@ -4517,37 +4013,9 @@
         "id": 28965,
         "key": "LOMAKE_PERUSTIEDOT",
         "locale": "sv",
-        "modified": 1639477386523,
+        "modified": 1630991215792,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Grundl\u00e4ggande"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639148794990,
-        "category": "organisaatio2",
-        "created": 1639148794990,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29684,
-        "key": "LOMAKE_RAKENNE",
-        "locale": "sv",
-        "modified": 1639477386519,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Historia och struktur"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131987950,
-        "category": "organisaatio2",
-        "created": 1639131987950,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29650,
-        "key": "LOMAKE_SIIRRA_ORGANISAATIO",
-        "locale": "sv",
-        "modified": 1639477386520,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Flytta institutionen"
+        "value": "LOMAKE_PERUSTIEDOT_SV"
     },
     {
         "accesscount": 0,
@@ -4559,9 +4027,9 @@
         "id": 28966,
         "key": "LOMAKE_YHDISTA_ORGANISAATIO",
         "locale": "sv",
-        "modified": 1639477386524,
+        "modified": 1630991215795,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Anslut en utbildningsinstitution"
+        "value": "LOMAKE_YHDISTA_ORGANISAATIO_SV"
     },
     {
         "accesscount": 0,
@@ -4573,37 +4041,9 @@
         "id": 28967,
         "key": "LOMAKE_YHTEYSTIEDOT",
         "locale": "sv",
-        "modified": 1639477386587,
+        "modified": 1630991215797,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kontaktinformation"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639490644790,
-        "category": "organisaatio2",
-        "created": 1639490644790,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29904,
-        "key": "MESSAGE_LATAUS_ONNISTUI",
-        "locale": "sv",
-        "modified": 1639490685821,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "R\u00e4ddningen lyckades"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639490563176,
-        "category": "organisaatio2",
-        "created": 1639490563176,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29903,
-        "key": "MESSAGE_TALLENNUS_ONNISTUI",
-        "locale": "sv",
-        "modified": 1639490563176,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "R\u00e4ddningen lyckades"
+        "value": "LOMAKE_YHTEYSTIEDOT_SV"
     },
     {
         "accesscount": 0,
@@ -4615,9 +4055,9 @@
         "id": 28968,
         "key": "NIMIHISTORIA_NIMEN_VOIMASSAOLO",
         "locale": "sv",
-        "modified": 1639477386523,
+        "modified": 1630991215892,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn startdatum"
+        "value": "NIMIHISTORIA_NIMEN_VOIMASSAOLO_SV"
     },
     {
         "accesscount": 0,
@@ -4629,65 +4069,9 @@
         "id": 28969,
         "key": "NIMIHISTORIA_NIMI",
         "locale": "sv",
-        "modified": 1639477386585,
+        "modified": 1630991215895,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133104490,
-        "category": "organisaatio2",
-        "created": 1639133104490,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29656,
-        "key": "ORGANISAATIO_SIIRTO_PVM",
-        "locale": "sv",
-        "modified": 1639491528052,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "\u00d6verf\u00f6ringen tr\u00e4der i kraft fr\u00e5n det angivna datumet"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639132906043,
-        "category": "organisaatio2",
-        "created": 1639132906043,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29654,
-        "key": "ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO",
-        "locale": "sv",
-        "modified": 1639491473300,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "V\u00e4lj en ny administrat\u00f6r f\u00f6r institutionen"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133541563,
-        "category": "organisaatio2",
-        "created": 1639133541563,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29662,
-        "key": "ORGANISAATIO_YHDISTYS_PVM",
-        "locale": "sv",
-        "modified": 1639491739067,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sammanslagningen tr\u00e4der i kraft det angivna datumet"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133467489,
-        "category": "organisaatio2",
-        "created": 1639133467489,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29660,
-        "key": "ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO",
-        "locale": "sv",
-        "modified": 1639491709620,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "V\u00e4lj den institution du vill ansluta till"
+        "value": "NIMIHISTORIA_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -4699,23 +4083,9 @@
         "id": 28970,
         "key": "PERUSTIETO_EI_YTUNNUS",
         "locale": "sv",
-        "modified": 1639480495137,
+        "modified": 1630991215897,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Inget f\u00f6retags-ID"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639492049967,
-        "category": "organisaatio2",
-        "created": 1639492049967,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29906,
-        "key": "PERUSTIETO_LAKKAUTUSPAIVA",
-        "locale": "sv",
-        "modified": 1639492123703,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Datum f\u00f6r upps\u00e4gning"
+        "value": "PERUSTIETO_EI_YTUNNUS_SV"
     },
     {
         "accesscount": 0,
@@ -4727,9 +4097,9 @@
         "id": 28986,
         "key": "PERUSTIETO__LAKKAUTUSPAIVA",
         "locale": "sv",
-        "modified": 1639478433404,
+        "modified": 1630991216398,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Datum f\u00f6r upps\u00e4gning"
+        "value": "PERUSTIETO__LAKKAUTUSPAIVA_SV"
     },
     {
         "accesscount": 0,
@@ -4741,9 +4111,9 @@
         "id": 28971,
         "key": "PERUSTIETO_MAA",
         "locale": "sv",
-        "modified": 1639478070593,
+        "modified": 1630991215993,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Land"
+        "value": "PERUSTIETO_MAA_SV"
     },
     {
         "accesscount": 0,
@@ -4755,9 +4125,9 @@
         "id": 28972,
         "key": "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI",
         "locale": "sv",
-        "modified": 1639478819648,
+        "modified": 1630991215995,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Avskaffande"
+        "value": "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI_SV"
     },
     {
         "accesscount": 0,
@@ -4769,9 +4139,9 @@
         "id": 28973,
         "key": "PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA",
         "locale": "sv",
-        "modified": 1639478819890,
+        "modified": 1630991215997,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namnbyte"
+        "value": "PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA_SV"
     },
     {
         "accesscount": 0,
@@ -4783,65 +4153,9 @@
         "id": 28974,
         "key": "PERUSTIETO_MUUT_KUNNAT",
         "locale": "sv",
-        "modified": 1639478028270,
+        "modified": 1630991216093,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Andra kommuner"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133739561,
-        "category": "organisaatio2",
-        "created": 1639133739561,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29668,
-        "key": "PERUSTIETO_MUUT_OPPILAITOSTYYPPI",
-        "locale": "sv",
-        "modified": 1639478819981,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Andra typer av utbildningsanstalter"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130952024,
-        "category": "organisaatio2",
-        "created": 1639130952024,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29642,
-        "key": "PERUSTIETO_NIMI_ENGLANNIKSI",
-        "locale": "sv",
-        "modified": 1639477714287,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn p\u00e5 engelska"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130980209,
-        "category": "organisaatio2",
-        "created": 1639130980209,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29643,
-        "key": "PERUSTIETO_NIMI_RUOTSIKSI",
-        "locale": "sv",
-        "modified": 1639477682063,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn p\u00e5 svenska"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131030968,
-        "category": "organisaatio2",
-        "created": 1639131030968,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29644,
-        "key": "PERUSTIETO_NIMI_SUOMEKSI",
-        "locale": "sv",
-        "modified": 1639477631642,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn p\u00e5 svenska"
+        "value": "PERUSTIETO_MUUT_KUNNAT_SV"
     },
     {
         "accesscount": 0,
@@ -4853,9 +4167,9 @@
         "id": 28975,
         "key": "PERUSTIETO_ON_YTUNNUS",
         "locale": "sv",
-        "modified": 1639480266415,
+        "modified": 1630991216095,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Det finns ett FO-nummer"
+        "value": "PERUSTIETO_ON_YTUNNUS_SV"
     },
     {
         "accesscount": 0,
@@ -4867,37 +4181,9 @@
         "id": 28976,
         "key": "PERUSTIETO_OPETUSKIELI",
         "locale": "sv",
-        "modified": 1639478819683,
+        "modified": 1630991216097,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Undervisningsspr\u00e5k"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133632873,
-        "category": "organisaatio2",
-        "created": 1639133632873,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29664,
-        "key": "PERUSTIETO_OPPILAITOSKOODI",
-        "locale": "sv",
-        "modified": 1639478819644,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Statistikcentralens l\u00e4roanstaltskod"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133698633,
-        "category": "organisaatio2",
-        "created": 1639133698633,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29666,
-        "key": "PERUSTIETO_OPPILAITOSTYYPPI",
-        "locale": "sv",
-        "modified": 1639478819681,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Typ av utbildningsinstitution"
+        "value": "PERUSTIETO_OPETUSKIELI_SV"
     },
     {
         "accesscount": 0,
@@ -4909,9 +4195,9 @@
         "id": 28977,
         "key": "PERUSTIETO_ORGANISAATION_NIMI",
         "locale": "sv",
-        "modified": 1639478819646,
+        "modified": 1630991216099,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn p\u00e5 organisationen"
+        "value": "PERUSTIETO_ORGANISAATION_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -4923,9 +4209,9 @@
         "id": 28978,
         "key": "PERUSTIETO_ORGANISAATIOTYYPPI",
         "locale": "sv",
-        "modified": 1639477818047,
+        "modified": 1630991216193,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisationstyp"
+        "value": "PERUSTIETO_ORGANISAATIOTYYPPI_SV"
     },
     {
         "accesscount": 0,
@@ -4937,9 +4223,9 @@
         "id": 28979,
         "key": "PERUSTIETO_ORGANISAATIO_TYYPPI",
         "locale": "sv",
-        "modified": 1639477818044,
+        "modified": 1630991216195,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisationstyp"
+        "value": "PERUSTIETO_ORGANISAATIO_TYYPPI_SV"
     },
     {
         "accesscount": 0,
@@ -4951,9 +4237,9 @@
         "id": 28980,
         "key": "PERUSTIETO_PAASIJAINTIKUNTA",
         "locale": "sv",
-        "modified": 1639478005875,
+        "modified": 1630991216197,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hemort"
+        "value": "PERUSTIETO_PAASIJAINTIKUNTA_SV"
     },
     {
         "accesscount": 0,
@@ -4965,9 +4251,9 @@
         "id": 28981,
         "key": "PERUSTIETO_PAIVITA_YTJ_TIEDOT",
         "locale": "sv",
-        "modified": 1639478819885,
+        "modified": 1630991216294,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Uppdatera informationen fr\u00e5n YTJ-tj\u00e4nsten"
+        "value": "PERUSTIETO_PAIVITA_YTJ_TIEDOT_SV"
     },
     {
         "accesscount": 0,
@@ -4979,9 +4265,9 @@
         "id": 28982,
         "key": "PERUSTIETO_PERUSTAMISPAIVA",
         "locale": "sv",
-        "modified": 1639477984317,
+        "modified": 1630991216296,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ikraft"
+        "value": "PERUSTIETO_PERUSTAMISPAIVA_SV"
     },
     {
         "accesscount": 0,
@@ -4999,20 +4285,6 @@
     },
     {
         "accesscount": 0,
-        "accessed": 1639480896384,
-        "category": "organisaatio2",
-        "created": 1639480896384,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29699,
-        "key": "PERUSTIETO_VUOSILUOKAT",
-        "locale": "sv",
-        "modified": 1639480896384,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "\u00c5rsklasser"
-    },
-    {
-        "accesscount": 0,
         "accessed": 1630991216394,
         "category": "organisaatio2",
         "created": 1630991216394,
@@ -5021,9 +4293,9 @@
         "id": 28984,
         "key": "PERUSTIETO_YRITYSMUOTO",
         "locale": "sv",
-        "modified": 1639478819888,
+        "modified": 1630991216394,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "F\u00f6retagstyp"
+        "value": "PERUSTIETO_YRITYSMUOTO_SV"
     },
     {
         "accesscount": 0,
@@ -5035,9 +4307,9 @@
         "id": 28985,
         "key": "PERUSTIETO_Y_TUNNUS",
         "locale": "sv",
-        "modified": 1639488582549,
+        "modified": 1630991216396,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "F\u00f6retags FO-nummer"
+        "value": "PERUSTIETO_Y_TUNNUS_SV"
     },
     {
         "accesscount": 0,
@@ -5049,9 +4321,9 @@
         "id": 28987,
         "key": "RAKENNE_ALKUPVM",
         "locale": "sv",
-        "modified": 1639478819888,
+        "modified": 1630991216493,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Start datum"
+        "value": "RAKENNE_ALKUPVM_SV"
     },
     {
         "accesscount": 0,
@@ -5063,23 +4335,9 @@
         "id": 28988,
         "key": "RAKENNE_LIITOKSET_OTSIKKO",
         "locale": "sv",
-        "modified": 1639478819781,
+        "modified": 1630991216496,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "F\u00f6r\u00e4ndringar i organisationsstruktur"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133887794,
-        "category": "organisaatio2",
-        "created": 1639133887794,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29670,
-        "key": "RAKENNE_LIITOKSET_OTSIKKO_FI",
-        "locale": "sv",
-        "modified": 1639478819790,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisatoriska f\u00f6r\u00e4ndringar"
+        "value": "RAKENNE_LIITOKSET_OTSIKKO_SV"
     },
     {
         "accesscount": 0,
@@ -5091,23 +4349,9 @@
         "id": 28989,
         "key": "RAKENNE_LIITOSPVM",
         "locale": "sv",
-        "modified": 1639481067833,
+        "modified": 1630991216498,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Start datum"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639134797444,
-        "category": "organisaatio2",
-        "created": 1639134797444,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29673,
-        "key": "RAKENNE_LIITOSPVM_FI",
-        "locale": "sv",
-        "modified": 1639478819682,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Start datum"
+        "value": "RAKENNE_LIITOSPVM_SV"
     },
     {
         "accesscount": 0,
@@ -5119,9 +4363,9 @@
         "id": 28990,
         "key": "RAKENNE_LIITTYNEET_NIMI",
         "locale": "sv",
-        "modified": 1639481000740,
+        "modified": 1630991216499,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Institutioner som \u00e4r anslutna till denna institution"
+        "value": "RAKENNE_LIITTYNEET_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -5133,9 +4377,9 @@
         "id": 28991,
         "key": "RAKENNE_LOPPUPVM",
         "locale": "sv",
-        "modified": 1639478819646,
+        "modified": 1630991216594,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Slutdatum"
+        "value": "RAKENNE_LOPPUPVM_SV"
     },
     {
         "accesscount": 0,
@@ -5147,9 +4391,9 @@
         "id": 28992,
         "key": "RAKENNE_SISALTYVAT_NIMI",
         "locale": "sv",
-        "modified": 1639478819683,
+        "modified": 1630991216596,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn p\u00e5 organisationen"
+        "value": "RAKENNE_SISALTYVAT_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -5161,9 +4405,9 @@
         "id": 28993,
         "key": "RAKENNE_SISALTYVAT_OTSIKKO",
         "locale": "sv",
-        "modified": 1639478819645,
+        "modified": 1630991216598,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisationer ing\u00e5r"
+        "value": "RAKENNE_SISALTYVAT_OTSIKKO_SV"
     },
     {
         "accesscount": 0,
@@ -5175,9 +4419,9 @@
         "id": 28994,
         "key": "RAKENNE_YHDISTETTY_NIMI",
         "locale": "sv",
-        "modified": 1639478819640,
+        "modified": 1630991216694,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kopplad till en l\u00e4roanstalt"
+        "value": "RAKENNE_YHDISTETTY_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -5189,9 +4433,9 @@
         "id": 28995,
         "key": "RAKENNE_YLEMMAN_TASON_NIMI",
         "locale": "sv",
-        "modified": 1639478819640,
+        "modified": 1630991216696,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namnet p\u00e5 moderorganisationen"
+        "value": "RAKENNE_YLEMMAN_TASON_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -5203,9 +4447,9 @@
         "id": 28996,
         "key": "RAKENNE_YLEMMAN_TASON_OTSIKKO",
         "locale": "sv",
-        "modified": 1639478819647,
+        "modified": 1630991216698,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "\u00d6vre organisation"
+        "value": "RAKENNE_YLEMMAN_TASON_OTSIKKO_SV"
     },
     {
         "accesscount": 0,
@@ -5217,9 +4461,9 @@
         "id": 28997,
         "key": "RYHMAT_AKTIVOI_RYHMA",
         "locale": "sv",
-        "modified": 1639136146636,
+        "modified": 1630991216794,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Aktivoi passivoitu ryhm\u00e4"
+        "value": "RYHMAT_AKTIVOI_RYHMA_SV"
     },
     {
         "accesscount": 0,
@@ -5231,9 +4475,9 @@
         "id": 28998,
         "key": "RYHMAT_HAKU_PLACEHOLDER",
         "locale": "sv",
-        "modified": 1639405322062,
+        "modified": 1630991216796,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "S\u00f6k grupp"
+        "value": "RYHMAT_HAKU_PLACEHOLDER_SV"
     },
     {
         "accesscount": 0,
@@ -5245,9 +4489,9 @@
         "id": 28999,
         "key": "RYHMAT_KAIKKI_RYHMAT",
         "locale": "sv",
-        "modified": 1639407006690,
+        "modified": 1630991216798,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alla grupper"
+        "value": "RYHMAT_KAIKKI_RYHMAT_SV"
     },
     {
         "accesscount": 0,
@@ -5259,9 +4503,9 @@
         "id": 29000,
         "key": "RYHMAT_KAYTTOTARKOITUS",
         "locale": "sv",
-        "modified": 1639405927799,
+        "modified": 1630991216800,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Gruppens \u00e4ndam\u00e5l"
+        "value": "RYHMAT_KAYTTOTARKOITUS_SV"
     },
     {
         "accesscount": 0,
@@ -5273,9 +4517,9 @@
         "id": 29001,
         "key": "RYHMAT_LISAA_UUSI",
         "locale": "sv",
-        "modified": 1639405256192,
+        "modified": 1630991216894,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Grunda ny grupp"
+        "value": "RYHMAT_LISAA_UUSI_SV"
     },
     {
         "accesscount": 0,
@@ -5287,9 +4531,9 @@
         "id": 29002,
         "key": "RYHMAT_OTSIKKO",
         "locale": "sv",
-        "modified": 1639406378515,
+        "modified": 1630991216896,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Administrera grupper"
+        "value": "RYHMAT_OTSIKKO_SV"
     },
     {
         "accesscount": 0,
@@ -5301,9 +4545,9 @@
         "id": 29003,
         "key": "RYHMAT_PASSIVOI_RYHMA",
         "locale": "sv",
-        "modified": 1639406922132,
+        "modified": 1630991216898,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Passivera"
+        "value": "RYHMAT_PASSIVOI_RYHMA_SV"
     },
     {
         "accesscount": 0,
@@ -5315,9 +4559,9 @@
         "id": 29004,
         "key": "RYHMAT_POISTA_RYHMA",
         "locale": "sv",
-        "modified": 1639407053757,
+        "modified": 1630991216996,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Ta bort grupp"
+        "value": "RYHMAT_POISTA_RYHMA_SV"
     },
     {
         "accesscount": 0,
@@ -5329,9 +4573,9 @@
         "id": 29005,
         "key": "RYHMAT_POISTO_VARMISTUSTEKSTI",
         "locale": "sv",
-        "modified": 1639464684541,
+        "modified": 1630991216998,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "\u00c4r du s\u00e4ker p\u00e5 att du vill ta bort gruppen?"
+        "value": "RYHMAT_POISTO_VARMISTUSTEKSTI_SV"
     },
     {
         "accesscount": 0,
@@ -5343,9 +4587,9 @@
         "id": 29006,
         "key": "RYHMAT_RYHMA",
         "locale": "sv",
-        "modified": 1639405444764,
+        "modified": 1630991217000,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Administrera grupper"
+        "value": "RYHMAT_RYHMA_SV"
     },
     {
         "accesscount": 0,
@@ -5357,9 +4601,9 @@
         "id": 29007,
         "key": "RYHMAT_RYHMAN_KAYTTOTARKOITUS",
         "locale": "sv",
-        "modified": 1639405741050,
+        "modified": 1630991217094,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Gruppens \u00e4ndam\u00e5l"
+        "value": "RYHMAT_RYHMAN_KAYTTOTARKOITUS_SV"
     },
     {
         "accesscount": 0,
@@ -5371,9 +4615,9 @@
         "id": 29008,
         "key": "RYHMAT_RYHMAN_KUVAUS",
         "locale": "sv",
-        "modified": 1639406922135,
+        "modified": 1630991217098,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Gruppen beskrivning"
+        "value": "RYHMAT_RYHMAN_KUVAUS_SV"
     },
     {
         "accesscount": 0,
@@ -5385,9 +4629,9 @@
         "id": 29009,
         "key": "RYHMAT_RYHMAN_NIMI",
         "locale": "sv",
-        "modified": 1639406134183,
+        "modified": 1630991217100,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Gruppnamnt"
+        "value": "RYHMAT_RYHMAN_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -5399,9 +4643,9 @@
         "id": 29010,
         "key": "RYHMAT_RYHMAN_TIEDOT_OTSIKKO",
         "locale": "sv",
-        "modified": 1639406557194,
+        "modified": 1630991217195,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Gruppinformation"
+        "value": "RYHMAT_RYHMAN_TIEDOT_OTSIKKO_SV"
     },
     {
         "accesscount": 0,
@@ -5413,9 +4657,9 @@
         "id": 29011,
         "key": "RYHMAT_RYHMAN_TILA",
         "locale": "sv",
-        "modified": 1639406267800,
+        "modified": 1630991217197,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Status"
+        "value": "RYHMAT_RYHMAN_TILA_SV"
     },
     {
         "accesscount": 0,
@@ -5427,9 +4671,9 @@
         "id": 29012,
         "key": "RYHMAT_RYHMAN_TYYPPI",
         "locale": "sv",
-        "modified": 1639405637735,
+        "modified": 1630991217200,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Grupptyp"
+        "value": "RYHMAT_RYHMAN_TYYPPI_SV"
     },
     {
         "accesscount": 0,
@@ -5441,9 +4685,9 @@
         "id": 29013,
         "key": "RYHMAT_RYHMAT_TILA",
         "locale": "sv",
-        "modified": 1639406267801,
+        "modified": 1630991217202,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Status"
+        "value": "RYHMAT_RYHMAT_TILA_SV"
     },
     {
         "accesscount": 0,
@@ -5455,9 +4699,9 @@
         "id": 29014,
         "key": "TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT",
         "locale": "sv",
-        "modified": 1639479440640,
+        "modified": 1630991217295,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Visa vilande"
+        "value": "TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT_SV"
     },
     {
         "accesscount": 0,
@@ -5469,9 +4713,9 @@
         "id": 29015,
         "key": "TAULUKKO_KAIKKI_ORGANISAATIOT",
         "locale": "sv",
-        "modified": 1639489566973,
+        "modified": 1630991217297,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Alla organisationer"
+        "value": "TAULUKKO_KAIKKI_ORGANISAATIOT_SV"
     },
     {
         "accesscount": 0,
@@ -5483,9 +4727,9 @@
         "id": 29016,
         "key": "TAULUKKO_KUNTA",
         "locale": "sv",
-        "modified": 1639479251299,
+        "modified": 1630991217299,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kommun"
+        "value": "TAULUKKO_KUNTA_SV"
     },
     {
         "accesscount": 0,
@@ -5497,9 +4741,9 @@
         "id": 29017,
         "key": "TAULUKKO_LISAA_UUSI_TOIMIJA",
         "locale": "sv",
-        "modified": 1639489391852,
+        "modified": 1630991217395,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "L\u00e4gg till en operat\u00f6r med ett FO-nummer"
+        "value": "TAULUKKO_LISAA_UUSI_TOIMIJA_SV"
     },
     {
         "accesscount": 0,
@@ -5511,9 +4755,9 @@
         "id": 29018,
         "key": "TAULUKKO_NAYTA_SIVULLA",
         "locale": "sv",
-        "modified": 1639406499980,
+        "modified": 1630991217397,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Visa p\u00e5 sidan"
+        "value": "TAULUKKO_NAYTA_SIVULLA_SV"
     },
     {
         "accesscount": 0,
@@ -5525,9 +4769,9 @@
         "id": 29019,
         "key": "TAULUKKO_NIMI",
         "locale": "sv",
-        "modified": 1639479287748,
+        "modified": 1630991217399,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namn p\u00e5 organisationen"
+        "value": "TAULUKKO_NIMI_SV"
     },
     {
         "accesscount": 0,
@@ -5539,9 +4783,9 @@
         "id": 29020,
         "key": "TAULUKKO_OMAT_ORGANISAATIOT",
         "locale": "sv",
-        "modified": 1639489601723,
+        "modified": 1630991217495,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Mina organisationer"
+        "value": "TAULUKKO_OMAT_ORGANISAATIOT_SV"
     },
     {
         "accesscount": 0,
@@ -5553,9 +4797,9 @@
         "id": 29021,
         "key": "TAULUKKO_TARKISTUS",
         "locale": "sv",
-        "modified": 1639479251301,
+        "modified": 1630991217497,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kontrollera informationen"
+        "value": "TAULUKKO_TARKISTUS_SV"
     },
     {
         "accesscount": 0,
@@ -5567,9 +4811,9 @@
         "id": 29022,
         "key": "TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER",
         "locale": "sv",
-        "modified": 1639479025165,
+        "modified": 1630991217499,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "S\u00f6k organisationer"
+        "value": "TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER_SV"
     },
     {
         "accesscount": 0,
@@ -5581,9 +4825,9 @@
         "id": 29023,
         "key": "TAULUKKO_TUNNISTE",
         "locale": "sv",
-        "modified": 1639478960651,
+        "modified": 1630991217501,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "M\u00e4rka"
+        "value": "TAULUKKO_TUNNISTE_SV"
     },
     {
         "accesscount": 0,
@@ -5595,23 +4839,9 @@
         "id": 29024,
         "key": "TAULUKKO_TYYPPI",
         "locale": "sv",
-        "modified": 1639477818044,
+        "modified": 1630991217596,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisationstyp"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639130211600,
-        "category": "organisaatio2",
-        "created": 1639130211600,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29636,
-        "key": "TAULUKKO_TYYPPIX",
-        "locale": "sv",
-        "modified": 1639477818049,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Organisationstyp"
+        "value": "TAULUKKO_TYYPPI_SV"
     },
     {
         "accesscount": 0,
@@ -5623,9 +4853,9 @@
         "id": 29025,
         "key": "TOIMIPISTEEN_LAKKAUTUS_PVM",
         "locale": "sv",
-        "modified": 1639152138707,
+        "modified": 1630991217598,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautus tulee voimaan annetusta p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4st\u00e4 lukien"
+        "value": "TOIMIPISTEEN_LAKKAUTUS_PVM_SV"
     },
     {
         "accesscount": 0,
@@ -5637,9 +4867,9 @@
         "id": 29026,
         "key": "TOIMIPISTEEN_LAKKAUTUS_TITLE",
         "locale": "sv",
-        "modified": 1639150198709,
+        "modified": 1630991217600,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Lakkautuksen voimaantulo"
+        "value": "TOIMIPISTEEN_LAKKAUTUS_TITLE_SV"
     },
     {
         "accesscount": 0,
@@ -5651,37 +4881,9 @@
         "id": 29027,
         "key": "TOIMIPISTEEN_NIMENMUUTOS_TITLE",
         "locale": "sv",
-        "modified": 1639491115454,
+        "modified": 1630991217695,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Namnbyte"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639132376839,
-        "category": "organisaatio2",
-        "created": 1639132376839,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29652,
-        "key": "TOIMIPISTEEN_SIIRTO_TITLE",
-        "locale": "sv",
-        "modified": 1639491439054,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "\u00d6verf\u00f6ring av en l\u00e4roanstalt och eventuella kontor till en ny administrat\u00f6r"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639133322385,
-        "category": "organisaatio2",
-        "created": 1639133322385,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29658,
-        "key": "TOIMIPISTEEN_YHDISTYS_TITLE",
-        "locale": "sv",
-        "modified": 1639491642508,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Sammanfoga en l\u00e4roanstalt med en annan l\u00e4roanstalt"
+        "value": "TOIMIPISTEEN_NIMENMUUTOS_TITLE_SV"
     },
     {
         "accesscount": 0,
@@ -6141,9 +5343,9 @@
         "id": 29060,
         "key": "UUSI_TOIMIJA_TITLE",
         "locale": "sv",
-        "modified": 1639477888396,
+        "modified": 1630991218701,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "L\u00e4gg till en ny organisation"
+        "value": "UUSI_TOIMIJA_TITLE_SV"
     },
     {
         "accesscount": 0,
@@ -6155,9 +5357,9 @@
         "id": 29061,
         "key": "UUSI_TOIMIJA_TOIMIJA_TITLE",
         "locale": "sv",
-        "modified": 1639477888397,
+        "modified": 1630991218703,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "L\u00e4gg till en ny organisation"
+        "value": "UUSI_TOIMIJA_TOIMIJA_TITLE_SV"
     },
     {
         "accesscount": 0,
@@ -6169,9 +5371,9 @@
         "id": 29062,
         "key": "UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN",
         "locale": "sv",
-        "modified": 1639477888396,
+        "modified": 1630991218797,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "L\u00e4gg till en ny organisation"
+        "value": "UUSI_TOIMIJA_UUDEN_TOIMIJAN_LISAAMINEN_SV"
     },
     {
         "accesscount": 0,
@@ -6183,9 +5385,9 @@
         "id": 29063,
         "key": "VALITSE_ORGANISAATIO",
         "locale": "sv",
-        "modified": 1639404123086,
+        "modified": 1630991218799,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Hae organisaatio YTJ palvelusta"
+        "value": "VALITSE_ORGANISAATIO_SV"
     },
     {
         "accesscount": 0,
@@ -6197,9 +5399,9 @@
         "id": 29064,
         "key": "VERSIOHISTORIA_MUOKATTU_VIIMEKSI",
         "locale": "sv",
-        "modified": 1639480948950,
+        "modified": 1630991218801,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Senaste uppdatering och uppdatering"
+        "value": "VERSIOHISTORIA_MUOKATTU_VIIMEKSI_SV"
     },
     {
         "accesscount": 0,
@@ -6253,79 +5455,9 @@
         "id": 29068,
         "key": "YHTEYSTIEDOT_KAYNTIOSOITE",
         "locale": "sv",
-        "modified": 1639489718705,
+        "modified": 1630991218997,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Bes\u00f6ksadress"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639482017189,
-        "category": "organisaatio2",
-        "created": 1639482017189,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29896,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_en",
-        "locale": "sv",
-        "modified": 1639644039098,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kontaktinformation p\u00e5 andra spr\u00e5k"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131311211,
-        "category": "organisaatio2",
-        "created": 1639131311211,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29647,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_fi",
-        "locale": "sv",
-        "modified": 1639481285594,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kontaktuppgifter p\u00e5 finska"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639131420728,
-        "category": "organisaatio2",
-        "created": 1639131420728,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29648,
-        "key": "YHTEYSTIEDOTKORTTI_OTSIKKO_sv",
-        "locale": "sv",
-        "modified": 1639481484173,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kontaktuppgifter p\u00e4 svenksa"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474361807,
-        "category": "organisaatio2",
-        "created": 1639474361807,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29828,
-        "key": "YHTEYSTIEDOT_NAYTA_MUUT_KIELET",
-        "locale": "sv",
-        "modified": 1639488727937,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Visa adresser p\u00e5 andra spr\u00e5k"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474361906,
-        "category": "organisaatio2",
-        "created": 1639474361906,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29829,
-        "key": "YHTEYSTIEDOT_PIILOTA_MUUT_KIELET",
-        "locale": "sv",
-        "modified": 1639488782144,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "D\u00f6lj kontakter p\u00e5 andra spr\u00e5k"
+        "value": "YHTEYSTIEDOT_KAYNTIOSOITE_SV"
     },
     {
         "accesscount": 0,
@@ -6337,23 +5469,9 @@
         "id": 29069,
         "key": "YHTEYSTIEDOT_POSTINUMERO",
         "locale": "sv",
-        "modified": 1639481528333,
+        "modified": 1630991218999,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postnummer"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639489102137,
-        "category": "organisaatio2",
-        "created": 1639489102137,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29900,
-        "key": "YHTEYSTIEDOT_POSTINUMERO'",
-        "locale": "sv",
-        "modified": 1639489102137,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postnummer"
+        "value": "YHTEYSTIEDOT_POSTINUMERO_SV"
     },
     {
         "accesscount": 0,
@@ -6365,51 +5483,9 @@
         "id": 29070,
         "key": "YHTEYSTIEDOT_POSTIOSOITE",
         "locale": "sv",
-        "modified": 1639481336932,
+        "modified": 1630991219002,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postadress"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639146157342,
-        "category": "organisaatio2",
-        "created": 1639146157342,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29680,
-        "key": "YHTEYSTIEDOT_POSTIOSOITE_MUU",
-        "locale": "sv",
-        "modified": 1639481909508,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Kontaktinformation"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639474361908,
-        "category": "organisaatio2",
-        "created": 1639474361908,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29830,
-        "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE",
-        "locale": "sv",
-        "modified": 1639494138887,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postadressen skiljer sig fr\u00e5n bes\u00f6ksadressen"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639488976453,
-        "category": "organisaatio2",
-        "created": 1639488976453,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29899,
-        "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE_SV",
-        "locale": "sv",
-        "modified": 1639494138892,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postadressen skiljer sig fr\u00e5n bes\u00f6ksadressen"
+        "value": "YHTEYSTIEDOT_POSTIOSOITE_SV"
     },
     {
         "accesscount": 0,
@@ -6421,9 +5497,9 @@
         "id": 29071,
         "key": "YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE",
         "locale": "sv",
-        "modified": 1639494138890,
+        "modified": 1630991219098,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Postadressen \u00e4r densamma som bes\u00f6ksadressen"
+        "value": "YHTEYSTIEDOT_POSTIOSOITE_ON_SAMA_KUIN_KAYNTIOSOITE_SV"
     },
     {
         "accesscount": 0,
@@ -6435,9 +5511,9 @@
         "id": 29072,
         "key": "YHTEYSTIEDOT_PUHELINNUMERO",
         "locale": "sv",
-        "modified": 1639481691661,
+        "modified": 1630991219100,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "Telefonnummer"
+        "value": "YHTEYSTIEDOT_PUHELINNUMERO_SV"
     },
     {
         "accesscount": 0,
@@ -6449,9 +5525,9 @@
         "id": 29073,
         "key": "YHTEYSTIEDOT_SAHKOPOSTIOSOITE",
         "locale": "sv",
-        "modified": 1639481719736,
+        "modified": 1630991219102,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "E-postadress"
+        "value": "YHTEYSTIEDOT_SAHKOPOSTIOSOITE_SV"
     },
     {
         "accesscount": 0,
@@ -6463,9 +5539,9 @@
         "id": 29074,
         "key": "YHTEYSTIEDOT_WWW_OSOITE",
         "locale": "sv",
-        "modified": 1639481828002,
+        "modified": 1630991219198,
         "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "www-adress"
+        "value": "YHTEYSTIEDOT_WWW_OSOITE_SV"
     },
     {
         "accesscount": 0,
@@ -6480,19 +5556,5 @@
         "modified": 1630991219200,
         "modifiedBy": "1.2.246.562.24.39768521067",
         "value": "YHTEYSTIETOTYYPPIA_KAYTTAVAT_SV"
-    },
-    {
-        "accesscount": 0,
-        "accessed": 1639490101420,
-        "category": "organisaatio2",
-        "created": 1639490101420,
-        "createdBy": "1.2.246.562.24.39768521067",
-        "force": false,
-        "id": 29902,
-        "key": "Y-TUNNUS",
-        "locale": "sv",
-        "modified": 1639490101420,
-        "modifiedBy": "1.2.246.562.24.39768521067",
-        "value": "FO-nummer"
     }
 ]

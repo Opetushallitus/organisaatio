@@ -5,7 +5,7 @@ import { LiitaOrganisaatioon, Option, UiOrganisaatioBase } from '../../../types/
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tools/organisaatio';
-import { BodyBreak, BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import LiitosDescription from './LiitosDescription';
@@ -31,37 +31,40 @@ export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaat
     const newParent = organisaatiot.find((o) => o.oid === liitaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
-        <BodyKehys>
+        <>
             <LiitosDescription sourceOid={organisaatioBase.oid} />
-            <BodyRivi>
-                <BodyKentta label={labels.otherOrg}>
-                    <Select
-                        menuPortalTarget={document.body}
-                        value={mapOrganisaatioToSelect(newParent, language)}
-                        options={parentOrganisaatiot
-                            .filter((o) => ![organisaatioBase.oid, organisaatioBase.parentOid].includes(o.value))
-                            .sort((a, b) => a.label.localeCompare(b.label))}
-                        onChange={(option) => {
-                            if (option)
-                                handleChange({
-                                    ...liitaOrganisaatio,
-                                    newParent: organisaatiot.find((a) => {
-                                        return (option as Option).value === a.oid;
-                                    }),
-                                });
-                        }}
-                    />
-                </BodyKentta>
-                <BodyBreak />
-                <BodyKentta label={labels.liitosPvm}>
-                    <DatePickerInput
-                        value={liitaOrganisaatio.date}
-                        onChange={(e) => {
-                            handleChange({ ...liitaOrganisaatio, date: e });
-                        }}
-                    />
-                </BodyKentta>
-            </BodyRivi>
-        </BodyKehys>
+            <BodyKehys>
+                <BodyRivi>
+                    <BodyKentta label={labels.otherOrg}>
+                        <Select
+                            menuPortalTarget={document.body}
+                            value={mapOrganisaatioToSelect(newParent, language)}
+                            options={parentOrganisaatiot
+                                .filter((o) => ![organisaatioBase.oid, organisaatioBase.parentOid].includes(o.value))
+                                .sort((a, b) => a.label.localeCompare(b.label))}
+                            onChange={(option) => {
+                                if (option)
+                                    handleChange({
+                                        ...liitaOrganisaatio,
+                                        newParent: organisaatiot.find((a) => {
+                                            return (option as Option).value === a.oid;
+                                        }),
+                                    });
+                            }}
+                        />
+                    </BodyKentta>
+                </BodyRivi>
+                <BodyRivi>
+                    <BodyKentta label={labels.liitosPvm}>
+                        <DatePickerInput
+                            value={liitaOrganisaatio.date}
+                            onChange={(e) => {
+                                handleChange({ ...liitaOrganisaatio, date: e });
+                            }}
+                        />
+                    </BodyKentta>
+                </BodyRivi>
+            </BodyKehys>
+        </>
     );
 }

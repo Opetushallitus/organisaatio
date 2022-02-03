@@ -15,7 +15,7 @@ type Props = {
 
 export default function PohjaModaali({ suljeCallback = () => {}, footer, header, body }: Props) {
     return (
-        <Modal maxWidth={'65%'} className={styles.ModaaliKehys} open onClose={suljeCallback}>
+        <Modal className={styles.ModaaliKehys} open onClose={suljeCallback}>
             <ModalHeader className={styles.ModaaliOtsikkoKehys} onClose={suljeCallback}>
                 {header}
             </ModalHeader>
