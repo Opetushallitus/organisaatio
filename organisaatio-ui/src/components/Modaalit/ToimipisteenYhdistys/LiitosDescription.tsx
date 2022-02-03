@@ -49,7 +49,7 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
             self?.subRows
                 ?.reduce(flattenHierarchy, [])
                 .sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi))) || [],
-        [self]
+        [i18n, self?.subRows]
     );
     const columns = useMemo(
         () => [
@@ -75,21 +75,24 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
                 },
             },
         ],
-        []
+        [i18n, organisaatioTyypit]
     );
-    const findSelf = (a: ApiOrganisaatio[], oid: string): ApiOrganisaatio | undefined => {
-        if (a.length === 0) return undefined;
-        return a[0]?.oid === oid ? a[0] : findSelf(a[0].subRows || [], oid);
-    };
+    const findSelfMemo = useMemo<(a: ApiOrganisaatio[], oid: string) => ApiOrganisaatio | undefined>(() => {
+        const findSelf = (a: ApiOrganisaatio[], oid: string): ApiOrganisaatio | undefined => {
+            if (a.length === 0) return undefined;
+            return a[0]?.oid === oid ? a[0] : findSelf(a[0].subRows || [], oid);
+        };
+        return findSelf;
+    }, []);
     useEffect(() => {
         (async () => {
             const searchResult = await searchOrganisation({
                 oid: sourceOid,
             });
-            const mySelf = findSelf(searchResult, sourceOid);
+            const mySelf = findSelfMemo(searchResult, sourceOid);
             setSelf(mySelf);
         })();
-    }, [sourceOid]);
+    }, [findSelfMemo, sourceOid]);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
         data,
