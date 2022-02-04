@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -200,10 +199,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
 
-        // Otetaan kuva mukaan vain "pyydettäessä"
-        if (s.isIncludeImage()) {
-            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
-        }
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
@@ -256,14 +251,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         }
 
         return result;
-    }
-
-    private String encodeToUUENCODED(BinaryData kuva) {
-        if (kuva == null || kuva.getData() == null) {
-            return null;
-        }
-
-        return Base64.getEncoder().encodeToString(kuva.getData());
     }
 
 }
