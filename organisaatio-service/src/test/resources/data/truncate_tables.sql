@@ -1,5 +1,4 @@
 set referential_integrity false;
-truncate table binarydata;
 truncate table monikielinenteksti;
 truncate table monikielinenteksti_values;
 truncate table namedmonikielinenteksti;
