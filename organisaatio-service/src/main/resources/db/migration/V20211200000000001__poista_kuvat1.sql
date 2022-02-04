@@ -1,5 +1,3 @@
-select 'initial lobs size', count(1)
-from (select distinct loid from pg_largeobject) as loids;
 do
 $$
     declare
@@ -18,6 +16,3 @@ $$
             end loop;
     end
 $$;
-
-select 'lobs after unlinking', count(1)
-from (select distinct loid from pg_largeobject) as loids;

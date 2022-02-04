@@ -1,5 +1,3 @@
-select 'initial lobs size', count(1)
-from (select distinct loid from pg_largeobject) as loids;
 do $$
     declare
         counter integer := 100000;
@@ -21,5 +19,3 @@ where 1 = 1;
 delete
 from binarydata
 where 1 = 1;
-select 'lobs after unlinking', count(1)
-from (select distinct loid from pg_largeobject) as loids;
