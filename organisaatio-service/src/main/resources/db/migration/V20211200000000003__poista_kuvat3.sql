@@ -3,7 +3,7 @@ $$
     declare
         counter integer := 100000;
     begin
-        while counter > 5000
+        while counter > 0
             loop
                 update binarydata
                 set data = null
@@ -16,3 +16,9 @@ $$
             end loop;
     end
 $$;
+update organisaatiometadata
+set kuva_id = null
+where 1 = 1;
+delete
+from binarydata
+where 1 = 1;
