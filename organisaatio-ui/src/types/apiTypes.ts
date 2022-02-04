@@ -116,35 +116,29 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
     piilotettu?: boolean;
     yhteystietoArvos?: ApiYhteystietoArvo[];
-    subRows?: ApiOrganisaatio[];
     virastoTunnus?: string;
 };
 
-export type OrganisaatioHakuOrganisaatio = OrganisaatioBase & {
-    alkuPvm: APIEndpontDate;
-    lakkautusPvm?: APIEndpontDate;
+export type OrganisaatioHakuOrganisaatio = {
+    aliOrganisaatioMaara: number;
+    alkuPvm: Date;
+    children: OrganisaatioHakuOrganisaatio[];
+    kieletUris: [];
+    kotipaikkaUri: KoodiUri;
+    match: boolean;
+    nimi: Nimi;
+    oid: string;
+    organisaatiotyypit: KoodiUri[];
     parentOid: string;
     parentOidPath: string;
-    yritysmuoto?: string;
-    ytunnus?: string;
-    tyypit: OrganisaatioType[];
-    organisaatiotyypit?: OrganisaatioType[];
     status: string;
-    nimet: ApiOrganisaationNimetNimi[];
-    kotipaikkaUri: KoodiUri;
-    muutKotipaikatUris?: KoodiUri[];
-    maaUri: KoodiUri;
-    kieletUris: KoodiUri[];
-    yhteystiedot: ApiYhteystiedot[];
-    oppilaitosTyyppiUri: KoodiUri;
-    oppilaitosKoodi: string;
-    muutOppilaitosTyyppiUris: string[];
-    vuosiluokat: string[];
-    varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
-    piilotettu?: boolean;
-    yhteystietoArvos?: ApiYhteystietoArvo[];
-    subRows?: ApiOrganisaatio[];
-    virastoTunnus?: string;
+    subRows: OrganisaatioHakuOrganisaatio[];
+    toimipistekoodi: string;
+    ytunnus: string;
+    oppilaitosKoodi?: string;
+    oppilaitostyyppi?: string;
+    allOrganisaatioTyypit: string[];
+    allOppilaitosTyypit: string[];
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

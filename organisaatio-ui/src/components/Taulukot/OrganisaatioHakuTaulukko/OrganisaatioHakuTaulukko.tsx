@@ -5,7 +5,7 @@ import { Cell, Column, HeaderGroup, Row, useExpanded, useFilters, usePagination,
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { ApiOrganisaatio } from '../../../types/apiTypes';
+import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import Loading from '../../Loading/Loading';
@@ -17,7 +17,7 @@ import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
-import { containingOidsFilter, tyyppiFilter } from './Filters';
+import { SelectOptionType } from '../../../types/types';
 
 const MAX_EXPAND_ROWS = 10;
 
@@ -26,7 +26,7 @@ const mapPaginationSelectors = (index) => {
     return [index - 2, index + 3];
 };
 
-export const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {}) => {
+export const expandData = (data: OrganisaatioHakuOrganisaatio[], parent?: string, initial = {}) => {
     return data.reduce((p, c, i) => {
         const me = parent ? `${parent}.${i}` : `${i}`;
         if (!!c.subRows && c.subRows.length <= MAX_EXPAND_ROWS) {
@@ -36,25 +36,23 @@ export const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {
         return p;
     }, initial);
 };
-export const allOids = (data: ApiOrganisaatio[]) => {
+export const allOids = (data: OrganisaatioHakuOrganisaatio[]): string[] => {
     return data.reduce((p: string[], c) => {
         const subs = !!c.subRows ? allOids(c.subRows) : [];
         return [...p, ...subs, c.oid];
     }, []);
 };
 
-export const enrichWithAllOrganisaatioTyypit = (data: ApiOrganisaatio[]) => {
-    const allOrganisaatioTyyppis = (data: ApiOrganisaatio[]) => {
-        return data.reduce((p: string[], c) => {
-            const organisaatiotyypit = c.organisaatiotyypit || [];
-            const subs = !!c.subRows ? allOrganisaatioTyyppis(c.subRows) : [];
-            return [...p, ...subs, ...organisaatiotyypit];
-        }, []);
-    };
-    return data.map((organisaatio) => ({
-        ...organisaatio,
-        allOrganisaatioTyypit: allOrganisaatioTyyppis([organisaatio]),
-    }));
+export const containingSomeValueFilter = (
+    rows: Row<OrganisaatioHakuOrganisaatio>[],
+    id: string,
+    filterValue: string[]
+): Row<OrganisaatioHakuOrganisaatio>[] => {
+    if (filterValue.length === 0) return rows;
+    return rows.filter((row) => {
+        const rowValue = row.values[id];
+        return rowValue.some((r) => filterValue.includes(r));
+    });
 };
 
 const ExpandIcon = ({ isExpanded }) => {
@@ -66,15 +64,13 @@ export default function OrganisaatioHakuTaulukko() {
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
     const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
-    const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
+    const [organisaatiot, setOrganisaatiot] = useState<OrganisaatioHakuOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
 
-    const tyyppiColumnFilter = React.useCallback(tyyppiFilter, []);
-    const containingOidsColumnFilter = React.useCallback(containingOidsFilter, []);
-
-    const columns = React.useMemo<Column<ApiOrganisaatio>[]>(
+    const containingFilter = React.useCallback(containingSomeValueFilter, []);
+    const columns = React.useMemo<Column<OrganisaatioHakuOrganisaatio>[]>(
         () => [
             {
                 id: 'expander',
@@ -96,9 +92,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: i18n.translate('TAULUKKO_NIMI'),
                 id: 'nimi',
-                accessor: (values) => {
-                    return i18n.translateNimi(values.nimi);
-                },
+                accessor: (values) => i18n.translateNimi(values.nimi),
                 Cell: ({ row }) => {
                     return (
                         <Link to={`/lomake/${row.original.oid}`}>
@@ -118,9 +112,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: i18n.translate('TAULUKKO_TYYPPI'),
                 id: 'organisaatiotyypit',
-                accessor: (values) => {
-                    return values.organisaatiotyypit;
-                },
+                accessor: (values) => values.allOrganisaatioTyypit,
                 Cell: ({ row }) => (
                     <span>
                         {row.original.organisaatiotyypit
@@ -128,7 +120,12 @@ export default function OrganisaatioHakuTaulukko() {
                             .join(', ')}
                     </span>
                 ),
-                filter: tyyppiColumnFilter,
+                filter: (rows, id, filterValue) =>
+                    containingFilter(
+                        rows,
+                        id,
+                        filterValue.map((selectOption: SelectOptionType) => selectOption.value)
+                    ),
             },
             {
                 Header: i18n.translate('TAULUKKO_TUNNISTE'),
@@ -157,30 +154,27 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: 'containingOids',
                 id: 'containingOids',
-                accessor: (values) => {
-                    console.log('dsada', ...values.parentOidPath.split('/'), ...allOids([values]));
-                    return [...values.parentOidPath.split('/'), ...allOids([values])];
-                },
+                accessor: (values) => Array.from(new Set([...values.parentOidPath.split('/'), ...allOids([values])])),
                 hidden: true,
-                filter: containingOidsColumnFilter,
+                filter: containingFilter,
             },
             {
-                Header: 'oppilaitosTyyppi',
-                id: 'oppilaitosTyyppi',
-                accessor: (values) => {
-                    return ([] as string[]).concat(
-                        values.oppilaitosTyyppiUri || [],
-                        values.muutOppilaitosTyyppiUris || []
-                    );
-                },
+                Header: 'oppilaitostyyppi',
+                id: 'oppilaitostyyppi',
+                accessor: (values) => values.allOppilaitosTyypit,
                 hidden: true,
-                filter: tyyppiColumnFilter,
+                filter: (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: SelectOptionType[]) =>
+                    containingFilter(
+                        rows,
+                        id,
+                        filterValue.map((selectOption: SelectOptionType) => selectOption.value)
+                    ),
             },
         ],
-        [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingOidsColumnFilter, tyyppiColumnFilter]
+        [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingFilter]
     );
     const sortOrganisations = useMemo(
-        () => (nodes: ApiOrganisaatio[]): ApiOrganisaatio[] => {
+        () => (nodes: OrganisaatioHakuOrganisaatio[]): OrganisaatioHakuOrganisaatio[] => {
             nodes.sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi)));
             nodes.forEach(function (node) {
                 if (node?.subRows && node.subRows.length > 0) {
@@ -211,14 +205,14 @@ export default function OrganisaatioHakuTaulukko() {
         previousPage,
         setPageSize,
         state: { pageIndex, pageSize },
-    } = useTable<ApiOrganisaatio>(
+    } = useTable<OrganisaatioHakuOrganisaatio>(
         {
             columns,
             data,
             initialState: {
                 pageIndex: 0,
                 expanded: initialExpanded,
-                hiddenColumns: ['containingOids', 'oppilaitosTyyppi'],
+                hiddenColumns: ['containingOids', 'oppilaitostyyppi'],
                 filters: [
                     { id: 'containingOids', value: crudOids },
                     {
@@ -226,7 +220,7 @@ export default function OrganisaatioHakuTaulukko() {
                         value: [],
                     },
                     {
-                        id: 'oppilaitosTyyppi',
+                        id: 'oppilaitostyyppi',
                         value: [],
                     },
                 ],
@@ -250,7 +244,7 @@ export default function OrganisaatioHakuTaulukko() {
                 value: organisaatioTyyppi,
             },
             {
-                id: 'oppilaitosTyyppi',
+                id: 'oppilaitostyyppi',
                 value: oppilaitosTyyppi,
             },
         ]);
@@ -263,12 +257,12 @@ export default function OrganisaatioHakuTaulukko() {
                 <div className={styles.TaulukkoContainer}>
                     <table {...getTableProps()} className={styles.Taulukko}>
                         <thead>
-                            {headerGroups.map((headerGroup: HeaderGroup<ApiOrganisaatio>) => (
+                            {headerGroups.map((headerGroup: HeaderGroup<OrganisaatioHakuOrganisaatio>) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map((column) => (
                                         <th
                                             {...column.getHeaderProps({
-                                                className: (column as HeaderGroup<ApiOrganisaatio> & {
+                                                className: (column as HeaderGroup<OrganisaatioHakuOrganisaatio> & {
                                                     collapse: boolean;
                                                 }).collapse
                                                     ? styles.collapse
@@ -290,11 +284,11 @@ export default function OrganisaatioHakuTaulukko() {
                                 prepareRow(row);
                                 return (
                                     <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell: Cell<ApiOrganisaatio>) => {
+                                        {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
                                             return (
                                                 <td
                                                     {...cell.getCellProps({
-                                                        className: (cell.row as Row<ApiOrganisaatio> & {
+                                                        className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
                                                             collapse: boolean;
                                                         }).collapse
                                                             ? styles.collapse

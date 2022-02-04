@@ -8,7 +8,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
-import { ApiOrganisaatio } from '../../../types/apiTypes';
+import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
@@ -16,13 +16,14 @@ import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { oppilaitostyyppiKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 import { SelectOptionType } from '../../../types/types';
 import { ValueType } from 'react-select';
+import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 
 const ORGANISAATIOTYYPPI_OPPILAITOS_VALUE = 'organisaatiotyyppi_02';
 
 const SEARCH_LENGTH = 3;
 
 type HakufiltteritProps = {
-    setOrganisaatiot: (data: ApiOrganisaatio[]) => void;
+    setOrganisaatiot: (data: OrganisaatioHakuOrganisaatio[]) => void;
     setLoading: (loading: boolean) => void;
 };
 
@@ -34,6 +35,46 @@ export const mapTyyppiFilter = (
 
 const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[]) =>
     !!organisaatioTyyppi.find((ot) => ot.value === ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
+
+export const enrichWithAllOrganisaatioTyypit = (
+    data: OrganisaatioHakuOrganisaatio[],
+    parentOrganisaatioTypes: string[] = [],
+    parentOpilaitosTypes: string[] = []
+): OrganisaatioHakuOrganisaatio[] => {
+    const allOrganisaatioTyyppis = (data): [string[], string[]] => {
+        return data.reduce(
+            (prev, c: OrganisaatioHakuOrganisaatio) => {
+                const [prevOrganisaatioTyypit, prevOppilaitosTyypit] = prev;
+                const organisaatiotyypit = c.organisaatiotyypit || [];
+                const oppilaitostyyppi = !!c.oppilaitostyyppi ? [dropKoodiVersionSuffix(c.oppilaitostyyppi)] : [];
+                const [subOrganisaatioTyypit, subOppilaitosTyypit] = !!c.subRows
+                    ? allOrganisaatioTyyppis(c.subRows)
+                    : [[], []];
+                return [
+                    [
+                        ...prevOrganisaatioTyypit,
+                        ...subOrganisaatioTyypit,
+                        ...organisaatiotyypit,
+                        ...parentOrganisaatioTypes,
+                    ],
+                    [...prevOppilaitosTyypit, ...subOppilaitosTyypit, ...oppilaitostyyppi, ...parentOpilaitosTypes],
+                ];
+            },
+            [[], []]
+        );
+    };
+    return data.map((organisaatio) => {
+        const [allOrganisaatioTyypit, allOppilaitosTyypit] = allOrganisaatioTyyppis([organisaatio]).map((arr) => [
+            ...new Set(arr),
+        ]);
+        return {
+            ...organisaatio,
+            subRows: enrichWithAllOrganisaatioTyypit(organisaatio.subRows, allOrganisaatioTyypit, allOppilaitosTyypit),
+            allOrganisaatioTyypit,
+            allOppilaitosTyypit,
+        };
+    });
+};
 
 export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
     const [i18n] = useAtom(languageAtom);
@@ -49,7 +90,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                     searchStr: remoteFilters.searchString,
                     lakkautetut: remoteFilters.naytaPassivoidut,
                 });
-                setOrganisaatiot(searchResult);
+                setOrganisaatiot(enrichWithAllOrganisaatioTyypit(searchResult, []));
                 setLoading(false);
             })();
         }
