@@ -60,6 +60,8 @@ const ExpandIcon = ({ isExpanded }) => {
     return <IconWrapper icon={chevronRight} />;
 };
 
+const mapOptionsToValues = (options: SelectOptionType[]) => options.map((o) => o.value);
+
 export default function OrganisaatioHakuTaulukko() {
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
@@ -120,12 +122,7 @@ export default function OrganisaatioHakuTaulukko() {
                             .join(', ')}
                     </span>
                 ),
-                filter: (rows, id, filterValue) =>
-                    containingFilter(
-                        rows,
-                        id,
-                        filterValue.map((selectOption: SelectOptionType) => selectOption.value)
-                    ),
+                filter: (rows, id, filterValue) => containingFilter(rows, id, mapOptionsToValues(filterValue)),
             },
             {
                 Header: i18n.translate('TAULUKKO_TUNNISTE'),
@@ -154,7 +151,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: 'containingOids',
                 id: 'containingOids',
-                accessor: (values) => Array.from(new Set([...values.parentOidPath.split('/'), ...allOids([values])])),
+                accessor: (values) => values.allOids,
                 hidden: true,
                 filter: containingFilter,
             },
@@ -164,11 +161,7 @@ export default function OrganisaatioHakuTaulukko() {
                 accessor: (values) => values.allOppilaitosTyypit,
                 hidden: true,
                 filter: (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: SelectOptionType[]) =>
-                    containingFilter(
-                        rows,
-                        id,
-                        filterValue.map((selectOption: SelectOptionType) => selectOption.value)
-                    ),
+                    containingFilter(rows, id, mapOptionsToValues(filterValue)),
             },
         ],
         [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingFilter]

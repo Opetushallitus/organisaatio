@@ -139,6 +139,7 @@ export type OrganisaatioHakuOrganisaatio = {
     oppilaitostyyppi?: string;
     allOrganisaatioTyypit: string[];
     allOppilaitosTyypit: string[];
+    allOids: string[];
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

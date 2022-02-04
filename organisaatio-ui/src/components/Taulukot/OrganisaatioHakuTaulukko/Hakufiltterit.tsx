@@ -36,42 +36,44 @@ export const mapTyyppiFilter = (
 const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[]) =>
     !!organisaatioTyyppi.find((ot) => ot.value === ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
 
-export const enrichWithAllOrganisaatioTyypit = (
+export const enrichWithAllNestedData = (
     data: OrganisaatioHakuOrganisaatio[],
     parentOrganisaatioTypes: string[] = [],
-    parentOpilaitosTypes: string[] = []
+    parentOpilaitosTypes: string[] = [],
+    parentOids: string[] = []
 ): OrganisaatioHakuOrganisaatio[] => {
-    const allOrganisaatioTyyppis = (data): [string[], string[]] => {
-        return data.reduce(
-            (prev, c: OrganisaatioHakuOrganisaatio) => {
-                const [prevOrganisaatioTyypit, prevOppilaitosTyypit] = prev;
-                const organisaatiotyypit = c.organisaatiotyypit || [];
-                const oppilaitostyyppi = !!c.oppilaitostyyppi ? [dropKoodiVersionSuffix(c.oppilaitostyyppi)] : [];
-                const [subOrganisaatioTyypit, subOppilaitosTyypit] = !!c.subRows
-                    ? allOrganisaatioTyyppis(c.subRows)
-                    : [[], []];
-                return [
-                    [
-                        ...prevOrganisaatioTyypit,
-                        ...subOrganisaatioTyypit,
-                        ...organisaatiotyypit,
-                        ...parentOrganisaatioTypes,
-                    ],
-                    [...prevOppilaitosTyypit, ...subOppilaitosTyypit, ...oppilaitostyyppi, ...parentOpilaitosTypes],
-                ];
-            },
-            [[], []]
-        );
-    };
+    const tableDataEnricher = (organisaatioData): [string[], string[], string[]] =>
+        organisaatioData
+            .reduce(
+                (prev: [string[], string[], string[]], c: OrganisaatioHakuOrganisaatio) => {
+                    const [prevOrganisaatioTyypit, prevOppilaitosTyypit, prevOids] = prev;
+                    const organisaatiotyypit = c.organisaatiotyypit || [];
+                    const oppilaitostyyppi = !!c.oppilaitostyyppi ? [dropKoodiVersionSuffix(c.oppilaitostyyppi)] : [];
+                    const [subOrganisaatioTyypit, subOppilaitosTyypit, subOids] = !!c.subRows
+                        ? tableDataEnricher(c.subRows)
+                        : [[], [], []];
+                    return [
+                        [
+                            ...prevOrganisaatioTyypit,
+                            ...subOrganisaatioTyypit,
+                            ...organisaatiotyypit,
+                            ...parentOrganisaatioTypes,
+                        ],
+                        [...prevOppilaitosTyypit, ...subOppilaitosTyypit, ...oppilaitostyyppi, ...parentOpilaitosTypes],
+                        [...prevOids, ...subOids, c.oid, ...c.parentOidPath.split('/'), ...parentOids],
+                    ];
+                },
+                [[], [], []]
+            )
+            .map((arr) => [...new Set(arr)]);
     return data.map((organisaatio) => {
-        const [allOrganisaatioTyypit, allOppilaitosTyypit] = allOrganisaatioTyyppis([organisaatio]).map((arr) => [
-            ...new Set(arr),
-        ]);
+        const [allOrganisaatioTyypit, allOppilaitosTyypit, allOids] = tableDataEnricher([organisaatio]);
         return {
             ...organisaatio,
-            subRows: enrichWithAllOrganisaatioTyypit(organisaatio.subRows, allOrganisaatioTyypit, allOppilaitosTyypit),
+            subRows: enrichWithAllNestedData(organisaatio.subRows, allOrganisaatioTyypit, allOppilaitosTyypit, allOids),
             allOrganisaatioTyypit,
             allOppilaitosTyypit,
+            allOids,
         };
     });
 };
@@ -90,7 +92,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                     searchStr: remoteFilters.searchString,
                     lakkautetut: remoteFilters.naytaPassivoidut,
                 });
-                setOrganisaatiot(enrichWithAllOrganisaatioTyypit(searchResult, []));
+                setOrganisaatiot(enrichWithAllNestedData(searchResult));
                 setLoading(false);
             })();
         }
