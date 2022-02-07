@@ -104,4 +104,7 @@ update "schema_version_history" set checksum=-1002781473 where version='20210127
 update "schema_version_history" set checksum=1193931279 where version='20210414120000000';
 update "schema_version_history" set checksum=-498681454 where version='20210416120000000';
 update "schema_version_history" set checksum=-1549115685 where version='20210813120000000';
+update "schema_version_history" set checksum=10586805 where version='20211200000000001';
+update "schema_version_history" set checksum=-1799659496 where version='20211200000000002';
+update "schema_version_history" set checksum=249513655 where version='20211200000000003';
 delete from schema_version_history where version = '057';

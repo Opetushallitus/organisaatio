@@ -240,14 +240,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter implements Converter<Organi
         return new HashSet<>(a);
     }
 
-    private BinaryData decodeFromUUENCODED(String kuva) {
-        if (kuva == null || kuva.isEmpty()) {
-            return null;
-        }
-        BinaryData bd = new BinaryData();
-        bd.setData(Base64.getDecoder().decode(kuva));
-        return bd;
-    }
 
     private OrganisaatioMetaData convertMetadata(OrganisaatioMetaDataRDTO t) {
         if (t == null) {
@@ -262,7 +254,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter implements Converter<Organi
         s.setHakutoimistoEctsTehtavanimike(convertMapToMonikielinenTeksti(t.getHakutoimistoEctsTehtavanimike()));
         s.setHakutoimistoNimi(convertMapToMonikielinenTeksti(t.getHakutoimistonNimi()));
         s.setKoodi(t.getKoodi());
-        s.setKuva(decodeFromUUENCODED(t.getKuvaEncoded()));
         if (t.getLuontiPvm()!=null) {
             s.setLuontiPvm(t.getLuontiPvm());
         }

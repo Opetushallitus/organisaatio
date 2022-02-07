@@ -200,10 +200,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter implements Converter<Organi
         t.setHakutoimistonNimi(convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
 
-        // Otetaan kuva mukaan vain "pyydettäessä"
-        if (s.isIncludeImage()) {
-            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
-        }
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
@@ -254,14 +250,6 @@ public class OrganisaatioToOrganisaatioRDTOConverter implements Converter<Organi
         }
 
         return result;
-    }
-
-    private String encodeToUUENCODED(BinaryData kuva) {
-        if (kuva == null || kuva.getData() == null) {
-            return null;
-        }
-
-        return Base64.getEncoder().encodeToString(kuva.getData());
     }
 
 }

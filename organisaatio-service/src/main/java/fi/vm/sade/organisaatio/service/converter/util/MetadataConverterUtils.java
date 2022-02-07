@@ -1,12 +1,10 @@
 package fi.vm.sade.organisaatio.service.converter.util;
 
-import fi.vm.sade.organisaatio.model.BinaryData;
 import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioMetaData;
 import fi.vm.sade.organisaatio.model.Yhteystieto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +23,6 @@ public class MetadataConverterUtils {
         s.setHakutoimistoEctsTehtavanimike(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(t.getHakutoimistoEctsTehtavanimike()));
         s.setHakutoimistoNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(t.getHakutoimistonNimi()));
         s.setKoodi(t.getKoodi());
-        s.setKuva(decodeFromUUENCODED(t.getKuvaEncoded()));
         if (t.getLuontiPvm()!=null) {
             s.setLuontiPvm(t.getLuontiPvm());
         }
@@ -55,15 +52,6 @@ public class MetadataConverterUtils {
         return s;
     }
 
-    private static BinaryData decodeFromUUENCODED(String kuva) {
-        if (kuva == null || kuva.isEmpty()) {
-            return null;
-        }
-        BinaryData bd = new BinaryData();
-        bd.setData(Base64.getDecoder().decode(kuva));
-        return bd;
-    }
-
 
     public static OrganisaatioMetaDataRDTO convertMetadata(OrganisaatioMetaData s) {
         if (s == null) {
@@ -79,10 +67,6 @@ public class MetadataConverterUtils {
         t.setHakutoimistonNimi(YhteystietoConverterUtils.convertMKTToMap(s.getHakutoimistoNimi()));
         t.setKoodi(s.getKoodi());
 
-        // Otetaan kuva mukaan vain "pyydettäessä"
-        if (s.isIncludeImage()) {
-            t.setKuvaEncoded(encodeToUUENCODED(s.getKuva()));
-        }
         t.setLuontiPvm(s.getLuontiPvm());
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
@@ -97,17 +81,5 @@ public class MetadataConverterUtils {
 
         return t;
     }
-
-
-
-    private static String encodeToUUENCODED(BinaryData kuva) {
-        if (kuva == null || kuva.getData() == null) {
-            return null;
-        }
-
-        return Base64.getEncoder().encodeToString(kuva.getData());
-    }
-
-
 
 }
