@@ -45,9 +45,6 @@ public class OrganisaatioMetaData extends BaseEntity {
     private MonikielinenTeksti hakutoimistoEctsPuhelinmkt;
 
 
-    @OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private BinaryData kuva;
-
     @Transient private boolean includeImage = true;
 
     // Hakutoimisto
@@ -222,13 +219,6 @@ public class OrganisaatioMetaData extends BaseEntity {
         this.hakutoimistoEctsPuhelinmkt = hakutoimistoEctsPuhelin;
     }
 
-    public BinaryData getKuva() {
-        return kuva;
-    }
-
-    public void setKuva(BinaryData kuva) {
-        this.kuva = kuva;
-    }
 
     public Organisaatio getOrganisation() {
         return organisation;

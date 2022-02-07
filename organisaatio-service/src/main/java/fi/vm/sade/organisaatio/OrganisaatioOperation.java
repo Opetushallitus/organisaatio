@@ -17,5 +17,6 @@ public enum OrganisaatioOperation implements Operation {
     IMG_CREATE,
     IMG_DELETE,
     ORG_UPDATE,
+    ORG_TARKASTA
 
 }

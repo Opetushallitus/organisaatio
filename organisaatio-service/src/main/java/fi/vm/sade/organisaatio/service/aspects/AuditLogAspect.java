@@ -59,98 +59,78 @@ public class AuditLogAspect {
     // POST /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatio(..))")
     private Object newOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_CREATE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_CREATE);
-        return result;
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_CREATE);
     }
 
     // DELETE /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
     private Object deleteOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_DELETE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.ORG_DELETE);
-        return result;
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_DELETE);
     }
 
     // PUT /organisaatio/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.updateOrganisaatio(..))")
     private Object updateOrgAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_UPDATE);
-            throw e;
-        }
-        logEvent(result, OrganisaatioOperation.ORG_UPDATE);
-        return result;
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_UPDATE);
     }
 
     // DELETE /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatio(..))")
     private Object deletergAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.ORG_DELETE);
-            throw e;
-        }
-        logEvent(result, OrganisaatioOperation.ORG_DELETE);
-        return result;
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_DELETE);
+    }
+
+    // PUT /<oid>/tarkasta
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.updateTarkastusPvm(..))")
+    private Object tarkastaAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_TARKASTA);
+    }
+
+    // POST /<oid>/nimet
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatioNimi(..))")
+    private Object newNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_NIMI_CREATE);
+    }
+
+    // PUT /<oid>/nimet
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.updateOrganisaatioNimi(..))")
+    private Object updateNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_NIMI_UPDATE);
+    }
+
+    // DELETE /<oid>/nimet
+    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.deleteOrganisaatioNimi(..))")
+    private Object deleteNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        return genericAdvice(pjp,OrganisaatioOperation.ORG_NIMI_DELETE);
     }
 
     // POST /yhteystietojentyyppi/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.updateYhteystietoTyyppi(..))")
     private Object updateYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_UPDATE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_UPDATE);
-        return result;
+        return genericAdvice(pjp,OrganisaatioOperation.YHTEYSTIETO_UPDATE);
     }
 
     // PUT /yhteystietojentyyppi/
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.createYhteystietojenTyyppi(..))")
     private Object newYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        Object result;
-        try {
-            result = pjp.proceed();
-        } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_CREATE);
-            throw e;
-        }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_CREATE);
-        return result;
+        return genericAdvice(pjp,OrganisaatioOperation.YHTEYSTIETO_CREATE);
     }
 
     // DELETE /yhteystietojentyyppi/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
     private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        return genericAdvice(pjp,OrganisaatioOperation.YHTEYSTIETO_DELETE);
+    }
+
+    private Object genericAdvice(ProceedingJoinPoint pjp, OrganisaatioOperation operation) throws Throwable {
         Object result;
         try {
             result = pjp.proceed();
         } catch (Exception e) {
-            logEvent(null, OrganisaatioOperation.YHTEYSTIETO_DELETE);
+            logEvent(e, operation);
             throw e;
         }
-        logEvent(pjp.getArgs()[0], OrganisaatioOperation.YHTEYSTIETO_DELETE);
+        logEvent(pjp.getArgs()[0], operation);
         return result;
     }
 
@@ -181,6 +161,12 @@ public class AuditLogAspect {
         }
 
         Target target = new Target.Builder().setField("oid", oid).build();
+        Changes changes = new Changes.Builder().build();
+        audit.log(getUser(), type, target, changes);
+    }
+
+    private void logEvent(Exception e, OrganisaatioOperation type){
+        Target target = new Target.Builder().setField("cause",e.getClass().getName()).setField("errorMessage", e.getMessage()).build();
         Changes changes = new Changes.Builder().build();
         audit.log(getUser(), type, target, changes);
     }
