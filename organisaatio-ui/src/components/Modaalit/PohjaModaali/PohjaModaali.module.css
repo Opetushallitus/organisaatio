@@ -6,6 +6,7 @@
     border-radius: 0px;
     background-color: #ffffff;
     box-shadow: 0 9px 7px 0 rgba(0, 0, 0, 0.5);
+    min-width: min-content;
 }
 
 .ModaaliOtsikkoKehys.ModaaliOtsikkoKehys {
