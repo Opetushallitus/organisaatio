@@ -64,8 +64,7 @@ export default function TNBody(props: TNProps) {
                         </BodyKentta>
                     </BodyRivi>
                 )}
-            </BodyKehys>
-            <BodyKehys>
+
                 <NimenMuutosFields
                     edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
                     validationErrors={validationErrors}

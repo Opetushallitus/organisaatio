@@ -71,6 +71,11 @@
     width: 26rem;
 }
 
+.NimiKentta {
+    margin-right: 2rem;
+    min-width: 55%;
+}
+
 .KenttaLyhyt {
     margin-right: 2rem;
     max-width: 50%;

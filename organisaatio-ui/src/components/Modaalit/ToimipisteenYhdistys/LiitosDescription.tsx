@@ -7,7 +7,7 @@ import { languageAtom } from '../../../api/lokalisaatio';
 import { useAtom } from 'jotai';
 import styled from 'styled-components';
 import { organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
-import { BodyKehys, BodyRivi } from '../ModalFields/ModalFields';
+import { BodyRivi } from '../ModalFields/ModalFields';
 
 const Styles = styled.div`
     table {
@@ -102,7 +102,7 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
         return <Spin />;
     }
     return (
-        <BodyKehys>
+        <>
             <BodyRivi>
                 <Styles>
                     <table {...getTableProps()}>
@@ -130,7 +130,7 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
                     </table>
                 </Styles>
             </BodyRivi>
-        </BodyKehys>
+        </>
     );
 };
 export default LiitosDescription;
