@@ -73,7 +73,7 @@
 
 .NimiKentta {
     margin-right: 2rem;
-    min-width: 55%;
+    width: 35rem;
 }
 
 .KenttaLyhyt {
@@ -90,6 +90,7 @@
     -webkit-appearance: none;
     border: none;
 }
+
 .ValiNappulat > Button {
     margin-right: 0.5rem;
 }
