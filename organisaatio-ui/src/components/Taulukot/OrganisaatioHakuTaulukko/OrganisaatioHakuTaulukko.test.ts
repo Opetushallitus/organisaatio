@@ -1,5 +1,6 @@
 import { containingSomeValueFilter, expandData } from './OrganisaatioHakuTaulukko';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
+import { Row } from 'react-table';
 
 describe('OrganisaatioHakuTaulukko', () => {
     describe('expandData', () => {
@@ -60,27 +61,26 @@ describe('OrganisaatioHakuTaulukko', () => {
             {
                 values: {
                     organisaatiotyypit: ['1'],
-                },
-            },
+                } as Partial<OrganisaatioHakuOrganisaatio>,
+            } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
             {
                 values: {
                     organisaatiotyypit: ['2'],
-                },
-            },
+                } as Partial<OrganisaatioHakuOrganisaatio>,
+            } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
             {
                 values: {
                     organisaatiotyypit: ['2'],
-                },
-            },
-        ];
-        const id = ['organisaatiotyypit'];
+                } as Partial<OrganisaatioHakuOrganisaatio>,
+            } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
+        ] as Row<OrganisaatioHakuOrganisaatio>[];
+        const id = 'organisaatiotyypit';
         test.each([
             ['Filters correctly based on filter', rows1, id, ['2'], [rows1[1], rows1[2]]],
             ['Filters correctly based on multiple filters', rows1, id, ['2', '1'], rows1],
             ['Passes all on empty filter', rows1, id, [], rows1],
             ['Does not fail if id does not match object prop', rows1, 'testi', [], rows1],
-        ])('%s', (_, rows, id, filter, expected) => {
-            // @ts-ignore:next-line
+        ])('%s', (_, rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filter: string[], expected) => {
             expect(containingSomeValueFilter(rows, id, filter)).toStrictEqual(expected);
         });
     });

@@ -121,7 +121,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
 
 export type OrganisaatioHakuOrganisaatio = {
     aliOrganisaatioMaara: number;
-    alkuPvm: Date;
+    alkuPvm: number;
     children: OrganisaatioHakuOrganisaatio[];
     kieletUris: [];
     kotipaikkaUri: KoodiUri;

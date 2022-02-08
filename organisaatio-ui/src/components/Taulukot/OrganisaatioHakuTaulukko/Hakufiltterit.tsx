@@ -27,14 +27,21 @@ type HakufiltteritProps = {
     setLoading: (loading: boolean) => void;
 };
 
+type HakufiltteritSelectProps = {
+    handleSelectChange: (selectOptionType: ValueType<SelectOptionType> | ValueType<SelectOptionType>[]) => void;
+    selectOptions: SelectOptionType[];
+    disabled?: boolean;
+    value: SelectOptionType[];
+};
+
 export const mapTyyppiFilter = (
-    selectedOptions: ValueType<SelectOptionType> | ValueType<SelectOptionType>[] | undefined
+    selectedOptions?: ValueType<SelectOptionType> | ValueType<SelectOptionType>[]
 ): SelectOptionType[] => {
     return selectedOptions ? ([] as SelectOptionType[]).concat(selectedOptions as SelectOptionType[]) : [];
 };
 
 const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[]) =>
-    !!organisaatioTyyppi.find((ot) => ot.value === ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
+    organisaatioTyyppi.map((ot) => ot.value).includes(ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
 
 export const enrichWithAllNestedData = (
     data: OrganisaatioHakuOrganisaatio[],
@@ -78,6 +85,17 @@ export const enrichWithAllNestedData = (
     });
 };
 
+const HakuFilterSelect = (props: HakufiltteritSelectProps) => {
+    const { handleSelectChange, selectOptions, disabled = false, value } = props;
+    const [i18n] = useAtom(languageAtom);
+    return (
+        <div className={styles.Kentta}>
+            <label>{i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}</label>
+            <Select onChange={handleSelectChange} isDisabled={disabled} isMulti value={value} options={selectOptions} />
+        </div>
+    );
+};
+
 export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
     const [i18n] = useAtom(languageAtom);
     const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
@@ -97,6 +115,23 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
             })();
         }
     }, [remoteFilters, setLoading, setOrganisaatiot]);
+
+    const handleOppilaitosTyyppiChange = (values) => {
+        setLocalFilters({
+            ...localFilters,
+            oppilaitosTyyppi: mapTyyppiFilter(values),
+        });
+    };
+
+    const handleOrganisaatiotyyppiChange = (values) => {
+        const organisaatioTyyppi = mapTyyppiFilter(values);
+        setLocalFilters({
+            ...localFilters,
+            organisaatioTyyppi,
+            oppilaitosTyyppi: checkIsOppilaitosTyyppiAllowed(organisaatioTyyppi) ? localFilters.oppilaitosTyyppi : [],
+        });
+    };
+
     return (
         <div>
             <div className={styles.FiltteriRivi}>
@@ -149,41 +184,17 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
             </div>
             <div className={styles.FiltteriRivi}>
                 <div className={styles.DropdownContainer}>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('TAULUKKO_ORGANISAATIOTYYPPI')}</label>
-                        <Select
-                            id={'ORGANISAATIOHAKU_TYYPPI_SELECT'}
-                            onChange={(values) => {
-                                const organisaatioTyyppi = mapTyyppiFilter(values);
-                                setLocalFilters({
-                                    ...localFilters,
-                                    organisaatioTyyppi,
-                                    oppilaitosTyyppi: checkIsOppilaitosTyyppiAllowed(organisaatioTyyppi)
-                                        ? localFilters.oppilaitosTyyppi
-                                        : [],
-                                });
-                            }}
-                            isMulti
-                            value={localFilters.organisaatioTyyppi}
-                            options={organisaatioTyypitKoodisto.selectOptions()}
-                        />
-                    </div>
-                    <div className={styles.Kentta}>
-                        <label>{i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}</label>
-                        <Select
-                            id={'ORGANISAATIOHAKU_OPPILAITOSTYYPPI_SELECT'}
-                            onChange={(values) => {
-                                setLocalFilters({
-                                    ...localFilters,
-                                    oppilaitosTyyppi: mapTyyppiFilter(values),
-                                });
-                            }}
-                            isDisabled={!checkIsOppilaitosTyyppiAllowed(localFilters.organisaatioTyyppi)}
-                            isMulti
-                            value={localFilters.oppilaitosTyyppi}
-                            options={oppilaitosTyypitKoodisto.selectOptions()}
-                        />
-                    </div>
+                    <HakuFilterSelect
+                        handleSelectChange={handleOrganisaatiotyyppiChange}
+                        selectOptions={organisaatioTyypitKoodisto.selectOptions()}
+                        value={localFilters.organisaatioTyyppi}
+                    />
+                    <HakuFilterSelect
+                        handleSelectChange={handleOppilaitosTyyppiChange}
+                        selectOptions={oppilaitosTyypitKoodisto.selectOptions()}
+                        disabled={!checkIsOppilaitosTyyppiAllowed(localFilters.organisaatioTyyppi)}
+                        value={localFilters.oppilaitosTyyppi}
+                    />
                 </div>
                 <div className={styles.LisatiedotLinkkiKentta}>
                     <a
