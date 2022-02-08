@@ -142,7 +142,6 @@ public class ConverterFactory {
             return converter.getJpaClass();
         }
 
-        // TODO: omat convertterit näillekin?
         Class<? extends OrganisaatioBaseEntity> jpaClass;
         if (OsoiteDTO.class.isAssignableFrom(dto.getClass())) {
             jpaClass = Osoite.class;
@@ -152,9 +151,7 @@ public class ConverterFactory {
             jpaClass = Www.class;
         } else if (EmailDTO.class.isAssignableFrom(dto.getClass())) {
             jpaClass = Email.class;
-        } //else if (OrganisaatioTyyppiDTO.class.isAssignableFrom(dto.getClass())) {
-            //jpaClass = OrganisaatioTyyppi.class;}
-        else if (YhteystietoElementtiDTO.class.isAssignableFrom(dto.getClass())) {
+        } else if (YhteystietoElementtiDTO.class.isAssignableFrom(dto.getClass())) {
             jpaClass = YhteystietoElementti.class;
         } else {
             throw new IllegalArgumentException("no converter found for dto: " + dto);

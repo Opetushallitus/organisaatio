@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import IconWrapper from '../../../IconWapper/IconWrapper';
-import { Path, UseFormRegisterReturn } from 'react-hook-form';
+import { FieldError, Path, UseFormRegisterReturn } from 'react-hook-form';
 import { KenttaError, Nimi } from '../../../../types/types';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
@@ -98,12 +98,13 @@ const NimiKentta = ({
     id: string;
     field: Path<Nimi>;
     formRegisterReturn: UseFormRegisterReturn;
-    error?: KenttaError;
+    error?: FieldError;
     copyToNames?: (field: Path<Nimi>) => void;
 }) => {
     const [i18n] = useAtom(languageAtom);
+    console.log(error);
     return (
-        <Kentta isRequired label={label}>
+        <Kentta isRequired label={label} error={error}>
             <Input
                 error={!!error}
                 id={id}
@@ -199,11 +200,12 @@ export {
     Rivi,
     Kentta,
     KenttaLyhyt,
+    NimiKentta,
+    NimiGroup,
     AvainKevyestiBoldattu,
     ReadOnly,
     ReadOnlyNimi,
     ReadOnlyDate,
     LomakeButton,
     LabelLink,
-    NimiGroup,
 };

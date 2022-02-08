@@ -232,8 +232,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Asetetaan parent path
         setParentPath(entity, parentOid);
 
-        checkToimipisteNimiFormat(entity, parentOrg);
-
         boolean parentChanged = false;
         Organisaatio oldParent = null;
         oldParent = validateHierarchy(parentOid, entity, oldOrg);
@@ -326,8 +324,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Asetetaan parent path
         setParentPath(entity, parentOid);
 
-        // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
-        checkToimipisteNimiFormat(entity, parentOrg);
 
         setPaivittajaData(entity);
 
@@ -1046,13 +1042,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return entity.getTyypit().stream().anyMatch(OrganisaatioTyyppi.VARHAISKASVATUKSEN_TOIMIPAIKKA.koodiValue()::equals);
     }
 
-    // Tarkistetaan että toimipisteen nimi on oikeassa formaatissa
-
-    private void checkToimipisteNimiFormat(Organisaatio entity, Organisaatio parentOrg) {
-        if (parentOrg != null && (organisaatioIsOfType(entity, OrganisaatioTyyppi.TOIMIPISTE) || organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPISOPIMUSTOIMIPISTE)) && !organisaatioIsOfType(entity, OrganisaatioTyyppi.OPPILAITOS)) {
-            checker.checkToimipisteNimiFormat(entity, parentOrg.getNimi());
-        }
-    }
 
     private void checkDateConstraints(Organisaatio entity, Organisaatio parentOrg) {
         // OH-116

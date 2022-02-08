@@ -8,17 +8,19 @@ const perustietoOptionSchemaRequired = Joi.object({
     label: Joi.string().required(),
     value: Joi.string().required(),
     arvo: Joi.string().required(),
-    versio: Joi.number().optional(),
-    disabled: Joi.boolean().optional(),
-}).required();
+})
+    .required()
+    .options({ allowUnknown: true });
+
 const perustietoOptionSchemaOptional = Joi.object({
     label: Joi.string().allow(''),
     value: Joi.string().allow(''),
     arvo: Joi.string().allow(''),
-    versio: Joi.number().optional(),
-    disabled: Joi.boolean().optional(),
-});
-const virastoTunnus = Joi.string().pattern(/^\d{6}.*$/);
+}).options({ allowUnknown: true });
+
+const virastoTunnus = Joi.string()
+    .pattern(/^\d{6}.*$/)
+    .allow('', null);
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
@@ -37,5 +39,5 @@ export default Joi.object({
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
     piilotettu: Joi.optional(),
     yritysmuoto: Joi.optional(),
-    virastoTunnus: virastoTunnus.optional(),
+    virastoTunnus: virastoTunnus,
 });

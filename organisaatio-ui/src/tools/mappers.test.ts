@@ -27,6 +27,7 @@ describe('mappers', () => {
             sv: 'ruotsikuvaus',
         },
         emptyprop: {},
+        tila: 'LUONNOS' as const,
     };
     describe('dropKoodiVersionSuffix', () => {
         it('Drops koodi version suffix #', () => {

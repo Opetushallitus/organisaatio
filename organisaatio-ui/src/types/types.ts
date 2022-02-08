@@ -1,4 +1,4 @@
-import { ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
+import { APIEndpontDate, ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
 
 export type Language = 'fi' | 'sv' | 'en';
@@ -18,6 +18,9 @@ export type Koodi = {
     arvo: KoodiArvo;
     nimi: LocalizableText;
     versio: number;
+    tila: 'PASSIIVINEN' | 'LUONNOS' | 'HYVAKSYTTY';
+    voimassaLoppuPvm?: APIEndpontDate;
+    voimassaAlkuPvm?: APIEndpontDate;
 };
 
 export type KoodistoSelectOption = {
@@ -25,6 +28,7 @@ export type KoodistoSelectOption = {
     arvo: KoodiArvo;
     label: string;
     versio: number;
+    isDisabled?: boolean;
     disabled?: boolean;
 };
 
@@ -260,7 +264,6 @@ export type Koodisto = {
     uri2Arvo: (uri: KoodiUri) => string | number;
     arvo2Uri: (arvo: KoodiArvo) => string;
     uri2Nimi: (uri: KoodiUri) => string;
-    arvo2Nimi: (arvo: KoodiArvo) => string;
     koodit: () => Koodi[];
     selectOptions: () => KoodistoSelectOption[];
     uri2SelectOption: (uri: KoodiUri, disabled?: boolean) => KoodistoSelectOption;

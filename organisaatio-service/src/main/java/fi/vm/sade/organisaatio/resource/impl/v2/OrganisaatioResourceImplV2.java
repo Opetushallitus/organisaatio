@@ -112,7 +112,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOidList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getLimit());
 
-        // TODO tarkistetaanko tässä vai business kerroksessa parametrit
 
         Set<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),

@@ -173,7 +173,6 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     }
 
     public boolean userCanUpdateYTJ() {
-        // TODO only OPH user can update??
         return checkAccess(ophOid, ROLE_CRUD);
     }
 
@@ -214,12 +213,10 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
         return checkAccess(ophOid, ROLE_CRUD);
     }
 
-    //TODO there's no spec about who can edit yhteystiedot
     public boolean userCanEditYhteystietojenTyypit() {
         return checkAccess(ophOid, ROLE_RU, ROLE_CRUD);
     }
 
-    //TODO there's no spec about who can edit yhteystiedot
     public boolean userCanDeleteYhteystietojenTyyppi() {
         return checkAccess(ophOid, ROLE_CRUD);
     }

@@ -1,18 +1,35 @@
-import { Koodi, KoodiArvo, Koodisto, KoodistoSelectOption, KoodiUri, Language } from '../types/types';
+import { Koodi, Koodisto, KoodistoSelectOption, KoodiUri, Language } from '../types/types';
 
 export class KoodistoImpl implements Koodisto {
     private readonly koodisto: Koodi[];
     private readonly kieli: Language;
     private readonly KoodistoOptionValues: KoodistoSelectOption[];
 
-    constructor(koodisto: Koodi[], kieli: Language) {
-        this.koodisto = koodisto.sort((a, b) => a.uri.localeCompare(b.uri));
+    constructor({
+        koodisto,
+        kieli,
+        disableOption = (koodi) => koodi.tila === 'PASSIIVINEN',
+    }: {
+        koodisto: Koodi[];
+        kieli: Language;
+        disableOption?: (Koodi) => boolean;
+    }) {
+        this.koodisto = koodisto;
         this.kieli = kieli;
-        this.KoodistoOptionValues = koodisto.map((koodi: Koodi) => this.uri2SelectOption(koodi.uri, false));
+        this.KoodistoOptionValues = koodisto.map((koodi: Koodi) =>
+            this.uri2SelectOption(koodi.uri, disableOption(koodi))
+        );
+        this.KoodistoOptionValues.sort((a, b) =>
+            a.isDisabled === b.isDisabled ? a.value.localeCompare(b.value) : a.isDisabled ? 1 : -1
+        );
     }
 
     uri2SelectOption(uri: KoodiUri, disabled = false): KoodistoSelectOption {
-        return { ...this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`)), disabled };
+        return {
+            ...this.nimi((koodi) => koodi.uri === uri || uri?.startsWith(`${koodi.uri}#`)),
+            isDisabled: disabled,
+            disabled,
+        };
     }
 
     uri2Nimi(uri: KoodiUri): string {
@@ -21,10 +38,6 @@ export class KoodistoImpl implements Koodisto {
 
     uri2Arvo(uri: KoodiUri): string {
         return this.koodit().find((koodi) => koodi.uri === uri)?.arvo || '';
-    }
-
-    arvo2Nimi(arvo: KoodiArvo): string {
-        return this.nimi((koodi) => koodi.arvo === arvo).label;
     }
 
     arvo2Uri(arvo: string): string {

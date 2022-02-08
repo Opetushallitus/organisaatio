@@ -3,7 +3,7 @@ import Radio from '@opetushallitus/virkailija-ui-components/Radio';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { NimenmuutosLomake } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormGetValues, UseFormRegister } from 'react-hook-form/dist/types/form';
+import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { Controller } from 'react-hook-form';
 import NimenMuutosFields from './NimenMuutosFields';
@@ -17,11 +17,12 @@ type TNProps = {
     register: UseFormRegister<NimenmuutosLomake>;
     formControl: Control<NimenmuutosLomake>;
     getValues: UseFormGetValues<NimenmuutosLomake>;
+    setValue: UseFormSetValue<NimenmuutosLomake>;
     isLoading: boolean;
 };
 
 export default function TNBody(props: TNProps) {
-    const { validationErrors, register, formControl, getValues, isLoading } = props;
+    const { validationErrors, register, formControl, getValues, setValue, isLoading } = props;
     const [i18n] = useAtom(languageAtom);
     if (isLoading) {
         return (
@@ -68,6 +69,8 @@ export default function TNBody(props: TNProps) {
                     validationErrors={validationErrors}
                     formControl={formControl}
                     register={register}
+                    getValues={getValues}
+                    setValue={setValue}
                 />
             </BodyRivi>
         </>
