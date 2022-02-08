@@ -9,17 +9,16 @@ export class I18nImpl implements I18n {
         this._language = language;
     }
 
-    translate(key: string): string {
-        return this.translateWithLang(key, this._language);
+    translate(key: string, keyIfEmpty = true): string {
+        return this.translateWithLang(key, this._language, keyIfEmpty);
     }
 
-    translateWithLang(key: string, language: Language): string {
+    translateWithLang(key: string, language: Language, keyIfEmpty = true): string {
         const translation = this._data[language]?.[key];
-        if (!translation) {
+        !translation &&
+            process.env.NODE_ENV !== 'development' &&
             console.info(`Translation is missing for ${key} in language ${language}`);
-            return key;
-        }
-        return translation;
+        return translation || keyIfEmpty ? key : '';
     }
 
     translateNimi = (nimi: Nimi | undefined) => {

@@ -60,7 +60,7 @@ export default function PerustietoLomake({
     return (
         <UloinKehys>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_SUOMEKSI'}>
+                <Kentta isRequired label={'PERUSTIETO_NIMI_SUOMEKSI'} error={validationErrors.nimi?.fi}>
                     <Input
                         error={!!validationErrors.nimi?.fi}
                         id={'organisaation_nimiFi'}
@@ -70,7 +70,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_RUOTSIKSI'}>
+                <Kentta isRequired label={'PERUSTIETO_NIMI_RUOTSIKSI'} error={validationErrors.nimi?.sv}>
                     <Input
                         error={!!validationErrors.nimi?.sv}
                         id={'organisaation_nimiSv'}
@@ -80,7 +80,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_NIMI_ENGLANNIKSI'}>
+                <Kentta isRequired label={'PERUSTIETO_NIMI_ENGLANNIKSI'} error={validationErrors.nimi?.en}>
                     <Input
                         error={!!validationErrors.nimi?.en}
                         id={'organisaation_nimiEn'}

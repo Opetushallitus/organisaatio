@@ -25,20 +25,18 @@ const ErrorWrapper: React.FC<{ error?: KenttaError[] }> = ({ error = [], childre
         <>
             {children}
             {error
-                .filter((e) => !!e)
-                .map((e, i) => {
-                    if (e?.message) {
-                        return (
-                            <div
-                                key={e.message}
-                                style={{ color: '#e44e4e', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}
-                            >
-                                {i18n.translate(e.message.replaceAll('"', ''))}
-                            </div>
-                        );
-                    }
-                    return <div key={i}>{i18n.translate('missing validation message')}</div>;
-                })}
+                .map((e) =>
+                    e?.ref?.name
+                        ? { key: e.ref.name, message: i18n.translate(`${e.ref.name}.virheellinen`, false) }
+                        : undefined
+                )
+                .map((e) =>
+                    e ? (
+                        <div key={e.key} style={{ color: '#e44e4e', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}>
+                            {e.message}
+                        </div>
+                    ) : undefined
+                )}
         </>
     );
 };

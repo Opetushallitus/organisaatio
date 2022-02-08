@@ -126,7 +126,11 @@ export const YhteystietoKortti = ({
                     label="YHTEYSTIEDOT_POSTIOSOITE_MUU"
                     isRequired
                     error={{
-                        message: error.lang === kortinKieli && error.name === 'postiOsoite' && error.message,
+                        ref: {
+                            name:
+                                (error.lang === kortinKieli && error.name === 'postiOsoite' && 'postiOsoite') ||
+                                undefined,
+                        },
                     }}
                 >
                     <Textarea
@@ -139,14 +143,22 @@ export const YhteystietoKortti = ({
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)}
-                        error={error.lang === kortinKieli && error.name === 'puhelinnumero'}
+                        error={{
+                            ref: {
+                                name:
+                                    (error.lang === kortinKieli && error.name === 'puhelinnumero' && 'puhelinnumero') ||
+                                    undefined,
+                            },
+                        }}
                     />
                 </RiviKentta>
                 <RiviKentta
                     label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE"
                     isRequired
                     error={{
-                        message: error.lang === kortinKieli && error.name === 'email' && error.message,
+                        ref: {
+                            name: (error.lang === kortinKieli && error.name === 'email' && 'email') || undefined,
+                        },
                     }}
                 >
                     <Input
@@ -171,7 +183,10 @@ export const YhteystietoKortti = ({
                 label="YHTEYSTIEDOT_POSTIOSOITE"
                 isRequired
                 error={{
-                    message: error.lang === kortinKieli && error.name === 'postiOsoite' && error.message,
+                    ref: {
+                        name:
+                            (error.lang === kortinKieli && error.name === 'postiOsoite' && 'postiOsoite') || undefined,
+                    },
                 }}
             >
                 <Input
@@ -186,7 +201,13 @@ export const YhteystietoKortti = ({
                 toimipaikkaName={`${kortinKieli}.postiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
                 control={formControl}
                 error={{
-                    message: error.lang === kortinKieli && error.name === 'postiOsoitePostiNro' && error.message,
+                    ref: {
+                        name:
+                            (error.lang === kortinKieli &&
+                                error.name === 'postiOsoitePostiNro' &&
+                                'postiOsoitePostiNro') ||
+                            undefined,
+                    },
                 }}
             >
                 <Input
@@ -236,7 +257,9 @@ export const YhteystietoKortti = ({
                 label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE"
                 isRequired
                 error={{
-                    message: error.lang === kortinKieli && error.name === 'email' && error.message,
+                    ref: {
+                        name: (error.lang === kortinKieli && error.name === 'email' && 'email') || undefined,
+                    },
                 }}
             >
                 <Input

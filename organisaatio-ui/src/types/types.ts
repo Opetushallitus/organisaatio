@@ -226,7 +226,7 @@ export type DynamicField = {
     value?: string;
 };
 export type KenttaError = {
-    message?: string;
+    ref?: { name?: string };
 };
 export type OrganisaatioChildType = {
     type: string;
@@ -251,8 +251,7 @@ export type Rakenne = {
 };
 
 export type I18n = {
-    translate: (key: string) => string;
-    translateWithLang: (key: string, language: Language) => string;
+    translate: (key: string, keyIfEmpty: boolean) => string;
     translateNimi: (nimi: Nimi | undefined) => string;
     enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
 };

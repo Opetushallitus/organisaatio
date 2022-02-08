@@ -109,7 +109,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
             </Rivi>
             {organisaatioTyypit && (
                 <Rivi>
-                    <Kentta label={'PERUSTIETO_ORGANISAATIOTYYPPI'}>
+                    <Kentta label={'PERUSTIETO_ORGANISAATIOTYYPPI'} error={validationErrors['organisaatioTyypit']}>
                         <Controller
                             control={formControl}
                             name={'organisaatioTyypit'}
