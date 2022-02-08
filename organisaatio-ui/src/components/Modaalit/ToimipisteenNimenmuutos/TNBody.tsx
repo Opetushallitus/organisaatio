@@ -35,45 +35,43 @@ export default function TNBody(props: TNProps) {
     }
     const { muutostyyppi, foundAmatch } = getValues();
     return (
-        <>
-            <BodyKehys>
+        <BodyKehys>
+            <BodyRivi>
+                <BodyKentta>
+                    <Controller
+                        control={formControl}
+                        name={'muutostyyppi'}
+                        render={({ field: { ref, value = 'CREATE', ...rest } }) => (
+                            <RadioGroup {...rest} value={value}>
+                                <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
+                                    {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
+                                </Radio>
+                                <Radio name={MUUTOSTYYPPI_EDIT} value={MUUTOSTYYPPI_EDIT}>
+                                    {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
+                                </Radio>
+                            </RadioGroup>
+                        )}
+                    />
+                </BodyKentta>
+            </BodyRivi>
+            {foundAmatch && (
                 <BodyRivi>
                     <BodyKentta>
-                        <Controller
-                            control={formControl}
-                            name={'muutostyyppi'}
-                            render={({ field: { ref, value = 'CREATE', ...rest } }) => (
-                                <RadioGroup {...rest} value={value}>
-                                    <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
-                                        {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
-                                    </Radio>
-                                    <Radio name={MUUTOSTYYPPI_EDIT} value={MUUTOSTYYPPI_EDIT}>
-                                        {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
-                                    </Radio>
-                                </RadioGroup>
-                            )}
-                        />
+                        <span style={{ color: '#e44e4e' }}>
+                            {i18n.translate('NIMENMUUTOS_MUOKKAUS_FOUND_NAME_FOR_DATE')}
+                        </span>
                     </BodyKentta>
                 </BodyRivi>
-                {foundAmatch && (
-                    <BodyRivi>
-                        <BodyKentta>
-                            <span style={{ color: '#e44e4e' }}>
-                                {i18n.translate('NIMENMUUTOS_MUOKKAUS_FOUND_NAME_FOR_DATE')}
-                            </span>
-                        </BodyKentta>
-                    </BodyRivi>
-                )}
+            )}
 
-                <NimenMuutosFields
-                    edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
-                    validationErrors={validationErrors}
-                    formControl={formControl}
-                    register={register}
-                    getValues={getValues}
-                    setValue={setValue}
-                />
-            </BodyKehys>
-        </>
+            <NimenMuutosFields
+                edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
+                validationErrors={validationErrors}
+                formControl={formControl}
+                register={register}
+                getValues={getValues}
+                setValue={setValue}
+            />
+        </BodyKehys>
     );
 }

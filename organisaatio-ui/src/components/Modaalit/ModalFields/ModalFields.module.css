@@ -23,7 +23,7 @@
 .BodyRivi {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding-right: 1rem;
     padding-bottom: 1rem;
 }
