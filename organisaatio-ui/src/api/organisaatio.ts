@@ -137,24 +137,21 @@ async function getJalkelaiset({ oid }: { oid: string }): Promise<OrganisaatioHak
 }
 async function searchOrganisation({
     searchStr,
-    oid,
     aktiiviset = true,
     lakkautetut = false,
     suunnitellut = true,
 }: {
-    searchStr?: string;
-    oid?: string;
+    searchStr: string;
     aktiiviset?: boolean;
     lakkautetut?: boolean;
     suunnitellut?: boolean;
 }): Promise<OrganisaatioHakuOrganisaatio[]> {
-    if (searchStr?.length && searchStr.length < 3) return [];
+    if (searchStr.length < 3) return [];
     const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
             aktiiviset,
             lakkautetut,
             searchStr,
-            oid,
             suunnitellut,
         },
     });
