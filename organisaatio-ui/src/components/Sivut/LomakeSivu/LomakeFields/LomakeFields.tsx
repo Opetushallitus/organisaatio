@@ -96,7 +96,6 @@ const NimiKentta = ({
     copyToNames?: (field: Path<Nimi>) => void;
 }) => {
     const [i18n] = useAtom(languageAtom);
-    console.log(error);
     return (
         <Kentta isRequired label={label} error={error}>
             <Input
