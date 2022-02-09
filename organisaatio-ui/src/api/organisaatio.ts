@@ -23,6 +23,7 @@ import {
     ApiYhteystiedot,
     ApiYhteystietoArvo,
     NewApiOrganisaatio,
+    OrganisaatioHakuOrganisaatio,
     YhteystiedotEmail,
     YhteystiedotOsoite,
     YhteystiedotPhone,
@@ -143,9 +144,9 @@ async function searchOrganisation({
     aktiiviset?: boolean;
     lakkautetut?: boolean;
     suunnitellut?: boolean;
-}): Promise<ApiOrganisaatio[]> {
+}): Promise<OrganisaatioHakuOrganisaatio[]> {
     if (searchStr?.length && searchStr.length < 3) return [];
-    const { data } = await Axios.get<{ organisaatiot: ApiOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
+    const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
             aktiiviset,
             lakkautetut,

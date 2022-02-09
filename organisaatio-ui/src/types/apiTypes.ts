@@ -101,6 +101,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     yritysmuoto?: string;
     ytunnus?: string;
     tyypit: OrganisaatioType[];
+    organisaatiotyypit?: OrganisaatioType[];
     status: string;
     nimet: ApiOrganisaationNimetNimi[];
     kotipaikkaUri: KoodiUri;
@@ -115,8 +116,30 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
     piilotettu?: boolean;
     yhteystietoArvos?: ApiYhteystietoArvo[];
-    subRows?: ApiOrganisaatio[];
     virastoTunnus?: string;
+};
+
+export type OrganisaatioHakuOrganisaatio = {
+    aliOrganisaatioMaara: number;
+    alkuPvm: number;
+    children: OrganisaatioHakuOrganisaatio[];
+    kieletUris: [];
+    kotipaikkaUri: KoodiUri;
+    match: boolean;
+    nimi: Nimi;
+    oid: string;
+    organisaatiotyypit: KoodiUri[];
+    parentOid: string;
+    parentOidPath: string;
+    status: string;
+    subRows: OrganisaatioHakuOrganisaatio[];
+    toimipistekoodi: string;
+    ytunnus: string;
+    oppilaitosKoodi?: string;
+    oppilaitostyyppi?: string;
+    allOrganisaatioTyypit: string[];
+    allOppilaitosTyypit: string[];
+    allOids: string[];
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;

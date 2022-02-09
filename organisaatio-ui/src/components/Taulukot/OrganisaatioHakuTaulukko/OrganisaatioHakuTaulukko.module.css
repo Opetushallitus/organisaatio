@@ -55,3 +55,13 @@ th.collapse.collapse {
 .Expander.Expander {
     padding-right: 1rem;
 }
+
+.TaulukkoContainer {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.Taulukko {
+    width: 100%;
+    border-spacing: 0;
+}
