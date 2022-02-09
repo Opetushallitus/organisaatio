@@ -18,7 +18,8 @@ export class I18nImpl implements I18n {
         !translation &&
             process.env.NODE_ENV !== 'development' &&
             console.info(`Translation is missing for ${key} in language ${language}`);
-        return !!translation ? translation : keyIfEmpty ? key : '';
+        if (!!translation) return translation;
+        return keyIfEmpty ? key : '';
     }
 
     translateNimi = (nimi: Nimi | undefined) => {

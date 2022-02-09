@@ -24,19 +24,13 @@ const ErrorWrapper: React.FC<{ error?: KenttaError[] }> = ({ error = [], childre
     return (
         <>
             {children}
-            {error
-                .map((e) =>
-                    e?.ref?.name
-                        ? { key: e.ref.name, message: i18n.translate(`${e.ref.name}.virheellinen`, false) }
-                        : undefined
-                )
-                .map((e) =>
-                    e ? (
-                        <div key={e.key} style={{ color: '#e44e4e', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}>
-                            {e.message}
-                        </div>
-                    ) : undefined
-                )}
+            {error.map((e) =>
+                e?.ref?.name ? (
+                    <div key={e.ref.name} style={{ color: '#e44e4e', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}>
+                        {i18n.translate(`${e.ref.name}.virheellinen`, false)}
+                    </div>
+                ) : undefined
+            )}
         </>
     );
 };
