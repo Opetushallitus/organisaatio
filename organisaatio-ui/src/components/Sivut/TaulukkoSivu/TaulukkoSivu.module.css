@@ -22,8 +22,6 @@
     padding: 2rem;
     display: block;
     max-width: 100%;
-    overflow-x: scroll;
-    overflow-y: hidden;
 }
 
 .TaulukkoContainer td {

@@ -26,7 +26,6 @@ import { useAtom } from 'jotai';
 import { languageAtom } from '../../api/lokalisaatio';
 import { kayttoRyhmatKoodistoAtom, ryhmanTilaKoodistoAtom, ryhmaTyypitKoodistoAtom } from '../../api/koodisto';
 
-// TODO yhtenäistä!
 const mapPaginationSelectors = (index) => {
     if (index < 3) return [0, 5];
     return [index - 2, index + 3];
@@ -62,15 +61,9 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
     const [kayttoRyhmatFiltteri, setKayttoRyhmatFiltteri] = useState<ValueType<SelectOptionType>[] | undefined>();
     const [tilaFiltteri, setTilaFiltteri] = useState<ValueType<SelectOptionType>[] | undefined>();
 
-    const ryhmatyypitOptions = ryhmaTyypitKoodisto.koodit().map((k) => {
-        return { value: k.arvo, label: k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '' };
-    });
-    const kayttoRyhmatOptions = kayttoRyhmatKoodisto.koodit().map((k) => {
-        return { value: k.arvo, label: k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '' };
-    });
-    const ryhmanTilaOptions = ryhmanTilaKoodisto.koodit().map((k) => {
-        return { value: k.arvo, label: k.nimi['fi'] || k.nimi['sv'] || k.nimi['en'] || '' };
-    });
+    const ryhmatyypitOptions = ryhmaTyypitKoodisto.selectOptions();
+    const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
+    const ryhmanTilaOptions = ryhmanTilaKoodisto.selectOptions();
 
     return (
         <div>
@@ -260,12 +253,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
             </table>
             <div className={styles.PaginationContainer}>
                 <div className={styles.PaginationSivunvaihto}>
-                    <Button
-                        variant={'text'}
-                        color={'secondary'}
-                        onClick={() => previousPage()}
-                        disabled={!canPreviousPage}
-                    >
+                    <Button variant={'text'} color={'secondary'} onClick={previousPage} disabled={!canPreviousPage}>
                         <IconWrapper icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
@@ -281,7 +269,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                             </Button>
                         );
                     })}
-                    <Button variant={'text'} color={'secondary'} onClick={() => nextPage()} disabled={!canNextPage}>
+                    <Button variant={'text'} color={'secondary'} onClick={nextPage} disabled={!canNextPage}>
                         <IconWrapper icon={chevronRight} />
                     </Button>
                 </div>
