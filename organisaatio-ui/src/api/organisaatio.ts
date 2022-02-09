@@ -131,7 +131,10 @@ function useOrganisaatioPaivittaja(
         };
     });
 }
-
+async function getJalkelaiset({ oid }: { oid: string }): Promise<OrganisaatioHakuOrganisaatio[]> {
+    const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}${oid}/jalkelaiset`);
+    return data.organisaatiot;
+}
 async function searchOrganisation({
     searchStr,
     oid,
@@ -661,4 +664,5 @@ export {
     updateOrganisaatioNimi,
     deleteOrganisaatioNimi,
     setTarkastusPvm,
+    getJalkelaiset,
 };

@@ -1,55 +1,31 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
-import { searchOrganisation } from '../../../api/organisaatio';
+import { getJalkelaiset } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useTable } from 'react-table';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { useAtom } from 'jotai';
-import styled from 'styled-components';
+import styles from './LiitosDescription.module.css';
 import { organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 import { BodyRivi } from '../ModalFields/ModalFields';
 
-const Styles = styled.div`
-    table {
-        border-collapse: collapse;
-        margin-bottom: 2rem;
-        th {
-            text-align: left;
-            border-bottom: 1px solid rgba(151, 151, 151, 0.5);
-            padding: 0.5rem;
-            font-weight: bold;
-        }
-        td {
-            padding: 0.5rem;
-        }
-        tbody {
-            border: 1px solid rgba(151, 151, 151, 0.5);
-            tr:nth-child(even) {
-                background: #ffffff;
-            }
-            tr:nth-child(odd) {
-                background: #f5f5f5;
-            }
-        }
-    }
-`;
-
 const flattenHierarchy = (p: OrganisaatioHakuOrganisaatio[], c: OrganisaatioHakuOrganisaatio) => [
     ...p,
-    { ...c, subRows: undefined },
-    ...(c.subRows?.reduce(flattenHierarchy, []) || []),
+    { ...c, subRows: [] },
+    ...c.subRows.reduce(flattenHierarchy, []),
 ];
 
 const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
     const [i18n] = useAtom(languageAtom);
     const [organisaatioTyypit] = useAtom(organisaatioTyypitKoodistoAtom);
-    const [self, setSelf] = useState<OrganisaatioHakuOrganisaatio | undefined>(undefined);
+    const [organisaatiot, setOrganisaatiot] = useState<OrganisaatioHakuOrganisaatio[]>([]);
     const data = useMemo(
         () =>
-            self?.subRows
-                ?.reduce(flattenHierarchy, [])
+            organisaatiot
+                .reduce(flattenHierarchy, [])
+                .filter((a) => a.status === 'AKTIIVINEN')
                 .sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi))) || [],
-        [i18n, self?.subRows]
+        [i18n, organisaatiot]
     );
     const columns = useMemo(
         () => [
@@ -77,62 +53,49 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
         ],
         [i18n, organisaatioTyypit]
     );
-    const findSelfMemo = useMemo<
-        (a: OrganisaatioHakuOrganisaatio[], oid: string) => OrganisaatioHakuOrganisaatio | undefined
-    >(() => {
-        const findSelf = (a: OrganisaatioHakuOrganisaatio[], oid: string): OrganisaatioHakuOrganisaatio | undefined => {
-            if (a.length === 0) return undefined;
-            return a[0]?.oid === oid ? a[0] : findSelf(a[0].subRows || [], oid);
-        };
-        return findSelf;
-    }, []);
+
     useEffect(() => {
         (async () => {
-            const searchResult = await searchOrganisation({
+            const jalkelaiset = await getJalkelaiset({
                 oid: sourceOid,
             });
-            const mySelf = findSelfMemo(searchResult, sourceOid);
-            setSelf(mySelf);
+            setOrganisaatiot(jalkelaiset);
         })();
-    }, [findSelfMemo, sourceOid]);
+    }, [sourceOid]);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
         data,
     });
 
-    if (!self || !data) {
+    if (!organisaatiot || !data) {
         return <Spin />;
     }
     return (
-        <>
-            <BodyRivi>
-                <Styles>
-                    <table {...getTableProps()}>
-                        <thead>
-                            {headerGroups.map((headerGroup) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map((column) => (
-                                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                                    ))}
-                                </tr>
+        <BodyRivi>
+            <table {...getTableProps()} className={styles.LiitosDescriptionTable}>
+                <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                             ))}
-                        </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {rows.map((row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => {
-                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </Styles>
-            </BodyRivi>
-        </>
+                        </tr>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map((cell) => {
+                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </BodyRivi>
     );
 };
 export default LiitosDescription;
