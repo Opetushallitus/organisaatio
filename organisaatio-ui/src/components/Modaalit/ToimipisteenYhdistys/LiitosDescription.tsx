@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ApiOrganisaatio } from '../../../types/apiTypes';
+import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import { searchOrganisation } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useTable } from 'react-table';
@@ -34,7 +34,7 @@ const Styles = styled.div`
     }
 `;
 
-const flattenHierarchy = (p: ApiOrganisaatio[], c: ApiOrganisaatio) => [
+const flattenHierarchy = (p: OrganisaatioHakuOrganisaatio[], c: OrganisaatioHakuOrganisaatio) => [
     ...p,
     { ...c, subRows: undefined },
     ...(c.subRows?.reduce(flattenHierarchy, []) || []),
@@ -43,7 +43,7 @@ const flattenHierarchy = (p: ApiOrganisaatio[], c: ApiOrganisaatio) => [
 const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
     const [i18n] = useAtom(languageAtom);
     const [organisaatioTyypit] = useAtom(organisaatioTyypitKoodistoAtom);
-    const [self, setSelf] = useState<ApiOrganisaatio | undefined>(undefined);
+    const [self, setSelf] = useState<OrganisaatioHakuOrganisaatio | undefined>(undefined);
     const data = useMemo(
         () =>
             self?.subRows
@@ -77,8 +77,10 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
         ],
         [i18n, organisaatioTyypit]
     );
-    const findSelfMemo = useMemo<(a: ApiOrganisaatio[], oid: string) => ApiOrganisaatio | undefined>(() => {
-        const findSelf = (a: ApiOrganisaatio[], oid: string): ApiOrganisaatio | undefined => {
+    const findSelfMemo = useMemo<
+        (a: OrganisaatioHakuOrganisaatio[], oid: string) => OrganisaatioHakuOrganisaatio | undefined
+    >(() => {
+        const findSelf = (a: OrganisaatioHakuOrganisaatio[], oid: string): OrganisaatioHakuOrganisaatio | undefined => {
             if (a.length === 0) return undefined;
             return a[0]?.oid === oid ? a[0] : findSelf(a[0].subRows || [], oid);
         };
