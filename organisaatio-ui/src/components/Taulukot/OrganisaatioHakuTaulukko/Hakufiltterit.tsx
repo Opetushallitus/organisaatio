@@ -28,6 +28,7 @@ type HakufiltteritProps = {
 };
 
 type HakufiltteritSelectProps = {
+    label: string;
     handleSelectChange: (selectOptionType: ValueType<SelectOptionType> | ValueType<SelectOptionType>[]) => void;
     selectOptions: SelectOptionType[];
     disabled?: boolean;
@@ -40,7 +41,7 @@ export const mapTyyppiFilter = (
     return selectedOptions ? ([] as SelectOptionType[]).concat(selectedOptions as SelectOptionType[]) : [];
 };
 
-const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[]) =>
+const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[] = []) =>
     organisaatioTyyppi.map((ot) => ot.value).includes(ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
 
 export const enrichWithAllNestedData = (
@@ -86,11 +87,10 @@ export const enrichWithAllNestedData = (
 };
 
 const HakuFilterSelect = (props: HakufiltteritSelectProps) => {
-    const { handleSelectChange, selectOptions, disabled = false, value } = props;
-    const [i18n] = useAtom(languageAtom);
+    const { label, handleSelectChange, selectOptions, disabled = false, value } = props;
     return (
         <div className={styles.Kentta}>
-            <label>{i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}</label>
+            <label>{label}</label>
             <Select onChange={handleSelectChange} isDisabled={disabled} isMulti value={value} options={selectOptions} />
         </div>
     );
@@ -185,11 +185,13 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
             <div className={styles.FiltteriRivi}>
                 <div className={styles.DropdownContainer}>
                     <HakuFilterSelect
+                        label={i18n.translate('TAULUKKO_ORGANISAATIOTYYPPI')}
                         handleSelectChange={handleOrganisaatiotyyppiChange}
                         selectOptions={organisaatioTyypitKoodisto.selectOptions()}
                         value={localFilters.organisaatioTyyppi}
                     />
                     <HakuFilterSelect
+                        label={i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}
                         handleSelectChange={handleOppilaitosTyyppiChange}
                         selectOptions={oppilaitosTyypitKoodisto.selectOptions()}
                         disabled={!checkIsOppilaitosTyyppiAllowed(localFilters.organisaatioTyyppi)}
