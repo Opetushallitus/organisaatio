@@ -289,8 +289,6 @@ export type Koodistot = {
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
 
-export type SupportedKieli = 'fi' | 'sv' | 'en';
-
 export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
 
 export type RemoteFilters = {

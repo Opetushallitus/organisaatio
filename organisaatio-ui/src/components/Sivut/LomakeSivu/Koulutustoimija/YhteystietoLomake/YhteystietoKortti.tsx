@@ -4,7 +4,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
-import { KenttaError, Yhteystiedot } from '../../../../../types/types';
+import { KenttaError, Language, Yhteystiedot } from '../../../../../types/types';
 import { useWatch } from 'react-hook-form';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
@@ -28,7 +28,7 @@ type OsoitteentoimipaikkaProps = {
 };
 
 type props = {
-    kieli: 'fi' | 'sv' | 'en';
+    kieli: Language;
     yhteystiedotRegister: UseFormRegister<Yhteystiedot>;
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     formControl: Control<Yhteystiedot>;
@@ -87,7 +87,7 @@ const getErrorDetails = (validationErrors) => {
     }
 };
 
-function getError(error: { name: string; lang: string }, kortinKieli: 'fi' | 'sv' | 'en', name: string): KenttaError {
+function getError(error: { name: string; lang: string }, kortinKieli: Language, name: string): KenttaError {
     return {
         ref: {
             name: (error.lang === kortinKieli && error.name === name && name) || undefined,

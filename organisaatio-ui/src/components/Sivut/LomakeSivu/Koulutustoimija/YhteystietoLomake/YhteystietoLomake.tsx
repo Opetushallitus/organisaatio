@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import styles from './YhteystietoLomake.module.css';
-import type { SupportedKieli, Yhteystiedot } from '../../../../../types/types';
+import type { Language, Yhteystiedot } from '../../../../../types/types';
 import { enAltSchema, fiAltSchema, svAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import {
     Control,
@@ -32,7 +32,7 @@ export type Props = {
     isYtj: boolean;
 };
 
-const kaikkiOpetuskielet: SupportedKieli[] = ['fi', 'sv', 'en'];
+const kaikkiOpetuskielet: Language[] = ['fi', 'sv', 'en'];
 
 const validationSchemas = {
     fi: fiAltSchema,
