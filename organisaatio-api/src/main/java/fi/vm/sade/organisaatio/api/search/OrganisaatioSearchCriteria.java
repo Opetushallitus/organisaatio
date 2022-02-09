@@ -12,13 +12,13 @@ public class OrganisaatioSearchCriteria {
 
     private boolean vainAktiiviset;
 
-    private Set<String> oppilaitostyyppi = new HashSet<String>();
+    private Set<String> oppilaitostyyppi = new HashSet<>();
 
     private String organisaatiotyyppi;
 
     private boolean suunnitellut;
 
-    private Set<String> kunta = new HashSet<String>();
+    private Set<String> kunta = new HashSet<>();
 
     private Set<String> oidRestrictionList = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class OrganisaatioSearchCriteria {
      * @return possible object is {@link String }
      */
     @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
-    public Set<String> getOppilaitosTyyppi() {
+    public Set<String> getOppilaitostyyppi() {
         return oppilaitostyyppi;
     }
 
@@ -54,7 +54,7 @@ public class OrganisaatioSearchCriteria {
      *
      * @param value allowed object is {@link String }
      */
-    public void setOppilaitosTyyppi(Set<String> value) {
+    public void setOppilaitostyyppi(Set<String> value) {
         if (value != null) {
             this.oppilaitostyyppi.addAll(value);
         }
@@ -66,7 +66,7 @@ public class OrganisaatioSearchCriteria {
      * @return possible object is {@link String }
      */
     @Schema(description = "Haettavan organisaation tyyppi", required = true)
-    public String getOrganisaatioTyyppi() {
+    public String getOrganisaatiotyyppi() {
         return organisaatiotyyppi;
     }
 
@@ -75,7 +75,7 @@ public class OrganisaatioSearchCriteria {
      *
      * @param value allowed object is {@link String }
      */
-    public void setOrganisaatioTyyppi(String value) {
+    public void setOrganisaatiotyyppi(String value) {
         this.organisaatiotyyppi = value;
     }
 

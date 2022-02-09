@@ -7,12 +7,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
-import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -23,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -224,12 +218,12 @@ public class OrganisaatioResourceTest {
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,
                                                                boolean suunnitellut, Set<String> oids) {
         OrganisaatioSearchCriteria sc = new OrganisaatioSearchCriteria();
-        sc.setOrganisaatioTyyppi(organisaatioTyyppi);//organisaatioTyyppi = organisaatioTyyppi;
+        sc.setOrganisaatiotyyppi(organisaatioTyyppi);//organisaatioTyyppi = organisaatioTyyppi;
         Set<String> tyypit = new HashSet<>();
         if (!StringUtils.isEmpty(oppilaitosTyyppi)) {
             tyypit.add(oppilaitosTyyppi);
         }
-        sc.setOppilaitosTyyppi(tyypit);
+        sc.setOppilaitostyyppi(tyypit);
         sc.setSearchStr(searchStr);
         sc.setSuunnitellut(suunnitellut);
         if (oids != null) {

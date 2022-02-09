@@ -15,7 +15,6 @@ import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
-import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
@@ -77,12 +76,12 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
     public OrganisaatioHakutulos searchHierarchy(OrganisaatioSearchCriteria s) {
         final OrganisaatioHakutulos tulos = new OrganisaatioHakutulos();
 
-        if (s.getOppilaitosTyyppi() != null && s.getOppilaitosTyyppi().isEmpty()) {
-            s.setOppilaitosTyyppi(null);
+        if (s.getOppilaitostyyppi() != null && s.getOppilaitostyyppi().isEmpty()) {
+            s.setOppilaitostyyppi(null);
         }
 
-        if (s.getOrganisaatioTyyppi() != null && s.getOrganisaatioTyyppi().length() == 0) {
-            s.setOrganisaatioTyyppi(null);
+        if (s.getOrganisaatiotyyppi() != null && s.getOrganisaatiotyyppi().length() == 0) {
+            s.setOrganisaatiotyyppi(null);
         }
 
         // Map api search criteria to service search criteria
