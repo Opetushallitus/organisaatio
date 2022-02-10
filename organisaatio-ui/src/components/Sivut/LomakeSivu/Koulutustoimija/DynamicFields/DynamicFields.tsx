@@ -44,7 +44,7 @@ export default function DynamicFields({
                     case 'INPUT':
                         return (
                             <Rivi key={field.name}>
-                                <Kentta label={field.label}>
+                                <Kentta label={field.label} error={validationErrors[field.name]}>
                                     <InputController<Perustiedot>
                                         disabled={readOnly}
                                         form={formControl}

@@ -1,4 +1,4 @@
-import { Koodi, LocalDate, Nimi, UiOrganisaationNimetNimi, Ryhma, SupportedKieli, Yhteystiedot } from '../types/types';
+import { Koodi, LocalDate, Nimi, UiOrganisaationNimetNimi, Ryhma, Yhteystiedot, Language } from '../types/types';
 import moment from 'moment';
 import { APIEndpontDate } from '../types/apiTypes';
 
@@ -17,7 +17,7 @@ export const mapLocalizedKoodiToLang = (lang: string, property: string, value: K
 
 //TODO tarttee katsoa ryhmissa tarvitaanko näitä vielä.
 
-export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefined): SupportedKieli[] => {
+export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefined): Language[] => {
     const priority = ['fi', 'sv', 'en'];
     const mapping = {
         suomi: ['fi'],
@@ -26,17 +26,16 @@ export const mapVisibleKieletFromOpetuskielet = (opetuskielet: string[] | undefi
         englanti: ['en'],
         muu: ['en'],
     };
-    const sort = (input: SupportedKieli[]): SupportedKieli[] =>
-        input.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
+    const sort = (input: Language[]): Language[] => input.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
     return sort(
         (opetuskielet?.length ? opetuskielet : ['suomi']).reduce(
             (acc, lang) => [...acc, ...(mapping[lang] || [])],
-            [] as SupportedKieli[]
+            [] as Language[]
         )
     ).filter((value, index, self) => self.indexOf(value) === index);
 };
 
-export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[SupportedKieli]): boolean => {
+export const checkHasSomeValueByKieli = (KielisetYhteystiedot: Yhteystiedot[Language]): boolean => {
     return (
         Object.keys(KielisetYhteystiedot).filter((yhteystietokentta) => KielisetYhteystiedot[yhteystietokentta])
             .length > 0

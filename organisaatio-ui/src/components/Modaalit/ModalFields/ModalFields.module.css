@@ -15,7 +15,12 @@
 .BodyKentta > label {
     padding: 0.5rem;
 }
-
+.Required {
+    white-space: nowrap;
+}
+.Required:after {
+    content: ' *';
+}
 .BodyKehys > .BodyKentta:last-child {
     flex-grow: 1;
 }

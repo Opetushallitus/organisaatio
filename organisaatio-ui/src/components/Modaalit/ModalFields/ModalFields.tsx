@@ -17,11 +17,7 @@ const BodyKentta = ({
     const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.BodyKentta}>
-            {label && (
-                <label>
-                    {i18n.translate(label)} {isRequired && '*'}
-                </label>
-            )}
+            {label && <label className={isRequired ? styles.Required : undefined}>{i18n.translate(label)}</label>}
             {children}
         </div>
     );

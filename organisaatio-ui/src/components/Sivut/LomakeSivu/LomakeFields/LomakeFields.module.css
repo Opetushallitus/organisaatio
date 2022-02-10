@@ -54,7 +54,7 @@
 .Rivi {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: flex-start;
     padding-bottom: 2rem;
     flex-wrap: wrap;
 }
@@ -70,12 +70,16 @@
     margin-right: 2rem;
     width: 26rem;
 }
-
+.Required {
+    white-space: nowrap;
+}
+.Required:after {
+    content: ' *';
+}
 .NimiKentta {
     margin-right: 2rem;
     width: 35rem;
 }
-
 .KenttaLyhyt {
     margin-right: 2rem;
     max-width: 50%;

@@ -229,7 +229,9 @@ export type DynamicField = {
     when: [{ field: Path<Perustiedot>; is: string }];
     value?: string;
 };
-
+export type KenttaError = {
+    ref?: { name?: string };
+};
 export type OrganisaatioChildType = {
     type: string;
     disabled?: boolean;
@@ -253,8 +255,7 @@ export type Rakenne = {
 };
 
 export type I18n = {
-    translate: (key: string) => string;
-    translateWithLang: (key: string, language: Language) => string;
+    translate: (key: string, keyIfEmpty: boolean) => string;
     translateNimi: (nimi: Nimi | undefined) => string;
     enrichMessage: (key: string, replacements: { key: string; value: string }[]) => string;
 };
@@ -287,8 +288,6 @@ export type Koodistot = {
 };
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
-
-export type SupportedKieli = 'fi' | 'sv' | 'en';
 
 export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
 

@@ -6,7 +6,7 @@ import { languageAtom } from '../../../../api/lokalisaatio';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import IconWrapper from '../../../IconWapper/IconWrapper';
 import { FieldError, Path, UseFormRegisterReturn } from 'react-hook-form';
-import { Nimi } from '../../../../types/types';
+import { KenttaError, Nimi } from '../../../../types/types';
 
 const UloinKehys = (props) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props) => <div className={styles.YlaBanneri}>{props.children}</div>;
@@ -19,6 +19,21 @@ const ValiNappulat = (props) => <div className={styles.ValiNappulat}>{props.chil
 const MuokattuKolumni = (props) => <div className={styles.MuokattuKolumni}>{props.children}</div>;
 const Ruudukko = (props) => <div className={styles.Ruudukko}>{props.children}</div>;
 const Rivi = (props) => <div className={styles.Rivi}>{props.children}</div>;
+const ErrorWrapper: React.FC<{ error?: KenttaError[] }> = ({ error = [], children }) => {
+    const [i18n] = useAtom(languageAtom);
+    return (
+        <>
+            {children}
+            {error.map((e) =>
+                e?.ref?.name ? (
+                    <div key={e.ref.name} style={{ color: '#e44e4e', paddingBottom: '0.5rem', paddingLeft: '0.5rem' }}>
+                        {i18n.translate(`${e.ref.name}.virheellinen`, false)}
+                    </div>
+                ) : undefined
+            )}
+        </>
+    );
+};
 const AvainKevyestiBoldattu = ({ label, translate = true }) => {
     const [i18n] = useAtom(languageAtom);
     return <span className={styles.AvainKevyestiBoldattu}>{translate ? i18n.translate(label) : label}</span>;
@@ -47,14 +62,19 @@ const LabelLink = ({ value, to }) => {
 const ReadOnlyDate = ({ value }) => {
     return <div className={styles.Kentta}>{value}</div>;
 };
-const Kentta = ({ label, children, isRequired = false }) => {
+const Kentta: React.FC<{ error?: KenttaError | KenttaError[]; label: string; isRequired?: boolean }> = ({
+    error,
+    label,
+    children,
+    isRequired = false,
+}) => {
     const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.Kentta}>
-            <label>
-                {i18n.translate(label)} {isRequired && '*'}
-            </label>
-            {children}
+            <ErrorWrapper error={([] as KenttaError[]).concat(error || [])}>
+                <label className={isRequired ? styles.Required : undefined}>{i18n.translate(label)}</label>
+                {children}
+            </ErrorWrapper>
         </div>
     );
 };
@@ -76,27 +96,27 @@ const NimiKentta = ({
     const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.NimiKentta}>
-            <label>
-                {i18n.translate(label)} {'*'}
-            </label>
-            <Input
-                error={!!error}
-                id={id}
-                {...formRegisterReturn}
-                defaultValue={''}
-                suffix={
-                    copyToNames && (
-                        <div title={i18n.translate('KOPIOI_MUIHIN_NIMIIN')} onClick={() => copyToNames(field)}>
-                            <IconWrapper
-                                icon="ci:copy"
-                                color={'gray'}
-                                height={'1.5rem'}
-                                name={'KOPIOI_MUIHIN_NIMIIN'}
-                            />
-                        </div>
-                    )
-                }
-            />
+            <ErrorWrapper error={([] as KenttaError[]).concat(error || [])}>
+                <label className={styles.Required}>{i18n.translate(label)}</label>
+                <Input
+                    error={!!error}
+                    id={id}
+                    {...formRegisterReturn}
+                    defaultValue={''}
+                    suffix={
+                        copyToNames && (
+                            <div title={i18n.translate('KOPIOI_MUIHIN_NIMIIN')} onClick={() => copyToNames(field)}>
+                                <IconWrapper
+                                    icon="ci:copy"
+                                    color={'gray'}
+                                    height={'1.5rem'}
+                                    name={'KOPIOI_MUIHIN_NIMIIN'}
+                                />
+                            </div>
+                        )
+                    }
+                />
+            </ErrorWrapper>
         </div>
     );
 };
@@ -134,14 +154,14 @@ const NimiGroup = ({ error, register, getValues, setValue }) => {
         </>
     );
 };
-const KenttaLyhyt = ({ label, children, isRequired = false }) => {
+const KenttaLyhyt = ({ label, children, isRequired = false, error }) => {
     const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.KenttaLyhyt}>
-            <label>
-                {i18n.translate(label)} {isRequired && '*'}
-            </label>
-            {children}
+            <ErrorWrapper error={([] as KenttaError[]).concat(error || [])}>
+                <label className={isRequired ? styles.Required : undefined}>{i18n.translate(label)}</label>
+                {children}
+            </ErrorWrapper>
         </div>
     );
 };
