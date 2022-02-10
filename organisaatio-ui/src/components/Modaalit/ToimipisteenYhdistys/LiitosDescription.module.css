@@ -1,0 +1,23 @@
+.LiitosDescriptionTable {
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.LiitosDescriptionTable th {
+    text-align: left;
+    border-bottom: 1px solid rgba(151, 151, 151, 0.5);
+    padding: 0.5rem;
+    font-weight: bold;
+}
+
+.LiitosDescriptionTable td {
+    padding: 0.5rem;
+}
+
+.LiitosDescriptionTable tbody > tr:nth-child(even) {
+    background: #ffffff;
+}
+
+.LiitosDescriptionTable tbody > tr:nth-child(odd) {
+    background: #f5f5f5;
+}

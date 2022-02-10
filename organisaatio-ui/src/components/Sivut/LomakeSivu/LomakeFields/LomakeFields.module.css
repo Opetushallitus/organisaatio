@@ -76,6 +76,10 @@
 .Required:after {
     content: ' *';
 }
+.NimiKentta {
+    margin-right: 2rem;
+    width: 35rem;
+}
 .KenttaLyhyt {
     margin-right: 2rem;
     max-width: 50%;
@@ -90,6 +94,7 @@
     -webkit-appearance: none;
     border: none;
 }
+
 .ValiNappulat > Button {
     margin-right: 0.5rem;
 }

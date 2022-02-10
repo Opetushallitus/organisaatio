@@ -78,8 +78,14 @@ export function LiitaOrganisaatio({
                         setConfirmationModaaliAuki(false);
                         tallennaCallback();
                     }}
-                    peruutaCallback={() => setConfirmationModaaliAuki(false)}
-                    suljeCallback={() => setConfirmationModaaliAuki(false)}
+                    peruutaCallback={() => {
+                        setConfirmationModaaliAuki(false);
+                        peruutaCallback();
+                    }}
+                    suljeCallback={() => {
+                        setConfirmationModaaliAuki(false);
+                        peruutaCallback();
+                    }}
                 />
             )}
         </>

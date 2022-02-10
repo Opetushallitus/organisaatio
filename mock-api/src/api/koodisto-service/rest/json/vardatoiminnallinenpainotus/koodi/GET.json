@@ -110,6 +110,49 @@
         "voimassaLoppuPvm": null
     },
     {
+        "koodiArvo": "TP98",
+        "koodiUri": "vardatoiminnallinenpainotus_tp98",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ei toiminnallista painotusta (- 6.5.2021)",
+                "lyhytNimi": "Ei toiminnallista painotusta",
+                "nimi": "Ei painotusta",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Ingen betoning",
+                "lyhytNimi": "",
+                "nimi": "Ingen betoning",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.21543894150",
+        "paivitysPvm": "2021-06-17",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp98",
+        "tila": "PASSIIVINEN",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": "2021-05-06"
+    },
+    {
         "koodiArvo": "TP03",
         "koodiUri": "vardatoiminnallinenpainotus_tp03",
         "koodisto": {

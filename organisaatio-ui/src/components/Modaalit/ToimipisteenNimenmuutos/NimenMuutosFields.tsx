@@ -35,15 +35,13 @@ export default function NimenMuutosFields({
                 />
             </BodyKentta>
             {!edit && (
-                <BodyRivi>
-                    <BodyKentta isRequired label={'LABEL_NIMI_ALKUPVM'}>
-                        <DatePickerController<NimenmuutosLomake>
-                            name={'alkuPvm'}
-                            form={formControl}
-                            validationErrors={validationErrors}
-                        />
-                    </BodyKentta>
-                </BodyRivi>
+                <BodyKentta isRequired label={'LABEL_NIMI_ALKUPVM'}>
+                    <DatePickerController<NimenmuutosLomake>
+                        name={'alkuPvm'}
+                        form={formControl}
+                        validationErrors={validationErrors}
+                    />
+                </BodyKentta>
             )}
         </BodyRivi>
     );

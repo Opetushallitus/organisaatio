@@ -23,6 +23,7 @@ import {
     ApiYhteystiedot,
     ApiYhteystietoArvo,
     NewApiOrganisaatio,
+    OrganisaatioHakuOrganisaatio,
     YhteystiedotEmail,
     YhteystiedotOsoite,
     YhteystiedotPhone,
@@ -130,7 +131,10 @@ function useOrganisaatioPaivittaja(
         };
     });
 }
-
+async function getJalkelaiset({ oid }: { oid: string }): Promise<OrganisaatioHakuOrganisaatio[]> {
+    const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}${oid}/jalkelaiset`);
+    return data.organisaatiot;
+}
 async function searchOrganisation({
     searchStr,
     aktiiviset = true,
@@ -141,9 +145,9 @@ async function searchOrganisation({
     aktiiviset?: boolean;
     lakkautetut?: boolean;
     suunnitellut?: boolean;
-}): Promise<ApiOrganisaatio[]> {
+}): Promise<OrganisaatioHakuOrganisaatio[]> {
     if (searchStr.length < 3) return [];
-    const { data } = await Axios.get<{ organisaatiot: ApiOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
+    const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params: {
             aktiiviset,
             lakkautetut,
@@ -151,7 +155,6 @@ async function searchOrganisation({
             suunnitellut,
         },
     });
-
     return data.organisaatiot;
 }
 
@@ -658,4 +661,5 @@ export {
     updateOrganisaatioNimi,
     deleteOrganisaatioNimi,
     setTarkastusPvm,
+    getJalkelaiset,
 };

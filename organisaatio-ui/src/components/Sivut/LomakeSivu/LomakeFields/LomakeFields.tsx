@@ -95,26 +95,29 @@ const NimiKentta = ({
 }) => {
     const [i18n] = useAtom(languageAtom);
     return (
-        <Kentta isRequired label={label} error={error}>
-            <Input
-                error={!!error}
-                id={id}
-                {...formRegisterReturn}
-                defaultValue={''}
-                suffix={
-                    copyToNames && (
-                        <div title={i18n.translate('KOPIOI_MUIHIN_NIMIIN')} onClick={() => copyToNames(field)}>
-                            <IconWrapper
-                                icon="ci:copy"
-                                color={'gray'}
-                                height={'1.5rem'}
-                                name={'KOPIOI_MUIHIN_NIMIIN'}
-                            />
-                        </div>
-                    )
-                }
-            />
-        </Kentta>
+        <div className={styles.NimiKentta}>
+            <ErrorWrapper error={([] as KenttaError[]).concat(error || [])}>
+                <label className={styles.Required}>{i18n.translate(label)}</label>
+                <Input
+                    error={!!error}
+                    id={id}
+                    {...formRegisterReturn}
+                    defaultValue={''}
+                    suffix={
+                        copyToNames && (
+                            <div title={i18n.translate('KOPIOI_MUIHIN_NIMIIN')} onClick={() => copyToNames(field)}>
+                                <IconWrapper
+                                    icon="ci:copy"
+                                    color={'gray'}
+                                    height={'1.5rem'}
+                                    name={'KOPIOI_MUIHIN_NIMIIN'}
+                                />
+                            </div>
+                        )
+                    }
+                />
+            </ErrorWrapper>
+        </div>
     );
 };
 const NimiGroup = ({ error, register, getValues, setValue }) => {

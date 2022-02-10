@@ -5,7 +5,7 @@ import { Cell, Column, HeaderGroup, Row, useExpanded, useFilters, usePagination,
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
-import { ApiOrganisaatio } from '../../../types/apiTypes';
+import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import Loading from '../../Loading/Loading';
@@ -17,14 +17,16 @@ import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
+import { SelectOptionType } from '../../../types/types';
 
 const MAX_EXPAND_ROWS = 10;
+
 const mapPaginationSelectors = (index) => {
     if (index < 3) return [0, 5];
     return [index - 2, index + 3];
 };
 
-export const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {}) => {
+export const expandData = (data: OrganisaatioHakuOrganisaatio[], parent?: string, initial = {}) => {
     return data.reduce((p, c, i) => {
         const me = parent ? `${parent}.${i}` : `${i}`;
         if (!!c.subRows && c.subRows.length <= MAX_EXPAND_ROWS) {
@@ -34,25 +36,43 @@ export const expandData = (data: ApiOrganisaatio[], parent?: string, initial = {
         return p;
     }, initial);
 };
-export const allOids = (data: ApiOrganisaatio[]) => {
+export const allOids = (data: OrganisaatioHakuOrganisaatio[]): string[] => {
     return data.reduce((p: string[], c) => {
         const subs = !!c.subRows ? allOids(c.subRows) : [];
         return [...p, ...subs, c.oid];
     }, []);
 };
+
+export const containingSomeValueFilter = (
+    rows: Row<OrganisaatioHakuOrganisaatio>[],
+    id: string,
+    filterValue: string[]
+): Row<OrganisaatioHakuOrganisaatio>[] => {
+    if (filterValue.length === 0) return rows;
+    return rows.filter((row) => {
+        const rowValue = row.values[id];
+        return rowValue.some((r) => filterValue.includes(r));
+    });
+};
+
 const ExpandIcon = ({ isExpanded }) => {
     if (isExpanded) return <IconWrapper icon={chevronDown} />;
     return <IconWrapper icon={chevronRight} />;
 };
+
+const mapOptionsToValues = (options: SelectOptionType[]) => options.map((o) => o.value);
+
 export default function OrganisaatioHakuTaulukko() {
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
     const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
-    const [organisaatiot, setOrganisaatiot] = useState<ApiOrganisaatio[]>([]);
+    const [organisaatiot, setOrganisaatiot] = useState<OrganisaatioHakuOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
-    const columns = React.useMemo<Column<ApiOrganisaatio>[]>(
+
+    const containingFilter = React.useCallback(containingSomeValueFilter, []);
+    const columns = React.useMemo<Column<OrganisaatioHakuOrganisaatio>[]>(
         () => [
             {
                 id: 'expander',
@@ -74,9 +94,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: i18n.translate('TAULUKKO_NIMI'),
                 id: 'nimi',
-                accessor: (values) => {
-                    return i18n.translateNimi(values.nimi);
-                },
+                accessor: (values) => i18n.translateNimi(values.nimi),
                 Cell: ({ row }) => {
                     return (
                         <Link to={`/lomake/${row.original.oid}`}>
@@ -95,9 +113,8 @@ export default function OrganisaatioHakuTaulukko() {
             },
             {
                 Header: i18n.translate('TAULUKKO_TYYPPI'),
-                accessor: (values) => {
-                    return values.tyypit;
-                },
+                id: 'organisaatiotyypit',
+                accessor: (values) => values.allOrganisaatioTyypit,
                 Cell: ({ row }) => (
                     <span>
                         {row.original.organisaatiotyypit
@@ -105,6 +122,7 @@ export default function OrganisaatioHakuTaulukko() {
                             .join(', ')}
                     </span>
                 ),
+                filter: (rows, id, filterValue) => containingFilter(rows, id, mapOptionsToValues(filterValue)),
             },
             {
                 Header: i18n.translate('TAULUKKO_TUNNISTE'),
@@ -133,23 +151,23 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: 'containingOids',
                 id: 'containingOids',
-                accessor: (values) => {
-                    return [...values.parentOidPath.split('/'), ...allOids([values])];
-                },
+                accessor: (values) => values.allOids,
                 hidden: true,
-                filter: (rows, id, filterValue) => {
-                    if (filterValue.length === 0) return rows;
-                    return rows.filter((row) => {
-                        const rowValue = row.values[id];
-                        return rowValue.some((r) => filterValue.includes(r));
-                    });
-                },
+                filter: containingFilter,
+            },
+            {
+                Header: 'oppilaitostyyppi',
+                id: 'oppilaitostyyppi',
+                accessor: (values) => values.allOppilaitosTyypit,
+                hidden: true,
+                filter: (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: SelectOptionType[]) =>
+                    containingFilter(rows, id, mapOptionsToValues(filterValue)),
             },
         ],
-        [i18n, kuntaKoodisto, organisaatioTyypitKoodisto]
+        [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingFilter]
     );
     const sortOrganisations = useMemo(
-        () => (nodes: ApiOrganisaatio[]): ApiOrganisaatio[] => {
+        () => (nodes: OrganisaatioHakuOrganisaatio[]): OrganisaatioHakuOrganisaatio[] => {
             nodes.sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi)));
             nodes.forEach(function (node) {
                 if (node?.subRows && node.subRows.length > 0) {
@@ -175,46 +193,69 @@ export default function OrganisaatioHakuTaulukko() {
         canNextPage,
         pageOptions,
         gotoPage,
-        setFilter,
+        setAllFilters,
         nextPage,
         previousPage,
         setPageSize,
         state: { pageIndex, pageSize },
-    } = useTable<ApiOrganisaatio>(
+    } = useTable<OrganisaatioHakuOrganisaatio>(
         {
             columns,
             data,
             initialState: {
                 pageIndex: 0,
                 expanded: initialExpanded,
-                hiddenColumns: ['containingOids'],
-                filters: [{ id: 'containingOids', value: crudOids }],
+                hiddenColumns: ['containingOids', 'oppilaitostyyppi'],
+                filters: [
+                    { id: 'containingOids', value: crudOids },
+                    {
+                        id: 'organisaatiotyypit',
+                        value: [],
+                    },
+                    {
+                        id: 'oppilaitostyyppi',
+                        value: [],
+                    },
+                ],
             },
             paginateExpandedRows: false,
+            getSubRows: (row) => row.subRows || [], // fix suggested by to reset subro
         },
         useFilters,
         useExpanded,
         usePagination
     );
-    const [{ omatOrganisaatiotSelected }] = useAtom(localFiltersAtom);
+    const [{ omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi }] = useAtom(localFiltersAtom);
     useEffect(() => {
-        if (omatOrganisaatiotSelected) setFilter('containingOids', crudOids);
-        else setFilter('containingOids', []);
-    }, [data, crudOids, setFilter, omatOrganisaatiotSelected]);
+        setAllFilters([
+            {
+                id: 'containingOids',
+                value: omatOrganisaatiotSelected ? crudOids : [],
+            },
+            {
+                id: 'organisaatiotyypit',
+                value: organisaatioTyyppi,
+            },
+            {
+                id: 'oppilaitostyyppi',
+                value: oppilaitosTyyppi,
+            },
+        ]);
+    }, [data, crudOids, setAllFilters, omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi]);
     return (
         <div>
             <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
 
             {(loading && <Loading />) || (
-                <>
-                    <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
+                <div className={styles.TaulukkoContainer}>
+                    <table {...getTableProps()} className={styles.Taulukko}>
                         <thead>
-                            {headerGroups.map((headerGroup: HeaderGroup<ApiOrganisaatio>) => (
+                            {headerGroups.map((headerGroup: HeaderGroup<OrganisaatioHakuOrganisaatio>) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map((column) => (
                                         <th
                                             {...column.getHeaderProps({
-                                                className: (column as HeaderGroup<ApiOrganisaatio> & {
+                                                className: (column as HeaderGroup<OrganisaatioHakuOrganisaatio> & {
                                                     collapse: boolean;
                                                 }).collapse
                                                     ? styles.collapse
@@ -236,11 +277,11 @@ export default function OrganisaatioHakuTaulukko() {
                                 prepareRow(row);
                                 return (
                                     <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell: Cell<ApiOrganisaatio>) => {
+                                        {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
                                             return (
                                                 <td
                                                     {...cell.getCellProps({
-                                                        className: (cell.row as Row<ApiOrganisaatio> & {
+                                                        className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
                                                             collapse: boolean;
                                                         }).collapse
                                                             ? styles.collapse
@@ -265,7 +306,7 @@ export default function OrganisaatioHakuTaulukko() {
                             <Button
                                 variant={'text'}
                                 color={'secondary'}
-                                onClick={() => previousPage()}
+                                onClick={previousPage}
                                 disabled={!canPreviousPage}
                             >
                                 <IconWrapper icon={chevronLeft} />
@@ -288,12 +329,7 @@ export default function OrganisaatioHakuTaulukko() {
                                     </Button>
                                 );
                             })}
-                            <Button
-                                variant={'text'}
-                                color={'secondary'}
-                                onClick={() => nextPage()}
-                                disabled={!canNextPage}
-                            >
+                            <Button variant={'text'} color={'secondary'} onClick={nextPage} disabled={!canNextPage}>
                                 <IconWrapper icon={chevronRight} />
                             </Button>
                         </div>
@@ -314,7 +350,7 @@ export default function OrganisaatioHakuTaulukko() {
                             </select>
                         </div>
                     </div>
-                </>
+                </div>
             )}
         </div>
     );

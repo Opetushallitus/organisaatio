@@ -4,6 +4,8 @@ import { atomWithStorage } from 'jotai/utils';
 export const localFiltersAtom = atomWithStorage<LocalFilters>('localFilters', {
     searchString: '',
     omatOrganisaatiotSelected: true,
+    organisaatioTyyppi: [],
+    oppilaitosTyyppi: [],
 });
 
 export const remoteFiltersAtom = atomWithStorage<RemoteFilters>('remoteFilters', {
