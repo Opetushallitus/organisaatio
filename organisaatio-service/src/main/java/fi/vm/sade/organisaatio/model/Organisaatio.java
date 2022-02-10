@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -635,7 +636,20 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return multilingual nimi (name)
      */
     public MonikielinenTeksti getNimi() {
-        return nimi;
+        Organisaatio parent = this.getParent();
+        if (parent != null && this.tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            Map<String, String> values = new HashMap<>();
+            MonikielinenTeksti parentNimi = parent.getNimi();
+            this.nimi.getValues().keySet().forEach(a -> values.put(a, String.format("%s, %s", parentNimi.getString(a), this.nimi.getString(a))));
+            MonikielinenTeksti modified = new MonikielinenTeksti();
+            modified.setValues(values);
+            return modified;
+        }
+        return this.nimi;
+    }
+
+    public MonikielinenTeksti getActualNimi() {
+        return this.nimi;
     }
 
     /**

@@ -53,8 +53,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
     private Set<String> _kayttoryhmat;
 
     private Map<String, String> _nimi = new HashMap<>();
-
-    private OrganisaatioRDTOV4 _parentOrganisaatio;
+    private Map<String, String> _lyhytNimi = new HashMap<>();
 
     private List<OrganisaatioNimiRDTO> _nimet = new ArrayList<>();
 
@@ -231,32 +230,23 @@ public class OrganisaatioRDTOV4 implements Serializable {
         if (_nimi == null) {
             _nimi = new HashMap<>();
         }
-        if (_parentOrganisaatio == null) {
-            return _nimi;
-        }
-        Map<String, String> parentName = _parentOrganisaatio.getNimi();
-        return _nimi.keySet().stream().collect(Collectors.toMap(e -> e, e -> {
-            String parentNimi = parentName.getOrDefault(e, "");
-            String parentNimiWithSep = String.format("%s, ", parentName.getOrDefault(e, ""));
-            String nimi = _nimi.get(e);
-            return nimi.equals(parentNimi) ? nimi : String.format("%s%s", parentNimiWithSep, nimi);
-        }));
-    }
-
-    @Schema(description = "LyhytNimi")
-    public Map<String, String> getLyhytNimi() {
-        if (_nimi == null) {
-            _nimi = new HashMap<>();
-        }
         return _nimi;
-    }
-
-    public void setParentOrganisaatio(OrganisaatioRDTOV4 parent) {
-        _parentOrganisaatio = parent;
     }
 
     public void setNimi(Map<String, String> _nimi) {
         this._nimi = _nimi;
+    }
+
+    @Schema(description = "LyhytNimi")
+    public Map<String, String> getLyhytNimi() {
+        if (_lyhytNimi == null) {
+            _lyhytNimi = new HashMap<>();
+        }
+        return _lyhytNimi;
+    }
+
+    public void setLyhytNimi(Map<String, String> _lyhytNimi) {
+        this._lyhytNimi = _lyhytNimi;
     }
 
     @Schema(description = "Organisaation nimihistoria", required = true)

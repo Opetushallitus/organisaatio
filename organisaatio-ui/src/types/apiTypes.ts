@@ -127,6 +127,7 @@ export type OrganisaatioHakuOrganisaatio = {
     kotipaikkaUri: KoodiUri;
     match: boolean;
     nimi: Nimi;
+    lyhytNimi: Nimi;
     oid: string;
     organisaatiotyypit: KoodiUri[];
     parentOid: string;

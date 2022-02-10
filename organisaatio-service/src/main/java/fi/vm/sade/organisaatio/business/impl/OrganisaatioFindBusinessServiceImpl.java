@@ -261,9 +261,6 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
         OrganisaatioRDTOV4 org = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
-        if (org != null && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            org.setParentOrganisaatio(mapToOrganisaatioRdtoV4(organisaatio.getParent()));
-        }
         return org;
     }
 

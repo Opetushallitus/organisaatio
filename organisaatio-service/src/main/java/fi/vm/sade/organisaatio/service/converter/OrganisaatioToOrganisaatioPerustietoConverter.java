@@ -39,6 +39,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements Converter<
 
         //destination.setMatch asetetaan muualla
         destination.setNimi(source.getNimi().getValues());
+        destination.setLyhytNimi(source.getActualNimi().getValues());
 
         source.getTyypit().stream()
                 .map(OrganisaatioTyyppi::fromKoodiValue)
