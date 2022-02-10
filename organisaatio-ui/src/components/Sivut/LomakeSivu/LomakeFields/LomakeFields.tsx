@@ -75,7 +75,10 @@ const NimiKentta = ({
 }) => {
     const [i18n] = useAtom(languageAtom);
     return (
-        <Kentta isRequired label={label}>
+        <div className={styles.NimiKentta}>
+            <label>
+                {i18n.translate(label)} {'*'}
+            </label>
             <Input
                 error={!!error}
                 id={id}
@@ -94,7 +97,7 @@ const NimiKentta = ({
                     )
                 }
             />
-        </Kentta>
+        </div>
     );
 };
 const NimiGroup = ({ error, register, getValues, setValue }) => {

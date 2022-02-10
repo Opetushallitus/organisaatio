@@ -8,6 +8,7 @@ import { mapOrganisaatioToSelect, organisaatioSelectMapper } from '../../../tool
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
+import LiitosDescription from './LiitosDescription';
 
 type TSProps = {
     liitaOrganisaatio: LiitaOrganisaatioon;
@@ -27,39 +28,43 @@ export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaat
     if (organisaatiotLoading || organisaatiotError) {
         return <Spin />;
     }
-
     const newParent = organisaatiot.find((o) => o.oid === liitaOrganisaatio.newParent?.oid);
     const parentOrganisaatiot = organisaatioSelectMapper(organisaatiot, language);
     return (
-        <BodyKehys>
-            <BodyRivi>
-                <BodyKentta label={labels.otherOrg}>
-                    <Select
-                        menuPortalTarget={document.body}
-                        value={mapOrganisaatioToSelect(newParent, language)}
-                        options={parentOrganisaatiot
-                            .filter((o) => ![organisaatioBase.oid, organisaatioBase.parentOid].includes(o.value))
-                            .sort((a, b) => a.label.localeCompare(b.label))}
-                        onChange={(option) => {
-                            if (option)
-                                handleChange({
-                                    ...liitaOrganisaatio,
-                                    newParent: organisaatiot.find((a) => {
-                                        return (option as Option).value === a.oid;
-                                    }),
-                                });
-                        }}
-                    />
-                </BodyKentta>
-                <BodyKentta label={labels.liitosPvm}>
-                    <DatePickerInput
-                        value={liitaOrganisaatio.date}
-                        onChange={(e) => {
-                            handleChange({ ...liitaOrganisaatio, date: e });
-                        }}
-                    />
-                </BodyKentta>
-            </BodyRivi>
-        </BodyKehys>
+        <>
+            <LiitosDescription sourceOid={organisaatioBase.oid} />
+            <BodyKehys>
+                <BodyRivi>
+                    <BodyKentta label={labels.otherOrg}>
+                        <Select
+                            menuPortalTarget={document.body}
+                            value={mapOrganisaatioToSelect(newParent, language)}
+                            options={parentOrganisaatiot
+                                .filter((o) => ![organisaatioBase.oid, organisaatioBase.parentOid].includes(o.value))
+                                .sort((a, b) => a.label.localeCompare(b.label))}
+                            onChange={(option) => {
+                                if (option)
+                                    handleChange({
+                                        ...liitaOrganisaatio,
+                                        newParent: organisaatiot.find((a) => {
+                                            return (option as Option).value === a.oid;
+                                        }),
+                                    });
+                            }}
+                        />
+                    </BodyKentta>
+                </BodyRivi>
+                <BodyRivi>
+                    <BodyKentta label={labels.liitosPvm}>
+                        <DatePickerInput
+                            value={liitaOrganisaatio.date}
+                            onChange={(e) => {
+                                handleChange({ ...liitaOrganisaatio, date: e });
+                            }}
+                        />
+                    </BodyKentta>
+                </BodyRivi>
+            </BodyKehys>
+        </>
     );
 }

@@ -4,7 +4,7 @@ import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { NimenmuutosLomake } from '../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
-import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
+import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import { Controller } from 'react-hook-form';
 import NimenMuutosFields from './NimenMuutosFields';
 import { MUUTOSTYYPPI_CREATE, MUUTOSTYYPPI_EDIT } from './constants';
@@ -35,7 +35,7 @@ export default function TNBody(props: TNProps) {
     }
     const { muutostyyppi, foundAmatch } = getValues();
     return (
-        <>
+        <BodyKehys>
             <BodyRivi>
                 <BodyKentta>
                     <Controller
@@ -63,16 +63,15 @@ export default function TNBody(props: TNProps) {
                     </BodyKentta>
                 </BodyRivi>
             )}
-            <BodyRivi>
-                <NimenMuutosFields
-                    edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
-                    validationErrors={validationErrors}
-                    formControl={formControl}
-                    register={register}
-                    getValues={getValues}
-                    setValue={setValue}
-                />
-            </BodyRivi>
-        </>
+
+            <NimenMuutosFields
+                edit={muutostyyppi === MUUTOSTYYPPI_EDIT}
+                validationErrors={validationErrors}
+                formControl={formControl}
+                register={register}
+                getValues={getValues}
+                setValue={setValue}
+            />
+        </BodyKehys>
     );
 }
