@@ -10,7 +10,6 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -640,7 +639,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         if (parent != null && this.tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             Map<String, String> values = new HashMap<>();
             MonikielinenTeksti parentNimi = parent.getNimi();
-            this.nimi.getValues().keySet().forEach(a -> values.put(a, String.format("%s, %s", parentNimi.getString(a), this.nimi.getString(a))));
+            this.nimi.getValues().keySet().forEach(a -> {
+                String currentNimiString = this.nimi.getString(a);
+                String parentNimiString = parentNimi.getString(a);
+                values.put(a, currentNimiString.equals(parentNimiString) ? currentNimiString : String.format("%s, %s", parentNimiString, currentNimiString));
+            });
             MonikielinenTeksti modified = new MonikielinenTeksti();
             modified.setValues(values);
             return modified;

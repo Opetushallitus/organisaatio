@@ -260,8 +260,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     }
 
     private OrganisaatioRDTOV4 mapToOrganisaatioRdtoV4(Organisaatio organisaatio) {
-        OrganisaatioRDTOV4 org = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
-        return org;
+        return conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
     }
 
     @Override
@@ -311,7 +310,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
             boolean excludeDiscontinued) {
         Preconditions.checkNotNull(lastModifiedSince);
 
-        LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        LOG.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(

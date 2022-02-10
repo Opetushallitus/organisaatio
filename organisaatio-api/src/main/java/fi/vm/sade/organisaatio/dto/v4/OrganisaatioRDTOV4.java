@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
