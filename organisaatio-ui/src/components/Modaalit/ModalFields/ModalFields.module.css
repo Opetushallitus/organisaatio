@@ -10,7 +10,13 @@
     flex-wrap: nowrap;
     padding-right: 1rem;
 }
-.BodyKehys > .BodyKentta:last-child{
+.Required {
+    white-space: nowrap;
+}
+.Required:after {
+    content: ' *';
+}
+.BodyKehys > .BodyKentta:last-child {
     flex-grow: 1;
 }
 

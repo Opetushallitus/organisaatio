@@ -72,9 +72,7 @@ const Kentta: React.FC<{ error?: KenttaError | KenttaError[]; label: string; isR
     return (
         <div className={styles.Kentta}>
             <ErrorWrapper error={([] as KenttaError[]).concat(error || [])}>
-                <label>
-                    {i18n.translate(label)} {isRequired && '*'}
-                </label>
+                <label className={isRequired ? styles.Required : undefined}>{i18n.translate(label)}</label>
                 {children}
             </ErrorWrapper>
         </div>
@@ -158,9 +156,7 @@ const KenttaLyhyt = ({ label, children, isRequired = false, error }) => {
     return (
         <div className={styles.KenttaLyhyt}>
             <ErrorWrapper error={([] as KenttaError[]).concat(error || [])}>
-                <label>
-                    {i18n.translate(label)} {isRequired && '*'}
-                </label>
+                <label className={isRequired ? styles.Required : undefined}>{i18n.translate(label)}</label>
                 {children}
             </ErrorWrapper>
         </div>

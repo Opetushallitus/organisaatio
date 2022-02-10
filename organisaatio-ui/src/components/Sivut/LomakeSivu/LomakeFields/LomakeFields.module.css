@@ -70,7 +70,12 @@
     margin-right: 2rem;
     width: 26rem;
 }
-
+.Required {
+    white-space: nowrap;
+}
+.Required:after {
+    content: ' *';
+}
 .KenttaLyhyt {
     margin-right: 2rem;
     max-width: 50%;
