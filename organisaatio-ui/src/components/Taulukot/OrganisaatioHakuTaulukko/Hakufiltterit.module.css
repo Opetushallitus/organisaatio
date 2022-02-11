@@ -29,6 +29,9 @@
     flex-wrap: wrap;
     align-items: center;
 }
+.CheckboxContainer label {
+    padding-left: 1rem;
+}
 
 .LisatiedotLinkkiKentta {
     padding-top: 1rem;
