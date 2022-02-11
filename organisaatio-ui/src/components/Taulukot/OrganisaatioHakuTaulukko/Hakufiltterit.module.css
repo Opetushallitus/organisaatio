@@ -14,17 +14,22 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    max-width: 60vw;
+    max-width: 75vw;
     align-items: center;
-}
-
-.FiltteriInputOsa > div {
-    width: 100vw;
 }
 
 .FiltteriInputOsa > label {
     padding-left: 2rem;
 }
+
+.CheckboxContainer {
+    padding-left: 1rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .LisatiedotLinkkiKentta {
     padding-top: 1rem;
 }

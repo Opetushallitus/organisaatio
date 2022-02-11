@@ -36,12 +36,6 @@ export const expandData = (data: OrganisaatioHakuOrganisaatio[], parent?: string
         return p;
     }, initial);
 };
-export const allOids = (data: OrganisaatioHakuOrganisaatio[]): string[] => {
-    return data.reduce((p: string[], c) => {
-        const subs = !!c.subRows ? allOids(c.subRows) : [];
-        return [...p, ...subs, c.oid];
-    }, []);
-};
 
 export const containingSomeValueFilter = (
     rows: Row<OrganisaatioHakuOrganisaatio>[],
@@ -54,6 +48,17 @@ export const containingSomeValueFilter = (
         return rowValue.some((r) => filterValue.includes(r));
     });
 };
+
+export const includeVakaToimijatFilter = (
+    rows: Row<OrganisaatioHakuOrganisaatio>[],
+    id: string,
+    filterValue: boolean
+): Row<OrganisaatioHakuOrganisaatio>[] =>
+    rows.filter(
+        (row) =>
+            filterValue ||
+            !row.values.organisaatiotyypit.some((r) => ['organisaatiotyyppi_07', 'organisaatiotyyppi_08'].includes(r))
+    );
 
 const ExpandIcon = ({ isExpanded }) => {
     if (isExpanded) return <IconWrapper icon={chevronDown} />;
@@ -72,6 +77,8 @@ export default function OrganisaatioHakuTaulukko() {
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
 
     const containingFilter = React.useCallback(containingSomeValueFilter, []);
+    const vakatoimijatFilter = React.useCallback(includeVakaToimijatFilter, []);
+
     const columns = React.useMemo<Column<OrganisaatioHakuOrganisaatio>[]>(
         () => [
             {
@@ -149,8 +156,8 @@ export default function OrganisaatioHakuTaulukko() {
                 },
             },
             {
-                Header: 'containingOids',
-                id: 'containingOids',
+                Header: 'allOids',
+                id: 'allOids',
                 accessor: (values) => values.allOids,
                 hidden: true,
                 filter: containingFilter,
@@ -163,8 +170,15 @@ export default function OrganisaatioHakuTaulukko() {
                 filter: (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: SelectOptionType[]) =>
                     containingFilter(rows, id, mapOptionsToValues(filterValue)),
             },
+            {
+                Header: 'showVakaToimijat',
+                id: 'showVakaToimijat',
+                accessor: (values) => values.organisaatiotyypit,
+                hidden: true,
+                filter: vakatoimijatFilter,
+            },
         ],
-        [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingFilter]
+        [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingFilter, vakatoimijatFilter]
     );
     const sortOrganisations = useMemo(
         () => (nodes: OrganisaatioHakuOrganisaatio[]): OrganisaatioHakuOrganisaatio[] => {
@@ -205,9 +219,9 @@ export default function OrganisaatioHakuTaulukko() {
             initialState: {
                 pageIndex: 0,
                 expanded: initialExpanded,
-                hiddenColumns: ['containingOids', 'oppilaitostyyppi'],
+                hiddenColumns: ['allOids', 'oppilaitostyyppi', 'showVakaToimijat'],
                 filters: [
-                    { id: 'containingOids', value: crudOids },
+                    { id: 'allOids', value: crudOids },
                     {
                         id: 'organisaatiotyypit',
                         value: [],
@@ -215,6 +229,10 @@ export default function OrganisaatioHakuTaulukko() {
                     {
                         id: 'oppilaitostyyppi',
                         value: [],
+                    },
+                    {
+                        id: 'showVakaToimijat',
+                        value: false,
                     },
                 ],
             },
@@ -225,11 +243,13 @@ export default function OrganisaatioHakuTaulukko() {
         useExpanded,
         usePagination
     );
-    const [{ omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi }] = useAtom(localFiltersAtom);
+    const [{ omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi, showVakaToimijat }] = useAtom(
+        localFiltersAtom
+    );
     useEffect(() => {
         setAllFilters([
             {
-                id: 'containingOids',
+                id: 'allOids',
                 value: omatOrganisaatiotSelected ? crudOids : [],
             },
             {
@@ -240,8 +260,21 @@ export default function OrganisaatioHakuTaulukko() {
                 id: 'oppilaitostyyppi',
                 value: oppilaitosTyyppi,
             },
+            {
+                id: 'showVakaToimijat',
+                value: showVakaToimijat,
+            },
         ]);
-    }, [data, crudOids, setAllFilters, omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi]);
+    }, [
+        data,
+        crudOids,
+        setAllFilters,
+        omatOrganisaatiotSelected,
+        organisaatioTyyppi,
+        oppilaitosTyyppi,
+        showVakaToimijat,
+    ]);
+    console.log('crud', omatOrganisaatiotSelected, crudOids);
     return (
         <div>
             <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />

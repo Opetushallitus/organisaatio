@@ -6,6 +6,7 @@ export const localFiltersAtom = atomWithStorage<LocalFilters>('localFilters', {
     omatOrganisaatiotSelected: true,
     organisaatioTyyppi: [],
     oppilaitosTyyppi: [],
+    showVakaToimijat: false,
 });
 
 export const remoteFiltersAtom = atomWithStorage<RemoteFilters>('remoteFilters', {

@@ -300,6 +300,7 @@ export type LocalFilters = {
     omatOrganisaatiotSelected: boolean;
     organisaatioTyyppi: SelectOptionType[];
     oppilaitosTyyppi: SelectOptionType[];
+    showVakaToimijat: boolean;
 };
 export type OrganisaatioType =
     | 'opetushallitus'
