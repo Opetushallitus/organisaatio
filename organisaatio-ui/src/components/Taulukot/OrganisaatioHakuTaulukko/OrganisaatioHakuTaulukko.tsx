@@ -93,12 +93,11 @@ export default function OrganisaatioHakuTaulukko() {
             },
             {
                 Header: i18n.translate('TAULUKKO_NIMI'),
-                id: 'nimi',
-                accessor: (values) => i18n.translateNimi(values.nimi),
+                id: 'lyhytNimi',
                 Cell: ({ row }) => {
                     return (
                         <Link to={`/lomake/${row.original.oid}`}>
-                            {i18n.translateNimi(row.original.nimi)}
+                            {i18n.translateNimi(row.original.lyhytNimi)}
                             {row.original?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
                         </Link>
                     );

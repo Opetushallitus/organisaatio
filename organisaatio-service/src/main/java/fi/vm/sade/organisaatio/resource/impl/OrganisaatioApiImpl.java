@@ -400,6 +400,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 current.setKotipaikkaUri(row.kotipaikka);
                 current.setOrganisaatiotyypit(new HashSet<>());
                 current.setNimi(new HashMap<>());
+                current.setLyhytNimi(new HashMap<>());
                 current.setKieletUris(new HashSet<>());
                 current.setChildren(new HashSet<>());
                 current.setParentOid(row.parentOid);

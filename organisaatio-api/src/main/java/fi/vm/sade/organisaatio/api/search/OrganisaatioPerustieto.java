@@ -58,6 +58,7 @@ public class OrganisaatioPerustieto implements Serializable {
 
     @Schema(description = "Organisaation nimi", required = true)
     private Map<String, String> nimi = new HashMap<String, String>();
+    private Map<String, String> lyhytNimi = new HashMap<>();
 
     private Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
     
@@ -84,6 +85,13 @@ public class OrganisaatioPerustieto implements Serializable {
 
     public void setNimi(Map<String, String> nimi) {
         this.nimi = nimi;
+    }
+    public void setLyhytNimi(Map<String, String> lyhytNimi) {
+        this.lyhytNimi = lyhytNimi;
+    }
+
+    public Map<String, String> getLyhytNimi() {
+        return lyhytNimi;
     }
 
     public boolean isMatch() {
