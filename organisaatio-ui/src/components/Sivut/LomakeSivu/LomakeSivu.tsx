@@ -4,7 +4,7 @@ import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
-import { rakenne, ROOT_OID } from '../../../contexts/constants';
+import { KOSKIPOSTI_TYYPI_OID, KRIISIVIESTINTA_TYYPI_OID, rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
     LiitaOrganisaatioon,
     Nimi,
@@ -67,6 +67,9 @@ import {
     maatJaValtiotKoodistoAtom,
     oppilaitoksenOpetuskieletKoodistoAtom,
     oppilaitostyyppiKoodistoAtom,
+    ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
+    ORGANIAATIOTYYPPI_OPPILAITOS,
+    ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA,
     organisaatioTyypitKoodistoAtom,
     postinumerotKoodistoAtom,
     vardajarjestamismuotoKoodistoAtom,
@@ -445,7 +448,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
-        if (organisaatioTyypit?.includes('organisaatiotyyppi_08') && varhaiskasvatuksenToimipaikkaTiedot) {
+        if (
+            organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA) &&
+            varhaiskasvatuksenToimipaikkaTiedot
+        ) {
             lomakkeet.push(
                 <VakaToimipaikka
                     control={perustiedotControl}
@@ -456,12 +462,26 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
         }
-        if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
+        if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA)) {
+            lomakkeet.push(
+                <ArvoLomake
+                    readOnly={
+                        readOnly && !casMe.canEditLomake('LOMAKE_KRIISI_VIESTINTA', params.oid, organisaatioNimiPolku)
+                    }
+                    tyyppiOid={KRIISIVIESTINTA_TYYPI_OID}
+                    yhteystietoArvoRegister={yhteystietoArvoRegister}
+                    field={'kriisiviestinta'}
+                />
+            );
+            otsikot.push(i18n.translate('LOMAKE_KRIISI_VIESTINTA'));
+        }
+        if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_OPPILAITOS)) {
             lomakkeet.push(
                 <ArvoLomake
                     readOnly={readOnly && !casMe.canEditLomake('LOMAKE_KOSKI_POSTI', params.oid, organisaatioNimiPolku)}
-                    tyyppiOid={'1.2.246.562.5.79385887983'}
+                    tyyppiOid={KOSKIPOSTI_TYYPI_OID}
                     yhteystietoArvoRegister={yhteystietoArvoRegister}
+                    field={'koskiposti'}
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));

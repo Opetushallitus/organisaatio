@@ -70,7 +70,7 @@ export type OrganisaatioBase = {
     tarkastusPvm?: number;
 };
 export type ApiYhteystietoArvo = {
-    'YhteystietoArvo.arvoText': string;
+    'YhteystietoArvo.arvoText'?: string;
     'YhteystietoArvo.kieli': string;
     'YhteystietojenTyyppi.oid': string;
     'YhteystietoElementti.oid': string;

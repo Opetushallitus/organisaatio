@@ -13,12 +13,14 @@ import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { oppilaitostyyppiKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
+import {
+    oppilaitostyyppiKoodistoAtom,
+    ORGANIAATIOTYYPPI_OPPILAITOS,
+    organisaatioTyypitKoodistoAtom,
+} from '../../../api/koodisto';
 import { SelectOptionType } from '../../../types/types';
 import { ValueType } from 'react-select';
 import { dropKoodiVersionSuffix } from '../../../tools/mappers';
-
-const ORGANISAATIOTYYPPI_OPPILAITOS_VALUE = 'organisaatiotyyppi_02';
 
 const SEARCH_LENGTH = 3;
 
@@ -42,7 +44,7 @@ export const mapTyyppiFilter = (
 };
 
 const checkIsOppilaitosTyyppiAllowed = (organisaatioTyyppi: SelectOptionType[] = []) =>
-    organisaatioTyyppi.map((ot) => ot.value).includes(ORGANISAATIOTYYPPI_OPPILAITOS_VALUE);
+    organisaatioTyyppi.map((ot) => ot.value).includes(ORGANIAATIOTYYPPI_OPPILAITOS);
 
 export const enrichWithAllNestedData = (
     data: OrganisaatioHakuOrganisaatio[],

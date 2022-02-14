@@ -4,8 +4,8 @@ const output = 'localisation.csv';
 const encodingOut = 'utf16le';
 const separator = '\t';
 fs.unlink(output, function (err) {
-    if (err) console.log('error deleting');
-    console.log('File deleted!');
+    if (err) console.info('error deleting');
+    console.info('File deleted!');
 });
 fs.readFile(input, 'utf8', function (err, data) {
     const json = JSON.parse(data);
