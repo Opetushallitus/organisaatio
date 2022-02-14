@@ -274,7 +274,6 @@ export default function OrganisaatioHakuTaulukko() {
         oppilaitosTyyppi,
         showVakaToimijat,
     ]);
-    console.log('crud', omatOrganisaatiotSelected, crudOids);
     return (
         <div>
             <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
