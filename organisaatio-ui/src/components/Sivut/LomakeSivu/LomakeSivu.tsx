@@ -26,6 +26,8 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
+    KOSKIPOSTI_TYYPI_OID,
+    KRIISIVIESTINTA_TYYPI_OID,
     mapApiVakaToUi,
     mapApiYhteystiedotToUi,
     mapApiYhteysTietoArvotToUi,
@@ -67,6 +69,7 @@ import {
     maatJaValtiotKoodistoAtom,
     oppilaitoksenOpetuskieletKoodistoAtom,
     oppilaitostyyppiKoodistoAtom,
+    ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
     ORGANIAATIOTYYPPI_OPPILAITOS,
     ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA,
     organisaatioTyypitKoodistoAtom,
@@ -222,6 +225,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             version,
         }));
         const { currentNimi, pastNimet, futureNimet } = sortNimet(apiNimetWithUIDate, mappingLyhytNimi);
+        console.log('in', yhteystietoArvos);
         return {
             Uiperustiedot: {
                 maa,
@@ -284,6 +288,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
             yhteystietoArvoReset(UIYhteysTietoArvot);
+            console.log(UIYhteysTietoArvot);
         }
     }
 
@@ -461,11 +466,24 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
         }
+        if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA)) {
+            lomakkeet.push(
+                <ArvoLomake
+                    readOnly={
+                        readOnly && !casMe.canEditLomake('LOMAKE_KRIISI_VIESTINTA', params.oid, organisaatioNimiPolku)
+                    }
+                    tyyppiOid={KRIISIVIESTINTA_TYYPI_OID}
+                    yhteystietoArvoRegister={yhteystietoArvoRegister}
+                    field={'kriisiviestinta'}
+                />
+            );
+            otsikot.push(i18n.translate('LOMAKE_KRIISI_VIESTINTA'));
+        }
         if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_OPPILAITOS)) {
             lomakkeet.push(
                 <ArvoLomake
                     readOnly={readOnly && !casMe.canEditLomake('LOMAKE_KOSKI_POSTI', params.oid, organisaatioNimiPolku)}
-                    tyyppiOid={'1.2.246.562.5.79385887983'}
+                    tyyppiOid={KOSKIPOSTI_TYYPI_OID}
                     yhteystietoArvoRegister={yhteystietoArvoRegister}
                     field={'koskiposti'}
                 />

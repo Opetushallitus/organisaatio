@@ -78,6 +78,7 @@ export type Yhteystiedot = {
 };
 export type YhteystietoArvot = {
     koskiposti?: { fi?: string; sv?: string; en?: string };
+    kriisiviestinta?: { fi?: string; sv?: string; en?: string };
 };
 
 export type Nimi = {
@@ -333,7 +334,7 @@ export type ConfigurableButton =
     | 'PERUSTIETO_PAIVITA_YTJ_TIEDOT'
     | 'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'
     | 'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA';
-export type ConfigurableLomake = 'LOMAKE_KOSKI_POSTI' | 'LOMAKE_YHTEYSTIEDOT';
+export type ConfigurableLomake = 'LOMAKE_KOSKI_POSTI' | 'LOMAKE_YHTEYSTIEDOT' | 'LOMAKE_KRIISI_VIESTINTA';
 export type CASMe = {
     uid: string;
     oid: string;

@@ -8,7 +8,7 @@ type Props = {
     tyyppiOid: string;
     yhteystietoArvoRegister: UseFormRegister<YhteystietoArvot>;
     readOnly: boolean;
-    field: 'koskiposti';
+    field: 'koskiposti' | 'kriisiviestinta';
 };
 export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }: Props) {
     return (
@@ -18,7 +18,7 @@ export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }:
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_fi'}>
                         <Input
                             disabled={readOnly}
-                            id={'koskiposti.fi'}
+                            id={`${field}.fi`}
                             {...yhteystietoArvoRegister(`${field}.fi` as const)}
                         />
                     </Kentta>
@@ -27,7 +27,7 @@ export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }:
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_sv'}>
                         <Input
                             disabled={readOnly}
-                            id={'koskiposti.sv'}
+                            id={`${field}.sv`}
                             {...yhteystietoArvoRegister(`${field}.sv` as const)}
                         />
                     </Kentta>
@@ -36,7 +36,7 @@ export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }:
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_en'}>
                         <Input
                             disabled={readOnly}
-                            id={'koskiposti.en'}
+                            id={`${field}.en`}
                             {...yhteystietoArvoRegister(`${field}.en` as const)}
                         />
                     </Kentta>

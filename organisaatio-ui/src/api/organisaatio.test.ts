@@ -9,14 +9,16 @@ import {
     YhteystiedotOsoite,
 } from '../types/apiTypes';
 import {
+    checkAndMapValuesToYhteystiedot,
     getApiOsoite,
     getApiYhteystieto,
+    KOSKIPOSTI_BASE,
+    KRIISIVIESTINTA_BASE,
     mapApiYhteystiedotToUi,
-    mapUiYhteystiedotToApi,
-    mapUiOrganisaatioToApiToUpdate,
-    mapUiOrganisaatioToApiToSave,
-    checkAndMapValuesToYhteystiedot,
     mapApiYhteysTietoArvotToUi,
+    mapUiOrganisaatioToApiToSave,
+    mapUiOrganisaatioToApiToUpdate,
+    mapUiYhteystiedotToApi,
 } from './organisaatio';
 import { ROOT_OID } from '../contexts/constants';
 import { ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA } from './koodisto';
@@ -195,44 +197,40 @@ const uiPerustiedot: Perustiedot = {
 };
 describe('mapApiYhteysTietoArvotToUi', () => {
     it('Maps api yhteystietoarvot to Api format', () => {
-        const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' } };
+        const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' }, kriisiviestinta: { en: 'en' } };
         expect(
             mapApiYhteysTietoArvotToUi([
                 {
                     //KOSKI sahkoposti
                     'YhteystietoArvo.arvoText': 'fi',
                     'YhteystietoArvo.kieli': 'kieli_fi#1',
-                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-                    'YhteystietoElementti.pakollinen': false,
-                    'YhteystietoElementti.kaytossa': true,
+                    ...KOSKIPOSTI_BASE,
                 },
                 {
                     //KOSKI sahkoposti
                     'YhteystietoArvo.arvoText': 'sv',
                     'YhteystietoArvo.kieli': 'kieli_sv#1',
-                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-                    'YhteystietoElementti.pakollinen': false,
-                    'YhteystietoElementti.kaytossa': true,
+                    ...KOSKIPOSTI_BASE,
                 },
                 {
                     //KOSKI sahkoposti
                     'YhteystietoArvo.arvoText': 'en',
                     'YhteystietoArvo.kieli': 'kieli_en#12',
-                    'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-                    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-                    'YhteystietoElementti.pakollinen': false,
-                    'YhteystietoElementti.kaytossa': true,
+                    ...KOSKIPOSTI_BASE,
                 },
                 {
                     //KOSKI sahkoposti
+                    'YhteystietoArvo.arvoText': 'en',
+                    'YhteystietoArvo.kieli': 'kieli_en#12',
+                    ...KRIISIVIESTINTA_BASE,
+                },
+                {
+                    //KOSKI sahkoposti
+                    ...KOSKIPOSTI_BASE,
                     'YhteystietoArvo.arvoText': 'foo',
                     'YhteystietoArvo.kieli': 'kieli_en#12',
                     'YhteystietojenTyyppi.oid': '1.2.246.562.5.shouldignore',
                     'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-                    'YhteystietoElementti.pakollinen': false,
-                    'YhteystietoElementti.kaytossa': true,
                 },
             ])
         ).toEqual(expected);

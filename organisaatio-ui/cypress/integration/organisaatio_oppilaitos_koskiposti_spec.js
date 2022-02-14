@@ -1,5 +1,6 @@
 import { organisaatio } from '../support/data';
 import { BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/constants';
+import { KOSKIPOSTI_BASE, KOSKIPOSTI_TYYPI_OID } from '../../src/api/organisaatio';
 
 describe('Oppilaitos koski posti', () => {
     before(() => {
@@ -8,7 +9,7 @@ describe('Oppilaitos koski posti', () => {
             url: `${LEGACY_API_CONTEXT}/yhteystietojentyyppi`,
             body: {
                 version: 1,
-                oid: '1.2.246.562.5.79385887983',
+                oid: KOSKIPOSTI_TYYPI_OID,
                 nimi: {
                     teksti: [
                         { value: 'KOSKI-palvelun omien tietojen virheilmoituksen sähköpostiosoite.', kieliKoodi: 'fi' },
@@ -127,10 +128,7 @@ describe('Oppilaitos koski posti', () => {
                             //KOSKI sahkoposti
                             'YhteystietoArvo.arvoText': 'testi@testi.com',
                             'YhteystietoArvo.kieli': 'kieli_fi#1',
-                            'YhteystietojenTyyppi.oid': '1.2.246.562.5.79385887983',
-                            'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-                            'YhteystietoElementti.pakollinen': false,
-                            'YhteystietoElementti.kaytossa': true,
+                            ...KOSKIPOSTI_BASE,
                         },
                     ],
                 }),
