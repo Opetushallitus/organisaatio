@@ -1,3 +1,8 @@
+import {
+    ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
+    ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_JARJESTAJA,
+} from '../../src/api/koodisto';
+
 const { FinnishBusinessIds } = require('finnish-business-ids');
 
 export const organisaatio = (prefix = '', override) => {
@@ -252,8 +257,8 @@ export const helsinki = (override) => {
             },
         ],
         tyypit: [
-            'organisaatiotyyppi_01',
-            'organisaatiotyyppi_07',
+            ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
+            ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_JARJESTAJA,
             // 'organisaatiotyyppi_09'
         ],
         ryhmatyypit: [],

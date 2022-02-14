@@ -1,6 +1,7 @@
 import JoiLess from 'joi';
 import JoiDate from '@joi/date';
 import { ytunnusJoiValidator } from './YtunnusValidator';
+import { ORGANIAATIOTYYPPI_KUNTA } from '../api/koodisto';
 
 const Joi = JoiLess.extend(JoiDate);
 
@@ -26,7 +27,7 @@ export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
     ytunnus: Joi.custom(ytunnusJoiValidator),
     alkuPvm: Joi.date().format(['D.M.YYYY']).required(),
-    organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not('organisaatiotyyppi_09').required()),
+    organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not(ORGANIAATIOTYYPPI_KUNTA).required()),
     kotipaikka: perustietoOptionSchemaRequired,
     muutKotipaikat: Joi.array(),
     maa: perustietoOptionSchemaRequired,

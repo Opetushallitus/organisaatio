@@ -67,6 +67,8 @@ import {
     maatJaValtiotKoodistoAtom,
     oppilaitoksenOpetuskieletKoodistoAtom,
     oppilaitostyyppiKoodistoAtom,
+    ORGANIAATIOTYYPPI_OPPILAITOS,
+    ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA,
     organisaatioTyypitKoodistoAtom,
     postinumerotKoodistoAtom,
     vardajarjestamismuotoKoodistoAtom,
@@ -445,7 +447,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             />
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
-        if (organisaatioTyypit?.includes('organisaatiotyyppi_08') && varhaiskasvatuksenToimipaikkaTiedot) {
+        if (
+            organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA) &&
+            varhaiskasvatuksenToimipaikkaTiedot
+        ) {
             lomakkeet.push(
                 <VakaToimipaikka
                     control={perustiedotControl}
@@ -456,12 +461,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
         }
-        if (organisaatioTyypit?.includes('organisaatiotyyppi_02')) {
+        if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_OPPILAITOS)) {
             lomakkeet.push(
                 <ArvoLomake
                     readOnly={readOnly && !casMe.canEditLomake('LOMAKE_KOSKI_POSTI', params.oid, organisaatioNimiPolku)}
                     tyyppiOid={'1.2.246.562.5.79385887983'}
                     yhteystietoArvoRegister={yhteystietoArvoRegister}
+                    field={'koskiposti'}
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));

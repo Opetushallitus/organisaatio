@@ -19,6 +19,7 @@ import {
     mapApiYhteysTietoArvotToUi,
 } from './organisaatio';
 import { ROOT_OID } from '../contexts/constants';
+import { ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA } from './koodisto';
 
 const kieli = 'kieli_fi#1';
 
@@ -113,7 +114,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
     parentOid: '123.321',
     parentOidPath: '123.321,1.2.1',
     status: 'AKTIIVINEN',
-    tyypit: ['organisaatiotyyppi_01'],
+    tyypit: [ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA],
     yhteystiedot: [...apiYhteystiedot],
     oppilaitosTyyppiUri: 'oppilaitostyyppi_11#1',
     oppilaitosKoodi: '',
@@ -135,7 +136,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     nimi: { fi: 'uusinimi' },
     lyhytNimi: { fi: 'uusinimi' },
     parentOid: '123.321',
-    tyypit: ['organisaatiotyyppi_01'],
+    tyypit: [ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA],
     yhteystiedot: [
         ...apiYhteystiedot,
         {
@@ -178,7 +179,7 @@ const uiPerustiedot: Perustiedot = {
     kotipaikka: { label: 'Helsinki', value: 'kunta_1', arvo: '1', versio: 1, isDisabled: false },
     maa: { label: 'Suomi', value: 'maa_1', arvo: '1', versio: 1, isDisabled: false },
     muutKotipaikat: [{ label: 'muutKotipaikat', value: 'kunta_2', arvo: '2', versio: 1, isDisabled: false }],
-    organisaatioTyypit: ['organisaatiotyyppi_01'],
+    organisaatioTyypit: [ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA],
     oppilaitosTyyppiUri: {
         label: 'Peruskoulut',
         value: 'oppilaitostyyppi_11',
