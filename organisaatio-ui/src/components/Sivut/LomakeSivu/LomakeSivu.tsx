@@ -225,7 +225,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             version,
         }));
         const { currentNimi, pastNimet, futureNimet } = sortNimet(apiNimetWithUIDate, mappingLyhytNimi);
-        console.log('in', yhteystietoArvos);
         return {
             Uiperustiedot: {
                 maa,
@@ -288,7 +287,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             perustiedotReset(Uiperustiedot);
             yhteystiedotReset(Uiyhteystiedot);
             yhteystietoArvoReset(UIYhteysTietoArvot);
-            console.log(UIYhteysTietoArvot);
         }
     }
 

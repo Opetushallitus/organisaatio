@@ -43,7 +43,6 @@ beforeEach(() => {
             if (a.startsWith('/organisaatio-service/internal/koodisto/KAYTTORYHMAT/koodi')) return { data: [] };
             if (a.startsWith('/organisaatio-service/internal/koodisto/RYHMANTILA/koodi')) return { data: [] };
         }
-        console.log(a);
         return { data: {} };
     });
 });
