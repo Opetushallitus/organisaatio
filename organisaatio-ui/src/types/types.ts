@@ -294,9 +294,10 @@ export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm
 export type RemoteFilters = {
     searchString: string;
     naytaPassivoidut: boolean;
+    oppilaitostyyppi: string;
+    organisaatiotyyppi: string;
 };
 export type LocalFilters = {
-    searchString: string;
     omatOrganisaatiotSelected: boolean;
     organisaatioTyyppi: SelectOptionType[];
     oppilaitosTyyppi: SelectOptionType[];

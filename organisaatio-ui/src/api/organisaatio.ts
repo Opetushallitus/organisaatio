@@ -135,25 +135,16 @@ async function getJalkelaiset({ oid }: { oid: string }): Promise<OrganisaatioHak
     const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}${oid}/jalkelaiset`);
     return data.organisaatiot;
 }
-async function searchOrganisation({
-    searchStr,
-    aktiiviset = true,
-    lakkautetut = false,
-    suunnitellut = true,
-}: {
+async function searchOrganisation(params: {
     searchStr: string;
-    aktiiviset?: boolean;
-    lakkautetut?: boolean;
-    suunnitellut?: boolean;
+    aktiiviset: boolean;
+    lakkautetut: boolean;
+    suunnitellut: boolean;
+    organisaatiotyyppi?: string;
+    oppilaitostyyppi?: string;
 }): Promise<OrganisaatioHakuOrganisaatio[]> {
-    if (searchStr.length < 3) return [];
     const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
-        params: {
-            aktiiviset,
-            lakkautetut,
-            searchStr,
-            suunnitellut,
-        },
+        params,
     });
     return data.organisaatiot;
 }
