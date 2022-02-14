@@ -1,4 +1,4 @@
-import { containingSomeValueFilter, expandData } from './OrganisaatioHakuTaulukko';
+import { containingSomeValueFilter, expandData, includeVakaToimijatFilter } from './OrganisaatioHakuTaulukko';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import { Row } from 'react-table';
 
@@ -82,6 +82,38 @@ describe('OrganisaatioHakuTaulukko', () => {
             ['Does not fail if id does not match object prop', rows1, 'testi', [], rows1],
         ])('%s', (_, rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filter: string[], expected) => {
             expect(containingSomeValueFilter(rows, id, filter)).toStrictEqual(expected);
+        });
+    });
+    describe('includeVakaToimijatFilter', () => {
+        const rows = [
+            {
+                values: {
+                    organisaatiotyypit: ['organisaatiotyyppi_07'],
+                } as Partial<OrganisaatioHakuOrganisaatio>,
+            } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
+            {
+                values: {
+                    organisaatiotyypit: ['organisaatiotyyppi_02'],
+                } as Partial<OrganisaatioHakuOrganisaatio>,
+            } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
+            {
+                values: {
+                    organisaatiotyypit: ['organisaatiotyyppi_08'],
+                } as Partial<OrganisaatioHakuOrganisaatio>,
+            } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
+        ] as Row<OrganisaatioHakuOrganisaatio>[];
+        const id = 'showVakaToimijat';
+        test.each([
+            ['Passes all rows when include vaka toimijat is set to true', rows, id, true, [...rows]],
+            [
+                'Filters out organisaatiotyyppi_07 and organisaatiotyyppi_08 if include vaka toimijat is set to false',
+                rows,
+                id,
+                false,
+                [rows[1]],
+            ],
+        ])('%s', (_, rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filter: boolean, expected) => {
+            expect(includeVakaToimijatFilter(rows, id, filter)).toStrictEqual(expected);
         });
     });
 });

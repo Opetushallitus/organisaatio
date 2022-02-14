@@ -134,6 +134,12 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
         });
     };
 
+    const handleLocalCheckBoxChange = ({ target: { name, checked } }) =>
+        setLocalFilters({ ...localFilters, [name]: checked });
+
+    const handleRemoteCheckBoxChange = ({ target: { name, checked } }) =>
+        setRemoteFilters({ ...remoteFilters, [name]: checked });
+
     return (
         <div>
             <div className={styles.FiltteriRivi}>
@@ -166,22 +172,29 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                             )
                         }
                     />
-                    <Checkbox
-                        type={'checkbox'}
-                        checked={remoteFilters.naytaPassivoidut}
-                        onChange={(e) => setRemoteFilters({ ...remoteFilters, naytaPassivoidut: e.target.checked })}
-                    >
-                        {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
-                    </Checkbox>
-                    <Checkbox
-                        type={'checkbox'}
-                        checked={localFilters.omatOrganisaatiotSelected}
-                        onChange={(e) =>
-                            setLocalFilters({ ...localFilters, omatOrganisaatiotSelected: e.target.checked })
-                        }
-                    >
-                        {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
-                    </Checkbox>
+                    <div className={styles.CheckboxContainer}>
+                        <Checkbox
+                            name={'naytaPassivoidut'}
+                            checked={remoteFilters.naytaPassivoidut}
+                            onChange={handleRemoteCheckBoxChange}
+                        >
+                            {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
+                        </Checkbox>
+                        <Checkbox
+                            name={'omatOrganisaatiotSelected'}
+                            checked={localFilters.omatOrganisaatiotSelected}
+                            onChange={handleLocalCheckBoxChange}
+                        >
+                            {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
+                        </Checkbox>
+                        <Checkbox
+                            name={'showVakaToimijat'}
+                            checked={localFilters.showVakaToimijat}
+                            onChange={handleLocalCheckBoxChange}
+                        >
+                            {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_VAKA_TOIMIJAT')}
+                        </Checkbox>
+                    </div>
                 </div>
             </div>
             <div className={styles.FiltteriRivi}>
