@@ -1,6 +1,5 @@
 import { organisaatio } from '../support/data';
-import { BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/constants';
-import { KOSKIPOSTI_BASE, KOSKIPOSTI_TYYPI_OID } from '../../src/api/organisaatio';
+import { BASE_PATH, KOSKIPOSTI_BASE, KOSKIPOSTI_TYYPI_OID, LEGACY_API_CONTEXT } from '../../src/contexts/constants';
 
 describe('Oppilaitos koski posti', () => {
     before(() => {
@@ -125,10 +124,10 @@ describe('Oppilaitos koski posti', () => {
                     tyypit: [`organisaatiotyyppi_02`],
                     yhteystietoArvos: [
                         {
+                            ...KOSKIPOSTI_BASE,
                             //KOSKI sahkoposti
                             'YhteystietoArvo.arvoText': 'testi@testi.com',
                             'YhteystietoArvo.kieli': 'kieli_fi#1',
-                            ...KOSKIPOSTI_BASE,
                         },
                     ],
                 }),

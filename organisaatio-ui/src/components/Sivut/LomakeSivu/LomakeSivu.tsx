@@ -4,7 +4,7 @@ import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
-import { rakenne, ROOT_OID } from '../../../contexts/constants';
+import { KOSKIPOSTI_TYYPI_OID, KRIISIVIESTINTA_TYYPI_OID, rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
     LiitaOrganisaatioon,
     Nimi,
@@ -26,8 +26,6 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
-    KOSKIPOSTI_TYYPI_OID,
-    KRIISIVIESTINTA_TYYPI_OID,
     mapApiVakaToUi,
     mapApiYhteystiedotToUi,
     mapApiYhteysTietoArvotToUi,

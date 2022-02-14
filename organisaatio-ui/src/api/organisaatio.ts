@@ -31,7 +31,14 @@ import {
 } from '../types/apiTypes';
 import useAxios from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
-import { PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/constants';
+import {
+    KOSKIPOSTI_BASE,
+    KOSKIPOSTI_TYYPI_OID,
+    KRIISIVIESTINTA_BASE,
+    KRIISIVIESTINTA_TYYPI_OID,
+    PUBLIC_API_CONTEXT,
+    ROOT_OID,
+} from '../contexts/constants';
 import { UnpackNestedValue } from 'react-hook-form';
 import { formatUiDateStrToApi, getUiDateStr } from '../tools/mappers';
 
@@ -41,20 +48,6 @@ type SupportedYhteystietoType = 'www' | 'email' | 'numero';
 const NAME_WWW = 'www';
 const NAME_EMAIL = 'email';
 const NAME_PHONE = 'numero';
-export const KOSKIPOSTI_TYYPI_OID = '1.2.246.562.5.79385887983';
-export const KOSKIPOSTI_BASE = {
-    'YhteystietojenTyyppi.oid': KOSKIPOSTI_TYYPI_OID,
-    'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
-    'YhteystietoElementti.pakollinen': false,
-    'YhteystietoElementti.kaytossa': true,
-};
-export const KRIISIVIESTINTA_TYYPI_OID = '1.2.246.562.5.31532764098';
-export const KRIISIVIESTINTA_BASE = {
-    'YhteystietojenTyyppi.oid': KRIISIVIESTINTA_TYYPI_OID,
-    'YhteystietoElementti.oid': '1.2.246.562.5.30789631784',
-    'YhteystietoElementti.pakollinen': false,
-    'YhteystietoElementti.kaytossa': true,
-};
 const baseUrl = `${PUBLIC_API_CONTEXT}/`;
 
 async function createOrganisaatio(organisaatio: NewApiOrganisaatio) {

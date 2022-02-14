@@ -12,15 +12,13 @@ import {
     checkAndMapValuesToYhteystiedot,
     getApiOsoite,
     getApiYhteystieto,
-    KOSKIPOSTI_BASE,
-    KRIISIVIESTINTA_BASE,
     mapApiYhteystiedotToUi,
     mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToSave,
     mapUiOrganisaatioToApiToUpdate,
     mapUiYhteystiedotToApi,
 } from './organisaatio';
-import { ROOT_OID } from '../contexts/constants';
+import { KOSKIPOSTI_BASE, KRIISIVIESTINTA_BASE, ROOT_OID } from '../contexts/constants';
 import { ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA } from './koodisto';
 
 const kieli = 'kieli_fi#1';
