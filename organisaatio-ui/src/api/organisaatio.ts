@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { CancelToken } from 'axios';
 import {
     Koodisto,
     LiitaOrganisaatioon,
@@ -137,16 +137,20 @@ async function getJalkelaiset({ oid }: { oid: string }): Promise<OrganisaatioHak
     const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}${oid}/jalkelaiset`);
     return data.organisaatiot;
 }
-async function searchOrganisation(params: {
-    searchStr: string;
-    aktiiviset: boolean;
-    lakkautetut: boolean;
-    suunnitellut: boolean;
-    organisaatiotyyppi?: string;
-    oppilaitostyyppi?: string;
-}): Promise<OrganisaatioHakuOrganisaatio[]> {
+async function searchOrganisation(
+    params: {
+        searchStr: string;
+        aktiiviset: boolean;
+        lakkautetut: boolean;
+        suunnitellut: boolean;
+        organisaatiotyyppi?: string;
+        oppilaitostyyppi?: string;
+    },
+    cancelToken: CancelToken
+): Promise<OrganisaatioHakuOrganisaatio[]> {
     const { data } = await Axios.get<{ organisaatiot: OrganisaatioHakuOrganisaatio[] }>(`${baseUrl}hierarkia/hae`, {
         params,
+        cancelToken,
     });
     return data.organisaatiot;
 }

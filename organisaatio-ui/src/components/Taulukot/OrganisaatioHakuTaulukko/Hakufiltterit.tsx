@@ -22,6 +22,7 @@ import { SelectOptionType } from '../../../types/types';
 import { ValueType } from 'react-select';
 import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import useDebounce from '../../../tools/useDebounce';
+import axios from 'axios';
 
 type HakufiltteritProps = {
     setOrganisaatiot: (data: OrganisaatioHakuOrganisaatio[]) => void;
@@ -107,16 +108,29 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
     useEffect(() => {
         (async () => {
             setLoading(true);
-            const searchResult = await searchOrganisation({
-                searchStr: debouncedSearchString,
-                lakkautetut: naytaPassivoidut,
-                ...(organisaatiotyyppi ? { organisaatiotyyppi } : {}),
-                ...(oppilaitostyyppi ? { oppilaitostyyppi } : {}),
-                aktiiviset: true,
-                suunnitellut: true,
-            });
-            setOrganisaatiot(enrichWithAllNestedData(searchResult));
-            setLoading(false);
+            let cancelToken;
+            if (typeof cancelToken != typeof undefined) {
+                cancelToken.cancel('Operation canceled due to new request.');
+            } else {
+                cancelToken = axios.CancelToken.source();
+            }
+            try {
+                const searchResult = await searchOrganisation(
+                    {
+                        searchStr: debouncedSearchString,
+                        lakkautetut: naytaPassivoidut,
+                        ...(organisaatiotyyppi ? { organisaatiotyyppi } : {}),
+                        ...(oppilaitostyyppi ? { oppilaitostyyppi } : {}),
+                        aktiiviset: true,
+                        suunnitellut: true,
+                    },
+                    cancelToken.token
+                );
+                setOrganisaatiot(enrichWithAllNestedData(searchResult));
+                setLoading(false);
+            } catch {
+                console.error('req cancelled');
+            }
         })();
     }, [debouncedSearchString, naytaPassivoidut, organisaatiotyyppi, oppilaitostyyppi, setLoading, setOrganisaatiot]);
 
