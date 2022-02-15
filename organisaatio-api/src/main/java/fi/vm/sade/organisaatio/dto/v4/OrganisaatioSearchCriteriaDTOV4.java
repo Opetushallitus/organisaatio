@@ -8,10 +8,13 @@ import java.util.Set;
 
 @Schema(description = "Organisaation hakuehdot v4")
 public class OrganisaatioSearchCriteriaDTOV4 {
+    @Schema(defaultValue = "true")
     @Parameter(description = "Otetaanko aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
     private boolean aktiiviset;
+    @Schema(defaultValue = "false")
     @Parameter(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
     private boolean suunnitellut;
+    @Schema(defaultValue = "false")
     @Parameter(description = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
     private boolean lakkautetut;
     @Parameter(description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista")
