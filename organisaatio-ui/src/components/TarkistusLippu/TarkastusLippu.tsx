@@ -7,6 +7,7 @@ import { getUiDateStr } from '../../tools/mappers';
 import { useAtom } from 'jotai';
 import { LomakeButton } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 import { languageAtom } from '../../api/lokalisaatio';
+import { ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA } from '../../api/koodisto';
 
 const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;
@@ -41,7 +42,7 @@ const TarkastusLippu: React.FC<TarkastusLippuProps> = ({
     organisaatioTyypit = [],
 }) => {
     const [i18n] = useAtom(languageAtom);
-    if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === 'organisaatiotyyppi_08') {
+    if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA) {
         return <></>;
     }
     const tarkastusDate = inputToDate(tarkastusPvm);
@@ -79,7 +80,7 @@ const TarkastusLippuButton: React.FC<TarkastusLippuButtonProps> = ({
     isDirty,
     onClick,
 }) => {
-    if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === 'organisaatiotyyppi_08') {
+    if (organisaatioTyypit.length === 1 && organisaatioTyypit[0] === ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA) {
         return <></>;
     }
     return (

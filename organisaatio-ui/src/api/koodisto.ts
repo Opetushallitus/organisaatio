@@ -8,7 +8,16 @@ import moment from 'moment';
 import { atomFamily } from 'jotai/utils';
 
 const baseUrl = `${API_CONTEXT}/koodisto/`;
-
+export const ORGANIAATIOTYYPPI_OPETUSHALLITUS = 'opetushallitus';
+export const ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA = 'organisaatiotyyppi_01';
+export const ORGANIAATIOTYYPPI_OPPILAITOS = 'organisaatiotyyppi_02';
+export const ORGANIAATIOTYYPPI_TOIMIPISTE = 'organisaatiotyyppi_03';
+export const ORGANIAATIOTYYPPI_OPPISOPIMUSTOIMIPISTE = 'organisaatiotyyppi_04';
+export const ORGANIAATIOTYYPPI_MUU_ORGANISAATIO = 'organisaatiotyyppi_05';
+export const ORGANIAATIOTYYPPI_TYOELAMAJARJESTO = 'organisaatiotyyppi_06';
+export const ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_JARJESTAJA = 'organisaatiotyyppi_07';
+export const ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA = 'organisaatiotyyppi_08';
+export const ORGANIAATIOTYYPPI_KUNTA = 'organisaatiotyyppi_09';
 const getKoodisto = async (koodisto: string, onlyValid?: boolean): Promise<Koodi[]> => {
     const validParameter = onlyValid ? '?onlyValid=true' : '';
     const url = `${baseUrl}${koodisto}/koodi${validParameter}`;

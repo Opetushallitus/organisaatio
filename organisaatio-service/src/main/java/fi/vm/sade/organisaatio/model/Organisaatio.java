@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -9,7 +10,6 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -635,7 +635,24 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return multilingual nimi (name)
      */
     public MonikielinenTeksti getNimi() {
-        return nimi;
+        Organisaatio parent = this.getParent();
+        if (parent != null && this.tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            Map<String, String> values = new HashMap<>();
+            MonikielinenTeksti parentNimi = parent.getNimi();
+            this.nimi.getValues().keySet().forEach(a -> {
+                String currentNimiString = this.nimi.getString(a);
+                String parentNimiString = parentNimi.getString(a);
+                values.put(a, currentNimiString.equals(parentNimiString) ? currentNimiString : String.format("%s, %s", parentNimiString, currentNimiString));
+            });
+            MonikielinenTeksti modified = new MonikielinenTeksti();
+            modified.setValues(values);
+            return modified;
+        }
+        return this.nimi;
+    }
+
+    public MonikielinenTeksti getActualNimi() {
+        return this.nimi;
     }
 
     /**

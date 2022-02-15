@@ -60,6 +60,7 @@ export class CASMeImpl implements CASMe {
                 ...getRoleItems<ConfigurableLomake>(c, ORGANISAATIO_CRUD, [
                     'LOMAKE_KOSKI_POSTI',
                     'LOMAKE_YHTEYSTIEDOT',
+                    'LOMAKE_KRIISI_VIESTINTA',
                 ]),
             ],
             [] as ConfigurableLomake[]

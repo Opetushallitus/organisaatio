@@ -89,6 +89,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter implements Converter<Orga
 
         t.setKayntiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getKayntiosoite()));
         t.setNimi(YhteystietoConverterUtils.convertMKTToMap(s.getNimi()));
+        t.setLyhytNimi(YhteystietoConverterUtils.convertMKTToMap(s.getActualNimi()));
         t.setNimet(organisaatioNimiModelMapper.map(s.getNimet(), organisaatioNimiRDTOListType));
         t.setPostiosoite(YhteystietoConverterUtils.convertOsoiteToMap(s.getPostiosoite()));
 

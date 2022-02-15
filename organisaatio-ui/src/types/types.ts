@@ -1,5 +1,17 @@
 import { APIEndpontDate, ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
+import {
+    ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
+    ORGANIAATIOTYYPPI_KUNTA,
+    ORGANIAATIOTYYPPI_MUU_ORGANISAATIO,
+    ORGANIAATIOTYYPPI_OPETUSHALLITUS,
+    ORGANIAATIOTYYPPI_OPPILAITOS,
+    ORGANIAATIOTYYPPI_OPPISOPIMUSTOIMIPISTE,
+    ORGANIAATIOTYYPPI_TOIMIPISTE,
+    ORGANIAATIOTYYPPI_TYOELAMAJARJESTO,
+    ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_JARJESTAJA,
+    ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA,
+} from '../api/koodisto';
 
 export type Language = 'fi' | 'sv' | 'en';
 
@@ -66,6 +78,7 @@ export type Yhteystiedot = {
 };
 export type YhteystietoArvot = {
     koskiposti?: { fi?: string; sv?: string; en?: string };
+    kriisiviestinta?: { fi?: string; sv?: string; en?: string };
 };
 
 export type Nimi = {
@@ -304,16 +317,16 @@ export type LocalFilters = {
     showVakaToimijat: boolean;
 };
 export type OrganisaatioType =
-    | 'opetushallitus'
-    | 'organisaatiotyyppi_01'
-    | 'organisaatiotyyppi_02'
-    | 'organisaatiotyyppi_03'
-    | 'organisaatiotyyppi_04'
-    | 'organisaatiotyyppi_05'
-    | 'organisaatiotyyppi_06'
-    | 'organisaatiotyyppi_07'
-    | 'organisaatiotyyppi_08'
-    | 'organisaatiotyyppi_09';
+    | typeof ORGANIAATIOTYYPPI_OPETUSHALLITUS
+    | typeof ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA
+    | typeof ORGANIAATIOTYYPPI_OPPILAITOS
+    | typeof ORGANIAATIOTYYPPI_TOIMIPISTE
+    | typeof ORGANIAATIOTYYPPI_OPPISOPIMUSTOIMIPISTE
+    | typeof ORGANIAATIOTYYPPI_MUU_ORGANISAATIO
+    | typeof ORGANIAATIOTYYPPI_TYOELAMAJARJESTO
+    | typeof ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_JARJESTAJA
+    | typeof ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA
+    | typeof ORGANIAATIOTYYPPI_KUNTA;
 export type ConfigurableButton =
     | 'LOMAKE_YHDISTA_ORGANISAATIO'
     | 'LOMAKE_SIIRRA_ORGANISAATIO'
@@ -323,7 +336,7 @@ export type ConfigurableButton =
     | 'PERUSTIETO_PAIVITA_YTJ_TIEDOT'
     | 'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'
     | 'PERUSTIETO_MUOKKAA_ORGANISAATION_NIMEA';
-export type ConfigurableLomake = 'LOMAKE_KOSKI_POSTI' | 'LOMAKE_YHTEYSTIEDOT';
+export type ConfigurableLomake = 'LOMAKE_KOSKI_POSTI' | 'LOMAKE_YHTEYSTIEDOT' | 'LOMAKE_KRIISI_VIESTINTA';
 export type CASMe = {
     uid: string;
     oid: string;
