@@ -14,23 +14,23 @@ public class OrganisaatioSearchCriteriaDTOV4 {
     private boolean suunnitellut;
     @Parameter(description = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
     private boolean lakkautetut;
-    @Parameter(description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", required = true)
+    @Parameter(description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista")
     private Set<String> yritysmuoto = new HashSet<>();
-    @Parameter(description = "Haettavan organisaation kunta tai lista kunnista", required = true)
+    @Parameter(description = "Haettavan organisaation kunta tai lista kunnista")
     private Set<String> kunta = new HashSet<>();
-    @Parameter(description = "Haettavan organisaation tyyppi", required = true)
+    @Parameter(description = "Haettavan organisaation tyyppi")
     private String organisaatiotyyppi;
-    @Parameter(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
+    @Parameter(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä")
     private Set<String> oppilaitostyyppi = new HashSet<>();
-    @Parameter(description = "Haettavan organisaation kieli tai lista kielistä", required = true)
+    @Parameter(description = "Haettavan organisaation kieli tai lista kielistä")
     private Set<String> kieli = new HashSet<>();
-    @Parameter(description = "Lista sallituista organisaatioiden oid:stä", required = true)
+    @Parameter(description = "Lista sallituista organisaatioiden oid:stä")
     private Set<String> oidRestrictionList = new HashSet<>();
-    @Parameter(description = "Hakutermit", required = true)
+    @Parameter(description = "Hakutermit")
     private String searchStr;
     @Parameter(description = "Haku oid:lla. Hakutermi jätetään huomioimatta jos oid on annettu.")
     private String oid;
-    @Parameter(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
+    @Parameter(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista")
     private boolean skipParents;
 
     /**
