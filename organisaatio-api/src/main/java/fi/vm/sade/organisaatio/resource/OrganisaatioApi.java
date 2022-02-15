@@ -60,7 +60,7 @@ public interface OrganisaatioApi {
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioRDTOV4> haeMuutetut(
             @Parameter(description = "Muokattu jälkeen", required = true) @RequestParam DateParam lastModifiedSince,
-            @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).") @RequestParam(defaultValue = "false") boolean includeImage,
+            @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).", deprecated = true) @RequestParam(defaultValue = "false") boolean includeImage,
             @Parameter(description = "Halutut organisaatiotyypit") @RequestParam(defaultValue = "") List<String> organizationTypes,
             @Parameter(description = "Rajataanko lakkautetut organisaatiot pois") @RequestParam(defaultValue = "false") boolean excludeDiscontinued
     );
