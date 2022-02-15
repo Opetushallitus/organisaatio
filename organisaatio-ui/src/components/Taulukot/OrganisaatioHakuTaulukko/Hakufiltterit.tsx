@@ -36,9 +36,6 @@ type HakufiltteritSelectProps = {
     value: string;
 };
 
-const checkIsOppilaitosTyyppiAllowed = (organisaatiotyyppi: string) =>
-    organisaatiotyyppi === ORGANIAATIOTYYPPI_OPPILAITOS;
-
 export const enrichWithAllNestedData = (
     data: OrganisaatioHakuOrganisaatio[],
     parentOrganisaatioTypes: string[] = [],
@@ -136,7 +133,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
         setRemoteFilters({
             ...remoteFilters,
             organisaatiotyyppi,
-            oppilaitostyyppi: checkIsOppilaitosTyyppiAllowed(organisaatiotyyppi) ? remoteFilters.oppilaitostyyppi : '',
+            oppilaitostyyppi: organisaatiotyyppi === ORGANIAATIOTYYPPI_OPPILAITOS ? remoteFilters.oppilaitostyyppi : '',
         });
     };
 
@@ -207,16 +204,18 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                         label={i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}
                         handleSelectChange={handleOppilaitosTyyppiChange}
                         selectOptions={oppilaitosTyypitKoodisto.selectOptions()}
-                        disabled={!checkIsOppilaitosTyyppiAllowed(remoteFilters.organisaatiotyyppi)}
+                        disabled={organisaatiotyyppi !== ORGANIAATIOTYYPPI_OPPILAITOS}
                         value={remoteFilters.oppilaitostyyppi}
                     />
-                    <div className={styles.Kentta}>
+                    <div className={styles.TyhjennaNappiKentta}>
                         <Button
+                            color={'secondary'}
+                            variant={'outlined'}
                             onClick={() =>
                                 setRemoteFilters({ ...remoteFilters, organisaatiotyyppi: '', oppilaitostyyppi: '' })
                             }
                         >
-                            {i18n.translate('ORGANISAATIOHAKU_TAULUKKO_TYHJENNA')}
+                            {i18n.translate('ORGANISAATIOHAKUTAULUKKO_TYHJENNA')}
                         </Button>
                     </div>
                 </div>
