@@ -8,13 +8,13 @@ import java.util.Set;
 
 public class YhteystietojenTyyppiDTO implements Serializable {
 
-    private final static long serialVersionUID = 100L;
+    private static final long serialVersionUID = 100L;
     protected long version;
     protected String oid;
     protected MonikielinenTekstiTyyppi nimi;
-    protected Set<String> sovellettavatOrganisaatios;
-    protected Set<YhteystietoElementtiDTO> allLisatietokenttas;
-    protected Set<String> sovellettavatOppilaitostyyppis;
+    private Set<String> sovellettavatOrganisaatios;
+    private Set<YhteystietoElementtiDTO> allLisatietokenttas;
+    private Set<String> sovellettavatOppilaitostyyppis;
 
     /**
      * Gets the value of the version property.

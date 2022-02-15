@@ -13,7 +13,7 @@ type Props = {
     footer?: React.ReactNode;
 };
 
-export default function PohjaModaali({ suljeCallback = () => {}, footer, header, body }: Props) {
+export default function PohjaModaali({ suljeCallback, footer, header, body }: Props) {
     return (
         <Modal className={styles.ModaaliKehys} open onClose={suljeCallback}>
             <ModalHeader className={styles.ModaaliOtsikkoKehys} onClose={suljeCallback}>

@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.organisaatio.api.OrganisaatioValidationConstraints;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.OrganisaatioValidationService;
@@ -34,8 +33,9 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
     private final OrganisaatioKoodisto organisaatioKoodisto;
 
-    private static final String uriWithVersionRegExp = "^.*#[0-9]+$";
-
+    private static final String URI_WITH_VERSION_PATTERN = "^.*#[0-9]+$";
+    private static final String YTUNNUS_PATTERN = "\\d\\d\\d\\d\\d\\d\\d-\\d";
+    private static final String VIRASTOTUNNUS_PATTERN = "\\d\\d\\d\\d\\d\\d.*";
     @Autowired
     OrganisaatioValidationServiceImpl(@Value("${root.organisaatio.oid}") String rootOrganisaatioOid,
                                       OrganisaatioKoodisto organisaatioKoodisto) {
@@ -64,7 +64,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         if (model.getYtunnus() != null && model.getYtunnus().length() == 0) {
             model.setYtunnus(null);
         }
-        if (model.getYtunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.YTUNNUS_PATTERN, model.getYtunnus())) {
+        if (model.getYtunnus() != null && !Pattern.matches(YTUNNUS_PATTERN, model.getYtunnus())) {
             throw new ValidationException("validation.organisaatio.ytunnus");
         }
 
@@ -72,7 +72,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         if (model.getVirastoTunnus() != null && model.getVirastoTunnus().length() == 0) {
             model.setVirastoTunnus(null);
         }
-        if (model.getVirastoTunnus() != null && !Pattern.matches(OrganisaatioValidationConstraints.VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
+        if (model.getVirastoTunnus() != null && !Pattern.matches(VIRASTOTUNNUS_PATTERN, model.getVirastoTunnus())) {
             throw new ValidationException("validation.organisaatio.virastotunnus");
         }
 
@@ -201,7 +201,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         // metadata.data
         // kielet
         for (String kieli : entity.getKielet()) {
-            if (!kieli.matches(uriWithVersionRegExp)) {
+            if (!kieli.matches(URI_WITH_VERSION_PATTERN)) {
                 LOG.warn("Version missing from koodistouri! Organisaation kieli: " + kieli);
                 throw new NoVersionInKoodistoUriException();
             }
@@ -209,7 +209,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
         // oppilaitostyyppi
         if (StringUtils.hasLength(entity.getOppilaitosTyyppi())) {
-            if (!entity.getOppilaitosTyyppi().matches(uriWithVersionRegExp)) {
+            if (!entity.getOppilaitosTyyppi().matches(URI_WITH_VERSION_PATTERN)) {
                 LOG.warn("Version missing from koodistouri! Organisaation oppilaitostyyppi: " + entity.getOppilaitosTyyppi());
                 throw new NoVersionInKoodistoUriException();
             }
@@ -220,7 +220,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
         entity.getYhteystiedot().stream()
                 .filter(yhteystieto -> !Objects.isNull(yhteystieto.getKieli()))
                 .forEach(yhteystieto -> {
-                    if (!yhteystieto.getKieli().matches(uriWithVersionRegExp)) {
+                    if (!yhteystieto.getKieli().matches(URI_WITH_VERSION_PATTERN)) {
                         LOG.warn("Version missing from koodistouri! Organisaation yhteystiedon kieli: " + yhteystieto.getKieli());
                         throw new NoVersionInKoodistoUriException();
                     }
@@ -228,7 +228,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
         // ryhmätyypit
         if (entity.getRyhmatyypit() != null) {
-            List<String> errors = entity.getRyhmatyypit().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
+            List<String> errors = entity.getRyhmatyypit().stream().filter(t -> !t.matches(URI_WITH_VERSION_PATTERN)).collect(toList());
             if (!errors.isEmpty()) {
                 LOG.warn("Version missing from koodistouri! Organisaation ryhmätyypit: {}", errors);
                 throw new NoVersionInKoodistoUriException();
@@ -237,7 +237,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
 
         // käyttöryhmät
         if (entity.getKayttoryhmat() != null) {
-            List<String> errors = entity.getKayttoryhmat().stream().filter(t -> !t.matches(uriWithVersionRegExp)).collect(toList());
+            List<String> errors = entity.getKayttoryhmat().stream().filter(t -> !t.matches(URI_WITH_VERSION_PATTERN)).collect(toList());
             if (!errors.isEmpty()) {
                 LOG.warn("Version missing from koodistouri! Organisaation käyttöryhmät: {}", errors);
                 throw new NoVersionInKoodistoUriException();
