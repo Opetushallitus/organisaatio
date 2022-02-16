@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { localFiltersAtom, remoteFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { searchOrganisation } from '../../../api/organisaatio';
 import styles from './Hakufiltterit.module.css';
@@ -22,11 +22,12 @@ import { SelectOptionType } from '../../../types/types';
 import { ValueType } from 'react-select';
 import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import useDebounce from '../../../tools/useDebounce';
-import axios from 'axios';
+import axios, { CancelTokenSource } from 'axios';
 
 type HakufiltteritProps = {
     setOrganisaatiot: (data: OrganisaatioHakuOrganisaatio[]) => void;
     setLoading: (loading: boolean) => void;
+    isLoading: boolean;
 };
 
 type HakufiltteritSelectProps = {
@@ -95,59 +96,82 @@ const HakuFilterSelect = (props: HakufiltteritSelectProps) => {
     );
 };
 
-export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
+let cancelToken: undefined | CancelTokenSource;
+
+export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: HakufiltteritProps) {
     const [i18n] = useAtom(languageAtom);
     const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
     const [localFilters, setLocalFilters] = useAtom(localFiltersAtom);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
     const [oppilaitosTyypitKoodisto] = useAtom(oppilaitostyyppiKoodistoAtom);
 
-    const { searchString, naytaPassivoidut, organisaatiotyyppi, oppilaitostyyppi } = remoteFilters;
+    const {
+        searchString,
+        naytaPassivoidut,
+        organisaatiotyyppi,
+        oppilaitostyyppi: oppilaitostyyppiWoVersion,
+    } = remoteFilters;
     const debouncedSearchString = useDebounce<string>(searchString, 500);
-
+    const searchRef = useRef<string | undefined>();
     useEffect(() => {
         (async () => {
-            setLoading(true);
-            let cancelToken;
-            if (typeof cancelToken != typeof undefined) {
-                cancelToken.cancel('Operation canceled due to new request.');
-            } else {
-                cancelToken = axios.CancelToken.source();
+            if (searchRef.current !== debouncedSearchString && debouncedSearchString === '') {
+                searchRef.current = debouncedSearchString;
+                return;
             }
+
             try {
+                setLoading(true);
+                cancelToken = axios.CancelToken.source();
                 const searchResult = await searchOrganisation(
                     {
                         searchStr: debouncedSearchString,
                         lakkautetut: naytaPassivoidut,
                         ...(organisaatiotyyppi ? { organisaatiotyyppi } : {}),
-                        ...(oppilaitostyyppi ? { oppilaitostyyppi } : {}),
+                        ...(oppilaitostyyppiWoVersion ? { oppilaitostyyppi: `${oppilaitostyyppiWoVersion}#1` } : {}),
                         aktiiviset: true,
                         suunnitellut: true,
                     },
                     cancelToken.token
                 );
                 setOrganisaatiot(enrichWithAllNestedData(searchResult));
+            } catch (e) {
+                console.debug(
+                    'Request possibly cancelled due to another search came in while waiting for response, error: ',
+                    e
+                );
+            } finally {
                 setLoading(false);
-            } catch {
-                console.error('req cancelled');
             }
+            searchRef.current = debouncedSearchString;
         })();
-    }, [debouncedSearchString, naytaPassivoidut, organisaatiotyyppi, oppilaitostyyppi, setLoading, setOrganisaatiot]);
+        return () => {
+            cancelToken && cancelToken.cancel('Operation canceled due to exiting or another request came.');
+        };
+    }, [
+        debouncedSearchString,
+        naytaPassivoidut,
+        organisaatiotyyppi,
+        oppilaitostyyppiWoVersion,
+        setLoading,
+        setOrganisaatiot,
+    ]);
 
     const handleOppilaitosTyyppiChange = (value) => {
-        const oppilaitostyyppi = value?.value || '';
+        const oppilaitostyyppiValue = value?.value || '';
         setRemoteFilters({
             ...remoteFilters,
-            oppilaitostyyppi,
+            oppilaitostyyppi: oppilaitostyyppiValue,
         });
     };
 
     const handleOrganisaatiotyyppiChange = (value) => {
-        const organisaatiotyyppi = value?.value || '';
+        const organisaatiotyyppiValue = value?.value || '';
         setRemoteFilters({
             ...remoteFilters,
-            organisaatiotyyppi,
-            oppilaitostyyppi: organisaatiotyyppi === ORGANIAATIOTYYPPI_OPPILAITOS ? remoteFilters.oppilaitostyyppi : '',
+            organisaatiotyyppi: organisaatiotyyppiValue,
+            oppilaitostyyppi:
+                organisaatiotyyppiValue === ORGANIAATIOTYYPPI_OPPILAITOS ? remoteFilters.oppilaitostyyppi : '',
         });
     };
 
@@ -186,6 +210,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                             name={'naytaPassivoidut'}
                             checked={remoteFilters.naytaPassivoidut}
                             onChange={handleRemoteCheckBoxChange}
+                            disabled={isLoading}
                         >
                             {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
                         </Checkbox>
@@ -193,6 +218,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                             name={'omatOrganisaatiotSelected'}
                             checked={localFilters.omatOrganisaatiotSelected}
                             onChange={handleLocalCheckBoxChange}
+                            disabled={isLoading}
                         >
                             {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
                         </Checkbox>
@@ -200,6 +226,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                             name={'showVakaToimijat'}
                             checked={localFilters.showVakaToimijat}
                             onChange={handleLocalCheckBoxChange}
+                            disabled={isLoading}
                         >
                             {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_VAKA_TOIMIJAT')}
                         </Checkbox>
@@ -213,16 +240,18 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
                         handleSelectChange={handleOrganisaatiotyyppiChange}
                         selectOptions={organisaatioTyypitKoodisto.selectOptions()}
                         value={remoteFilters.organisaatiotyyppi}
+                        disabled={isLoading}
                     />
                     <HakuFilterSelect
                         label={i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}
                         handleSelectChange={handleOppilaitosTyyppiChange}
                         selectOptions={oppilaitosTyypitKoodisto.selectOptions()}
-                        disabled={organisaatiotyyppi !== ORGANIAATIOTYYPPI_OPPILAITOS}
+                        disabled={organisaatiotyyppi !== ORGANIAATIOTYYPPI_OPPILAITOS || isLoading}
                         value={remoteFilters.oppilaitostyyppi}
                     />
                     <div className={styles.TyhjennaNappiKentta}>
                         <Button
+                            disabled={isLoading}
                             color={'secondary'}
                             variant={'outlined'}
                             onClick={() =>
