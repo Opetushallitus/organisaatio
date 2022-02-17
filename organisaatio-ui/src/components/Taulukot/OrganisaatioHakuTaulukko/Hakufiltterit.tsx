@@ -134,13 +134,12 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
                     cancelTokenRef.current.token
                 );
                 setOrganisaatiot(enrichWithAllNestedData(searchResult));
+                setLoading(false);
             } catch (e) {
                 console.debug(
                     'Request possibly cancelled due to another search came in while waiting for response, error: ',
                     e
                 );
-            } finally {
-                setLoading(false);
             }
             searchRef.current = debouncedSearchString;
         })();
