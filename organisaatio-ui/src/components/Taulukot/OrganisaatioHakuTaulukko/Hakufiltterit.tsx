@@ -96,8 +96,6 @@ const HakuFilterSelect = (props: HakufiltteritSelectProps) => {
     );
 };
 
-let cancelToken: undefined | CancelTokenSource;
-
 export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: HakufiltteritProps) {
     const [i18n] = useAtom(languageAtom);
     const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
@@ -113,6 +111,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
     } = remoteFilters;
     const debouncedSearchString = useDebounce<string>(searchString, 500);
     const searchRef = useRef<string | undefined>();
+    const cancelTokenRef = useRef<undefined | CancelTokenSource>();
     useEffect(() => {
         (async () => {
             if (searchRef.current !== debouncedSearchString && debouncedSearchString === '') {
@@ -122,7 +121,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
 
             try {
                 setLoading(true);
-                cancelToken = axios.CancelToken.source();
+                cancelTokenRef.current = axios.CancelToken.source();
                 const searchResult = await searchOrganisation(
                     {
                         searchStr: debouncedSearchString,
@@ -132,7 +131,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
                         aktiiviset: true,
                         suunnitellut: true,
                     },
-                    cancelToken.token
+                    cancelTokenRef.current.token
                 );
                 setOrganisaatiot(enrichWithAllNestedData(searchResult));
             } catch (e) {
@@ -146,7 +145,8 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
             searchRef.current = debouncedSearchString;
         })();
         return () => {
-            cancelToken && cancelToken.cancel('Operation canceled due to exiting or another request came.');
+            cancelTokenRef?.current &&
+                cancelTokenRef.current.cancel('Operation canceled due to exiting or another request came.');
         };
     }, [
         debouncedSearchString,
