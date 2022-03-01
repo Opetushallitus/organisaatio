@@ -8,7 +8,6 @@ import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
-import Loading from '../../Loading/Loading';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
 import { Link } from 'react-router-dom';
 import { TarkastusLippu } from '../../TarkistusLippu/TarkastusLippu';
@@ -18,6 +17,7 @@ import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 import { SelectOptionType } from '../../../types/types';
+import LoadingBubbles from '../../Loading/LoadingBubbles';
 
 const MAX_EXPAND_ROWS = 10;
 
@@ -275,114 +275,107 @@ export default function OrganisaatioHakuTaulukko() {
     ]);
     return (
         <div>
-            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
-
-            {(loading && <Loading />) || (
-                <div className={styles.TaulukkoContainer}>
-                    <table {...getTableProps()} className={styles.Taulukko}>
-                        <thead>
-                            {headerGroups.map((headerGroup: HeaderGroup<OrganisaatioHakuOrganisaatio>) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map((column) => (
-                                        <th
-                                            {...column.getHeaderProps({
-                                                className: (column as HeaderGroup<OrganisaatioHakuOrganisaatio> & {
-                                                    collapse: boolean;
-                                                }).collapse
-                                                    ? styles.collapse
-                                                    : '',
-                                            })}
-                                            style={{
-                                                textAlign: 'left',
-                                                borderBottom: '1px solid rgba(151,151,151,0.5)',
-                                            }}
-                                        >
-                                            {column.render('Header')}
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {page.map((row, index) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
-                                            return (
-                                                <td
-                                                    {...cell.getCellProps({
-                                                        className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
-                                                            collapse: boolean;
-                                                        }).collapse
-                                                            ? styles.collapse
-                                                            : '',
-                                                    })}
-                                                    style={{
-                                                        background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
-                                                    }}
-                                                >
-                                                    {cell.render('Cell')}
-                                                </td>
-                                            );
+            <Hakufiltterit isLoading={loading} setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
+            <div className={styles.TaulukkoContainer}>
+                {loading && <LoadingBubbles />}
+                <table {...getTableProps()} className={styles.Taulukko}>
+                    <thead>
+                        {headerGroups.map((headerGroup: HeaderGroup<OrganisaatioHakuOrganisaatio>) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column) => (
+                                    <th
+                                        {...column.getHeaderProps({
+                                            className: (column as HeaderGroup<OrganisaatioHakuOrganisaatio> & {
+                                                collapse: boolean;
+                                            }).collapse
+                                                ? styles.collapse
+                                                : '',
                                         })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-
-                    <div className={styles.PaginationContainer}>
-                        <div className={styles.PaginationSivunvaihto}>
-                            <Button
-                                variant={'text'}
-                                color={'secondary'}
-                                onClick={previousPage}
-                                disabled={!canPreviousPage}
-                            >
-                                <IconWrapper icon={chevronLeft} />
-                            </Button>
-                            {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
-                                if (option === pageIndex)
-                                    return (
-                                        <Button key={option + 1} onClick={() => gotoPage(option)}>
-                                            {option + 1}
-                                        </Button>
-                                    );
-                                return (
-                                    <Button
-                                        key={option + 1}
-                                        variant={'text'}
-                                        color={'secondary'}
-                                        onClick={() => gotoPage(option)}
+                                        style={{
+                                            textAlign: 'left',
+                                            borderBottom: '1px solid rgba(151,151,151,0.5)',
+                                        }}
                                     >
+                                        {column.render('Header')}
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row, index) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
+                                        return (
+                                            <td
+                                                {...cell.getCellProps({
+                                                    className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
+                                                        collapse: boolean;
+                                                    }).collapse
+                                                        ? styles.collapse
+                                                        : '',
+                                                })}
+                                                style={{
+                                                    background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
+                                                }}
+                                            >
+                                                {cell.render('Cell')}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+
+                <div className={styles.PaginationContainer}>
+                    <div className={styles.PaginationSivunvaihto}>
+                        <Button variant={'text'} color={'secondary'} onClick={previousPage} disabled={!canPreviousPage}>
+                            <IconWrapper icon={chevronLeft} />
+                        </Button>
+                        {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
+                            if (option === pageIndex)
+                                return (
+                                    <Button key={option + 1} onClick={() => gotoPage(option)}>
                                         {option + 1}
                                     </Button>
                                 );
-                            })}
-                            <Button variant={'text'} color={'secondary'} onClick={nextPage} disabled={!canNextPage}>
-                                <IconWrapper icon={chevronRight} />
-                            </Button>
-                        </div>
-                        <div className={styles.PaginationYhteensa}>
-                            <span>{i18n.translate('TAULUKKO_NAYTA_SIVULLA')}:</span>
-                            <select
-                                className={styles.NaytaSivullaSelect}
-                                value={pageSize}
-                                onChange={(e) => {
-                                    setPageSize(Number(e.target.value));
-                                }}
-                            >
-                                {[10, 20, 30, 40, 50].map((pageSizeOption) => (
-                                    <option key={pageSizeOption} value={pageSizeOption}>
-                                        {pageSizeOption}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                            return (
+                                <Button
+                                    key={option + 1}
+                                    variant={'text'}
+                                    color={'secondary'}
+                                    onClick={() => gotoPage(option)}
+                                >
+                                    {option + 1}
+                                </Button>
+                            );
+                        })}
+                        <Button variant={'text'} color={'secondary'} onClick={nextPage} disabled={!canNextPage}>
+                            <IconWrapper icon={chevronRight} />
+                        </Button>
+                    </div>
+                    <div className={styles.PaginationYhteensa}>
+                        <span>{i18n.translate('TAULUKKO_NAYTA_SIVULLA')}:</span>
+                        <select
+                            className={styles.NaytaSivullaSelect}
+                            value={pageSize}
+                            onChange={(e) => {
+                                setPageSize(Number(e.target.value));
+                            }}
+                        >
+                            {[10, 20, 30, 40, 50].map((pageSizeOption) => (
+                                <option key={pageSizeOption} value={pageSizeOption}>
+                                    {pageSizeOption}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

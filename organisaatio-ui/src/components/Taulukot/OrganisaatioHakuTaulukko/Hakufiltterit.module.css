@@ -52,6 +52,10 @@ a.LisatiedotLinkki:visited {
     font-size: 1.7rem;
 }
 
+.TyhjennaNappiKentta {
+    padding-top: 1.4rem;
+}
+
 .Kentta {
     margin-right: 1rem;
     width: 26rem;
