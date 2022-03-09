@@ -8,8 +8,8 @@ import java.util.List;
 
 public class MonikielinenTekstiTyyppi implements Serializable  {
 
-    private final static long serialVersionUID = 100L;
-    protected List<Teksti> teksti;
+    private static final long serialVersionUID = 100L;
+    private List<Teksti> teksti;
 
     /**
      * Gets the value of the teksti property.
@@ -35,14 +35,14 @@ public class MonikielinenTekstiTyyppi implements Serializable  {
      */
     public List<Teksti> getTeksti() {
         if (teksti == null) {
-            teksti = new ArrayList<Teksti>();
+            teksti = new ArrayList<>();
         }
         return this.teksti;
     }
 
 
     public static class Teksti implements Serializable {
-        private final static long serialVersionUID = 100L;
+        private static final long serialVersionUID = 100L;
         protected String value;
         protected String kieliKoodi;
 
