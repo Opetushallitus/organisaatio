@@ -24,10 +24,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,26 +42,26 @@ public interface OrganisaatioResourceV2 {
 
     @GetMapping(path = "/hierarkia/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioHakutulos searchOrganisaatioHierarkia(
-            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+            @RequestBody OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hierarkia/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(
-            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+            @RequestBody OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hierarkia/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(@RequestBody OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulos searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    OrganisaatioHakutulos searchOrganisaatiot(@RequestBody OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotNimet(@RequestBody OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatiotTyypit(@RequestBody OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @PostMapping(path = "/yhteystiedot/hae", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
+    List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(@RequestBody YhteystiedotSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/{oid}/paivittaja", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(@PathVariable("oid") String oid) throws Exception;
@@ -93,7 +90,7 @@ public interface OrganisaatioResourceV2 {
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated
         // käytä OrganisaatioResourceV3#groups
-    List<OrganisaatioGroupDTOV2> groups(RyhmaCriteriaDtoV2 criteria) throws Exception;
+    List<OrganisaatioGroupDTOV2> groups(@RequestBody RyhmaCriteriaDtoV2 criteria) throws Exception;
 
     @GetMapping(path = "/{oid}/hakutoimisto", produces = MediaType.APPLICATION_JSON_VALUE)
     HakutoimistoDTO hakutoimisto(@PathVariable("oid") String organisaatioOid);
