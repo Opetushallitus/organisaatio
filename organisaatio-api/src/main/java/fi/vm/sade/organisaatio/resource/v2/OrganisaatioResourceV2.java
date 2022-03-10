@@ -41,10 +41,12 @@ public interface OrganisaatioResourceV2 {
     String hello();
 
     @GetMapping(path = "/hierarkia/hae", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulos searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    OrganisaatioHakutulos searchOrganisaatioHierarkia(
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hierarkia/hae/nimi", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
+    OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaNimet(
+            OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
 
     @GetMapping(path = "/hierarkia/hae/tyyppi", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioHakutulosSuppeaDTOV2 searchOrganisaatioHierarkiaTyypit(OrganisaatioSearchCriteriaDTOV2 hakuEhdot);
