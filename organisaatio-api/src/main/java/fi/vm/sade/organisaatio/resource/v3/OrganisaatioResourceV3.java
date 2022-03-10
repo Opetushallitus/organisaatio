@@ -33,7 +33,7 @@ public interface OrganisaatioResourceV3 {
             @RequestParam(defaultValue = "false") boolean includeImage) throws Exception;
 
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioGroupDTOV3> groups(@RequestBody RyhmaCriteriaDtoV3 criteria) throws Exception;
+    List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria) throws Exception;
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioRDTOV3 getOrganisaatioByOID(
