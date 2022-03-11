@@ -49,7 +49,7 @@
         <log4j.version>2.17.0</log4j.version>
 
         <!-- Database -->
-        <postgresql.version>42.2.5</postgresql.version>
+        <postgresql.version>42.3.3</postgresql.version>
         <atomikos.version>3.6.6</atomikos.version>
         <jta.version>1.1</jta.version>
         <hsqldb.version>2.0.0</hsqldb.version>
@@ -112,7 +112,7 @@
 
         <ant-contrib.version>1.0b3</ant-contrib.version>
 
-        <buildversion_prefix />
+        <buildversion_prefix/>
 
         <compiler.debug>false</compiler.debug>
 
@@ -228,7 +228,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
+                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
@@ -238,8 +238,8 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
-                                <echo message="${buildversiontxt}" />
+                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
+                                <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
                         </configuration>
