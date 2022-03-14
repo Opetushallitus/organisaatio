@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [master, organisaatio-2]
+  pull_request:
 jobs:
   build:
     runs-on: ubuntu-latest
