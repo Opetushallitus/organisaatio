@@ -19,7 +19,6 @@ describe('Restrict buttons by roles', () => {
     const generalRestrictedButtons = ['MUOKKAA_ORGANISAATION_NIMEA', 'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'];
     const suljeButton = 'SULJE';
     const allRestrictedButtons = [
-        tallenna,
         lomakeLisaaUusi,
         ...oppilaitosButtons,
         ...koulutusToimijaButtons,
