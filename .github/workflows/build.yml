@@ -23,7 +23,45 @@ jobs:
           cache: "maven"
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
-      - name: Build clean build
+      - name: Build
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
-          arguments: clean package
+          arguments: clean build
+  cypress:
+    runs-on: ubuntu-latest
+    container: node:10.18-jessie
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Use node 12.18.1
+        uses: actions/setup-node@v2
+        with:
+          node-version: "12.18.1"
+          cache: "npm"
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build backend with no tests
+        uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
+        with:
+          arguments: clean build -x test -x uiTest -x lint -x checkFormatting
+      - name: Run Cypress
+        run: |
+          cd mock-api && npm run mock-api &
+          java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available organisaatio-service/build/libs/organisaatio-service.jar &
+          cd organisaatio-ui && npm run cypress:ci && cd -
+          kill $(jobs -p) || true
