@@ -34,8 +34,8 @@ export class CASMeImpl implements CASMe {
     oid: string;
     roles: string[];
     uid: string;
-    allowedButtons: ConfigurableButton[];
-    allowedLomakes: ConfigurableLomake[];
+    allowedButtons: { button: ConfigurableButton; fromLevel: number }[];
+    allowedLomakes: { lomake: ConfigurableLomake; fromLevel: number }[];
     constructor(casMe) {
         this.firstName = casMe.firstName;
         this.groups = casMe.groups;
@@ -47,9 +47,9 @@ export class CASMeImpl implements CASMe {
         this.allowedButtons = casMe.roles.reduce(
             (p, c) => [
                 ...p,
-                ...getRoleItems<ConfigurableButton>(c, ORGANISAATIO_CRUD, [
-                    'LOMAKE_LISAA_UUSI_TOIMIJA',
-                    'BUTTON_TALLENNA',
+                ...getRoleItems<{ button: ConfigurableButton; fromLevel: number }>(c, ORGANISAATIO_CRUD, [
+                    { button: 'LOMAKE_LISAA_UUSI_TOIMIJA', fromLevel: 1 },
+                    { button: 'BUTTON_TALLENNA', fromLevel: 0 },
                 ]),
             ],
             [] as ConfigurableButton[]
@@ -57,13 +57,13 @@ export class CASMeImpl implements CASMe {
         this.allowedLomakes = casMe.roles.reduce(
             (p, c) => [
                 ...p,
-                ...getRoleItems<ConfigurableLomake>(c, ORGANISAATIO_CRUD, [
-                    'LOMAKE_KOSKI_POSTI',
-                    'LOMAKE_YHTEYSTIEDOT',
-                    'LOMAKE_KRIISI_VIESTINTA',
+                ...getRoleItems<{ lomake: ConfigurableLomake; fromLevel: number }>(c, ORGANISAATIO_CRUD, [
+                    { lomake: 'LOMAKE_KOSKI_POSTI', fromLevel: 1 },
+                    { lomake: 'LOMAKE_YHTEYSTIEDOT', fromLevel: 1 },
+                    { lomake: 'LOMAKE_KRIISI_VIESTINTA', fromLevel: 0 },
                 ]),
             ],
-            [] as ConfigurableLomake[]
+            []
         );
     }
     canHaveButton = (button: ConfigurableButton, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
@@ -71,21 +71,22 @@ export class CASMeImpl implements CASMe {
         if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
             return true;
         return (
-            organisaatioNimiPolku.length > 1 &&
             organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
-            this.allowedButtons.includes(button)
+            this.allowedButtons.reduce(
+                (p, c) => p || (c.button === button && organisaatioNimiPolku.length > c.fromLevel),
+                false
+            )
         );
     };
     canEditLomake = (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
-        if (
-            organisaatioNimiPolku.length > 1 &&
+        return (
             organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
-            this.allowedLomakes.includes(lomake)
-        ) {
-            return true;
-        }
-        return false;
+            this.allowedLomakes.reduce(
+                (p, c) => p || (c.lomake === lomake && organisaatioNimiPolku.length > c.fromLevel),
+                false
+            )
+        );
     };
     canEditIfParent = (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
