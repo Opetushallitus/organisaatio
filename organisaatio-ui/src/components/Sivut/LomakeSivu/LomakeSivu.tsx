@@ -233,7 +233,9 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 lakkautusPvm: apiLakkautusPvm ? getUiDateStr(apiLakkautusPvm) : '',
                 ytunnus: mappingYtunnus,
                 organisaatioTyypit: tyypit,
-                oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(oppilaitosTyyppiUri),
+                oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(
+                    oppilaitosTyyppiUri ? oppilaitosTyyppiUri : ''
+                ),
                 oppilaitosKoodi,
                 muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris.map((kieliUri) =>
                     oppilaitostyyppiKoodisto.uri2SelectOption(kieliUri)

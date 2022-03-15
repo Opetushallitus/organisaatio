@@ -175,6 +175,7 @@ async function readOrganisaatio(
         }
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
         const polku = await readOrganisaatioPath(idArr);
+        console.log('read', organisaatio.oppilaitosTyyppiUri);
         return { organisaatio, polku };
     });
 }
@@ -383,6 +384,10 @@ function mapUiOrganisaatioToApiToUpdate(
     const apiAlkuPvm = formatUiDateStrToApi(alkuPvm);
     const apiLakkautusPvm = lakkautusPvm ? formatUiDateStrToApi(lakkautusPvm) : '';
     const { currentNimi, nimet } = organisaatioBase;
+    console.log(oppilaitosTyyppiUri?.arvo, {
+        oppilaitosTyyppiUri:
+            (!!oppilaitosTyyppiUri?.arvo && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`) || undefined,
+    });
     return {
         ...originalOrganisaatio,
         lakkautusPvm: apiLakkautusPvm,
@@ -402,7 +407,8 @@ function mapUiOrganisaatioToApiToUpdate(
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
         kieletUris: kielet.map((a) => `${a.value}#${a.versio}`),
-        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.arvo && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
+        oppilaitosTyyppiUri:
+            (!!oppilaitosTyyppiUri?.arvo && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`) || undefined,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
         vuosiluokat: vuosiluokat?.map((a) => `${a.value}#${a.versio}`),
