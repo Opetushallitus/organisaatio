@@ -147,6 +147,8 @@ jobs:
           source ci-tools/common/setup-tools.sh
           export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
           export ARTIFACT_NAME="organisaatio"
+          ls -l
+          pwd
           cp organisaatio-service.jar $DOCKER_BUILD_DIR/artifact/organisaatio-service.jar
           cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
           ./ci-tools/common/pull-image.sh
