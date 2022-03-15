@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.repository;
 
 import fi.vm.sade.organisaatio.model.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioSuhdeRepositoryImplTest.class);
-
+    @AfterEach
+    public void cleanup() {
+        executeSqlScript("classpath:data/truncate_tables.sql", false);
+    }
     @Autowired
     OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
 
