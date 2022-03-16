@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -52,38 +52,7 @@ public class RekisterointiServiceTest {
     private static final Long SAVED_REKISTEROINTI_ID = 1L;
     private static final Long INVALID_REKISTEROINTI_ID = 2L;
     private static final String PAATTAJA_OID = "1.234.56789";
-    private static final Rekisterointi SAVED_REKISTEROINTI = new Rekisterointi(
-            SAVED_REKISTEROINTI_ID,
-            Organisaatio.of(
-                    "0000000-0",
-                    null,
-                    LocalDate.now(),
-                    KielistettyNimi.of(
-                            "fi", "Testiyritys", null
-                    ),
-                    "yritysmuoto_26",
-                    Set.of("organisaatiotyyppi_07"),
-                    "kunta_091",
-                    "maatjavaltiot1_fin",
-                    Set.of("opetuskieli"),
-                    Yhteystiedot.of(
-                            "+358101234567",
-                            "testi@testiyritys.fi",
-                            Osoite.TYHJA, Osoite.TYHJA
-                    )),
-            "vardatoimintamuoto_tm01",
-            Set.of("kunta_091"),
-            Set.of("testi.henkilo@foo.bar"),
-            Kayttaja.builder()
-                    .etunimi("Testi")
-                    .sukunimi("Henkilö")
-                    .sahkoposti("testi.henkilo@foo.bar")
-                    .asiointikieli("fi")
-                    .build(),
-            LocalDateTime.now(),
-            null,
-            Rekisterointi.Tila.KASITTELYSSA
-    );
+    private static final Rekisterointi SAVED_REKISTEROINTI = getRekisterointi();
 
     @MockBean
     private RekisterointiRepository rekisterointiRepository;
@@ -117,7 +86,20 @@ public class RekisterointiServiceTest {
     public void createSavesRekisterointi() {
         Long id = rekisterointiService.create(SAVED_REKISTEROINTI, requestContext("user1"));
         assertEquals(SAVED_REKISTEROINTI_ID, id);
+        assertFalse(SAVED_REKISTEROINTI.organisaatio.uudelleenRekisterointi);
         verify(rekisterointiRepository).save(SAVED_REKISTEROINTI);
+    }
+
+    @Test
+    public void createSavesUudelleenRekisterointi() {
+        when(rekisterointiRepository.findByYtunnus(SAVED_REKISTEROINTI.organisaatio.ytunnus))
+                .thenReturn(List.of(SAVED_REKISTEROINTI));
+
+        Rekisterointi rekisterointi = getRekisterointi();
+        Long id = rekisterointiService.create(rekisterointi, requestContext("user1"));
+        assertEquals(SAVED_REKISTEROINTI_ID, id);
+        assertTrue(rekisterointi.organisaatio.uudelleenRekisterointi);
+        verify(rekisterointiRepository).save(rekisterointi);
     }
 
     @Test(expected = InvalidInputException.class)
@@ -172,5 +154,41 @@ public class RekisterointiServiceTest {
             return new RequestContextImpl("127.0.0.1");
         }
         return new RequestContextImpl(userId, "127.0.0.1");
+    }
+
+    private static Rekisterointi getRekisterointi() {
+        return new Rekisterointi(
+                SAVED_REKISTEROINTI_ID,
+                Organisaatio.of(
+                        "0000000-0",
+                        null,
+                        LocalDate.now(),
+                        KielistettyNimi.of(
+                                "fi", "Testiyritys", null
+                        ),
+                        "yritysmuoto_26",
+                        Set.of("organisaatiotyyppi_07"),
+                        "kunta_091",
+                        "maatjavaltiot1_fin",
+                        Set.of("opetuskieli"),
+                        Yhteystiedot.of(
+                                "+358101234567",
+                                "testi@testiyritys.fi",
+                                Osoite.TYHJA, Osoite.TYHJA
+                        ),
+                        false),
+                "vardatoimintamuoto_tm01",
+                Set.of("kunta_091"),
+                Set.of("testi.henkilo@foo.bar"),
+                Kayttaja.builder()
+                        .etunimi("Testi")
+                        .sukunimi("Henkilö")
+                        .sahkoposti("testi.henkilo@foo.bar")
+                        .asiointikieli("fi")
+                        .build(),
+                LocalDateTime.now(),
+                null,
+                Rekisterointi.Tila.KASITTELYSSA
+        );
     }
 }

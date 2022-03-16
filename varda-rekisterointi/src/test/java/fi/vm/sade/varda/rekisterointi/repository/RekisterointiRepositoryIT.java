@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -79,6 +79,14 @@ public class RekisterointiRepositoryIT {
     }
 
     @Test
+    public void findByYtunnusReturnsMatch() {
+        Iterable<Rekisterointi> iterable = rekisterointiRepository.findByYtunnus("0000000-0");
+        List<Rekisterointi> results = new ArrayList<>();
+        iterable.forEach(results::add);
+        assertEquals(1, results.size());
+    }
+
+    @Test
     public void findByTilaAndKunnatAndOrganisaatioRulesOutOrganisaatioMismatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
                 Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki"}, "vääräfirma");
@@ -103,4 +111,24 @@ public class RekisterointiRepositoryIT {
         assertNotNull(rekisterointi.id);
     }
 
+    @Test
+    public void savesUudelleenRekisterointi() {
+        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        rekisterointi = rekisterointiRepository.save(rekisterointi);
+        Rekisterointi uudelleenRekisterointi = TestiRekisterointi.validiRekisterointi();
+        uudelleenRekisterointi.organisaatio.setUudelleenRekisterointi(true);
+        uudelleenRekisterointi = rekisterointiRepository.save(uudelleenRekisterointi);
+
+        assertNotNull(rekisterointi.id);
+        assertNotNull(uudelleenRekisterointi.id);
+        assertNotEquals(rekisterointi.id, uudelleenRekisterointi.id);
+        assertFalse(rekisterointi.organisaatio.uudelleenRekisterointi);
+        assertTrue(uudelleenRekisterointi.organisaatio.uudelleenRekisterointi);
+    }
+
+    @Test(expected = DbActionExecutionException.class)
+    public void oidMustBeUniqueUnlessUudelleenRekisterointi() {
+        rekisterointiRepository.save(TestiRekisterointi.validiRekisterointi());
+        rekisterointiRepository.save(TestiRekisterointi.validiRekisterointi());
+    }
 }

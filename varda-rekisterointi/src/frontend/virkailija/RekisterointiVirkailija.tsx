@@ -19,15 +19,24 @@ export default function RekisterointiVirkailija() {
     const { i18n } = useContext(LanguageContext);
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(tyhjaOrganisaatio());
     const [organisaatio, setOrganisaatio] = useReducer(reducer, tyhjaOrganisaatio());
-    const [fetchLoading, setFetchLoading] = useState(true);
-    const [fetchError, setFetchError] = useState(null);
+    const [fetchLoading, setFetchLoading] = useState<boolean>(true);
+    const [fetchError, setFetchError] = useState<string|null>(null);
     const { ytunnus } = useParams();
     useEffect(() => {
         async function fetch() {
             try {
                 setFetchLoading(true);
                 setFetchError(null);
-                const response = await Axios.get(organisaatiotUrl(ytunnus));
+                const response = await Axios
+                    .get(organisaatiotUrl(ytunnus))
+                    .catch(error => {
+                        if ( error?.response?.status === 400 && error?.response?.data?.message ) {
+                            setFetchError(error.response.data.message);
+                        } else {
+                            setFetchError('ERROR_FETCH');
+                        }
+                        throw error;
+                    });
                 const data = response.data;
                 const tyypit: KoodiUri[] = data.tyypit ? data.tyypit : [];
                 if (tyypit.indexOf('organisaatiotyyppi_07') === -1) {
@@ -36,7 +45,6 @@ export default function RekisterointiVirkailija() {
                 setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
                 setOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
             } catch (error) {
-                setFetchError(error);
             } finally {
                 setFetchLoading(false);
             }
@@ -48,7 +56,7 @@ export default function RekisterointiVirkailija() {
         return <Spinner />;
     }
     if (fetchError) {
-        return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
+        return <ErrorPage>{i18n.translate(fetchError)}</ErrorPage>;
     }
 
     return <Rekisterointi

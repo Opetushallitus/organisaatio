@@ -17,7 +17,8 @@ public class TestiOrganisaatio {
                 "kunta_93",
                 "maa_123",
                 Set.of("fi"),
-                Yhteystiedot.of("0123456789", "foo@foo.bar", Osoite.TYHJA, Osoite.TYHJA)
+                Yhteystiedot.of("0123456789", "foo@foo.bar", Osoite.TYHJA, Osoite.TYHJA),
+                false
         );
     }
 

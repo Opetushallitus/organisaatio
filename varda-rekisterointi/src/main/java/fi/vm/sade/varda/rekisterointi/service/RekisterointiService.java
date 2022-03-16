@@ -80,6 +80,7 @@ public class RekisterointiService {
      */
     @Transactional
     public long create(Rekisterointi rekisterointi, RequestContext requestContext) {
+        rekisterointi.organisaatio.setUudelleenRekisterointi(rekisterointiRepository.findByYtunnus(rekisterointi.organisaatio.ytunnus).iterator().hasNext());
         Rekisterointi saved = rekisterointiRepository.save(rekisterointi);
         String taskId = String.format("%s-%d", rekisterointiEmailTask.getName(), saved.id);
         schedulerClient.schedule(rekisterointiEmailTask.instance(taskId, saved.id), Instant.now());

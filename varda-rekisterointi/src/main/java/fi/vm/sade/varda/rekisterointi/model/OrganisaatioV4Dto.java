@@ -15,6 +15,7 @@ public class OrganisaatioV4Dto extends BaseDto {
     public Map<String, String> nimi;
     public List<OrganisaatioNimi> nimet;
     public LocalDate alkuPvm;
+    public LocalDate lakkautusPvm;
     public String yritysmuoto;
     public Set<String> tyypit;
     public String kotipaikkaUri;
@@ -28,6 +29,7 @@ public class OrganisaatioV4Dto extends BaseDto {
         organisaatio.ytunnus = businessId;
         organisaatio.nimi = Map.of("fi", organisationName);
         organisaatio.alkuPvm = null;
+        organisaatio.lakkautusPvm = null;
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.alkuPvm = organisaatio.alkuPvm;
         organisaatioNimi.nimi = organisaatio.nimi;

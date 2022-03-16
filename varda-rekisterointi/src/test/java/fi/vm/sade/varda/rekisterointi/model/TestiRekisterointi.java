@@ -12,11 +12,12 @@ public class TestiRekisterointi {
 
     public static Rekisterointi rekisterointi(Kayttaja kayttaja) {
         return Rekisterointi.of(
-                Organisaatio.of("0000000-1", null, LocalDate.now(),
+                Organisaatio.of("0000000-1", "oid", LocalDate.now(),
                         KielistettyNimi.of("Testiyritys", "fi", LocalDate.now()),
                         "yritysmuoto_26", Set.of("organisaatiotyyppi_07"), "kunta_091",
                         "maatjavaltiot1_fin", Set.of("oppilaitoksenopetuskieli_1#1"),
-                        Yhteystiedot.of("101234567", "testi@testiyritys.fi", Osoite.TYHJA, Osoite.TYHJA)),
+                        Yhteystiedot.of("101234567", "testi@testiyritys.fi", Osoite.TYHJA, Osoite.TYHJA),
+                        false),
                 "vardatoimintamuoto_tm01",
                 Collections.singleton("Helsinki"),
                 Set.of("foo@foo.bar"),
