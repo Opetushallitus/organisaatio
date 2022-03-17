@@ -109,7 +109,7 @@ export type ApiOrganisaatio = OrganisaatioBase & {
     maaUri: KoodiUri;
     kieletUris: KoodiUri[];
     yhteystiedot: ApiYhteystiedot[];
-    oppilaitosTyyppiUri: KoodiUri;
+    oppilaitosTyyppiUri?: KoodiUri;
     oppilaitosKoodi: string;
     muutOppilaitosTyyppiUris: string[];
     vuosiluokat: string[];

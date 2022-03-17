@@ -402,7 +402,8 @@ function mapUiOrganisaatioToApiToUpdate(
         kotipaikkaUri: kotipaikka.value,
         maaUri: maa.value,
         kieletUris: kielet.map((a) => `${a.value}#${a.versio}`),
-        oppilaitosTyyppiUri: oppilaitosTyyppiUri?.arvo && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`,
+        oppilaitosTyyppiUri:
+            (!!oppilaitosTyyppiUri?.arvo && `${oppilaitosTyyppiUri.value}#${oppilaitosTyyppiUri.versio}`) || undefined,
         oppilaitosKoodi,
         muutOppilaitosTyyppiUris: muutOppilaitosTyyppiUris?.map((a) => `${a.value}#${a.versio}`),
         vuosiluokat: vuosiluokat?.map((a) => `${a.value}#${a.versio}`),
