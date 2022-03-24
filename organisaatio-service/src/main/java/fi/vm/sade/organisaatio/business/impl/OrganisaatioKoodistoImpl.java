@@ -504,7 +504,9 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     public List<Koodi> haeKoodit(KoodistoUri koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
         Map<String, Object> parametrit = new HashMap<>();
         versio.ifPresent(value -> parametrit.put("koodistoVersio", value));
-        Optional.ofNullable(onlyValid).ifPresent(value -> parametrit.put("onlyValidKoodis", value));
+        onlyValid.ifPresent(value -> {
+            parametrit.put("onlyValidKoodis", value);
+        });
         String url = properties.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
         return fetchKoodiTypeList(url)
                 .stream()
