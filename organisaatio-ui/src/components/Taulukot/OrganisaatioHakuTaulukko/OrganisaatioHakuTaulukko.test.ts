@@ -87,17 +87,17 @@ describe('OrganisaatioHakuTaulukko', () => {
     describe('includeVakaToimijatFilter', () => {
         const rows = [
             {
-                values: {
+                original: {
                     organisaatiotyypit: ['organisaatiotyyppi_07'],
                 } as Partial<OrganisaatioHakuOrganisaatio>,
             } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
             {
-                values: {
+                original: {
                     organisaatiotyypit: ['organisaatiotyyppi_02'],
                 } as Partial<OrganisaatioHakuOrganisaatio>,
             } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
             {
-                values: {
+                original: {
                     organisaatiotyypit: ['organisaatiotyyppi_08'],
                 } as Partial<OrganisaatioHakuOrganisaatio>,
             } as Partial<Row<OrganisaatioHakuOrganisaatio>>,

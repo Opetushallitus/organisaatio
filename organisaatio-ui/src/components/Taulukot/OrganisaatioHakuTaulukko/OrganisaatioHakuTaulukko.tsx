@@ -54,11 +54,16 @@ export const includeVakaToimijatFilter = (
     id: string,
     filterValue: boolean
 ): Row<OrganisaatioHakuOrganisaatio>[] =>
-    rows.filter(
-        (row) =>
+    rows.filter((row) => {
+        const organisaatiotyypit = row.original.organisaatiotyypit;
+        return (
             filterValue ||
-            !row.values.organisaatiotyypit.some((r) => ['organisaatiotyyppi_07', 'organisaatiotyyppi_08'].includes(r))
-    );
+            !(
+                organisaatiotyypit.length === 1 && // this is because some kunta type and other type orgs are also vaka toimija, and maybe we should not filter them out!
+                organisaatiotyypit.some((r) => ['organisaatiotyyppi_07', 'organisaatiotyyppi_08'].includes(r))
+            )
+        );
+    });
 
 const ExpandIcon = ({ isExpanded }) => {
     if (isExpanded) return <IconWrapper icon={chevronDown} />;
