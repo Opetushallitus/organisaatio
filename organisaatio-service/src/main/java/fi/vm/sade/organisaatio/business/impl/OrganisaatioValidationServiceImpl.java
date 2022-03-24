@@ -76,7 +76,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
             throw new ValidationException("validation.organisaatio.virastotunnus");
         }
 
-        List<Koodi> kieliKoodit = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, Optional.ofNullable(1), null);
+        List<Koodi> kieliKoodit = organisaatioKoodisto.haeKoodit(OrganisaatioKoodisto.KoodistoUri.KIELI, Optional.ofNullable(1), Optional.empty());
         KoodiPredicate kieliKoodiArvoPredicate = new KoodiPredicate(kieliKoodit, koodi -> koodi.getArvo().toLowerCase());
         KoodiPredicate kieliKoodiUriVersioPredicate = new KoodiPredicate(kieliKoodit, new KoodiToUriVersioMapper());
 
