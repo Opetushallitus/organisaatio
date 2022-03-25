@@ -19,10 +19,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietoElementtiDAO;
+import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -51,16 +48,16 @@ public class OrganisaatioBusinessChecker {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
-    protected YhteystietoArvoDAO yhteystietoArvoDAO;
+    protected YhteystietoArvoRepository yhteystietoArvoRepository;
 
     @Autowired
-    protected YhteystietoElementtiDAO yhteystietoElementtiDAO;
+    protected YhteystietoElementtiRepository yhteystietoElementtiRepository;
 
     @Autowired
-    protected OrganisaatioNimiDAO organisaatioNimiDAO;
+    protected OrganisaatioNimiRepository organisaatioNimiRepository;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;
@@ -103,7 +100,7 @@ public class OrganisaatioBusinessChecker {
      * @return
      */
     public boolean checkLearningInstitutionCodeIsUniqueAndNotUsed(Organisaatio org) {
-        List<Organisaatio> orgs = organisaatioDAO.findBy("oppilaitosKoodi", org.getOppilaitosKoodi().trim());
+        List<Organisaatio> orgs = organisaatioRepository.findByOppilaitosKoodi(org.getOppilaitosKoodi().trim());
         if (orgs != null && orgs.size() > 0) {
             return true;
         }
@@ -118,7 +115,7 @@ public class OrganisaatioBusinessChecker {
      * @return
      */
     public boolean checkToimipistekoodiIsUniqueAndNotUsed(String toimipistekoodi) {
-        List<Organisaatio> orgs = organisaatioDAO.findBy("toimipisteKoodi", toimipistekoodi.trim());
+        List<Organisaatio> orgs = organisaatioRepository.findByToimipisteKoodi(toimipistekoodi.trim());
         if (orgs != null && orgs.size() > 0) {
             // toimipistekoodi on jo olemassa
             LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
@@ -135,7 +132,7 @@ public class OrganisaatioBusinessChecker {
      * @param ytunnus
      */
     public void checkYtunnusIsUniqueAndNotUsed(String ytunnus) {
-        if (ytunnus != null && !organisaatioDAO.isYtunnusAvailable(ytunnus)) {
+        if (ytunnus != null && !organisaatioRepository.isYtunnusAvailable(ytunnus)) {
             throw new YtunnusException();
         }
     }
@@ -144,11 +141,11 @@ public class OrganisaatioBusinessChecker {
         LOG.debug("checkOrganisaatioHierarchy()");
 
         final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
-        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioDAO.findByOid(parentOid) : null;
+        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioRepository.customFindByOid(parentOid) : null;
         if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio))) {
             //check children
             if (organisaatio.getId() != null) { // we can have children only if we are already saved
-                List<Organisaatio> children = organisaatioDAO.findChildren(organisaatio.getId());
+                List<Organisaatio> children = organisaatioRepository.findChildren(organisaatio.getId());
                 for (Organisaatio child : children) {
                     if (!validator.apply(Maps.immutableEntry(organisaatio, child))) {
                         throw new OrganisaatioHierarchyException();
@@ -176,47 +173,13 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
-    public void checkToimipisteNimiFormat(Organisaatio entity, MonikielinenTeksti parentNimi) {
-        LOG.debug("checkToimipisteNimiFormat");
-        MonikielinenTeksti nimi = entity.getNimi();
-        for (String key : nimi.getValues().keySet()) {
-            String p = parentNimi.getString(key);
-            String n = nimi.getString(key);
-            if (p != null && !p.isEmpty() && n != null) {
-                if (!n.startsWith(p)) {
-                    // TODO: Korjataanko formatti (1), palautetaan virhe (2) vai hyväksytään (3)?
-                    /* 1
-                     // Korjataan nimi oikeaan formaattiin
-                     nimi.addString(key, n.isEmpty() ? p : p + ", " + n);
-                     LOG.debug("Name[" + key + "] fixed from \"" + n + "\" to \"" + nimi.getString(key) + "\".");
-                     */
-                    LOG.warn("Invalid organisation name format: For toimipiste, name must be prefixed with parent name (lang:" + key
-                            + ", name:" + n + ", parentname:" + p + ")");
-                    /* 2
-                    throw new OrganisaatioNameFormatException();
-                    */
-                    /* 3
-                    OK
-                    */
-                } else {
-                    // OK
-                    LOG.debug("Name format OK for lang " + key);
-                }
-            } else {
-                // TODO: Heitetäänkö poikkeus vai hyväksytäänkö?
-                LOG.warn("Organisation name missing: For toimipiste, name must be given in all languages parent name exists (lang:" + key
-                        + ", name:" + n + ", parentname:" + p + ")");
-                //throw new OrganisaatioNameEmptyException();
-            }
-        }
-    }
 
     /*
     Validate min and max dates. Check the suborganisation chain too.
     Child is now supposed to end later than the parent organisation.
      */
     public String checkPvmConstraints(Organisaatio organisaatio,
-            Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+                                      Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
         LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
 
         final Date MIN_DATE = this.MIN_DATE.getTime();

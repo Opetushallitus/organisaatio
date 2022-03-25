@@ -21,105 +21,79 @@ import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.vm.sade.organisaatio.ytj.api.exception.YtjExceptionType;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/ytj")
-@Component("ytjResource")
-@Transactional(readOnly = true)
-@Api(value = "/ytj", description = "YTJ hakuoperaatiot")
+@Hidden
+@RestController
+@RequestMapping({"${server.internal.context-path}/ytj", "${server.rest.context-path}/ytj"})
 public class YTJResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(YTJResource.class);
-        
     @Autowired(required = true)
     private YTJService ytjService;
 
     @Autowired
     private ConversionService conversionService;
-    
+
     /**
      * YTJ DTO as JSON.
-     * 
+     *
      * @param ytunnus
      * @return
      */
-    @GET
-    @Path("{ytunnus}")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = YTJDTO.class)
-    public YTJDTO findByYTunnus(@ApiParam(value = "Y Tunnus", required = true) @PathParam("ytunnus") String ytunnus) {
-        YTJDTO ytj = new YTJDTO();
+    @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON)
+    public YTJDTO findByYTunnus(@PathVariable String ytunnus) {
         try {
-            ytj = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
-        } 
-        catch (YtjConnectionException ex) {
-            ex.printStackTrace();
-            LOG.error("YtjConnectionException : " + ex.toString());
-            
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+            return ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
+        } catch (YtjConnectionException ex) {
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
         }
-        
-        return ytj; 
     }
 
-    @GET
-    @Path("{ytunnus}/v4")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Näyttää yhden yrityksen tiedot", notes = "Operaatio näyttää yhden yrityksen tiedot annetulla Y tunnuksella.", response = OrganisaatioRDTOV4.class)
-    public OrganisaatioRDTOV4 findByYTunnusV4(@ApiParam(value = "Y Tunnus", required = true) @PathParam("ytunnus") String ytunnus) {
+    @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON)
+    public OrganisaatioRDTOV4 findByYTunnusV4(@PathVariable String ytunnus) {
         return conversionService.convert(getOrganisaatioByYTunnus(ytunnus), OrganisaatioRDTOV4.class);
     }
 
     private Organisaatio getOrganisaatioByYTunnus(String ytunnus) {
         YTJDTO ytjdto = findByYTunnus(ytunnus);
         if (ytjdto.getYtunnus() == null) {
-            throw new OrganisaatioResourceException(Response.Status.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
         }
         return conversionService.convert(ytjdto, Organisaatio.class);
     }
 
-    @GET
-    @Path("/hae")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee yritysten tiedot nimen perusteella", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden nimessä esiintyy annettu nimi.")
-    public List<YTJDTO> findByYNimi(@ApiParam(value = "nimi", required = true) @QueryParam("nimi") String nimi) {
-        List<YTJDTO> ytjList = new ArrayList<YTJDTO>();
+    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON)
+    public List<YTJDTO> findByYNimi(@RequestParam String nimi) {
+        List<YTJDTO> ytjList = new ArrayList<>();
         if (nimi != null && nimi.length() > 0) {
             try {
                 ytjList = ytjService.findByYNimi(nimi.trim(), true, YTJKieli.FI);
             } catch (YtjConnectionException ex) {
-                ex.printStackTrace();
-                LOG.warn("YtjConnectionException : " + ex.toString());
-
-                throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+                if(ex.getExceptionType().equals(YtjExceptionType.SOAP)){
+                    //assuming fault due to too many results
+                    throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "organisaatio.exception.too.many.results", ex.getExceptionType().name());
+                }
+                throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
             }
         }
         return ytjList;
     }
 
     // Api for batch searches by y-tunnuses
-    @GET
-    @Path("/massahaku/{ytunnukset}")
+
+    @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Hakee maksimissaan 1000:n yrityksen tiedot", notes = "Operaatio palauttaa listan yritysten tiedoista, joiden y-tunnukset on annettu")
-    public List<YTJDTO> findByYTunnusBatch(@ApiParam(value = "Y-tunnukset", required = true)
-                                               @PathParam("ytunnukset") List<String> ytunnuses) {
+    public List<YTJDTO> findByYTunnusBatch(@PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);
     }
 
@@ -127,12 +101,8 @@ public class YTJResource {
         List<YTJDTO> ytjListResult;
         try {
             ytjListResult = ytjService.findByYTunnusBatch(ytunnuses, YTJKieli.FI);
-        }
-        catch (YtjConnectionException ex) {
-            ex.printStackTrace();
-            LOG.error("YtjConnectionException : " + ex.toString());
-
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, ex.toString());
+        } catch (YtjConnectionException ex) {
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
         }
         return ytjListResult;
     }

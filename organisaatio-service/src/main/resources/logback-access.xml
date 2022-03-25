@@ -1,0 +1,14 @@
+<configuration>
+    <appender name="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>{&quot;timestamp&quot;: &quot;%t{yyyy-MM-dd'T'HH:mm:ss.SSSZ}&quot;, &quot;responseCode&quot;: &quot;%s&quot;, &quot;request&quot;: &quot;%r&quot;, &quot;responseTime&quot;: &quot;%D&quot;, &quot;requestMethod&quot;: &quot;%m&quot;, &quot;service&quot;: &quot;organisaatio&quot;, &quot;environment&quot;: &quot;${name}&quot;, &quot;customer&quot;: &quot;OPH&quot;, &quot;user-agent&quot;: &quot;%i{User-Agent}&quot;, &quot;clientSubSystemCode&quot;: &quot;%i{clientSubSystemCode}&quot;, &quot;caller-id&quot;: &quot;%i{Caller-Id}&quot;, &quot;x-forwarded-for&quot;: &quot;%i{X-Forwarded-For}&quot;, &quot;remote-ip&quot;: &quot;%a&quot;, &quot;session&quot;: &quot;%reqCookie{JSESSIONID}&quot;, &quot;response-size&quot;: &quot;%B&quot;, &quot;referer&quot;: &quot;%i{Referer}&quot;, &quot;opintopolku-api-key&quot;: &quot;%i{Opintopolku-Api-Key}&quot;}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${user.home}/logs/localhost_access_log.%d{yyyy-MM-dd}.txt</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <appender-ref ref="ACCESS"/>
+</configuration>

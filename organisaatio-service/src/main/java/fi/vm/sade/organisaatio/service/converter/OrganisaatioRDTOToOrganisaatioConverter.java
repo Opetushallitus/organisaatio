@@ -11,6 +11,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -19,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
-public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTO, Organisaatio> {
+public class OrganisaatioRDTOToOrganisaatioConverter implements Converter<OrganisaatioRDTO, Organisaatio> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOToOrganisaatioConverter.class);
 
@@ -32,7 +33,7 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
 
     @Override
     public Organisaatio convert(OrganisaatioRDTO t) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio s = new Organisaatio();
 
@@ -286,8 +287,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter extends AbstractToDomainCon
         if (s != null) {
             try {
                 if (s.containsKey("kieli") == false) {
-                    // TODO: Kieli missing, what to do
-                    // 1. raise exception, 2. only log, 3. use default 'kielivalikoima_fi'
                     LOG.warn("missing kieli from yhteystieto");
                 }
                 if (s.get("email") != null) {

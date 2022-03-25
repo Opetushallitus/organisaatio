@@ -1,0 +1,125 @@
+.UloinKehys {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.YlaBanneri {
+    box-sizing: border-box;
+    height: 6rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    padding-left: 2rem;
+}
+
+.YlaBanneri > div {
+    padding-right: 1rem;
+}
+
+.PaaOsio {
+    margin: 0 10rem;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ValiContainer {
+    margin: 1rem 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.ValiOtsikko {
+    display: flex;
+    flex-direction: column;
+}
+
+.AlaBanneri {
+    height: 6rem;
+    background-color: #ffffff;
+    border-top: 2px solid #159ecb;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10rem;
+}
+
+.Rivi {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.Ruudukko {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: min-content auto;
+    padding-right: 2rem;
+}
+
+.Kentta {
+    margin-right: 2rem;
+    width: 26rem;
+}
+.Required {
+    white-space: nowrap;
+}
+.Required:after {
+    content: ' *';
+}
+.NimiKentta {
+    margin-right: 2rem;
+    width: 35rem;
+}
+.KenttaLyhyt {
+    margin-right: 2rem;
+    max-width: 50%;
+}
+
+.AvainKevyestiBoldattu {
+    font-weight: 700;
+}
+
+.ReadOnly {
+    font-size: 16px;
+    -webkit-appearance: none;
+    border: none;
+}
+
+.ValiNappulat > Button {
+    margin-right: 0.5rem;
+}
+
+.ValiNappulat > Button:last-child {
+    margin-right: 0rem;
+}
+
+.IconContainer {
+    padding-right: 0.5rem;
+}
+
+.VersioContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.MuokattuKolumni {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+@media (min-width: 900px) {
+    .AvainKevyestiBoldattu {
+        white-space: nowrap;
+    }
+}

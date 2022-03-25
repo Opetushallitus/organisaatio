@@ -1,0 +1,315 @@
+[
+    {
+        "koodiArvo": "KJ03",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj03",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Freinet-pedagogik",
+                "lyhytNimi": "",
+                "nimi": "Freinet-pedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Freinet-pedagoginen kasvatusopillinen j\u00e4rjestelm\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Freinet-pedagogiikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj03",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "KJ04",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj04",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Reggio Emilia-pedagogik",
+                "lyhytNimi": "",
+                "nimi": "Reggio Emilia-pedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Reggio Emilia \u2013pedagoginen kasvatusopillinen j\u00e4rjestelm\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Reggio Emilia \u2013pedagogiikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj04",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "KJ05",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj05",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Freirel\u00e4inen pedagoginen kasvatusopillinen j\u00e4rjestelm\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Freirel\u00e4inen pedagogiikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Freire-pedagogik",
+                "lyhytNimi": "",
+                "nimi": "Freire-pedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj05",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "KJ01",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj01",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Steiner-pedagogik",
+                "lyhytNimi": "",
+                "nimi": "Steiner-pedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Steiner-pedagoginen kasvatusopillinen j\u00e4rjestelm\u00e4",
+                "lyhytNimi": "",
+                "nimi": "Steiner-pedagogiikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj01",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "KJ98",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj98",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ei painotusta",
+                "lyhytNimi": "",
+                "nimi": "Ei painotusta",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Ingen inriktning",
+                "lyhytNimi": "",
+                "nimi": "Ingen inriktning",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj98",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "KJ02",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj02",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Montessori-pedagogik",
+                "lyhytNimi": "",
+                "nimi": "Montessori-pedagogik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Montessori-pedagogiikka",
+                "lyhytNimi": "",
+                "nimi": "Montessori-pedagogiikka",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj02",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "KJ99",
+        "koodiUri": "vardakasvatusopillinenjarjestelma_kj99",
+        "koodisto": {
+            "koodistoUri": "vardakasvatusopillinenjarjestelma",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Muu",
+                "lyhytNimi": "",
+                "nimi": "Muu",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Other",
+                "lyhytNimi": "",
+                "nimi": "Other",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "\u00d6vrig inriktning",
+                "lyhytNimi": "",
+                "nimi": "\u00d6vrig inriktning",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardakasvatusopillinenjarjestelma_kj99",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    }
+]

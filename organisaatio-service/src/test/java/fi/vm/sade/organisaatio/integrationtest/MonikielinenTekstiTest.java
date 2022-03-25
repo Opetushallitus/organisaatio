@@ -16,44 +16,39 @@
 package fi.vm.sade.organisaatio.integrationtest;
 
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests to verify the translated text functionality works as expected.
- *
- * @author mlyly
  */
-@ContextConfiguration(locations = {
-    "classpath:spring/test-context.xml"
-})
-@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest
+@AutoConfigureTestDatabase
 @Transactional
 public class MonikielinenTekstiTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(MonikielinenTekstiTest.class);
 
-    private static String TEXT_FI1 = "fi1";
-    private static String TEXT_FI2 = "fi2";
-    private static String TEXT_EN1 = "en1";
-    private static String TEXT_EN2 = "en2";
-    private static String TEXT_SV1 = "hejssan";
+    private static final String TEXT_FI1 = "fi1";
+    private static final String TEXT_FI2 = "fi2";
+    private static final String TEXT_EN1 = "en1";
+    private static final String TEXT_EN2 = "en2";
+    private static final String TEXT_SV1 = "hejssan";
 
     @PersistenceContext
     private EntityManager em;
 
-    @Before
+    @BeforeEach
     public void getEm() {
         LOG.debug("getEm(): {}", em);
         assertNotNull(em);
@@ -73,7 +68,7 @@ public class MonikielinenTekstiTest {
         em.persist(mt);
 
         // Make sure it was inserted
-        assertTrue("Count mt was not increased.", (countMt + 1) == getCountMonikielinenTeksti());
+        assertEquals((long) getCountMonikielinenTeksti(), (countMt + 1), "Count mt was not increased.");
 
         LOG.debug("count mt = {}", getCountMonikielinenTeksti());
 
@@ -82,7 +77,7 @@ public class MonikielinenTekstiTest {
 
         mt = findById(mt.getId());
         assertNotNull(mt);
-        assertTrue(mt.getValues().size() == 3);
+        assertEquals(mt.getValues().size(), 3);
 
         // Verify loaded values are the same
         LOG.debug("  verify values...");
@@ -105,7 +100,7 @@ public class MonikielinenTekstiTest {
 
         mt = findById(mt.getId());
         assertNotNull(mt);
-        assertTrue(mt.getValues().size() == 4);
+        assertEquals(mt.getValues().size(), 4);
 
         // Verify loaded values are the same
         LOG.debug("  verify values...");
@@ -128,7 +123,7 @@ public class MonikielinenTekstiTest {
 
         mt = findById(mt.getId());
         assertNotNull(mt);
-        assertTrue(mt.getValues().size() == 2);
+        assertEquals(mt.getValues().size(), 2);
 
         // Verify loaded values are the same
         LOG.debug("  verify values...");

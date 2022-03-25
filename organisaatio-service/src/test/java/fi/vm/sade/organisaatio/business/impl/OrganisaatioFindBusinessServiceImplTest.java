@@ -4,43 +4,48 @@ import fi.vm.sade.organisaatio.OrganisaatioBuilder;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dao.OrganisaatioSuhdeDAO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import static java.util.Arrays.asList;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
-import static org.mockito.Matchers.*;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyCollection;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.test.util.ReflectionTestUtils;
 
-@RunWith(MockitoJUnitRunner.class)
+@Transactional
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class OrganisaatioFindBusinessServiceImplTest {
 
     @Mock
-    private OrganisaatioDAO organisaatioDaoMock;
+    private OrganisaatioRepository organisaatioDaoMock;
 
     @Mock
-    private OrganisaatioSuhdeDAO organisaatioSuhdeDaoMock;
+    private OrganisaatioSuhdeRepository organisaatioSuhdeRepositoryMock;
 
     @Mock
     private ConversionService conversionServiceMock;
@@ -54,11 +59,11 @@ public class OrganisaatioFindBusinessServiceImplTest {
     @InjectMocks
     private OrganisaatioFindBusinessServiceImpl organisaatioFindBusinessServiceImpl;
 
-    @Before
+    @BeforeEach
     public void setup() {
         ReflectionTestUtils.setField(organisaatioFindBusinessServiceImpl, "rootOrganisaatioOid", "rootOid");
         when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
-            Organisaatio entity = invocation.getArgumentAt(0, Organisaatio.class);
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
             OrganisaatioPerustieto dto = new OrganisaatioPerustieto();
             dto.setOid(entity.getOid());
             return dto;

@@ -3,21 +3,23 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTOBuilder;
 import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
+import fi.vm.sade.organisaatio.ytj.mock.YTJServiceMock;
 import org.assertj.core.groups.Tuple;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -28,38 +30,45 @@ import java.util.List;
 import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_FI;
 import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_SV;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
+@SpringBootTest
+@AutoConfigureTestDatabase
 public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
+    @TestConfiguration
+    static class OrganisaatioYtjServiceImplTestConfiguration {
+        @Bean
+        @Primary
+        public YTJService ytjService() {
+            return spy(new YTJServiceMock());
+        }
+    }
+
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
     @Autowired
     private OrganisaatioYtjService service;
     @Autowired
-    private YTJService ytjServiceMock;
+    private YTJService ytjService;
 
-    private List<OrganisaatioNimi> orgSortedNimet;
-    private List<Yhteystieto> orgSortedYhteystiedot;
-    private List<Organisaatio> organisaatioList;
-
-    @Before
+    @BeforeEach
     public void setUp() throws YtjConnectionException {
-        executeSqlScript("data/basic_organisaatio_data.sql", false);
-        when(ytjServiceMock.findByYTunnus(eq("1234569-5"), any(YTJKieli.class))).thenAnswer(invocation ->
-                new YTJDTOBuilder(invocation.getArgumentAt(0, String.class))
-                        .kieli(invocation.getArgumentAt(1, YTJKieli.class))
+        executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
+        when(ytjService.findByYTunnus(eq("1234569-5"), any(YTJKieli.class))).thenAnswer(invocation ->
+                new YTJDTOBuilder(invocation.getArgument(0, String.class))
+                        .kieli(invocation.getArgument(1, YTJKieli.class))
                         .build());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
-        executeSqlScript("data/truncate_tables.sql", false);
+        executeSqlScript("classpath:data/truncate_tables.sql", false);
     }
 
     @Test
@@ -67,15 +76,15 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         service.updateYTJData(false);
         // verify that the database is updated properly
         List<String> oidList = new ArrayList<>();
-        oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
-        oidList.addAll(organisaatioDAO.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
-        organisaatioList = organisaatioDAO.findByOidList(oidList, OrganisaatioYtjServiceImpl.SEARCH_LIMIT);
+        oidList.addAll(organisaatioRepository.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.KOULUTUSTOIMIJA));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.TYOELAMAJARJESTO));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.MUU_ORGANISAATIO));
+        oidList.addAll(organisaatioRepository.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
+        List<Organisaatio> organisaatioList = organisaatioRepository.findByOidList(oidList, OrganisaatioYtjServiceImpl.SEARCH_LIMIT);
 
-        Assert.assertEquals(4, organisaatioList.size());
+        assertEquals(4, organisaatioList.size());
 
-        Organisaatio org = organisaatioDAO.findByOid("1.2.2005.5");
+        Organisaatio org = organisaatioRepository.customFindByOid("1.2.2005.5");
         initTestData(org);
         // Case: Has sv name; gets new fi name from YTJ, no puhelin, www, alkupvm updated
         // name history not updated
@@ -110,7 +119,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         KIELI_KOODI_FI
                         );
 
-        org = organisaatioDAO.findByOid("1.2.2004.1");
+        org = organisaatioRepository.customFindByOid("1.2.2004.1");
         initTestData(org);
         // Case: Has fi and sv name, puhelin, www, alkupvm; gets fi name updated from YTJ
         // new entry to name history
@@ -146,7 +155,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         KIELI_KOODI_FI
                 );
 
-        org = organisaatioDAO.findByOid("1.2.2004.5");
+        org = organisaatioRepository.customFindByOid("1.2.2004.5");
         initTestData(org);
         // Case: Has fi name, puhelin, www, alkupvm; gets new sv name and updated puhelin, www from YTJ;
         // alkupvm not updated since ytj invalid data
@@ -184,34 +193,20 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
     }
 
     private void initTestData(Organisaatio org) {
-        orgSortedNimet = new ArrayList<>();
+        List<OrganisaatioNimi> orgSortedNimet = new ArrayList<>();
         sortOrganisaatioNimet(org, orgSortedNimet);
-        orgSortedYhteystiedot = new ArrayList<>();
+        List<Yhteystieto> orgSortedYhteystiedot = new ArrayList<>();
         sortOrganisaatioYhteystiedot(org, orgSortedYhteystiedot);
     }
 
     private void sortOrganisaatioYhteystiedot(Organisaatio org, List<Yhteystieto> orgSortedYhteystiedot) {
-        for(Yhteystieto yhteystieto : org.getYhteystiedot()) {
-            orgSortedYhteystiedot.add(yhteystieto);
-        }
-        Collections.sort(orgSortedYhteystiedot, new Comparator<Yhteystieto>() {
-            @Override
-            public int compare(Yhteystieto o1, Yhteystieto o2) {
-                return o1.getId().compareTo(o2.getId());
-            }
-        });
+        orgSortedYhteystiedot.addAll(org.getYhteystiedot());
+        orgSortedYhteystiedot.sort(Comparator.comparing(BaseEntity::getId));
     }
 
     private void sortOrganisaatioNimet(Organisaatio org, List<OrganisaatioNimi> orgNimet) {
-        for(OrganisaatioNimi orgNimi : org.getNimet()) {
-            orgNimet.add(orgNimi);
-        }
-        Collections.sort(orgNimet, new Comparator<OrganisaatioNimi>() {
-            @Override
-            public int compare(OrganisaatioNimi o1, OrganisaatioNimi o2) {
-                return o1.getAlkuPvm().compareTo(o2.getAlkuPvm());
-            }
-        });
+        orgNimet.addAll(org.getNimet());
+        orgNimet.sort(Comparator.comparing(OrganisaatioNimi::getAlkuPvm));
     }
 
 }

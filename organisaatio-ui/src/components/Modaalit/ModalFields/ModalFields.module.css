@@ -1,0 +1,38 @@
+.BodyKehys {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+}
+
+.BodyKentta {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding-right: 1rem;
+}
+
+.BodyKentta > label {
+    padding: 0.5rem;
+}
+.Required {
+    white-space: nowrap;
+}
+.Required:after {
+    content: ' *';
+}
+.BodyKehys > .BodyKentta:last-child {
+    flex-grow: 1;
+}
+
+.BodyRivi {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+}
+
+.BodyRivi > div {
+    margin-right: 1rem;
+}

@@ -2,20 +2,16 @@ package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class OrganisaatioToOrganisaatioPerustietoConverter implements org.springframework.core.convert.converter.Converter<Organisaatio, OrganisaatioPerustieto> {
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+public class OrganisaatioToOrganisaatioPerustietoConverter implements Converter<Organisaatio, OrganisaatioPerustieto> {
 
     @Override
     public OrganisaatioPerustieto convert(Organisaatio source) {
@@ -23,6 +19,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements org.spring
         destination.setOid(source.getOid());
         // java.sql.Date -> java.util.Date jotta json-formaatti sama kuin solr-toteutuksessa
         destination.setAlkuPvm(clone(source.getAlkuPvm()));
+        destination.setTarkastusPvm(clone(source.getTarkastusPvm()));
         destination.setLakkautusPvm(clone(source.getLakkautusPvm()));
         List<String> parentOids = Optional.ofNullable(source.getParentOidPath())
                 .map(parentOidPath -> Arrays.stream(parentOidPath.split("\\|")))
@@ -42,6 +39,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements org.spring
 
         //destination.setMatch asetetaan muualla
         destination.setNimi(source.getNimi().getValues());
+        destination.setLyhytNimi(source.getActualNimi().getValues());
 
         source.getTyypit().stream()
                 .map(OrganisaatioTyyppi::fromKoodiValue)

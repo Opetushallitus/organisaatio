@@ -4,8 +4,8 @@
           xsi:schemaLocation="http://dozer.sourceforge.net
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
-    <!-- TODO: copypaste organisaatio-service:n alta koska dozer ei löytänyt classpathista?! -->
-	
+    <!-- copypaste organisaatio-service:n alta koska dozer ei löytänyt classpathista?! -->
+
     <mapping>
         <class-a>fi.vm.sade.organisaatio.model.YhteystietoArvo</class-a>
         <class-b>fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO</class-b>

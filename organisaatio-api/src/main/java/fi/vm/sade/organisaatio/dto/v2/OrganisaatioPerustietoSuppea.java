@@ -1,29 +1,28 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 
 @XmlRootElement
-@ApiModel(value = "Organisaation suppeat perustiedot")
+@Schema(description = "Organisaation suppeat perustiedot")
 public class OrganisaatioPerustietoSuppea implements Serializable {
 
     private final static long serialVersionUID = 100L;
 
-    @ApiModelProperty(value = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", required = true)
     private String oid;
 
-    @ApiModelProperty(value = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", required = true)
     private Map<String, String> nimi = new HashMap<String, String>();
-    
-    @ApiModelProperty(value = "Organisaation tyypit", required = true)
+
+    @Schema(description = "Organisaation tyypit", required = true)
     private Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
-    
-    @ApiModelProperty(value = "Oppilaitoksen tyyppi", required = true)
+
+    @Schema(description = "Oppilaitoksen tyyppi", required = true)
     private String oppilaitostyyppi;
 
     private Collection<OrganisaatioPerustietoSuppea> children = new HashSet<>();
@@ -50,9 +49,9 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     /**
      * Gets the value of the oid property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getOid() {
         return oid;
@@ -60,10 +59,10 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     /**
      * Sets the value of the oid property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOid(String value) {
         this.oid = value;
@@ -71,7 +70,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     /**
      * Aseta organisaation nimi
-     * 
+     *
      * @param targetLanguage
      *            "fi","en" tai "sv"
      * @param nimi
@@ -82,7 +81,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     /**
      * Palauta organisaation nimi, tai null jos ko kielellä ei löydy.
-     * 
+     *
      * @param language
      *            "fi","en" tai "sv"
      * @return
@@ -90,8 +89,8 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
     public String getNimi(String language) {
         return this.nimi.get(language);
     }
-    
-    @ApiModelProperty(value = "Organisaation tyypit", required = true)
+
+    @Schema(description = "Organisaation tyypit", required = true)
     public Set<OrganisaatioTyyppi> getOrganisaatiotyypit() {
         if (tyypit == null) {
             return null;
@@ -101,16 +100,16 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
         }
         return this.tyypit;
     }
-    
+
     public void setOrganisaatiotyypit(Set<OrganisaatioTyyppi> tyypit) {
         this.tyypit = tyypit;
     }
-    
+
     /**
      * Gets the value of the oppilaitostyyppi property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getOppilaitostyyppi() {
         return oppilaitostyyppi;
@@ -118,13 +117,13 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     /**
      * Sets the value of the oppilaitostyyppi property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOppilaitostyyppi(String value) {
         this.oppilaitostyyppi = value;
     }
-    
+
 }

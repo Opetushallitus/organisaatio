@@ -1,38 +1,42 @@
 package fi.vm.sade.security;
 
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
 
 @Component
 public class OidProvider {
 
-    private final String rootOrganisaatioOid;
-    private final OrganisaatioDAO organisaatioDAO;
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private OrganisaatioFindBusinessService organisaatioFindBusinessService;
+    @Value("${root.organisaatio.oid}")
+    private String rootOrganisaatioOid;
 
-    public OidProvider(@Value("${root.organisaatio.oid}") String rootOrganisaatioOid,
-                       OrganisaatioDAO organisaatioDAO) {
-        this.rootOrganisaatioOid = rootOrganisaatioOid;
-        this.organisaatioDAO = organisaatioDAO;
+    public OidProvider() {
     }
+
 
     public List<String> getSelfAndParentOids(String organisaatioOid) {
-        Stream<String> parentOids = Optional.ofNullable(organisaatioDAO.findByOid(organisaatioOid))
-                .map(organisaatio -> organisaatio.getParentOids().stream())
-                .orElseGet(() -> Stream.of(rootOrganisaatioOid));
-        return Stream.concat(Stream.of(organisaatioOid), parentOids).collect(
-                Collectors.collectingAndThen(toList(), strings -> {
-                    Collections.reverse(strings);
-                    return strings;
-                }));
+        return Optional.ofNullable(organisaatioOid).map(oid ->
+                        Optional.ofNullable(organisaatioFindBusinessService.findById(oid))
+                                .map(organisaatio -> Optional.ofNullable(organisaatio.getParentOids())
+                                        .map(parentOids -> {
+                                            List<String> a = new ArrayList<>(parentOids);
+                                            a.add(organisaatioOid);
+                                            return a;
+                                        })
+                                        .orElseGet(() -> Arrays.asList(organisaatioOid)))
+                                .orElseGet(() -> Arrays.asList(rootOrganisaatioOid, organisaatioOid)))
+                .orElseGet(() -> Arrays.asList(rootOrganisaatioOid));
     }
-
 }

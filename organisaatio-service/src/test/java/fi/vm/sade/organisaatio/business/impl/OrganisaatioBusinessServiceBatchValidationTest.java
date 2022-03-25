@@ -4,8 +4,8 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
@@ -20,7 +20,7 @@ public class OrganisaatioBusinessServiceBatchValidationTest {
     private Organisaatio child2 = new Organisaatio();
     private Organisaatio root = new Organisaatio();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         parent.setOid("1234.5");
         OrganisaatioSuhde os1 = new OrganisaatioSuhde();

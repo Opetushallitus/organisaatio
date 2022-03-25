@@ -17,46 +17,20 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
  */
-public class OrganisaatioResourceException extends WebApplicationException {
+public class OrganisaatioResourceException extends ApiException {
 
-    public static class ErrorMessage {
-
-        private final String errorMessage;
-        private final String errorKey;
-
-        public ErrorMessage(String errorMessage, String errorKey) {
-            this.errorMessage = errorMessage;
-            this.errorKey = errorKey;
-        }
-
-        public ErrorMessage(SadeBusinessException sbe) {
-            this.errorMessage = sbe.getMessage();
-            this.errorKey = sbe.getErrorKey();
-        }
-
-        public ErrorMessage(String errorMessage) {
-            this(errorMessage, "");
-        }
-
-        public String getErrorMessage() {
-            return errorMessage;
-        }
-
-        public String getErrorKey() {
-            return errorKey;
-        }
-
+    public OrganisaatioResourceException(ErrorMessage errorMessage, HttpStatus status) {
+        super(new ResponseEntity<>(errorMessage, status));
     }
 
-    public OrganisaatioResourceException(int status, Object message) {
-        super(Response.status(status).entity(message).build());
+    public OrganisaatioResourceException(int status, ErrorMessage message) {
+        this(message, HttpStatus.valueOf(status));
     }
 
     public OrganisaatioResourceException(int status, String message) {
@@ -67,20 +41,20 @@ public class OrganisaatioResourceException extends WebApplicationException {
         this(status, new ErrorMessage(message, key));
     }
 
-    public OrganisaatioResourceException(Status status, String message) {
-        this(status.getStatusCode(), new ErrorMessage(message));
+    public OrganisaatioResourceException(HttpStatus status, String message) {
+        this(new ErrorMessage(message), status);
     }
 
-    public OrganisaatioResourceException(Status status, String message, String key) {
-        this(status.getStatusCode(), new ErrorMessage(message, key));
+    public OrganisaatioResourceException(HttpStatus status, String message, String key) {
+        this(new ErrorMessage(message, key), status);
     }
 
     public OrganisaatioResourceException(SadeBusinessException sbe) {
-        this(500, new ErrorMessage(sbe));
+        this(new ErrorMessage(sbe), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public OrganisaatioResourceException(Status status, SadeBusinessException exception) {
-        this(status.getStatusCode(), new ErrorMessage(exception));
+    public OrganisaatioResourceException(HttpStatus status, SadeBusinessException exception) {
+        this(new ErrorMessage(exception), status);
     }
 
 }

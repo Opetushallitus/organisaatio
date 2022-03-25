@@ -3,14 +3,15 @@ package fi.vm.sade.organisaatio.business.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.KoulutustoimijaBuilder;
 import fi.vm.sade.organisaatio.OppilaitosBuilder;
+import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoClient;
 import fi.vm.sade.organisaatio.config.JsonJavaSqlDateSerializer;
 import fi.vm.sade.organisaatio.config.ObjectMapperConfiguration;
-import fi.vm.sade.organisaatio.config.UrlConfiguration;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.properties.OphProperties;
 import org.json.JSONException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDate;
@@ -21,19 +22,19 @@ import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 public class OrganisaatioKoodistoImplTest {
-
     private OrganisaatioKoodistoImpl impl;
 
     private OrganisaatioKoodistoClient clientMock;
-    private OrganisaatioDAO daoMock;
+    private OrganisaatioRepository daoMock;
 
-    private UrlConfiguration properties = new UrlConfiguration();
+    private OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
     private ObjectMapper mapper = new ObjectMapperConfiguration().objectMapper(new JsonJavaSqlDateSerializer());
 
-    @Before
+    @BeforeEach
     public void setup() {
+        properties.addFiles("/application.properties");
         clientMock = mock(OrganisaatioKoodistoClient.class);
-        daoMock = mock(OrganisaatioDAO.class);
+        daoMock = mock(OrganisaatioRepository.class);
         impl = new OrganisaatioKoodistoImpl(clientMock, daoMock, properties, mapper);
     }
 

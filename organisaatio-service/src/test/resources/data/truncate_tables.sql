@@ -23,3 +23,4 @@ truncate table yhteystietojentyyppi_organisaatiotyypit;
 truncate table ytjpaivitysloki;
 truncate table ytjvirhe;
 set referential_integrity true;
+

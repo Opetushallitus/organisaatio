@@ -3,15 +3,16 @@ package fi.vm.sade.organisaatio.dto.mapping;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SearchCriteriaModelMapperTest {
 
     private SearchCriteriaModelMapper mapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         mapper = new SearchCriteriaModelMapper();
     }
@@ -20,13 +21,13 @@ public class SearchCriteriaModelMapperTest {
     public void organisaatioSearchCriteriaDTOV2OrganisaatioTyyppi() {
         OrganisaatioSearchCriteriaDTOV2 dto = new OrganisaatioSearchCriteriaDTOV2();
 
-        dto.setOrganisaatioTyyppi("Koulutustoimija");
+        dto.setOrganisaatiotyyppi("Koulutustoimija");
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).containsExactly("organisaatiotyyppi_01");
 
-        dto.setOrganisaatioTyyppi(null);
+        dto.setOrganisaatiotyyppi(null);
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).isEmpty();
 
-        dto.setOrganisaatioTyyppi("Ryhma");
+        dto.setOrganisaatiotyyppi("Ryhma");
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).isEmpty();
     }
 
@@ -45,13 +46,13 @@ public class SearchCriteriaModelMapperTest {
     public void organisaatioSearchCriteriaOrganisaatioTyyppi() {
         OrganisaatioSearchCriteria dto = new OrganisaatioSearchCriteria();
 
-        dto.setOrganisaatioTyyppi("Koulutustoimija");
+        dto.setOrganisaatiotyyppi("Koulutustoimija");
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).containsExactly("organisaatiotyyppi_01");
 
-        dto.setOrganisaatioTyyppi(null);
+        dto.setOrganisaatiotyyppi(null);
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).isEmpty();
 
-        dto.setOrganisaatioTyyppi("Ryhma");
+        dto.setOrganisaatiotyyppi("Ryhma");
         assertThat(mapper.map(dto, SearchCriteria.class).getOrganisaatioTyyppi()).isEmpty();
     }
 

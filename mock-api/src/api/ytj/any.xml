@@ -1,0 +1,74 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ytj="http://www.ytj.fi/">
+    <soap:Body>
+        <ytj:wmYritysTiedotV2Response>
+            <ytj:wmYritysTiedotV2Result>
+                <ytj:Toiminimi>
+                    <ytj:Toiminimi>Hameen ammatti-instituutti Oy</ytj:Toiminimi>
+                    <ytj:AlkuPvm>07.08.2014</ytj:AlkuPvm>
+                </ytj:Toiminimi>
+                <ytj:YritysTunnus>
+                    <ytj:Status>2</ytj:Status>
+                    <ytj:Alkupvm>19.6.2014</ytj:Alkupvm>
+                    <ytj:Loppupvm></ytj:Loppupvm>
+                    <ytj:YritysLopetettu>false</ytj:YritysLopetettu>
+                    <ytj:YTunnus>0737546-2</ytj:YTunnus>
+                </ytj:YritysTunnus>
+                <ytj:Yritysmuoto>
+                    <ytj:Seloste>Osakeyhtio</ytj:Seloste>
+                    <ytj:Koodi>16</ytj:Koodi>
+                </ytj:Yritysmuoto>
+                <ytj:Kotipaikka>
+                    <ytj:Seloste>HÄMEENLINNA</ytj:Seloste>
+                    <ytj:Koodi>109</ytj:Koodi>
+                </ytj:Kotipaikka>
+                <ytj:Toimiala>
+                    <ytj:Seloste>Keskiasteen ammatillinen koulutus</ytj:Seloste>
+                    <ytj:Koodi>85320</ytj:Koodi>
+                </ytj:Toimiala>
+                <ytj:YrityksenKieli>
+                    <ytj:Seloste>Suomi</ytj:Seloste>
+                </ytj:YrityksenKieli>
+                <ytj:YrityksenPostiOsoite>
+                    <ytj:Katu>PL 1010</ytj:Katu>
+                    <ytj:Postinumero>13101</ytj:Postinumero>
+                    <ytj:Toimipaikka>HAMEENLINNA</ytj:Toimipaikka>
+                    <ytj:Maa></ytj:Maa>
+                    <ytj:Kieli>1</ytj:Kieli>
+                </ytj:YrityksenPostiOsoite>
+                <ytj:YrityksenKayntiOsoite>
+                    <ytj:Katu>Visamäentie 35 A</ytj:Katu>
+                    <ytj:Postinumero>13101</ytj:Postinumero>
+                    <ytj:Toimipaikka>HAMEENLINNA</ytj:Toimipaikka>
+                    <ytj:Maa></ytj:Maa>
+                    <ytj:Kieli>1</ytj:Kieli>
+                </ytj:YrityksenKayntiOsoite>
+                <ytj:YrityksenYhteystiedot>
+                    <ytj:YrityksenYhteystietoDTO>
+                        <ytj:Laji>5</ytj:Laji>
+                        <ytj:YhteysTieto>036461</ytj:YhteysTieto>
+                    </ytj:YrityksenYhteystietoDTO>
+                    <ytj:YrityksenYhteystietoDTO>
+                        <ytj:Laji>2</ytj:Laji>
+                        <ytj:YhteysTieto>036464200</ytj:YhteysTieto>
+                    </ytj:YrityksenYhteystietoDTO>
+                    <ytj:YrityksenYhteystietoDTO>
+                        <ytj:Laji>3</ytj:Laji>
+                        <ytj:YhteysTieto>hami@hamk.fi</ytj:YhteysTieto>
+                    </ytj:YrityksenYhteystietoDTO>
+                    <ytj:YrityksenYhteystietoDTO>
+                        <ytj:Laji>4</ytj:Laji>
+                        <ytj:YhteysTieto>www.hami.fi</ytj:YhteysTieto>
+                    </ytj:YrityksenYhteystietoDTO>
+                </ytj:YrityksenYhteystiedot>
+                <ytj:YritysEnnakkoperintaRekisterissa>false</ytj:YritysEnnakkoperintaRekisterissa>
+                <ytj:TunnistusTiedot>
+                    <ytj:AsiakasNimi>Hämeen ammatti-instituutti Oy</ytj:AsiakasNimi>
+                    <ytj:Tiketti/>
+                    <ytj:PyyntojenMaara>0</ytj:PyyntojenMaara>
+                    <ytj:PyyntoPvm/>
+                    <ytj:TunnistusStatus>2</ytj:TunnistusStatus>
+                </ytj:TunnistusTiedot>
+            </ytj:wmYritysTiedotV2Result>
+        </ytj:wmYritysTiedotV2Response>
+    </soap:Body>
+</soap:Envelope>

@@ -17,30 +17,23 @@
 
 package fi.vm.sade.organisaatio.model;
 
+
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
-
-/**
- * @author Antti Salonen
- */
+//TODO xss filtering
 @Entity
-@EntityListeners(XssFilterListener.class)
 public class Email extends Yhteystieto {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String  EMAIL_PATTERN =
+    private static final String EMAIL_PATTERN =
         "^[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+(\\.[_A-Za-z0-9-+!#$%&'*/=?^`{|}~]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     @NotNull
     @Pattern(regexp = EMAIL_PATTERN, message = "{validation.invalid.email}")
-    @FilterXss
-    private String email;
+    private String email; // TODO filterxss
 
     public Email() {
         this.yhteystietoOid = "" + System.currentTimeMillis() + Math.random();

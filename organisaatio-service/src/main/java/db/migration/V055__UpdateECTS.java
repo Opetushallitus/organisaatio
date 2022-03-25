@@ -14,7 +14,14 @@
  */
 package db.migration;
 
-import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
+import org.flywaydb.core.api.migration.BaseJavaMigration;
+import org.flywaydb.core.api.migration.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -22,10 +29,6 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * OVT-8420
@@ -34,15 +37,16 @@ import org.springframework.jdbc.core.RowMapper;
  *
  * @author hpyy
  */
-public class V055__UpdateECTS implements SpringJdbcMigration {
+public class V055__UpdateECTS extends BaseJavaMigration {
 
     private static final Logger LOG = LoggerFactory.getLogger(V055__UpdateECTS.class);
     private Map<String, Map<String, Object>> _organisations = new HashMap<String, Map<String, Object>>();
     private int _numUpdated = 0;
 
-    public void migrate(JdbcTemplate jdbcTemplate) throws Exception {
+    public void migrate(Context context) throws Exception {
         LOG.info("migrate()...");
-
+        JdbcTemplate jdbcTemplate =
+                new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true));
         // Get all organisaatiometadatas where there are strings to process
         List<Map> resultSet = jdbcTemplate.query("SELECT id,hakutoimistoectsemail,hakutoimistoectsnimi,hakutoimistoectspuhelin,hakutoimistoectstehtavanimike FROM organisaatiometadata WHERE hakutoimistoectsemail<>'' OR hakutoimistoectsnimi<>'' OR hakutoimistoectspuhelin<>'' OR hakutoimistoectstehtavanimike<>''", new RowMapper<Map>() {
             @Override

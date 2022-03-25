@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 

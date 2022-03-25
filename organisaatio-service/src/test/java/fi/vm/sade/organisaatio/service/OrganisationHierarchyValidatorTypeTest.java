@@ -2,9 +2,9 @@ package fi.vm.sade.organisaatio.service;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,38 +18,26 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class OrganisationHierarchyValidatorTypeTest {
 
     private static final String ROOT_OID = "1";
+    private final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(ROOT_OID);
 
-    private OrganisationHierarchyValidator validator;
-    private final OrganisaatioTyyppi parent;
-    private final OrganisaatioTyyppi child;
-    private final boolean expected;
-
-    public OrganisationHierarchyValidatorTypeTest(OrganisaatioTyyppi parent, OrganisaatioTyyppi child, boolean expected) {
-        this.validator = new OrganisationHierarchyValidator(ROOT_OID);
-        this.parent = parent;
-        this.child = child;
-        this.expected = expected;
-    }
-
-    @Parameterized.Parameters(name = "parent:{0} + child:{1} -> {2}")
-    public static Collection<Object[]> parameters() throws IOException {
+    private static Stream<Arguments> parameters() throws IOException {
         try (Stream<String> rows = Files.lines(Paths.get("src/test/resources/OrganisationHierarchyValidator.csv"))) {
             return rows.reduce(new ArrayList<>(), new ParametersAccumulator<>(), (t, u) -> {
                 throw new UnsupportedOperationException("Parallel streaming not implemented");
-            });
+            }).stream();
         }
     }
 
-    @Test
-    public void test() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void test(OrganisaatioTyyppi parent, OrganisaatioTyyppi child, boolean expected) {
         assertThat(validator.apply(new AbstractMap.SimpleEntry<>(getOrg(parent), getOrg(child)))).isEqualTo(expected);
     }
 
-    private static class ParametersAccumulator<T extends Collection<Object[]>> implements BiFunction<T, String, T> {
+    private static class ParametersAccumulator<T extends List<Arguments>> implements BiFunction<T, String, T> {
 
         private List<OrganisaatioTyyppi> ylaorganisaatiotyypit;
 
@@ -67,7 +55,7 @@ public class OrganisationHierarchyValidatorTypeTest {
             OrganisaatioTyyppi childType = OrganisaatioTyyppi.valueOf(cells[0]);
             IntStream.range(1, cells.length).forEach(i -> {
                 OrganisaatioTyyppi parentType = ylaorganisaatiotyypit.get(i - 1);
-                parameters.add(new Object[]{parentType, childType, Boolean.parseBoolean(cells[i])});
+                parameters.add(Arguments.of(parentType, childType, Boolean.parseBoolean(cells[i])));
             });
             return parameters;
         }

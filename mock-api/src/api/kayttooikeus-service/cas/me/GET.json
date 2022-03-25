@@ -1,0 +1,9 @@
+{
+    "uid": "mbender",
+    "oid": "1.2.246.562.24.41721051355",
+    "firstName": "Mike",
+    "lastName": "Bender",
+    "groups": ["LANG_fi", "VIRKAILIJA"],
+    "roles": "[\"APP_ORGANISAATIOHALLINTA\",\"APP_ORGANISAATIOHALLINTA_CRUD\",\"APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001\",\"LANG_fi\",\"USER_mbender\",\"VIRKAILIJA\"]",
+    "lang": "fi"
+}

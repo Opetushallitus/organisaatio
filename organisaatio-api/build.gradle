@@ -1,0 +1,33 @@
+plugins {
+	id 'java'
+	id 'maven-publish'
+}
+
+dependencies {
+	implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.3.0.RELEASE'
+	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.4'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.3'
+	compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'
+	compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+}
+
+publishing {
+	publications {
+		OrganisaatioApi(MavenPublication) {
+			version = getDate()+versionSuffix
+			from components.java
+		}
+	}
+	repositories {
+		maven {
+			name = 'sadeRepository'
+			credentials(PasswordCredentials)
+			if(versionSuffix.endsWith('-SNAPSHOT')) {
+				url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+			} else {
+				url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+			}
+		}
+	}
+}

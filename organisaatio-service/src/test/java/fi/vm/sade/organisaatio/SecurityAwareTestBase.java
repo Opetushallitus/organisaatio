@@ -1,8 +1,9 @@
 package fi.vm.sade.organisaatio;
 
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,20 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
  * By default executes tests as CRUD_USER, override before to customize
  */
 public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4SpringContextTests {
-    
+
     @Value("${root.organisaatio.oid}")
     protected String ophOid;
     
     @Autowired
     protected OrganisationHierarchyAuthorizer authorizer;
     
-    
-    
+    @Autowired
     private OidProvider oidProvider;
 
     /**
      * Set permissions for current user, setup Mock oid provider
      */
-    @Before
+    @BeforeEach
     public void before() {
         setCurrentUser("ophadmin", getAuthority("APP_" + OrganisaatioPermissionServiceImpl.ORGANISAATIOHALLINTA + "_CRUD", ophOid));
         OidProvider oidProvider = Mockito.mock(OidProvider.class);
@@ -47,10 +47,10 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
 //        Mockito.stub(oidProvider.getSelfAndParentOids(userOrgOid)).toReturn(
 //                ophOid, userOrgOid));
         
-        Mockito.stub(oidProvider.getSelfAndParentOids(ophOid)).toReturn(
+        Mockito.when(oidProvider.getSelfAndParentOids(ophOid)).thenReturn(
                 Lists.newArrayList(ophOid));
 
-        Mockito.stub(oidProvider.getSelfAndParentOids("1.2.2004.2")).toReturn(
+        Mockito.when(oidProvider.getSelfAndParentOids("1.2.2004.2")).thenReturn(
                 Lists.newArrayList(ophOid, "1.2.2004.2"));
 //        Mockito.stub(oidProvider.getSelfAndParentOids(Mockito.anyString())).toReturn(
 //                Lists.newArrayList(ophOid));
@@ -61,7 +61,7 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
         Whitebox.setInternalState(authorizer, "oidProvider", oidProvider);
     }
     
-    @After
+    @AfterEach
     public void after(){
         //restore original oidprovider
         Whitebox.setInternalState(authorizer, "oidProvider", this.oidProvider);

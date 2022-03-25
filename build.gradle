@@ -1,0 +1,37 @@
+plugins {
+	id 'groovy'
+	id "org.sonarqube" version "3.3"
+}
+compileJava.options.encoding = 'UTF-8'
+def getDate() {
+	def date = new Date()
+	def formattedDate = date.format(versionDateFormat)
+	return formattedDate
+}
+
+allprojects {
+	repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+		maven {
+			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+			mavenContent {
+				snapshotsOnly()
+			}
+		}
+		maven {
+			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+			mavenContent {
+				releasesOnly()
+			}
+		}
+	}
+}
+sonarqube {
+	properties {
+		property "sonar.projectKey", "Opetushallitus_organisaatio"
+		property "sonar.organization", "opetushallitus"
+		property "sonar.host.url", "https://sonarcloud.io"
+	}
+}

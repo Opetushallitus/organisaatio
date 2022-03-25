@@ -1,13 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.vm.sade.organisaatio.ytj.api;
 
-/**
- *
- * @author Tuomas Katva
- */
 public class YTJOsoiteDTO {
     
     private String katu;

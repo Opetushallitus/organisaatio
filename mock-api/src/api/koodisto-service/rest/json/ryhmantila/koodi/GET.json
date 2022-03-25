@@ -1,0 +1,68 @@
+[
+    {
+        "koodiArvo": "AKTIIVINEN",
+        "koodiUri": "ryhmantila_aktiivinen",
+        "koodisto": {
+            "koodistoUri": "ryhmantila",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "AKTIIVINEN",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-10-25",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmantila_aktiivinen",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2021-10-24",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "PASSIIVINEN",
+        "koodiUri": "ryhmantila_passiivinen",
+        "koodisto": {
+            "koodistoUri": "ryhmantila",
+            "koodistoVersios": [
+                1
+            ],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": null,
+                "huomioitavaKoodi": null,
+                "kasite": null,
+                "kayttoohje": null,
+                "kieli": "FI",
+                "kuvaus": null,
+                "lyhytNimi": null,
+                "nimi": "PASSIIVINEN",
+                "sisaltaaKoodiston": null,
+                "sisaltaaMerkityksen": null
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.69633009338",
+        "paivitysPvm": "2021-10-25",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/ryhmantila_passiivinen",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 0,
+        "voimassaAlkuPvm": "2021-10-24",
+        "voimassaLoppuPvm": null
+    }
+]

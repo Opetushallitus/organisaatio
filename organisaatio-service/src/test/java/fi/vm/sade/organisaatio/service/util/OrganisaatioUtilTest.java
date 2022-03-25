@@ -1,14 +1,14 @@
 package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrganisaatioUtilTest {
 

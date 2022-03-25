@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.vm.sade.organisaatio.ytj.service;
 
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
@@ -10,45 +6,24 @@ import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.*;
+
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Tuomas Katva
- */
 public class YTJServiceImplTest {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    
-    public YTJServiceImplTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(YTJServiceImplTest.class);
 
     @Test
-    public void testHashHex() throws Exception {
+    public void testHashHex() {
         String str = "Str to be hashed";
-        YTJServiceImpl instance = new YTJServiceImpl();
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
         String hex = instance.createHashHex(str);
-        assertTrue(hex != null);
+        assertNotNull(hex);
     }
     /**
      * Test of findByYNimi method, of class YTJServiceImpl.
@@ -61,8 +36,8 @@ public class YTJServiceImplTest {
         String nimi = "Helsingin";
         boolean naytaPassiiviset = false;
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        List result = instance.findByYNimi(nimi, naytaPassiiviset, kieli);
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
+        instance.findByYNimi(nimi, naytaPassiiviset, kieli);
     }
 
     /*Ignore this test so that YTJ is not called every time when project is compiled
@@ -75,19 +50,14 @@ public class YTJServiceImplTest {
         String nimi = "Katva";
         boolean naytaPassiiviset = false;
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("XX");
-        instance.setSalainenavain("XX");
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
         try {
             List<YTJDTO> results = instance.findByYNimi(nimi,naytaPassiiviset,kieli);
-            log.info("Got {} results", results.size());
-            /*for (YTJDTO dto:results) {
-                log.info("Organisaatio nimi: {}",dto.getNimi());
-            }*/
+            LOGGER.info("Got {} results", results.size());
             assertTrue(results.size() > 0);
         } catch (Exception exp) {
-            log.info("Exception in findByNimiSuccess : {}",exp.toString());
-            assertTrue(false);
+            LOGGER.info("Exception in findByNimiSuccess : {}",exp.toString());
+            fail();
         }
     }
 
@@ -95,7 +65,7 @@ public class YTJServiceImplTest {
     public void testFindByYTunnusBatchWithoutCredentialsFails() throws Exception {
         List<String> ytunnus = new ArrayList<String>(){{add("1111111-1");}};
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
         List<YTJDTO> result = instance.findByYTunnusBatch(ytunnus, kieli);
         assertEquals("Diibadaa", result.get(0).getNimi().trim()); //shouldn't reach this point
     }
@@ -103,20 +73,18 @@ public class YTJServiceImplTest {
     // Test of findByYTunnusBatch method, of class YTJServiceImpl
     @Ignore
     @Test
-    public void testFindByYTunnusBatchSuccess() throws Exception {
+    public void testFindByYTunnusBatchSuccess() {
         List<String> ytunnus = new ArrayList<String>(){{add("0313471-7");add("0201256-6");add("2189312-7");}};
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("XX");
-        instance.setSalainenavain("XX");
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
         try {
             List<YTJDTO> result = instance.findByYTunnusBatch(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.get(0).getNimi().trim().toLowerCase());
             assertEquals("Helsingin kaupunki".toLowerCase(), result.get(1).getNimi().trim().toLowerCase());
             assertEquals("Mikkelin Ammattikorkeakoulu Oy".toLowerCase(), result.get(2).getNimi().trim().toLowerCase());
         } catch (Exception exp) {
-            log.info("Exception in findByYTunnus : {}",exp.toString());
-            assertTrue(false);
+            LOGGER.info("Exception in findByYTunnus : {}",exp.toString());
+            fail();
         }
     }
 
@@ -128,7 +96,7 @@ public class YTJServiceImplTest {
     public void testFindByYTunnusWithoutCredentialsFails() throws Exception {
         String ytunnus = "1111111-1";
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
         YTJDTO result = instance.findByYTunnus(ytunnus, kieli);
         assertEquals("Diibadaa", result.getNimi().trim()); //shouldn't reach this point
     }
@@ -139,18 +107,16 @@ public class YTJServiceImplTest {
      */
     @Ignore
     @Test
-    public void testFindByYTunnusSuccess() throws Exception {
+    public void testFindByYTunnusSuccess() {
         String ytunnus = "0313471-7"; // Helsingin yliopisto
         YTJKieli kieli = YTJKieli.FI;
-        YTJServiceImpl instance = new YTJServiceImpl();
-        instance.setAsiakastunnus("XX");
-        instance.setSalainenavain("XX");
+        YTJServiceImpl instance = new YTJServiceImpl("XX", "XX","XX");
         try {
             YTJDTO result = instance.findByYTunnus(ytunnus, kieli);
             assertEquals("Helsingin yliopisto".toLowerCase(), result.getNimi().trim().toLowerCase());
         } catch (Exception exp) {
-            log.info("Exception in findByYTunnus : {}",exp.toString());
-            assertTrue(false);
+            LOGGER.info("Exception in findByYTunnus : {}",exp.toString());
+            fail();
         }
     }
 

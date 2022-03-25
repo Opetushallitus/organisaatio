@@ -1,0 +1,41 @@
+.OtsikkoRivi {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #CCCCCC;
+    align-items: center;
+}
+
+.Otsikko {
+    margin: 1.5rem;
+    flex-grow: 1;
+}
+
+.LisaaUusiBtn {
+    height: 48px;
+    margin-right: 1rem;
+}
+
+
+.HakuvalikkoRivi {
+    justify-content: space-between;
+}
+
+.Kentta {
+    margin-right: 1rem;
+    width: 26rem;
+}
+
+.TaulukkoKehys {
+    margin: 2rem;
+    display: block;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.nimenMaksimiPituus {
+    display: block;
+    width: 20rem;
+    word-wrap:break-word;
+    white-space: normal
+}

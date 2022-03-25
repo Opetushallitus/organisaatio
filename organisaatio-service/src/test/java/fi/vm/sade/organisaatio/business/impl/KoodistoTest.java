@@ -15,16 +15,18 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class KoodistoTest {
-@Test
+
+    @Test
     public void test() {
         List<OrganisaatioKoodistoKoodiCodeElements> elements = new LinkedList<>();
 
@@ -77,12 +79,12 @@ public class KoodistoTest {
             elementsResult.put(e.getCodeElementUri(), e);
         }
         
-        Assert.assertTrue("Relaatioita muuttunut", result);
+        assertTrue(result);
         
-        Assert.assertEquals("Koodistoon menevien relaatioiden määrä", 7, elements.size());
+        assertEquals(7, elements.size());
         
         for (String r: koodistoTulosRelaatiot) {
-            Assert.assertTrue("relaatio " + r + " päivitetty", elementsResult.containsKey(r));
+            assertTrue(elementsResult.containsKey(r));
         }
     }
 }

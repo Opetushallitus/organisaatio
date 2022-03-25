@@ -9,19 +9,20 @@ package fi.vm.sade.organisaatio.api;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+
+import fi.vm.sade.organisaatio.resource.ApiException;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public class DateParam extends AbstractParam<Date> {
 
-    public DateParam(String param) throws WebApplicationException {
+    public DateParam(String param) throws ApiException {
         super(param);
     }
 
     @Override
-    protected Date parse(String param) throws Throwable {
+    protected Date parse(String param) throws ApiException {
         if (StringUtils.isEmpty(param)) {
             return null;
         }
@@ -39,9 +40,9 @@ public class DateParam extends AbstractParam<Date> {
         try {
             return dateFormat.parse(param);
         } catch (ParseException e) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-                    .entity("Couldn't parse date string: " + e.getMessage())
-                    .build());
+            throw new ApiException(new ResponseEntity<>(
+                    "Couldn't parse date string: " + e.getMessage(),
+                    HttpStatus.BAD_REQUEST));
         }
 
     }

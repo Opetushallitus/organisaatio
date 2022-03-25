@@ -1,12 +1,11 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "Organisaation hakuehdot")
+@Schema(description = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteriaDTOV2 {
 
     private boolean aktiiviset;
@@ -28,13 +27,12 @@ public class OrganisaatioSearchCriteriaDTOV2 {
 
     /**
      * Default no-arg constructor
-     *
      */
     public OrganisaatioSearchCriteriaDTOV2() {
         super();
     }
 
-    @ApiModelProperty(value = "Otetaanko aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getAktiiviset() {
         return aktiiviset;
     }
@@ -43,7 +41,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.aktiiviset = aktiiviset;
     }
 
-    @ApiModelProperty(value = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getSuunnitellut() {
         return suunnitellut;
     }
@@ -52,7 +50,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.suunnitellut = value;
     }
 
-    @ApiModelProperty(value = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getLakkautetut() {
         return lakkautetut;
     }
@@ -61,7 +59,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.lakkautetut = lakkautetut;
     }
 
-    @ApiModelProperty(value = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", required = true)
+    @Schema(description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", required = true)
     public Set<String> getYritysmuoto() {
         return yritysmuoto;
     }
@@ -70,7 +68,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.yritysmuoto = yritysmuoto;
     }
 
-    @ApiModelProperty(value = "Haettavan organisaation kunta tai lista kunnista", required = true)
+    @Schema(description = "Haettavan organisaation kunta tai lista kunnista", required = true)
     public Set<String> getKunta() {
         return kunta;
     }
@@ -81,27 +79,27 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         }
     }
 
-    @ApiModelProperty(value = "Haettavan organisaation tyyppi", required = true)
-    public String getOrganisaatioTyyppi() {
+    @Schema(description = "Haettavan organisaation tyyppi", required = true)
+    public String getOrganisaatiotyyppi() {
         return organisaatiotyyppi;
     }
 
-    public void setOrganisaatioTyyppi(String value) {
+    public void setOrganisaatiotyyppi(String value) {
         this.organisaatiotyyppi = value;
     }
 
-    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
-    public Set<String> getOppilaitosTyyppi() {
+    @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
+    public Set<String> getOppilaitostyyppi() {
         return oppilaitostyyppi;
     }
 
-    public void setOppilaitosTyyppi(Set<String> oppilaitostyyppi) {
+    public void setOppilaitostyyppi(Set<String> oppilaitostyyppi) {
         if (oppilaitostyyppi != null) {
             this.oppilaitostyyppi.addAll(oppilaitostyyppi);
         }
     }
-    
-    @ApiModelProperty(value = "Haettavan organisaation kieli tai lista kielistä", required = true)
+
+    @Schema(description = "Haettavan organisaation kieli tai lista kielistä", required = true)
     public Set<String> getKieli() {
         return kieli;
     }
@@ -112,7 +110,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         }
     }
 
-    @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
+    @Schema(description = "Lista sallituista organisaatioiden oid:stä", required = true)
     public Set<String> getOidRestrictionList() {
         if (this.oidRestrictionList == null) {
             this.oidRestrictionList = new HashSet<>();
@@ -124,7 +122,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.oidRestrictionList.addAll(oidRestrictionList);
     }
 
-    @ApiModelProperty(value = "Hakutermit", required = true)
+    @Schema(description = "Hakutermit", required = true)
     public String getSearchStr() {
         return searchStr;
     }
@@ -133,7 +131,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.searchStr = searchStr;
     }
 
-    @ApiModelProperty(value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
+    @Schema(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
     public boolean getSkipParents() {
         return skipParents;
     }
@@ -142,7 +140,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.skipParents = skipParents;
     }
 
-    @ApiModelProperty(value = "Haku oid:lla. Hakutermi jätetään huomioimatta jos oid on annettu.")
+    @Schema(description = "Haku oid:lla. Hakutermi jätetään huomioimatta jos oid on annettu.")
     public String getOid() {
         return oid;
     }

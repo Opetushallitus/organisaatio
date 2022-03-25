@@ -19,16 +19,16 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteHakukohteita
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteParentException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-
-import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  *
@@ -41,7 +41,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;
@@ -51,7 +51,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
         Organisaatio parent;
 
         // Haetaan poistettava organisaatio
-        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
         if (org == null) {
             LOG.warn("Cannot find organisaatio to be deleted: " + oid);
             throw new OrganisaatioNotFoundException(oid);
@@ -73,7 +73,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
             }
 
             // Merkitään ryhmä poistetuksi
-            parent = organisaatioDAO.markRemoved(oid);
+            parent = organisaatioRepository.markRemoved(oid);
         }
         else {
             // Poistettavalla organisaatiolla ei saa olla alkavia koulutuksia
@@ -83,7 +83,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
             }
 
             // Merkitään organisaatio poistetuksi
-            parent = organisaatioDAO.markRemoved(oid);
+            parent = organisaatioRepository.markRemoved(oid);
         }
 
         return parent;

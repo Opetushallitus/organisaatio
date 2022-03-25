@@ -5,10 +5,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -31,11 +28,11 @@ public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
     }
 
     @Override
-    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
         switch (koodisto) {
             case KIELI:
                 return Stream.of("fi", "sv", "en")
-                        .map(koodi -> new Koodi(koodi.toUpperCase(), String.format("kieli_%s", koodi), versio))
+                        .map(koodi -> new Koodi(koodi.toUpperCase(), String.format("kieli_%s", koodi), versio.orElse(1)))
                         .collect(toList());
             default:
                 throw new IllegalArgumentException(String.format("Koodisto %s ei ole tuettu mockissa", koodisto));

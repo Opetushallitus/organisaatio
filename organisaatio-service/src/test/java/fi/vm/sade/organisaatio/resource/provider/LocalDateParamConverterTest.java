@@ -1,16 +1,17 @@
 package fi.vm.sade.organisaatio.resource.provider;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import org.junit.Before;
-import org.junit.Test;
 
 public class LocalDateParamConverterTest {
 
     private LocalDateParamConverter converter;
 
-    @Before
+    @BeforeEach
     public void setup() {
         converter = new LocalDateParamConverter();
     }

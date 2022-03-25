@@ -1,11 +1,12 @@
 package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrganisaatioNimiUtilTest {
 

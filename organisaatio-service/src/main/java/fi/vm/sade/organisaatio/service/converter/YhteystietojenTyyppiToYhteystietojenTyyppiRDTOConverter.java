@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.YhteystietoElementti;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import fi.vm.sade.organisaatio.resource.dto.YhteystietojenTyyppiRDTO;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.Set;
  *
  */
 @Component
-public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter extends AbstractFromDomainConverter<YhteystietojenTyyppi, YhteystietojenTyyppiRDTO>{
+public class YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter implements Converter<YhteystietojenTyyppi, YhteystietojenTyyppiRDTO> {
 
     @Override
     public YhteystietojenTyyppiRDTO convert(YhteystietojenTyyppi s) {

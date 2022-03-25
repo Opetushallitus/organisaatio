@@ -3,12 +3,12 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
@@ -130,5 +130,5 @@ public interface OrganisaatioFindBusinessService {
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
 
-    List<OrganisaatioDAOImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden);
+    List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden);
 }

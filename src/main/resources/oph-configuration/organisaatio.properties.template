@@ -28,7 +28,7 @@ organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koo
 organisaatio-service.scheduled.update.cron.expression=0 0 1 * * ?
 organisaatio.service.username.to.viestinta={{organisaatio_service_username_to_viestinta | default("username")}}
 organisaatio.service.password.to.viestinta={{organisaatio_service_password_to_viestinta | default("password")}}
-organisaatio.ui.url={{host_virkailija}}/organisaatio-ui/html/organisaatiot
+organisaatio.ui.url={{host_virkailija}}/organisaatio/html/organisaatiot
 organisaatio.ui.ilmoitukset.url=${organisaatio.ui.url}/ilmoitukset
 ryhmasahkoposti.service.email={{ryhmasahkoposti_service_email | default("jatkuvatpalvelut@oph.fi")}}
 organisaatio-service.postgresql.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
@@ -38,6 +38,9 @@ organisaatio-service.postgresql.maxactive={{host_postgresql_organisaatio_max_act
 organisaatio-service.postgresql.maxwait={{host_postgresql_organisaatio_max_wait}}
 organisaatio-service.postgresql.maxlifetimemillis=60000
 organisaatio-service.hikaricp.leakDetectionThreshold={{organisaatio_hikaricp_leak_detection_threshold | default(0)}}
+spring.datasource.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
+spring.datasource.username={{postgres_app_user}}
+spring.datasource.password={{host_postgresql_organisaatio_app_password}}
 
 # Oletusarvoja
 activemq.queue.name.log.error=Sade.Log_Error
@@ -51,9 +54,9 @@ activeMq.targetDestination.learningopportunityprovider.public=fi.vm.sade.learnin
 activeMq.targetDestination.organisaatio=fi.vm.sade.organisaatio.service
 activeMq.targetDestinationAdmin.tarjonta=fi.vm.sade.tarjonta.admin.service
 activeMq.targetDestinationPublic.tarjonta=fi.vm.sade.tarjonta.public.service
-cas.callback.organisaatio-app=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio-app
-cas.callback.organisaatio-service=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio-service
-cas.callback.organisaatio-ui=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio-ui
+cas.callback.organisaatio-app=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
+cas.callback.organisaatio-service=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
+cas.callback.organisaatio-ui=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
 cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
 cas.group-search-filter=(uniqueMember\={0})
@@ -61,7 +64,7 @@ cas.sendRenew=false
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 cas.callback.tarjonta-service=http://{{ cluster_tarjonta_host | default("${server.name}") }}:{{ cluster_tarjonta_port | default("8302") }}/tarjonta-service
-cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio-ui
+cas.service.organisaatio-ui=https\://${host.virkailija}/organisaatio-service
 cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
 cas.service.tarjonta-service=https\://${host.virkailija}/tarjonta-service
 flyway.initOnMigrate=true
@@ -82,7 +85,7 @@ organisaatio-ui.cas.url=https://${host.virkailija}/cas/myroles
 koodisto-service.url.rest=https://${host.virkailija}/koodisto-service/rest/
 lokalisointi.url.rest=https://${host.virkailija}/lokalisointi/cxf/rest
 organisaatio-service.url.rest=https://${host.virkailija}/organisaatio-service/rest/
-organisaatio-ui.organisaatio-ui-url=https://${host.virkailija}/organisaatio-ui/
+organisaatio-ui.organisaatio-ui-url=https://${host.virkailija}/organisaatio-service/organisaatiot
 root.organisaatio.oid=1.2.246.562.10.00000000001
 user.home.conf=${user.home}/oph-configuration
 web.url.cas=https\://${host.cas}/cas

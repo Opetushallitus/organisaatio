@@ -1,0 +1,19 @@
+{
+  "name": "mock-api",
+  "version": "1.0.0",
+  "description": "Mock API for local use and Travis builds",
+  "main": "app.js",
+  "scripts": {
+    "mock-api": "node ./src/app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-api-mocker": "^1.10.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "prettier": "^2.4.1",
+    "express-xml-bodyparser": "^0.3.0",
+    "morgan-body": "^2.6.6"
+  }
+}

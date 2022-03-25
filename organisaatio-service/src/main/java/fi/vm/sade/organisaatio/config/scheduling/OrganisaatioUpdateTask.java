@@ -9,6 +9,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.springframework.stereotype.Component;
 
@@ -23,14 +24,14 @@ import java.util.Date;
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private String nameUpdateCronExpression;
+    private final String nameUpdateCronExpression;
 
     private final OrganisaatioBusinessService organisaatioBusinessService;
 
     private final OrganisaatioYtjService organisaatioYtjService;
 
-    public OrganisaatioUpdateTask(OrganisaatioBusinessService organisaatioBusinessService,
-                                  OrganisaatioYtjService organisaatioYtjService,
+    public OrganisaatioUpdateTask(@Lazy OrganisaatioBusinessService organisaatioBusinessService,
+                                  @Lazy OrganisaatioYtjService organisaatioYtjService,
                                   @Value("${organisaatio-service.scheduled.update.cron.expression:0 0 1 * * ?}")
                                           String nameUpdateCronExpression) {
         super("päivittäiset ajastukset task", new Daily(LocalDateTime.ofInstant(new CronSequenceGenerator(nameUpdateCronExpression).next(new Date()).toInstant(), ZoneId.systemDefault()).toLocalTime()), Void.class, null);
@@ -43,7 +44,7 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
 
     @Override
     public void executeRecurringly(TaskInstance taskInstance, ExecutionContext executionContext) {
-        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: " + new Date(), nameUpdateCronExpression);
+        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
 
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();

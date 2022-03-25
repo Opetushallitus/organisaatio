@@ -1,22 +1,17 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
+
 import java.time.LocalDate;
-import javax.ws.rs.QueryParam;
 
 public class RyhmaCriteriaDtoV3 {
 
-    @QueryParam("q")
     private String q;
-    @QueryParam("aktiivinen")
     private Boolean aktiivinen;
-    @QueryParam("lakkautusPvm")
     private LocalDate lakkautusPvm;
-    @QueryParam("ryhmatyyppi")
-    @ApiParam("Koodisto 'ryhmatyypit'")
+    @Parameter(description = "Koodisto 'ryhmatyypit'")
     private String ryhmatyyppi;
-    @QueryParam("kayttoryhma")
-    @ApiParam("Koodisto 'kayttoryhmat'")
+    @Parameter(description = "Koodisto 'kayttoryhmat'")
     private String kayttoryhma;
 
     public String getQ() {

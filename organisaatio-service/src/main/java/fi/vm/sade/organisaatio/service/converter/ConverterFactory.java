@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.service.converter;
 
 import fi.vm.sade.organisaatio.api.model.types.*;
-import fi.vm.sade.organisaatio.dao.*;
+import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import org.dozer.DozerBeanMapper;
@@ -9,11 +9,11 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.ws.rs.core.Response;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -43,19 +43,19 @@ public class ConverterFactory {
     private List<Converter> converters = new ArrayList<>();
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioDAO;
 
     @Autowired
-    private YhteystietoArvoDAO yhteystietoArvoDAO;
+    private YhteystietoArvoRepository yhteystietoArvoDAO;
 
     @Autowired
-    private YhteystietoDAO yhteystietoDAO;
+    private YhteystietoRepository yhteystietoDAO;
 
     @Autowired
-    private YhteystietoElementtiDAO yhteystietoElementtiDAO;
+    private YhteystietoElementtiRepository yhteystietoElementtiDAO;
 
     @Autowired
-    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiRepository yhteystietojenTyyppiDAO;
     
     @PostConstruct
     public void initConverters() {
@@ -142,7 +142,6 @@ public class ConverterFactory {
             return converter.getJpaClass();
         }
 
-        // TODO: omat convertterit näillekin?
         Class<? extends OrganisaatioBaseEntity> jpaClass;
         if (OsoiteDTO.class.isAssignableFrom(dto.getClass())) {
             jpaClass = Osoite.class;
@@ -152,9 +151,7 @@ public class ConverterFactory {
             jpaClass = Www.class;
         } else if (EmailDTO.class.isAssignableFrom(dto.getClass())) {
             jpaClass = Email.class;
-        } //else if (OrganisaatioTyyppiDTO.class.isAssignableFrom(dto.getClass())) {
-            //jpaClass = OrganisaatioTyyppi.class;}
-        else if (YhteystietoElementtiDTO.class.isAssignableFrom(dto.getClass())) {
+        } else if (YhteystietoElementtiDTO.class.isAssignableFrom(dto.getClass())) {
             jpaClass = YhteystietoElementti.class;
         } else {
             throw new IllegalArgumentException("no converter found for dto: " + dto);
@@ -175,16 +172,16 @@ public class ConverterFactory {
 
             Class jpaClass = YhteystietoArvo.class;
             // reload if !merge and entity exists in db already
-            if (dto.getYhteystietoArvoOid() != null && this.yhteystietoArvoDAO.findBy("yhteystietoArvoOid", dto.getYhteystietoArvoOid()).size() > 0 && !merge) {
-                entity = this.yhteystietoArvoDAO.findBy("yhteystietoArvoOid", dto.getYhteystietoArvoOid()).get(0);//(YhteystietoArvo) entityManager.find(jpaClass, dto.getYhteystietoArvoOid());
+            if (dto.getYhteystietoArvoOid() != null && this.yhteystietoArvoDAO.findByYhteystietoArvoOid(dto.getYhteystietoArvoOid()).size() > 0 && !merge) {
+                entity = this.yhteystietoArvoDAO.findByYhteystietoArvoOid(dto.getYhteystietoArvoOid()).get(0);//(YhteystietoArvo) entityManager.find(jpaClass, dto.getYhteystietoArvoOid());
                 //DEBUGSAWAY:log.debug("convertToJPA reloaded object: "+entity);
-            } else if (dto.getYhteystietoArvoOid() != null && this.yhteystietoArvoDAO.findBy("yhteystietoArvoOid", dto.getYhteystietoArvoOid()).size() > 0 && merge) {
+            } else if (dto.getYhteystietoArvoOid() != null && this.yhteystietoArvoDAO.findByYhteystietoArvoOid(dto.getYhteystietoArvoOid()).size() > 0 && merge) {
                 // hibernate merge tms jos on kannassa jo ja merge=true, muuten syntyy duplikaatti objekti
                 /*
                 entity = (JPACLASS) mapper.map(dto, jpaClass);
                 entity = entityManager.merge(entity);
                 */
-                entity = this.yhteystietoArvoDAO.findBy("yhteystietoArvoOid", dto.getYhteystietoArvoOid()).get(0);
+                entity = this.yhteystietoArvoDAO.findByYhteystietoArvoOid(dto.getYhteystietoArvoOid()).get(0);
                 mapper.map(dto, entity);
             } else {
                 // or convert fields from dto
@@ -215,16 +212,16 @@ public class ConverterFactory {
 
             Class jpaClass = YhteystietoElementti.class;
             // reload if !merge and entity exists in db already
-            if (dto.getOid() != null && this.yhteystietoElementtiDAO.findBy("oid", dto.getOid()).size() > 0 && !merge) {
-                entity = this.yhteystietoElementtiDAO.findBy("oid", dto.getOid()).get(0);//(YhteystietoElementti) entityManager.find(jpaClass, dto.getNimi());
+            if (dto.getOid() != null && this.yhteystietoElementtiDAO.findByOid(dto.getOid()).size() > 0 && !merge) {
+                entity = this.yhteystietoElementtiDAO.findByOid(dto.getOid()).get(0);//(YhteystietoElementti) entityManager.find(jpaClass, dto.getNimi());
                 //DEBUGSAWAY:log.debug("convertToJPA reloaded object: "+entity);
-            } else if (dto.getOid() != null && this.yhteystietoElementtiDAO.findBy("oid", dto.getOid()).size() > 0 && merge) {
+            } else if (dto.getOid() != null && this.yhteystietoElementtiDAO.findByOid(dto.getOid()).size() > 0 && merge) {
                 // hibernate merge tms jos on kannassa jo ja merge=true, muuten syntyy duplikaatti objekti
                 /*
                 entity = (JPACLASS) mapper.map(dto, jpaClass);
                 entity = entityManager.merge(entity);
                 */
-                entity = this.yhteystietoElementtiDAO.findBy("oid", dto.getOid()).get(0);//(YhteystietoElementti) entityManager.find(jpaClass, dto.getNimi());
+                entity = this.yhteystietoElementtiDAO.findByOid(dto.getOid()).get(0);//(YhteystietoElementti) entityManager.find(jpaClass, dto.getNimi());
                 mapper.map(dto, entity);
                 entity.setTyyppi(dto.getTyyppi().value());
 
@@ -265,16 +262,16 @@ public class ConverterFactory {
         Class jpaClass = getJPAClass(dto);
         if (dto != null) {
             // reload if !merge and entity exists in db already
-           if (dto.getYhteystietoOid() != null && yhteystietoDAO.findBy("yhteystietoOid", dto.getYhteystietoOid()).size() > 0 && !merge) {
-                entity = (JPACLASS)(yhteystietoDAO.findBy("yhteystietoOid", dto.getYhteystietoOid()).get(0));
+           if (dto.getYhteystietoOid() != null && yhteystietoDAO.findByYhteystietoOid(dto.getYhteystietoOid()).size() > 0 && !merge) {
+                entity = (JPACLASS)(yhteystietoDAO.findByYhteystietoOid(dto.getYhteystietoOid()).get(0));
                 //DEBUGSAWAY://log.debug("convertToJPA reloaded object: "+entity);
-            } else if (dto.getYhteystietoOid() != null && yhteystietoDAO.findBy("yhteystietoOid", dto.getYhteystietoOid()).size() > 0 && merge) {
+            } else if (dto.getYhteystietoOid() != null && yhteystietoDAO.findByYhteystietoOid(dto.getYhteystietoOid()).size() > 0 && merge) {
                 // hibernate merge tms jos on kannassa jo ja merge=true, muuten syntyy duplikaatti objekti
                 /*
                 entity = (JPACLASS) mapper.map(dto, jpaClass);
                 entity = entityManager.merge(entity);
                 */
-                entity = (JPACLASS)(yhteystietoDAO.findBy("yhteystietoOid", dto.getYhteystietoOid()).get(0));
+                entity = (JPACLASS)(yhteystietoDAO.findByYhteystietoOid(dto.getYhteystietoOid()).get(0));
                 mapper.map(dto, entity);
             } else {
                 // or convert fields from dto
@@ -299,18 +296,18 @@ public class ConverterFactory {
         Class<YhteystietojenTyyppi> jpaClass = YhteystietojenTyyppi.class;
          if (dto != null) {
              // reload if !merge and entity exists in db already
-            if (dto.getOid() != null && this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).size() > 0 && !merge) {
-                 entity = this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).get(0);//(YhteystietojenTyyppi) entityManager.find(jpaClass, dto.getOid());
+            if (dto.getOid() != null && this.yhteystietojenTyyppiDAO.findByOid(dto.getOid()).size() > 0 && !merge) {
+                 entity = this.yhteystietojenTyyppiDAO.findByOid(dto.getOid()).get(0);//(YhteystietojenTyyppi) entityManager.find(jpaClass, dto.getOid());
                  //DEBUGSAWAY://log.debug("convertToJPA reloaded object: "+entity);
-             } else if (dto.getOid() != null && this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).size() > 0 && merge) {
+             } else if (dto.getOid() != null && this.yhteystietojenTyyppiDAO.findByOid(dto.getOid()).size() > 0 && merge) {
                  // hibernate merge tms jos on kannassa jo ja merge=true, muuten syntyy duplikaatti objekti
                  /*
                  entity = (JPACLASS) mapper.map(dto, jpaClass);
                  entity = entityManager.merge(entity);
                  */
-                 entity = this.yhteystietojenTyyppiDAO.findBy("oid", dto.getOid()).get(0);
+                 entity = this.yhteystietojenTyyppiDAO.findByOid(dto.getOid()).get(0);
                  if (entity.getVersion() != dto.getVersion()) {
-                     throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Data version changed.", "yhteystietojentyyppi.exception.modified");
+                     throw new OrganisaatioResourceException(HttpStatus.CONFLICT, "Data version changed.", "yhteystietojentyyppi.exception.modified");
                  }
                  mapper.map(dto, entity);
              } else {

@@ -5,6 +5,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface OrganisaatioKoodisto {
@@ -15,10 +16,11 @@ public interface OrganisaatioKoodisto {
 
     String lakkautaKoodi(String uri, String tunniste, Date lakkautusPvm);
 
-    List<Koodi> haeKoodit(KoodistoUri koodisto, int versio);
+    List<Koodi> haeKoodit(KoodistoUri koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid);
 
     /**
      * Hakee kaikki oppilaitoskoodit
+     *
      * @return Setti oppilaitoskoodeja
      */
     Set<String> haeOppilaitoskoodit();
@@ -34,11 +36,25 @@ public interface OrganisaatioKoodisto {
     Set<String> haeKielikoodit();
 
     enum KoodistoUri {
+        OPPILAITOKSENOPETUSKIELI("oppilaitoksenopetuskieli"),
+        MAATJAVALTIOT1("maatjavaltiot1"),
+        KUNTA("kunta"),
+        ORGANISAATIOTYYPPI("organisaatiotyyppi"),
         KIELI("kieli"),
         TOIMIPISTE("opetuspisteet"),
         OPPILAITOS("oppilaitosnumero"),
         KOULUTUSTOIMIJA("koulutustoimija"),
-        YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi");
+        YHTEISHAUNKOULUKOODI("yhteishaunkoulukoodi"),
+        POSTI("posti"),
+        RYHMATYYPIT("ryhmatyypit"),
+        RYHMANTILA("ryhmantila"),
+        KAYTTORYHMAT("kayttoryhmat"),
+        OPPILAITOSTYYPPI("oppilaitostyyppi"),
+        VUOSILUOKAT("vuosiluokat"),
+        VARDATOIMINTAMUOTO("vardatoimintamuoto"),
+        VARDAKASVATUSOPILLINENJARJESTELMA("vardakasvatusopillinenjarjestelma"),
+        VARDATOIMINNALLINENPAINOTUS("vardatoiminnallinenpainotus"),
+        VARDAJARJESTAMISMUOTO("vardajarjestamismuoto");
         private final String uri;
 
         KoodistoUri(String koodistoUri) {

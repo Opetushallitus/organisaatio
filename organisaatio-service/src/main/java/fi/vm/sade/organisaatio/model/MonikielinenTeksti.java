@@ -1,21 +1,15 @@
 package fi.vm.sade.organisaatio.model;
 
 import com.google.common.base.Objects;
-import fi.vm.sade.security.xssfilter.XssFilter;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Generic translatable text.
- *
- * @author jraanamo
- * @author mlyly
- */
 @Entity
 @BatchSize(size = 500)
+@Table(name="monikielinenteksti")
 public class MonikielinenTeksti extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -23,7 +17,7 @@ public class MonikielinenTeksti extends BaseEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     @MapKeyColumn(name="key")
     @Column(name="value", length=16384)
-    @CollectionTable(joinColumns=@JoinColumn(name="id"))
+    @CollectionTable(name="monikielinenteksti_values", joinColumns=@JoinColumn(name="id"))
     @BatchSize(size = 1000)
     private Map<String, String> values = new HashMap<>();
 
@@ -32,9 +26,9 @@ public class MonikielinenTeksti extends BaseEntity {
     @PreUpdate
     public void filterXss() {
     	for (Map.Entry<String, String> e : values.entrySet()) {
-    		e.setValue(XssFilter.filter(e.getValue()));
-            // Allow ampersand characters
-            e.setValue(e.getValue().replace("&amp;", "&"));
+    		//e.setValue(e.getValue().trim()); // TODO xss filter wrapperi oli?
+            // Allow ampersand character;
+            e.setValue(e.getValue().trim().replace("&amp;", "&"));
     	}
     }
 

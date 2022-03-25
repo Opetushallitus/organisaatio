@@ -1,0 +1,13 @@
+.NimiHistoriaCell {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.NimiHistoriaCell span:last-of-type {
+    padding-right: 1rem;
+}
+
+.DeleteIcon {
+    color: #e44e4e;
+    cursor: pointer;
+}

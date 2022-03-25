@@ -17,27 +17,20 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
 
-import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
-import fi.vm.sade.security.xssfilter.FilterXss;
-import fi.vm.sade.security.xssfilter.XssFilterListener;
+import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
+import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
 
 /**
  * @author Antti
  */
-@Entity
-@EntityListeners(XssFilterListener.class)
+@Entity  // TODO XSS filtteri
 public class Osoite extends Yhteystieto {
 
 	private static final long serialVersionUID = 1L;
@@ -55,27 +48,21 @@ public class Osoite extends Yhteystieto {
     
     @NotNull
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
-    @FilterXss
-    private String osoite;
+    private String osoite; // TODO XSS filtteri
     
     //@NotNull
     //Postinumero can be null because of the foreign addresses
     //Postinumero is stored as koodistouri so no validation can be done
     //@Pattern(regexp = ZIPCODE_PATTERN, message = "{validation.invalid.zipcode}")
-    @FilterXss
-    private String postinumero;
+    private String postinumero; // TODO XSS filtteri
 
     //Postitoimipaikka can be null because of the foreign addresses
     //@NotNull
     //@Size(min = GENERIC_MIN, max = GENERIC_MAX)
-    @FilterXss
-    private String postitoimipaikka;
-    @FilterXss
-    private String osavaltio;
-    @FilterXss
-    private String extraRivi;
-    @FilterXss
-    private String maa;
+    private String postitoimipaikka; // TODO XSS filtteri
+    private String osavaltio;  // TODO XSS filtteri
+    private String extraRivi; // TODO XSS filtteri
+    private String maa; // TODO XSS filtteri
 
     //Should these be strings
     private Double lat;

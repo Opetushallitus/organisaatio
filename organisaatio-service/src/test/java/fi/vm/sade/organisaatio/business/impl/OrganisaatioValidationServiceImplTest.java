@@ -1,8 +1,8 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.model.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.validation.ValidationException;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 public class OrganisaatioValidationServiceImplTest {
     private OrganisaatioValidationServiceImpl organisaatioValidationService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         this.organisaatioValidationService = new OrganisaatioValidationServiceImpl("root", new OrganisaatioKoodistoMock());
     }

@@ -24,35 +24,30 @@ import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiDTO;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.YhteystietoArvoDAO;
-import fi.vm.sade.organisaatio.dao.YhteystietojenTyyppiDAO;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
+import fi.vm.sade.organisaatio.repository.YhteystietoArvoRepository;
+import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.service.converter.ConverterFactory;
 import fi.vm.sade.organisaatio.service.util.MonikielinenTekstiUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
-@Path("/yhteystietojentyyppi")
-@Component("yhteystietojenTyyppiResource")
-@Api(value = "/yhteystietojentyyppi", description = "Yhteytietojen tyyppeihin liittyvät operaatiot")
+@Hidden
+@RestController
+@RequestMapping({"${server.internal.context-path}/yhteystietojentyyppi", "${server.rest.context-path}/yhteystietojentyyppi"})
 public class YhteystietojenTyyppiResource {
     @Autowired
-    private YhteystietojenTyyppiDAO yhteystietojenTyyppiDAO;
+    private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
     @Autowired
     private ConverterFactory converterFactory;
@@ -61,7 +56,7 @@ public class YhteystietojenTyyppiResource {
     private PermissionChecker permissionChecker;
 
     @Autowired
-    protected YhteystietoArvoDAO yhteystietoArvoDAO;
+    protected YhteystietoArvoRepository yhteystietoArvoRepository;
 
     @Autowired
     private OIDService oidService;
@@ -77,28 +72,19 @@ public class YhteystietojenTyyppiResource {
         }
     }
 
-    @GET
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Palauttaa yhteystietotyypit", notes = "Palauttaa yhteystietotyypit",
-            response = YhteystietojenTyyppiDTO.class, responseContainer = "List")
+    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<YhteystietojenTyyppiDTO> getYhteystietoTyypit() {
         List<YhteystietojenTyyppiDTO> tyypit = new ArrayList<>();
-        for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
+        for (YhteystietojenTyyppi t : yhteystietojenTyyppiRepository.findAll()) {
             tyypit.add(converterFactory.convertToDTO(t));
         }
         return tyypit;
     }
 
-    @POST
-    @Path("/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Muokkaa yhteystietotyyppiä", notes = "Muokkaa yhteystietotyyppiä",
-            response = YhteystietojenTyyppiDTO.class)
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @Transactional(readOnly = false)
-    public YhteystietojenTyyppiDTO updateYhteystietoTyyppi(YhteystietojenTyyppiDTO dto) {
+    @Transactional
+    public YhteystietojenTyyppiDTO updateYhteystietoTyyppi(@RequestBody YhteystietojenTyyppiDTO dto) {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
@@ -106,26 +92,21 @@ public class YhteystietojenTyyppiResource {
         }
         try {
             generateOids(dto);
-        }
-        catch (ExceptionMessage em) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+        } catch (ExceptionMessage em) {
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
         YhteystietojenTyyppi entity = converterFactory.convertYhteystietojenTyyppiToJPA(dto, true);
         if (entity == null) {
-            throw new OrganisaatioResourceException(Response.Status.BAD_REQUEST, "Entity is null.");
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "Entity is null.");
         }
-        yhteystietojenTyyppiDAO.update(entity);
-        return (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(entity);
+        yhteystietojenTyyppiRepository.save(entity);
+        return converterFactory.convertToDTO(entity);
     }
 
-    @PUT
-    @Path("/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Luo yhteystietotyyppi", notes = "Luo uusi yhteystietotyyppi", response = YhteystietojenTyyppiDTO.class)
+    @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @Transactional(rollbackFor = Throwable.class, readOnly = false)
-    public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(YhteystietojenTyyppiDTO yhteystietojenTyyppi) {
+    @Transactional
+    public YhteystietojenTyyppiDTO createYhteystietojenTyyppi(@RequestBody YhteystietojenTyyppiDTO yhteystietojenTyyppi) {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
@@ -133,62 +114,56 @@ public class YhteystietojenTyyppiResource {
         }
 
         // Validate
-        for (YhteystietojenTyyppi t : yhteystietojenTyyppiDAO.findAll()) {
-            YhteystietojenTyyppiDTO dtd = (YhteystietojenTyyppiDTO)converterFactory.convertToDTO(t);
+        for (YhteystietojenTyyppi t : yhteystietojenTyyppiRepository.findAll()) {
+            YhteystietojenTyyppiDTO dtd = converterFactory.convertToDTO(t);
             if (MonikielinenTekstiUtil.haveSameText(yhteystietojenTyyppi.getNimi(), dtd.getNimi())) {
-                throw new OrganisaatioResourceException(Response.Status.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
+                throw new OrganisaatioResourceException(HttpStatus.CONFLICT, "Duplicates not allowed.", "yhteystietojentyyppi.exception.duplicate");
             }
         }
 
         try {
             generateOids(yhteystietojenTyyppi);
         } catch (ExceptionMessage em) {
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR, em.getMessage());
+            throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
         YhteystietojenTyyppi entity = converterFactory.convertYhteystietojenTyyppiToJPA(yhteystietojenTyyppi, true);
         try {
-            entity = this.yhteystietojenTyyppiDAO.insert(entity);
+            entity = this.yhteystietojenTyyppiRepository.save(entity);
         } catch (PersistenceException e) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, e.toString(), "yhteystietojentyyppi.exception.savefailed");
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, e.toString(), "yhteystietojentyyppi.exception.savefailed");
         }
 
         return converterFactory.convertToDTO(entity, YhteystietojenTyyppiDTO.class);
     }
 
-    @DELETE
-    @Path("/{oid}")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-    @ApiOperation(value = "Poista oidin yhteystietotyyppi", notes = "Poista oidin yhteystietotyyppi")
+    @DeleteMapping(path = "/{oid}", produces = MediaType.TEXT_PLAIN_VALUE)
     @Secured({"ROLE_APP_ORGANISAATIOHALLINTA"})
-    @Transactional(readOnly = false)
-    public String deleteYhteystietottyypi(@PathParam("oid") String oid, @DefaultValue("false") @QueryParam("force") boolean force) {
+    @Transactional
+    public String deleteYhteystietottyypi(@PathVariable String oid, @RequestParam(defaultValue = "false") boolean force) {
         try {
             permissionChecker.checkEditYhteystietojentyyppi();
         } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae.toString());
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae.toString());
         }
 
-        List<YhteystietojenTyyppi> tyypit = this.yhteystietojenTyyppiDAO.findBy("oid", oid);
+        List<YhteystietojenTyyppi> tyypit = this.yhteystietojenTyyppiRepository.findByOid(oid);
         if (tyypit.isEmpty()) {
             throw new OrganisaatioResourceException(
-                    Response.Status.NOT_FOUND,
+                    HttpStatus.NOT_FOUND,
                     oid,
                     "yhteystietojentyyppi.exception.remove.notfound"
             );
         }
         YhteystietojenTyyppi tyyppiToRemove = tyypit.get(0);
-        List<YhteystietoArvo> arvos = yhteystietoArvoDAO.findByYhteystietojenTyyppi(tyyppiToRemove);
+        List<YhteystietoArvo> arvos = yhteystietoArvoRepository.findByYhteystietojenTyyppi(tyyppiToRemove);
         if (force) {
-            for (YhteystietoArvo arvo : arvos) {
-                this.yhteystietoArvoDAO.remove(arvo);
-            }
-            this.yhteystietojenTyyppiDAO.remove(tyyppiToRemove);
-        }
-        else if (arvos.isEmpty()) {
-            this.yhteystietojenTyyppiDAO.remove(tyyppiToRemove);
+            this.yhteystietoArvoRepository.deleteAll(arvos);
+            this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);
+        } else if (arvos.isEmpty()) {
+            this.yhteystietojenTyyppiRepository.delete(tyyppiToRemove);
         } else {
             throw new OrganisaatioResourceException(
-                    Response.Status.CONFLICT,
+                    HttpStatus.CONFLICT,
                     oid,
                     "yhteystietojentyyppi.exception.remove.inuse"
             );

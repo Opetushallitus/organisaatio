@@ -17,17 +17,15 @@
 
 package fi.vm.sade.organisaatio.service;
 
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
-import java.util.Date;
-import java.util.Map.Entry;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+
+import javax.annotation.Nullable;
+import java.util.Date;
+import java.util.Map.Entry;
 
 /**
  * Validates start and end dates for child and parent.

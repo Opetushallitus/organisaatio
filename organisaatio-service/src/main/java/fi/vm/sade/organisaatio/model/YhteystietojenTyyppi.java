@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.model;
 
-import fi.vm.sade.security.xssfilter.XssFilterListener;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
@@ -9,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@EntityListeners(XssFilterListener.class)
 public class YhteystietojenTyyppi extends OrganisaatioBaseEntity {
 
 	private static final long serialVersionUID = 1L;

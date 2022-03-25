@@ -1,0 +1,35 @@
+
+.EnsimmainenRivi {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.EnsimmainenRivi > h3 {
+    font-weight: bolder;
+    padding-bottom: 1rem;
+    color: #0a789c
+}
+
+.PiilotaNappiKentta {
+    margin-left: 1rem;
+    margin-right: 5rem;
+}
+
+.ToimipaikkaText {
+    padding-bottom: .5rem;
+}
+
+.KorttiKehys {
+    border: 3px solid #ccc;
+    padding: 1rem 1rem 1rem 1.5rem;
+    margin: 1rem
+}
+
+.KortitContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 2rem;
+    flex-wrap: wrap;
+}

@@ -1,0 +1,31 @@
+plugins{
+    id 'jacoco'
+}
+dependencies {
+    implementation project(':ytj-client:ytj-api')
+    implementation project(':ytj-client:ytj-generated-model')
+    implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:3.4.0'
+    implementation 'org.apache.cxf:cxf-rt-transports-http:3.4.0'
+    implementation 'commons-codec:commons-codec:1.6'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    runtime 'org.slf4j:slf4j-log4j12:1.7.30'
+    runtime 'log4j:log4j:1.2.14'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'javax.xml.ws:jaxws-api:2.3.1'
+    testImplementation 'junit:junit:4.13.2'
+}
+test {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = true
+        csv.required = false
+    }
+}
+
+description = "Organisaatio :: YTJ Client :: Service - $version"

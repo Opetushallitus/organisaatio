@@ -1,6 +1,0 @@
-{
-  "preset": "airbnb",
-  "requireSemicolons": false,
-  "disallowSemicolons": true,
-  "maximumLineLength": 80
-}

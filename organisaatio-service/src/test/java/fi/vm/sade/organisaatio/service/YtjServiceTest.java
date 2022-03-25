@@ -3,37 +3,36 @@ package fi.vm.sade.organisaatio.service;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl;
 import fi.vm.sade.organisaatio.resource.YTJResource;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.mockito.Matchers.anyListOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(locations = {"classpath:spring/test-context.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class YtjServiceTest {
+
     private YTJResource ytjResource;
 
     private OrganisaatioYtjServiceImpl organisaatioYtjService;
 
     public YtjServiceTest() {
         ytjResource = mock(YTJResource.class);
-        when(ytjResource.doYtjMassSearch(anyListOf(String.class)))
+        when(ytjResource.doYtjMassSearch(anyList()))
                 .thenAnswer(new Answer<List<YTJDTO>>() {
                     @Override
-                    public List<YTJDTO> answer(InvocationOnMock invocation) throws Throwable {
-                        List<YTJDTO> ytjdtoList = new ArrayList<>();
+                    public List<YTJDTO> answer(InvocationOnMock invocation) {
+
                         @SuppressWarnings("unchecked")
                         List<String> ytunnusList = (List<String>) invocation.getArguments()[0];
                         return ytunnusList.stream().map(ytunnus -> new YTJDTO() {{
@@ -45,30 +44,25 @@ public class YtjServiceTest {
         ReflectionTestUtils.setField(organisaatioYtjService, "ytjResource", ytjResource);
     }
 
-    @Test
-    public void fetchLessThan1000() {
-        final int amount = 500;
-        List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
-        Assert.assertEquals(amount, ytjdtoList.size());
+    private static Stream<Arguments> parameters() {
+        return Stream.of(
+                Arguments.of("fetchLessThan1000", 500),
+                Arguments.of("fetch1000Test", 1000),
+                Arguments.of("fetchMoreThan1000Test", 1500)
+        );
     }
 
-    @Test
-    public void fetch1000Test() {
-        final int amount = 1000;
+    @ParameterizedTest
+    @MethodSource("parameters")
+    void fetchLessThan1000(String message, int amount) {
         List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
-        Assert.assertEquals(amount, ytjdtoList.size());
+        assertEquals(amount, ytjdtoList.size(), message);
     }
 
-    @Test
-    public void fetchMoreThan1000Test() {
-        final int amount = 1500;
-        List<YTJDTO> ytjdtoList = invokeFetchDataFromYtj(amount);
-        Assert.assertEquals(amount, ytjdtoList.size());
-    }
 
     private List<YTJDTO> invokeFetchDataFromYtj(int amount) {
         List<String> ytunnusMock = new ArrayList<>();
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             ytunnusMock.add("2769790-1");
         }
         return ReflectionTestUtils.invokeMethod(organisaatioYtjService, "fetchDataFromYtj", ytunnusMock);

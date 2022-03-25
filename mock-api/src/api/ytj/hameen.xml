@@ -1,0 +1,22 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ytj="http://www.ytj.fi/">
+    <soap:Body>
+        <ytj:wmYritysHakuResponse>
+            <ytj:wmYritysHakuResult>
+                <ytj:YritysHaku>
+                    <ytj:YritysHakuDTO>
+                        <ytj:Yritysnimi>Hameen ammatti-instituutti Oy</ytj:Yritysnimi>
+                        <ytj:YTunnus>0737546-2</ytj:YTunnus>
+                    </ytj:YritysHakuDTO>
+                    <ytj:YritysHakuDTO>
+                        <ytj:Yritysnimi>Hameen ammatti-instituutti Oy 4</ytj:Yritysnimi>
+                        <ytj:YTunnus>1572860-0</ytj:YTunnus>
+                    </ytj:YritysHakuDTO>
+                    <ytj:YritysHakuDTO>
+                        <ytj:Yritysnimi>Hameen ammatti-instituutti Oy 5</ytj:Yritysnimi>
+                        <ytj:YTunnus>6047728-1</ytj:YTunnus>
+                    </ytj:YritysHakuDTO>
+                </ytj:YritysHaku>
+            </ytj:wmYritysHakuResult>
+        </ytj:wmYritysHakuResponse>
+    </soap:Body>
+</soap:Envelope>

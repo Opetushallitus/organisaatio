@@ -1,12 +1,11 @@
 package fi.vm.sade.organisaatio.dto.v3;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Map;
 import java.util.Set;
 
-@ApiModel(value = "Organisaation ydintiedot",
+@Schema(description = "Organisaation ydintiedot",
           subTypes={OrganisaatioGroupDTOV3.class})
 public class OrganisaatioCoreInfoDTOV3 {
     private String oid;
@@ -17,7 +16,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the oid
      */
-    @ApiModelProperty(value = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", required = true)
     public String getOid() {
         return oid;
     }
@@ -32,7 +31,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the status
      */
-    @ApiModelProperty(value = "Organisaation tila", required = true)
+    @Schema(description = "Organisaation tila", required = true)
     public String getStatus() {
         return status;
     }
@@ -47,7 +46,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the _tyypit
      */
-    @ApiModelProperty(value = "Organisaation tyypit", required = true)
+    @Schema(description = "Organisaation tyypit", required = true)
     public Set<String> getTyypit() {
         return _tyypit;
     }
@@ -62,7 +61,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the nimi
      */
-    @ApiModelProperty(value = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", required = true)
     public Map<String, String> getNimi() {
         return nimi;
     }

@@ -18,9 +18,11 @@
 package fi.vm.sade.organisaatio.integrationtest;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.dao.OrganisaatioNimiDAO;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioDAOImpl;
-import fi.vm.sade.organisaatio.dao.impl.OrganisaatioSuhdeDAOImpl;
+import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioSuhdeRepositoryImpl;
 import fi.vm.sade.organisaatio.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,15 +39,14 @@ import java.util.stream.Collectors;
 public class TestDataCreator {
 
     @Autowired
-    OrganisaatioDAOImpl organisaatioDAO;
+    OrganisaatioRepository organisaatioRepository;
     @Autowired
-    OrganisaatioSuhdeDAOImpl organisaatioSuhdeDAO;
+    OrganisaatioSuhdeRepository organisaatioSuhde;
     @Autowired
-    OrganisaatioNimiDAO organisaatioNimiDAO;
+    OrganisaatioNimiRepository organisaatioNimiRepository;
 
     public void createInitialTestData() {
 
-        // create initial test organisations - TODO: for testing purposes
         Calendar futureStart = Calendar.getInstance();
         futureStart.set(2013, 5, 29);
         Calendar pastStop = Calendar.getInstance();
@@ -65,7 +66,7 @@ public class TestDataCreator {
 
     private Organisaatio initCreateOrLoad(String nimi, String ytunnus, Organisaatio parent, Date startDate, Date endDate, String oppilaitostyyppi, String oid) {
         try {
-            Organisaatio org = organisaatioDAO.findByOid(oid);
+            Organisaatio org = organisaatioRepository.customFindByOid(oid);
             if (org != null) {
                 return org;
             }
@@ -95,20 +96,19 @@ public class TestDataCreator {
 
             createYhteystietos(organisaatio);
 
-            organisaatio = organisaatioDAO.insert(organisaatio);
+            organisaatio = organisaatioRepository.save(organisaatio);
 
             orgNimi.setOrganisaatio(organisaatio);
-            organisaatioNimiDAO.insert(orgNimi);
+            organisaatioNimiRepository.save(orgNimi);
 
             if (parent != null) {
-                OrganisaatioSuhde suhde = organisaatioSuhdeDAO.addChild(parent.getId(), organisaatio.getId(), Calendar.getInstance().getTime(), null);
-                organisaatio.getParentSuhteet().add(suhde); //organisaatioDAO.findByOid(organisaatio.getOid());
+                OrganisaatioSuhde suhde = organisaatioSuhde.addChild(parent.getId(), organisaatio.getId(), Calendar.getInstance().getTime(), null);
+                organisaatio.getParentSuhteet().add(suhde); //organisaatioRepository.findByOid(organisaatio.getOid());
                 setParentPaths(organisaatio, parent.getOid());
             }
 
             return organisaatio;
         } catch (Exception exp) {
-            exp.printStackTrace();
             return new Organisaatio();
         }
     }
@@ -157,7 +157,7 @@ public class TestDataCreator {
 
     private void setParentPaths(Organisaatio o, String parentOid) {
         String parentIdPath = "";
-        List<Organisaatio> parents = this.organisaatioDAO.findParentsTo(parentOid);
+        List<Organisaatio> parents = this.organisaatioRepository.findParentsTo(parentOid);
         for (Organisaatio curOrg : parents) {
             parentIdPath += "|" + curOrg.getId();
         }

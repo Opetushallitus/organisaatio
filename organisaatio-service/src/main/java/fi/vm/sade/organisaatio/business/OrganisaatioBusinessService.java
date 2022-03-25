@@ -15,9 +15,9 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
-import fi.vm.sade.organisaatio.dto.v2.OrganisaatioNimiDTOV2;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
@@ -27,34 +27,32 @@ import fi.vm.sade.organisaatio.model.OrganisaatioResult;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import javax.validation.ValidationException;
+import java.sql.Timestamp;
 import java.util.*;
 
 public interface OrganisaatioBusinessService {
 
     /**
      * @param model
-     * @param updating
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTO model, boolean updating) throws ValidationException;
+    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTO model) throws ValidationException;
 
     /**
      * @param model
-     * @param updating
      * @return
      * @throws ValidationException
      */
-    public OrganisaatioResult save(OrganisaatioRDTOV3 model, boolean updating) throws ValidationException;
+    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTOV3 model) throws ValidationException;
 
     /**
      * Organisaatio api v4 wrapperi organisaation luomiseen ja tallennukseen.
      * @param model Organisaatio v4 rajapinnan mukainen dto organisaatiosta
-     * @param updating Luodaanko uusi vai päivitetäänkö
      * @return Organisaatio v4 rajapinnan tulos dto
      * @throws ValidationException Validointivirhe jos organisaation tiedot ovat virheellisiä
      */
-    ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean updating) throws ValidationException;
+    public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException;
 
     /**
      * @param oid
@@ -67,32 +65,26 @@ public interface OrganisaatioBusinessService {
      * @param nimidto
      * @return
      */
-    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto);
+    public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto);
 
     /**
      * @param oid
-     * @param date
      * @param nimidto
      * @return
      */
-    public OrganisaatioNimi updateOrganisaatioNimi(String oid, Date date, OrganisaatioNimiDTOV2 nimidto);
+    public OrganisaatioNimi updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimidto);
 
     /**
      * @param oid
-     * @param date
+     * @param nimi
      */
-    public void deleteOrganisaatioNimi(String oid, Date date);
+    public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimi);
 
     /**
      * Päivitetään organisaatioiden nimet niiltä organisaatioilta, joilla ajastettu nimenmuutos.
      */
     public void updateCurrentOrganisaatioNimet();
 
-    /**
-     * @param tiedot
-     * @return
-     */
-    public OrganisaatioMuokkausTulosListaDTO bulkUpdatePvm(List<OrganisaatioMuokkausTiedotDTO> tiedot);
 
     /**
      * Checks all new organisation relations and updates necessarry changes to tree hierarchy.
@@ -116,6 +108,7 @@ public interface OrganisaatioBusinessService {
      * @param date Siirto pvm
      */
     public void mergeOrganisaatio(Organisaatio self, Organisaatio newParent, Date date);
+    public void mergeOrganisaatio(String self, String newParent, Optional<Date> date, boolean merge);
 
     /**
      *
@@ -131,4 +124,11 @@ public interface OrganisaatioBusinessService {
      * @Param newParentNimiMap language-name mappings for the new parent name
      */
     void updateNimiValues(Map<String, String> oldParentNimiMap, Map<String, String> currentNimiMap, Map<String, String> newParentNimiMap);
+
+    /**
+     * Update the tarkastusPvm of organisaatio
+     * @param oid Oid of organisaatio that has been checked
+     * @return Timestamp when organisaatio was checked
+     */
+    Timestamp updateTarkastusPvm(String oid);
 }

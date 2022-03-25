@@ -18,11 +18,9 @@ package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.base.Objects;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
@@ -44,7 +42,7 @@ public class PermissionChecker {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     private OrganisaatioPermissionServiceImpl permissionService;
@@ -52,7 +50,7 @@ public class PermissionChecker {
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
     public void checkRemoveOrganisation(String oid) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioDAO.findByOid(oid));
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.customFindByOid(oid));
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));
     }
 
@@ -62,49 +60,42 @@ public class PermissionChecker {
         checkPermission(permissionService.userCanEditName(authContext));
     }
 
-    public void checkSaveOrganisation(OrganisaatioRDTO organisaatio, boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
-    }
-
-    public void checkSaveOrganisation(OrganisaatioRDTOV3 organisaatio, boolean update) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
-        checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
-                organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
-    }
-
     public void checkSaveOrganisation(OrganisaatioRDTOV4 organisaatio, boolean update) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatio);
         checkSaveOrganisation(authContext, update, organisaatio.getOid(), organisaatio.getNimi(),
                 organisaatio.getAlkuPvm(), organisaatio.getLakkautusPvm());
     }
 
+    public void checkUpdateOrganisation(String oid) {
+        final OrganisaatioContext authContext = OrganisaatioContext.get(oid);
+        checkPermission(permissionService.userCanUpdateOrganisation(authContext));
+    }
+
     private void checkSaveOrganisation(OrganisaatioContext authContext, boolean update,
-            String oid, Map<String, String> nimi,
-            Date alkuPvm, Date lakkautusPvm) {
+                                       String oid, Map<String, String> nimi,
+                                       Date alkuPvm, Date lakkautusPvm) {
         if (update) {
-            final Organisaatio current = organisaatioDAO.findByOid(oid);
+            final Organisaatio current = organisaatioRepository.customFindByOid(oid);
 
             if (!Objects.equal(current.getNimi().getValues(), nimi)) {
                 LOG.info("Nimi muuttunut");
 
                 // name changed
-                checkPermission(permissionService.userCanEditName(authContext));
+               checkPermission(permissionService.userCanEditName(authContext));
             }
             if (OrganisaatioUtil.isSameDay(alkuPvm, current.getAlkuPvm()) == false) {
                 LOG.info("Alkupäivämäärä muuttunut: " +
                         current.getAlkuPvm() + " -> " + alkuPvm);
 
                 // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
+               checkPermission(permissionService.userCanEditDates(authContext));
             }
             if (OrganisaatioUtil.isSameDay(lakkautusPvm, current.getLakkautusPvm()) == false) {
                 LOG.info("Lakkautuspäivämäärä muuttunut: " +
                         current.getLakkautusPvm() + " -> " + lakkautusPvm);
 
                 // date(s) changed
-                checkPermission(permissionService.userCanEditDates(authContext));
+               checkPermission(permissionService.userCanEditDates(authContext));
             }
             checkPermission(permissionService.userCanUpdateOrganisation(authContext));
         } else {
@@ -123,7 +114,7 @@ public class PermissionChecker {
     }
 
     public void checkReadOrganisation(String oid) {
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
 
         if(organisaatio == null){
             return;

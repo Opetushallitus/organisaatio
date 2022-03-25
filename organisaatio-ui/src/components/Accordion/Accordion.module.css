@@ -1,0 +1,76 @@
+.Accordion {
+   width: 100%;
+}
+
+.AccordionItem {
+    padding-top: 1rem;
+}
+
+.AccordionItem:last-of-type {
+    padding-bottom: 1rem;
+}
+
+
+.AccordionHeadingItem {
+    height: 4.438rem;
+    border: 1px solid #CCCCCC;
+    box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.17);
+    background-color: #FFFFFF;
+}
+
+.AccordionButton {
+    cursor: pointer;
+    padding: 1.5rem 0;
+    width: 100%;
+    text-align: left;
+}
+
+.AccordionButton:hover {
+}
+
+.AccordionButton:after {
+    display: inline-block;
+    content: '';
+    float: right;
+    height: 0.7rem;
+    width: 0.7rem;
+    margin:0.3rem 2rem 0 0;
+    border-bottom: 4px solid #AEAEAE;
+    border-right: 4px solid #AEAEAE;
+    transform: rotate(45deg);
+}
+
+.AccordionButton[aria-expanded='true']::after,
+.AccordionButton[aria-selected='true']::after {
+    transform: rotate(225deg);
+}
+
+.AccordionPanel {
+    animation: fadein 0.35s ease-in;
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    background-color: #FFFFFF;
+    box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.17)
+}
+
+.OtsikkoTeksti {
+    font-family: Arial;
+    font-size: 1.25rem;
+    color: #2A2A2A;
+    padding-left: 2rem;
+}
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

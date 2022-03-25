@@ -18,13 +18,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fi.vm.sade.koodisto.service.types.common.KoodiMetadataType;
 import fi.vm.sade.koodisto.service.types.common.KoodiType;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
-import fi.vm.sade.organisaatio.config.UrlConfiguration;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoClient;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.properties.OphProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +40,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+
 /**
  * Päivittää organisaatiopalvelussa lisätyn tai muokatun organisaation tiedot
  * koodistoon.
- *
  */
 @Component
 public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
@@ -49,13 +53,13 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     private final OrganisaatioKoodistoClient client;
 
-    private final OrganisaatioDAO dao;
+    private final OrganisaatioRepository organisaatioRepository;
 
     private final Gson gson;
 
     private final ObjectMapper objectMapper;
 
-    private final UrlConfiguration urlConfiguration;
+    private final OphProperties properties;
 
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
 
@@ -64,12 +68,12 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      */
     @Autowired
     public OrganisaatioKoodistoImpl(OrganisaatioKoodistoClient client,
-                                    OrganisaatioDAO dao,
-                                    UrlConfiguration urlConfiguration,
+                                    OrganisaatioRepository organisaatioRepository,
+                                    OphProperties properties,
                                     ObjectMapper objectMapper) {
         this.client = client;
-        this.dao = dao;
-        this.urlConfiguration = urlConfiguration;
+        this.organisaatioRepository = organisaatioRepository;
+        this.properties = properties;
         this.objectMapper = objectMapper;
         gson = new GsonBuilder().create();
     }
@@ -82,13 +86,13 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * Hakee koodin koodistosta
      *
      * @param koodistoUri Koodisto URI
-     * @param tunniste URI-spesifinen tunniste (toimipistekoodi,
-     * oppilaitosnumero tai y-tunnus ilman väliviivaa)
+     * @param tunniste    URI-spesifinen tunniste (toimipistekoodi,
+     *                    oppilaitosnumero tai y-tunnus ilman väliviivaa)
      * @return Koodiobjekti tai null jos ei löytynyt
      */
     private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
         tunniste = tunniste.replace("-", "");
-        String url = this.urlConfiguration.url("organisaatio-service.koodisto-service.koodi.v1", koodistoUri, tunniste);
+        String url = this.properties.url("organisaatio-service.koodisto-service.koodi.v1", koodistoUri, tunniste);
         String json = getClient().get(url);
         LOG.debug("Haettiin koodi: " + (json));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
@@ -109,8 +113,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * Lisää koodistoon uuden koodin (POST)
      *
      * @param koodi Lisättävä koodi
-     * @param uri Koodisto URI ("opetuspisteet", "oppilaitosnumero",
-     * "koulutustoimija" tai "yhteishaunkoulukoodi")
+     * @param uri   Koodisto URI ("opetuspisteet", "oppilaitosnumero",
+     *              "koulutustoimija" tai "yhteishaunkoulukoodi")
      * @return true jos lisääminen onnistui, false muuten
      */
     private boolean lisaaKoodi(OrganisaatioKoodistoKoodi koodi, String uri) {
@@ -126,9 +130,9 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     /**
      * Lisää koodistoon uuden koodin koodiarvolla <uri>_<tunniste>
      *
-     * @param uri KoodiURI
+     * @param uri      KoodiURI
      * @param tunniste Uri-kohtainen tunniste
-     * @param entity Organisaatio jolle koodi lisätään
+     * @param entity   Organisaatio jolle koodi lisätään
      * @return Luotu koodi jos onnistui, null jos lisääminen ei onnistunut
      */
     private OrganisaatioKoodistoKoodi luoKoodi(String uri, String tunniste, Organisaatio entity) {
@@ -165,7 +169,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      * Päivittää elements-parametriin relaatiot organisaation entityn perusteella
      *
      * @param entityRelaatiot Organisaation entityssä olevat relaatiot
-     * @param elements Koodin nykyiset relaatiot.
+     * @param elements        Koodin nykyiset relaatiot.
      * @return true jos elements-listaa päivitettiin, false muuten
      */
     protected boolean paivitaCodeElements(List<String> entityRelaatiot, List<OrganisaatioKoodistoKoodiCodeElements> elements) {
@@ -197,7 +201,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         }
         // Lisää koodistoon ne organisaation relaatiot joita siellä ei vielä ole
         for (String oRel : entityRelaatiot) {
-            if (oRel!=null) {
+            if (oRel != null) {
                 String[] codeElementUriAndVersion = oRel.split("#");
                 String codeElementUri = codeElementUriAndVersion[0];
                 int versio = getVersio(codeElementUriAndVersion);
@@ -238,10 +242,10 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             entityRelaatiot.add(entity.getKotipaikka());
             entityRelaatiot.add(entity.getOppilaitosTyyppi());
             // childien opetuspisteet
-            if (entity.getOppilaitosKoodi()!=null) {
+            if (entity.getOppilaitosKoodi() != null) {
                 // Käydään läpi aliorganisaatiot, jotka eivät ole passiivisia
                 for (Organisaatio child : entity.getChildren(false)) {
-                    if (child.getToimipisteKoodi()!=null) {
+                    if (child.getToimipisteKoodi() != null) {
                         entityRelaatiot.add("opetuspisteet_" + child.getToimipisteKoodi());
                     }
                 }
@@ -260,7 +264,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         if (koodi.getKoodiUri().startsWith("opetuspisteet_")) {
             // parentin oppilaitosnumero
             Organisaatio parent = entity.getParent();
-            if (parent !=null && parent.getOppilaitosKoodi()!=null) {
+            if (parent != null && parent.getOppilaitosKoodi() != null) {
                 entityRelaatiot.add("oppilaitosnumero_" + parent.getOppilaitosKoodi());
             }
         }
@@ -270,33 +274,32 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     @Override
     @Transactional(readOnly = true)
     public void paivitaKoodisto(String oid) {
-        paivitaKoodisto(dao.findByOid(oid));
+        paivitaKoodisto(organisaatioRepository.customFindByOid(oid));
     }
 
     /**
      * Päivittää koodiston vastaamaan muokattua organisaatiota.
      * 1. Jos organisaatio on uusi ja koodia ei löydy
-     *    => Luodaan uusi koodi
+     * => Luodaan uusi koodi
      * 2. Jos organisaation nimeä tai voimassaoloaikaa on muutettu
-     *    => Koodistoon päivitetään muuttuneet tiedot.
-     *
+     * => Koodistoon päivitetään muuttuneet tiedot.
+     * <p>
      * Päivitettävä koodi riippuu parametrina annetun organisaation tyypistä:
      * - Toimipiste (organisaatiolla on toimipistekoodi muttei oppilaitoskoodia)
-     *   => Päivitetään koodi: opetuspisteet_[toimipistekoodi]
+     * => Päivitetään koodi: opetuspisteet_[toimipistekoodi]
      * - Oppilaitos (organisaatiolla on oppilaitoskoodi)
-     *   => Päivitetään koodi: oppilaitosnumero_[oppilaitoskoodi]
+     * => Päivitetään koodi: oppilaitosnumero_[oppilaitoskoodi]
      * - Koulutustoimija (organisaatiolla on y-tunnus)
-     *   => Päivitetään koodi: koulutustoimija_[y-tunnus]
+     * => Päivitetään koodi: koulutustoimija_[y-tunnus]
      * - Jos organisaatiolla on yhteishaunkoulukoodi
-     *   => Päivitetään koodi: yhteishaunkoulukoodi_[yhteishaunkoulukoodi]
+     * => Päivitetään koodi: yhteishaunkoulukoodi_[yhteishaunkoulukoodi]
      *
      * @param entity Organisaatio
-     *
      * @throws RuntimeException jos koodiston päivityksessä tapahtuu virhe
      */
     @Override
     public synchronized void paivitaKoodisto(Organisaatio entity) {
-        if (entity==null || entity.isOrganisaatioPoistettu()) {
+        if (entity == null || entity.isOrganisaatioPoistettu()) {
             LOG.warn("Organiasaatiota ei voi päivittää koodistoon, organisaatio == null / poistettu");
             return;
         }
@@ -306,11 +309,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
          *     [1]: tunniste
          */
         Object[][] koodiLista = {
-            new Object[]{"opetuspisteet",
-                (entity.getOppilaitosKoodi() != null && !entity.getOppilaitosKoodi().isEmpty()) ? null : entity.getToimipisteKoodi()},
-            new Object[]{"oppilaitosnumero", entity.getOppilaitosKoodi()},
-            new Object[]{"koulutustoimija", entity.getYtunnus()},
-            new Object[]{"yhteishaunkoulukoodi", entity.getYhteishaunKoulukoodi()}
+                new Object[]{"opetuspisteet",
+                        (entity.getOppilaitosKoodi() != null && !entity.getOppilaitosKoodi().isEmpty()) ? null : entity.getToimipisteKoodi()},
+                new Object[]{"oppilaitosnumero", entity.getOppilaitosKoodi()},
+                new Object[]{"koulutustoimija", entity.getYtunnus()},
+                new Object[]{"yhteishaunkoulukoodi", entity.getYhteishaunKoulukoodi()}
         };
         int URI_INDEX = 0;
         int TUNNISTE_INDEX = 1;
@@ -423,7 +426,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
                     if (paivitaKoodi(koodi) == true) {
                         LOG.info("Koodi " + uri + "_" + tunniste + " päivitettiin");
                     } else {
-                        throw new RuntimeException("Koodin " + uri + "_" + tunniste + " päivitys epäonnistui");
+                        LOG.warn("Koodin {}_{} päivitys epäonnistui", uri, tunniste);
                     }
                 } else {
                     LOG.debug("Ei muutoksia");
@@ -436,10 +439,9 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     /**
      * Asettaa annetulle koodille lakkautuspäivämäärän.
      *
-     * @param uri KoodiUri
-     * @param tunniste Koodin tunniste, esim. opetuspiste koodille toimipistekoodi
+     * @param uri          KoodiUri
+     * @param tunniste     Koodin tunniste, esim. opetuspiste koodille toimipistekoodi
      * @param lakkautusPvm Lakkautuspäivämäärä
-     *
      * @return null jos koodiston päivittäminen onnistui, virheviesti jos epäonnistui
      */
     @Override
@@ -499,10 +501,11 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     @Override
-    public List<Koodi> haeKoodit(KoodistoUri koodisto, int versio) {
+    public List<Koodi> haeKoodit(KoodistoUri koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
         Map<String, Object> parametrit = new HashMap<>();
-        parametrit.put("koodistoVersio", versio);
-        String url = urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
+        versio.ifPresent(value -> parametrit.put("koodistoVersio", value));
+        onlyValid.ifPresent(value -> parametrit.put("onlyValidKoodis", value));
+        String url = properties.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
         return fetchKoodiTypeList(url)
                 .stream()
                 .map(new KoodiTypeToKoodiMapper())
@@ -540,7 +543,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     private Set<String> haeKoodistonKoodit(String koodistoUri) {
-        String url = this.urlConfiguration.url("organisaatio-service.koodisto-service.koodisto.koodit", koodistoUri);
+        String url = this.properties.url("organisaatio-service.koodisto-service.koodisto.koodit", koodistoUri);
         String json = this.client.get(url);
         CollectionType listType = objectMapper.getTypeFactory().
                 constructCollectionType(List.class, KoodiType.class);
@@ -549,8 +552,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodiCollectionType = this.objectMapper
                     .readerFor(listType)
                     .readValue(json);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw new RestClientException("Error while parsing koodisto return koodiValue for " + koodistoUri, ioe);
         }
         return koodiCollectionType.stream()
@@ -564,8 +566,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             return this.objectMapper
                     .readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class, KoodiType.class))
                     .readValue(json);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw new RestClientException("Error while parsing koodisto return koodiValue for " + url, ioe);
         }
     }
@@ -578,9 +579,18 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodi.setArvo(koodiType.getKoodiArvo());
             koodi.setUri(koodiType.getKoodiUri());
             koodi.setVersio(koodiType.getVersio());
+            koodi.setNimi(metadataTo(koodiType.getMetadata(), metadata -> metadata.getNimi()));
+            koodi.setTila(koodiType.getTila());
+            koodi.setVoimassaAlkuPvm(Optional.ofNullable(koodiType.getVoimassaAlkuPvm()).map(a->a.toGregorianCalendar().getTime()).orElse(null));
+            koodi.setVoimassaLoppuPvm(Optional.ofNullable(koodiType.getVoimassaLoppuPvm()).map(a->a.toGregorianCalendar().getTime()).orElse(null));
             return koodi;
         }
 
     }
 
+    private static Map<String, String> metadataTo(List<KoodiMetadataType> metadataList, Function<KoodiMetadataType, String> valueProvider) {
+        return metadataList.stream()
+                .filter(metadata -> metadata != null && isNotEmpty(metadata.getKieli().value()) && isNotEmpty(valueProvider.apply(metadata)))
+                .collect(toMap(metadata -> metadata.getKieli().value().toLowerCase(), valueProvider));
+    }
 }

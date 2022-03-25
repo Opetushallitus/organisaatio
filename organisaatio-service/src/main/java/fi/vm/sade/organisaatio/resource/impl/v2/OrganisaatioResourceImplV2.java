@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -29,7 +28,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
@@ -37,36 +36,33 @@ import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
+import fi.vm.sade.organisaatio.resource.dto.*;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SearchCriteriaService;
-import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 import java.util.*;
 
 /**
  * @author simok
  */
-@Component
+@RestController
 @Transactional(readOnly = true)
-@CrossOriginResourceSharing(allowAllOrigins = true)
+@RequestMapping("${server.rest.context-path}/organisaatio/v2")
 public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
@@ -96,7 +92,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     private ConversionService conversionService;
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     PermissionChecker permissionChecker;
@@ -116,7 +112,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOidList());
         LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getLimit());
 
-        // TODO tarkistetaanko tässä vai business kerroksessa parametrit
 
         Set<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
@@ -128,7 +123,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
                 hakuEhdot.getLimit());
 
         // Define the target list type for mapping
-        Type organisaatioYhteystiedotDTOV2ListType = new TypeToken<List<OrganisaatioYhteystiedotDTOV2>>() {}.getType();
+        Type organisaatioYhteystiedotDTOV2ListType = new TypeToken<List<OrganisaatioYhteystiedotDTOV2>>() {
+        }.getType();
 
         // Map domain type to DTO
         return organisaatioModelMapper.map(organisaatiot, organisaatioYhteystiedotDTOV2ListType);
@@ -280,12 +276,12 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         LOG.debug("searchOrganisaatioPaivittaja: " + oid);
 
-        Organisaatio org = organisaatioDAO.findByOid(oid);
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
 
         if (org != null) {
             final OrganisaatioPaivittajaDTOV2 tulos = new OrganisaatioPaivittajaDTOV2();
@@ -299,20 +295,21 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/nimet
     @Override
-    public List<OrganisaatioNimiDTOV2> getOrganisaatioNimet(String oid) throws Exception {
+    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid){
         Preconditions.checkNotNull(oid);
 
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         List<OrganisaatioNimi> organisaatioNimet = organisaatioBusinessService.getOrganisaatioNimet(oid);
 
         // Define the target list type for mapping
-        Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTOV2>>() {}.getType();
+        Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTO>>() {
+        }.getType();
 
         // Map domain type to DTO
         return organisaatioNimiModelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
@@ -337,7 +334,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         LOG.debug("getOrganisaationLOPTiedotByOID: " + oid);
@@ -348,18 +345,18 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // 3. VIRASTOTUNNUS
         // 4. OPPILAITOSKOODI
         // 5. TOIMIPISTEKOODI
-        Organisaatio o = organisaatioDAO.findByOid(oid);
+        Organisaatio o = organisaatioRepository.customFindByOid(oid);
         if (o == null) {
-            o = organisaatioDAO.findByYTunnus(oid);
+            o = organisaatioRepository.findByYTunnus(oid);
         }
         if (o == null) {
-            o = organisaatioDAO.findByVirastoTunnus(oid);
+            o = organisaatioRepository.findByVirastoTunnus(oid);
         }
         if (o == null) {
-            o = organisaatioDAO.findByOppilaitoskoodi(oid);
+            o = organisaatioRepository.findByOppilaitoskoodi(oid);
         }
         if (o == null) {
-            o = organisaatioDAO.findByToimipistekoodi(oid);
+            o = organisaatioRepository.findByToimipistekoodi(oid);
         }
 
         if (o != null) {
@@ -377,84 +374,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return null;
     }
 
-    // PUT /organisaatio/v2/{oid}/nimet
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioNimiDTOV2 newOrganisaatioNimi(String oid, OrganisaatioNimiDTOV2 nimidto) throws Exception {
-        Preconditions.checkNotNull(oid);
-
-        try {
-            permissionChecker.checkUpdateOrganisationName(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-        }
-
-        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.newOrganisaatioNimi(oid, nimidto);
-
-        return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTOV2.class);
-    }
-
-    // POST /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioNimiDTOV2 updateOrganisaatioNimi(String oid, DateParam date, OrganisaatioNimiDTOV2 nimidto) {
-        Preconditions.checkNotNull(oid);
-        Preconditions.checkNotNull(date);
-
-        try {
-            permissionChecker.checkUpdateOrganisationName(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-        }
-
-
-        OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, date.getValue(), nimidto);
-
-        return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTOV2.class);
-    }
-
-    // DELETE /organisaatio/v2/{oid}/nimet/{date: [0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]}
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String deleteOrganisaatioNimi(String oid, DateParam date) {
-        Preconditions.checkNotNull(oid);
-        Preconditions.checkNotNull(date);
-
-        try {
-            permissionChecker.checkUpdateOrganisationName(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-        }
-
-        organisaatioBusinessService.deleteOrganisaatioNimi(oid, date.getValue());
-
-        return "";
-    }
-
-    // PUT /organisaatio/v2/muokkaamonta
-    @Override
-    public OrganisaatioMuokkausTulosListaDTO muokkaaMontaOrganisaatiota(List<OrganisaatioMuokkausTiedotDTO> tiedot) {
-        LOG.debug("muokkaaMontaOrganisaatiota:" + tiedot);
-
-        try {
-            OrganisaatioMuokkausTulosListaDTO tulos = organisaatioBusinessService.bulkUpdatePvm(tiedot);
-            return tulos;
-        } catch (ValidationException ex) {
-            LOG.warn("Error saving multiple organizations", ex);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
-                    ex.getMessage(), "organisaatio.validointi.virhe");
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving multiple organizations", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        } catch (OrganisaatioResourceException ore) {
-            LOG.warn("Error saving multiple organizations", ore);
-            throw ore;
-        } catch (Throwable t) {
-            LOG.error("Error saving multiple organizations", t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
-                    t.getMessage(), "generic.error");
-        }
-    }
 
     // GET /organisaatio/v2/muutetut
     @Override
@@ -465,7 +384,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+        List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
@@ -499,7 +418,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         Preconditions.checkNotNull(lastModifiedSince);
         LOG.debug("haeMuutettujenOid: " + lastModifiedSince.toString());
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+        List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
                 lastModifiedSince.getValue());
 
@@ -511,60 +430,20 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return "{ \"oids\": [\"" + Joiner.on("\", \"").join(oids) + "\"]}";
     }
 
-    // POST /organisaatio/v2/{oid}/organisaatiosuhde
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public void changeOrganisationRelationship(String oid, boolean merge, DateParam dateParam, String newParentOid) {
-
-        Preconditions.checkNotNull(oid);
-        Preconditions.checkNotNull(newParentOid);
-        Preconditions.checkNotNull(merge);
-
-        Date date;
-        if (dateParam != null && dateParam.getValue() != null) {
-            date = dateParam.getValue();
-        } else {
-            date = new Date();
-        }
-
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
-        Organisaatio newParent = organisaatioDAO.findByOid(newParentOid);
-
-        if (organisaatio == null) {
-            throw new OrganisaatioNotFoundException(oid);
-        }
-        if (newParent == null) {
-            throw new OrganisaatioNotFoundException(newParentOid);
-        }
-
-        // Liitetäänkö organisaatio vai siirretäänkö organisaatio
-        try {
-            if (merge) {
-                // Organisaatio yhdistyy toiseen, yhdistyvä organisaatio passivoidaan
-                organisaatioBusinessService.mergeOrganisaatio(organisaatio, newParent, date);
-            } else {
-                // Oppilaitos siirtyy toisen organisaation alle
-                organisaatioBusinessService.changeOrganisaatioParent(organisaatio, newParent, date);
-            }
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving multiple organizations", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        }
-    }
 
     // GET /organisaatio/v2/{oid}/historia
     @Override
-    public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) throws Exception {
+    public OrganisaatioHistoriaRDTOV2 getOrganizationHistory(String oid) {
         Preconditions.checkNotNull(oid);
 
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
-        Organisaatio organisaatio = organisaatioDAO.findByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
 
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException(oid);
@@ -575,7 +454,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // Haetaan organisaatiosuhteet
         Set<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
         Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA));
-        Type organisaatioSuhdeSetType = new TypeToken<Set<OrganisaatioSuhdeDTOV2>>() {}.getType();
+        Type organisaatioSuhdeSetType = new TypeToken<Set<OrganisaatioSuhdeDTOV2>>() {
+        }.getType();
 
         historia.setChildSuhteet(organisaatioSuhdeModelMapper.map(childSuhteet, organisaatioSuhdeSetType));
         historia.setParentSuhteet(organisaatioSuhdeModelMapper.map(parentSuhteet, organisaatioSuhdeSetType));
@@ -584,7 +464,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         Set<OrganisaatioSuhde> liitokset = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
         Set<OrganisaatioSuhde> liittynyt = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS));
 
-        Type organisaatioLiitosSetType = new TypeToken<Set<OrganisaatioLiitosDTOV2>>() {}.getType();
+        Type organisaatioLiitosSetType = new TypeToken<Set<OrganisaatioLiitosDTOV2>>() {
+        }.getType();
 
         historia.setLiitokset(organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosSetType));
         historia.setLiittymiset(organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosSetType));
@@ -594,15 +475,16 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/liitokset
     @Override
-    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam dateParam) {
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam liitoksetAlkaen) {
         Date date = null;
-        if (dateParam != null && dateParam.getValue() != null) {
-            date = dateParam.getValue();
+        if (liitoksetAlkaen != null && liitoksetAlkaen.getValue() != null) {
+            date = liitoksetAlkaen.getValue();
         }
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);
 
-        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
+        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {
+        }.getType();
 
         return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
     }
@@ -617,7 +499,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         LOG.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
 
-        Type groupListType = new TypeToken<List<OrganisaatioGroupDTOV2>>() {}.getType();
+        Type groupListType = new TypeToken<List<OrganisaatioGroupDTOV2>>() {
+        }.getType();
 
         List<OrganisaatioGroupDTOV2> groupList = groupModelMapper.map(entitys, groupListType);
 
@@ -628,21 +511,23 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/hakutoimisto
     @Override
-    public Response hakutoimisto(String organisaatioOid) {
+    public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
 
         try {
             permissionChecker.checkReadOrganisation(organisaatioOid);
         } catch (NotAuthorizedException nae) {
             LOG.warn("Not authorized to read organisation: " + organisaatioOid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             HakutoimistoDTO hakutoimistoDTO = hakutoimistoRec(organisaatioOid);
-            return Response.ok(hakutoimistoDTO).build();
+            return hakutoimistoDTO;
         } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
-            LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.", e);
-            return Response.status(404).build();
+            LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage()
+            );
         }
     }
 

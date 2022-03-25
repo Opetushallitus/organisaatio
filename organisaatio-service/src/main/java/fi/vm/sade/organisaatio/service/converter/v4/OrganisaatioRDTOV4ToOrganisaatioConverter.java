@@ -14,6 +14,7 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -23,7 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainConverter<OrganisaatioRDTOV4, Organisaatio> {
+public class OrganisaatioRDTOV4ToOrganisaatioConverter implements Converter<OrganisaatioRDTOV4, Organisaatio> {
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Autowired
@@ -47,6 +48,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter extends AbstractToDomainC
         target.setMuutKotipaikatUris(convertCollectionToSet(source.getMuutKotipaikatUris()));
         target.setKuvaus2(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getKuvaus2()));
         target.setLakkautusPvm(source.getLakkautusPvm());
+        target.setTarkastusPvm(source.getTarkastusPvm());
         target.setMaa(source.getMaaUri());
         target.setMetadata(MetadataConverterUtils.convertMetadata(source.getMetadata()));
         target.setNimi(MonikielinenTekstiConverterUtils.convertMapToMonikielinenTeksti(source.getNimi()));

@@ -1,25 +1,24 @@
 package fi.vm.sade.organisaatio.api.search;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@ApiModel(value = "Organisaation hakuehdot")
+@Schema(description = "Organisaation hakuehdot")
 public class OrganisaatioSearchCriteria {
 
     private boolean vainLakkautetut;
 
     private boolean vainAktiiviset;
 
-    private Set<String> oppilaitostyyppi = new HashSet<String>();
+    private Set<String> oppilaitostyyppi = new HashSet<>();
 
     private String organisaatiotyyppi;
 
     private boolean suunnitellut;
 
-    private Set<String> kunta = new HashSet<String>();
+    private Set<String> kunta = new HashSet<>();
 
     private Set<String> oidRestrictionList = new HashSet<>();
 
@@ -31,7 +30,6 @@ public class OrganisaatioSearchCriteria {
 
     /**
      * Default no-arg constructor
-     *
      */
     public OrganisaatioSearchCriteria() {
         super();
@@ -42,24 +40,21 @@ public class OrganisaatioSearchCriteria {
     }
 
     /**
-     * Gets the value of the oppilaitosTyyppi property.
+     * Gets the description of the oppilaitosTyyppi property.
      *
      * @return possible object is {@link String }
-     *
      */
-    @ApiModelProperty(value = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
-    public Set<String> getOppilaitosTyyppi() {
+    @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
+    public Set<String> getOppilaitostyyppi() {
         return oppilaitostyyppi;
     }
 
     /**
-     * Sets the value of the oppilaitosTyyppi property.
+     * Sets the description of the oppilaitosTyyppi property.
      *
-     * @param value
-     *            allowed object is {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
-    public void setOppilaitosTyyppi(Set<String> value) {
+    public void setOppilaitostyyppi(Set<String> value) {
         if (value != null) {
             this.oppilaitostyyppi.addAll(value);
         }
@@ -69,42 +64,37 @@ public class OrganisaatioSearchCriteria {
      * Gets the value of the organisaatioTyyppi property.
      *
      * @return possible object is {@link String }
-     *
      */
-    @ApiModelProperty(value = "Haettavan organisaation tyyppi", required = true)
-    public String getOrganisaatioTyyppi() {
+    @Schema(description = "Haettavan organisaation tyyppi", required = true)
+    public String getOrganisaatiotyyppi() {
         return organisaatiotyyppi;
     }
 
     /**
      * Sets the value of the organisaatioTyyppi property.
      *
-     * @param value
-     *            allowed object is {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
-    public void setOrganisaatioTyyppi(String value) {
+    public void setOrganisaatiotyyppi(String value) {
         this.organisaatiotyyppi = value;
     }
 
     /**
      * Gets the value of the suunnitellut property.
-     *
      */
-    @ApiModelProperty(value = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getSuunnitellut() {
         return suunnitellut;
     }
 
     /**
      * Sets the value of the suunnitellut property.
-     *
      */
     public void setSuunnitellut(boolean value) {
         this.suunnitellut = value;
     }
 
-    @ApiModelProperty(value = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
+    @Schema(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
     public boolean getSkipParents() {
         return skipParents;
     }
@@ -122,9 +112,8 @@ public class OrganisaatioSearchCriteria {
      * Gets the value of the kunta property.
      *
      * @return possible object is {@link String }
-     *
      */
-    @ApiModelProperty(value = "Haettavan organisaation kunta tai lista kunnista", required = true)
+    @Schema(description = "Haettavan organisaation kunta tai lista kunnista", required = true)
     public Set<String> getKunta() {
         return kunta;
     }
@@ -132,9 +121,7 @@ public class OrganisaatioSearchCriteria {
     /**
      * Sets the value of the kunta property.
      *
-     * @param value
-     *            allowed object is {@link String }
-     *
+     * @param value allowed object is {@link String }
      */
     public void setKunta(Set<String> value) {
         if (value != null) {
@@ -142,12 +129,12 @@ public class OrganisaatioSearchCriteria {
         }
     }
 
-    @ApiModelProperty(value = "Lista sallituista organisaatioiden oid:stä", required = true)
+    @Schema(description = "Lista sallituista organisaatioiden oid:stä", required = true)
     public Set<String> getOidRestrictionList() {
         return this.oidRestrictionList;
     }
 
-    @ApiModelProperty(value = "Hakutermit", required = true)
+    @Schema(description = "Hakutermit", required = true)
     public String getSearchStr() {
         return searchStr;
     }
@@ -159,14 +146,13 @@ public class OrganisaatioSearchCriteria {
     /**
      * Gets the value of the vainLakkautetut property.
      */
-    @ApiModelProperty(value = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getVainLakkautetut() {
         return vainLakkautetut;
     }
 
     /**
      * Sets the value of the vainLakkautetut property.
-     *
      */
     public void setVainLakkautetut(boolean value) {
         this.vainLakkautetut = value;
@@ -175,14 +161,13 @@ public class OrganisaatioSearchCriteria {
     /**
      * Gets the value of the vainAktiiviset property.
      */
-    @ApiModelProperty(value = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
     public boolean getVainAktiiviset() {
         return vainAktiiviset;
     }
 
     /**
      * Sets the value of the vainLakkautetut property.
-     *
      */
     public void setVainAktiiviset(boolean vainAktiiviset) {
         this.vainAktiiviset = vainAktiiviset;

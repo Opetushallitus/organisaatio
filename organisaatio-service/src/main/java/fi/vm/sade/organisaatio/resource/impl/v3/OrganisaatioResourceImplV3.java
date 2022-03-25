@@ -1,55 +1,39 @@
 package fi.vm.sade.organisaatio.resource.impl.v3;
 
 import com.google.common.base.Preconditions;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
-import fi.vm.sade.organisaatio.dao.OrganisaatioDAO;
 import fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
-import fi.vm.sade.organisaatio.dto.v3.ResultRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioResult;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
-import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.v3.OrganisaatioResourceV3;
-import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
-@Transactional(readOnly = true)
-@CrossOriginResourceSharing(allowAllOrigins = true)
+@RestController
+@RequestMapping("${server.rest.context-path}/organisaatio/v3")
 public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV3.class);
 
-    @Autowired
-    private OrganisaatioBusinessService organisaatioBusinessService;
-
-    @Autowired
-    private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
 
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
@@ -61,26 +45,27 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
     private ConversionService conversionService;
 
     @Autowired
-    private OrganisaatioDAO organisaatioDAO;
+    private OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     private PermissionChecker permissionChecker;
 
     @Override
-    public List<OrganisaatioRDTOV3> findByOids(List<String> oids){
+    public List<OrganisaatioRDTOV3> findByOids(List<String> oids) {
         Preconditions.checkNotNull(oids);
         Preconditions.checkArgument(!oids.isEmpty());
         Preconditions.checkArgument(oids.size() <= 1000);
         return organisaatioFindBusinessService.findByOids(oids);
     }
+
     // GET /organisaatio/v3/{oid}/children
     @Override
     public List<OrganisaatioRDTOV3> children(String oid, boolean includeImage) throws Exception {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            LOG.warn("Not authorized to read organisation: {}", oid);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         Preconditions.checkNotNull(oid);
@@ -109,7 +94,8 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         LOG.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
 
-        Type groupListType = new TypeToken<List<OrganisaatioGroupDTOV3>>() {}.getType();
+        Type groupListType = new TypeToken<List<OrganisaatioGroupDTOV3>>() {
+        }.getType();
 
         List<OrganisaatioGroupDTOV3> groupList = groupModelMapper.map(entitys, groupListType);
 
@@ -118,7 +104,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         return groupList;
     }
 
-    // GET /organisaatio/v3/{oid}
+    // GET /organisaatio/v3/<oid>
     @Override
     public OrganisaatioRDTOV3 getOrganisaatioByOID(String oid, boolean includeImage) {
         LOG.debug("/organisaatio/{} -- getOrganisaatioByOID()", oid);
@@ -126,14 +112,14 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
+            LOG.warn("Not authorized to read organisation: {}", oid);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         Organisaatio o = organisaatioFindBusinessService.findById(oid);
 
         if (o == null) {
-            LOG.info("Failed to find organisaatio by: " + oid);
+            LOG.info("Failed to find organisaatio by: {}", oid);
             throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
         }
 
@@ -148,96 +134,15 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
         return result;
     }
 
-    // PUT /organisaatio/v3/{oid}
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTOV3 updateOrganisaatio(String oid, OrganisaatioRDTOV3 ordto) {
-        LOG.info("Saving " + oid);
-        try {
-            permissionChecker.checkSaveOrganisation(ordto, true);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to update organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-        }
-
-        try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, true);
-            return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
-        } catch (ValidationException ex) {
-            LOG.warn("Error saving " + oid, ex);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
-                    ex.getMessage(), "organisaatio.validointi.virhe");
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving " + oid, sbe);
-            throw new OrganisaatioResourceException(sbe);
-        } catch (OrganisaatioResourceException ore) {
-            LOG.warn("Error saving " + oid, ore);
-            throw ore;
-        } catch (Throwable t) {
-            LOG.error("Error saving " + oid, t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
-                    t.getMessage(), "generic.error");
-        }
-    }
-
-    // DELETE /organisaatio/v3/{oid}
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String deleteOrganisaatio(String oid) {
-        try {
-            permissionChecker.checkRemoveOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to delete organisation: " + oid);
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-        }
-
-        try {
-            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            LOG.info("Deleted organisaatio: " + oid +" under parent: " + parent.getOid());
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error deleting org", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        }
-
-        return "{\"message\": \"deleted\"}";
-    }
-
-    // POST /organisaatio/v3/
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public ResultRDTOV3 newOrganisaatio(OrganisaatioRDTOV3 ordto) {
-        try {
-            permissionChecker.checkSaveOrganisation(ordto, false);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to create child organisation for: " + ordto.getParentOid());
-            throw new OrganisaatioResourceException(Response.Status.FORBIDDEN, nae);
-        }
-        try {
-            OrganisaatioResult result = organisaatioBusinessService.save(ordto, false);
-            return new ResultRDTOV3(conversionService.convert(result.getOrganisaatio(), OrganisaatioRDTOV3.class), result.getInfo());
-        } catch (ValidationException ex) {
-            LOG.warn("Error saving new org", ex);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
-                    ex.getMessage(), "organisaatio.validointi.virhe");
-        } catch (SadeBusinessException sbe) {
-            LOG.warn("Error saving new org", sbe);
-            throw new OrganisaatioResourceException(sbe);
-        } catch (Throwable t) {
-            LOG.warn("Error saving new org", t);
-            throw new OrganisaatioResourceException(Response.Status.INTERNAL_SERVER_ERROR,
-                    t.getMessage(), "generic.error");
-        }
-    }
-
     // GET /organisaatio/v3/muutetut
     @Override
     public List<OrganisaatioRDTOV3> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
         Preconditions.checkNotNull(lastModifiedSince);
 
-        LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        LOG.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = organisaatioDAO.findModifiedSince(
+        List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);

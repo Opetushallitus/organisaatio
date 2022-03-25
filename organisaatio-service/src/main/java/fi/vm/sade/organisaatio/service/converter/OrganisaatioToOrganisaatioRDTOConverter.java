@@ -10,6 +10,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -20,7 +21,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 @Component
-public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainConverter<Organisaatio, OrganisaatioRDTO> {
+public class OrganisaatioToOrganisaatioRDTOConverter implements Converter<Organisaatio, OrganisaatioRDTO> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioToOrganisaatioRDTOConverter.class);
 
@@ -203,15 +204,13 @@ public class OrganisaatioToOrganisaatioRDTOConverter extends AbstractFromDomainC
         t.setMuokkausPvm(s.getMuokkausPvm());
         t.setNimi(convertMKTToMap(s.getNimi()));
 
-        // TODO t.set(s.getYhteystiedot());
         for (Yhteystieto yhteystieto : s.getYhteystiedot()) {
             t.getYhteystiedot().add(convertYhteystietoGeneric(yhteystieto));
         }
 
 
         for (NamedMonikielinenTeksti namedMonikielinenTeksti : s.getValues()) {
-            // TODO how about namedMonikielinenTeksti.getNimi ???
-            t.addByKey(namedMonikielinenTeksti.getKey(), convertMKTToMap(namedMonikielinenTeksti.getValue()));
+             t.addByKey(namedMonikielinenTeksti.getKey(), convertMKTToMap(namedMonikielinenTeksti.getValue()));
         }
 
         return t;

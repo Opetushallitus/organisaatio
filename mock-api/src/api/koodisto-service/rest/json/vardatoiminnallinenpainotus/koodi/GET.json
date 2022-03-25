@@ -1,0 +1,559 @@
+[
+    {
+        "koodiArvo": "TP01",
+        "koodiUri": "vardatoiminnallinenpainotus_tp01",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Musiikki",
+                "lyhytNimi": "",
+                "nimi": "Musiikki",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Music",
+                "lyhytNimi": "",
+                "nimi": "Music",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Musik",
+                "lyhytNimi": "",
+                "nimi": "Musik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp01",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 4,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP02",
+        "koodiUri": "vardatoiminnallinenpainotus_tp02",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Liikunta",
+                "lyhytNimi": "",
+                "nimi": "Liikunta",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Physical education",
+                "lyhytNimi": "",
+                "nimi": "Physical education",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Gymnastik",
+                "lyhytNimi": "",
+                "nimi": "Gymnastik",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp02",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP98",
+        "koodiUri": "vardatoiminnallinenpainotus_tp98",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ei toiminnallista painotusta (- 6.5.2021)",
+                "lyhytNimi": "Ei toiminnallista painotusta",
+                "nimi": "Ei painotusta",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Ingen betoning",
+                "lyhytNimi": "",
+                "nimi": "Ingen betoning",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": "1.2.246.562.24.21543894150",
+        "paivitysPvm": "2021-06-17",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp98",
+        "tila": "PASSIIVINEN",
+        "versio": 1,
+        "version": 3,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": "2021-05-06"
+    },
+    {
+        "koodiArvo": "TP03",
+        "koodiUri": "vardatoiminnallinenpainotus_tp03",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Kuvataide",
+                "lyhytNimi": "",
+                "nimi": "Kuvataide",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Bildkonst",
+                "lyhytNimi": "",
+                "nimi": "Bildkonst",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp03",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP04",
+        "koodiUri": "vardatoiminnallinenpainotus_tp04",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Tiede",
+                "lyhytNimi": "",
+                "nimi": "Tiede",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Science",
+                "lyhytNimi": "",
+                "nimi": "Science",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Vetenskap",
+                "lyhytNimi": "",
+                "nimi": "Vetenskap",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp04",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP05",
+        "koodiUri": "vardatoiminnallinenpainotus_tp05",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Draama",
+                "lyhytNimi": "",
+                "nimi": "Draama",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Drama",
+                "lyhytNimi": "",
+                "nimi": "Drama",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Drama",
+                "lyhytNimi": "",
+                "nimi": "Drama",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp05",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP06",
+        "koodiUri": "vardatoiminnallinenpainotus_tp06",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Ymp\u00e4rist\u00f6 ja luonto",
+                "lyhytNimi": "",
+                "nimi": "Ymp\u00e4rist\u00f6 ja luonto",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Milj\u00f6 och natur",
+                "lyhytNimi": "",
+                "nimi": "Milj\u00f6 och natur",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp06",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP07",
+        "koodiUri": "vardatoiminnallinenpainotus_tp07",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Seikkailu",
+                "lyhytNimi": "",
+                "nimi": "Seikkailu",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Adventure",
+                "lyhytNimi": "",
+                "nimi": "Adventure",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "\u00c4ventyr",
+                "lyhytNimi": "",
+                "nimi": "\u00c4ventyr",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp07",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP08",
+        "koodiUri": "vardatoiminnallinenpainotus_tp08",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Media",
+                "lyhytNimi": "",
+                "nimi": "Media",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Media",
+                "lyhytNimi": "",
+                "nimi": "Media",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "Media",
+                "lyhytNimi": "",
+                "nimi": "Media",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp08",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP09",
+        "koodiUri": "vardatoiminnallinenpainotus_tp09",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "V\u00e4rlds\u00e5sk\u00e5dning",
+                "lyhytNimi": "",
+                "nimi": "V\u00e4rlds\u00e5sk\u00e5dning",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Maailmankatsomuksellinen",
+                "lyhytNimi": "",
+                "nimi": "Maailmankatsomuksellinen",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp09",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    },
+    {
+        "koodiArvo": "TP99",
+        "koodiUri": "vardatoiminnallinenpainotus_tp99",
+        "koodisto": {
+            "koodistoUri": "vardatoiminnallinenpainotus",
+            "koodistoVersios": [1],
+            "organisaatioOid": "1.2.246.562.10.00000000001"
+        },
+        "metadata": [
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "SV",
+                "kuvaus": "\u00d6vrig betoning",
+                "lyhytNimi": "",
+                "nimi": "\u00d6vrig betoning",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "EN",
+                "kuvaus": "Other",
+                "lyhytNimi": "",
+                "nimi": "Other",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            },
+            {
+                "eiSisallaMerkitysta": "",
+                "huomioitavaKoodi": "",
+                "kasite": "",
+                "kayttoohje": "",
+                "kieli": "FI",
+                "kuvaus": "Muu",
+                "lyhytNimi": "",
+                "nimi": "Muu",
+                "sisaltaaKoodiston": "",
+                "sisaltaaMerkityksen": ""
+            }
+        ],
+        "paivittajaOid": null,
+        "paivitysPvm": "2019-01-02",
+        "resourceUri": "https://virkailija.untuvaopintopolku.fi/koodisto-service/rest/codeelement/vardatoiminnallinenpainotus_tp99",
+        "tila": "LUONNOS",
+        "versio": 1,
+        "version": 2,
+        "voimassaAlkuPvm": "2019-01-01",
+        "voimassaLoppuPvm": null
+    }
+]

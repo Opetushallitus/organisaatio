@@ -19,10 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
-import fi.vm.sade.organisaatio.config.UrlConfiguration;
+import fi.vm.sade.organisaatio.client.OrganisaatioViestintaClient;
 import fi.vm.sade.organisaatio.dto.ViestintaSahkopostiDto;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.model.YtjVirhe;
+import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailMessage;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
@@ -49,7 +50,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
     private String email;
 
     @Autowired
-    private UrlConfiguration urlConfiguration;
+    private OphProperties properties;
 
     private OrganisaatioViestintaClient viestintaClient;
 
@@ -110,7 +111,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             String oid = entry.getKey();
             List<YtjVirhe> ytjVirheList = entry.getValue();
 
-            msgContent += "<a href=\"https://" + urlConfiguration.getProperty("organisaatio.ui.url") + "/"
+            msgContent += "<a href=\"https://" + properties.getProperty("organisaatio.ui.url") + "/"
                     + oid +"\">" + ytjVirheList.get(0).getOrgNimi() + "</a> (";
             String separator = "";
             for(YtjVirhe ytjVirhe : ytjVirheList) {
@@ -120,7 +121,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
             msgContent += ")<br>";
         }
 
-        msgContent += "<br><a href=\"https://" + urlConfiguration.getProperty("organisaatio.ui.ilmoitukset.url")
+        msgContent += "<br><a href=\"https://" + properties.getProperty("organisaatio.ui.ilmoitukset.url")
                  + "\">YTJ-päivitykset</a>";
         return msgContent;
     }

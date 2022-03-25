@@ -15,22 +15,21 @@
 
 package fi.vm.sade.organisaatio.dto.v2;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ApiModel(value = "Organisaation hakutulos suppea")
+@Schema(description = "Organisaation hakutulos suppea")
 public class OrganisaatioLOPTietoDTOV2 {
 
     private String _oid;
 
     private Map<String, String> nimi = new HashMap<String, String>();
-    
+
     private Map<String, Map<String, String>> _data = new HashMap<String, Map<String, String>>();
-    
-    @ApiModelProperty(value = "Organisaation oid", required = true)
+
+    @Schema(description = "Organisaation oid", required = true)
     public String getOid() {
         return _oid;
     }
@@ -38,8 +37,8 @@ public class OrganisaatioLOPTietoDTOV2 {
     public void setOid(String _oid) {
         this._oid = _oid;
     }
-    
-    @ApiModelProperty(value = "Organisaation nimi", required = true)
+
+    @Schema(description = "Organisaation nimi", required = true)
     public Map<String, String> getNimi() {
         return nimi;
     }
@@ -47,8 +46,8 @@ public class OrganisaatioLOPTietoDTOV2 {
     public void setNimi(Map<String, String> nimi) {
         this.nimi = nimi;
     }
-    
-    @ApiModelProperty(value = "Organisaation LOP tiedot", required = true)
+
+    @Schema(description = "Organisaation LOP tiedot", required = true)
     public Map<String, Map<String, String>> getData() {
         return _data;
     }
@@ -56,7 +55,7 @@ public class OrganisaatioLOPTietoDTOV2 {
     public void setData(Map<String, Map<String, String>> _data) {
         this._data = _data;
     }
-    
+
     public void addByKey(String key, Map<String, String> map) {
         _data.put(key, map);
     }

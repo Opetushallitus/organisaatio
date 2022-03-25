@@ -1,0 +1,17 @@
+.UloinKehys {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.Rivi {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1rem;
+}
+
+.Rivi > div {
+    width: 100%;
+}
