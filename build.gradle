@@ -15,13 +15,17 @@ allprojects {
         mavenCentral()
         jcenter()
 		maven {
+			name = 'opintopolkuSnapshotRepository'
 			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+			credentials(PasswordCredentials)
 			mavenContent {
 				snapshotsOnly()
 			}
 		}
 		maven {
+			name = 'opintopolkuRepository'
 			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+			credentials(PasswordCredentials)
 			mavenContent {
 				releasesOnly()
 			}
