@@ -167,8 +167,8 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build
         env:
-          ORG_GRADLE_PROJECT_opintopolkuRepositoryUsername: ${{ secrets.ARTIFACTORY_USERNAME }}
-          ORG_GRADLE_PROJECT_opintopolkuRepositoryPassword: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ORG_GRADLE_PROJECT_sadeRepositoryUsername: ${{ secrets.ARTIFACTORY_USERNAME }}
+          ORG_GRADLE_PROJECT_sadeRepositoryPassword: ${{ secrets.ARTIFACTORY_PASSWORD }}
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: publish -PversionSuffix=.RELEASE
