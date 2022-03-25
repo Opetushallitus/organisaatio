@@ -17,7 +17,6 @@ import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 import { SelectOptionType } from '../../../types/types';
-import LoadingBubbles from '../../Loading/LoadingBubbles';
 
 const MAX_EXPAND_ROWS = 10;
 
@@ -282,7 +281,6 @@ export default function OrganisaatioHakuTaulukko() {
         <div>
             <Hakufiltterit isLoading={loading} setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
             <div className={styles.TaulukkoContainer}>
-                {loading && <LoadingBubbles />}
                 <table {...getTableProps()} className={styles.Taulukko}>
                     <thead>
                         {headerGroups.map((headerGroup: HeaderGroup<OrganisaatioHakuOrganisaatio>) => (

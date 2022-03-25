@@ -23,6 +23,7 @@ import { ValueType } from 'react-select';
 import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import useDebounce from '../../../tools/useDebounce';
 import axios, { CancelTokenSource } from 'axios';
+import LoadingBubbles from '../../Loading/LoadingBubbles';
 
 type HakufiltteritProps = {
     setOrganisaatiot: (data: OrganisaatioHakuOrganisaatio[]) => void;
@@ -114,11 +115,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
     const cancelTokenRef = useRef<undefined | CancelTokenSource>();
     useEffect(() => {
         (async () => {
-            if (searchRef.current !== debouncedSearchString && debouncedSearchString === '') {
-                searchRef.current = debouncedSearchString;
-                return;
-            }
-
+            searchRef.current = debouncedSearchString;
             try {
                 setLoading(true);
                 cancelTokenRef.current = axios.CancelToken.source();
@@ -181,87 +178,29 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
         setRemoteFilters({ ...remoteFilters, [name]: checked });
 
     return (
-        <div>
+        <>
             <div className={styles.FiltteriRivi}>
-                <div className={styles.FiltteriInputOsa}>
-                    <Input
-                        placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
-                        value={remoteFilters.searchString || ''}
-                        onChange={(e) => {
-                            setRemoteFilters({ ...remoteFilters, searchString: e.target.value });
-                        }}
-                        suffix={
-                            <Button
-                                variant={'text'}
-                                style={{ boxShadow: 'none' }}
-                                onClick={() => {
-                                    if (remoteFilters.searchString) {
-                                        setRemoteFilters({ ...remoteFilters, searchString: '' });
-                                    }
-                                }}
-                            >
-                                <IconWrapper color={'#999999'} icon={clearIcon} />
-                            </Button>
-                        }
-                    />
-                    <div className={styles.CheckboxContainer}>
-                        <Checkbox
-                            name={'naytaPassivoidut'}
-                            checked={remoteFilters.naytaPassivoidut}
-                            onChange={handleRemoteCheckBoxChange}
-                            disabled={isLoading}
-                        >
-                            {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
-                        </Checkbox>
-                        <Checkbox
-                            name={'omatOrganisaatiotSelected'}
-                            checked={localFilters.omatOrganisaatiotSelected}
-                            onChange={handleLocalCheckBoxChange}
-                            disabled={isLoading}
-                        >
-                            {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
-                        </Checkbox>
-                        <Checkbox
-                            name={'showVakaToimijat'}
-                            checked={localFilters.showVakaToimijat}
-                            onChange={handleLocalCheckBoxChange}
-                            disabled={isLoading}
-                        >
-                            {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_VAKA_TOIMIJAT')}
-                        </Checkbox>
-                    </div>
-                </div>
-            </div>
-            <div className={styles.FiltteriRivi}>
-                <div className={styles.DropdownContainer}>
-                    <HakuFilterSelect
-                        label={i18n.translate('TAULUKKO_ORGANISAATIOTYYPPI')}
-                        handleSelectChange={handleOrganisaatiotyyppiChange}
-                        selectOptions={organisaatioTyypitKoodisto.selectOptions()}
-                        value={remoteFilters.organisaatiotyyppi}
-                        disabled={isLoading}
-                    />
-                    <HakuFilterSelect
-                        label={i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}
-                        handleSelectChange={handleOppilaitosTyyppiChange}
-                        selectOptions={oppilaitosTyypitKoodisto.selectOptions()}
-                        disabled={organisaatiotyyppi !== ORGANIAATIOTYYPPI_OPPILAITOS || isLoading}
-                        value={remoteFilters.oppilaitostyyppi}
-                    />
-                    <div className={styles.TyhjennaNappiKentta}>
-                        <Button
-                            disabled={isLoading}
-                            color={'secondary'}
-                            variant={'outlined'}
-                            onClick={() =>
-                                setRemoteFilters({ ...remoteFilters, organisaatiotyyppi: '', oppilaitostyyppi: '' })
+                <div className={styles.InputContainer}>
+                    <div>
+                        <Input
+                            className={styles.SearchInput}
+                            placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
+                            value={remoteFilters.searchString || ''}
+                            onChange={(e) => setRemoteFilters({ ...remoteFilters, searchString: e.target.value })}
+                            suffix={
+                                <Button
+                                    variant={'text'}
+                                    style={{ boxShadow: 'none' }}
+                                    onClick={() => setRemoteFilters({ ...remoteFilters, searchString: '' })}
+                                >
+                                    <IconWrapper color={'#999999'} icon={clearIcon} />
+                                </Button>
                             }
-                        >
-                            {i18n.translate('ORGANISAATIOHAKUTAULUKKO_TYHJENNA')}
-                        </Button>
+                        />
                     </div>
+                    <div className={styles.LoadingBubblesContainer}>{isLoading && <LoadingBubbles />}</div>
                 </div>
-                <div className={styles.LisatiedotLinkkiKentta}>
+                <div>
                     <a
                         href={LISATIEDOT_EXTERNAL_URI}
                         target={'_blank'}
@@ -272,6 +211,60 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
                     </a>
                 </div>
             </div>
-        </div>
+            <div className={styles.FiltteriRivi}>
+                <div className={styles.CheckboxContainer}>
+                    <Checkbox
+                        name={'naytaPassivoidut'}
+                        checked={remoteFilters.naytaPassivoidut}
+                        onChange={handleRemoteCheckBoxChange}
+                        disabled={isLoading}
+                    >
+                        {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
+                    </Checkbox>
+                    <Checkbox
+                        name={'omatOrganisaatiotSelected'}
+                        checked={localFilters.omatOrganisaatiotSelected}
+                        onChange={handleLocalCheckBoxChange}
+                    >
+                        {i18n.translate('TAULUKKO_CHECKBOX_OMAT_ORGANISAATIOT')}
+                    </Checkbox>
+                    <Checkbox
+                        name={'showVakaToimijat'}
+                        checked={localFilters.showVakaToimijat}
+                        onChange={handleLocalCheckBoxChange}
+                    >
+                        {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_VAKA_TOIMIJAT')}
+                    </Checkbox>
+                </div>
+            </div>
+            <div className={styles.FiltteriRivi}>
+                <div className={styles.DropdownContainer}>
+                    <HakuFilterSelect
+                        label={i18n.translate('TAULUKKO_ORGANISAATIOTYYPPI')}
+                        handleSelectChange={handleOrganisaatiotyyppiChange}
+                        selectOptions={organisaatioTyypitKoodisto.selectOptions()}
+                        value={remoteFilters.organisaatiotyyppi}
+                    />
+                    <HakuFilterSelect
+                        label={i18n.translate('TAULUKKO_OPPILAITOSTYYPPI')}
+                        handleSelectChange={handleOppilaitosTyyppiChange}
+                        selectOptions={oppilaitosTyypitKoodisto.selectOptions()}
+                        disabled={organisaatiotyyppi !== ORGANIAATIOTYYPPI_OPPILAITOS}
+                        value={remoteFilters.oppilaitostyyppi}
+                    />
+                    <div className={styles.TyhjennaNappiKentta}>
+                        <Button
+                            color={'secondary'}
+                            variant={'outlined'}
+                            onClick={() =>
+                                setRemoteFilters({ ...remoteFilters, organisaatiotyyppi: '', oppilaitostyyppi: '' })
+                            }
+                        >
+                            {i18n.translate('ORGANISAATIOHAKUTAULUKKO_TYHJENNA')}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
