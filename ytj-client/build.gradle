@@ -33,8 +33,20 @@ subprojects {
 
     publishing {
         publications {
-            maven(MavenPublication) {
-                from(components.java)
+            YTJClient(MavenPublication) {
+                version = getDate()+versionSuffix
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name = 'sadeRepository'
+                credentials(PasswordCredentials)
+                if(versionSuffix.endsWith('-SNAPSHOT')) {
+                    url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+                } else {
+                    url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+                }
             }
         }
     }
