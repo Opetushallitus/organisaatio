@@ -2,7 +2,7 @@ name: organisaatio
 on:
   workflow_dispatch:
   push:
-    branches: [master, organisaatio-2]
+    branches: [master]
   pull_request:
 jobs:
   build:
