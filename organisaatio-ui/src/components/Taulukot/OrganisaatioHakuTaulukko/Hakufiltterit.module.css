@@ -1,8 +1,27 @@
 .FiltteriRivi {
     display: flex;
     flex-direction: row;
-    padding: 1.5rem 0;
+    padding: 1rem 0;
     justify-content: space-between;
+}
+
+.InputContainer {
+    display: flex;
+}
+
+.SearchInput.SearchInput {
+    width: 55vw;
+}
+.LoadingBubblesContainer {
+    height: 2.4rem;
+    width: 3rem;
+    display: flex;
+    padding-left: 1rem;
+    align-items: center;
+}
+
+.FiltteriRivi:first-of-type {
+    padding: 0;
 }
 
 .DropdownContainer {
@@ -10,20 +29,11 @@
     flex-wrap: wrap;
 }
 
-.FiltteriInputOsa {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    max-width: 75vw;
-    align-items: center;
-}
-
 .FiltteriInputOsa > label {
     padding-left: 2rem;
 }
 
 .CheckboxContainer {
-    padding-left: 1rem;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -32,9 +42,8 @@
 .CheckboxContainer label {
     padding-left: 1rem;
 }
-
-.LisatiedotLinkkiKentta {
-    padding-top: 1rem;
+.CheckboxContainer label:first-of-type {
+    padding-left: 0;
 }
 
 a.LisatiedotLinkki,
