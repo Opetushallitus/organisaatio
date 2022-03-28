@@ -5,7 +5,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven-publish'
 
     repositories {
         mavenLocal()
@@ -31,25 +30,6 @@ subprojects {
     configurations.all {
     }
 
-    publishing {
-        publications {
-            YTJClient(MavenPublication) {
-                version = getDate()+versionSuffix
-                from components.java
-            }
-        }
-        repositories {
-            maven {
-                name = 'sadeRepository'
-                credentials(PasswordCredentials)
-                if(versionSuffix.endsWith('-SNAPSHOT')) {
-                    url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
-                } else {
-                    url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
-                }
-            }
-        }
-    }
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
