@@ -13,7 +13,6 @@ allprojects {
 	repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
 		maven {
 			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
 			mavenContent {

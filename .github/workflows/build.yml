@@ -154,7 +154,6 @@ jobs:
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
   deploy-artifacts:
     needs: [build, cypress]
-    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
