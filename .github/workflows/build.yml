@@ -154,6 +154,7 @@ jobs:
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
   deploy-artifacts:
     needs: [build, cypress]
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -172,3 +173,24 @@ jobs:
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: publish -PversionSuffix=.RELEASE
+  deploy-artifacts-snapshot:
+    needs: [build, cypress]
+    if: github.ref != 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Build
+        env:
+          ORG_GRADLE_PROJECT_sadeRepositoryUsername: ${{ secrets.ARTIFACTORY_USERNAME }}
+          ORG_GRADLE_PROJECT_sadeRepositoryPassword: ${{ secrets.ARTIFACTORY_PASSWORD }}
+        uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
+        with:
+          arguments: publish
