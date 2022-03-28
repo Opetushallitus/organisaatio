@@ -10,10 +10,10 @@ def getDate() {
 }
 
 allprojects {
+	apply plugin: 'maven-publish'
 	repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
 		maven {
 			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
 			mavenContent {
@@ -24,6 +24,19 @@ allprojects {
 			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
 			mavenContent {
 				releasesOnly()
+			}
+		}
+	}
+	publishing {
+		repositories {
+			maven {
+				name = 'sadeRepository'
+				credentials(PasswordCredentials)
+				if(versionSuffix.endsWith('-SNAPSHOT')) {
+					url "https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local"
+				} else {
+					url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
+				}
 			}
 		}
 	}
