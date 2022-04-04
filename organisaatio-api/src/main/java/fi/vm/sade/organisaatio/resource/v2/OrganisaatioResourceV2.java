@@ -85,7 +85,7 @@ public interface OrganisaatioResourceV2 {
     OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable String oid);
 
     @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam DateParam liitoksetAlkaen);
+    List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam(required = false) DateParam liitoksetAlkaen);
 
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated
