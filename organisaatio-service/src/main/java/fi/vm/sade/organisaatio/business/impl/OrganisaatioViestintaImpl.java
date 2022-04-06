@@ -149,7 +149,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         try {
             getClient().post(json, "");
         } catch (OrganisaatioViestintaException ve) {
-            LOG.error("Could not send email.", ve);
+            LOG.error("Could not send email. {} {}", ve, json);
         }
     }
 
