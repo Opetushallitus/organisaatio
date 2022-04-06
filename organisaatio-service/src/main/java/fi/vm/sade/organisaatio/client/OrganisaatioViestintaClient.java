@@ -24,32 +24,15 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.function.Supplier;
-
 import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_VIESTINTA;
 import static java.util.function.Function.identity;
 
 
 @Component
-public class OrganisaatioViestintaClient {
+public class OrganisaatioViestintaClient  extends CustomClient {
 
-    private final OphHttpClient httpClient;
-    private final OphProperties urlConfiguration;
-
-    public OrganisaatioViestintaClient(@Qualifier(HTTP_CLIENT_VIESTINTA) OphHttpClient httpClient,
-                                       OphProperties urlConfiguration) {
-        this.httpClient = httpClient;
-        this.urlConfiguration = urlConfiguration;
-    }
-
-    private <T> T wrapException(Supplier<T> action) {
-        try {
-            return action.get();
-        } catch (Exception e) {
-            OrganisaatioViestintaException organisaatioViestintaException = new OrganisaatioViestintaException(e.getMessage());
-            organisaatioViestintaException.initCause(e);
-            throw organisaatioViestintaException;
-        }
+    public OrganisaatioViestintaClient(@Qualifier(HTTP_CLIENT_VIESTINTA) OphHttpClient httpClient, OphProperties properties) {
+        super(httpClient, properties);
     }
 
     public String post(String json, String uri) throws OrganisaatioViestintaException {
@@ -57,7 +40,7 @@ public class OrganisaatioViestintaClient {
     }
 
     public String post(String json, String uri, boolean sanitize) {
-        String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri, sanitize);
+        String viestintaServiceUrl = properties.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri, sanitize);
 
         OphHttpRequest request = OphHttpRequest.Builder.post(viestintaServiceUrl)
                 .setEntity(new OphHttpEntity.Builder()

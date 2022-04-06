@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_LOKALISOINTI;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 

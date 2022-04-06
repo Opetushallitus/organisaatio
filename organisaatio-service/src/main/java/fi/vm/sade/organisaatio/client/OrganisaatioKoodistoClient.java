@@ -23,9 +23,7 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_KOODISTO;
 import static java.util.function.Function.identity;
@@ -38,21 +36,6 @@ public class OrganisaatioKoodistoClient extends CustomClient {
 
     public OrganisaatioKoodistoClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient, OphProperties properties) {
         super(httpClient, properties);
-    }
-
-    private String createKoodistoServiceParameters() {
-        // Estetään cachen käyttö
-        return "?noCache=" + new Date().getTime();
-    }
-
-    private <T> T wrapException(Supplier<T> action) {
-        try {
-            return action.get();
-        } catch (Exception e) {
-            OrganisaatioKoodistoException organisaatioKoodistoException = new OrganisaatioKoodistoException(e.getMessage());
-            organisaatioKoodistoException.initCause(e);
-            throw organisaatioKoodistoException;
-        }
     }
 
     /**

@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
 import fi.vm.sade.properties.OphProperties;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 public abstract class CustomClient {
     final OphHttpClient httpClient;
@@ -40,6 +42,16 @@ public abstract class CustomClient {
             return objectReader.forType(javaType).readValue(json);
         } catch (IOException ex) {
             throw new ClientException(ex);
+        }
+    }
+
+     <T> T wrapException(Supplier<T> action) {
+        try {
+            return action.get();
+        } catch (Exception e) {
+            OrganisaatioViestintaException organisaatioViestintaException = new OrganisaatioViestintaException(e.getMessage());
+            organisaatioViestintaException.initCause(e);
+            throw organisaatioViestintaException;
         }
     }
 }
