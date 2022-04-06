@@ -47,18 +47,16 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     @Override
     public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
         logger.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
-        execute();
-
-    }
-    @EventListener(ApplicationReadyEvent.class)
-    public void executeOnStartup() {
-        logger.info("OrganisaatioUpdateTask on startup, Current time: {}",  new Date());
-        execute();
-    }
-
-    public void execute() {
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
         organisaatioYtjService.updateYTJData(false);
+
     }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void executeOnStartup() {
+        logger.info("OrganisaatioUpdateTask on startup, Current time: {}", new Date());
+        organisaatioYtjService.updateYTJData(false);
+    }
+
 }
