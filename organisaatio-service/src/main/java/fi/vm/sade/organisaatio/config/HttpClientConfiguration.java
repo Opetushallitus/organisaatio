@@ -60,7 +60,6 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password.to.viestinta"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("organisaatio-service.ryhmasahkoposti-service.login"))
-                .sessionCookieName("organisaatio-ryhmasahkoposti")
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
