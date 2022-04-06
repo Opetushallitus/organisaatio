@@ -9,7 +9,9 @@ import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.support.CronSequenceGenerator;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,7 @@ import java.util.Date;
  */
 @Component
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final String nameUpdateCronExpression;
 
@@ -43,12 +45,20 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     }
 
     @Override
-    public void executeRecurringly(TaskInstance taskInstance, ExecutionContext executionContext) {
-        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
+    public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
+        logger.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
+        execute();
 
+    }
+    @EventListener(ApplicationReadyEvent.class)
+    public void executeOnStartup() {
+        logger.info("OrganisaatioUpdateTask on startup, Current time: {}",  new Date());
+        execute();
+    }
+
+    public void execute() {
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
         organisaatioYtjService.updateYTJData(false);
-
     }
 }
