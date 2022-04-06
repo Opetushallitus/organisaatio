@@ -12,21 +12,15 @@ import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
 import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
 import Notification from './components/Notification/Notification';
 import { BASE_PATH } from './contexts/constants';
-import { useAtom } from 'jotai';
-import { frontPropertiesAtom } from './api/config';
-import { casMeAtom } from './api/kayttooikeus';
 import Loading from './components/Loading/Loading';
 import { ErrorBoundary } from './index';
 
 const theme = createTheme();
 
 const OrganisaatioApp: React.FC = () => {
-    useAtom(frontPropertiesAtom);
-    useAtom(casMeAtom);
     registerLocale('fi', fi);
     registerLocale('sv', sv);
     registerLocale('en', enGB);
-
     return (
         <ErrorBoundary>
             <React.Suspense fallback={<Loading />}>
