@@ -34,15 +34,10 @@ import static java.util.function.Function.identity;
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
 @Component
-public class OrganisaatioKoodistoClient {
+public class OrganisaatioKoodistoClient extends CustomClient {
 
-    private final OphHttpClient httpClient;
-    private final OphProperties urlConfiguration;
-
-    public OrganisaatioKoodistoClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient,
-                                      OphProperties urlConfiguration) {
-        this.httpClient = httpClient;
-        this.urlConfiguration = urlConfiguration;
+    public OrganisaatioKoodistoClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient, OphProperties properties) {
+        super(httpClient, properties);
     }
 
     private String createKoodistoServiceParameters() {
@@ -84,7 +79,7 @@ public class OrganisaatioKoodistoClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void put(String json) throws OrganisaatioKoodistoException {
-        String uri = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
+        String uri = properties.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
         OphHttpRequest request = OphHttpRequest.Builder.put(uri)
                 .setEntity(new OphHttpEntity.Builder()
                         .content(json)
@@ -105,7 +100,7 @@ public class OrganisaatioKoodistoClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void post(String json, String uri) throws OrganisaatioKoodistoException {
-        String url = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
+        String url = properties.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
         OphHttpRequest request = OphHttpRequest.Builder.post(url)
                 .setEntity(new OphHttpEntity.Builder()
                         .content(json)
