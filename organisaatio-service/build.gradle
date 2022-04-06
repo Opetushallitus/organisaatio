@@ -78,8 +78,9 @@ dependencies {
     compile('fi.vm.sade.tarjonta:tarjonta-api:9.7-SNAPSHOT') {
         // TODO exclusions
         exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_2.5_spec'
-
+        exclude group: 'org.apache.cxf', module: 'cxf-bundle'
     }
+    implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:3.4.0'
     compile('fi.vm.sade.koodisto:koodisto-api:9.0-SNAPSHOT') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
@@ -99,7 +100,7 @@ dependencies {
     }
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '1.1.7.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
