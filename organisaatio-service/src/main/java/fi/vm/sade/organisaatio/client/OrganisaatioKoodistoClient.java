@@ -23,7 +23,6 @@ import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -34,37 +33,17 @@ import static java.util.function.Function.identity;
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
 @Component
-public class OrganisaatioKoodistoClient {
+public class OrganisaatioKoodistoClient extends CustomClient {
 
-    private final OphHttpClient httpClient;
-    private final OphProperties urlConfiguration;
-
-    public OrganisaatioKoodistoClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient,
-                                      OphProperties urlConfiguration) {
-        this.httpClient = httpClient;
-        this.urlConfiguration = urlConfiguration;
-    }
-
-    private String createKoodistoServiceParameters() {
-        // Estetään cachen käyttö
-        return "?noCache=" + new Date().getTime();
-    }
-
-    private <T> T wrapException(Supplier<T> action) {
-        try {
-            return action.get();
-        } catch (Exception e) {
-            OrganisaatioKoodistoException organisaatioKoodistoException = new OrganisaatioKoodistoException(e.getMessage());
-            organisaatioKoodistoException.initCause(e);
-            throw organisaatioKoodistoException;
-        }
+    public OrganisaatioKoodistoClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient, OphProperties properties) {
+        super(httpClient, properties);
     }
 
     /**
      * Hae koodi URIn mukaan
      *
      * @param uri kononainen koodiston uri, käytä urlpropertiesseja generointiin esim.
-     * "/koodisto-service/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
+     *            "/koodisto-service/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
      * @return koodi json-muodossa, tai null jos koodia ei löydy
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
@@ -84,7 +63,7 @@ public class OrganisaatioKoodistoClient {
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void put(String json) throws OrganisaatioKoodistoException {
-        String uri = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
+        String uri = properties.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
         OphHttpRequest request = OphHttpRequest.Builder.put(uri)
                 .setEntity(new OphHttpEntity.Builder()
                         .content(json)
@@ -101,11 +80,11 @@ public class OrganisaatioKoodistoClient {
      * Lisää koodin koodistoon
      *
      * @param json Lisättävä koodi json-muodossa
-     * @param uri Lisättävän koodin uri, esim. 'opetuspisteet'
+     * @param uri  Lisättävän koodin uri, esim. 'opetuspisteet'
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void post(String json, String uri) throws OrganisaatioKoodistoException {
-        String url = urlConfiguration.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
+        String url = properties.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri);
         OphHttpRequest request = OphHttpRequest.Builder.post(url)
                 .setEntity(new OphHttpEntity.Builder()
                         .content(json)
@@ -116,5 +95,14 @@ public class OrganisaatioKoodistoClient {
                 .expectedStatus(201)
                 .mapWith(identity())
                 .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", uri))));
+    }
+    <T> T wrapException(Supplier<T> action) {
+        try {
+            return action.get();
+        } catch (Exception e) {
+            OrganisaatioKoodistoException ex = new OrganisaatioKoodistoException(e.getMessage());
+            ex.initCause(e);
+            throw ex;
+        }
     }
 }

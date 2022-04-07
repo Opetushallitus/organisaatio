@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @Component
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final String nameUpdateCronExpression;
 
@@ -43,12 +43,10 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     }
 
     @Override
-    public void executeRecurringly(TaskInstance taskInstance, ExecutionContext executionContext) {
-        LOG.debug("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
-
+    public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
+        logger.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
         organisaatioBusinessService.updateCurrentOrganisaatioNimet();
         organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
         organisaatioYtjService.updateYTJData(false);
-
     }
 }

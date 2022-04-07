@@ -69,7 +69,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
 
     @Override
     public String sendEmail(EmailData data, boolean sanitize) {
-        return gson.fromJson(viestintaClient.post(gson.toJson(data), "", sanitize), ViestintaSahkopostiDto.class).getId();
+        return gson.fromJson(viestintaClient.sendEmail(gson.toJson(data), sanitize), ViestintaSahkopostiDto.class).getId();
     }
 
     @Override
@@ -126,8 +126,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         return msgContent;
     }
 
-    @Override
-    public void sendStringViestintaEmail(String msgContent) {
+    void sendStringViestintaEmail(String msgContent) {
         if(msgContent == null || msgContent.isEmpty()) {
             LOG.error("Null or empty string. Could not send email.");
         }
@@ -136,8 +135,7 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         }
     }
 
-    @Override
-    public void generateAndSendEmail(String msgContent, List<String> receiverEmails) {
+    void generateAndSendEmail(String msgContent, List<String> receiverEmails) {
         List<EmailRecipient> receiverList = new ArrayList<>();
         for(String receiverEmail : receiverEmails) {
             EmailRecipient receiver = new EmailRecipient(null, receiverEmail);
@@ -147,9 +145,9 @@ public class OrganisaatioViestintaImpl implements OrganisaatioViestinta {
         EmailData messageData = new EmailData(receiverList, emailMessage);
         String json = gson.toJson(messageData);
         try {
-            getClient().post(json, "");
+            getClient().sendEmail(json);
         } catch (OrganisaatioViestintaException ve) {
-            LOG.error("Could not send email.", ve);
+            LOG.error("Could not send email. {} {}", ve, json);
         }
     }
 
