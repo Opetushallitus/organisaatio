@@ -18,8 +18,6 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 
-import java.util.List;
-
 public interface OrganisaatioViestinta {
 
     /**
