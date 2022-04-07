@@ -18,12 +18,14 @@ import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioViestintaException;
 import fi.vm.sade.properties.OphProperties;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_KOODISTO;
 import static java.util.function.Function.identity;
@@ -42,7 +44,7 @@ public class OrganisaatioKoodistoClient extends CustomClient {
      * Hae koodi URIn mukaan
      *
      * @param uri kononainen koodiston uri, käytä urlpropertiesseja generointiin esim.
-     * "/koodisto-service/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
+     *            "/koodisto-service/rest/json/opetuspisteet/koodi/opetuspisteet_0106705"
      * @return koodi json-muodossa, tai null jos koodia ei löydy
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
@@ -79,7 +81,7 @@ public class OrganisaatioKoodistoClient extends CustomClient {
      * Lisää koodin koodistoon
      *
      * @param json Lisättävä koodi json-muodossa
-     * @param uri Lisättävän koodin uri, esim. 'opetuspisteet'
+     * @param uri  Lisättävän koodin uri, esim. 'opetuspisteet'
      * @throws OrganisaatioKoodistoException Koodistopalvelupyyntö epäonnistui
      */
     public void post(String json, String uri) throws OrganisaatioKoodistoException {
@@ -94,5 +96,14 @@ public class OrganisaatioKoodistoClient extends CustomClient {
                 .expectedStatus(201)
                 .mapWith(identity())
                 .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", uri))));
+    }
+    <T> T wrapException(Supplier<T> action) {
+        try {
+            return action.get();
+        } catch (Exception e) {
+            OrganisaatioKoodistoException ex = new OrganisaatioKoodistoException(e.getMessage());
+            ex.initCause(e);
+            throw ex;
+        }
     }
 }

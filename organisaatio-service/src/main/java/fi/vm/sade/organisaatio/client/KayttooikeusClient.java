@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioKayttooikeusException;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
@@ -30,7 +31,7 @@ public class KayttooikeusClient extends CustomClient {
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, new TypeReference<>() {
                 }))
-                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", url)));
+                .orElseThrow(() -> new OrganisaatioKayttooikeusException(String.format("Osoite %s palautti 204 tai 404", url)));
     }
 
     public Collection<VirkailijaDto> listVirkailija(VirkailijaCriteria criteria) {
@@ -44,7 +45,7 @@ public class KayttooikeusClient extends CustomClient {
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, new TypeReference<>() {
                 }))
-                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", url)));
+                .orElseThrow(() -> new OrganisaatioKayttooikeusException(String.format("Osoite %s palautti 204 tai 404", url)));
     }
 
 }

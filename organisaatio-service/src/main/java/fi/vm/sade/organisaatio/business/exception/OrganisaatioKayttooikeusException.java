@@ -13,24 +13,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
 
-package fi.vm.sade.organisaatio.business;
+package fi.vm.sade.organisaatio.business.exception;
 
-import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
-import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
+public class OrganisaatioKayttooikeusException extends OrganisaatioBusinessException {
 
-import java.util.List;
+    public OrganisaatioKayttooikeusException(String msg) {
+        super(msg);
+    }
 
-public interface OrganisaatioViestinta {
-
-    /**
-     * Lähettää sähköpostin.
-     *
-     * @param data sähköpostin sisältö
-     * @param sanitize true=viestintäpalvelu poistaa kielletyt html-tagit sähköpostin sisällöstä
-     * @return sähköpostin tunniste
-     */
-    String sendEmail(EmailData data, boolean sanitize);
-
-    void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
+    @Override
+    public String getErrorKey() {
+        return "organisaatio.exception.kayttooikeus";
+    }
 
 }
