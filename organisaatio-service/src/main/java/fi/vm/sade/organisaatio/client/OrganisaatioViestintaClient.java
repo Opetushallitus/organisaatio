@@ -37,8 +37,8 @@ public class OrganisaatioViestintaClient extends CustomClient {
         super(httpClient, properties);
     }
 
-    public String sendEmail(String json) throws OrganisaatioViestintaException {
-        return sendEmail(json, true);
+    public void sendEmail(String json) throws OrganisaatioViestintaException {
+        sendEmail(json, true);
     }
 
     public String sendEmail(String json, boolean sanitize) {
