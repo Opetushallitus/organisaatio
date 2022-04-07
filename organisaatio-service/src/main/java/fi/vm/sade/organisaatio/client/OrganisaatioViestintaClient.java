@@ -31,33 +31,18 @@ import static java.util.function.Function.identity;
 
 
 @Component
-public class OrganisaatioViestintaClient {
+public class OrganisaatioViestintaClient extends CustomClient {
 
-    private final OphHttpClient httpClient;
-    private final OphProperties urlConfiguration;
-
-    public OrganisaatioViestintaClient(@Qualifier(HTTP_CLIENT_VIESTINTA) OphHttpClient httpClient,
-                                       OphProperties urlConfiguration) {
-        this.httpClient = httpClient;
-        this.urlConfiguration = urlConfiguration;
+    public OrganisaatioViestintaClient(@Qualifier(HTTP_CLIENT_VIESTINTA) OphHttpClient httpClient, OphProperties properties) {
+        super(httpClient, properties);
     }
 
-    private <T> T wrapException(Supplier<T> action) {
-        try {
-            return action.get();
-        } catch (Exception e) {
-            OrganisaatioViestintaException organisaatioViestintaException = new OrganisaatioViestintaException(e.getMessage());
-            organisaatioViestintaException.initCause(e);
-            throw organisaatioViestintaException;
-        }
+    public void sendEmail(String json) throws OrganisaatioViestintaException {
+        sendEmail(json, true);
     }
 
-    public String post(String json, String uri) throws OrganisaatioViestintaException {
-        return post(json, uri, true);
-    }
-
-    public String post(String json, String uri, boolean sanitize) {
-        String viestintaServiceUrl = urlConfiguration.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", uri, sanitize);
+    public String sendEmail(String json, boolean sanitize) {
+        String viestintaServiceUrl = properties.getProperty("organisaatio-service.ryhmasahkoposti-service.rest.mail", sanitize);
 
         OphHttpRequest request = OphHttpRequest.Builder.post(viestintaServiceUrl)
                 .setEntity(new OphHttpEntity.Builder()
@@ -69,5 +54,14 @@ public class OrganisaatioViestintaClient {
                 .expectedStatus(200)
                 .mapWith(identity())
                 .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", viestintaServiceUrl))));
+    }
+    <T> T wrapException(Supplier<T> action) {
+        try {
+            return action.get();
+        } catch (Exception e) {
+            OrganisaatioViestintaException ex = new OrganisaatioViestintaException(e.getMessage());
+            ex.initCause(e);
+            throw ex;
+        }
     }
 }

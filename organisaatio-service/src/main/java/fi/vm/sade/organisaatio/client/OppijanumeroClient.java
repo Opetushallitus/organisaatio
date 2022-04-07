@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioOppijanumeroException;
 import fi.vm.sade.properties.OphProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class OppijanumeroClient extends CustomClient {
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, new TypeReference<>() {
                 }))
-                .orElseThrow(() -> new ClientException(String.format("Osoite %s palautti 204 tai 404", url)));
+                .orElseThrow(() -> new OrganisaatioOppijanumeroException(String.format("Osoite %s palautti 204 tai 404", url)));
     }
 
     public static class OppijanumeroDto {

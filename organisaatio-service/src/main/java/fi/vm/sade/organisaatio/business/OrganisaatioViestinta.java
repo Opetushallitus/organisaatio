@@ -18,8 +18,6 @@ package fi.vm.sade.organisaatio.business;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 
-import java.util.List;
-
 public interface OrganisaatioViestinta {
 
     /**
@@ -31,9 +29,6 @@ public interface OrganisaatioViestinta {
      */
     String sendEmail(EmailData data, boolean sanitize);
 
-    void sendStringViestintaEmail(String message);
-
     void sendPaivitysLokiViestintaEmail(YtjPaivitysLoki ytjPaivitysLoki);
 
-    void generateAndSendEmail(String content, List<String> receiverEmails);
 }
