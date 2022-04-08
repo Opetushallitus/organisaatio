@@ -11,7 +11,7 @@ Sisältää sovellukset
 
 ## Swagger-dokumentaatio
 
-https://virkailija.opintopolku.fi/organisaatio/swagger-ui.html
+https://virkailija.opintopolku.fi/organisaatio-service/swagger-ui
 
 ## Sovelluksen pystyttäminen ja ajaminen omalla koneella
 
