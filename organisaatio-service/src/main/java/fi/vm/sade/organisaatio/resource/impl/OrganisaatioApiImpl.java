@@ -177,11 +177,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public List<OrganisaatioRDTOV4> haeMuutetut(
             DateParam lastModifiedSince,
             boolean includeImage,
-            List<String> organizationTypes,
+            List<String> organizationType,
             boolean excludeDiscontinued) {
         try {
-            List<OrganisaatioTyyppi> organisaatioTyypit = organizationTypes == null ? Collections.emptyList() :
-                    organizationTypes.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
+            List<OrganisaatioTyyppi> organisaatioTyypit = organizationType == null ? Collections.emptyList() :
+                    organizationType.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
             return this.organisaatioFindBusinessService.haeMuutetut(
                     lastModifiedSince, includeImage, organisaatioTyypit, excludeDiscontinued);
         } catch (IllegalArgumentException iae) {
