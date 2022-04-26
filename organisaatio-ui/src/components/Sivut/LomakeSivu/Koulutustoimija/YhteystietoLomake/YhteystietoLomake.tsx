@@ -76,15 +76,13 @@ const YhteystietoLomake = ({
                             : i18n.translate('YHTEYSTIEDOT_NAYTA_MUUT_KIELET')}
                     </Button>
                 </div>
-                {(readOnly && (
-                    <Checkbox disabled checked={osoitteetOnEri}>
-                        {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE')}
-                    </Checkbox>
-                )) || (
-                    <Checkbox {...formRegister('osoitteetOnEri')} checked={osoitteetOnEri}>
-                        {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE')}
-                    </Checkbox>
-                )}
+                <Checkbox
+                    disabled={readOnly}
+                    {...(!readOnly && formRegister('osoitteetOnEri'))}
+                    checked={osoitteetOnEri}
+                >
+                    {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE')}
+                </Checkbox>
             </Rivi>
             <div className={styles.KortitContainer}>
                 {visibleKielet.map((kieli: Language) => (
