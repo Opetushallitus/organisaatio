@@ -128,7 +128,7 @@ export const YhteystietoKortti = ({
     const error = getErrorDetails(validationErrors);
     if (kortinKieli === 'en')
         return (
-            <div key={kortinKieli} className={styles.KorttiKehys}>
+            <div className={styles.KorttiKehys}>
                 <OtsikkoRivi label={`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`} />
                 <RiviKentta
                     label="YHTEYSTIEDOT_POSTIOSOITE_MUU"
@@ -169,7 +169,7 @@ export const YhteystietoKortti = ({
             </div>
         );
     return (
-        <div key={kortinKieli} className={styles.KorttiKehys}>
+        <div className={styles.KorttiKehys}>
             <OtsikkoRivi label={`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`} />
             <RiviKentta label="YHTEYSTIEDOT_POSTIOSOITE" isRequired error={getError(error, kortinKieli, 'postiOsoite')}>
                 <Input
@@ -195,7 +195,7 @@ export const YhteystietoKortti = ({
                 />
             </PostinumeroKentta>
             {osoitteetOnEri && [
-                <RiviKentta label="YHTEYSTIEDOT_KAYNTIOSOITE">
+                <RiviKentta key={`${kortinKieli}-kaynti`} label="YHTEYSTIEDOT_KAYNTIOSOITE">
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.kayntiOsoite` as const)}
@@ -203,6 +203,7 @@ export const YhteystietoKortti = ({
                     />
                 </RiviKentta>,
                 <PostinumeroKentta
+                    key={`${kortinKieli}-postinro`}
                     label="YHTEYSTIEDOT_POSTINUMERO'"
                     toimipaikkaName={`${kortinKieli}.kayntiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
                     control={formControl}

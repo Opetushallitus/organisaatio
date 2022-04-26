@@ -76,12 +76,16 @@ const YhteystietoLomake = ({
                             : i18n.translate('YHTEYSTIEDOT_NAYTA_MUUT_KIELET')}
                     </Button>
                 </div>
-                <Checkbox disabled={readOnly} {...formRegister('osoitteetOnEri')} checked={osoitteetOnEri}>
+                <Checkbox
+                    disabled={readOnly}
+                    {...(!readOnly && formRegister('osoitteetOnEri'))}
+                    checked={osoitteetOnEri}
+                >
                     {i18n.translate('YHTEYSTIEDOT_POSTIOSOITE_ON_ERI_KUIN_KAYNTIOSOITE')}
                 </Checkbox>
             </Rivi>
             <div className={styles.KortitContainer}>
-                {visibleKielet.map((kieli, index) => (
+                {visibleKielet.map((kieli: Language) => (
                     <YhteystietoKortti
                         isYtj={isYtj}
                         readOnly={readOnly}
@@ -100,8 +104,8 @@ const YhteystietoLomake = ({
                 ))}
                 {naytaMuutKielet &&
                     kaikkiOpetuskielet
-                        .filter((kieli) => !visibleKielet.includes(kieli))
-                        .map((kieli) => (
+                        .filter((kieli: Language) => !visibleKielet.includes(kieli))
+                        .map((kieli: Language) => (
                             <YhteystietoKortti
                                 readOnly={readOnly}
                                 key={kieli}
