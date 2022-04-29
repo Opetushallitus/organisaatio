@@ -71,7 +71,7 @@ import java.util.stream.IntStream;
 @RequestMapping("${server.rest.context-path}/organisaatio/v2")
 public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
     private static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
 
     @Autowired
@@ -267,13 +267,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/paivittaja
     @Override
-    public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(String oid) throws Exception {
+    public OrganisaatioPaivittajaDTOV2 getOrganisaatioPaivittaja(String oid) {
         Preconditions.checkNotNull(oid);
 
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
+            logger.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
@@ -297,50 +297,64 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
+            logger.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
-        List<OrganisaatioNimi> organisaatioNimet = organisaatioBusinessService.getOrganisaatioNimet(oid);
-
         // Define the target list type for mapping
         Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTO>>() {
         }.getType();
-
-        // Map domain type to DTO
-        List<OrganisaatioNimiDTO> mapped = organisaatioNimiModelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
-        List<OrganisaatioNimiDTO> result = new ArrayList<>();
+        List<OrganisaatioNimiDTO> mapped = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), organisaatioNimiDTOV2ListType);
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
         if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             String parentOid = org.getParentOid().orElseThrow(() -> new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "missing parentoid"));
-            List<OrganisaatioNimi> parentNimet = organisaatioBusinessService.getOrganisaatioNimet(parentOid);
-            IntStream.range(0, mapped.size()).forEach(idx -> {
-                        OrganisaatioNimiDTO toimipiste1 = mapped.get(idx);
-                        OrganisaatioNimiDTO toimipiste2 = idx + 1 < mapped.size() ? mapped.get(idx + 1) : null;
-                        parentNimet.stream()
-                                .filter(parent -> parent.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0)
-                                .filter(parent -> toimipiste2 == null || parent.getAlkuPvm().compareTo(toimipiste2.getAlkuPvm()) < 0)
-                                .forEach(oppilaitosNimi -> result.add(extracted(toimipiste1, oppilaitosNimi)));
+            List<OrganisaatioNimiDTO> mappedParentNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentOid), organisaatioNimiDTOV2ListType);
+            mappedParentNimet.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
+            return decoreateToimipisteNimet(mapped, mappedParentNimet);
+        } else {
+            return mapped;
+        }
+    }
+
+    List<OrganisaatioNimiDTO> decoreateToimipisteNimet(List<OrganisaatioNimiDTO> toimipisteNimet, List<OrganisaatioNimiDTO> oppilaitosNimet) {
+        List<OrganisaatioNimiDTO> result = new ArrayList<>();
+        IntStream.range(0, toimipisteNimet.size()).forEach(toimipisteIndex -> {
+            OrganisaatioNimiDTO toimipiste1 = toimipisteNimet.get(toimipisteIndex);
+            OrganisaatioNimiDTO toimipiste2 = toimipisteIndex + 1 < toimipisteNimet.size() ? toimipisteNimet.get(toimipisteIndex + 1) : null;
+            IntStream.range(0, oppilaitosNimet.size()).forEach(oppilaitosIndex -> {
+                        OrganisaatioNimiDTO oppilaitos1 = oppilaitosNimet.get(oppilaitosIndex);
+                        OrganisaatioNimiDTO oppilaitos2 = oppilaitosIndex + 1 < oppilaitosNimet.size() ? oppilaitosNimet.get(oppilaitosIndex + 1) : null;
+
+                        boolean firstToimipiste = toimipisteIndex == 0;
+                        boolean lastToimipiste = toimipiste2 == null;
+                        boolean firtsOppilaitos = oppilaitosIndex == 0;
+                        boolean lastOppilaitos = oppilaitos2 == null;
+
+                        boolean toimipisteInOppilaitosRange = (firtsOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos1.getAlkuPvm()) >= 0) && (lastOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos2.getAlkuPvm()) <= 0);
+                        boolean oppilaitosWithinToimipisteet = (firstToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0) && (lastToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste2.getAlkuPvm()) <= 0);
+
+                        if (toimipisteInOppilaitosRange) {
+                            result.add(oppilaitosToimipisteNimi(toimipiste1, oppilaitos1, toimipiste1.getAlkuPvm()));
+                        } else if (oppilaitosWithinToimipisteet)
+                            result.add(oppilaitosToimipisteNimi(toimipiste1, oppilaitos1, oppilaitos1.getAlkuPvm()));
                     }
             );
-        } else {
-            result.addAll(mapped);
-        }
+        });
         result.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
         return result;
     }
 
-    private OrganisaatioNimiDTO extracted(OrganisaatioNimiDTO toimipiste, OrganisaatioNimi oppilaitosNimi) {
-        OrganisaatioNimiDTO copy = new OrganisaatioNimiDTO();
+    OrganisaatioNimiDTO oppilaitosToimipisteNimi(OrganisaatioNimiDTO toimipiste, OrganisaatioNimiDTO oppilaitosNimi, Date alkuPvm) {
+        OrganisaatioNimiDTO toimipisteNimi = new OrganisaatioNimiDTO();
         Map<String, String> thisNimi = toimipiste.getNimi().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        copy.setNimi(thisNimi);
-        copy.setVersion(toimipiste.getVersion());
-        copy.setAlkuPvm(oppilaitosNimi.getAlkuPvm());
+        toimipisteNimi.setNimi(thisNimi);
+        toimipisteNimi.setVersion(toimipiste.getVersion());
+        toimipisteNimi.setAlkuPvm(alkuPvm);
         thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
                 String.format("%s, %s",
-                        oppilaitosNimi.getNimi().getValues().get(kieli),
+                        oppilaitosNimi.getNimi().get(kieli),
                         thisNimi.get(kieli).substring(thisNimi.get(kieli).lastIndexOf(", ") > 0 ? thisNimi.get(kieli).lastIndexOf(", ") + 2 : 0))));
-        return copy;
+        return toimipisteNimi;
     }
 
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
@@ -361,11 +375,11 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
+            logger.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
-        LOG.debug("getOrganisaationLOPTiedotByOID: {}", oid);
+        logger.debug("getOrganisaationLOPTiedotByOID: {}", oid);
 
         // Search order
         // 1. OID
@@ -409,13 +423,13 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         Preconditions.checkNotNull(lastModifiedSince);
 
-        LOG.debug("haeMuutetut: {}", lastModifiedSince);
+        logger.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
 
-        LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
+        logger.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
 
         if (organisaatiot == null || organisaatiot.isEmpty()) {
@@ -434,7 +448,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             results.add(result);
         }
 
-        LOG.debug("Muutettujen convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
+        logger.debug("Muutettujen convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
 
         return results;
     }
@@ -444,7 +458,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     public String haeMuutettujenOid(DateParam lastModifiedSince) {
 
         Preconditions.checkNotNull(lastModifiedSince);
-        LOG.debug("haeMuutettujenOid: {}", lastModifiedSince);
+        logger.debug("haeMuutettujenOid: {}", lastModifiedSince);
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
@@ -467,7 +481,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
+            logger.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
@@ -524,7 +538,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups(conversionService.convert(criteria, RyhmaCriteriaDtoV3.class));
 
-        LOG.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
+        logger.debug("Ryhmien haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
 
         Type groupListType = new TypeToken<List<OrganisaatioGroupDTOV2>>() {
@@ -532,7 +546,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         List<OrganisaatioGroupDTOV2> groupList = groupModelMapper.map(entitys, groupListType);
 
-        LOG.debug("Ryhmien convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
+        logger.debug("Ryhmien convertointi {} ms --> yhteensä {} ms", System.currentTimeMillis() - qstarted2, System.currentTimeMillis() - qstarted);
 
         return groupList;
     }
@@ -544,14 +558,14 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(organisaatioOid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, organisaatioOid);
+            logger.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, organisaatioOid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             return hakutoimistoRec(organisaatioOid);
         } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
-            LOG.warn("Hakutoimiston haku organisaatiolle {} epäonnistui.", organisaatioOid);
+            logger.warn("Hakutoimiston haku organisaatiolle {} epäonnistui.", organisaatioOid);
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, e.getMessage()
             );
