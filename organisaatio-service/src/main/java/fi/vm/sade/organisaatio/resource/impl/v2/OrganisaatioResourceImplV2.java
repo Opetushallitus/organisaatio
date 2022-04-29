@@ -18,6 +18,7 @@ package fi.vm.sade.organisaatio.resource.impl.v2;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.api.DateParam;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
@@ -38,7 +39,10 @@ import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.dto.*;
+import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
+import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
@@ -56,6 +60,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author simok
@@ -66,6 +72,7 @@ import java.util.*;
 public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
+    private static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
 
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
@@ -104,15 +111,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioYhteystiedotDTOV2> searchOrganisaatioYhteystiedot(YhteystiedotSearchCriteriaDTOV2 hakuEhdot) {
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getKieliList());
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getKuntaList());
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOppilaitostyyppiList());
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getVuosiluokkaList());
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getYtunnusList());
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getOidList());
-        LOG.debug("searchOrganisaatioYhteystiedot: " + hakuEhdot.getLimit());
-
-
         Set<Organisaatio> organisaatiot = organisaatioFindBusinessService.findBySearchCriteria(
                 hakuEhdot.getKieliList(),
                 hakuEhdot.getKuntaList(),
@@ -275,11 +273,9 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
-
-        LOG.debug("searchOrganisaatioPaivittaja: " + oid);
 
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
 
@@ -295,16 +291,15 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/{oid}/nimet
     @Override
-    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid){
+    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid) {
         Preconditions.checkNotNull(oid);
 
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
-
         List<OrganisaatioNimi> organisaatioNimet = organisaatioBusinessService.getOrganisaatioNimet(oid);
 
         // Define the target list type for mapping
@@ -312,7 +307,40 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }.getType();
 
         // Map domain type to DTO
-        return organisaatioNimiModelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
+        List<OrganisaatioNimiDTO> mapped = organisaatioNimiModelMapper.map(organisaatioNimet, organisaatioNimiDTOV2ListType);
+        List<OrganisaatioNimiDTO> result = new ArrayList<>();
+        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            String parentOid = org.getParentOid().orElseThrow(() -> new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "missing parentoid"));
+            List<OrganisaatioNimi> parentNimet = organisaatioBusinessService.getOrganisaatioNimet(parentOid);
+            IntStream.range(0, mapped.size()).forEach(idx -> {
+                        OrganisaatioNimiDTO toimipiste1 = mapped.get(idx);
+                        OrganisaatioNimiDTO toimipiste2 = idx + 1 < mapped.size() ? mapped.get(idx + 1) : null;
+                        parentNimet.stream()
+                                .filter(parent -> parent.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0)
+                                .filter(parent -> toimipiste2 == null || parent.getAlkuPvm().compareTo(toimipiste2.getAlkuPvm()) < 0)
+                                .forEach(oppilaitosNimi -> result.add(extracted(toimipiste1, oppilaitosNimi)));
+                    }
+            );
+        } else {
+            result.addAll(mapped);
+        }
+        result.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
+        return result;
+    }
+
+    private OrganisaatioNimiDTO extracted(OrganisaatioNimiDTO toimipiste, OrganisaatioNimi oppilaitosNimi) {
+        OrganisaatioNimiDTO copy = new OrganisaatioNimiDTO();
+        Map<String, String> thisNimi = toimipiste.getNimi().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        copy.setNimi(thisNimi);
+        copy.setVersion(toimipiste.getVersion());
+        copy.setAlkuPvm(oppilaitosNimi.getAlkuPvm());
+        thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
+                String.format("%s, %s",
+                        oppilaitosNimi.getNimi().getValues().get(kieli),
+                        thisNimi.get(kieli).substring(thisNimi.get(kieli).lastIndexOf(", ") > 0 ? thisNimi.get(kieli).lastIndexOf(", ") + 2 : 0))));
+        return copy;
     }
 
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
@@ -333,11 +361,11 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
-        LOG.debug("getOrganisaationLOPTiedotByOID: " + oid);
+        LOG.debug("getOrganisaationLOPTiedotByOID: {}", oid);
 
         // Search order
         // 1. OID
@@ -381,7 +409,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         Preconditions.checkNotNull(lastModifiedSince);
 
-        LOG.debug("haeMuutetut: " + lastModifiedSince.toString());
+        LOG.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
@@ -416,7 +444,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     public String haeMuutettujenOid(DateParam lastModifiedSince) {
 
         Preconditions.checkNotNull(lastModifiedSince);
-        LOG.debug("haeMuutettujenOid: " + lastModifiedSince.toString());
+        LOG.debug("haeMuutettujenOid: {}", lastModifiedSince);
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
@@ -439,7 +467,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + oid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
@@ -491,7 +519,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/ryhmat
     @Override
-    public List<OrganisaatioGroupDTOV2> groups(RyhmaCriteriaDtoV2 criteria) throws Exception {
+    public List<OrganisaatioGroupDTOV2> groups(RyhmaCriteriaDtoV2 criteria) {
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> entitys = organisaatioFindBusinessService.findGroups(conversionService.convert(criteria, RyhmaCriteriaDtoV3.class));
@@ -516,15 +544,14 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         try {
             permissionChecker.checkReadOrganisation(organisaatioOid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: " + organisaatioOid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, organisaatioOid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
-            HakutoimistoDTO hakutoimistoDTO = hakutoimistoRec(organisaatioOid);
-            return hakutoimistoDTO;
+            return hakutoimistoRec(organisaatioOid);
         } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
-            LOG.warn("Hakutoimiston haku organisaatiolle " + organisaatioOid + " epäonnistui.");
+            LOG.warn("Hakutoimiston haku organisaatiolle {} epäonnistui.", organisaatioOid);
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, e.getMessage()
             );
