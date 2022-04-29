@@ -334,8 +334,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
                         boolean firtsOppilaitos = oppilaitosIndex == 0;
                         boolean lastOppilaitos = oppilaitos2 == null;
 
-                        boolean toimipisteInOppilaitosRange = (firtsOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos1.getAlkuPvm()) >= 0) && (lastOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos2.getAlkuPvm()) <= 0);
-                        boolean oppilaitosWithinToimipisteet = (firstToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0) && (lastToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste2.getAlkuPvm()) <= 0);
+                        boolean toimipisteInOppilaitosRange = (firtsOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos1.getAlkuPvm()) >= 0) && (lastOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos2.getAlkuPvm()) < 0);
+                        boolean oppilaitosWithinToimipisteet = (firstToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0) && (lastToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste2.getAlkuPvm()) < 0);
 
                         if (toimipisteInOppilaitosRange) {
                             result.add(oppilaitosToimipisteNimi(toimipiste1, oppilaitos1, toimipiste1.getAlkuPvm()));
