@@ -301,17 +301,22 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         // Define the target list type for mapping
-        Type organisaatioNimiDTOV2ListType = new TypeToken<List<OrganisaatioNimiDTO>>() {
+        Type type = new TypeToken<List<OrganisaatioNimiDTO>>() {
         }.getType();
-        List<OrganisaatioNimiDTO> mapped = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), organisaatioNimiDTOV2ListType);
+        List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), type);
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        return getOrganisaatioNimiDTOS(type, orgNimet, org);
+    }
+
+    private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(Type type, List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
         if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             String parentOid = org.getParentOid().orElseThrow(() -> new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "missing parentoid"));
-            List<OrganisaatioNimiDTO> mappedParentNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentOid), organisaatioNimiDTOV2ListType);
+            Organisaatio parentOrg = organisaatioRepository.customFindByOid(parentOid);
+            List<OrganisaatioNimiDTO> mappedParentNimet = getOrganisaatioNimiDTOS(type, organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentOid), type), parentOrg);
             mappedParentNimet.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
-            return decoreateToimipisteNimet(mapped, mappedParentNimet);
+            return decoreateToimipisteNimet(orgNimet, mappedParentNimet);
         } else {
-            return mapped;
+            return orgNimet;
         }
     }
 
@@ -352,7 +357,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         toimipisteNimi.setAlkuPvm(alkuPvm);
         thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
                 String.format("%s, %s",
-                        oppilaitosNimi.getNimi().get(kieli),
+                        oppilaitosNimi.getNimi().get(kieli) != null ? oppilaitosNimi.getNimi().get(kieli) : oppilaitosNimi.getNimi().get("fi"),
                         thisNimi.get(kieli).substring(thisNimi.get(kieli).lastIndexOf(", ") > 0 ? thisNimi.get(kieli).lastIndexOf(", ") + 2 : 0))));
         return toimipisteNimi;
     }
