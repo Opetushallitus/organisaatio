@@ -310,32 +310,32 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(Type type, List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
         if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            String parentOid = org.getParentOid().orElseThrow(() -> new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "missing parentoid"));
-            Organisaatio parentOrg = organisaatioRepository.customFindByOid(parentOid);
-            List<OrganisaatioNimiDTO> mappedParentNimet = getOrganisaatioNimiDTOS(type, organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentOid), type), parentOrg);
-            mappedParentNimet.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
-            return decoreateToimipisteNimet(orgNimet, mappedParentNimet);
+            List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA).stream().map(parentSuhde ->
+                    Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), type))
+            ).collect(Collectors.toList());
+            return decoreateToimipisteNimet(orgNimet, oppilaitosHistoryNimet);
         } else {
             return orgNimet;
         }
     }
 
-    List<OrganisaatioNimiDTO> decoreateToimipisteNimet(List<OrganisaatioNimiDTO> toimipisteNimet, List<OrganisaatioNimiDTO> oppilaitosNimet) {
+    List<OrganisaatioNimiDTO> decoreateToimipisteNimet(List<OrganisaatioNimiDTO> toimipisteNimet, List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet) {
         List<OrganisaatioNimiDTO> result = new ArrayList<>();
+        List<OrganisaatioNimiDTO> oppilaitosNimet = evaluateParentNameHistory(oppilaitosHistoryNimet);
         IntStream.range(0, toimipisteNimet.size()).forEach(toimipisteIndex -> {
             OrganisaatioNimiDTO toimipiste1 = toimipisteNimet.get(toimipisteIndex);
-            OrganisaatioNimiDTO toimipiste2 = toimipisteIndex + 1 < toimipisteNimet.size() ? toimipisteNimet.get(toimipisteIndex + 1) : null;
+            Optional<OrganisaatioNimiDTO> toimipiste2 = toimipisteIndex + 1 < toimipisteNimet.size() ? Optional.of(toimipisteNimet.get(toimipisteIndex + 1)) : Optional.empty();
             IntStream.range(0, oppilaitosNimet.size()).forEach(oppilaitosIndex -> {
                         OrganisaatioNimiDTO oppilaitos1 = oppilaitosNimet.get(oppilaitosIndex);
-                        OrganisaatioNimiDTO oppilaitos2 = oppilaitosIndex + 1 < oppilaitosNimet.size() ? oppilaitosNimet.get(oppilaitosIndex + 1) : null;
+                        Optional<OrganisaatioNimiDTO> oppilaitos2 = oppilaitosIndex + 1 < oppilaitosNimet.size() ? Optional.of(oppilaitosNimet.get(oppilaitosIndex + 1)) : Optional.empty();
 
                         boolean firstToimipiste = toimipisteIndex == 0;
-                        boolean lastToimipiste = toimipiste2 == null;
+                        boolean lastToimipiste = toimipiste2.isEmpty();
                         boolean firtsOppilaitos = oppilaitosIndex == 0;
-                        boolean lastOppilaitos = oppilaitos2 == null;
+                        boolean lastOppilaitos = oppilaitos2.isEmpty();
 
-                        boolean toimipisteInOppilaitosRange = (firtsOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos1.getAlkuPvm()) >= 0) && (lastOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos2.getAlkuPvm()) < 0);
-                        boolean oppilaitosWithinToimipisteet = (firstToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0) && (lastToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste2.getAlkuPvm()) < 0);
+                        boolean toimipisteInOppilaitosRange = (firtsOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos1.getAlkuPvm()) >= 0) && (lastOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos2.get().getAlkuPvm()) < 0);
+                        boolean oppilaitosWithinToimipisteet = (firstToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0) && (lastToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste2.get().getAlkuPvm()) < 0);
 
                         if (toimipisteInOppilaitosRange) {
                             result.add(oppilaitosToimipisteNimi(toimipiste1, oppilaitos1, toimipiste1.getAlkuPvm()));
@@ -348,18 +348,41 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return result;
     }
 
+    List<OrganisaatioNimiDTO> evaluateParentNameHistory(List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet) {
+        List<OrganisaatioNimiDTO> names = oppilaitosHistoryNimet.stream().reduce(new ArrayList<>(), (previous, current) -> {
+            Date alku = current.getKey().getKey();
+            Optional<Date> loppu = current.getKey().getValue();
+            current.getValue().forEach(nimi -> {
+                boolean nimiInRange = nimi.getAlkuPvm().compareTo(alku) >= 0 && (loppu.isEmpty() || nimi.getAlkuPvm().compareTo(loppu.get()) < 0);
+                if (nimiInRange)
+                    previous.add(nimi);
+            });
+            return previous;
+        }, (a, b) -> {
+            a.addAll(b);
+            return a;
+        });
+        names.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
+        return names;
+    }
+
     OrganisaatioNimiDTO oppilaitosToimipisteNimi(OrganisaatioNimiDTO toimipiste, OrganisaatioNimiDTO oppilaitosNimi, Date alkuPvm) {
         OrganisaatioNimiDTO toimipisteNimi = new OrganisaatioNimiDTO();
         Map<String, String> thisNimi = toimipiste.getNimi().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        toimipisteNimi.setNimi(thisNimi);
         toimipisteNimi.setVersion(toimipiste.getVersion());
         toimipisteNimi.setAlkuPvm(alkuPvm);
         thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
                 String.format("%s, %s",
                         oppilaitosNimi.getNimi().get(kieli) != null ? oppilaitosNimi.getNimi().get(kieli) : oppilaitosNimi.getNimi().get("fi"),
-                        thisNimi.get(kieli).substring(thisNimi.get(kieli).lastIndexOf(", ") > 0 ? thisNimi.get(kieli).lastIndexOf(", ") + 2 : 0))));
+                        fixBrokenData(thisNimi.get(kieli)))));
+        toimipisteNimi.setNimi(thisNimi);
         return toimipisteNimi;
+    }
+
+    private String fixBrokenData(String nimi) {
+        // This correction of data is needed as long as the name-history of toimipiste still contains concatenated oppilaitos name
+        return nimi.substring(nimi.lastIndexOf(", ") > 0 ? nimi.lastIndexOf(", ") + 2 : 0);
     }
 
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
