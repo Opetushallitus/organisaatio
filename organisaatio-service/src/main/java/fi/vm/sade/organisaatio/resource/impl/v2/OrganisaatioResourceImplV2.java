@@ -362,6 +362,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             a.addAll(b);
             return a;
         });
+        if (names.isEmpty() && !oppilaitosHistoryNimet.isEmpty() && !oppilaitosHistoryNimet.get(0).getValue().isEmpty())
+            names.add(oppilaitosHistoryNimet.get(0).getValue().get(0));
         names.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
         return names;
     }
