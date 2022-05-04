@@ -350,20 +350,21 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     List<OrganisaatioNimiDTO> evaluateParentNameHistory(List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet) {
         List<OrganisaatioNimiDTO> names = oppilaitosHistoryNimet.stream().reduce(new ArrayList<>(), (previous, current) -> {
+            List<OrganisaatioNimiDTO> currentNames = new ArrayList<>();
             Date alku = current.getKey().getKey();
             Optional<Date> loppu = current.getKey().getValue();
             current.getValue().forEach(nimi -> {
-                boolean nimiInRange = nimi.getAlkuPvm().compareTo(alku) >= 0 && (loppu.isEmpty() || nimi.getAlkuPvm().compareTo(loppu.get()) < 0);
+                boolean nimiInRange = (previous.isEmpty() || nimi.getAlkuPvm().compareTo(alku) >= 0) && (loppu.isEmpty() || nimi.getAlkuPvm().compareTo(loppu.get()) < 0);
                 if (nimiInRange)
-                    previous.add(nimi);
+                    currentNames.add(nimi);
             });
+            previous.addAll(currentNames);
             return previous;
         }, (a, b) -> {
             a.addAll(b);
             return a;
         });
-        if (names.isEmpty() && !oppilaitosHistoryNimet.isEmpty() && !oppilaitosHistoryNimet.get(0).getValue().isEmpty())
-            names.add(oppilaitosHistoryNimet.get(0).getValue().get(0));
+
         names.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
         return names;
     }
