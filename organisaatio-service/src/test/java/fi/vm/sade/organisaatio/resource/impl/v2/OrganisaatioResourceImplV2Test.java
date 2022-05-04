@@ -178,14 +178,22 @@ class OrganisaatioResourceImplV2Test {
     }
 
     @Test
+    @DisplayName("Names from first parent should be extrapolated to beginning of time")
     void testEvaluateParentNameHistory4() {
-        OrganisaatioNimiDTO oppilaitosA1 = createNimi(77, "A1");
+        OrganisaatioNimiDTO oppilaitosA1 = createNimi(30, "A1");
+        OrganisaatioNimiDTO oppilaitosA2 = createNimi(25, "A2");
+        OrganisaatioNimiDTO oppilaitosA3 = createNimi(20, "A3");
+        OrganisaatioNimiDTO oppilaitosA4 = createNimi(15, "A4");
         List<OrganisaatioNimiDTO> res = resource.evaluateParentNameHistory(List.of(
-                Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(40)), Optional.of(Date.valueOf(LocalDate.now().minusDays(20)))), List.of(oppilaitosA1))
+                Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(27)), Optional.of(Date.valueOf(LocalDate.now().minusDays(17)))), List.of(oppilaitosA1, oppilaitosA2, oppilaitosA3, oppilaitosA4))
         ));
-        assertThat(res).isNotNull().hasSize(1);
+        assertThat(res).isNotNull().hasSize(3);
         assertThat(res.get(0).getNimi()).containsEntry("fi", "A1");
-        assertThat(res.get(0).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(77)));
+        assertThat(res.get(0).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(30)));
+        assertThat(res.get(1).getNimi()).containsEntry("fi", "A2");
+        assertThat(res.get(1).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(25)));
+        assertThat(res.get(2).getNimi()).containsEntry("fi", "A3");
+        assertThat(res.get(2).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(20)));
     }
 
 
