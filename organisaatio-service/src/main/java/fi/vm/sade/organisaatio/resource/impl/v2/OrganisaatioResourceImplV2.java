@@ -378,15 +378,11 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
                 String.format("%s, %s",
                         oppilaitosNimi.getNimi().get(kieli) != null ? oppilaitosNimi.getNimi().get(kieli) : oppilaitosNimi.getNimi().get("fi"),
-                        fixBrokenData(thisNimi.get(kieli)))));
+                        thisNimi.get(kieli))));
         toimipisteNimi.setNimi(thisNimi);
         return toimipisteNimi;
     }
 
-    private String fixBrokenData(String nimi) {
-        // This correction of data is needed as long as the name-history of toimipiste still contains concatenated oppilaitos name
-        return nimi.substring(nimi.lastIndexOf(", ") > 0 ? nimi.lastIndexOf(", ") + 2 : 0);
-    }
 
     private Map<String, String> convertMKTToMap(MonikielinenTeksti nimi) {
         Map<String, String> result = new HashMap<>();

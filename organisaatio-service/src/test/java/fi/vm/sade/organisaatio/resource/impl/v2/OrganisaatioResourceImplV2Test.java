@@ -94,21 +94,6 @@ class OrganisaatioResourceImplV2Test {
     }
 
     @Test
-    @DisplayName("Legacy concatenations from toimipiste-nimi shoudld be removed")
-    void testDecoreateToimipisteNimetLegacyNamesMayHaveConcatenation() {
-        OrganisaatioNimiDTO toimipiste1 = createNimi(30, "foo, one");
-        OrganisaatioNimiDTO toimipiste2 = createNimi(25, "two");
-        OrganisaatioNimiDTO oppilaitos1 = createNimi(30, "first");
-
-        List<OrganisaatioNimiDTO> res = resource.decoreateToimipisteNimet(List.of(toimipiste1, toimipiste2), List.of(Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusYears(1)), Optional.of(Date.valueOf(LocalDate.now()))), List.of(oppilaitos1))));
-        assertThat(res).isNotNull().hasSize(2);
-        assertThat(res.get(0).getNimi()).containsEntry("fi", "first, one");
-        assertThat(res.get(0).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(30)));
-        assertThat(res.get(1).getNimi()).containsEntry("fi", "first, two");
-        assertThat(res.get(1).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(25)));
-    }
-
-    @Test
     @DisplayName("parentnamehistory should combine names from parent history, only names within the parent period should be included (names from first oppilaitos will be gathered from start of time)")
     void testEvaluateParentNameHistory1() {
         OrganisaatioNimiDTO oppilaitosA1 = createNimi(30, "A1");
