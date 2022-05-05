@@ -376,11 +376,18 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         toimipisteNimi.setVersion(toimipiste.getVersion());
         toimipisteNimi.setAlkuPvm(alkuPvm);
         thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
-                String.format("%s, %s",
-                        oppilaitosNimi.getNimi().get(kieli) != null ? oppilaitosNimi.getNimi().get(kieli) : oppilaitosNimi.getNimi().get("fi"),
-                        thisNimi.get(kieli))));
+                generateToimipisteNimi(oppilaitosNimi, thisNimi, kieli)));
         toimipisteNimi.setNimi(thisNimi);
         return toimipisteNimi;
+    }
+
+    private String generateToimipisteNimi(OrganisaatioNimiDTO oppilaitosNimi, Map<String, String> thisNimi, String kieli) {
+        String nimiString = thisNimi.get(kieli);
+        String oppilaitosNimiString = oppilaitosNimi.getNimi().get(kieli) != null ? oppilaitosNimi.getNimi().get(kieli) : oppilaitosNimi.getNimi().get("fi");
+        if (nimiString.equals(oppilaitosNimiString))
+            return nimiString;
+        else
+            return String.format("%s, %s", oppilaitosNimiString, nimiString);
     }
 
 
