@@ -31,17 +31,17 @@ WITH rows AS (
                        join organisaatio o2 on suhde.parent_id = o2.id
                        join organisaatio_nimi nimi2 on nimi2.organisaatio_id = o2.id
                        join monikielinenteksti mkt2 on nimi2.nimi_mkt = mkt2.id
-                       join monikielinenteksti_values mktv2 on mkt2.id = mktv2.id and mktv.key = mktv2.key
+                       join monikielinenteksti_values mktv2 on mkt2.id = mktv2.id-- and mktv.key = mktv2.key
 
                        join organisaatio o3 on parents.parent_oid = o3.oid
                        join organisaatio_nimi nimi3 on nimi3.organisaatio_id = o3.id
                        join monikielinenteksti mkt3 on nimi3.nimi_mkt = mkt3.id
-                       join monikielinenteksti_values mktv3 on mkt3.id = mktv3.id and mktv.key = mktv3.key
+                       join monikielinenteksti_values mktv3 on mkt3.id = mktv3.id --and mktv.key = mktv3.key
 
                        join organisaatio o4 on suhde2.parent_id = o4.id
                        join organisaatio_nimi nimi4 on nimi4.organisaatio_id = o4.id
                        join monikielinenteksti mkt4 on nimi4.nimi_mkt = mkt4.id
-                       join monikielinenteksti_values mktv4 on mkt4.id = mktv4.id and mktv.key = mktv4.key
+                       join monikielinenteksti_values mktv4 on mkt4.id = mktv4.id-- and mktv.key = mktv4.key
               where mktv.value like mktv2.value || ', %'
                  or mktv.value like mktv3.value || ', %'
                  or mktv.value like mktv4.value || ', %') as sub
@@ -85,17 +85,17 @@ WITH rows AS (
                        join organisaatio o2 on suhde.parent_id = o2.id
                        join organisaatio_nimi nimi2 on nimi2.organisaatio_id = o2.id
                        join monikielinenteksti mkt2 on nimi2.nimi_mkt = mkt2.id
-                       join monikielinenteksti_values mktv2 on mkt2.id = mktv2.id and mktv.key = mktv2.key
+                       join monikielinenteksti_values mktv2 on mkt2.id = mktv2.id --and mktv.key = mktv2.key
 
                        join organisaatio o3 on parents.parent_oid = o3.oid
                        join organisaatio_nimi nimi3 on nimi3.organisaatio_id = o3.id
                        join monikielinenteksti mkt3 on nimi3.nimi_mkt = mkt3.id
-                       join monikielinenteksti_values mktv3 on mkt3.id = mktv3.id and mktv.key = mktv3.key
+                       join monikielinenteksti_values mktv3 on mkt3.id = mktv3.id --and mktv.key = mktv3.key
 
                        join organisaatio o4 on suhde2.parent_id = o4.id
                        join organisaatio_nimi nimi4 on nimi4.organisaatio_id = o4.id
                        join monikielinenteksti mkt4 on nimi4.nimi_mkt = mkt4.id
-                       join monikielinenteksti_values mktv4 on mkt4.id = mktv4.id and mktv.key = mktv4.key
+                       join monikielinenteksti_values mktv4 on mkt4.id = mktv4.id --and mktv.key = mktv4.key
               where mktv.value like mktv2.value || ', %'
                  or mktv.value like mktv3.value || ', %'
                  or mktv.value like mktv4.value || ', %') as sub
@@ -139,17 +139,17 @@ WITH rows AS (
                        join organisaatio o2 on suhde.parent_id = o2.id
                        join organisaatio_nimi nimi2 on nimi2.organisaatio_id = o2.id
                        join monikielinenteksti mkt2 on nimi2.nimi_mkt = mkt2.id
-                       join monikielinenteksti_values mktv2 on mkt2.id = mktv2.id and mktv.key = mktv2.key
+                       join monikielinenteksti_values mktv2 on mkt2.id = mktv2.id --and mktv.key = mktv2.key
 
                        join organisaatio o3 on parents.parent_oid = o3.oid
                        join organisaatio_nimi nimi3 on nimi3.organisaatio_id = o3.id
                        join monikielinenteksti mkt3 on nimi3.nimi_mkt = mkt3.id
-                       join monikielinenteksti_values mktv3 on mkt3.id = mktv3.id and mktv.key = mktv3.key
+                       join monikielinenteksti_values mktv3 on mkt3.id = mktv3.id --and mktv.key = mktv3.key
 
                        join organisaatio o4 on suhde2.parent_id = o4.id
                        join organisaatio_nimi nimi4 on nimi4.organisaatio_id = o4.id
                        join monikielinenteksti mkt4 on nimi4.nimi_mkt = mkt4.id
-                       join monikielinenteksti_values mktv4 on mkt4.id = mktv4.id and mktv.key = mktv4.key
+                       join monikielinenteksti_values mktv4 on mkt4.id = mktv4.id --and mktv.key = mktv4.key
               where mktv.value like mktv2.value || ', %'
                  or mktv.value like mktv3.value || ', %'
                  or mktv.value like mktv4.value || ', %') as sub
