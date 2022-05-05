@@ -105,15 +105,22 @@ class OrganisaatioResourceImplV2Test {
         List<OrganisaatioNimiDTO> res = resource.evaluateParentNameHistory(List.of(
                 Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(27)), Optional.of(Date.valueOf(LocalDate.now().minusDays(17)))), List.of(oppilaitosA1, oppilaitosA2, oppilaitosA3)),
                 Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(17)), Optional.of(Date.valueOf(LocalDate.now()))), List.of(oppilaitosB1, oppilaitosB2, oppilaitosB3))));
-        assertThat(res).isNotNull().hasSize(4);
         assertThat(res.get(0).getNimi()).containsEntry("fi", "A1");
         assertThat(res.get(0).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(30)));
+
         assertThat(res.get(1).getNimi()).containsEntry("fi", "A2");
         assertThat(res.get(1).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(25)));
+
         assertThat(res.get(2).getNimi()).containsEntry("fi", "A3");
         assertThat(res.get(2).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(20)));
-        assertThat(res.get(3).getNimi()).containsEntry("fi", "B3");
-        assertThat(res.get(3).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(15)));
+
+        assertThat(res.get(3).getNimi()).containsEntry("fi", "B2");
+        assertThat(res.get(3).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(17)));
+
+        assertThat(res.get(4).getNimi()).containsEntry("fi", "B3");
+        assertThat(res.get(4).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(15)));
+
+        assertThat(res).isNotNull().hasSize(5);
     }
 
     @Test
@@ -128,15 +135,18 @@ class OrganisaatioResourceImplV2Test {
         List<OrganisaatioNimiDTO> res = resource.evaluateParentNameHistory(List.of(
                 Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(27)), Optional.of(Date.valueOf(LocalDate.now().minusDays(17)))), List.of(oppilaitosA1, oppilaitosA2, oppilaitosA3)),
                 Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(17)), Optional.empty()), List.of(oppilaitosB1, oppilaitosB2, oppilaitosB3))));
-        assertThat(res).isNotNull().hasSize(4);
+
         assertThat(res.get(0).getNimi()).containsEntry("fi", "A1");
         assertThat(res.get(0).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(30)));
         assertThat(res.get(1).getNimi()).containsEntry("fi", "A2");
         assertThat(res.get(1).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(25)));
         assertThat(res.get(2).getNimi()).containsEntry("fi", "A3");
         assertThat(res.get(2).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(20)));
-        assertThat(res.get(3).getNimi()).containsEntry("fi", "B3");
-        assertThat(res.get(3).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(15)));
+        assertThat(res.get(3).getNimi()).containsEntry("fi", "B2");
+        assertThat(res.get(3).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(17)));
+        assertThat(res.get(4).getNimi()).containsEntry("fi", "B3");
+        assertThat(res.get(4).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(15)));
+        assertThat(res).isNotNull().hasSize(5);
     }
 
     @Test
@@ -151,7 +161,7 @@ class OrganisaatioResourceImplV2Test {
         List<OrganisaatioNimiDTO> res = resource.evaluateParentNameHistory(List.of(
                 Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(25)), Optional.of(Date.valueOf(LocalDate.now().minusDays(20)))), List.of(oppilaitosA1, oppilaitosA2, oppilaitosA3)),
                 Map.entry(Map.entry(Date.valueOf(LocalDate.now().minusDays(20)), Optional.empty()), List.of(oppilaitosB1, oppilaitosB2, oppilaitosB3))));
-        assertThat(res).isNotNull().hasSize(4);
+
         assertThat(res.get(0).getNimi()).containsEntry("fi", "A1");
         assertThat(res.get(0).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(30)));
         assertThat(res.get(1).getNimi()).containsEntry("fi", "A2");
@@ -160,6 +170,7 @@ class OrganisaatioResourceImplV2Test {
         assertThat(res.get(2).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(20)));
         assertThat(res.get(3).getNimi()).containsEntry("fi", "B3");
         assertThat(res.get(3).getAlkuPvm()).isEqualToIgnoringMinutes(Date.valueOf(LocalDate.now().minusDays(15)));
+        assertThat(res).isNotNull().hasSize(4);
     }
 
     @Test

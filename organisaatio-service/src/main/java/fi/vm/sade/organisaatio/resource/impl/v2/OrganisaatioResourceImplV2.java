@@ -349,34 +349,45 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     List<OrganisaatioNimiDTO> evaluateParentNameHistory(List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet) {
-        List<OrganisaatioNimiDTO> names = oppilaitosHistoryNimet.stream().reduce(new ArrayList<>(), (previous, current) -> {
-            List<OrganisaatioNimiDTO> currentNames = new ArrayList<>();
-            Date alku = current.getKey().getKey();
-            Optional<Date> loppu = current.getKey().getValue();
-            current.getValue().forEach(nimi -> {
-                boolean nimiInRange = (previous.isEmpty() || nimi.getAlkuPvm().compareTo(alku) >= 0) && (loppu.isEmpty() || nimi.getAlkuPvm().compareTo(loppu.get()) < 0);
-                if (nimiInRange)
-                    currentNames.add(nimi);
-            });
-            previous.addAll(currentNames);
-            return previous;
-        }, (a, b) -> {
-            a.addAll(b);
-            return a;
-        });
+        List<OrganisaatioNimiDTO> result = new ArrayList<>();
+        IntStream.range(0, oppilaitosHistoryNimet.size()).forEach(index -> {
+            Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>> currentOppilaitosNimet = oppilaitosHistoryNimet.get(index);
 
-        names.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
-        return names;
+            Date alku = currentOppilaitosNimet.getKey().getKey();
+            Optional<Date> loppu = currentOppilaitosNimet.getKey().getValue();
+            List<OrganisaatioNimiDTO> currentNames = new ArrayList<>();
+            IntStream.range(0, currentOppilaitosNimet.getValue().size()).forEach(index2 -> {
+                OrganisaatioNimiDTO currentOppilaitosNimi = currentOppilaitosNimet.getValue().get(index2);
+                boolean nimiInRange = (index == 0 || currentOppilaitosNimi.getAlkuPvm().compareTo(alku) >= 0) && (loppu.isEmpty() || currentOppilaitosNimi.getAlkuPvm().compareTo(loppu.get()) < 0);
+
+                if (nimiInRange) {
+                    if (index > 0 && index2 > 0 && currentNames.isEmpty() && currentOppilaitosNimi.getAlkuPvm().compareTo(alku) > 0) {
+                        //add previous name with start from start of range
+                        currentNames.add(copyNimi(currentOppilaitosNimet.getValue().get(index2 - 1), alku));
+                    }
+                    currentNames.add(currentOppilaitosNimi);
+                }
+            });
+            result.addAll(currentNames);
+        });
+        result.sort(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm));
+        return result;
     }
 
     OrganisaatioNimiDTO oppilaitosToimipisteNimi(OrganisaatioNimiDTO toimipiste, OrganisaatioNimiDTO oppilaitosNimi, Date alkuPvm) {
+        OrganisaatioNimiDTO toimipisteNimi = copyNimi(toimipiste, alkuPvm);
+        Map<String, String> nimi = toimipisteNimi.getNimi();
+        nimi.keySet().forEach(kieli -> nimi.put(kieli,
+                generateToimipisteNimi(oppilaitosNimi, nimi, kieli)));
+        return toimipisteNimi;
+    }
+
+    private OrganisaatioNimiDTO copyNimi(OrganisaatioNimiDTO toimipiste, Date alkuPvm) {
         OrganisaatioNimiDTO toimipisteNimi = new OrganisaatioNimiDTO();
         Map<String, String> thisNimi = toimipiste.getNimi().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         toimipisteNimi.setVersion(toimipiste.getVersion());
         toimipisteNimi.setAlkuPvm(alkuPvm);
-        thisNimi.keySet().forEach(kieli -> thisNimi.put(kieli,
-                generateToimipisteNimi(oppilaitosNimi, thisNimi, kieli)));
         toimipisteNimi.setNimi(thisNimi);
         return toimipisteNimi;
     }
