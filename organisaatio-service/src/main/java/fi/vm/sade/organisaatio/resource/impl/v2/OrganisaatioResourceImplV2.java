@@ -358,14 +358,18 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             List<OrganisaatioNimiDTO> currentNames = new ArrayList<>();
             IntStream.range(0, currentOppilaitosNimet.getValue().size()).forEach(index2 -> {
                 OrganisaatioNimiDTO currentOppilaitosNimi = currentOppilaitosNimet.getValue().get(index2);
-                boolean nimiInRange = (index == 0 || currentOppilaitosNimi.getAlkuPvm().compareTo(alku) >= 0) && (loppu.isEmpty() || currentOppilaitosNimi.getAlkuPvm().compareTo(loppu.get()) < 0);
+                boolean lastOppilaitosNimi = (index == oppilaitosHistoryNimet.size() - 1 && index2 == currentOppilaitosNimet.getValue().size() - 1);
+                boolean nimiInRange = (index == 0 || lastOppilaitosNimi || currentOppilaitosNimi.getAlkuPvm().compareTo(alku) >= 0) && (loppu.isEmpty() || currentOppilaitosNimi.getAlkuPvm().compareTo(loppu.get()) < 0);
 
                 if (nimiInRange) {
                     if (index > 0 && index2 > 0 && currentNames.isEmpty() && currentOppilaitosNimi.getAlkuPvm().compareTo(alku) > 0) {
                         //add previous name with start from start of range
                         currentNames.add(copyNimi(currentOppilaitosNimet.getValue().get(index2 - 1), alku));
                     }
-                    currentNames.add(currentOppilaitosNimi);
+                    if (currentOppilaitosNimi.getAlkuPvm().compareTo(alku) < 0)
+                        currentNames.add(copyNimi(currentOppilaitosNimi, alku));
+                    else
+                        currentNames.add(currentOppilaitosNimi);
                 }
             });
             result.addAll(currentNames);
