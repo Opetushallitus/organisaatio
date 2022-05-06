@@ -310,9 +310,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(Type type, List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
         if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA).stream().map(parentSuhde ->
-                    Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), type))
-            ).collect(Collectors.toList());
+            List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA).stream()
+                    .map(parentSuhde ->
+                            Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), type)))
+                    .collect(Collectors.toList());
             return decoreateToimipisteNimet(orgNimet, oppilaitosHistoryNimet);
         } else {
             return orgNimet;
@@ -328,15 +329,12 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             IntStream.range(0, oppilaitosNimet.size()).forEach(oppilaitosIndex -> {
                         OrganisaatioNimiDTO oppilaitos1 = oppilaitosNimet.get(oppilaitosIndex);
                         Optional<OrganisaatioNimiDTO> oppilaitos2 = oppilaitosIndex + 1 < oppilaitosNimet.size() ? Optional.of(oppilaitosNimet.get(oppilaitosIndex + 1)) : Optional.empty();
-
                         boolean firstToimipiste = toimipisteIndex == 0;
                         boolean lastToimipiste = toimipiste2.isEmpty();
                         boolean firtsOppilaitos = oppilaitosIndex == 0;
                         boolean lastOppilaitos = oppilaitos2.isEmpty();
-
                         boolean toimipisteInOppilaitosRange = (firtsOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos1.getAlkuPvm()) >= 0) && (lastOppilaitos || toimipiste1.getAlkuPvm().compareTo(oppilaitos2.get().getAlkuPvm()) < 0);
                         boolean oppilaitosWithinToimipisteet = (firstToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste1.getAlkuPvm()) >= 0) && (lastToimipiste || oppilaitos1.getAlkuPvm().compareTo(toimipiste2.get().getAlkuPvm()) < 0);
-
                         if (toimipisteInOppilaitosRange) {
                             result.add(oppilaitosToimipisteNimi(toimipiste1, oppilaitos1, toimipiste1.getAlkuPvm()));
                         } else if (oppilaitosWithinToimipisteet)
@@ -352,24 +350,25 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         List<OrganisaatioNimiDTO> result = new ArrayList<>();
         IntStream.range(0, oppilaitosHistoryNimet.size()).forEach(index -> {
             Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>> currentOppilaitosNimet = oppilaitosHistoryNimet.get(index);
-
-            Date alku = currentOppilaitosNimet.getKey().getKey();
-            Optional<Date> loppu = currentOppilaitosNimet.getKey().getValue();
+            Date startOfParentRange = currentOppilaitosNimet.getKey().getKey();
+            Optional<Date> endOfParentRange = currentOppilaitosNimet.getKey().getValue();
             List<OrganisaatioNimiDTO> currentNames = new ArrayList<>();
             IntStream.range(0, currentOppilaitosNimet.getValue().size()).forEach(index2 -> {
                 OrganisaatioNimiDTO currentOppilaitosNimi = currentOppilaitosNimet.getValue().get(index2);
                 boolean lastOppilaitosNimi = (index == oppilaitosHistoryNimet.size() - 1 && index2 == currentOppilaitosNimet.getValue().size() - 1);
-                boolean nimiInRange = (index == 0 || lastOppilaitosNimi || currentOppilaitosNimi.getAlkuPvm().compareTo(alku) >= 0) && (loppu.isEmpty() || currentOppilaitosNimi.getAlkuPvm().compareTo(loppu.get()) < 0);
-
+                boolean nimiInRange = (index == 0 || lastOppilaitosNimi || currentOppilaitosNimi.getAlkuPvm().compareTo(startOfParentRange) >= 0) && (endOfParentRange.isEmpty() || currentOppilaitosNimi.getAlkuPvm().compareTo(endOfParentRange.get()) < 0);
                 if (nimiInRange) {
-                    if (index > 0 && index2 > 0 && currentNames.isEmpty() && currentOppilaitosNimi.getAlkuPvm().compareTo(alku) > 0) {
+                    if (index > 0 && index2 > 0 && currentNames.isEmpty() && currentOppilaitosNimi.getAlkuPvm().compareTo(startOfParentRange) > 0) {
                         //add previous name with start from start of range
-                        currentNames.add(copyNimi(currentOppilaitosNimet.getValue().get(index2 - 1), alku));
+                        currentNames.add(copyNimi(currentOppilaitosNimet.getValue().get(index2 - 1), startOfParentRange));
                     }
-                    if (currentOppilaitosNimi.getAlkuPvm().compareTo(alku) < 0)
-                        currentNames.add(copyNimi(currentOppilaitosNimi, alku));
-                    else
-                        currentNames.add(currentOppilaitosNimi);
+                    if (currentOppilaitosNimi.getAlkuPvm().compareTo(startOfParentRange) < 0) {
+                        // if oppilaitos is from before the start of the range, the startdate should still be according to the range
+                        currentNames.add(copyNimi(currentOppilaitosNimi, startOfParentRange));
+                    }
+                    else{
+                            currentNames.add(currentOppilaitosNimi);
+                        }
                 }
             });
             result.addAll(currentNames);
