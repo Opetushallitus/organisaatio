@@ -1,12 +1,10 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
-import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * REST API used DTO, ie. "RDTO" for transmitting Organisaatio related data over
@@ -53,9 +51,6 @@ public class OrganisaatioRDTO implements Serializable {
     private Set<String> _kayttoryhmat;
 
     private Map<String, String> _nimi;
-
-
-    private OrganisaatioRDTO _parentOrganisaatio;
 
     private List<OrganisaatioNimiRDTO> _nimet;
 
@@ -207,9 +202,7 @@ public class OrganisaatioRDTO implements Serializable {
         }
         return _nimi;
     }
-    public void setParentOrganisaatio(OrganisaatioRDTO parent) {
-        _parentOrganisaatio = parent;
-    }
+
     public void setNimi(Map<String, String> _nimi) {
         this._nimi = _nimi;
     }
