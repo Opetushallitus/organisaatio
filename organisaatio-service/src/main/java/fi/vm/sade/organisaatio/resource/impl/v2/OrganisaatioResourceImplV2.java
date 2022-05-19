@@ -358,8 +358,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
                 boolean lastOppilaitosNimi = (index == oppilaitosHistoryNimet.size() - 1 && index2 == currentOppilaitosNimet.getValue().size() - 1);
                 boolean nimiInRange = (index == 0 || lastOppilaitosNimi || currentOppilaitosNimi.getAlkuPvm().compareTo(startOfParentRange) >= 0) && (endOfParentRange.isEmpty() || currentOppilaitosNimi.getAlkuPvm().compareTo(endOfParentRange.get()) < 0);
                 if (nimiInRange) {
-                    currentNames.add(getName(index, index2, currentOppilaitosNimet, startOfParentRange, currentOppilaitosNimi, currentNames.isEmpty()));
-
+                    currentNames.addAll(getNames(index, index2, currentOppilaitosNimet, startOfParentRange, currentOppilaitosNimi, currentNames.isEmpty()));
                 }
             });
             result.addAll(currentNames);
@@ -368,17 +367,19 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return result;
     }
 
-    private OrganisaatioNimiDTO getName(int index, int index2, Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>> currentOppilaitosNimet, Date startOfParentRange, OrganisaatioNimiDTO currentOppilaitosNimi, boolean evaluatingFirstRange) {
+    private List<OrganisaatioNimiDTO> getNames(int index, int index2, Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>> currentOppilaitosNimet, Date startOfParentRange, OrganisaatioNimiDTO currentOppilaitosNimi, boolean evaluatingFirstRange) {
+        List<OrganisaatioNimiDTO> currentNames = new ArrayList<>();
         if (index > 0 && index2 > 0 && evaluatingFirstRange && currentOppilaitosNimi.getAlkuPvm().compareTo(startOfParentRange) > 0) {
             //add previous name with start from start of range
-            return copyNimi(currentOppilaitosNimet.getValue().get(index2 - 1), startOfParentRange);
+            currentNames.add(copyNimi(currentOppilaitosNimet.getValue().get(index2 - 1), startOfParentRange));
         }
         if (currentOppilaitosNimi.getAlkuPvm().compareTo(startOfParentRange) < 0) {
             // if oppilaitos is from before the start of the range, the startdate should still be according to the range
-            return copyNimi(currentOppilaitosNimi, startOfParentRange);
+            currentNames.add(copyNimi(currentOppilaitosNimi, startOfParentRange));
         } else {
-            return currentOppilaitosNimi;
+            currentNames.add(currentOppilaitosNimi);
         }
+        return currentNames;
     }
 
     OrganisaatioNimiDTO oppilaitosToimipisteNimi(OrganisaatioNimiDTO toimipiste, OrganisaatioNimiDTO oppilaitosNimi, Date alkuPvm) {
