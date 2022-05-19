@@ -234,11 +234,8 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         return result;
     }
     private OrganisaatioRDTO mapToOrganisaatioRdto(Organisaatio organisaatio) {
-        OrganisaatioRDTO org = conversionService.convert(organisaatio, OrganisaatioRDTO.class);
-        if (org != null && organisaatio.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            org.setParentOrganisaatio(mapToOrganisaatioRdto(organisaatio.getParent()));
-        }
-        return org;
+       return conversionService.convert(organisaatio, OrganisaatioRDTO.class);
+
     }
     // GET /organisaatio/yhteystietometadata
     @Override
