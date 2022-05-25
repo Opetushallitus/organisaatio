@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("integration-test, dev")
+@ActiveProfiles({"integration-test", "dev"})
 @Transactional
 public class ScheduledTaskDaoIT {
 

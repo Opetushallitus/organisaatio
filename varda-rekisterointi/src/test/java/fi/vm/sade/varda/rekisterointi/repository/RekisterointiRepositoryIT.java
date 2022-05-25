@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("integration-test, dev")
+@ActiveProfiles({"integration-test", "dev"})
 @Transactional
 public class RekisterointiRepositoryIT {
 
@@ -63,7 +63,7 @@ public class RekisterointiRepositoryIT {
     @Test
     public void findByTilaAndKunnatRulesOutKuntaMismatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnat(
-                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Vääräkunta", "Toinenvääräkunta"});
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[]{"Vääräkunta", "Toinenvääräkunta"});
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(0, results.size());
@@ -72,7 +72,7 @@ public class RekisterointiRepositoryIT {
     @Test
     public void findByTilaAndKunnatReturnsMatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnat(
-                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki", "Vääräkunta"});
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[]{"Helsinki", "Vääräkunta"});
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(1, results.size());
@@ -89,7 +89,7 @@ public class RekisterointiRepositoryIT {
     @Test
     public void findByTilaAndKunnatAndOrganisaatioRulesOutOrganisaatioMismatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
-                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki"}, "vääräfirma");
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[]{"Helsinki"}, "vääräfirma");
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(0, results.size());
@@ -98,7 +98,7 @@ public class RekisterointiRepositoryIT {
     @Test
     public void findByTilaAndKunnatAndOrganisaatioReturnsMatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
-                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[] {"Helsinki"}, "testi");
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[]{"Helsinki"}, "testi");
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(1, results.size());

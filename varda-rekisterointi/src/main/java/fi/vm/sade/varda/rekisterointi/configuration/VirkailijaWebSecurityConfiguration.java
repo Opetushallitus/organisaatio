@@ -107,8 +107,6 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     public SingleSignOutFilter singleSignOutFilter() {
         SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
         singleSignOutFilter.setIgnoreInitConfiguration(true);
-        singleSignOutFilter.setCasServerUrlPrefix(ophProperties.url("cas.base"));
         return singleSignOutFilter;
     }
-
 }

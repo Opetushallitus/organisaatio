@@ -14,7 +14,7 @@ import java.util.List;
 import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_ROLE;
 
 @Configuration
-@Profile("dev")
+@Profile({"dev"})
 public class DevUserDetailsServiceConfiguration {
 
     private static final SimpleGrantedAuthority[] AUTHORITIES = new SimpleGrantedAuthority[] {

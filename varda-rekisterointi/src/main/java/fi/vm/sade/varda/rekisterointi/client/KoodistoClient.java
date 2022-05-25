@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toMap;
  * Client koodistopalvelun käyttämiseen.
  */
 @Component
-@Profile("!test & !integration-test")
+@Profile({"!test & !integration-test"})
 public class KoodistoClient {
 
     private final OphHttpClient httpClient;

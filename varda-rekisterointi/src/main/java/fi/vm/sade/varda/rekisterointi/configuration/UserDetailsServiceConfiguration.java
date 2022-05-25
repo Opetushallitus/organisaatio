@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
-@Profile("!dev")
+@Profile({"!dev"})
 public class UserDetailsServiceConfiguration {
 
     private final OphProperties ophProperties;
