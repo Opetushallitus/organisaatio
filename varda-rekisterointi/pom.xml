@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.12.RELEASE</version>
+        <version>2.4.13</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fi.vm.sade.varda.rekisterointi</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.github.kagkarlsson</groupId>
             <artifactId>db-scheduler-spring-boot-starter</artifactId>
-            <version>6.2</version>
+            <version>11.2</version>
         </dependency>
 
         <dependency>
@@ -134,6 +134,12 @@
             <version>2.1.212</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
