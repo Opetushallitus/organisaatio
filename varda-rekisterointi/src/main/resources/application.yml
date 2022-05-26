@@ -18,6 +18,9 @@ spring:
     password: varda-rekisterointi
   flyway:
     out-of-order: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   resources:
     cache:
       cachecontrol:
