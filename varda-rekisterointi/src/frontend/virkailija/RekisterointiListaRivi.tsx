@@ -60,7 +60,7 @@ export default function RekisterointiListaRivi({ valintaKaytossa, rekisterointi,
     }
 
     function koodit2kunnat(kunnatArr: string[]): string {
-        return kunnatArr.map(k => kuntaKoodisto.uri2Nimi(k) || k).join(", ")
+        return (kunnatArr || []).map(k => kuntaKoodisto.uri2Nimi(k) || k).join(", ")
     }
 
     return (

@@ -51,7 +51,7 @@ describe('RekisterointiLista', () => {
         const rekisteroinnit: Rekisterointihakemus[] = [];
         jest.spyOn(Axios, "get").mockImplementation(() => Promise.resolve({ data: rekisteroinnit }));
         await act(async() => {
-            render(<ThemeProvider theme={theme}><RekisterointiLista /></ThemeProvider>, container);
+            render(<ThemeProvider theme={theme}><RekisterointiLista statusCallback={jest.fn}/></ThemeProvider>, container);
         });
         expect(container.querySelector("table.vardaRekisterointiLista")).not.toBeNull();
     });
@@ -68,7 +68,7 @@ describe('RekisterointiLista', () => {
         const rekisteroinnit = [rekisterointi];
         jest.spyOn(Axios, "get").mockImplementation(() => Promise.resolve({ data: rekisteroinnit }));
         await act(async () => {
-            render(<ThemeProvider theme={theme}><RekisterointiLista /></ThemeProvider>, container);
+            render(<ThemeProvider theme={theme}><RekisterointiLista statusCallback={jest.fn}/></ThemeProvider>, container);
         });
         expect(container.querySelectorAll("table tbody tr")).toHaveLength(rekisteroinnit.length);
     });

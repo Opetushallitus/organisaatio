@@ -62,6 +62,6 @@ describe('YhteystiedotValidator', () => {
             kayntiosoite: tyhjaOsoite
         };
         const virheet = validoiYhteystiedot(yhteystiedot);
-        expect(virheet['postiosoite.katuosoite']).toEqual('PAKOLLINEN_TIETO');
+        expect(virheet['postiosoite.katuosoite']).toEqual('VIRHEELLINEN_OSOITE');
     });
 });
