@@ -110,6 +110,9 @@ export default function OrganisaatioHakuTaulukko() {
                         <Link to={`/lomake/${row.original.oid}`}>
                             {i18n.translateNimi(row.original.lyhytNimi)}
                             {row.original?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
+                            {row.original &&
+                                row.original.status !== 'AKTIIVINEN' &&
+                                ` (${i18n.translate(`LABEL_${row.original.status.toUpperCase()}`)})`}
                         </Link>
                     );
                 },
