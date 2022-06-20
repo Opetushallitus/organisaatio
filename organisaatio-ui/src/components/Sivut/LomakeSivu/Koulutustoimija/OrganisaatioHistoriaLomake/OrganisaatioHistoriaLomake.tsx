@@ -1,17 +1,16 @@
 import * as React from 'react';
 import styles from './OrganisaaatioHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
-import { Link } from 'react-router-dom';
 import {
     HistoriaTaulukkoData,
     OrganisaatioHistoria,
     OrganisaatioSuhde,
     UiOrganisaationNimetNimi,
 } from '../../../../../types/types';
-import { OrganisaatioBase } from '../../../../../types/apiTypes';
 import { Column } from 'react-table';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
+import { OrganisaatioLink } from '../../../../OrganisaatioComponents';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],
@@ -36,22 +35,10 @@ const historiaSorter = (a: OrganisaatioSuhde, b: OrganisaatioSuhde) => {
     return a.alkuPvm.localeCompare(b.alkuPvm);
 };
 
-const OrganisaatioLink = ({ organisaatio }: { organisaatio: OrganisaatioBase }) => {
-    const [i18n] = useAtom(languageAtom);
-    return (
-        <Link to={`/lomake/${organisaatio.oid}`}>
-            {i18n.translateNimi(organisaatio.nimi) +
-                (organisaatio.status !== 'AKTIIVINEN'
-                    ? `(${i18n.translate('LABEL_' + organisaatio.status.toUpperCase())})`
-                    : '')}
-        </Link>
-    );
-};
-
 const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
     return {
         oid: a[key].oid,
-        nimiHref: <OrganisaatioLink organisaatio={a[key]} />,
+        nimiHref: <OrganisaatioLink oid={a[key].oid} nimi={a[key].nimi} status={a[key].status} />,
         alkuPvm: a.alkuPvm,
         status: a[key].status,
     };
