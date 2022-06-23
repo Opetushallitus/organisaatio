@@ -9,7 +9,6 @@ import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
-import { Link } from 'react-router-dom';
 import { TarkastusLippu } from '../../TarkistusLippu/TarkastusLippu';
 import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { useAtom } from 'jotai';
@@ -17,6 +16,7 @@ import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 import { SelectOptionType } from '../../../types/types';
+import { OrganisaatioLink } from '../../OrganisaatioComponents';
 
 const MAX_EXPAND_ROWS = 10;
 
@@ -107,10 +107,11 @@ export default function OrganisaatioHakuTaulukko() {
                 id: 'lyhytNimi',
                 Cell: ({ row }) => {
                     return (
-                        <Link to={`/lomake/${row.original.oid}`}>
-                            {i18n.translateNimi(row.original.lyhytNimi)}
-                            {row.original?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
-                        </Link>
+                        <OrganisaatioLink
+                            oid={row.original.oid}
+                            nimi={row.original.lyhytNimi}
+                            status={row.original.status}
+                        />
                     );
                 },
             },

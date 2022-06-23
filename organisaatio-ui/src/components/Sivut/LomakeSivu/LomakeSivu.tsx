@@ -79,6 +79,7 @@ import {
     vuosiluokatKoodistoAtom,
 } from '../../../api/koodisto';
 import { languageAtom } from '../../../api/lokalisaatio';
+import { DecoratedNimi } from '../../OrganisaatioComponents';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -533,8 +534,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     </h3>
 
                     <h1>
-                        {i18n.translateNimi(organisaatioBase.nimi)}
-                        {organisaatioBase?.status !== 'AKTIIVINEN' && ` (${i18n.translate('LABEL_PASSIIVINEN')})`}
+                        <DecoratedNimi nimi={organisaatioBase.nimi} status={organisaatioBase.status} />
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
