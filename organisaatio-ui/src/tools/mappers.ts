@@ -76,8 +76,12 @@ export const sortNimet = (
     );
     if (currentNimiIndex === 0) {
         mappedPastNimet[0].isCurrentNimi = true;
+    } else {
+        mappedFutureNimet[0].isCurrentNimi = true;
     }
-    return { currentNimi: { ...mappedPastNimet[0] }, pastNimet: mappedPastNimet, futureNimet: mappedFutureNimet };
+    const currentNimi =
+        currentNimiIndex >= 0 ? { ...mappedPastNimet[0] } : { ...mappedFutureNimet[mappedFutureNimet.length - 1] };
+    return { currentNimi, pastNimet: mappedPastNimet, futureNimet: mappedFutureNimet };
 };
 
 const makeDate = (date, format) => {

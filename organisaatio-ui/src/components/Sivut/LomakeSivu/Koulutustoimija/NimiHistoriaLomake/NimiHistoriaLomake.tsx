@@ -9,6 +9,7 @@ import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
 import Loading from '../../../../Loading/Loading';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
+import moment from 'moment';
 
 type nimiHistoriaProps = {
     nimet: UiOrganisaationNimetNimi[];
@@ -20,7 +21,7 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
     const [i18n] = useAtom(languageAtom);
     const { nimet, handleNimiMuutos, oid } = props;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    nimet.sort((a, b) => (moment(a.alkuPvm, 'D.M.YYYY').isBefore(moment(b.alkuPvm, 'D.M.YYYY')) ? 1 : -1));
     async function handleDeleteNimi(nimi: UiOrganisaationNimetNimi) {
         setIsLoading(true);
         try {
