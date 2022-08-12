@@ -59,7 +59,7 @@ jobs:
           node-version: "18.x"
           cache: "npm"
           cache-dependency-path: rekisterointi-ui/package-lock.json
-      - name: Install dependencies
+      - name: Install app dependencies
         run: npm ci
         working-directory: rekisterointi-ui
       - name: Install Playwright dependencies
@@ -69,7 +69,7 @@ jobs:
         run: |
           npm start &
           ./scripts/ci-wait-for-frontend.sh
-          npm run playwright:test
+          HEADLESS=true npm run playwright:test
         working-directory: rekisterointi-ui
       - uses: actions/upload-artifact@v2
         if: always()
