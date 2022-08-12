@@ -17,5 +17,5 @@ test('Correct file', async ({ page }) => {
     const FrontPage = FrontPageFn(page);
     await FrontPage.goto();
     const fileName = page.locator('code');
-    expect(await fileName.textContent()).toEqual('src/App.ts');
+    expect(await fileName.textContent()).toEqual('src/App.js');
 });
