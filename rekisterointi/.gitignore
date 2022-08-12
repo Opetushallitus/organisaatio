@@ -4,6 +4,8 @@
 /rekisterointi-ui/node_modules
 /rekisterointi-ui/.pnp
 /rekisterointi-ui.pnp.js
+/rekisterointi-ui/playwright-results/
+/rekisterointi-ui/playwright/.cache/
 
 # testing
 /rekisterointi-ui/coverage
