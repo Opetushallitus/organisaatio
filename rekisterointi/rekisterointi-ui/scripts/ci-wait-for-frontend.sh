@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
 
-echo 'waiting for server to start'
+echo 'waiting for frontend to start'
 attempt=0
 until curl --output /dev/null --silent --head --fail http://localhost:3000; do
   echo 'waiting...'
@@ -12,4 +12,4 @@ until curl --output /dev/null --silent --head --fail http://localhost:3000; do
     exit 1
   fi
 done
-echo 'done'
+echo 'frontend started'
