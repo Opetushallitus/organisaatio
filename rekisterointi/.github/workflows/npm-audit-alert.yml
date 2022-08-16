@@ -31,4 +31,4 @@ jobs:
       - name: Send Slack alert if previous steps failed
         if: failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"channel": "#yleiskäyttöiset-alerts", "icon_emoji": ":warning:", "text": "${{ steps.run_audit.outputs.content }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"channel": "#yleiskäyttöiset-alerts", "icon_emoji": ":warning:", "text": "*${{ github.repository }}:*\n${{ steps.run_audit.outputs.content }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
