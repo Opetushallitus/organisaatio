@@ -20,7 +20,7 @@ jobs:
         run: |
           npm audit 2>&1 | tee audit.log
           result_code=${PIPESTATUS[0]}
-          content=$(cat audit.log)
+          content="$(cat audit.log)"
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
@@ -31,4 +31,4 @@ jobs:
       - name: Send Slack alert if previous steps failed
         if: failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"channel": "#yleiskäyttöiset-alerts", "icon_emoji": ":warning:", "text": "${{ steps.release_description.run_audit.content }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"channel": "#yleiskäyttöiset-alerts", "icon_emoji": ":warning:", "text": "${{ steps.run_audit.outputs.content }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
