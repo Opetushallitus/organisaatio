@@ -1,0 +1,34 @@
+name: npm-audit-alert
+
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: "0 12 * * *"
+
+jobs:
+  create-alert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: "master"
+      - name: Install deps
+        run: npm ci
+        working-directory: rekisterointi-ui
+      - name: Run npm audit
+        run: |
+          npm audit 2>&1 | tee audit.log
+          result_code=${PIPESTATUS[0]}
+          content=$(cat audit.log)
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          echo "::set-output name=content::$content"
+          exit $result_code
+        id: run_audit
+        working-directory: rekisterointi-ui
+      - name: Send Slack alert if previous steps failed
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"channel": "#yleiskäyttöiset-alerts", "icon_emoji": ":warning:", "text": "${{ steps.release_description.run_audit.content }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
