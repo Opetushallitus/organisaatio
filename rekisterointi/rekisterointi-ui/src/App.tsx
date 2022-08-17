@@ -12,8 +12,9 @@ const Logo = ({ ...props }: any) => (
 
 function App() {
     return (
-        <div className="App">
+        <main className="App">
             <header className="App-header">
+                <h1>React</h1>
                 <Logo className="App-logo" alt="logo" />
                 <p>
                     Edit <code>src/App.js</code> and save to reload.
@@ -22,7 +23,7 @@ function App() {
                     Learn React
                 </a>
             </header>
-        </div>
+        </main>
     );
 }
 
