@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 import { FrontPageFn } from '../pages/frontpage';
 import { openLinkInNewTab } from '../util/navigate';
@@ -18,4 +19,11 @@ test('Correct file', async ({ page }) => {
     await FrontPage.goto();
     const fileName = page.locator('code');
     expect(await fileName.textContent()).toEqual('src/App.js');
+});
+
+test('Is accessible', async ({ page }) => {
+    const FrontPage = FrontPageFn(page);
+    await FrontPage.goto();
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
 });
