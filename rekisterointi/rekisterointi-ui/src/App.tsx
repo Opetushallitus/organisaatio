@@ -41,9 +41,9 @@ function App() {
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, i18n }}>
-            <Router>
+            <Router basename="/rekisterointi">
                 <Routes>
-                    <Route path="/" element={<VardaLanding />} />
+                    <Route path="/varda" element={<VardaLanding />} />
                 </Routes>
                 <Outlet />
             </Router>
