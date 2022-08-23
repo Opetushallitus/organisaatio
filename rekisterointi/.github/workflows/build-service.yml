@@ -78,7 +78,6 @@ jobs:
       - name: Install Playwright dependencies
         run: npx playwright install-deps chromium
         working-directory: rekisterointi-ui
-      - name: Start server
       - name: Run playwright tests
         run: |
           java -jar rekisterointi.jar &
