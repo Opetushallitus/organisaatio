@@ -79,12 +79,12 @@ jobs:
         run: npx playwright install-deps chromium
         working-directory: rekisterointi-ui
       - name: Start server
-        run: java -jar rekisterointi.jar
       - name: Run playwright tests
         run: |
+          java -jar rekisterointi.jar &
+          cd rekisterointi-ui
           ./scripts/ci-wait-for-frontend.sh
           HEADLESS=true npm run playwright:test
-        working-directory: rekisterointi-ui
       - uses: actions/upload-artifact@v2
         if: always()
         with:
