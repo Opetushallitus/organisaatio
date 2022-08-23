@@ -4,7 +4,7 @@ import { navigate } from '../util/navigate';
 
 export function VardaLandingFn(page: Page) {
     async function goto() {
-        await navigate(page);
+        await navigate(page, '/rekisterointi/varda');
         await page.waitForSelector('#kielivalikko');
     }
 
