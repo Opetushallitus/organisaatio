@@ -36,6 +36,7 @@
     "scripts": {
         "start": "webpack serve --config=./webpack.dev.js",
         "build": "webpack --config=./webpack.prod.js",
+        "build:watch": "webpack --watch --config=./webpack.watch.js",
         "playwright:test": "playwright test --config=playwright/playwright.config.ts",
         "prepare": "cd .. && husky install rekisterointi-ui/.husky",
         "lint": "eslint --ext .ts,.tsx ."
