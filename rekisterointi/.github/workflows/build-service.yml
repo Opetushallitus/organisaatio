@@ -75,6 +75,9 @@ jobs:
           node-version: "18.x"
           cache: "npm"
           cache-dependency-path: rekisterointi-ui/package-lock.json
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: rekisterointi-ui
       - name: Install Playwright dependencies
         run: npx playwright install-deps chromium
         working-directory: rekisterointi-ui
