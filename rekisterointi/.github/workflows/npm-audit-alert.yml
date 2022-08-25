@@ -3,6 +3,13 @@ name: npm-audit-alert
 on:
   push:
     branches: [master]
+    paths:
+      - "rekisterointi-ui/package.json"
+      - "rekisterointi-ui/package-lock.json"
+  pull_request:
+    paths:
+      - "rekisterointi-ui/package.json"
+      - "rekisterointi-ui/package-lock.json"
   schedule:
     - cron: "0 12 * * *"
 
