@@ -44,6 +44,7 @@ function App() {
             <Router basename="/rekisterointi">
                 <Routes>
                     <Route path="/varda" element={<VardaLanding />} />
+                    <Route path="/hakija/aloitus" element={<h1>jee</h1>} />
                 </Routes>
                 <Outlet />
             </Router>

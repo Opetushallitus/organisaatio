@@ -19,7 +19,7 @@ tmux new-session -d -s $session
 
 tmux select-pane -t 0 -T server
 echo "starting server"
-tmux send-keys "mvn spring-boot:run" C-m
+tmux send-keys "./start-local-backend.sh" C-m
 
 tmux splitw -h
 

@@ -52,7 +52,7 @@ export function VardaLanding() {
                 <p>
                     <a
                         className={`oph-button oph-button-primary ${styles.varimuutos}`}
-                        href="/rekisterointi/varda/aloitus"
+                        href="/rekisterointi/hakija/aloitus"
                     >
                         {i18n.translate('HAKIJA_ALOITA_REKISTEROITYMINEN')}
                     </a>
