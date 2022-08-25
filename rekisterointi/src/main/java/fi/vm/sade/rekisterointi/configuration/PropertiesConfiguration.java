@@ -16,9 +16,15 @@ public class PropertiesConfiguration {
   @Bean("properties")
   public OphProperties properties(Environment environment) {
     var profiles = environment.getActiveProfiles();
-    OphProperties properties = Arrays.asList(profiles).contains("dev")
-        ? new OphProperties("/rekisterointi-oph.properties", "/rekisterointi-oph-dev.properties")
-        : new OphProperties("/rekisterointi-oph.properties");
+    OphProperties properties;
+    if (Arrays.asList(profiles).contains("dev")) {
+      properties = new OphProperties("/rekisterointi-oph.properties", "/rekisterointi-oph-dev.properties");
+    } else if (Arrays.asList(profiles).contains("ci")) {
+      properties = new OphProperties("/rekisterointi-oph.properties", "/rekisterointi-oph-ci.properties");
+    } else {
+      properties = new OphProperties("/rekisterointi-oph.properties");
+    }
+    properties.addDefault("url-oppija", environment.getRequiredProperty("rekisterointi.url-oppija"));
     return properties;
   }
 
