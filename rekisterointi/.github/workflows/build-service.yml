@@ -28,7 +28,7 @@ jobs:
           distribution: "adopt"
           cache: "maven"
       - name: Build
-        run: mvn clean package -B -Dbranch=$GITHUB_REF_NAME -Drevision=$GITHUB_SHA -DbuildNumber=$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT
+        run: mvn clean package -Pci -B -Dbranch=$GITHUB_REF_NAME -Drevision=$GITHUB_SHA -DbuildNumber=$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT
       - name: Upload rekisterointi-jar
         uses: actions/upload-artifact@v2
         with:

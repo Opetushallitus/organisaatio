@@ -1,9 +1,6 @@
 package fi.vm.sade.rekisterointi.rest;
 
 import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.suomifi.valtuudet.SessionDto;
-import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
-import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +9,6 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.Locale;
 
 import static fi.vm.sade.rekisterointi.util.Constants.*;
