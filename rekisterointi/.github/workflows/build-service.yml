@@ -94,7 +94,7 @@ jobs:
           path: rekisterointi-ui/playwright-results
           retention-days: 10
   deploy-container:
-    needs: [build]
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
