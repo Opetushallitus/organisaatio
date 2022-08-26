@@ -24,6 +24,8 @@ public class PropertiesConfiguration {
       properties = new OphProperties("/rekisterointi-oph.properties");
     }
     properties.addDefault("url-oppija", environment.getRequiredProperty("rekisterointi.url-oppija"));
+    properties.addDefault("rekisterointi.service.username", "dummy");
+    properties.addDefault("rekisterointi.service.password", "dummy");
     return properties;
   }
 
