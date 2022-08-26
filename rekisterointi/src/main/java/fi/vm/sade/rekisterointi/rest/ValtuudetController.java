@@ -7,6 +7,7 @@ import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import static fi.vm.sade.rekisterointi.util.Constants.*;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 
+@Profile("!dev")
 @Controller
 @RequestMapping("/hakija")
 public class ValtuudetController {

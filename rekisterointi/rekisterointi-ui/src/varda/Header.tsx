@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 
-import { asiointikielet, toLocalizedText } from './LocalizableTextUtils';
-import { LanguageContext } from './contexts';
-import { Language } from './types';
+import { asiointikielet, toLocalizedText } from '../LocalizableTextUtils';
+import { LanguageContext } from '../contexts';
+import { Language } from '../types';
 import styles from './Header.module.css';
 
 export default function Header() {

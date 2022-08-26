@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 
 import Header from './Header';
 import Footer from './Footer';
-import { LanguageContext } from './contexts';
-import { Language } from './types';
+import { LanguageContext } from '../contexts';
+import { Language } from '../types';
 
 import styles from './VardaLanding.module.css';
 

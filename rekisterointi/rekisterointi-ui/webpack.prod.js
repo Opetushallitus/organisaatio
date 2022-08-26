@@ -16,6 +16,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './scripts/html-template.html',
+            publicPath: '/rekisterointi/',
         }),
         new CopyWebpackPlugin({
             patterns: [{ from: 'public' }],

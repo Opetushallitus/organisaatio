@@ -8,7 +8,8 @@ import 'oph-virkailija-style-guide/oph-styles.css';
 
 import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
 import { Language, Lokalisointi, LokalisointiRivi } from './types';
-import { VardaLanding } from './VardaLanding';
+import { VardaLanding } from './varda/VardaLanding';
+import VardaAloitus from './varda/VardaAloitus';
 
 function App() {
     const [language, setLanguage] = useState<Language>('fi');
@@ -44,7 +45,7 @@ function App() {
             <Router basename="/rekisterointi">
                 <Routes>
                     <Route path="/varda" element={<VardaLanding />} />
-                    <Route path="/hakija/aloitus" element={<h1>jee</h1>} />
+                    <Route path="/hakija/aloitus" element={<VardaAloitus />} />
                 </Routes>
                 <Outlet />
             </Router>
