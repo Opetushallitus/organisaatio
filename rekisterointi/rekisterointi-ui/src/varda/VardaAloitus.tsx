@@ -5,7 +5,7 @@ function VardaAloitus() {
     const [organisaatiot, setOrganisaatiot] = useState();
     useEffect(() => {
         async function fetchOrganisaatiot() {
-            const resp = await axios.get('/rekisterointi/hakija/api/organisaatiot');
+            const resp = await axios.get('/hakija/api/organisaatiot');
             setOrganisaatiot(resp.data);
         }
         void fetchOrganisaatiot();

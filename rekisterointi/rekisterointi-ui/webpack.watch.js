@@ -18,7 +18,7 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './scripts/html-template.html',
-            publicPath: '/rekisterointi/',
+            publicPath: '/',
         }),
         new CopyWebpackPlugin({
             patterns: [{ from: 'public' }],

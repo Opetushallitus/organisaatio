@@ -1,0 +1,95 @@
+@import './variables.css';
+
+body {
+    color: var(--gray-font);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 700;
+    color: var(--gray-heading);
+}
+
+h1 {
+    font-size: 28px;
+    line-height: 32px;
+}
+
+h2 {
+    font-size: 21px;
+    line-height: 26px;
+}
+
+@media (min-width: 1000px) {
+    h1 {
+        font-size: 48px;
+        line-height: 58px;
+    }
+
+    h2 {
+        font-size: 26px;
+        line-height: 32px;
+    }
+}
+
+a {
+    color: var(--green);
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 8px solid var(--green);
+}
+
+main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer {
+    text-align: center;
+    padding: 45px 0;
+}
+
+footer span {
+    background-color: #fff;
+    padding: 24px 45px;
+}
+
+footer::after {
+    display: block;
+    content: '';
+    border: 1px solid var(--light-gray);
+    margin-top: -32px;
+}
+
+@media (min-width: 1000px) {
+    footer {
+        padding: 24px 0;
+    }
+
+    footer span {
+        padding: 24px 120px;
+    }
+}
+
+.content {
+    margin: 20px;
+    max-width: 900px;
+}

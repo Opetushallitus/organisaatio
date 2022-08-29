@@ -1,0 +1,15 @@
+.bannerContainer {
+    width: 100%;
+    background-color: #3a7a10;
+}
+
+.banner {
+    width: 100%;
+}
+
+.registerButton {
+    padding: 13px 79px;
+    border: none;
+    background: var(--green);
+    color: var(--white);
+}

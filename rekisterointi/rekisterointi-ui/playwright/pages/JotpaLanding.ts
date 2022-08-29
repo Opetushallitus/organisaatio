@@ -2,14 +2,14 @@ import { Page } from '@playwright/test';
 
 import { navigate } from '../util/navigate';
 
-export function VardaLandingFn(page: Page) {
+export function JotpaLandingFn(page: Page) {
     async function goto() {
-        await navigate(page, '/rekisterointi/varda');
-        await page.waitForSelector('#kielivalikko');
+        await navigate(page, '/jotpa');
+        await page.waitForSelector('.content');
     }
 
     const changeLanguage = async (lang: 'fi' | 'sv') => {
-        await page.locator('#kielivalikko').selectOption(lang);
+        // todo
     };
 
     return {

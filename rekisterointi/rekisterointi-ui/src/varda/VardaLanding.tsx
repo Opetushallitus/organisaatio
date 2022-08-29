@@ -50,10 +50,7 @@ export function VardaLanding() {
                     </a>
                 </p>
                 <p>
-                    <a
-                        className={`oph-button oph-button-primary ${styles.varimuutos}`}
-                        href="/rekisterointi/hakija/aloitus"
-                    >
+                    <a className={`oph-button oph-button-primary ${styles.varimuutos}`} href="/hakija/aloitus">
                         {i18n.translate('HAKIJA_ALOITA_REKISTEROITYMINEN')}
                     </a>
                 </p>
@@ -72,7 +69,7 @@ export function VardaLanding() {
             <main className={styles.section}>
                 <div className={styles.child}>
                     <div className={styles.logo}>
-                        <img src="/rekisterointi/Lapset.png" alt={i18n.translate('KUVA_LAPSISTA')} />
+                        <img src="/Lapset.png" alt={i18n.translate('KUVA_LAPSISTA')} />
                     </div>
                     {renderByKieli(data[language])}
                 </div>
