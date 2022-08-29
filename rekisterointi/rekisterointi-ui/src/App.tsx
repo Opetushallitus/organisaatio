@@ -43,7 +43,7 @@ function App() {
     }
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, i18n }}>
+        <>
             <Router>
                 <Routes>
                     <Route path="/jotpa" element={<JotpaLanding />} />
@@ -52,7 +52,7 @@ function App() {
                 <Outlet />
             </Router>
             <Footer />
-        </LanguageContext.Provider>
+        </>
     );
 }
 
