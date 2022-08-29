@@ -9,8 +9,7 @@ import './styles.css';
 
 import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
 import { Language, Lokalisointi, LokalisointiRivi } from './types';
-import { VardaLanding } from './varda/VardaLanding';
-import VardaAloitus from './varda/VardaAloitus';
+import { JotpaAloitus } from './jotpa/JotpaAloitus';
 import { JotpaLanding } from './jotpa/JotpaLanding';
 import { Footer } from './Footer';
 
@@ -47,9 +46,8 @@ function App() {
         <LanguageContext.Provider value={{ language, setLanguage, i18n }}>
             <Router>
                 <Routes>
-                    <Route path="/varda" element={<VardaLanding />} />
                     <Route path="/jotpa" element={<JotpaLanding />} />
-                    <Route path="/hakija/aloitus" element={<VardaAloitus />} />
+                    <Route path="/hakija/aloitus" element={<JotpaAloitus />} />
                 </Routes>
                 <Outlet />
             </Router>

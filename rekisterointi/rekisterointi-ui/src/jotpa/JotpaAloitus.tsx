@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-function VardaAloitus() {
+export function JotpaAloitus() {
     const [organisaatiot, setOrganisaatiot] = useState();
     useEffect(() => {
         async function fetchOrganisaatiot() {
@@ -17,5 +17,3 @@ function VardaAloitus() {
 
     return <div>{JSON.stringify(organisaatiot)}</div>;
 }
-
-export default VardaAloitus;

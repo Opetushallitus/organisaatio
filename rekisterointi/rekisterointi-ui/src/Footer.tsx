@@ -1,7 +1,5 @@
 import React from 'react';
 
-import styles from './Footer.module.css';
-
 const Logo = (...props: any) => (
     <svg width="79" height="54" viewBox="0 0 79 54" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
