@@ -38,14 +38,6 @@ export const LanguageContext = React.createContext<LanguageContextType>({
     i18n: new I18nImpl(defaultLokalisointi, 'fi'),
 });
 
-type ConfigurationContextType = {
-    virkailijaRaamitUrl: string;
-};
-
-export const ConfigurationContext = React.createContext<ConfigurationContextType>({
-    virkailijaRaamitUrl: '/virkailija-raamit/apply-raamit.js',
-});
-
 export interface Koodisto {
     uri2Nimi: (uri: KoodiUri) => string;
     arvo2Nimi: (arvo: KoodiArvo) => string;

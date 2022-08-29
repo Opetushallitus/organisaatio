@@ -32,15 +32,11 @@ function App() {
         }
 
         if (!localization) {
-            void fetchLocalization();
+            //void fetchLocalization();
         } else {
             setI18n(new I18nImpl(localization, language));
         }
     }, [language, localization]);
-
-    if (!Object.keys(i18n._data[language]).length) {
-        return <div></div>;
-    }
 
     return (
         <>
