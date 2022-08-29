@@ -112,7 +112,7 @@ jobs:
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
           export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
-          export ARTIFACT_NAME="rekisterointi-ui"
+          export ARTIFACT_NAME="rekisterointi"
           cp rekisterointi.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
           cp -vr oph-configuration $DOCKER_BUILD_DIR/config/
           ./ci-tools/common/pull-image.sh
