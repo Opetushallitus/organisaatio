@@ -20,9 +20,10 @@ server:
             max-days: 7
         port-header: X-Real-Port
         protocol-header: X-Real-Proto
-varda-rekisterointi:
+rekisterointi:
     url-oppija:  https://{{ host_oppija }}
     url-virkailija: https://{{ host_virkailija }}
+    url-rekisterointi: https://rekisterointi.{{ host_oppija }}
     url-alb: {{ host_alb }}
     service:
         username: {{ varda_rekisterointi_service_username }}

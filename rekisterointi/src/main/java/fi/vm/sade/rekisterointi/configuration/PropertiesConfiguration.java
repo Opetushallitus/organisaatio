@@ -25,6 +25,7 @@ public class PropertiesConfiguration {
     }
     properties.addDefault("url-oppija", environment.getRequiredProperty("rekisterointi.url-oppija"));
     properties.addDefault("url-virkailija", environment.getRequiredProperty("rekisterointi.url-virkailija"));
+    properties.addDefault("url-rekisterointi", environment.getRequiredProperty("rekisterointi.url-rekisterointi"));
     properties.addDefault("rekisterointi.service.username", "dummy");
     properties.addDefault("rekisterointi.service.password", "dummy");
     return properties;

@@ -20,3 +20,33 @@ export type LokalisointiRivi = {
     value: LocalizationValue;
     locale: Language;
 };
+
+type Yhteystiedot = {
+    puhelinnumero: string;
+    sahkoposti: string;
+    postiosoite: {
+        katuosoite: string;
+        postinumeroUri: string;
+        postitoimipaikka: string;
+    };
+    kayntiosoite: {
+        katuosoite: string;
+        postinumeroUri: string;
+        postitoimipaikka: string;
+    };
+};
+
+export type Organization = {
+    alkuPvm: string;
+    kieletUris: string[];
+    kotipaikkaUri: string;
+    kunta: boolean;
+    maaUri: string;
+    oid: string;
+    tyypit: string[];
+    uudelleenRekisterointi: boolean;
+    yhteystiedot: Yhteystiedot;
+    yritysmuoto: string;
+    ytjNimi: { nimi: string; kieli: string; alkuPvm: string };
+    ytunnus: string;
+};

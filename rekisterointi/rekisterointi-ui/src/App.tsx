@@ -9,7 +9,7 @@ import './styles.css';
 
 import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
 import { Language, Lokalisointi, LokalisointiRivi } from './types';
-import { JotpaAloitus } from './jotpa/JotpaAloitus';
+import { JotpaRekisterointi } from './jotpa/JotpaRekisterointi';
 import { JotpaLanding } from './jotpa/JotpaLanding';
 import { Footer } from './Footer';
 
@@ -47,7 +47,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/jotpa" element={<JotpaLanding />} />
-                    <Route path="/hakija/aloitus" element={<JotpaAloitus />} />
+                    <Route path="/jotpa/*" element={<JotpaRekisterointi />} />
                 </Routes>
                 <Outlet />
             </Router>

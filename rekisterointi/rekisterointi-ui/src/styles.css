@@ -1,6 +1,10 @@
 @import './variables.css';
 
 body {
+    font-family: 'Open Sans', 'Helvetica', sans-sefif;
+    font-size: 95%;
+    line-height: 1.45;
+    text-size-adjust: 100%;
     color: var(--gray-font);
 }
 
@@ -53,6 +57,7 @@ header {
     flex-direction: column;
     align-items: center;
     border-top: 8px solid var(--green);
+    background-color: var(--gray-header-background);
 }
 
 main {
@@ -68,7 +73,7 @@ footer {
 }
 
 footer span {
-    background-color: #fff;
+    background-color: var(--white);
     padding: 24px 45px;
 }
 
@@ -91,5 +96,14 @@ footer::after {
 
 .content {
     margin: 20px;
+    width: 100%;
     max-width: 900px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 27px;
+    line-height: 27px;
 }

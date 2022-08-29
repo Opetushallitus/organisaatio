@@ -3,13 +3,16 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@reduxjs/toolkit": "^1.8.5",
         "axios": "^0.27.2",
         "normalize.css": "^8.0.1",
         "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-redux": "^8.0.2",
         "react-router": "^6.3.0",
-        "react-router-dom": "^6.3.0"
+        "react-router-dom": "^6.3.0",
+        "redux": "^4.2.0"
     },
     "devDependencies": {
         "@axe-core/playwright": "^4.4.3",
