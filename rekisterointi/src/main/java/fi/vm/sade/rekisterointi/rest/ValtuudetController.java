@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static fi.vm.sade.rekisterointi.util.Constants.*;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.removeSessionAttribute;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 
 @Profile("!dev")
@@ -99,8 +100,11 @@ public class ValtuudetController {
     setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, organisation.identifier);
     setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, organisation.name);
 
-    String redirectUrl = properties.url("rekisterointi.hakija");
-    return new RedirectView(redirectUrl);
+    var redirectUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, String.class);
+    if (redirectUrl.isPresent()) {
+      removeSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST);
+    }
+    return new RedirectView(redirectUrl.orElse(properties.url("rekisterointi.hakija")));
   }
 
 }

@@ -25,6 +25,11 @@ public final class ServletUtils {
     return value;
   }
 
+  public static void removeSessionAttribute(HttpServletRequest request, String name) {
+    HttpSession session = request.getSession();
+    session.removeAttribute(name);
+  }
+
   public static Optional<String> resolveUsername(HttpServletRequest request) {
     return Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName);
   }

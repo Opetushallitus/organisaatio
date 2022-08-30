@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 import static fi.vm.sade.rekisterointi.util.Constants.*;
-import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.*;
 
 @Profile("dev")
 @Controller
@@ -37,7 +37,8 @@ public class DevValtuudetController {
     setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, "0772017-4");
     setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, "Meyer Turku Oy");
 
-    String redirectUrl = properties.url("rekisterointi.hakija");
+    String redirectUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, String.class)
+        .orElse(properties.url("rekisterointi.hakija"));
     return new RedirectView(redirectUrl);
   }
 

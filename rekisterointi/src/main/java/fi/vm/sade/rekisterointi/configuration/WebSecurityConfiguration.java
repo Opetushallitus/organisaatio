@@ -23,13 +23,23 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
+
+import java.io.IOException;
 
 @Configuration
 @Order(2)
@@ -51,6 +61,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
         .anyRequest().hasRole(HAKIJA_ROLE)
         .and()
+        .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
         .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
@@ -108,6 +119,25 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     authenticationProvider
         .setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
     return authenticationProvider;
+  }
+
+  private static class SaveOriginalRequestFilter extends GenericFilterBean {
+    @Override
+    public void doFilter(
+        ServletRequest request,
+        ServletResponse response,
+        FilterChain chain) throws IOException, ServletException {
+      if (request instanceof HttpServletRequest) {
+        var httpRequest = (HttpServletRequest) request;
+        var currentOriginalRequest = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST,
+            String.class);
+        var url = httpRequest.getRequestURL().toString();
+        if (currentOriginalRequest.isEmpty() && !url.contains("/api/")) {
+          setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, url);
+        }
+      }
+      chain.doFilter(request, response);
+    }
   }
 
   private static class HakijaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
