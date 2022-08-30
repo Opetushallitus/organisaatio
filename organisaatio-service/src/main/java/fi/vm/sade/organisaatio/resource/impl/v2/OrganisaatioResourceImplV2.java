@@ -300,24 +300,36 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             logger.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
-        // Define the target list type for mapping
-        Type type = new TypeToken<List<OrganisaatioNimiDTO>>() {
-        }.getType();
-        List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), type);
+        List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), new TypeToken<List<OrganisaatioNimiDTO>>() {
+        }.getType());
         Organisaatio org = organisaatioRepository.customFindByOid(oid);
-        return getOrganisaatioNimiDTOS(type, orgNimet, org);
+        return getOrganisaatioNimiDTOS(orgNimet, org).stream()
+                .sorted(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm)).collect(Collectors.toList());
     }
 
-    private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(Type type, List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
+    private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
         if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA).stream()
-                    .map(parentSuhde ->
-                            Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), type)))
-                    .collect(Collectors.toList());
+            List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = getOppilaitosNameIntervals(org);
             return decoreateToimipisteNimet(orgNimet, oppilaitosHistoryNimet);
         } else {
             return orgNimet;
         }
+    }
+
+    List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> getOppilaitosNameIntervals(Organisaatio org) {
+        return org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA).stream()
+                .map(parentSuhde -> {
+                    List<OrganisaatioNimiDTO> parentNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), new TypeToken<List<OrganisaatioNimiDTO>>() {
+                    }.getType());
+                    List<OrganisaatioNimiDTO> relevantParentNimet = getRelevantParentNimet(org, parentNimet);
+                    return Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), relevantParentNimet);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private static List<OrganisaatioNimiDTO> getRelevantParentNimet(Organisaatio org, List<OrganisaatioNimiDTO> parentNimet) {
+        List<OrganisaatioNimiDTO> relevantParentNimet = parentNimet.stream().filter(a -> a.getAlkuPvm().compareTo(org.getAlkuPvm()) >= 0).collect(Collectors.toList());
+        return relevantParentNimet.isEmpty() ? List.of(parentNimet.get(parentNimet.size() - 1)) : relevantParentNimet;
     }
 
     List<OrganisaatioNimiDTO> decoreateToimipisteNimet(List<OrganisaatioNimiDTO> toimipisteNimet, List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet) {
