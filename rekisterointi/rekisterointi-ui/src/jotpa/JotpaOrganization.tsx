@@ -1,13 +1,11 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Header } from '../Header';
+import { useKoodistos } from '../KoodistoContext';
 import { useJotpaRekisterointiSelector } from './store';
 
 export function JotpaOrganization() {
     const { loading, organization } = useJotpaRekisterointiSelector((state) => state.organization);
-    console.log(organization);
-    console.log(loading);
     if (loading || !organization) {
         return null;
     }

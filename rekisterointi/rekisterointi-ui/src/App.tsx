@@ -43,7 +43,9 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/jotpa" element={<JotpaLanding />} />
-                    <Route path="/jotpa/*" element={<JotpaRekisterointi />} />
+                    <Route path="/hakija">
+                        <Route path="jotpa/*" element={<JotpaRekisterointi />} />
+                    </Route>
                 </Routes>
                 <Outlet />
             </Router>
