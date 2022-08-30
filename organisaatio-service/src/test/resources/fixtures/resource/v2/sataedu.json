@@ -1,0 +1,37 @@
+[
+  {
+    "nimi": {
+      "fi": "Kokemaenjokilaakson ammattioppilaitos, Kokemaki"
+    },
+    "alkuPvm": "1992-01-01",
+    "version": 0
+  },
+  {
+    "nimi": {
+      "fi": "Kokemaenjokilaakson ammattiopisto, Kokemaki"
+    },
+    "alkuPvm": "2002-08-01",
+    "version": 0
+  },
+  {
+    "nimi": {
+      "fi": "SATAEDU Satakunnan ammattiopisto, Kokemaki"
+    },
+    "alkuPvm": "2010-01-01",
+    "version": 0
+  },
+  {
+    "nimi": {
+      "fi": "SATAEDU, Kokemaki"
+    },
+    "alkuPvm": "2013-01-01",
+    "version": 0
+  },
+  {
+    "nimi": {
+      "fi": "Sataedu, Kokemaki"
+    },
+    "alkuPvm": "2013-01-03",
+    "version": 0
+  }
+]

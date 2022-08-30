@@ -309,15 +309,26 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
         if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            List<OrganisaatioNimiDTO> sanitizedOrgNimet = sanitizeNimet(orgNimet, org);
             List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = getOppilaitosNameIntervals(org);
-            return decoreateToimipisteNimet(orgNimet, oppilaitosHistoryNimet);
+            return decoreateToimipisteNimet(sanitizedOrgNimet, oppilaitosHistoryNimet);
         } else {
             return orgNimet;
         }
     }
 
+    private List<OrganisaatioNimiDTO> sanitizeNimet(List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
+        List<OrganisaatioNimiDTO> sanitizedOrgNimet = orgNimet.stream()
+                .sorted(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm))
+                .collect(Collectors.toList());
+        sanitizedOrgNimet.get(0).setAlkuPvm(org.getAlkuPvm());
+        return sanitizedOrgNimet;
+    }
+
     List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> getOppilaitosNameIntervals(Organisaatio org) {
-        return org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA).stream()
+        List<OrganisaatioSuhde> parentSuhteet = org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
+        List<OrganisaatioSuhde> sanitizedParentSuhteet = sanitizeParentSuhteet(parentSuhteet, org);
+        return sanitizedParentSuhteet.stream()
                 .map(parentSuhde -> {
                     List<OrganisaatioNimiDTO> parentNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), new TypeToken<List<OrganisaatioNimiDTO>>() {
                     }.getType());
@@ -325,6 +336,14 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
                     return Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), relevantParentNimet);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private List<OrganisaatioSuhde> sanitizeParentSuhteet(List<OrganisaatioSuhde> parentSuhteet, Organisaatio org) {
+        List<OrganisaatioSuhde> sanitizedParentSuhteet = parentSuhteet.stream()
+                .sorted(Comparator.comparing(OrganisaatioSuhde::getAlkuPvm))
+                .collect(Collectors.toList());
+        sanitizedParentSuhteet.get(0).setAlkuPvm(org.getAlkuPvm());
+        return sanitizedParentSuhteet;
     }
 
     private static List<OrganisaatioNimiDTO> getRelevantParentNimet(Organisaatio org, List<OrganisaatioNimiDTO> parentNimet) {
