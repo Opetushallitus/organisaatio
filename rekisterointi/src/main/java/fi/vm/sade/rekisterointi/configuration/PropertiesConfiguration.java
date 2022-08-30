@@ -23,6 +23,7 @@ public class PropertiesConfiguration {
     } else {
       properties = new OphProperties("/rekisterointi-oph.properties");
     }
+    properties.addDefault("host_oppija", "testiopintopolku.fi");
     properties.addDefault("url-oppija", environment.getRequiredProperty("rekisterointi.url-oppija"));
     properties.addDefault("url-virkailija", environment.getRequiredProperty("rekisterointi.url-virkailija"));
     properties.addDefault("url-rekisterointi", environment.getRequiredProperty("rekisterointi.url-rekisterointi"));
