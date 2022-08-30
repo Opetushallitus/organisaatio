@@ -308,27 +308,14 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     private List<OrganisaatioNimiDTO> getOrganisaatioNimiDTOS(List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
-        if (org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            List<OrganisaatioNimiDTO> sanitizedOrgNimet = sanitizeNimet(orgNimet, org);
-            List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> oppilaitosHistoryNimet = getOppilaitosNameIntervals(org);
-            return decoreateToimipisteNimet(sanitizedOrgNimet, oppilaitosHistoryNimet);
-        } else {
-            return orgNimet;
-        }
-    }
+        return org.getTyypit().contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue()) ?
+                decoreateToimipisteNimet(orgNimet, getOppilaitosNameIntervals(org)) :
+                orgNimet;
 
-    private List<OrganisaatioNimiDTO> sanitizeNimet(List<OrganisaatioNimiDTO> orgNimet, Organisaatio org) {
-        List<OrganisaatioNimiDTO> sanitizedOrgNimet = orgNimet.stream()
-                .sorted(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm))
-                .collect(Collectors.toList());
-        sanitizedOrgNimet.get(0).setAlkuPvm(org.getAlkuPvm());
-        return sanitizedOrgNimet;
     }
 
     List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> getOppilaitosNameIntervals(Organisaatio org) {
-        List<OrganisaatioSuhde> parentSuhteet = org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        List<OrganisaatioSuhde> sanitizedParentSuhteet = sanitizeParentSuhteet(parentSuhteet, org);
-        return sanitizedParentSuhteet.stream()
+        return sanitizeParentSuhteet(org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA), org).stream()
                 .map(parentSuhde -> {
                     List<OrganisaatioNimiDTO> parentNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), new TypeToken<List<OrganisaatioNimiDTO>>() {
                     }.getType());

@@ -20,13 +20,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Sql({"/data//truncate_tables.sql"})
 class OrganisaatioResourceImplV2IntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @DisplayName("Case Riveria Niskala")
+    @Sql({"/data/truncate_tables.sql"})
     @Sql({"/data/riveria_organisaatio_data.sql"})
     @WithMockUser(value = "1.2.3.4.5", authorities = {"FOO"})
     void testRiveriaNiskala() throws Exception {
@@ -37,6 +37,7 @@ class OrganisaatioResourceImplV2IntegrationTest {
 
     @Test
     @DisplayName("Case Sataedu Kokemäki")
+    @Sql({"/data/truncate_tables.sql"})
     @Sql({"/data/sataedu_organisaatio_data.sql"})
     @WithMockUser(value = "1.2.3.4.5", authorities = {"FOO"})
     void testSataeduKokemaki() throws Exception {
