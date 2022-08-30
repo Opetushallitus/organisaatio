@@ -334,7 +334,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     }
 
     private static List<OrganisaatioNimiDTO> getRelevantParentNimet(Organisaatio org, List<OrganisaatioNimiDTO> parentNimet) {
-        List<OrganisaatioNimiDTO> relevantParentNimet = parentNimet.stream().filter(a -> a.getAlkuPvm().compareTo(org.getAlkuPvm()) >= 0).collect(Collectors.toList());
+        List<OrganisaatioNimiDTO> relevantParentNimet = parentNimet.stream().filter(parentNimi -> !parentNimi.getAlkuPvm().before(org.getAlkuPvm())).collect(Collectors.toList());
         return relevantParentNimet.isEmpty() ? List.of(parentNimet.get(parentNimet.size() - 1)) : relevantParentNimet;
     }
 
