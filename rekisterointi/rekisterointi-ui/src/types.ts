@@ -50,3 +50,5 @@ export type Organization = {
     ytjNimi: { nimi: string; kieli: string; alkuPvm: string };
     ytunnus: string;
 };
+
+export type SelectOption = { value: string; label: string };

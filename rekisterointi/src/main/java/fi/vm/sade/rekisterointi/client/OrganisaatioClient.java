@@ -199,7 +199,6 @@ public class OrganisaatioClient {
   }
 
   private static class OrganisaatioListDto {
-    public long numHits;
     public Collection<OrganisaatioV4Dto> organisaatiot;
   }
 

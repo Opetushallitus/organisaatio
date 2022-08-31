@@ -3,16 +3,23 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@hookform/resolvers": "^2.9.7",
         "@reduxjs/toolkit": "^1.8.5",
+        "@types/react-datepicker": "^4.4.2",
         "axios": "^0.27.2",
+        "date-fns": "^2.29.2",
         "normalize.css": "^8.0.1",
         "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
         "react": "^18.2.0",
+        "react-datepicker": "^4.8.0",
         "react-dom": "^18.2.0",
+        "react-hook-form": "^7.34.2",
         "react-redux": "^8.0.2",
         "react-router": "^6.3.0",
         "react-router-dom": "^6.3.0",
-        "redux": "^4.2.0"
+        "react-select": "^5.4.0",
+        "redux": "^4.2.0",
+        "yup": "^0.32.11"
     },
     "devDependencies": {
         "@axe-core/playwright": "^4.4.3",

@@ -11,6 +11,8 @@ import { Koodi } from '../types';
 
 store.dispatch(fetchOrganization());
 
+const koodistoNimiComparator = (a: Koodi, b: Koodi) => ((a.nimi.fi ?? 'xxx') > (b.nimi.fi ?? 'xxx') ? 1 : -1);
+
 export function JotpaRekisterointi() {
     const [koodisto, setKoodisto] = useState<Koodistos>();
     useEffect(() => {
@@ -22,7 +24,16 @@ export function JotpaRekisterointi() {
                     axios.get<Koodi[]>('/api/koodisto/ORGANISAATIOTYYPPI/koodi?onlyValid=true'),
                     axios.get<Koodi[]>('/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true'),
                 ]);
-            setKoodisto({ kunnat, yritysmuodot, organisaatiotyypit, maat });
+            kunnat.sort(koodistoNimiComparator);
+            yritysmuodot.sort(koodistoNimiComparator);
+            organisaatiotyypit.sort(koodistoNimiComparator);
+            maat.sort(koodistoNimiComparator);
+            setKoodisto({
+                kunnat,
+                yritysmuodot,
+                organisaatiotyypit,
+                maat,
+            });
         }
 
         void fetchKoodisto();

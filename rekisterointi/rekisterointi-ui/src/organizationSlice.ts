@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { Organization } from './types';
+import { Organization, SelectOption } from './types';
 
 export const fetchOrganization = createAsyncThunk<Organization, void>(
     'organization/fetchOrganization',
@@ -13,18 +13,34 @@ export const fetchOrganization = createAsyncThunk<Organization, void>(
 
 interface State {
     loading: boolean;
-    organization?: Organization;
+    initialOrganization?: Organization;
+    yritysmuoto?: SelectOption;
+    kotipaikka?: SelectOption;
+    alkamisaika?: Date;
 }
 
 const initialState: State = {
     loading: true,
-    organization: undefined,
+    initialOrganization: undefined,
+    yritysmuoto: undefined,
+    kotipaikka: undefined,
+    alkamisaika: undefined,
 };
 
 const organizationSlice = createSlice({
     name: 'organization',
     initialState,
-    reducers: {},
+    reducers: {
+        setYritysmuoto: (state, action: PayloadAction<SelectOption>) => {
+            state.yritysmuoto = action.payload;
+        },
+        setKotipaikka: (state, action: PayloadAction<SelectOption>) => {
+            state.kotipaikka = action.payload;
+        },
+        setAlkamisaika: (state, action: PayloadAction<Date>) => {
+            state.alkamisaika = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchOrganization.pending, (state) => {
@@ -32,9 +48,11 @@ const organizationSlice = createSlice({
             })
             .addCase(fetchOrganization.fulfilled, (state, action) => {
                 state.loading = false;
-                state.organization = action.payload;
+                state.initialOrganization = action.payload;
             });
     },
 });
 
 export default organizationSlice.reducer;
+
+export const { setYritysmuoto, setKotipaikka, setAlkamisaika } = organizationSlice.actions;

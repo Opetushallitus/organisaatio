@@ -1,10 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom';
+import { registerLocale } from 'react-datepicker';
+import fi from 'date-fns/locale/fi';
+import { setLocale } from 'yup';
 
 // import global styles first
 import 'normalize.css';
 import 'oph-virkailija-style-guide/oph-styles.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 
 import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
@@ -12,6 +16,14 @@ import { Language, Lokalisointi, LokalisointiRivi } from './types';
 import { JotpaRekisterointi } from './jotpa/JotpaRekisterointi';
 import { JotpaLanding } from './jotpa/JotpaLanding';
 import { Footer } from './Footer';
+
+registerLocale('fi', fi);
+setLocale({
+    mixed: {
+        required: 'Pakollinen tieto',
+        notType: 'Virheellinen arvo',
+    },
+});
 
 function App() {
     const [language, setLanguage] = useState<Language>('fi');

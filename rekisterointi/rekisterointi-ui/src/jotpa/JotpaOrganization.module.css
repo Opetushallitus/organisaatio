@@ -1,0 +1,20 @@
+.infoList {
+    padding: 12px 12px 12px 28px;
+    background: var(--gray-header-background);
+    line-height: 26px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: end;
+    margin-top: 66px;
+}
+
+.cancelButton {
+    padding: 13px 79px;
+    border: none;
+    background: var(--white);
+    color: var(--green);
+    cursor: pointer;
+    font-weight: 600;
+}

@@ -22,7 +22,8 @@ public class LogoutController {
   @GetMapping("/hakija/logout")
   public View logout(HttpServletRequest request) {
     Optional.ofNullable(request.getSession(false)).ifPresent(HttpSession::invalidate);
-    return new RedirectView("/");
+    var redirectPath = Optional.ofNullable(request.getParameter("redirect")).orElse("/");
+    return new RedirectView(redirectPath);
   }
 
 }

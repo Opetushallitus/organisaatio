@@ -107,3 +107,58 @@ label {
     margin-top: 27px;
     line-height: 27px;
 }
+
+input[type='submit'] {
+    padding: 13px 79px;
+    border: none;
+    background: var(--green);
+    color: var(--white);
+    cursor: pointer;
+}
+
+.react-datepicker {
+    border-radius: 2px;
+    color: var(--gray-font);
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+    color: var(--gray-font);
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+    color: var(--gray-heading);
+}
+
+.react-datepicker__input-container > input {
+    border-radius: 2px;
+    border: 1px solid var(--light-gray);
+    height: 38px;
+    margin: 1px;
+    padding: 2px 8px;
+}
+
+.react-datepicker__input-container > input.invalid_date {
+    border: 2px solid var(--red-error);
+    margin: 0;
+}
+
+.react-datepicker__triangle {
+    display: none;
+}
+
+.react-datepicker__header {
+    background-color: var(--gray-header-background);
+}
+
+.react-datepicker-popper[data-placement^='bottom'] {
+    padding-top: 2px;
+}
+
+.react-datepicker-popper[data-placement^='top'] {
+    padding-bottom: 0;
+    margin-bottom: -4px;
+}
