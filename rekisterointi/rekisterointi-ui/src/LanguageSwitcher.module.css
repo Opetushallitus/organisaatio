@@ -33,7 +33,7 @@
     border-left: none;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 768px) {
     .switcherContainer {
         justify-content: end;
     }

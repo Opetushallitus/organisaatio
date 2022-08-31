@@ -27,7 +27,7 @@ h2 {
     line-height: 26px;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 768px) {
     h1 {
         font-size: 48px;
         line-height: 58px;
@@ -84,7 +84,7 @@ footer::after {
     margin-top: -32px;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 768px) {
     footer {
         padding: 24px 0;
     }
@@ -95,7 +95,8 @@ footer::after {
 }
 
 .content {
-    margin: 20px;
+    box-sizing: border-box;
+    padding: 20px;
     width: 100%;
     max-width: 900px;
 }
