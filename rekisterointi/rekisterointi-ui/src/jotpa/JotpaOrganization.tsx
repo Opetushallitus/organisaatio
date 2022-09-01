@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,17 +7,18 @@ import { Header } from '../Header';
 import { useKoodistos } from '../KoodistoContext';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { Select } from '../Select';
-import { Koodi } from '../types';
+import { Koodi, Language } from '../types';
 import { DatePicker } from '../DatePicker';
 import { OrganizationFormState, OrganizationSchema, setForm } from '../organizationSlice';
 import { Input } from '../Input';
 
 import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
+import { LanguageContext } from '../contexts';
 
-const findPostitoimipaikka = (postinumero: string, postinumerot: Koodi[]) => {
+const findPostitoimipaikka = (postinumero: string, postinumerot: Koodi[], language: Language) => {
     const postinumeroUri = `posti_${postinumero}`;
-    return postinumerot.find((p) => p.uri === postinumeroUri)?.nimi.fi;
+    return postinumerot.find((p) => p.uri === postinumeroUri)?.nimi[language];
 };
 
 const AddEmailLogo = () => (
@@ -27,6 +28,7 @@ const AddEmailLogo = () => (
 );
 
 export function JotpaOrganization() {
+    const { language } = useContext(LanguageContext);
     const navigate = useNavigate();
     const { yritysmuodot, kunnat, posti, postinumerot } = useKoodistos();
     const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
@@ -41,7 +43,7 @@ export function JotpaOrganization() {
         defaultValues: useMemo(() => {
             return form;
         }, [form]),
-        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot)),
+        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot, language)),
     });
 
     const { fields: emailFields, append: appendEmail } = useFieldArray<OrganizationFormState>({
@@ -49,7 +51,7 @@ export function JotpaOrganization() {
         name: 'emails',
     });
     if (emailFields.length === 0) {
-        appendEmail({ email: '' });
+        appendEmail({ email: '' }, { shouldFocus: false });
     }
 
     if (loading || !initialOrganization || !yritysmuodot) {
@@ -93,8 +95,8 @@ export function JotpaOrganization() {
     const postinumero = watch('postinumero');
     const copyKayntiosoite = watch('copyKayntiosoite');
     const kayntipostinumero = watch('kayntipostinumero');
-    const postitoimipaikka = findPostitoimipaikka(postinumero, posti);
-    const kayntipostitoimipaikka = kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti);
+    const postitoimipaikka = findPostitoimipaikka(postinumero, posti, language);
+    const kayntipostitoimipaikka = kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti, language);
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
@@ -123,7 +125,7 @@ export function JotpaOrganization() {
                         name="yritysmuoto"
                         control={control}
                         error={errors.yritysmuoto?.value}
-                        options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi.fi || k.uri }))}
+                        options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                     />
                     <label>Organisaatiotyyppi</label>
                     <div>Koulutuksen järjestäjä</div>
@@ -132,7 +134,7 @@ export function JotpaOrganization() {
                         name="kotipaikka"
                         control={control}
                         error={errors.kotipaikka?.value}
-                        options={kunnat.map((k) => ({ value: k.uri, label: k.nimi.fi || k.uri }))}
+                        options={kunnat.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                     />
                     <label htmlFor="alkamisaika">Toiminnan alkamisaika *</label>
                     <DatePicker<OrganizationFormState>

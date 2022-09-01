@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
@@ -7,15 +7,18 @@ import store from './store';
 import { JotpaOrganization } from './JotpaOrganization';
 import { fetchOrganization, OrganizationSchema } from '../organizationSlice';
 import { KoodistoContext, Koodistos } from '../KoodistoContext';
-import { Koodi } from '../types';
+import { Koodi, Language } from '../types';
 import { JotpaUser } from './JotpaUser';
 import { JotpaWizardValidator } from './JotpaWizardValidator';
+import { LanguageContext } from '../contexts';
 
 store.dispatch(fetchOrganization());
 
-const koodistoNimiComparator = (a: Koodi, b: Koodi) => ((a.nimi.fi ?? 'xxx') > (b.nimi.fi ?? 'xxx') ? 1 : -1);
+const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
+    (a.nimi[language] ?? 'xxx') > (b.nimi[language] ?? 'xxx') ? 1 : -1;
 
 export function JotpaRekisterointi() {
+    const { language } = useContext(LanguageContext);
     const [koodisto, setKoodisto] = useState<Koodistos>();
     useEffect(() => {
         async function fetchKoodisto() {
@@ -32,10 +35,10 @@ export function JotpaRekisterointi() {
                 axios.get<Koodi[]>('/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true'),
                 axios.get<Koodi[]>('/api/koodisto/POSTI/koodi?onlyValid=true'),
             ]);
-            kunnat.sort(koodistoNimiComparator);
-            yritysmuodot.sort(koodistoNimiComparator);
-            organisaatiotyypit.sort(koodistoNimiComparator);
-            maat.sort(koodistoNimiComparator);
+            kunnat.sort(koodistoNimiComparator(language));
+            yritysmuodot.sort(koodistoNimiComparator(language));
+            organisaatiotyypit.sort(koodistoNimiComparator(language));
+            maat.sort(koodistoNimiComparator(language));
             const postinumerot = posti.map((p) => p.arvo);
             setKoodisto({
                 kunnat,
@@ -68,7 +71,8 @@ export function JotpaRekisterointi() {
                                         schema: OrganizationSchema(
                                             koodisto.yritysmuodot,
                                             koodisto.kunnat,
-                                            koodisto.postinumerot
+                                            koodisto.postinumerot,
+                                            language
                                         ),
                                         redirectPath: '/hakija/jotpa/aloitus',
                                     },

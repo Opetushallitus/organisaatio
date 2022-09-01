@@ -10,7 +10,7 @@ import {
     PostiosoiteSchema,
     PuhelinnumeroSchema,
 } from './yupSchemas';
-import { Koodi, Organization, SelectOption } from './types';
+import { Koodi, Language, Organization, SelectOption } from './types';
 
 export const fetchOrganization = createAsyncThunk<Organization, void>(
     'organization/fetchOrganization',
@@ -71,11 +71,12 @@ export const { setForm } = organizationSlice.actions;
 export const OrganizationSchema = (
     yritysmuodot: Koodi[],
     kunnat: Koodi[],
-    postinumerot: string[]
+    postinumerot: string[],
+    language: Language
 ): yup.SchemaOf<OrganizationFormState> =>
     yup.object().shape({
-        yritysmuoto: KoodiSchema(yritysmuodot),
-        kotipaikka: KoodiSchema(kunnat),
+        yritysmuoto: KoodiSchema(yritysmuodot, language),
+        kotipaikka: KoodiSchema(kunnat, language),
         alkamisaika: yup.date().required(),
         puhelinnumero: PuhelinnumeroSchema,
         email: EmailSchema,

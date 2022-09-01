@@ -1,8 +1,8 @@
 import * as yup from 'yup';
 
-import { Koodi } from './types';
+import { Koodi, Language } from './types';
 
-export const KoodiSchema = (koodit: Koodi[]) =>
+export const KoodiSchema = (koodit: Koodi[], language: Language) =>
     yup
         .object()
         .shape({
@@ -10,7 +10,7 @@ export const KoodiSchema = (koodit: Koodi[]) =>
                 .string()
                 .required()
                 .oneOf(
-                    koodit.map((k) => k.nimi.fi),
+                    koodit.map((k) => k.nimi[language] ?? k.nimi.fi),
                     'Väärä arvo'
                 ),
             value: yup
