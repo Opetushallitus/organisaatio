@@ -1,80 +1,34 @@
 import React, { useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { Header } from '../Header';
 import { useKoodistos } from '../KoodistoContext';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { Select } from '../Select';
-import { Koodi, SelectOption } from '../types';
+import { Koodi } from '../types';
 import { DatePicker } from '../DatePicker';
-import { FormState, setForm } from '../organizationSlice';
-import {
-    EmailArraySchema,
-    EmailSchema,
-    KoodiSchema,
-    PostinumeroSchema,
-    PostiosoiteSchema,
-    PuhelinnumeroSchema,
-} from '../yupSchemas';
+import { OrganizationFormState, OrganizationSchema, setForm } from '../organizationSlice';
 import { Input } from '../Input';
 
 import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
-
-type OrganizationForm = {
-    yritysmuoto: SelectOption;
-    kotipaikka: SelectOption;
-    alkamisaika: Date;
-    puhelinnumero: string;
-    email: string;
-    postiosoite: string;
-    postinumero: string;
-    copyKayntiosoite: boolean;
-    kayntiosoite?: string;
-    kayntipostinumero?: string;
-    emails: { email?: string }[];
-};
 
 const findPostitoimipaikka = (postinumero: string, postinumerot: Koodi[]) => {
     const postinumeroUri = `posti_${postinumero}`;
     return postinumerot.find((p) => p.uri === postinumeroUri)?.nimi.fi;
 };
 
-const OrganizationSchema = (yritysmuodot: Koodi[], kunnat: Koodi[]): yup.SchemaOf<OrganizationForm> =>
-    yup.object().shape({
-        yritysmuoto: KoodiSchema(yritysmuodot),
-        kotipaikka: KoodiSchema(kunnat),
-        alkamisaika: yup.date().required(),
-        puhelinnumero: PuhelinnumeroSchema,
-        email: EmailSchema,
-        postiosoite: PostiosoiteSchema.required(),
-        postinumero: PostinumeroSchema.required(),
-        copyKayntiosoite: yup.bool().required(),
-        kayntiosoite: yup
-            .string()
-            .when(['copyKayntiosoite'], (copyKayntiosoite, schema) =>
-                copyKayntiosoite ? schema.optional() : PostiosoiteSchema.required()
-            ),
-        kayntipostinumero: yup
-            .string()
-            .when(['copyKayntiosoite'], (copyKayntiosoite, schema) =>
-                copyKayntiosoite ? schema.optional() : PostinumeroSchema.required()
-            ),
-        emails: EmailArraySchema,
-    });
-
 const AddEmailLogo = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#3A7A10" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#3A7A10" />
     </svg>
 );
 
 export function JotpaOrganization() {
     const navigate = useNavigate();
-    const { yritysmuodot, kunnat, postinumerot } = useKoodistos();
+    const { yritysmuodot, kunnat, posti, postinumerot } = useKoodistos();
     const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
     const dispatch = useJotpaRekisterointiDispatch();
     const {
@@ -83,15 +37,14 @@ export function JotpaOrganization() {
         handleSubmit,
         register,
         watch,
-        getValues,
-        setError,
-    } = useForm<OrganizationForm>({
+    } = useForm<OrganizationFormState>({
         defaultValues: useMemo(() => {
             return form;
         }, [form]),
-        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat)),
+        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot)),
     });
-    const { fields: emailFields, append: appendEmail } = useFieldArray<OrganizationForm>({
+
+    const { fields: emailFields, append: appendEmail } = useFieldArray<OrganizationFormState>({
         control,
         name: 'emails',
     });
@@ -102,24 +55,7 @@ export function JotpaOrganization() {
     if (loading || !initialOrganization || !yritysmuodot) {
         return null;
     }
-    const onSubmit = (data: OrganizationForm) => {
-        const postitoimipaikka = findPostitoimipaikka(data.postinumero, postinumerot);
-        const kayntipostitoimipaikka = data.copyKayntiosoite
-            ? postitoimipaikka
-            : findPostitoimipaikka(data.kayntipostinumero!, postinumerot);
-        const isInvalidKayntipostitoimipaikka = !data.copyKayntiosoite && !kayntipostitoimipaikka;
-        if (!postitoimipaikka || isInvalidKayntipostitoimipaikka) {
-            if (!postitoimipaikka) {
-                setError('postinumero', { message: 'Postinumerolle ei löydy postitoimipaikkaa' });
-            }
-            if (isInvalidKayntipostitoimipaikka) {
-                setError('kayntipostinumero', {
-                    message: 'Käynti osoitteen postinumerolle ei löydy postitoimipaikkaa',
-                });
-            }
-            return;
-        }
-
+    const onSubmit = (data: OrganizationFormState) => {
         const kayntiosoite = !data.copyKayntiosoite
             ? {
                   kayntiosoite: data.kayntiosoite!,
@@ -131,7 +67,7 @@ export function JotpaOrganization() {
                   kayntipostinumero: data.postinumero,
                   kayntipostitoimipaikka: postitoimipaikka,
               };
-        const formState: FormState = {
+        const formState: OrganizationFormState = {
             yritysmuoto: data.yritysmuoto,
             kotipaikka: data.kotipaikka,
             alkamisaika: data.alkamisaika,
@@ -140,7 +76,7 @@ export function JotpaOrganization() {
             emails: data.emails.filter((e) => !!e.email) as { email: string }[],
             postiosoite: data.postiosoite,
             postinumero: data.postinumero,
-            postitoimipaikka,
+            copyKayntiosoite: data.copyKayntiosoite,
             ...kayntiosoite,
         };
 
@@ -157,8 +93,8 @@ export function JotpaOrganization() {
     const postinumero = watch('postinumero');
     const copyKayntiosoite = watch('copyKayntiosoite');
     const kayntipostinumero = watch('kayntipostinumero');
-    const postitoimipaikka = findPostitoimipaikka(postinumero, postinumerot);
-    const kayntipostitoimipaikka = kayntipostinumero && findPostitoimipaikka(kayntipostinumero, postinumerot);
+    const postitoimipaikka = findPostitoimipaikka(postinumero, posti);
+    const kayntipostitoimipaikka = kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti);
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
@@ -183,7 +119,7 @@ export function JotpaOrganization() {
                     <label>Y-tunnus</label>
                     <div>{initialOrganization.ytunnus}</div>
                     <label htmlFor="yritysmuoto">Yritysmuoto *</label>
-                    <Select<OrganizationForm>
+                    <Select<OrganizationFormState>
                         name="yritysmuoto"
                         control={control}
                         error={errors.yritysmuoto?.value}
@@ -192,14 +128,18 @@ export function JotpaOrganization() {
                     <label>Organisaatiotyyppi</label>
                     <div>Koulutuksen järjestäjä</div>
                     <label htmlFor="kotipaikka">Kotipaikka *</label>
-                    <Select<OrganizationForm>
+                    <Select<OrganizationFormState>
                         name="kotipaikka"
                         control={control}
                         error={errors.kotipaikka?.value}
                         options={kunnat.map((k) => ({ value: k.uri, label: k.nimi.fi || k.uri }))}
                     />
                     <label htmlFor="alkamisaika">Toiminnan alkamisaika *</label>
-                    <DatePicker<OrganizationForm> name="alkamisaika" control={control} error={errors.alkamisaika} />
+                    <DatePicker<OrganizationFormState>
+                        name="alkamisaika"
+                        control={control}
+                        error={errors.alkamisaika}
+                    />
                     <h2>Organisaation yhteystiedot</h2>
                     <div className={styles.info}>
                         Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista. Palveluntuottajan
@@ -252,14 +192,14 @@ export function JotpaOrganization() {
                         <li>Sähköpostiosoitetta ei tallenneta Organisaatiopalveluun.</li>
                     </ul>
                     <label>Sähköpostiosoite *</label>
+                    <FormError error={errors?.emails?.message} />
                     {emailFields.map((field, index) => {
                         const error = errors.emails?.[index]?.email;
                         return (
-                            <div>
+                            <div key={field.id}>
                                 <input
                                     className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
                                     type="text"
-                                    key={field.id}
                                     {...register(`emails.${index}.email`)}
                                 />
                                 <FormError error={error?.message} />
@@ -281,9 +221,6 @@ export function JotpaOrganization() {
                         <input type="submit" value="Seuraava vaihe" />
                     </div>
                 </div>
-                {JSON.stringify(getValues())}
-                <br />
-                {JSON.stringify(initialOrganization)}
             </main>
         </form>
     );

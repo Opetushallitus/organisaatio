@@ -5,10 +5,11 @@ import axios from 'axios';
 
 import store from './store';
 import { JotpaOrganization } from './JotpaOrganization';
-import { fetchOrganization } from '../organizationSlice';
+import { fetchOrganization, OrganizationSchema } from '../organizationSlice';
 import { KoodistoContext, Koodistos } from '../KoodistoContext';
 import { Koodi } from '../types';
 import { JotpaUser } from './JotpaUser';
+import { JotpaWizardValidator } from './JotpaWizardValidator';
 
 store.dispatch(fetchOrganization());
 
@@ -23,7 +24,7 @@ export function JotpaRekisterointi() {
                 { data: yritysmuodot },
                 { data: organisaatiotyypit },
                 { data: maat },
-                { data: postinumerot },
+                { data: posti },
             ] = await Promise.all([
                 axios.get<Koodi[]>('/api/koodisto/KUNTA/koodi?onlyValid=true'),
                 axios.get<Koodi[]>('/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true'),
@@ -35,11 +36,13 @@ export function JotpaRekisterointi() {
             yritysmuodot.sort(koodistoNimiComparator);
             organisaatiotyypit.sort(koodistoNimiComparator);
             maat.sort(koodistoNimiComparator);
+            const postinumerot = posti.map((p) => p.arvo);
             setKoodisto({
                 kunnat,
                 yritysmuodot,
                 organisaatiotyypit,
                 maat,
+                posti,
                 postinumerot,
             });
         }
@@ -55,7 +58,26 @@ export function JotpaRekisterointi() {
             <Provider store={store}>
                 <Routes>
                     <Route path="/aloitus" element={<JotpaOrganization />} />
-                    <Route path="/paakayttaja" element={<JotpaUser />} />
+                    <Route
+                        path="/paakayttaja"
+                        element={
+                            <JotpaWizardValidator
+                                validate={[
+                                    {
+                                        slice: 'organization',
+                                        schema: OrganizationSchema(
+                                            koodisto.yritysmuodot,
+                                            koodisto.kunnat,
+                                            koodisto.postinumerot
+                                        ),
+                                        redirectPath: '/hakija/jotpa/aloitus',
+                                    },
+                                ]}
+                            >
+                                <JotpaUser />
+                            </JotpaWizardValidator>
+                        }
+                    />
                 </Routes>
             </Provider>
         </KoodistoContext.Provider>

@@ -28,18 +28,17 @@ export const PuhelinnumeroSchema = yup
     .matches(/^(\+|-| |\(|\)|[0-9]){3,100}$/, 'Puhelinnumeron muoto on väärä')
     .required();
 
-export const PostinumeroSchema = yup.string().matches(/^\d{5}$/, 'Postinumeron muoto on väärä');
+export const PostinumeroSchema = (postinumerot: string[]) =>
+    yup.string().oneOf(postinumerot, 'Postinumerolle ei löydy postitoimipaikkaa');
 
-const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
-export const EmailSchema = yup.string().email().required();
+export const EmailSchema = yup.string().email('Sähköpostin muoto on väärä').required('Pakollinen tieto');
 
 export const EmailArraySchema = yup
     .array()
-    .min(1)
+    .min(1, 'Syötä vähintään yksi sähköposti')
     .of(
         yup.object().shape({
-            email: yup.string().test('invalid_email', 'Sähköpostin muoto on väärä', (e) => !e || emailRegex.test(e)),
+            email: yup.string().email('Sähköpostin muoto on väärä').required('Pakollinen tieto'),
         })
     );
 
