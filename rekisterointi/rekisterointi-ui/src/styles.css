@@ -139,7 +139,8 @@ input[type='submit'] {
     border: 1px solid var(--light-gray);
     height: 38px;
     margin: 1px;
-    padding: 2px 8px;
+    padding: 2px 40px 2px 8px;
+    background: no-repeat right 50% / 20% 60% url(/public/calendar.svg);
 }
 
 .react-datepicker__input-container > input.invalid_date {

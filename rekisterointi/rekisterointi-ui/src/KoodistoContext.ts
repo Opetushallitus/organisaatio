@@ -6,6 +6,7 @@ export interface Koodistos {
     yritysmuodot: Koodi[];
     organisaatiotyypit: Koodi[];
     maat: Koodi[];
+    postinumerot: Koodi[];
 }
 
 const defaultKoodistos = {
@@ -13,6 +14,7 @@ const defaultKoodistos = {
     yritysmuodot: [],
     organisaatiotyypit: [],
     maat: [],
+    postinumerot: [],
 };
 
 export const KoodistoContext = React.createContext<Koodistos>(defaultKoodistos);

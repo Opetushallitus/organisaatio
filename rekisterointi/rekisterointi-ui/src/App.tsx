@@ -23,6 +23,16 @@ setLocale({
         required: 'Pakollinen tieto',
         notType: 'Virheellinen arvo',
     },
+    string: {
+        min: ({ min }) => `Kentän minimipituus on ${min} merkkiä`,
+        max: ({ max }) => `Kentän maksimipituus on ${max} merkkiä`,
+        matches: 'Virheellinen arvo',
+        email: 'Sähköpostin muoto on väärä',
+    },
+    array: {
+        min: ({ min }) => `Vähintään ${min}`,
+        max: ({ max }) => `Enintään ${max}`,
+    },
 });
 
 function App() {

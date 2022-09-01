@@ -11,34 +11,37 @@ export const fetchOrganization = createAsyncThunk<Organization, void>(
     }
 );
 
+export interface FormState {
+    yritysmuoto: SelectOption;
+    kotipaikka: SelectOption;
+    alkamisaika: Date;
+    puhelinnumero: string;
+    email: string;
+    postiosoite: string;
+    postinumero: string;
+    postitoimipaikka: string;
+    kayntiosoite: string;
+    kayntipostinumero: string;
+    kayntipostitoimipaikka: string;
+    emails: { email: string }[];
+}
+
 interface State {
     loading: boolean;
     initialOrganization?: Organization;
-    yritysmuoto?: SelectOption;
-    kotipaikka?: SelectOption;
-    alkamisaika?: Date;
+    form?: FormState;
 }
 
 const initialState: State = {
     loading: true,
-    initialOrganization: undefined,
-    yritysmuoto: undefined,
-    kotipaikka: undefined,
-    alkamisaika: undefined,
 };
 
 const organizationSlice = createSlice({
     name: 'organization',
     initialState,
     reducers: {
-        setYritysmuoto: (state, action: PayloadAction<SelectOption>) => {
-            state.yritysmuoto = action.payload;
-        },
-        setKotipaikka: (state, action: PayloadAction<SelectOption>) => {
-            state.kotipaikka = action.payload;
-        },
-        setAlkamisaika: (state, action: PayloadAction<Date>) => {
-            state.alkamisaika = action.payload;
+        setForm: (state, action: PayloadAction<FormState>) => {
+            state.form = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -55,4 +58,4 @@ const organizationSlice = createSlice({
 
 export default organizationSlice.reducer;
 
-export const { setYritysmuoto, setKotipaikka, setAlkamisaika } = organizationSlice.actions;
+export const { setForm } = organizationSlice.actions;

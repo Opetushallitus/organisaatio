@@ -17,13 +17,19 @@ export function JotpaRekisterointi() {
     const [koodisto, setKoodisto] = useState<Koodistos>();
     useEffect(() => {
         async function fetchKoodisto() {
-            const [{ data: kunnat }, { data: yritysmuodot }, { data: organisaatiotyypit }, { data: maat }] =
-                await Promise.all([
-                    axios.get<Koodi[]>('/api/koodisto/KUNTA/koodi?onlyValid=true'),
-                    axios.get<Koodi[]>('/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true'),
-                    axios.get<Koodi[]>('/api/koodisto/ORGANISAATIOTYYPPI/koodi?onlyValid=true'),
-                    axios.get<Koodi[]>('/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true'),
-                ]);
+            const [
+                { data: kunnat },
+                { data: yritysmuodot },
+                { data: organisaatiotyypit },
+                { data: maat },
+                { data: postinumerot },
+            ] = await Promise.all([
+                axios.get<Koodi[]>('/api/koodisto/KUNTA/koodi?onlyValid=true'),
+                axios.get<Koodi[]>('/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true'),
+                axios.get<Koodi[]>('/api/koodisto/ORGANISAATIOTYYPPI/koodi?onlyValid=true'),
+                axios.get<Koodi[]>('/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true'),
+                axios.get<Koodi[]>('/api/koodisto/POSTI/koodi?onlyValid=true'),
+            ]);
             kunnat.sort(koodistoNimiComparator);
             yritysmuodot.sort(koodistoNimiComparator);
             organisaatiotyypit.sort(koodistoNimiComparator);
@@ -33,6 +39,7 @@ export function JotpaRekisterointi() {
                 yritysmuodot,
                 organisaatiotyypit,
                 maat,
+                postinumerot,
             });
         }
 
