@@ -20,12 +20,25 @@
 }
 
 .cancelButton {
-    padding: 13px 79px;
-    border: none;
+    padding: 13px 33px;
+    box-sizing: border-box;
+    border: 2px solid var(--white);
     background: var(--white);
     color: var(--green);
     cursor: pointer;
     font-weight: 600;
+    margin-right: 20px;
+}
+
+.previousButton {
+    padding: 13px 33px;
+    box-sizing: border-box;
+    border: 2px solid var(--green);
+    background: var(--white);
+    color: var(--green);
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 20px;
 }
 
 .addEmailButton {

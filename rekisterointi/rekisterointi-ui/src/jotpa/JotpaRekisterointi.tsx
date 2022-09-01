@@ -8,6 +8,7 @@ import { JotpaOrganization } from './JotpaOrganization';
 import { fetchOrganization } from '../organizationSlice';
 import { KoodistoContext, Koodistos } from '../KoodistoContext';
 import { Koodi } from '../types';
+import { JotpaUser } from './JotpaUser';
 
 store.dispatch(fetchOrganization());
 
@@ -54,6 +55,7 @@ export function JotpaRekisterointi() {
             <Provider store={store}>
                 <Routes>
                     <Route path="/aloitus" element={<JotpaOrganization />} />
+                    <Route path="/paakayttaja" element={<JotpaUser />} />
                 </Routes>
             </Provider>
         </KoodistoContext.Provider>

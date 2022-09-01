@@ -110,8 +110,9 @@ label {
 }
 
 input[type='submit'] {
-    padding: 13px 79px;
-    border: none;
+    padding: 13px 33px;
+    box-sizing: border-box;
+    border: 2px solid var(--green);
     background: var(--green);
     color: var(--white);
     cursor: pointer;

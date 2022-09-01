@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -20,7 +21,7 @@ import {
 } from '../yupSchemas';
 import { Input } from '../Input';
 
-import styles from './JotpaOrganization.module.css';
+import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
 
 type OrganizationForm = {
@@ -72,6 +73,7 @@ const AddEmailLogo = () => (
 );
 
 export function JotpaOrganization() {
+    const navigate = useNavigate();
     const { yritysmuodot, kunnat, postinumerot } = useKoodistos();
     const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
     const dispatch = useJotpaRekisterointiDispatch();
@@ -143,6 +145,7 @@ export function JotpaOrganization() {
         };
 
         dispatch(setForm(formState));
+        navigate('/hakija/jotpa/paakayttaja');
     };
 
     const addEmail = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -275,7 +278,7 @@ export function JotpaOrganization() {
                         >
                             Keskeytä
                         </button>
-                        <input type="submit" title="Seuraava vaihe" />
+                        <input type="submit" value="Seuraava vaihe" />
                     </div>
                 </div>
                 {JSON.stringify(getValues())}
