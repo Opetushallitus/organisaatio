@@ -28,6 +28,8 @@ public class PropertiesConfiguration {
       properties.addDefault("url-virkailija", environment.getRequiredProperty("url-virkailija"));
       properties.addDefault("url-rekisterointi", environment.getRequiredProperty("url-virkailija"));
       properties.addDefault("url-alb", environment.getRequiredProperty("url-alb"));
+      properties.addDefault("varda-rekisterointi.service.username", environment.getRequiredProperty("rekisterointi.service.username"));
+      properties.addDefault("varda-rekisterointi.service.password", environment.getRequiredProperty("rekisterointi.service.password"));
     }
     return properties;
   }
