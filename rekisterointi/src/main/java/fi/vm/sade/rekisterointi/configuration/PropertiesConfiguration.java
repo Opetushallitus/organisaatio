@@ -18,8 +18,10 @@ public class PropertiesConfiguration {
     OphProperties properties;
     if (Arrays.asList(profiles).contains("dev")) {
       properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
+    } else if (Arrays.asList(profiles).contains("test")) {
+        properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
     } else if (Arrays.asList(profiles).contains("ci")) {
-        properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-ci.properties");
+      properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-ci.properties");
     } else {
       properties = new OphProperties("/rekisterointi_oph.properties");
     }
