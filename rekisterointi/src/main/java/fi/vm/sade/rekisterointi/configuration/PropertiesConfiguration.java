@@ -24,6 +24,9 @@ public class PropertiesConfiguration {
       properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-ci.properties");
     } else {
       properties = new OphProperties("/rekisterointi_oph.properties");
+      properties.addDefault("url-oppija", environment.getRequiredProperty("url-oppija"));
+      properties.addDefault("url-virkailija", environment.getRequiredProperty("url-virkailija"));
+      properties.addDefault("url-alb", environment.getRequiredProperty("url-alb"));
     }
     return properties;
   }
