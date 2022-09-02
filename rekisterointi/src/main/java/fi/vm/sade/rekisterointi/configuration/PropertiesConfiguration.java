@@ -17,18 +17,12 @@ public class PropertiesConfiguration {
     var profiles = environment.getActiveProfiles();
     OphProperties properties;
     if (Arrays.asList(profiles).contains("dev")) {
-      properties = new OphProperties("/rekisterointi-oph.properties", "/rekisterointi-oph-dev.properties");
+      properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
     } else if (Arrays.asList(profiles).contains("ci")) {
-      properties = new OphProperties("/rekisterointi-oph.properties", "/rekisterointi-oph-ci.properties");
+        properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-ci.properties");
     } else {
-      properties = new OphProperties("/rekisterointi-oph.properties");
+      properties = new OphProperties("/rekisterointi_oph.properties");
     }
-    properties.addDefault("host_oppija", "testiopintopolku.fi");
-    properties.addDefault("url-oppija", environment.getRequiredProperty("rekisterointi.url-oppija"));
-    properties.addDefault("url-virkailija", environment.getRequiredProperty("rekisterointi.url-virkailija"));
-    properties.addDefault("url-rekisterointi", environment.getRequiredProperty("rekisterointi.url-rekisterointi"));
-    properties.addDefault("rekisterointi.service.username", "dummy");
-    properties.addDefault("rekisterointi.service.password", "dummy");
     return properties;
   }
 

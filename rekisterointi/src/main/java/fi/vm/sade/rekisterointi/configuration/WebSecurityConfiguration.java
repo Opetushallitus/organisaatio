@@ -75,7 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean
   @DependsOn("properties")
   public TicketValidator casOppijaticketValidator() {
-    return new Cas20ServiceTicketValidator(ophProperties.url("rekisterointi.cas.oppija.url"));
+    return new Cas20ServiceTicketValidator(ophProperties.url("cas-oppija.url"));
   }
 
   @Bean
@@ -91,7 +91,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean
   public AuthenticationEntryPoint hakijaAuthenticationEntryPoint() {
     String loginCallbackUrl = ophProperties.url("rekisterointi.hakija.login");
-    String defaultLoginUrl = ophProperties.url("rekisterointi.cas.oppija.login", loginCallbackUrl);
+    String defaultLoginUrl = ophProperties.url("cas-oppija.login", loginCallbackUrl);
     return new AuthenticationEntryPointImpl(defaultLoginUrl, ophProperties, loginCallbackUrl);
   }
 
@@ -109,7 +109,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) {
-      return properties.url("rekisterointi.cas.oppija.login", loginCallbackUrl, "fi");
+      return properties.url("cas-oppija.login", loginCallbackUrl, "fi");
     }
   }
 
