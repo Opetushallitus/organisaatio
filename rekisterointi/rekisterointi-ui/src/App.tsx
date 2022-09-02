@@ -12,7 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 
 import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
-import { Language, Lokalisointi, LokalisointiRivi } from './types';
+import { Language, Lokalisointi } from './types';
 import { JotpaRekisterointi } from './jotpa/JotpaRekisterointi';
 import { JotpaLanding } from './jotpa/JotpaLanding';
 import { Footer } from './Footer';
@@ -23,6 +23,16 @@ setLocale({
         required: 'Pakollinen tieto',
         notType: 'Virheellinen arvo',
     },
+    string: {
+        min: ({ min }) => `Kentän minimipituus on ${min} merkkiä`,
+        max: ({ max }) => `Kentän maksimipituus on ${max} merkkiä`,
+        matches: 'Virheellinen arvo',
+        email: 'Sähköpostin muoto on väärä',
+    },
+    array: {
+        min: ({ min }) => `Vähintään ${min}`,
+        max: ({ max }) => `Enintään ${max}`,
+    },
 });
 
 function App() {
@@ -32,26 +42,24 @@ function App() {
 
     useEffect(() => {
         async function fetchLocalization() {
-            const resp = await axios.get<LokalisointiRivi[]>(
-                'https://virkailija.opintopolku.fi/lokalisointi/cxf/rest/v1/localisation?category=varda-rekisterointi'
-            );
-            const lokalisointi: Lokalisointi = resp.data.reduce(
-                (acc: Lokalisointi, cur) => ({ ...acc, [cur.locale]: { ...acc[cur.locale], [cur.key]: cur.value } }),
-                { fi: {}, sv: {}, en: {} }
-            );
-            setLocalization(lokalisointi);
-            setI18n(new I18nImpl(lokalisointi, language));
+            const resp = await axios.get<Lokalisointi>('/api/lokalisointi');
+            setLocalization(resp.data);
+            setI18n(new I18nImpl(resp.data, language));
         }
 
         if (!localization) {
-            //void fetchLocalization();
+            void fetchLocalization();
         } else {
             setI18n(new I18nImpl(localization, language));
         }
     }, [language, localization]);
 
+    if (!Object.keys(i18n._data[language]).length) {
+        return <div></div>;
+    }
+
     return (
-        <>
+        <LanguageContext.Provider value={{ language, setLanguage, i18n }}>
             <Router>
                 <Routes>
                     <Route path="/jotpa" element={<JotpaLanding />} />
@@ -62,7 +70,7 @@ function App() {
                 <Outlet />
             </Router>
             <Footer />
-        </>
+        </LanguageContext.Provider>
     );
 }
 
