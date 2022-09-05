@@ -43,3 +43,8 @@ export const EmailArraySchema = yup
     );
 
 export const PostiosoiteSchema = yup.string().min(3).max(100);
+
+export const DateStringSchema = yup
+    .string()
+    .matches(/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}/)
+    .required();

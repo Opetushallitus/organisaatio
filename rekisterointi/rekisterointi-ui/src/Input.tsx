@@ -18,6 +18,7 @@ export const Input = <T,>({ name, required, register, error }: InputProps<T>) =>
                 id={name}
                 className={`${styles.input} ${error ? styles.error : ''}`}
                 type="text"
+                autoComplete="off"
                 {...register(name, { required })}
             />
             <FormError error={error?.message} />

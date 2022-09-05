@@ -7,7 +7,6 @@ import { Header } from '../Header';
 import { useKoodistos } from '../KoodistoContext';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { Select } from '../Select';
-import { Koodi, Language } from '../types';
 import { DatePicker } from '../DatePicker';
 import { OrganizationFormState, OrganizationSchema, setForm } from '../organizationSlice';
 import { Input } from '../Input';
@@ -15,11 +14,7 @@ import { Input } from '../Input';
 import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
 import { useLanguageContext } from '../LanguageContext';
-
-const findPostitoimipaikka = (postinumero: string, postinumerot: Koodi[], language: Language) => {
-    const postinumeroUri = `posti_${postinumero}`;
-    return postinumerot.find((p) => p.uri === postinumeroUri)?.nimi[language];
-};
+import { findPostitoimipaikka } from '../addressUtils';
 
 const AddEmailLogo = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -38,7 +33,7 @@ const RemoveEmailLogo = () => (
     </svg>
 );
 
-export function JotpaOrganization() {
+export function JotpaOrganisaatio() {
     const { language } = useLanguageContext();
     const navigate = useNavigate();
     const { yritysmuodot, kunnat, posti, postinumerot } = useKoodistos();

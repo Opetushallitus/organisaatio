@@ -4,11 +4,11 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 
 import store from './store';
-import { JotpaOrganization } from './JotpaOrganization';
+import { JotpaOrganisaatio } from './JotpaOrganisaatio';
 import { fetchOrganization, OrganizationSchema } from '../organizationSlice';
 import { KoodistoContext, Koodistos } from '../KoodistoContext';
 import { Koodi, Language } from '../types';
-import { JotpaUser } from './JotpaUser';
+import { JotpaPaakayttaja } from './JotpaPaakayttaja';
 import { JotpaWizardValidator } from './JotpaWizardValidator';
 import { useLanguageContext } from '../LanguageContext';
 import { UserSchema } from '../userSlice';
@@ -74,12 +74,12 @@ export function JotpaRekisterointi() {
         <KoodistoContext.Provider value={koodisto}>
             <Provider store={store}>
                 <Routes>
-                    <Route path="/organisaatio" element={<JotpaOrganization />} />
+                    <Route path="/organisaatio" element={<JotpaOrganisaatio />} />
                     <Route
                         path="/paakayttaja"
                         element={
                             <JotpaWizardValidator validate={[organizationValidation]}>
-                                <JotpaUser />
+                                <JotpaPaakayttaja />
                             </JotpaWizardValidator>
                         }
                     />

@@ -7,13 +7,11 @@ import { Header } from '../Header';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { setForm, UserFormState, UserSchema } from '../userSlice';
 import { Input } from '../Input';
-import { useLanguageContext } from '../LanguageContext';
 import { FormError } from '../FormError';
 
 import styles from './jotpa.module.css';
 
-export function JotpaUser() {
-    const { language } = useLanguageContext();
+export function JotpaPaakayttaja() {
     const navigate = useNavigate();
     const { form } = useJotpaRekisterointiSelector((state) => state.user);
     const dispatch = useJotpaRekisterointiDispatch();
@@ -72,25 +70,11 @@ export function JotpaUser() {
                         <label className="title">Asiointikieli *</label>
                         <div className={styles.radioButtons}>
                             <label htmlFor="fi">
-                                <input
-                                    id="fi"
-                                    type="radio"
-                                    {...register('asiointikieli')}
-                                    value="fi"
-                                    defaultValue={language}
-                                />{' '}
-                                Suomi
+                                <input id="fi" type="radio" {...register('asiointikieli')} value="fi" /> Suomi
                             </label>
                             <br />
                             <label htmlFor="sv">
-                                <input
-                                    id="sv"
-                                    type="radio"
-                                    {...register('asiointikieli')}
-                                    value="sv"
-                                    defaultValue={language}
-                                />{' '}
-                                Ruotsi
+                                <input id="sv" type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
                             </label>
                             <FormError error={errors.asiointikieli?.message} />
                         </div>
@@ -106,7 +90,11 @@ export function JotpaUser() {
                             >
                                 Keskeytä
                             </button>
-                            <button role="link" className={styles.previousButton} onClick={() => navigate(-1)}>
+                            <button
+                                role="link"
+                                className={styles.previousButton}
+                                onClick={() => navigate('/hakija/jotpa/organisaatio', { replace: true })}
+                            >
                                 Edellinen vaihe
                             </button>
                             <input type="submit" value="Seuraava vaihe" />

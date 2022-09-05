@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 
 import {
+    DateStringSchema,
     EmailArraySchema,
     EmailSchema,
     KoodiSchema,
@@ -23,7 +24,7 @@ export const fetchOrganization = createAsyncThunk<Organization, void>(
 export interface OrganizationFormState {
     yritysmuoto: SelectOption;
     kotipaikka: SelectOption;
-    alkamisaika: Date;
+    alkamisaika: string;
     puhelinnumero: string;
     email: string;
     postiosoite: string;
@@ -77,7 +78,7 @@ export const OrganizationSchema = (
     yup.object().shape({
         yritysmuoto: KoodiSchema(yritysmuodot, language),
         kotipaikka: KoodiSchema(kunnat, language),
-        alkamisaika: yup.date().required(),
+        alkamisaika: DateStringSchema,
         puhelinnumero: PuhelinnumeroSchema,
         email: EmailSchema,
         emails: EmailArraySchema,
