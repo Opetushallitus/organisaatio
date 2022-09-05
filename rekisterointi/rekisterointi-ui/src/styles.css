@@ -49,6 +49,10 @@ h3 {
     }
 }
 
+ul {
+    padding-inline-start: 20px;
+}
+
 a {
     color: var(--green);
 }
@@ -72,6 +76,15 @@ header {
     align-items: center;
     border-top: 8px solid var(--green);
     background-color: var(--gray-header-background);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
 }
 
 main {

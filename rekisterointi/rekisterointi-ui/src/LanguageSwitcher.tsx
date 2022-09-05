@@ -14,23 +14,21 @@ export function LanguageSwitcher() {
     };
 
     return (
-        <div className={styles.switcherContainer}>
-            <div className={styles.languageSwitcher}>
-                <button
-                    className={`${styles.languageButton} ${styles.leftButton}`}
-                    onClick={() => onChange('fi')}
-                    disabled={language === 'fi'}
-                >
-                    Suomeksi
-                </button>
-                <button
-                    className={`${styles.languageButton} ${styles.rightButton}`}
-                    onClick={() => onChange('sv')}
-                    disabled={language === 'sv'}
-                >
-                    På svenska
-                </button>
-            </div>
+        <div className={styles.languageSwitcher}>
+            <button
+                className={`${styles.languageButton} ${styles.leftButton}`}
+                onClick={() => onChange('fi')}
+                disabled={language === 'fi'}
+            >
+                Suomeksi
+            </button>
+            <button
+                className={`${styles.languageButton} ${styles.rightButton}`}
+                onClick={() => onChange('sv')}
+                disabled={language === 'sv'}
+            >
+                På svenska
+            </button>
         </div>
     );
 }

@@ -46,7 +46,7 @@ function App() {
         async function fetchLocalization() {
             const [langResp, localizationResp] = await Promise.all([
                 await axios.get<Language>('/api/lokalisointi/kieli'),
-                await axios.get<Lokalisointi>('/api/lokalisointi'),
+                await axios.get<Lokalisointi>('/api/lokalisointi?category=jotpa-rekisterointi'),
             ]);
             setLanguage(langResp.data);
             setLocalization(localizationResp.data);

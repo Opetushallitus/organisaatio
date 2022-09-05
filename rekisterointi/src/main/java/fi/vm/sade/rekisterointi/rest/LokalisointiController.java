@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/lokalisointi")
 public class LokalisointiController {
@@ -25,8 +27,9 @@ public class LokalisointiController {
      * @return lokalisointitiedot (kieli -&gt; avain -&gt; arvo).
      */
     @GetMapping
-    public Map<String, Map<String, String>> getLokalisointi() {
-        return lokalisointiClient.getByCategory("varda-rekisterointi");
+    public Map<String, Map<String, String>> getLokalisointi(HttpServletRequest request) {
+        var category = request.getParameter("category");
+        return lokalisointiClient.getByCategory(category);
     }
 
     /**
