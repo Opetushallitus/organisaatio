@@ -11,6 +11,8 @@ import { Koodi, Language } from '../types';
 import { JotpaUser } from './JotpaUser';
 import { JotpaWizardValidator } from './JotpaWizardValidator';
 import { useLanguageContext } from '../LanguageContext';
+import { UserSchema } from '../userSlice';
+import { JotpaYhteenveto } from './JotpaYhteenveto';
 
 store.dispatch(fetchOrganization());
 
@@ -52,33 +54,40 @@ export function JotpaRekisterointi() {
 
         void fetchKoodisto();
     }, []);
+
     if (!koodisto) {
         return <div></div>;
     }
+
+    const organizationValidation = {
+        slice: 'organization' as const,
+        schema: OrganizationSchema(koodisto.yritysmuodot, koodisto.kunnat, koodisto.postinumerot, language),
+        redirectPath: '/hakija/jotpa/organisaatio',
+    };
+    const userValidation = {
+        slice: 'user' as const,
+        schema: UserSchema,
+        redirectPath: '/hakija/jotpa/paakayttaja',
+    };
 
     return (
         <KoodistoContext.Provider value={koodisto}>
             <Provider store={store}>
                 <Routes>
-                    <Route path="/aloitus" element={<JotpaOrganization />} />
+                    <Route path="/organisaatio" element={<JotpaOrganization />} />
                     <Route
                         path="/paakayttaja"
                         element={
-                            <JotpaWizardValidator
-                                validate={[
-                                    {
-                                        slice: 'organization',
-                                        schema: OrganizationSchema(
-                                            koodisto.yritysmuodot,
-                                            koodisto.kunnat,
-                                            koodisto.postinumerot,
-                                            language
-                                        ),
-                                        redirectPath: '/hakija/jotpa/aloitus',
-                                    },
-                                ]}
-                            >
+                            <JotpaWizardValidator validate={[organizationValidation]}>
                                 <JotpaUser />
+                            </JotpaWizardValidator>
+                        }
+                    />
+                    <Route
+                        path="/yhteenveto"
+                        element={
+                            <JotpaWizardValidator validate={[organizationValidation, userValidation]}>
+                                <JotpaYhteenveto />
                             </JotpaWizardValidator>
                         }
                     />

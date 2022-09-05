@@ -73,3 +73,7 @@
     border: 2px solid var(--red-error);
     margin: 0;
 }
+
+.copyKayntiosoite {
+    margin-top: 26px;
+}

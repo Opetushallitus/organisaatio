@@ -117,27 +117,33 @@ export function JotpaOrganization() {
                                 on hyväksynyt rekisteröitymisen. Huomaa, että kaikki kentät ovat pakollisia.
                             </li>
                         </ul>
-                        <label>Organisaation nimi</label>
+                        <div className="label">Organisaation nimi</div>
                         <div>{initialOrganization.ytjNimi.nimi}</div>
-                        <label>Y-tunnus</label>
+                        <div className="label">Y-tunnus</div>
                         <div>{initialOrganization.ytunnus}</div>
-                        <label htmlFor="yritysmuoto">Yritysmuoto *</label>
+                        <label className="title" htmlFor="yritysmuoto">
+                            Yritysmuoto *
+                        </label>
                         <Select<OrganizationFormState>
                             name="yritysmuoto"
                             control={control}
                             error={errors.yritysmuoto?.value}
                             options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
-                        <label>Organisaatiotyyppi</label>
+                        <div className="label">Organisaatiotyyppi</div>
                         <div>Koulutuksen järjestäjä</div>
-                        <label htmlFor="kotipaikka">Kotipaikka *</label>
+                        <label className="title" htmlFor="kotipaikka">
+                            Kotipaikka *
+                        </label>
                         <Select<OrganizationFormState>
                             name="kotipaikka"
                             control={control}
                             error={errors.kotipaikka?.value}
                             options={kunnat.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
-                        <label htmlFor="alkamisaika">Toiminnan alkamisaika *</label>
+                        <label className="title" htmlFor="alkamisaika">
+                            Toiminnan alkamisaika *
+                        </label>
                         <DatePicker<OrganizationFormState>
                             name="alkamisaika"
                             control={control}
@@ -149,36 +155,51 @@ export function JotpaOrganization() {
                             Palveluntuottajan yhteystiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun
                             kunta on hyväksynyt rekisteröitymisen.
                         </div>
-                        <label htmlFor="puhelinnumero">Puhelinnumero *</label>
+                        <label className="title" htmlFor="puhelinnumero">
+                            Puhelinnumero *
+                        </label>
                         <Input name="puhelinnumero" register={register} error={errors.puhelinnumero} />
-                        <label htmlFor="email">Yhteiskäyttöinen sähköpostiosoite *</label>
+                        <label className="title" htmlFor="email">
+                            Yhteiskäyttöinen sähköpostiosoite *
+                        </label>
                         <Input name="email" register={register} error={errors.email} />
-                        <label htmlFor="postiosoite">Postiosoite *</label>
+                        <label className="title" htmlFor="postiosoite">
+                            Postiosoite *
+                        </label>
                         <Input name="postiosoite" register={register} error={errors.postiosoite} />
-                        <label htmlFor="postinumero">Postinumero *</label>
+                        <label className="title" htmlFor="postinumero">
+                            Postinumero *
+                        </label>
                         <Input name="postinumero" register={register} error={errors.postinumero} />
-                        <label>Postitoimipaikka</label>
+                        <label className="title">Postitoimipaikka</label>
                         <div className={styles.postitoimipaikka}>{postitoimipaikka}</div>
-                        <label>Käyntiosoite *</label>
-                        <div>
-                            <input type="checkbox" {...register('copyKayntiosoite')} /> Sama kuin postiosoite
+                        <div className={styles.copyKayntiosoite}>
+                            <label htmlFor="copyKayntiosoite">
+                                <input id="copyKayntiosoite" type="checkbox" {...register('copyKayntiosoite')} />{' '}
+                                Käyntiosoite on sama kuin postiosoite
+                            </label>
                         </div>
                         {!copyKayntiosoite && (
                             <>
+                                <label className="title" htmlFor="kayntiosoite">
+                                    Käyntiosoite *
+                                </label>
                                 <Input
                                     name="kayntiosoite"
                                     required={false}
                                     register={register}
                                     error={errors.kayntiosoite}
                                 />
-                                <label>Käyntiosoitteen postinumero *</label>
+                                <label className="title" htmlFor="kayntipostinumero">
+                                    Käyntiosoitteen postinumero *
+                                </label>
                                 <Input
                                     name="kayntipostinumero"
                                     required={false}
                                     register={register}
                                     error={errors.kayntipostinumero}
                                 />
-                                <label>Käyntiosoitteen postitoimipaikka</label>
+                                <label className="title">Käyntiosoitteen postitoimipaikka</label>
                                 <div className={styles.postitoimipaikka}>{kayntipostitoimipaikka}</div>
                             </>
                         )}
@@ -194,13 +215,16 @@ export function JotpaOrganization() {
                             </li>
                             <li>Sähköpostiosoitetta ei tallenneta Organisaatiopalveluun.</li>
                         </ul>
-                        <label>Sähköpostiosoite *</label>
+                        <label className="title" htmlFor="firstEmail">
+                            Sähköpostiosoite *
+                        </label>
                         <FormError error={errors?.emails?.message} />
                         {emailFields.map((field, index) => {
                             const error = errors.emails?.[index]?.email;
                             return (
                                 <div key={field.id}>
                                     <input
+                                        id={index === 0 ? 'firstEmail' : undefined}
                                         className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
                                         type="text"
                                         {...register(`emails.${index}.email`)}

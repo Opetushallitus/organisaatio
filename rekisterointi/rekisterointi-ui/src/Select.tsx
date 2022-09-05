@@ -26,6 +26,7 @@ export const Select = <T,>({ name, control, options, error }: SelectProps<T>) =>
                 render={({ field }) => (
                     <ReactSelect
                         {...field}
+                        id={name}
                         placeholder={null}
                         styles={reactSelectStyles(!!error)}
                         components={{ DropdownIndicator }}

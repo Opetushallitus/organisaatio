@@ -43,6 +43,10 @@ a {
     color: var(--green);
 }
 
+label {
+    cursor: pointer;
+}
+
 button {
     cursor: pointer;
 }
@@ -101,12 +105,22 @@ footer::after {
     max-width: 900px;
 }
 
-label {
+label.title,
+.label {
     display: block;
     font-weight: 600;
     font-size: 16px;
     margin-top: 27px;
     line-height: 27px;
+}
+
+input[type='radio'],
+input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green);
+    vertical-align: sub;
+    margin-right: 8px;
 }
 
 input[type='submit'] {
@@ -164,4 +178,11 @@ input[type='submit'] {
 .react-datepicker-popper[data-placement^='top'] {
     padding-bottom: 0;
     margin-bottom: -4px;
+}
+
+textarea {
+    resize: none;
+    width: 100%;
+    height: 8rem;
+    box-sizing: border-box;
 }

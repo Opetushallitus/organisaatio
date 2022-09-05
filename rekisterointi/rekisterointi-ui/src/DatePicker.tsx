@@ -20,6 +20,7 @@ export const DatePicker = <T,>({ name, control, error }: DatePickerProps<T>) => 
                 control={control}
                 render={({ field }) => (
                     <ReactDatePicker
+                        id={name}
                         locale={language}
                         onChange={(e) => field.onChange(e)}
                         selected={field.value as Date}

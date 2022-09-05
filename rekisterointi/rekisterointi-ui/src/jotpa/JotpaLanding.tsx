@@ -46,7 +46,7 @@ export function JotpaLanding() {
                     <button
                         role="link"
                         className={styles.registerButton}
-                        onClick={() => (window.location.href = '/hakija/jotpa/aloitus')}
+                        onClick={() => (window.location.href = '/hakija/jotpa/organisaatio')}
                     >
                         Aloita rekisteröityminen
                     </button>

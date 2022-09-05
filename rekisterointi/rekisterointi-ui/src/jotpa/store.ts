@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import organizationReducer from '../organizationSlice';
+import userReducer from '../userSlice';
 
 const store = configureStore({
     reducer: {
         organization: organizationReducer,
+        user: userReducer,
     },
 });
 
