@@ -98,132 +98,134 @@ export function JotpaOrganization() {
     const postitoimipaikka = findPostitoimipaikka(postinumero, posti, language);
     const kayntipostitoimipaikka = kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti, language);
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <>
             <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
-            <main>
-                <div className="content">
-                    <h2>Organisaation perustiedot</h2>
-                    <ul className={styles.infoList}>
-                        <li>Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista.</li>
-                        <li>Anna organisaatiolle kuvaava nimi, jos kenttä on tyhjä.</li>
-                        <li>
-                            Esitäytetyt tiedot tulevat Yritys- ja yhteisötietojärjestelmästä ja Opetushallituksen
-                            Organisaatiopalvelusta. Jos esitäytetyissä tiedoissa on virheitä, tiedot tulee päivittää
-                            Yritys- ja yhteisötietojärjestelmään tai Organisaatiopalveluun.
-                        </li>
-                        <li>
-                            Palveluntuottajan tiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun kunta on
-                            hyväksynyt rekisteröitymisen. Huomaa, että kaikki kentät ovat pakollisia.
-                        </li>
-                    </ul>
-                    <label>Organisaation nimi</label>
-                    <div>{initialOrganization.ytjNimi.nimi}</div>
-                    <label>Y-tunnus</label>
-                    <div>{initialOrganization.ytunnus}</div>
-                    <label htmlFor="yritysmuoto">Yritysmuoto *</label>
-                    <Select<OrganizationFormState>
-                        name="yritysmuoto"
-                        control={control}
-                        error={errors.yritysmuoto?.value}
-                        options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
-                    />
-                    <label>Organisaatiotyyppi</label>
-                    <div>Koulutuksen järjestäjä</div>
-                    <label htmlFor="kotipaikka">Kotipaikka *</label>
-                    <Select<OrganizationFormState>
-                        name="kotipaikka"
-                        control={control}
-                        error={errors.kotipaikka?.value}
-                        options={kunnat.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
-                    />
-                    <label htmlFor="alkamisaika">Toiminnan alkamisaika *</label>
-                    <DatePicker<OrganizationFormState>
-                        name="alkamisaika"
-                        control={control}
-                        error={errors.alkamisaika}
-                    />
-                    <h2>Organisaation yhteystiedot</h2>
-                    <div className={styles.info}>
-                        Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista. Palveluntuottajan
-                        yhteystiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun kunta on hyväksynyt
-                        rekisteröitymisen.
-                    </div>
-                    <label htmlFor="puhelinnumero">Puhelinnumero *</label>
-                    <Input name="puhelinnumero" register={register} error={errors.puhelinnumero} />
-                    <label htmlFor="email">Yhteiskäyttöinen sähköpostiosoite *</label>
-                    <Input name="email" register={register} error={errors.email} />
-                    <label htmlFor="postiosoite">Postiosoite *</label>
-                    <Input name="postiosoite" register={register} error={errors.postiosoite} />
-                    <label htmlFor="postinumero">Postinumero *</label>
-                    <Input name="postinumero" register={register} error={errors.postinumero} />
-                    <label>Postitoimipaikka</label>
-                    <div className={styles.postitoimipaikka}>{postitoimipaikka}</div>
-                    <label>Käyntiosoite *</label>
-                    <div>
-                        <input type="checkbox" {...register('copyKayntiosoite')} /> Sama kuin postiosoite
-                    </div>
-                    {!copyKayntiosoite && (
-                        <>
-                            <Input
-                                name="kayntiosoite"
-                                required={false}
-                                register={register}
-                                error={errors.kayntiosoite}
-                            />
-                            <label>Käyntiosoitteen postinumero *</label>
-                            <Input
-                                name="kayntipostinumero"
-                                required={false}
-                                register={register}
-                                error={errors.kayntipostinumero}
-                            />
-                            <label>Käyntiosoitteen postitoimipaikka</label>
-                            <div className={styles.postitoimipaikka}>{kayntipostitoimipaikka}</div>
-                        </>
-                    )}
-                    <h2>Sähköpostiosoite</h2>
-                    <ul className={styles.infoList}>
-                        <li>
-                            Syötä yhden tai useamman henkilön sähköpostiosoite, jota käytetään palveluntuottajan
-                            rekisteröitymiseen liittyvässä viestinnässä.
-                        </li>
-                        <li>
-                            Sähköposteja lähetetään rekisteröitymisen vastaanottamisesta sekä rekisteröitymisen
-                            hyväksymisestä tai hylkäämisestä.
-                        </li>
-                        <li>Sähköpostiosoitetta ei tallenneta Organisaatiopalveluun.</li>
-                    </ul>
-                    <label>Sähköpostiosoite *</label>
-                    <FormError error={errors?.emails?.message} />
-                    {emailFields.map((field, index) => {
-                        const error = errors.emails?.[index]?.email;
-                        return (
-                            <div key={field.id}>
-                                <input
-                                    className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
-                                    type="text"
-                                    {...register(`emails.${index}.email`)}
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <main>
+                    <div className="content">
+                        <h2>Organisaation perustiedot</h2>
+                        <ul className={styles.infoList}>
+                            <li>Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista.</li>
+                            <li>Anna organisaatiolle kuvaava nimi, jos kenttä on tyhjä.</li>
+                            <li>
+                                Esitäytetyt tiedot tulevat Yritys- ja yhteisötietojärjestelmästä ja Opetushallituksen
+                                Organisaatiopalvelusta. Jos esitäytetyissä tiedoissa on virheitä, tiedot tulee päivittää
+                                Yritys- ja yhteisötietojärjestelmään tai Organisaatiopalveluun.
+                            </li>
+                            <li>
+                                Palveluntuottajan tiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun kunta
+                                on hyväksynyt rekisteröitymisen. Huomaa, että kaikki kentät ovat pakollisia.
+                            </li>
+                        </ul>
+                        <label>Organisaation nimi</label>
+                        <div>{initialOrganization.ytjNimi.nimi}</div>
+                        <label>Y-tunnus</label>
+                        <div>{initialOrganization.ytunnus}</div>
+                        <label htmlFor="yritysmuoto">Yritysmuoto *</label>
+                        <Select<OrganizationFormState>
+                            name="yritysmuoto"
+                            control={control}
+                            error={errors.yritysmuoto?.value}
+                            options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
+                        />
+                        <label>Organisaatiotyyppi</label>
+                        <div>Koulutuksen järjestäjä</div>
+                        <label htmlFor="kotipaikka">Kotipaikka *</label>
+                        <Select<OrganizationFormState>
+                            name="kotipaikka"
+                            control={control}
+                            error={errors.kotipaikka?.value}
+                            options={kunnat.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
+                        />
+                        <label htmlFor="alkamisaika">Toiminnan alkamisaika *</label>
+                        <DatePicker<OrganizationFormState>
+                            name="alkamisaika"
+                            control={control}
+                            error={errors.alkamisaika}
+                        />
+                        <h2>Organisaation yhteystiedot</h2>
+                        <div className={styles.info}>
+                            Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista.
+                            Palveluntuottajan yhteystiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun
+                            kunta on hyväksynyt rekisteröitymisen.
+                        </div>
+                        <label htmlFor="puhelinnumero">Puhelinnumero *</label>
+                        <Input name="puhelinnumero" register={register} error={errors.puhelinnumero} />
+                        <label htmlFor="email">Yhteiskäyttöinen sähköpostiosoite *</label>
+                        <Input name="email" register={register} error={errors.email} />
+                        <label htmlFor="postiosoite">Postiosoite *</label>
+                        <Input name="postiosoite" register={register} error={errors.postiosoite} />
+                        <label htmlFor="postinumero">Postinumero *</label>
+                        <Input name="postinumero" register={register} error={errors.postinumero} />
+                        <label>Postitoimipaikka</label>
+                        <div className={styles.postitoimipaikka}>{postitoimipaikka}</div>
+                        <label>Käyntiosoite *</label>
+                        <div>
+                            <input type="checkbox" {...register('copyKayntiosoite')} /> Sama kuin postiosoite
+                        </div>
+                        {!copyKayntiosoite && (
+                            <>
+                                <Input
+                                    name="kayntiosoite"
+                                    required={false}
+                                    register={register}
+                                    error={errors.kayntiosoite}
                                 />
-                                <FormError error={error?.message} />
-                            </div>
-                        );
-                    })}
-                    <button className={styles.addEmailButton} onClick={addEmail}>
-                        <AddEmailLogo />
-                        Lisää sähköpostiosoite
-                    </button>
-                    <div className={styles.buttons}>
-                        <button
-                            role="link"
-                            className={styles.cancelButton}
-                            onClick={() => (window.location.href = '/hakija/logout?redirect=/jotpa')}
-                        >
-                            Keskeytä
+                                <label>Käyntiosoitteen postinumero *</label>
+                                <Input
+                                    name="kayntipostinumero"
+                                    required={false}
+                                    register={register}
+                                    error={errors.kayntipostinumero}
+                                />
+                                <label>Käyntiosoitteen postitoimipaikka</label>
+                                <div className={styles.postitoimipaikka}>{kayntipostitoimipaikka}</div>
+                            </>
+                        )}
+                        <h2>Sähköpostiosoite</h2>
+                        <ul className={styles.infoList}>
+                            <li>
+                                Syötä yhden tai useamman henkilön sähköpostiosoite, jota käytetään palveluntuottajan
+                                rekisteröitymiseen liittyvässä viestinnässä.
+                            </li>
+                            <li>
+                                Sähköposteja lähetetään rekisteröitymisen vastaanottamisesta sekä rekisteröitymisen
+                                hyväksymisestä tai hylkäämisestä.
+                            </li>
+                            <li>Sähköpostiosoitetta ei tallenneta Organisaatiopalveluun.</li>
+                        </ul>
+                        <label>Sähköpostiosoite *</label>
+                        <FormError error={errors?.emails?.message} />
+                        {emailFields.map((field, index) => {
+                            const error = errors.emails?.[index]?.email;
+                            return (
+                                <div key={field.id}>
+                                    <input
+                                        className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
+                                        type="text"
+                                        {...register(`emails.${index}.email`)}
+                                    />
+                                    <FormError error={error?.message} />
+                                </div>
+                            );
+                        })}
+                        <button className={styles.addEmailButton} onClick={addEmail}>
+                            <AddEmailLogo />
+                            Lisää sähköpostiosoite
                         </button>
-                        <input type="submit" value="Seuraava vaihe" />
+                        <div className={styles.buttons}>
+                            <button
+                                role="link"
+                                className={styles.cancelButton}
+                                onClick={() => (window.location.href = '/hakija/logout?redirect=/jotpa')}
+                            >
+                                Keskeytä
+                            </button>
+                            <input type="submit" value="Seuraava vaihe" />
+                        </div>
                     </div>
-                </div>
-            </main>
-        </form>
+                </main>
+            </form>
+        </>
     );
 }
