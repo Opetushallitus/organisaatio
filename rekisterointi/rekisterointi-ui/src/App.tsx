@@ -12,7 +12,7 @@ import 'oph-virkailija-style-guide/oph-styles.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 
-import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
+import { defaultLokalisointi, I18nImpl, LanguageContext } from './LanguageContext';
 import { Language, Lokalisointi } from './types';
 import { JotpaRekisterointi } from './jotpa/JotpaRekisterointi';
 import { JotpaLanding } from './jotpa/JotpaLanding';
