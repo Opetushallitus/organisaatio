@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,7 +14,7 @@ import { Input } from '../Input';
 
 import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
-import { LanguageContext } from '../contexts';
+import { useLanguageContext } from '../LanguageContext';
 
 const findPostitoimipaikka = (postinumero: string, postinumerot: Koodi[], language: Language) => {
     const postinumeroUri = `posti_${postinumero}`;
@@ -28,7 +28,7 @@ const AddEmailLogo = () => (
 );
 
 export function JotpaOrganization() {
-    const { language } = useContext(LanguageContext);
+    const { language } = useLanguageContext();
     const navigate = useNavigate();
     const { yritysmuodot, kunnat, posti, postinumerot } = useKoodistos();
     const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);

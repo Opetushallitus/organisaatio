@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { KoodistoContext, Koodistos } from '../KoodistoContext';
 import { Koodi, Language } from '../types';
 import { JotpaUser } from './JotpaUser';
 import { JotpaWizardValidator } from './JotpaWizardValidator';
-import { LanguageContext } from '../contexts';
+import { useLanguageContext } from '../LanguageContext';
 
 store.dispatch(fetchOrganization());
 
@@ -18,7 +18,7 @@ const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
     (a.nimi[language] ?? 'xxx') > (b.nimi[language] ?? 'xxx') ? 1 : -1;
 
 export function JotpaRekisterointi() {
-    const { language } = useContext(LanguageContext);
+    const { language } = useLanguageContext();
     const [koodisto, setKoodisto] = useState<Koodistos>();
     useEffect(() => {
         async function fetchKoodisto() {

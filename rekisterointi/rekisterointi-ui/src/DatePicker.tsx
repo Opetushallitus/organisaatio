@@ -3,6 +3,7 @@ import ReactDatePicker from 'react-datepicker';
 import { Control, Controller, FieldError, Path } from 'react-hook-form';
 
 import { FormError } from './FormError';
+import { useLanguageContext } from './LanguageContext';
 
 type DatePickerProps<T> = {
     name: Path<T>;
@@ -11,6 +12,7 @@ type DatePickerProps<T> = {
 };
 
 export const DatePicker = <T,>({ name, control, error }: DatePickerProps<T>) => {
+    const { language } = useLanguageContext();
     return (
         <div>
             <Controller
@@ -18,7 +20,7 @@ export const DatePicker = <T,>({ name, control, error }: DatePickerProps<T>) => 
                 control={control}
                 render={({ field }) => (
                     <ReactDatePicker
-                        locale="fi"
+                        locale={language}
                         onChange={(e) => field.onChange(e)}
                         selected={field.value as Date}
                         dateFormat="dd.MM.yyyy"

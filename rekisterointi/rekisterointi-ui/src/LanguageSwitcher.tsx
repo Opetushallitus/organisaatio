@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { LanguageContext } from './contexts';
+import { useLanguageContext } from './LanguageContext';
 import { Language } from './types';
 
 import styles from './LanguageSwitcher.module.css';
 import axios from 'axios';
 
 export function LanguageSwitcher() {
-    const { language, setLanguage } = useContext(LanguageContext);
+    const { language, setLanguage } = useLanguageContext();
     const onChange = async (lang: Language) => {
         await axios.put(`/api/lokalisointi/kieli?locale=${lang}`);
         setLanguage(lang);
