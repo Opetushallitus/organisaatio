@@ -27,6 +27,17 @@ const AddEmailLogo = () => (
     </svg>
 );
 
+const RemoveEmailLogo = () => (
+    <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+            fill="#4C4C4C"
+        />
+    </svg>
+);
+
 export function JotpaOrganization() {
     const { language } = useLanguageContext();
     const navigate = useNavigate();
@@ -46,7 +57,11 @@ export function JotpaOrganization() {
         resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot, language)),
     });
 
-    const { fields: emailFields, append: appendEmail } = useFieldArray<OrganizationFormState>({
+    const {
+        fields: emailFields,
+        append: appendEmail,
+        remove: removeEmail,
+    } = useFieldArray<OrganizationFormState>({
         control,
         name: 'emails',
     });
@@ -86,10 +101,10 @@ export function JotpaOrganization() {
         navigate('/hakija/jotpa/paakayttaja');
     };
 
-    const addEmail = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const preventDefault = (fn: () => void) => (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        appendEmail({ email: '' });
+        fn();
     };
 
     const postinumero = watch('postinumero');
@@ -223,17 +238,33 @@ export function JotpaOrganization() {
                             const error = errors.emails?.[index]?.email;
                             return (
                                 <div key={field.id}>
-                                    <input
-                                        id={index === 0 ? 'firstEmail' : undefined}
-                                        className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
-                                        type="text"
-                                        {...register(`emails.${index}.email`)}
-                                    />
+                                    <div className={styles.emailRow}>
+                                        <input
+                                            id={index === 0 ? 'firstEmail' : undefined}
+                                            className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
+                                            type="text"
+                                            {...register(`emails.${index}.email`)}
+                                        />
+                                        {index === 0 ? (
+                                            <div className={styles.removeEmailPlaceholder} />
+                                        ) : (
+                                            <button
+                                                className={styles.removeEmailButton}
+                                                onClick={preventDefault(() => removeEmail(index))}
+                                                aria-label="Poista sähköposti"
+                                            >
+                                                <RemoveEmailLogo />
+                                            </button>
+                                        )}
+                                    </div>
                                     <FormError error={error?.message} />
                                 </div>
                             );
                         })}
-                        <button className={styles.addEmailButton} onClick={addEmail}>
+                        <button
+                            className={styles.addEmailButton}
+                            onClick={preventDefault(() => appendEmail({ email: '' }))}
+                        >
                             <AddEmailLogo />
                             Lisää sähköpostiosoite
                         </button>

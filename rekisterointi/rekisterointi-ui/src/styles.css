@@ -180,6 +180,10 @@ input[type='submit'] {
     margin-bottom: -4px;
 }
 
+input[type='text'] {
+    box-sizing: border-box;
+}
+
 textarea {
     resize: none;
     width: 100%;
