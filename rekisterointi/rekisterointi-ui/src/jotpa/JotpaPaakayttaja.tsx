@@ -8,6 +8,7 @@ import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './
 import { setForm, UserFormState, UserSchema } from '../userSlice';
 import { Input } from '../Input';
 import { FormError } from '../FormError';
+import { RegistrationProgressBar } from '../RegistrationProgressBar';
 
 import styles from './jotpa.module.css';
 
@@ -41,6 +42,10 @@ export function JotpaPaakayttaja() {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <main>
                     <div className="content">
+                        <RegistrationProgressBar
+                            currentPhase={2}
+                            phaseTranslationKeys={['organisaatio_otsikko', 'paakayttaja_otsikko', 'yhteenveto_otsikko']}
+                        />
                         <h2>Jotpa-pääkäyttäjän tiedot</h2>
                         <ul className={styles.infoList}>
                             <li>

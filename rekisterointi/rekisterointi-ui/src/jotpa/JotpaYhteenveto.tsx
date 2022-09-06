@@ -6,6 +6,7 @@ import { Header } from '../Header';
 import { findPostitoimipaikka } from '../addressUtils';
 import { useKoodistos } from '../KoodistoContext';
 import { useLanguageContext } from '../LanguageContext';
+import { RegistrationProgressBar } from '../RegistrationProgressBar';
 
 import styles from './jotpa.module.css';
 
@@ -36,6 +37,10 @@ export function JotpaYhteenveto() {
             <form onSubmit={onSubmit}>
                 <main>
                     <div className="content">
+                        <RegistrationProgressBar
+                            currentPhase={3}
+                            phaseTranslationKeys={['organisaatio_otsikko', 'paakayttaja_otsikko', 'yhteenveto_otsikko']}
+                        />
                         <h2>Yhteenveto</h2>
                         <ul className={styles.infoList}>
                             <li>

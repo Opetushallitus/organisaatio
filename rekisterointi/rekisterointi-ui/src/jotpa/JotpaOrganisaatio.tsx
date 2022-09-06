@@ -15,6 +15,7 @@ import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
 import { useLanguageContext } from '../LanguageContext';
 import { findPostitoimipaikka } from '../addressUtils';
+import { RegistrationProgressBar } from '../RegistrationProgressBar';
 
 const AddEmailLogo = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -113,6 +114,10 @@ export function JotpaOrganisaatio() {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <main>
                     <div className="content">
+                        <RegistrationProgressBar
+                            currentPhase={1}
+                            phaseTranslationKeys={['organisaatio_otsikko', 'paakayttaja_otsikko', 'yhteenveto_otsikko']}
+                        />
                         <h2>Organisaation perustiedot</h2>
                         <ul className={styles.infoList}>
                             <li>Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista.</li>
