@@ -68,6 +68,12 @@ async function updateOrganisaatio(organisaatio: ApiOrganisaatio) {
         return data.organisaatio;
     });
 }
+async function deleteOrganisaatio(oid: string) {
+    return errorHandlingWrapper(async () => {
+        await Axios.delete<{ organisaatio: ApiOrganisaatio }>(`${baseUrl}${oid}`);
+        success({ message: 'MESSAGE_POISTO_ONNISTUI' });
+    });
+}
 
 async function createOrganisaatioNimi(oid: string, { nimi, alkuPvm }: UiOrganisaationNimetNimi) {
     const apiNimi = { nimi, alkuPvm: formatUiDateStrToApi(alkuPvm) };
@@ -664,6 +670,7 @@ export {
     useOrganisaatioHistoria,
     useOrganisaatioHaku,
     createOrganisaatio,
+    deleteOrganisaatio,
     readOrganisaatio,
     updateOrganisaatio,
     mergeOrganisaatio,

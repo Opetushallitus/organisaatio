@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
+    deleteOrganisaatio,
     mapApiVakaToUi,
     mapApiYhteystiedotToUi,
     mapApiYhteysTietoArvotToUi,
@@ -80,6 +81,8 @@ import {
 } from '../../../api/koodisto';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { DecoratedNimi } from '../../OrganisaatioComponents';
+import Popup from 'reactjs-popup';
+import { Confirmation } from '../../Modaalit/Confirmation/Confirmation';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -581,6 +584,39 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                                 label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
                             />
                         )}
+                    {casMe.canHaveButton('LOMAKE_POISTA_ORGANISAATIO', params.oid, organisaatioNimiPolku) && (
+                        <Popup
+                            position="bottom right"
+                            trigger={() => (
+                                <LomakeButton
+                                    disabled={isDirty}
+                                    onClick={() => {
+                                        deleteOrganisaatio(organisaatioBase.oid);
+                                    }}
+                                    label={'LOMAKE_POISTA_ORGANISAATIO'}
+                                    icon={() => (
+                                        <IconWrapper
+                                            inline={true}
+                                            icon="ci:trash-full"
+                                            height={'1.2rem'}
+                                            name={'LOMAKE_POISTA_ORGANISAATIO'}
+                                        />
+                                    )}
+                                />
+                            )}
+                        >
+                            {(close: () => void) => (
+                                <Confirmation
+                                    header={'POISTO_VAHVISTUS_TITLE'}
+                                    message={'POISTO_VAHVISTUS_MESSAGE'}
+                                    replacements={[]}
+                                    tallennaCallback={() => deleteOrganisaatio(organisaatioBase.oid)}
+                                    peruutaCallback={close}
+                                    suljeCallback={close}
+                                />
+                            )}
+                        </Popup>
+                    )}
                 </ValiNappulat>
             </ValiContainer>
             <PaaOsio>
