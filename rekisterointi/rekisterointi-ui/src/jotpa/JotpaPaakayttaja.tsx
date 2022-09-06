@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Markdown from 'react-markdown';
 
 import { Header } from '../Header';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
@@ -9,10 +10,12 @@ import { setForm, UserFormState, UserSchema } from '../userSlice';
 import { Input } from '../Input';
 import { FormError } from '../FormError';
 import { RegistrationProgressBar } from '../RegistrationProgressBar';
+import { useLanguageContext } from '../LanguageContext';
 
 import styles from './jotpa.module.css';
 
 export function JotpaPaakayttaja() {
+    const { i18n } = useLanguageContext();
     const navigate = useNavigate();
     const { form } = useJotpaRekisterointiSelector((state) => state.user);
     const dispatch = useJotpaRekisterointiDispatch();
@@ -46,33 +49,23 @@ export function JotpaPaakayttaja() {
                             currentPhase={2}
                             phaseTranslationKeys={['organisaatio_otsikko', 'paakayttaja_otsikko', 'yhteenveto_otsikko']}
                         />
-                        <h2>Jotpa-pääkäyttäjän tiedot</h2>
-                        <ul className={styles.infoList}>
-                            <li>
-                                Jotpa-pääkäyttäjä vastaa organisaation Jotpa-käyttöoikeuksista. Lomakkeella ilmoitettu
-                                henkilö saa kutsun Jotpa-pääkäyttäjäksi.
-                            </li>
-                            <li>
-                                Jotpa-pääkäyttäjän yhteystiedot tallennetaan Opetushallituksen Käyttöoikeuspalveluun.
-                            </li>
-                            <li>
-                                Jotpa-pääkäyttäjän henkilötiedot tallennetaan Opetushallituksen Oppijanumerorekisteriin
-                                hänen rekisteröityessään palvelun käyttäjäksi.
-                            </li>
-                        </ul>
+                        <h2>{i18n.translate('paakayttaja_otsikko')}</h2>
+                        <div className={styles.info}>
+                            <Markdown>{i18n.translate('paakayttaja_info')}</Markdown>
+                        </div>
                         <label className="title" htmlFor="etunimi">
-                            Etunimi *
+                            {i18n.translate('paakayttaja_etunimi')} *
                         </label>
                         <Input name="etunimi" register={register} error={errors.etunimi} />
                         <label className="title" htmlFor="sukunimi">
-                            Sukunimi *
+                            {i18n.translate('paakayttaja_sukunimi')} *
                         </label>
                         <Input name="sukunimi" register={register} error={errors.sukunimi} />
                         <label className="title" htmlFor="email">
-                            Jotpa-pääkäyttäjän sähköpostisoite (ei yhteiskäyttöinen) *
+                            {i18n.translate('paakayttaja_email')} *
                         </label>
                         <Input name="email" register={register} error={errors.email} />
-                        <label className="title">Asiointikieli *</label>
+                        <label className="title">{i18n.translate('paakayttaja_asiointikieli')} *</label>
                         <div className={styles.radioButtons}>
                             <label htmlFor="fi">
                                 <input id="fi" type="radio" {...register('asiointikieli')} value="fi" /> Suomi
@@ -84,7 +77,7 @@ export function JotpaPaakayttaja() {
                             <FormError error={errors.asiointikieli?.message} />
                         </div>
                         <label className="title" htmlFor="info">
-                            Saateteksti pääkäyttäjälle
+                            {i18n.translate('paakayttaja_saateteksti')}
                         </label>
                         <textarea id="info" {...register('info')} />
                         <div className={styles.buttons}>
@@ -93,16 +86,16 @@ export function JotpaPaakayttaja() {
                                 className={styles.cancelButton}
                                 onClick={() => (window.location.href = '/hakija/logout?redirect=/jotpa')}
                             >
-                                Keskeytä
+                                {i18n.translate('organisaatio_nappi_keskeyta')}
                             </button>
                             <button
                                 role="link"
                                 className={styles.previousButton}
                                 onClick={() => navigate('/hakija/jotpa/organisaatio', { replace: true })}
                             >
-                                Edellinen vaihe
+                                {i18n.translate('nappi_edellinen_vaihe')}
                             </button>
-                            <input type="submit" value="Seuraava vaihe" />
+                            <input type="submit" value={i18n.translate('organisaatio_nappi_seuraava_vaihe')} />
                         </div>
                     </div>
                 </main>

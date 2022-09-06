@@ -43,7 +43,7 @@ function App() {
         }
     }, [language, localization]);
 
-    if (!Object.keys(i18n._data[language]).length) {
+    if (!localization) {
         return <div></div>;
     }
 

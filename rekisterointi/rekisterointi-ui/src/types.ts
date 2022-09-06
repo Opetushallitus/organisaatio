@@ -13,14 +13,6 @@ export type Koodi = {
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 
-type LocalizationKey = string;
-type LocalizationValue = string;
-export type LokalisointiRivi = {
-    key: LocalizationKey;
-    value: LocalizationValue;
-    locale: Language;
-};
-
 type Yhteystiedot = {
     puhelinnumero: string;
     sahkoposti: string;
