@@ -145,7 +145,7 @@ export const YhteystietoKortti = ({
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)}
-                        error={getError(error, kortinKieli, 'puhelinnumero')}
+                        error={error.lang === kortinKieli && error.name === 'puhelinnumero'}
                     />
                 </RiviKentta>
                 <RiviKentta
@@ -236,7 +236,7 @@ export const YhteystietoKortti = ({
             </RiviKentta>
             <RiviKentta label="YHTEYSTIEDOT_WWW_OSOITE">
                 <Input
-                    disabled={readOnly || ytjReadOnly}
+                    disabled={readOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.www` as const)}
                     error={error.lang === kortinKieli && error.name === 'www'}
                 />

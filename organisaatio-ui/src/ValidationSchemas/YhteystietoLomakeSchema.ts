@@ -1,4 +1,6 @@
-import Joi from 'joi';
+import JoiLess from 'joi';
+import JoiPhoneNumber from 'joi-phone-number';
+const Joi = JoiLess.extend(JoiPhoneNumber);
 
 export const postinumeroSchema = Joi.string().regex(/^\d{5}$/);
 
@@ -15,7 +17,7 @@ const allAllowedLanguageObject = {
     kayntiOsoite: Joi.string().allow(''),
     kayntiOsoitePostiNro: postinumeroSchema.allow(''),
     kayntiOsoiteToimipaikka: Joi.string().allow(''),
-    puhelinnumero: Joi.string().allow(''),
+    puhelinnumero: Joi.string().phoneNumber({ defaultCountry: 'FI' }).allow(''),
     email: Joi.string()
         .email({ tlds: { allow: false } })
         .allow(''),
@@ -60,6 +62,7 @@ export const enAltSchema = Joi.object({
             .email({ tlds: { allow: false } })
             .required(),
     }),
+    osoitteetOnEri: Joi.boolean(),
 });
 
 export default Joi.alternatives().try(fiAltSchema, svAltSchema, enAltSchema);
