@@ -83,7 +83,7 @@ jobs:
         working-directory: rekisterointi-ui
       - name: Run playwright tests
         run: |
-          java -jar -Dspring-boot.run.profiles=ci rekisterointi.jar &
+          java -jar -Dspring.profiles.active=ci rekisterointi.jar &
           cd rekisterointi-ui
           ./scripts/ci-wait-for-frontend.sh
           HEADLESS=true npm run playwright:test

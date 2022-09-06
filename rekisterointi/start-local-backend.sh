@@ -14,4 +14,7 @@ mvn spring-boot:run \
     -Drekisterointi.service.password=$SERVICE_PASSWORD
     -Drekisterointi.valtuudet.api-key=$VALTUUDET_API_KEY
     -Drekisterointi.valtuudet.client-id=$VALTUUDET_CLIENT_ID
-    -Drekisterointi.valtuudet.oauth-password=$VALTUUDET_OAUTH_PASSWORD"
+    -Drekisterointi.valtuudet.oauth-password=$VALTUUDET_OAUTH_PASSWORD
+    -DbaseUrl=https://virkailija.untuvaopintopolku.fi
+    -Drekisterointi.baseUrl=http://localhost:3000
+    -Dcas-oppija.baseUrl=https://untuvaopintopolku.fi"
