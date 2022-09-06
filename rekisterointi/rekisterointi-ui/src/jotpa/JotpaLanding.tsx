@@ -1,54 +1,54 @@
 import React from 'react';
+import Markdown from 'react-markdown';
 
 import { Header } from '../Header';
+import { useLanguageContext } from '../LanguageContext';
 
 import styles from './JotpaLanding.module.css';
+import { JotpaProsessikuvaus } from './JotpaProsessikuvaus';
+
+const ExternalLink = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M19 19H5V5H12V3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V12H19V19ZM14 3V5H17.59L7.76 14.83L9.17 16.24L19 6.41V10H21V3H14Z"
+            fill="#3A7A10"
+        />
+    </svg>
+);
 
 export function JotpaLanding() {
+    const { i18n } = useLanguageContext();
     return (
         <>
-            <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
+            <Header title={i18n.translate('otsikko_rekisterointi')} />
             <main>
                 <div className={styles.bannerContainer}>
                     <img className={styles.banner} src="/jotpa_banner.png" alt="Jotpa" />
                 </div>
                 <div className="content">
-                    <p>Koulutuksen järjestäjien on rekisteröitävä tietonsa tietovarantoon (Jotpa) 1.1.2023 alkaen. </p>
-                    <h2>Varmista ensin, että organisaatio on </h2>
-                    <ul>
-                        <li>merkitty kaupparekisteriin tai Yritys- ja yhteisötietojärjestelmään ja että</li>
-                        <li>sinulla on järjestelmään merkitty oikeus asioida ko. organisaation puolesta.</li>
-                    </ul>
-                    <h2>Mikä on Jotpa?</h2>
-                    <p>
-                        Jatkuvan oppimisen ja työllisyyden palvelukeskus (lyhyemmin JOTPA) on uusi viranomainen, joka
-                        edistää työikäisten osaamisen kehittämistä ja osaavan työvoiman saatavuutta.
+                    <Markdown>{i18n.translate('etusivu_mika_jotpa')}</Markdown>
+                    <h3>{i18n.translate('etusivu_prosessikuvaus')}</h3>
+                    <JotpaProsessikuvaus />
+                    <Markdown>{i18n.translate('etusivu_rekisterointi')}</Markdown>
+                    <p className={styles.link}>
+                        <a href="/">{i18n.translate('linkki_palvelun_kayttoohje')}</a>
+                        <ExternalLink />
                     </p>
-                    <h2>Rekisteröityminen</h2>
-                    <ul>
-                        <li>Koulutuksen järjestäjä rekisteröi tiedot organisaatiosta alla olevan linkin kautta.</li>
-                        <li>
-                            Rekisteröityminen edellyttää vahvaa tunnistautumista (suomi.fi) henkilökohtaisilla
-                            verkkopankkitunnuksilla tai mobiilivarmenteella. Rekisteröidessä asioidaan organisaation
-                            puolesta. Jos listassa on monta organisaatiota, valitsethan rekisteröityvän koulutuksen
-                            järjestäjän organisaation.
-                        </li>
-                    </ul>
-                    <p>
-                        <a href="/">Ohjeet palvelun käyttöön</a>
+                    <p className={styles.link}>
+                        <a href="/">{i18n.translate('linkki_jotpa_esittely')}</a>
+                        <ExternalLink />
                     </p>
-                    <p>
-                        <a href="/">Jatkuvan oppimisen ja työllisyyden palvelukeskus (JOTPA) esittely</a>
-                    </p>
-                    <p>
-                        <a href="/">Saavutettavuusseloste</a>
+                    <p className={styles.link}>
+                        <a href="/">{i18n.translate('linkki_saavutettavuusseloste')}</a>
                     </p>
                     <button
                         role="link"
                         className={styles.registerButton}
-                        onClick={() => (window.location.href = '/hakija/jotpa/aloitus')}
+                        onClick={() => (window.location.href = '/hakija/jotpa/organisaatio')}
                     >
-                        Aloita rekisteröityminen
+                        {i18n.translate('etusivu_aloitus_nappi')}
                     </button>
                 </div>
             </main>

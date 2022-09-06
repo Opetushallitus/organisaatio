@@ -13,3 +13,11 @@
     background: var(--green);
     color: var(--white);
 }
+
+.link {
+    display: flex;
+}
+
+.link > svg {
+    padding-left: 8px;
+}

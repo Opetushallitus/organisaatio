@@ -4,7 +4,7 @@
 }
 
 .languageSwitcher {
-    margin: 14px 19px;
+    margin: 14px 0;
     box-sizing: border-box;
 }
 
@@ -39,6 +39,6 @@
     }
 
     .languageSwitcher {
-        margin: 28px 24px;
+        margin: 28px;
     }
 }

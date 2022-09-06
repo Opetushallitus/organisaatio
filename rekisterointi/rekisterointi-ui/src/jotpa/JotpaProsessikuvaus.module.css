@@ -1,0 +1,57 @@
+.processPhase {
+    display: flex;
+    padding: 20px;
+    position: relative;
+    overflow-y: hidden;
+}
+
+.topLine {
+    position: absolute;
+    top: 20px;
+    left: 38px;
+    width: 0;
+    height: 100%;
+    border-left: 2px dashed var(--light-gray);
+    z-index: -999;
+}
+
+.activePhase {
+    display: flex;
+    background: var(--light-green-background);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.middleLine {
+    position: absolute;
+    left: 38px;
+    top: -20px;
+    width: 0;
+    height: calc(100% + 40px);
+    border-left: 2px dashed var(--light-gray);
+    z-index: -999;
+}
+
+.bottomLine {
+    position: absolute;
+    left: 38px;
+    top: -20px;
+    width: 0;
+    height: 40px;
+    border-left: 2px dashed var(--light-gray);
+    z-index: -999;
+}
+
+.processInfo {
+    margin-left: 16px;
+}
+
+.processInfo > h4 {
+    margin-block-start: 6px;
+    margin-block-end: 6px;
+}
+
+.processInfo > p {
+    margin-block-start: 6px;
+    margin-block-end: 6px;
+}

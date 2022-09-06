@@ -1,0 +1,56 @@
+.progressBar {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    width: 100%;
+    margin: 40px 0 50px;
+}
+
+.phase {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 80px;
+}
+
+.phaseName {
+    text-align: center;
+}
+
+.activeName {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.leftLine {
+    position: absolute;
+    top: 18px;
+    right: 0;
+    width: 50%;
+    height: 0;
+    border-bottom: 2px dashed var(--light-gray);
+    z-index: -999;
+}
+
+.rightLine {
+    position: absolute;
+    top: 18px;
+    left: 0;
+    width: 50%;
+    height: 0;
+    border-bottom: 2px dashed var(--light-gray);
+    z-index: -999;
+}
+
+.fullLine {
+    position: absolute;
+    top: 18px;
+    left: 0;
+    width: 100%;
+    height: 0;
+    border-bottom: 2px dashed var(--light-gray);
+    z-index: -999;
+}

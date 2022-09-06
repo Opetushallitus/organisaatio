@@ -25,7 +25,6 @@
     border: 2px solid var(--white);
     background: var(--white);
     color: var(--green);
-    cursor: pointer;
     font-weight: 600;
     margin-right: 20px;
 }
@@ -36,9 +35,13 @@
     border: 2px solid var(--green);
     background: var(--white);
     color: var(--green);
-    cursor: pointer;
     font-weight: 600;
     margin-right: 20px;
+}
+
+.emailRow {
+    display: flex;
+    width: 100%;
 }
 
 .addEmailButton {
@@ -47,13 +50,27 @@
     border: none;
     background: var(--white);
     color: var(--green);
-    cursor: pointer;
     font-weight: 600;
     line-height: 24px;
 }
 
 .addEmailButton > svg {
     margin-right: 6px;
+}
+
+.removeEmailPlaceholder {
+    height: 38px;
+    width: 38px;
+}
+
+.removeEmailButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 38px;
+    width: 38px;
+    border: none;
+    background: var(--white);
 }
 
 .postitoimipaikka {
@@ -72,4 +89,8 @@
 .errorInput {
     border: 2px solid var(--red-error);
     margin: 0;
+}
+
+.copyKayntiosoite {
+    margin-top: 26px;
 }

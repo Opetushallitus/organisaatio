@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Language, Lokalisointi } from './types';
 
 export interface I18n {
@@ -37,3 +37,11 @@ export const LanguageContext = React.createContext<LanguageContextType>({
     setLanguage: (language: Language) => {},
     i18n: new I18nImpl(defaultLokalisointi, 'fi'),
 });
+
+export const useLanguageContext = () => {
+    const context = useContext(LanguageContext);
+    if (!context && context !== null) {
+        throw new Error('Localization not available');
+    }
+    return context;
+};

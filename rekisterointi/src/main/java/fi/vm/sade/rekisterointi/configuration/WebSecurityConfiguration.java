@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
+import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.DEFAULT_LOCALE;
 import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
@@ -109,7 +111,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) {
-      return properties.url("cas-oppija.login", loginCallbackUrl, "fi");
+      Locale locale = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_LOCALE, Locale.class)
+          .orElse(DEFAULT_LOCALE);
+      String language = locale.getLanguage();
+      return properties.url("cas-oppija.login", loginCallbackUrl, language);
     }
   }
 

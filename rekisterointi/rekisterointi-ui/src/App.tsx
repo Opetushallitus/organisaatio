@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom';
 import { registerLocale } from 'react-datepicker';
 import fi from 'date-fns/locale/fi';
+import sv from 'date-fns/locale/sv';
 import { setLocale } from 'yup';
 
 // import global styles first
@@ -11,13 +12,14 @@ import 'oph-virkailija-style-guide/oph-styles.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 
-import { defaultLokalisointi, I18nImpl, LanguageContext } from './contexts';
+import { defaultLokalisointi, I18nImpl, LanguageContext } from './LanguageContext';
 import { Language, Lokalisointi } from './types';
 import { JotpaRekisterointi } from './jotpa/JotpaRekisterointi';
 import { JotpaLanding } from './jotpa/JotpaLanding';
 import { Footer } from './Footer';
 
 registerLocale('fi', fi);
+registerLocale('sv', sv);
 setLocale({
     mixed: {
         required: 'Pakollinen tieto',
@@ -27,7 +29,7 @@ setLocale({
         min: ({ min }) => `Kentän minimipituus on ${min} merkkiä`,
         max: ({ max }) => `Kentän maksimipituus on ${max} merkkiä`,
         matches: 'Virheellinen arvo',
-        email: 'Sähköpostin muoto on väärä',
+        email: 'Virheellinen sähköposti',
     },
     array: {
         min: ({ min }) => `Vähintään ${min}`,
@@ -42,9 +44,13 @@ function App() {
 
     useEffect(() => {
         async function fetchLocalization() {
-            const resp = await axios.get<Lokalisointi>('/api/lokalisointi');
-            setLocalization(resp.data);
-            setI18n(new I18nImpl(resp.data, language));
+            const [langResp, localizationResp] = await Promise.all([
+                await axios.get<Language>('/api/lokalisointi/kieli'),
+                await axios.get<Lokalisointi>('/api/lokalisointi?category=jotpa-rekisterointi'),
+            ]);
+            setLanguage(langResp.data);
+            setLocalization(localizationResp.data);
+            setI18n(new I18nImpl(localizationResp.data, language));
         }
 
         if (!localization) {
