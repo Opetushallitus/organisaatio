@@ -1,5 +1,6 @@
-import Joi from 'joi';
-const phoneNumberJoi = Joi.extend(require('joi-phone-number'));
+import JoiLess from 'joi';
+import JoiPhoneNumber from 'joi-phone-number';
+const Joi = JoiLess.extend(JoiPhoneNumber);
 
 export const postinumeroSchema = Joi.string().regex(/^\d{5}$/);
 
@@ -16,7 +17,7 @@ const allAllowedLanguageObject = {
     kayntiOsoite: Joi.string().allow(''),
     kayntiOsoitePostiNro: postinumeroSchema.allow(''),
     kayntiOsoiteToimipaikka: Joi.string().allow(''),
-    puhelinnumero: phoneNumberJoi.string().phoneNumber({ defaultCountry: 'FI' }).allow(''),
+    puhelinnumero: Joi.string().phoneNumber({ defaultCountry: 'FI' }).allow(''),
     email: Joi.string()
         .email({ tlds: { allow: false } })
         .allow(''),
