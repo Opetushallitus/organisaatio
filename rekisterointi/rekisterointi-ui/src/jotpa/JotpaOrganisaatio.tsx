@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Markdown from 'react-markdown';
 
 import { Header } from '../Header';
 import { useKoodistos } from '../KoodistoContext';
@@ -10,12 +11,12 @@ import { Select } from '../Select';
 import { DatePicker } from '../DatePicker';
 import { OrganizationFormState, OrganizationSchema, setForm } from '../organizationSlice';
 import { Input } from '../Input';
-
-import styles from './jotpa.module.css';
 import { FormError } from '../FormError';
 import { useLanguageContext } from '../LanguageContext';
 import { findPostitoimipaikka } from '../addressUtils';
 import { RegistrationProgressBar } from '../RegistrationProgressBar';
+
+import styles from './jotpa.module.css';
 
 const AddEmailLogo = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +36,7 @@ const RemoveEmailLogo = () => (
 );
 
 export function JotpaOrganisaatio() {
-    const { language } = useLanguageContext();
+    const { language, i18n } = useLanguageContext();
     const navigate = useNavigate();
     const { yritysmuodot, kunnat, posti, postinumerot } = useKoodistos();
     const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
@@ -118,26 +119,16 @@ export function JotpaOrganisaatio() {
                             currentPhase={1}
                             phaseTranslationKeys={['organisaatio_otsikko', 'paakayttaja_otsikko', 'yhteenveto_otsikko']}
                         />
-                        <h2>Organisaation perustiedot</h2>
-                        <ul className={styles.infoList}>
-                            <li>Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista.</li>
-                            <li>Anna organisaatiolle kuvaava nimi, jos kenttä on tyhjä.</li>
-                            <li>
-                                Esitäytetyt tiedot tulevat Yritys- ja yhteisötietojärjestelmästä ja Opetushallituksen
-                                Organisaatiopalvelusta. Jos esitäytetyissä tiedoissa on virheitä, tiedot tulee päivittää
-                                Yritys- ja yhteisötietojärjestelmään tai Organisaatiopalveluun.
-                            </li>
-                            <li>
-                                Palveluntuottajan tiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun kunta
-                                on hyväksynyt rekisteröitymisen. Huomaa, että kaikki kentät ovat pakollisia.
-                            </li>
-                        </ul>
-                        <div className="label">Organisaation nimi</div>
+                        <h2>{i18n.translate('organisaatio_otsikko')}</h2>
+                        <div className={styles.info}>
+                            <Markdown>{i18n.translate('organisaatio_perustiedot_info')}</Markdown>
+                        </div>
+                        <div className="label">{i18n.translate('organisaatio_perustiedot_nimi')}</div>
                         <div>{initialOrganization.ytjNimi.nimi}</div>
-                        <div className="label">Y-tunnus</div>
+                        <div className="label">{i18n.translate('organisaatio_perustiedot_ytunnus')}</div>
                         <div>{initialOrganization.ytunnus}</div>
                         <label className="title" htmlFor="yritysmuoto">
-                            Yritysmuoto *
+                            {i18n.translate('organisaatio_perustiedot_yritysmuoto')} *
                         </label>
                         <Select<OrganizationFormState>
                             name="yritysmuoto"
@@ -145,10 +136,10 @@ export function JotpaOrganisaatio() {
                             error={errors.yritysmuoto?.value}
                             options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
-                        <div className="label">Organisaatiotyyppi</div>
+                        <div className="label">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</div>
                         <div>Koulutuksen järjestäjä</div>
                         <label className="title" htmlFor="kotipaikka">
-                            Kotipaikka *
+                            {i18n.translate('organisaatio_perustiedot_kotipaikka')} *
                         </label>
                         <Select<OrganizationFormState>
                             name="kotipaikka"
@@ -157,47 +148,45 @@ export function JotpaOrganisaatio() {
                             options={kunnat.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
                         <label className="title" htmlFor="alkamisaika">
-                            Toiminnan alkamisaika *
+                            {i18n.translate('organisaatio_perustiedot_alkamisaika')} *
                         </label>
                         <DatePicker<OrganizationFormState>
                             name="alkamisaika"
                             control={control}
                             error={errors.alkamisaika}
                         />
-                        <h2>Organisaation yhteystiedot</h2>
+                        <h2>{i18n.translate('organisaatio_yhteystiedot')}</h2>
                         <div className={styles.info}>
-                            Tarkista, että tiedot ovat oikein ja täytä puuttuvat kohdat ennen jatkamista.
-                            Palveluntuottajan yhteystiedot tallennetaan Opetushallituksen Organisaatiopalveluun, kun
-                            kunta on hyväksynyt rekisteröitymisen.
+                            <Markdown>{i18n.translate('organisaatio_yhteystiedot_info')}</Markdown>
                         </div>
                         <label className="title" htmlFor="puhelinnumero">
-                            Puhelinnumero *
+                            {i18n.translate('organisaatio_yhteystiedot_puhelinnumero')} *
                         </label>
                         <Input name="puhelinnumero" register={register} error={errors.puhelinnumero} />
                         <label className="title" htmlFor="email">
-                            Yhteiskäyttöinen sähköpostiosoite *
+                            {i18n.translate('organisaatio_yhteystiedot_email')} *
                         </label>
                         <Input name="email" register={register} error={errors.email} />
                         <label className="title" htmlFor="postiosoite">
-                            Postiosoite *
+                            {i18n.translate('organisaatio_yhteystiedot_postiosoite')} *
                         </label>
                         <Input name="postiosoite" register={register} error={errors.postiosoite} />
                         <label className="title" htmlFor="postinumero">
-                            Postinumero *
+                            {i18n.translate('organisaatio_yhteystiedot_postinumero')} *
                         </label>
                         <Input name="postinumero" register={register} error={errors.postinumero} />
-                        <label className="title">Postitoimipaikka</label>
+                        <label className="title">{i18n.translate('organisaatio_yhteystiedot_postitoimipaikka')}</label>
                         <div className={styles.postitoimipaikka}>{postitoimipaikka}</div>
                         <div className={styles.copyKayntiosoite}>
                             <label htmlFor="copyKayntiosoite">
                                 <input id="copyKayntiosoite" type="checkbox" {...register('copyKayntiosoite')} />{' '}
-                                Käyntiosoite on sama kuin postiosoite
+                                {i18n.translate('organisaatio_yhteystiedot_kopioi_osoite')}
                             </label>
                         </div>
                         {!copyKayntiosoite && (
                             <>
                                 <label className="title" htmlFor="kayntiosoite">
-                                    Käyntiosoite *
+                                    {i18n.translate('organisaatio_yhteystiedot_kayntiosoite')} *
                                 </label>
                                 <Input
                                     name="kayntiosoite"
@@ -206,7 +195,7 @@ export function JotpaOrganisaatio() {
                                     error={errors.kayntiosoite}
                                 />
                                 <label className="title" htmlFor="kayntipostinumero">
-                                    Käyntiosoitteen postinumero *
+                                    {i18n.translate('organisaatio_yhteystiedot_kayntipostinumero')} *
                                 </label>
                                 <Input
                                     name="kayntipostinumero"
@@ -214,24 +203,18 @@ export function JotpaOrganisaatio() {
                                     register={register}
                                     error={errors.kayntipostinumero}
                                 />
-                                <label className="title">Käyntiosoitteen postitoimipaikka</label>
+                                <label className="title">
+                                    {i18n.translate('organisaatio_yhteystiedot_kayntipostitoimipaikka')}
+                                </label>
                                 <div className={styles.postitoimipaikka}>{kayntipostitoimipaikka}</div>
                             </>
                         )}
-                        <h2>Sähköpostiosoite</h2>
-                        <ul className={styles.infoList}>
-                            <li>
-                                Syötä yhden tai useamman henkilön sähköpostiosoite, jota käytetään palveluntuottajan
-                                rekisteröitymiseen liittyvässä viestinnässä.
-                            </li>
-                            <li>
-                                Sähköposteja lähetetään rekisteröitymisen vastaanottamisesta sekä rekisteröitymisen
-                                hyväksymisestä tai hylkäämisestä.
-                            </li>
-                            <li>Sähköpostiosoitetta ei tallenneta Organisaatiopalveluun.</li>
-                        </ul>
+                        <h2>{i18n.translate('organisaatio_email')}</h2>
+                        <div className={styles.info}>
+                            <Markdown>{i18n.translate('organisaatio_email_info')}</Markdown>
+                        </div>
                         <label className="title" htmlFor="firstEmail">
-                            Sähköpostiosoite *
+                            {i18n.translate('organisaatio_email')} *
                         </label>
                         <FormError error={errors?.emails?.message} />
                         {emailFields.map((field, index) => {
@@ -251,7 +234,7 @@ export function JotpaOrganisaatio() {
                                             <button
                                                 className={styles.removeEmailButton}
                                                 onClick={preventDefault(() => removeEmail(index))}
-                                                aria-label="Poista sähköposti"
+                                                aria-label={i18n.translate('organisaatio_email_remove')}
                                             >
                                                 <RemoveEmailLogo />
                                             </button>
@@ -266,7 +249,7 @@ export function JotpaOrganisaatio() {
                             onClick={preventDefault(() => appendEmail({ email: '' }))}
                         >
                             <AddEmailLogo />
-                            Lisää sähköpostiosoite
+                            {i18n.translate('organisaatio_email_add')}
                         </button>
                         <div className={styles.buttons}>
                             <button
@@ -274,9 +257,9 @@ export function JotpaOrganisaatio() {
                                 className={styles.cancelButton}
                                 onClick={() => (window.location.href = '/hakija/logout?redirect=/jotpa')}
                             >
-                                Keskeytä
+                                {i18n.translate('organisaatio_nappi_keskeyta')}
                             </button>
-                            <input type="submit" value="Seuraava vaihe" />
+                            <input type="submit" value={i18n.translate('organisaatio_nappi_seuraava_vaihe')} />
                         </div>
                     </div>
                 </main>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
+import { setLocale } from 'yup';
 
 import store from './store';
 import { JotpaOrganisaatio } from './JotpaOrganisaatio';
@@ -15,6 +16,15 @@ import { UserSchema } from '../userSlice';
 import { JotpaYhteenveto } from './JotpaYhteenveto';
 
 store.dispatch(fetchOrganization());
+setLocale({
+    mixed: {
+        required: 'validaatio_pakollinen',
+    },
+    string: {
+        matches: 'validaatio_geneerinen',
+        email: 'validaatio_email',
+    },
+});
 
 const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
     (a.nimi[language] ?? 'xxx') > (b.nimi[language] ?? 'xxx') ? 1 : -1;

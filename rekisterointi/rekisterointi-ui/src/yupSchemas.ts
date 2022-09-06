@@ -8,43 +8,42 @@ export const KoodiSchema = (koodit: Koodi[], language: Language) =>
         .shape({
             label: yup
                 .string()
-                .required()
+                .required('validaatio_pakollinen')
                 .oneOf(
                     koodit.map((k) => k.nimi[language] ?? k.nimi.fi),
-                    'Virheellinen arvo'
+                    'validaatio_geneerinen'
                 ),
             value: yup
                 .string()
-                .required()
+                .required('validaatio_pakollinen')
                 .oneOf(
                     koodit.map((k) => k.uri),
-                    'Virheellinen arvo'
+                    'validaatio_geneerinen'
                 ),
         })
-        .required();
+        .required('validaatio_pakollinen');
 
 export const PuhelinnumeroSchema = yup
     .string()
-    .matches(/^(\+|-| |\(|\)|[0-9]){3,100}$/, 'Virheellinen puhelinnumero')
-    .required();
+    .required('validaatio_pakollinen')
+    .matches(/^(\+|-| |\(|\)|[0-9]){3,100}$/, 'validaatio_geneerinen');
 
-export const PostinumeroSchema = (postinumerot: string[]) =>
-    yup.string().oneOf(postinumerot, 'Virheellinen postinumero');
+export const PostinumeroSchema = (postinumerot: string[]) => yup.string().oneOf(postinumerot, 'validaatio_postinumero');
 
-export const EmailSchema = yup.string().email('Virheellinen sähköposti').required('Pakollinen tieto');
+export const EmailSchema = yup.string().email('validaatio_email').required('validaatio_pakollinen');
 
 export const EmailArraySchema = yup
     .array()
-    .min(1, 'Syötä vähintään yksi sähköposti')
+    .min(1, 'validaatio_email')
     .of(
         yup.object().shape({
-            email: yup.string().email('Virheellinen sähköposti').required('Pakollinen tieto'),
+            email: yup.string().email('validaatio_email').required('validaatio_pakollinen'),
         })
     );
 
-export const PostiosoiteSchema = yup.string().min(3).max(100);
+export const PostiosoiteSchema = yup.string();
 
 export const DateStringSchema = yup
     .string()
-    .matches(/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}/)
-    .required();
+    .required('validaatio_pakollinen')
+    .matches(/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}/, 'validaatio_geneerinen');

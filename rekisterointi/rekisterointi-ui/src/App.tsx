@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom
 import { registerLocale } from 'react-datepicker';
 import fi from 'date-fns/locale/fi';
 import sv from 'date-fns/locale/sv';
-import { setLocale } from 'yup';
 
 // import global styles first
 import 'normalize.css';
@@ -20,22 +19,6 @@ import { Footer } from './Footer';
 
 registerLocale('fi', fi);
 registerLocale('sv', sv);
-setLocale({
-    mixed: {
-        required: 'Pakollinen tieto',
-        notType: 'Virheellinen arvo',
-    },
-    string: {
-        min: ({ min }) => `Kentän minimipituus on ${min} merkkiä`,
-        max: ({ max }) => `Kentän maksimipituus on ${max} merkkiä`,
-        matches: 'Virheellinen arvo',
-        email: 'Virheellinen sähköposti',
-    },
-    array: {
-        min: ({ min }) => `Vähintään ${min}`,
-        max: ({ max }) => `Enintään ${max}`,
-    },
-});
 
 function App() {
     const [language, setLanguage] = useState<Language>('fi');

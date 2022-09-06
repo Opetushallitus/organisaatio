@@ -8,9 +8,10 @@
 
 .info {
     width: 100%;
-    padding: 12px;
+    padding: 1px 12px;
     background: var(--gray-header-background);
     line-height: 26px;
+    box-sizing: border-box;
 }
 
 .buttons {

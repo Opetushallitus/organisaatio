@@ -63,7 +63,7 @@ export const RegistrationProgressBar = ({ currentPhase, phaseTranslationKeys }: 
                         <UpcomingPhase phase={idx + 1} />
                     );
                 return (
-                    <div className={styles.phase}>
+                    <div key={k} className={styles.phase}>
                         <div className={dottedLineClassName} />
                         <div>{LogoElement}</div>
                         <div className={styles.phaseName}>

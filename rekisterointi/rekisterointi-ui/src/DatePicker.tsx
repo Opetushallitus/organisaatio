@@ -13,6 +13,16 @@ type DatePickerProps<T> = {
     error?: FieldError;
 };
 
+const dateFormat = 'dd.MM.yyyy';
+
+const parseDate = (value: string) => {
+    const date = value ? parse(value, dateFormat, new Date()) : null;
+    if (date?.toString() === 'Invalid Date') {
+        return null;
+    }
+    return date;
+};
+
 export const DatePicker = <T,>({ name, control, error }: DatePickerProps<T>) => {
     const { language } = useLanguageContext();
     return (
@@ -24,9 +34,9 @@ export const DatePicker = <T,>({ name, control, error }: DatePickerProps<T>) => 
                     <ReactDatePicker
                         id={name}
                         locale={language}
-                        onChange={(e) => field.onChange(e && format(e, 'dd.MM.yyyy'))}
-                        selected={field.value ? parse(field.value as string, 'dd.MM.yyyy', new Date()) : null}
-                        dateFormat="dd.MM.yyyy"
+                        onChange={(e) => field.onChange(e && format(e, dateFormat))}
+                        selected={parseDate(field.value as string)}
+                        dateFormat={dateFormat}
                         className={error ? 'invalid_date' : ''}
                     />
                 )}
