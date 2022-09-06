@@ -15,6 +15,7 @@ import { defaultLokalisointi, I18nImpl, LanguageContext } from './LanguageContex
 import { Language, Lokalisointi } from './types';
 import { JotpaRekisterointi } from './jotpa/JotpaRekisterointi';
 import { JotpaLanding } from './jotpa/JotpaLanding';
+import { JotpaValmis } from './jotpa/JotpaValmis';
 import { Footer } from './Footer';
 
 registerLocale('fi', fi);
@@ -52,6 +53,7 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/jotpa" element={<JotpaLanding />} />
+                    <Route path="/jotpa/valmis" element={<JotpaValmis />} />
                     <Route path="/hakija">
                         <Route path="jotpa/*" element={<JotpaRekisterointi />} />
                     </Route>

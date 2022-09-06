@@ -28,7 +28,7 @@ const RekisterointiLogo = () => (
     </svg>
 );
 
-const OdotusLogo = () => (
+export const OdotusLogo = () => (
     <svg width="39" height="37" viewBox="0 0 39 37" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="19.1827" cy="18.5" rx="18.1827" ry="17.5" fill="white" stroke="#4C4C4C" strokeWidth="2" />
         <g clipPath="url(#clip0_528_2701)">
@@ -47,7 +47,7 @@ const OdotusLogo = () => (
     </svg>
 );
 
-const KayttajaLogo = () => (
+export const KayttajaLogo = () => (
     <svg width="39" height="37" viewBox="0 0 39 37" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="19.1827" cy="18.5" rx="18.1827" ry="17.5" fill="white" stroke="#4C4C4C" strokeWidth="2" />
         <path

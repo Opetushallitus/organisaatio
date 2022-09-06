@@ -24,7 +24,12 @@ export function JotpaYhteenveto() {
         window.scrollTo(0, 0);
     }, []);
 
-    const onSubmit = () => {};
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        // do submit
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/hakija/logout?redirect=/jotpa/valmis';
+    };
 
     const kayntiosoite = organizationForm?.copyKayntiosoite
         ? organizationForm.postiosoite
