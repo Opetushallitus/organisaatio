@@ -6,6 +6,7 @@ import org.jasig.cas.client.validation.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -43,13 +44,13 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
 
 import java.io.IOException;
 
+@Profile("!dev")
 @Configuration
 @Order(2)
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  private static final String HAKIJA_ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
-  private static final String HAKIJA_PATH_CLOB = "/hakija/**";
+  private static final String HAKIJA_ROLE = "APP_REKISTEROINTI_HAKIJA";
 
   private final OphProperties ophProperties;
 
@@ -59,9 +60,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.headers().disable().csrf().disable();
-    http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
-        .anyRequest().hasRole(HAKIJA_ROLE)
+    http.headers().disable()
+        .csrf().disable()
+        .authorizeRequests()
+        .antMatchers("/*").permitAll()
+        .antMatchers("/api/**").permitAll()
+        .anyRequest().authenticated()
         .and()
         .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
         .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
