@@ -13,7 +13,7 @@
         "joi": "^17.4.0",
         "joi-phone-number": "^5.1.1",
         "jotai": "^1.5.3",
-        "moment": "2.29.1",
+        "moment": "2.29.4",
         "oph-urls-js": "github:Opetushallitus/oph-urls-js#master",
         "query-string": "^7.0.1",
         "react": "16.13.1",
