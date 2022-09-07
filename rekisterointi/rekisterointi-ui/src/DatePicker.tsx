@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDatePicker from 'react-datepicker';
-import { Control, Controller, FieldError, Path } from 'react-hook-form';
+import { Control, Controller, FieldError, FieldValues, Path } from 'react-hook-form';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 
 import { FormError } from './FormError';
 import { useLanguageContext } from './LanguageContext';
 
-type DatePickerProps<T> = {
+type DatePickerProps<T extends FieldValues> = {
     name: Path<T>;
     control: Control<T>;
     error?: FieldError;
@@ -23,7 +23,7 @@ const parseDate = (value: string) => {
     return date;
 };
 
-export const DatePicker = <T,>({ name, control, error }: DatePickerProps<T>) => {
+export const DatePicker = <T extends FieldValues>({ name, control, error }: DatePickerProps<T>) => {
     const { language } = useLanguageContext();
     return (
         <div>

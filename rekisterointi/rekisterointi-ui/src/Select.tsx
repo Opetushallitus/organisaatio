@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactSelect from 'react-select';
-import { Control, Controller, FieldError, Path } from 'react-hook-form';
+import { Control, Controller, FieldError, FieldValues, Path } from 'react-hook-form';
 
 import { FormError } from './FormError';
 import { reactSelectStyles, DropdownIndicator } from './select-styles';
@@ -10,14 +10,14 @@ type Option = {
     label: string;
 };
 
-type SelectProps<T> = {
+type SelectProps<T extends FieldValues> = {
     name: Path<T>;
     control: Control<T, any>;
     options: Option[];
     error?: FieldError;
 };
 
-export const Select = <T,>({ name, control, options, error }: SelectProps<T>) => {
+export const Select = <T extends FieldValues>({ name, control, options, error }: SelectProps<T>) => {
     return (
         <div>
             <Controller
