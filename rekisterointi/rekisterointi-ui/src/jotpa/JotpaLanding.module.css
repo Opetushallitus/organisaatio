@@ -4,7 +4,9 @@
 }
 
 .banner {
+    display: block;
     width: 100%;
+    mix-blend-mode: overlay;
 }
 
 .registerButton {
