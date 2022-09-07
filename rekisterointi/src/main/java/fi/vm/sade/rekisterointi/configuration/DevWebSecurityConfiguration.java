@@ -53,6 +53,7 @@ public class DevWebSecurityConfiguration {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http.csrf().disable().authorizeRequests()
         .antMatchers("/jotpa").permitAll()
+        .antMatchers("/jotpa/**").permitAll()
         .antMatchers("/api/**").permitAll()
         .antMatchers("/actuator/health").permitAll()
         .anyRequest().authenticated()
