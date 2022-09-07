@@ -3,7 +3,7 @@ set -o errexit -o nounset -o pipefail
 
 echo 'waiting for frontend to start'
 attempt=0
-until curl --output /dev/null --silent --head --fail http://localhost:3000/; do
+until curl --output /dev/null --silent --head --fail http://localhost:3000/actuator/health; do
   echo 'waiting...'
   sleep 1
   attempt=$(( attempt + 1 ))
