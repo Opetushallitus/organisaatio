@@ -31,7 +31,14 @@ const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
 
 export function JotpaRekisterointi() {
     const { language } = useLanguageContext();
-    const [koodisto, setKoodisto] = useState<Koodistos>();
+    const [koodisto, setKoodisto] = useState<Koodistos>({
+        kunnat: [],
+        yritysmuodot: [],
+        organisaatiotyypit: [],
+        maat: [],
+        posti: [],
+        postinumerot: [],
+    });
     useEffect(() => {
         async function fetchKoodisto() {
             const [
@@ -64,10 +71,6 @@ export function JotpaRekisterointi() {
 
         void fetchKoodisto();
     }, []);
-
-    if (!koodisto) {
-        return <div></div>;
-    }
 
     const organizationValidation = {
         slice: 'organization' as const,

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -53,7 +53,6 @@ export function JotpaOrganisaatio() {
         }, [form]),
         resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot, language)),
     });
-
     const {
         fields: emailFields,
         append: appendEmail,
@@ -62,13 +61,19 @@ export function JotpaOrganisaatio() {
         control,
         name: 'emails',
     });
-    if (emailFields.length === 0) {
-        appendEmail({ email: '' }, { shouldFocus: false });
-    }
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     if (loading || !initialOrganization || !yritysmuodot) {
         return null;
     }
+
+    if (emailFields.length === 0) {
+        appendEmail({ email: '' }, { shouldFocus: false });
+    }
+
     const onSubmit = (data: OrganizationFormState) => {
         const kayntiosoite = !data.copyKayntiosoite
             ? {
