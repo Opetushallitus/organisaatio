@@ -2,17 +2,11 @@ import * as yup from 'yup';
 
 import { Koodi, Language } from './types';
 
-export const KoodiSchema = (koodit: Koodi[], language: Language) =>
+export const KoodiSchema = (koodit: Koodi[]) =>
     yup
         .object()
         .shape({
-            label: yup
-                .string()
-                .required('validaatio_pakollinen')
-                .oneOf(
-                    koodit.map((k) => k.nimi[language] ?? k.nimi.fi),
-                    'validaatio_geneerinen'
-                ),
+            label: yup.string().required('validaatio_pakollinen'),
             value: yup
                 .string()
                 .required('validaatio_pakollinen')
