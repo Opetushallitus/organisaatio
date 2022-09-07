@@ -51,6 +51,7 @@ import java.io.IOException;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private static final String HAKIJA_ROLE = "APP_REKISTEROINTI_HAKIJA";
+  private static final String HAKIJA_PATH_CLOB = "/hakija/**";
 
   private final OphProperties ophProperties;
 
@@ -60,14 +61,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.headers().disable()
-        .csrf().disable()
-        .authorizeRequests()
-        .antMatchers("/jotpa").permitAll()
-        .antMatchers("/jotpa/*").permitAll()
+    http.headers().disable().csrf().disable();
+    http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
         .antMatchers("/api/**").permitAll()
-        .antMatchers("/actuator/health").permitAll()
-        .anyRequest().authenticated()
+        .anyRequest().hasRole(HAKIJA_ROLE)
         .and()
         .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
         .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
