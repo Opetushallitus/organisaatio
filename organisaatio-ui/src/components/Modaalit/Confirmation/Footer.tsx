@@ -16,7 +16,7 @@ export default function Footer({ tallennaCallback, peruutaCallback }: Props) {
             <Button className={styles.FooterButton} variant={'outlined'} onClick={peruutaCallback}>
                 {i18n.translate('BUTTON_PERUUTA')}
             </Button>
-            <Button className={styles.FooterButton} onClick={tallennaCallback}>
+            <Button className={styles.FooterButton} name={'BUTTON_VAHVISTA'} onClick={tallennaCallback}>
                 {i18n.translate('BUTTON_VAHVISTA')}
             </Button>
         </div>

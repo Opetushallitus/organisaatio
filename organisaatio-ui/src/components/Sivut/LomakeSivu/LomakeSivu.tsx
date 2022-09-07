@@ -594,14 +594,8 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                                         deleteOrganisaatio(organisaatioBase.oid);
                                     }}
                                     label={'LOMAKE_POISTA_ORGANISAATIO'}
-                                    icon={() => (
-                                        <IconWrapper
-                                            inline={true}
-                                            icon="ci:trash-full"
-                                            height={'1.2rem'}
-                                            name={'LOMAKE_POISTA_ORGANISAATIO'}
-                                        />
-                                    )}
+                                    name={'LOMAKE_POISTA_ORGANISAATIO'}
+                                    icon={() => <IconWrapper inline={true} icon="ci:trash-full" height={'1.2rem'} />}
                                 />
                             )}
                         >
@@ -610,7 +604,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                                     header={'POISTO_VAHVISTUS_TITLE'}
                                     message={'POISTO_VAHVISTUS_MESSAGE'}
                                     replacements={[]}
-                                    tallennaCallback={() => deleteOrganisaatio(organisaatioBase.oid)}
+                                    tallennaCallback={async () => {
+                                        setIsLoading(true);
+                                        await deleteOrganisaatio(organisaatioBase.oid);
+                                        close();
+                                        await findAndResetOrganisaatio(organisaatioBase.oid);
+                                        setIsLoading(false);
+                                    }}
                                     peruutaCallback={close}
                                     suljeCallback={close}
                                 />

@@ -174,5 +174,9 @@
     },
     "nyc": {
         "report-dir": "cypress-coverage"
+    },
+    "engines": {
+        "npm": "6.14.17",
+        "node": "14.20.0"
     }
 }
