@@ -51,7 +51,7 @@ export function JotpaOrganisaatio() {
         defaultValues: useMemo(() => {
             return form;
         }, [form]),
-        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot, language)),
+        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot)),
     });
     const {
         fields: emailFields,

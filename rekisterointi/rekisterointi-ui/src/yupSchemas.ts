@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-import { Koodi, Language } from './types';
+import { Koodi } from './types';
 
 export const KoodiSchema = (koodit: Koodi[]) =>
     yup

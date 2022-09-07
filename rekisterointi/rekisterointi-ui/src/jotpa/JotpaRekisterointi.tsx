@@ -74,7 +74,7 @@ export function JotpaRekisterointi() {
 
     const organizationValidation = {
         slice: 'organization' as const,
-        schema: OrganizationSchema(koodisto.yritysmuodot, koodisto.kunnat, koodisto.postinumerot, language),
+        schema: OrganizationSchema(koodisto.yritysmuodot, koodisto.kunnat, koodisto.postinumerot),
         redirectPath: '/hakija/jotpa/organisaatio',
     };
     const userValidation = {
