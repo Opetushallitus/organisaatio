@@ -38,7 +38,7 @@ const RemoveEmailLogo = () => (
 export function JotpaOrganisaatio() {
     const { language, i18n } = useLanguageContext();
     const navigate = useNavigate();
-    const { yritysmuodot, kunnat, posti, postinumerot } = useKoodistos();
+    const { yritysmuodot, organisaatiotyypit, kunnat, posti, postinumerot } = useKoodistos();
     const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
     const dispatch = useJotpaRekisterointiDispatch();
     const {
@@ -137,7 +137,7 @@ export function JotpaOrganisaatio() {
                             options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
                         <div className="label">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</div>
-                        <div>Koulutuksen järjestäjä</div>
+                        <div>{organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language]}</div>
                         <label className="title" htmlFor="kotipaikka">
                             {i18n.translate('organisaatio_perustiedot_kotipaikka')} *
                         </label>

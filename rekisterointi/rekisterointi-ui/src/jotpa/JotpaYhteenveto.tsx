@@ -14,7 +14,7 @@ import styles from './jotpa.module.css';
 export function JotpaYhteenveto() {
     const navigate = useNavigate();
     const { language, i18n } = useLanguageContext();
-    const { posti } = useKoodistos();
+    const { organisaatiotyypit, posti } = useKoodistos();
     const {
         organization: { initialOrganization, form: organizationForm },
         user: { form: userForm },
@@ -59,7 +59,7 @@ export function JotpaYhteenveto() {
                         <label className="title">{i18n.translate('organisaatio_perustiedot_yritysmuoto')}</label>
                         <div>{organizationForm?.yritysmuoto.label}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</label>
-                        <div>Koulutuksen järjestäjä</div>
+                        <div>{organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language]}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_kotipaikka')}</label>
                         <div>{organizationForm?.kotipaikka.label}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_alkamisaika')}</label>
