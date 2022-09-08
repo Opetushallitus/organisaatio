@@ -12,8 +12,10 @@ import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
-    config.headers['Caller-Id'] = `${ROOT_OID}.organisaatio-ui`;
-    config.headers['CSRF'] = cookies.get('CSRF');
+    if (config.headers) {
+        config.headers['Caller-Id'] = `${ROOT_OID}.organisaatio-ui`;
+        config.headers['CSRF'] = cookies.get('CSRF');
+    }
     return config;
 });
 
