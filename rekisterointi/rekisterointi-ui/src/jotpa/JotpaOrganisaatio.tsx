@@ -39,7 +39,7 @@ export function JotpaOrganisaatio() {
     const { language, i18n } = useLanguageContext();
     const navigate = useNavigate();
     const { yritysmuodot, organisaatiotyypit, kunnat, posti, postinumerot } = useKoodistos();
-    const { loading, initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
+    const { initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
     const dispatch = useJotpaRekisterointiDispatch();
     const {
         control,
@@ -65,10 +65,6 @@ export function JotpaOrganisaatio() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    if (loading || !initialOrganization || !yritysmuodot) {
-        return null;
-    }
 
     if (emailFields.length === 0) {
         appendEmail({ email: '' }, { shouldFocus: false });
@@ -129,9 +125,9 @@ export function JotpaOrganisaatio() {
                             <Markdown>{i18n.translate('organisaatio_perustiedot_info')}</Markdown>
                         </div>
                         <div className="label">{i18n.translate('organisaatio_perustiedot_nimi')}</div>
-                        <div>{initialOrganization.ytjNimi.nimi}</div>
+                        <div>{initialOrganization?.ytjNimi.nimi ?? '...'}</div>
                         <div className="label">{i18n.translate('organisaatio_perustiedot_ytunnus')}</div>
-                        <div>{initialOrganization.ytunnus}</div>
+                        <div>{initialOrganization?.ytunnus ?? '...'}</div>
                         <label className="title" htmlFor="yritysmuoto">
                             {i18n.translate('organisaatio_perustiedot_yritysmuoto')} *
                         </label>
@@ -142,7 +138,9 @@ export function JotpaOrganisaatio() {
                             options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
                         <div className="label">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</div>
-                        <div>{organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language]}</div>
+                        <div>
+                            {organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language] ?? '...'}
+                        </div>
                         <label className="title" htmlFor="kotipaikka">
                             {i18n.translate('organisaatio_perustiedot_kotipaikka')} *
                         </label>
