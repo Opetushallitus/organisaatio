@@ -39,5 +39,6 @@ export const PostiosoiteSchema = yup.string();
 
 export const DateStringSchema = yup
     .string()
+    .nullable()
     .required('validaatio_pakollinen')
     .matches(/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}/, 'validaatio_geneerinen');

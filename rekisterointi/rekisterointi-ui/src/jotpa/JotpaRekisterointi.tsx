@@ -19,6 +19,7 @@ store.dispatch(fetchOrganization());
 setLocale({
     mixed: {
         required: 'validaatio_pakollinen',
+        notType: 'validaatio_geneerinen',
     },
     string: {
         matches: 'validaatio_geneerinen',
