@@ -1,5 +1,6 @@
 import React from 'react';
 import Markdown from 'react-markdown';
+import { Helmet } from 'react-helmet';
 
 import { Header } from './JotpaHeader';
 import { useLanguageContext } from '../LanguageContext';
@@ -22,6 +23,9 @@ export function JotpaValmis() {
     const { i18n } = useLanguageContext();
     return (
         <>
+            <Helmet>
+                <meta name="robots" content="noindex" />
+            </Helmet>
             <Header title={i18n.translate('otsikko_valmis')} />
             <main>
                 <div className="content" data-test-id="valmis-content">

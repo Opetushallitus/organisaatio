@@ -155,6 +155,17 @@ input[type='submit'] {
     cursor: pointer;
 }
 
+input[type='text'] {
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: none;
+    width: 100%;
+    height: 8rem;
+    box-sizing: border-box;
+}
+
 .react-datepicker {
     border-radius: 2px;
     color: var(--gray-font);
@@ -201,15 +212,4 @@ input[type='submit'] {
 .react-datepicker-popper[data-placement^='top'] {
     padding-bottom: 0;
     margin-bottom: -4px;
-}
-
-input[type='text'] {
-    box-sizing: border-box;
-}
-
-textarea {
-    resize: none;
-    width: 100%;
-    height: 8rem;
-    box-sizing: border-box;
 }

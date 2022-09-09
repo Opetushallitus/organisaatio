@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import { setLocale } from 'yup';
+import { Helmet } from 'react-helmet';
 
 import store from './store';
 import { JotpaOrganisaatio } from './JotpaOrganisaatio';
@@ -31,7 +32,7 @@ const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
     (a.nimi[language] ?? 'xxx') > (b.nimi[language] ?? 'xxx') ? 1 : -1;
 
 export function JotpaRekisterointi() {
-    const { language } = useLanguageContext();
+    const { language, i18n } = useLanguageContext();
     const [koodisto, setKoodisto] = useState<Koodistos>({
         kunnat: [],
         yritysmuodot: [],
@@ -86,6 +87,9 @@ export function JotpaRekisterointi() {
 
     return (
         <KoodistoContext.Provider value={koodisto}>
+            <Helmet>
+                <title>{i18n.translate('title')}</title>
+            </Helmet>
             <Provider store={store}>
                 <Routes>
                     <Route path="/organisaatio" element={<JotpaOrganisaatio />} />
