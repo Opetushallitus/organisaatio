@@ -242,6 +242,7 @@ export function JotpaOrganisaatio() {
                                             <div className={styles.removeEmailPlaceholder} />
                                         ) : (
                                             <button
+                                                id={`remove-email-${index}`}
                                                 className={styles.removeEmailButton}
                                                 onClick={preventDefault(() => removeEmail(index))}
                                                 aria-label={i18n.translate('organisaatio_email_remove')}
