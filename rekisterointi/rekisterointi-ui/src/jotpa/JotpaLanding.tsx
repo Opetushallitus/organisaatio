@@ -1,5 +1,6 @@
 import React from 'react';
 import Markdown from 'react-markdown';
+import { Helmet } from 'react-helmet';
 
 import { Header } from './JotpaHeader';
 import { useLanguageContext } from '../LanguageContext';
@@ -22,6 +23,9 @@ export function JotpaLanding() {
     const { i18n } = useLanguageContext();
     return (
         <>
+            <Helmet>
+                <title>{i18n.translate('title')}</title>
+            </Helmet>
             <Header title={i18n.translate('otsikko_rekisterointi')} />
             <main>
                 <div className={styles.bannerContainer}>
