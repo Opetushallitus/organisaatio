@@ -14,10 +14,11 @@ type SelectProps<T extends FieldValues> = {
     name: Path<T>;
     control: Control<T, any>;
     options: Option[];
+    ariaLabel: string;
     error?: FieldError;
 };
 
-export const Select = <T extends FieldValues>({ name, control, options, error }: SelectProps<T>) => {
+export const Select = <T extends FieldValues>({ name, control, options, ariaLabel, error }: SelectProps<T>) => {
     return (
         <div>
             <Controller
@@ -27,14 +28,16 @@ export const Select = <T extends FieldValues>({ name, control, options, error }:
                     <ReactSelect
                         {...field}
                         id={name}
-                        placeholder={null}
+                        inputId={`select-${name}`}
+                        placeholder={`${ariaLabel}...`}
                         styles={reactSelectStyles(!!error)}
                         components={{ DropdownIndicator }}
                         options={options}
+                        aria-label={ariaLabel}
                     />
                 )}
             />
-            <FormError error={error?.message} />
+            <FormError error={error?.message} inputId={name} />
         </div>
     );
 };

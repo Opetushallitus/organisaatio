@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Markdown from 'react-markdown';
 
-import { Header } from '../Header';
+import { Header } from './JotpaHeader';
 import { useKoodistos } from '../KoodistoContext';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { Select } from '../Select';
@@ -125,20 +125,21 @@ export function JotpaOrganisaatio() {
                             <Markdown>{i18n.translate('organisaatio_perustiedot_info')}</Markdown>
                         </div>
                         <div className="label">{i18n.translate('organisaatio_perustiedot_nimi')}</div>
-                        <div>{initialOrganization?.ytjNimi.nimi ?? '...'}</div>
+                        <div data-test-id="yrityksen-nimi">{initialOrganization?.ytjNimi.nimi ?? '...'}</div>
                         <div className="label">{i18n.translate('organisaatio_perustiedot_ytunnus')}</div>
-                        <div>{initialOrganization?.ytunnus ?? '...'}</div>
+                        <div data-test-id="ytunnus">{initialOrganization?.ytunnus ?? '...'}</div>
                         <label className="title" htmlFor="yritysmuoto">
                             {i18n.translate('organisaatio_perustiedot_yritysmuoto')} *
                         </label>
                         <Select<OrganizationFormState>
                             name="yritysmuoto"
+                            ariaLabel={i18n.translate('organisaatio_perustiedot_yritysmuoto')}
                             control={control}
                             error={errors.yritysmuoto?.value}
                             options={yritysmuodot.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
                         />
                         <div className="label">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</div>
-                        <div>
+                        <div data-test-id="organisaatiotyyppi">
                             {organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language] ?? '...'}
                         </div>
                         <label className="title" htmlFor="kotipaikka">
@@ -146,6 +147,7 @@ export function JotpaOrganisaatio() {
                         </label>
                         <Select<OrganizationFormState>
                             name="kotipaikka"
+                            ariaLabel={i18n.translate('organisaatio_perustiedot_kotipaikka')}
                             control={control}
                             error={errors.kotipaikka?.value}
                             options={kunnat.map((k) => ({ value: k.uri, label: k.nimi[language] || k.uri }))}
@@ -179,7 +181,9 @@ export function JotpaOrganisaatio() {
                         </label>
                         <Input name="postinumero" register={register} error={errors.postinumero} />
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postitoimipaikka')}</label>
-                        <div className={styles.postitoimipaikka}>{postitoimipaikka}</div>
+                        <div className={styles.postitoimipaikka} data-test-id="postitoimipaikka">
+                            {postitoimipaikka}
+                        </div>
                         <div className={styles.copyKayntiosoite}>
                             <label htmlFor="copyKayntiosoite">
                                 <input id="copyKayntiosoite" type="checkbox" {...register('copyKayntiosoite')} />{' '}
@@ -209,23 +213,26 @@ export function JotpaOrganisaatio() {
                                 <label className="title">
                                     {i18n.translate('organisaatio_yhteystiedot_kayntipostitoimipaikka')}
                                 </label>
-                                <div className={styles.postitoimipaikka}>{kayntipostitoimipaikka}</div>
+                                <div className={styles.postitoimipaikka} data-test-id="kayntipostitoimipaikka">
+                                    {kayntipostitoimipaikka}
+                                </div>
                             </>
                         )}
                         <h2>{i18n.translate('organisaatio_email')}</h2>
                         <div className={styles.info}>
                             <Markdown>{i18n.translate('organisaatio_email_info')}</Markdown>
                         </div>
-                        <label className="title" htmlFor="firstEmail">
+                        <label id="email-label" className="title" htmlFor="firstEmail">
                             {i18n.translate('organisaatio_email')} *
                         </label>
-                        <FormError error={errors?.emails?.message} />
+                        <FormError error={errors?.emails?.message} inputId="emails" />
                         {emailFields.map((field, index) => {
                             const error = errors.emails?.[index]?.email;
                             return (
                                 <div key={field.id}>
                                     <div className={styles.emailRow}>
                                         <input
+                                            aria-labelledby="email-label"
                                             id={index === 0 ? 'firstEmail' : undefined}
                                             className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
                                             type="text"
@@ -243,13 +250,14 @@ export function JotpaOrganisaatio() {
                                             </button>
                                         )}
                                     </div>
-                                    <FormError error={error?.message} />
+                                    <FormError error={error?.message} inputId={`email-${index}`} />
                                 </div>
                             );
                         })}
                         <button
                             className={styles.addEmailButton}
                             onClick={preventDefault(() => appendEmail({ email: '' }))}
+                            data-test-id="add-email"
                         >
                             <AddEmailLogo />
                             {i18n.translate('organisaatio_email_add')}

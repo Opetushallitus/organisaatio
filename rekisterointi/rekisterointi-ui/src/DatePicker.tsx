@@ -13,7 +13,7 @@ type DatePickerProps<T extends FieldValues> = {
     error?: FieldError;
 };
 
-const dateFormat = 'dd.MM.yyyy';
+const dateFormat = 'd.M.yyyy';
 
 const parseDate = (value: string) => {
     const date = value ? parse(value, dateFormat, new Date()) : null;
@@ -41,7 +41,7 @@ export const DatePicker = <T extends FieldValues>({ name, control, error }: Date
                     />
                 )}
             />
-            <FormError error={error?.message} />
+            <FormError error={error?.message} inputId={name} />
         </div>
     );
 };

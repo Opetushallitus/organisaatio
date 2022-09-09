@@ -1,7 +1,7 @@
 import React from 'react';
 import Markdown from 'react-markdown';
 
-import { Header } from '../Header';
+import { Header } from './JotpaHeader';
 import { useLanguageContext } from '../LanguageContext';
 
 import styles from './JotpaLanding.module.css';

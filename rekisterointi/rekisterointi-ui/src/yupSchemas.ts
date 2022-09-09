@@ -41,4 +41,4 @@ export const DateStringSchema = yup
     .string()
     .nullable()
     .required('validaatio_pakollinen')
-    .matches(/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}/, 'validaatio_geneerinen');
+    .matches(/^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/, 'validaatio_geneerinen');

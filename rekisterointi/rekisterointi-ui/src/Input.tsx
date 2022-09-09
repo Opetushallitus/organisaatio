@@ -21,7 +21,7 @@ export const Input = <T extends FieldValues>({ name, required, register, error }
                 autoComplete="off"
                 {...register(name, { required })}
             />
-            <FormError error={error?.message} />
+            <FormError error={error?.message} inputId={name} />
         </div>
     );
 };

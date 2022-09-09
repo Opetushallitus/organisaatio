@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Markdown from 'react-markdown';
 
-import { Header } from '../Header';
+import { Header } from './JotpaHeader';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { setForm, UserFormState, UserSchema } from '../userSlice';
 import { Input } from '../Input';
@@ -42,7 +42,7 @@ export function JotpaPaakayttaja() {
     return (
         <>
             <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} data-test-id="paakayttaja-form">
                 <main>
                     <div className="content">
                         <RegistrationProgressBar
@@ -74,7 +74,7 @@ export function JotpaPaakayttaja() {
                             <label htmlFor="sv">
                                 <input id="sv" type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
                             </label>
-                            <FormError error={errors.asiointikieli?.message} />
+                            <FormError error={errors.asiointikieli?.message} inputId="asiointikieli" />
                         </div>
                         <label className="title" htmlFor="info">
                             {i18n.translate('paakayttaja_saateteksti')}

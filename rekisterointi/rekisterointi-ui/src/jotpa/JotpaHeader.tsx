@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { LanguageSwitcher } from '../LanguageSwitcher';
+
+import styles from './jotpa.module.css';
 
 type HeaderProps = {
     title: string;
@@ -11,7 +13,7 @@ export function Header({ title }: HeaderProps) {
         <header>
             <div className="header">
                 <div>
-                    <img src="/jotpa_logo.png" alt="Jotpa logo" />
+                    <img className={styles.jotpaLogo} src="/jotpa_logo.png" alt="Jotpa logo" />
                 </div>
                 <LanguageSwitcher />
             </div>

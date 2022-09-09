@@ -1,3 +1,7 @@
+.jotpaLogo {
+    width: 211px;
+}
+
 .infoList {
     box-sizing: border-box;
     width: 100%;
@@ -79,7 +83,7 @@
 }
 
 .emailInput {
-    height: 38px;
+    height: 40px;
     width: 100%;
     padding: 2px 8px;
     border-radius: 2px;

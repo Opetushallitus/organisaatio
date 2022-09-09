@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import Markdown from 'react-markdown';
 
 import { useJotpaRekisterointiSelector } from './store';
-import { Header } from '../Header';
+import { Header } from './JotpaHeader';
 import { findPostitoimipaikka } from '../addressUtils';
 import { useKoodistos } from '../KoodistoContext';
 import { useLanguageContext } from '../LanguageContext';
@@ -53,57 +53,61 @@ export function JotpaYhteenveto() {
                         </div>
                         <h3>{i18n.translate('organisaatio_otsikko')}</h3>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_nimi')}</label>
-                        <div>{initialOrganization?.ytjNimi.nimi}</div>
+                        <div data-test-id="yrityksen-nimi">{initialOrganization?.ytjNimi.nimi}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_ytunnus')}</label>
-                        <div>{initialOrganization?.ytunnus}</div>
+                        <div data-test-id="ytunnus">{initialOrganization?.ytunnus}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_yritysmuoto')}</label>
-                        <div>{organizationForm?.yritysmuoto.label}</div>
+                        <div data-test-id="yritysmuoto">{organizationForm?.yritysmuoto.label}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</label>
-                        <div>{organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language]}</div>
+                        <div data-test-id="organisaatiotyyppi">
+                            {organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language]}
+                        </div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_kotipaikka')}</label>
-                        <div>{organizationForm?.kotipaikka.label}</div>
+                        <div data-test-id="kotipaikka">{organizationForm?.kotipaikka.label}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_alkamisaika')}</label>
-                        <div>{organizationForm?.alkamisaika}</div>
+                        <div data-test-id="alkamisaika">{organizationForm?.alkamisaika}</div>
                         <h3>{i18n.translate('organisaatio_yhteystiedot')}</h3>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_puhelinnumero')}</label>
-                        <div>{organizationForm?.puhelinnumero}</div>
+                        <div data-test-id="puhelinnumero">{organizationForm?.puhelinnumero}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_email')}</label>
-                        <div>{organizationForm?.email}</div>
+                        <div data-test-id="organisaatio-email">{organizationForm?.email}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postiosoite')}</label>
-                        <div>{organizationForm?.postiosoite}</div>
+                        <div data-test-id="postiosoite">{organizationForm?.postiosoite}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postinumero')}</label>
-                        <div>{organizationForm?.postinumero}</div>
+                        <div data-test-id="postinumero">{organizationForm?.postinumero}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postitoimipaikka')}</label>
-                        <div>
+                        <div data-test-id="postitoimipaikka">
                             {organizationForm?.postinumero &&
                                 findPostitoimipaikka(organizationForm?.postinumero, posti, language)}
                         </div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_kayntiosoite')}</label>
-                        <div>{kayntiosoite}</div>
+                        <div data-test-id="kayntiosoite">{kayntiosoite}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_kayntipostinumero')}</label>
-                        <div>{kayntipostinumero}</div>
+                        <div data-test-id="kayntipostinumero">{kayntipostinumero}</div>
                         <label className="title">
                             {i18n.translate('organisaatio_yhteystiedot_kayntipostitoimipaikka')}
                         </label>
-                        <div>{kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti, language)}</div>
+                        <div data-test-id="kayntipostitoimipaikka">
+                            {kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti, language)}
+                        </div>
                         <h3>{i18n.translate('organisaatio_email')}</h3>
                         <label className="title">{i18n.translate('organisaatio_email')}</label>
-                        <div>
+                        <div data-test-id="emails">
                             {organizationForm?.emails.map((e) => (
                                 <div key={e.email}>{e.email}</div>
                             ))}
                         </div>
                         <h3>{i18n.translate('paakayttaja_otsikko')}</h3>
                         <label className="title">{i18n.translate('paakayttaja_etunimi')}</label>
-                        <div>{userForm?.etunimi}</div>
+                        <div data-test-id="etunimi">{userForm?.etunimi}</div>
                         <label className="title">{i18n.translate('paakayttaja_sukunimi')}</label>
-                        <div>{userForm?.sukunimi}</div>
+                        <div data-test-id="sukunimi">{userForm?.sukunimi}</div>
                         <label className="title">{i18n.translate('paakayttaja_email')}</label>
-                        <div>{userForm?.email}</div>
+                        <div data-test-id="paakayttaja-email">{userForm?.email}</div>
                         <label className="title">{i18n.translate('paakayttaja_asiointikieli')}</label>
-                        <div>{userForm?.asiointikieli === 'fi' ? 'Suomi' : 'Ruotsi'}</div>
+                        <div data-test-id="asiointikieli">{userForm?.asiointikieli === 'fi' ? 'Suomi' : 'Ruotsi'}</div>
                         <label className="title">{i18n.translate('paakayttaja_saateteksti')}</label>
-                        <div>{userForm?.info}</div>
+                        <div data-test-id="info">{userForm?.info}</div>
                         <div className={styles.buttons}>
                             <button
                                 role="link"

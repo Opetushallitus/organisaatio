@@ -1,7 +1,7 @@
 import React from 'react';
 import Markdown from 'react-markdown';
 
-import { Header } from '../Header';
+import { Header } from './JotpaHeader';
 import { useLanguageContext } from '../LanguageContext';
 import { KayttajaLogo, OdotusLogo } from './JotpaProsessikuvaus';
 
@@ -24,7 +24,7 @@ export function JotpaValmis() {
         <>
             <Header title={i18n.translate('otsikko_valmis')} />
             <main>
-                <div className="content">
+                <div className="content" data-test-id="valmis-content">
                     <div className={styles.successContent}>
                         <div className={styles.success}>
                             <div>
