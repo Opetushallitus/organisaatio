@@ -30,8 +30,8 @@ public class AWSSNSAspect {
         if (updated instanceof OrganisaatioRDTOV4) {
             OrganisaatioRDTOV4 updatedOrg = (OrganisaatioRDTOV4) updated;
             Organisaatio oldOrg = organisaatioRepository.customFindByOid(updatedOrg.getOid());
-            if (!OrganisaatioUtil.isSameDay(updatedOrg.getLakkautusPvm(), oldOrg.getLakkautusPvm())) {
-                String message =new ObjectMapper().writeValueAsString(Map.of("oid", updatedOrg.getOid()));
+            if (oldOrg != null && !OrganisaatioUtil.isSameDay(updatedOrg.getLakkautusPvm(), oldOrg.getLakkautusPvm())) {
+                String message = new ObjectMapper().writeValueAsString(Map.of("oid", updatedOrg.getOid()));
                 lakkautusTopic.pubTopic(message);
             }
         } else {
