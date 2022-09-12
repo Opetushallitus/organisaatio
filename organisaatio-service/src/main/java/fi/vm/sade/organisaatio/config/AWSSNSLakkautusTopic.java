@@ -12,9 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AWSSNSLakkautusTopic {
-
     private final AmazonSNSClient amazonSNSClient;
-    private final String topicArn;//= "arn:aws:sns:eu-west-1:153563371259:untuva-organisaatiolakkautus";
+    private final String topicArn;
     private final boolean enabled;
 
     public AWSSNSLakkautusTopic(AWSSNSClientConfiguration configuration, AmazonSNSClient amazonSNSClient) {
