@@ -187,16 +187,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTOV3 model) throws ValidationException {
-        // Luodaan tallennettava entity objekti
-        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if (entity != null && entity.getOid() != null) {
-            return update(entity, model.getParentOid());
-        }
-        return save(entity, model.getParentOid());
-    }
-
-    @Override
     public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException {
         // Luodaan tallennettava entity objekti
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
