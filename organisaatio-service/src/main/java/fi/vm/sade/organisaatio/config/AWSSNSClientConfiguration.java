@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @ConfigurationProperties(prefix = "aws.sns")
 public class AWSSNSClientConfiguration {
-    private String topicArn;
+    private String lakkautusTopicArn;
     private boolean enabled;
 
     @Bean

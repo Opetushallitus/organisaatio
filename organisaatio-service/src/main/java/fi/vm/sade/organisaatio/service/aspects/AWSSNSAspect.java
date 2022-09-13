@@ -1,8 +1,8 @@
 package fi.vm.sade.organisaatio.service.aspects;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.config.AWSSNSLakkautusTopic;
-import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -24,18 +25,36 @@ public class AWSSNSAspect {
     private final AWSSNSLakkautusTopic lakkautusTopic;
     private final OrganisaatioRepository organisaatioRepository;
 
-    @Before("execution(public * fi.vm.sade.organisaatio.business.OrganisaatioBusinessService.saveOrUpdate(..))")
-    private void updateOrgAdvice(JoinPoint jp) throws Throwable {
+    @Pointcut("execution(public * fi.vm.sade.organisaatio.repository.OrganisaatioRepository.saveAndFlush(..))))")
+    private void saveAndFlushOrganisaatio() {
+        // Pointcut for saveAndFlush
+    }
+
+    @Pointcut("execution(* fi.vm.sade.organisaatio.repository.OrganisaatioRepository.save(..))))")
+    private void saveOrganisaatio() {
+        // Pointcut for save
+    }
+
+    @Before("saveOrganisaatio() || saveAndFlushOrganisaatio()")
+    private void publishSNSOnSaveOrganisaatio(JoinPoint jp) throws Throwable {
         Object updated = jp.getArgs()[0];
-        if (updated instanceof OrganisaatioRDTOV4) {
-            OrganisaatioRDTOV4 updatedOrg = (OrganisaatioRDTOV4) updated;
+        if (updated instanceof Organisaatio) {
+            Organisaatio updatedOrg = (Organisaatio) updated;
             Organisaatio oldOrg = organisaatioRepository.customFindByOid(updatedOrg.getOid());
-            if (oldOrg != null && !OrganisaatioUtil.isSameDay(updatedOrg.getLakkautusPvm(), oldOrg.getLakkautusPvm())) {
-                String message = new ObjectMapper().writeValueAsString(Map.of("oid", updatedOrg.getOid()));
-                lakkautusTopic.pubTopic(message);
-            }
+            handleLakkautusPvmChange(updatedOrg, oldOrg);
         } else {
             log.error("SNS PULBISH FAILED for {}, {}", updated, updated.getClass().getName());
         }
+    }
+
+    private void handleLakkautusPvmChange(Organisaatio updatedOrg, Organisaatio oldOrg) throws JsonProcessingException {
+        if (lakkautusPvmChanged(updatedOrg, oldOrg)) {
+            String message = new ObjectMapper().writeValueAsString(Map.of("oid", updatedOrg.getOid()));
+            lakkautusTopic.pubTopic(message);
+        }
+    }
+
+    private static boolean lakkautusPvmChanged(Organisaatio updatedOrg, Organisaatio oldOrg) {
+        return oldOrg != null && !OrganisaatioUtil.isSameDay(updatedOrg.getLakkautusPvm(), oldOrg.getLakkautusPvm());
     }
 }

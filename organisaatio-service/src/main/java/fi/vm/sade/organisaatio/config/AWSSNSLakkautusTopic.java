@@ -4,8 +4,6 @@ import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.AmazonSNSException;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.PublishResult;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +15,10 @@ public class AWSSNSLakkautusTopic {
     private final boolean enabled;
 
     public AWSSNSLakkautusTopic(AWSSNSClientConfiguration configuration, AmazonSNSClient amazonSNSClient) {
-        this.topicArn = configuration.getTopicArn();
+        this.topicArn = configuration.getLakkautusTopicArn();
         this.enabled = configuration.isEnabled();
         this.amazonSNSClient = amazonSNSClient;
+        log.info("Initialized ");
     }
 
     public void pubTopic(String message) {
@@ -31,7 +30,6 @@ public class AWSSNSLakkautusTopic {
                 log.debug("{} Message sent. Status is {}",
                         result.getMessageId(),
                         result.getSdkHttpMetadata().getHttpStatusCode());
-
             } catch (AmazonSNSException e) {
                 log.error(e.getErrorMessage());
             }
