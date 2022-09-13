@@ -15,10 +15,9 @@
 
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
