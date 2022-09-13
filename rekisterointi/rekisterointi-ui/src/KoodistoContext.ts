@@ -5,7 +5,6 @@ export interface Koodistos {
     kunnat: Koodi[];
     yritysmuodot: Koodi[];
     organisaatiotyypit: Koodi[];
-    maat: Koodi[];
     posti: Koodi[];
     postinumerot: string[];
 }
@@ -14,7 +13,6 @@ const defaultKoodistos = {
     kunnat: [],
     yritysmuodot: [],
     organisaatiotyypit: [],
-    maat: [],
     posti: [],
     postinumerot: [],
 };

@@ -64,7 +64,7 @@ export function JotpaPaakayttaja() {
                         <label className="title" htmlFor="email">
                             {i18n.translate('paakayttaja_email')} *
                         </label>
-                        <Input name="email" register={register} error={errors.email} />
+                        <Input name="paakayttajaEmail" register={register} error={errors.paakayttajaEmail} />
                         <label className="title">{i18n.translate('paakayttaja_asiointikieli')} *</label>
                         <div className={styles.radioButtons}>
                             <label htmlFor="fi">

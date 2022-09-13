@@ -7,7 +7,7 @@ import { EmailSchema } from './yupSchemas';
 export interface UserFormState {
     etunimi: string;
     sukunimi: string;
-    email: string;
+    paakayttajaEmail: string;
     asiointikieli: Language;
     info?: string;
 }
@@ -35,7 +35,7 @@ export const { setForm } = userSlice.actions;
 export const UserSchema: yup.SchemaOf<UserFormState> = yup.object().shape({
     etunimi: yup.string().required('validaatio_pakollinen'),
     sukunimi: yup.string().required('validaatio_pakollinen'),
-    email: EmailSchema,
+    paakayttajaEmail: EmailSchema,
     asiointikieli: yup.mixed().oneOf<Language>(['fi', 'sv']).required('validaatio_pakollinen'),
     info: yup.string().optional(),
 });

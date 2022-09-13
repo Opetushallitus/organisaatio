@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Markdown from 'react-markdown';
+import axios, { AxiosResponse } from 'axios';
 
 import { useJotpaRekisterointiSelector } from './store';
 import { Header } from './JotpaHeader';
@@ -8,8 +9,11 @@ import { findPostitoimipaikka } from '../addressUtils';
 import { useKoodistos } from '../KoodistoContext';
 import { useLanguageContext } from '../LanguageContext';
 import { RegistrationProgressBar } from '../RegistrationProgressBar';
+import { RekisterointiRequest } from '../types';
 
 import styles from './jotpa.module.css';
+import { OrganizationFormState } from '../organizationSlice';
+import { UserFormState } from '../userSlice';
 
 export function JotpaYhteenveto() {
     const navigate = useNavigate();
@@ -24,19 +28,33 @@ export function JotpaYhteenveto() {
         window.scrollTo(0, 0);
     }, []);
 
+    const kayntiosoite = organizationForm?.copyKayntiosoite
+        ? organizationForm.postiosoite
+        : organizationForm?.kayntiosoite!;
+    const kayntipostinumero = organizationForm?.copyKayntiosoite
+        ? organizationForm.postinumero
+        : organizationForm?.kayntipostinumero!;
+
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        // do submit
         e.preventDefault();
         e.stopPropagation();
+        const organization: OrganizationFormState = organizationForm!;
+        const user: UserFormState = userForm!;
+        axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
+            ...organization,
+            yritysmuoto: organization.yritysmuoto.value!,
+            kotipaikka: organization.kotipaikka.value!,
+            postinumero: `posti_${organization.postinumero}`,
+            postitoimipaikka: findPostitoimipaikka(organization.postinumero, posti, language)!,
+            kayntiosoite,
+            kayntipostinumero: `posti_${kayntipostinumero}`,
+            kayntipostitoimipaikka: findPostitoimipaikka(kayntipostinumero, posti, language)!,
+            emails: organization.emails.map((e) => e.email).filter((e) => !!e) as string[],
+            ...user,
+        });
         window.location.href = '/hakija/logout?redirect=/jotpa/valmis';
     };
 
-    const kayntiosoite = organizationForm?.copyKayntiosoite
-        ? organizationForm.postiosoite
-        : organizationForm?.kayntiosoite;
-    const kayntipostinumero = organizationForm?.copyKayntiosoite
-        ? organizationForm.postinumero
-        : organizationForm?.kayntipostinumero;
     return (
         <>
             <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
@@ -103,7 +121,7 @@ export function JotpaYhteenveto() {
                         <label className="title">{i18n.translate('paakayttaja_sukunimi')}</label>
                         <div data-test-id="sukunimi">{userForm?.sukunimi}</div>
                         <label className="title">{i18n.translate('paakayttaja_email')}</label>
-                        <div data-test-id="paakayttaja-email">{userForm?.email}</div>
+                        <div data-test-id="paakayttaja-email">{userForm?.paakayttajaEmail}</div>
                         <label className="title">{i18n.translate('paakayttaja_asiointikieli')}</label>
                         <div data-test-id="asiointikieli">{userForm?.asiointikieli === 'fi' ? 'Suomi' : 'Ruotsi'}</div>
                         <label className="title">{i18n.translate('paakayttaja_saateteksti')}</label>

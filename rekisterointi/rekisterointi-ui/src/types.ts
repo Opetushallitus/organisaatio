@@ -44,3 +44,24 @@ export type Organization = {
 };
 
 export type SelectOption = { value: string; label: string };
+
+export type RekisterointiRequest = {
+    yritysmuoto: string;
+    kotipaikka: string;
+    alkamisaika: string;
+    puhelinnumero: string;
+    email: string;
+    postiosoite: string;
+    postinumero: string;
+    postitoimipaikka: string;
+    copyKayntiosoite: boolean;
+    kayntiosoite: string;
+    kayntipostinumero: string;
+    kayntipostitoimipaikka: string;
+    emails: string[];
+    etunimi: string;
+    sukunimi: string;
+    paakayttajaEmail: string;
+    asiointikieli: Language;
+    info?: string;
+};
