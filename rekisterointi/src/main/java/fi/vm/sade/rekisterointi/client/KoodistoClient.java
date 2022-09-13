@@ -6,7 +6,6 @@ import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.model.BaseDto;
 import fi.vm.sade.rekisterointi.model.Koodi;
 import fi.vm.sade.rekisterointi.model.KoodistoType;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

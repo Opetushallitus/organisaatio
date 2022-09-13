@@ -70,11 +70,9 @@ public class DevWebSecurityConfiguration {
         ServletRequest request,
         ServletResponse response,
         FilterChain chain) throws IOException, ServletException {
-      if (request instanceof HttpServletRequest) {
-        var httpRequest = (HttpServletRequest) request;
-        setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, "0772017-4");
-        setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, "Meyer Turku Oy");
-      }
+      var httpRequest = (HttpServletRequest) request;
+      setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, "0772017-4");
+      setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, "Meyer Turku Oy");
       chain.doFilter(request, response);
     }
   }

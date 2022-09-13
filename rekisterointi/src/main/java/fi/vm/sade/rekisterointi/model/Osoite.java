@@ -1,10 +1,9 @@
 package fi.vm.sade.rekisterointi.model;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-@AllArgsConstructor(staticName = "of", access = AccessLevel.PRIVATE)
+@AllArgsConstructor(staticName = "of")
 @Builder
 public class Osoite {
 

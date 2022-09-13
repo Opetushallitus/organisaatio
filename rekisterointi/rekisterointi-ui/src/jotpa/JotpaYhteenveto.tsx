@@ -14,6 +14,7 @@ import { RekisterointiRequest } from '../types';
 import styles from './jotpa.module.css';
 import { OrganizationFormState } from '../organizationSlice';
 import { UserFormState } from '../userSlice';
+import { format, parse } from 'date-fns';
 
 export function JotpaYhteenveto() {
     const navigate = useNavigate();
@@ -35,15 +36,16 @@ export function JotpaYhteenveto() {
         ? organizationForm.postinumero
         : organizationForm?.kayntipostinumero!;
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
         const organization: OrganizationFormState = organizationForm!;
         const user: UserFormState = userForm!;
-        axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
+        await axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
             ...organization,
             yritysmuoto: organization.yritysmuoto.value!,
             kotipaikka: organization.kotipaikka.value!,
+            alkamisaika: format(parse(organization.alkamisaika, 'd.M.yyyy', new Date()), 'yyyy-MM-dd'),
             postinumero: `posti_${organization.postinumero}`,
             postitoimipaikka: findPostitoimipaikka(organization.postinumero, posti, language)!,
             kayntiosoite,
