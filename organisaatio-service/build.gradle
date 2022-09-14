@@ -112,6 +112,12 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-access', version: '1.2.3'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sns
+    implementation 'com.amazonaws:aws-java-sdk-sns:1.12.300'
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
     // QueryDSL
     // For javax/persistence/Entity
     annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'

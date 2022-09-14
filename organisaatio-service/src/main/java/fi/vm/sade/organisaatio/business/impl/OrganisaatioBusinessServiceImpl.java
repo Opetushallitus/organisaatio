@@ -27,7 +27,6 @@ import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
@@ -181,16 +180,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new ValidationException("validation.organisaatio.convert.error");
         }
         if (entity.getOid() != null) {
-            return update(entity, model.getParentOid());
-        }
-        return save(entity, model.getParentOid());
-    }
-
-    @Override
-    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTOV3 model) throws ValidationException {
-        // Luodaan tallennettava entity objekti
-        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if (entity != null && entity.getOid() != null) {
             return update(entity, model.getParentOid());
         }
         return save(entity, model.getParentOid());
@@ -1118,7 +1107,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         try {
             entity.setPaivittaja(getCurrentUser());
             entity.setPaivitysPvm(new Date());
-        } catch (Throwable t) {
+        } catch (Exception t) {
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, t.getMessage(), "error.setting.updater");
         }
     }
