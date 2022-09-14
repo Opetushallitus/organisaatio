@@ -78,7 +78,7 @@ public class RekisterointiController {
         yhteystiedot,
         false);
     var kayttaja = Kayttaja.of(dto.etunimi, dto.sukunimi, dto.paakayttajaEmail, dto.asiointikieli, dto.info);
-    var backendRequest = RekisterointiDto.of(organisaatio, dto.emails, kayttaja);
+    var backendRequest = RekisterointiDto.of(organisaatio, "jotpa", dto.emails, kayttaja);
     client.create(backendRequest);
     return "ok";
   }

@@ -17,6 +17,9 @@ public class RekisterointiDto {
   @Valid
   public final Organisaatio organisaatio;
 
+  @NotNull
+  public final String toimintamuoto;
+
   @NotEmpty
   public final Set<@Email String> sahkopostit;
 
