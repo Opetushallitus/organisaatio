@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.service.aspects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.config.AWSSNSLakkautusTopic;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
@@ -24,6 +23,7 @@ import java.util.Map;
 public class AWSSNSAspect {
     private final AWSSNSLakkautusTopic lakkautusTopic;
     private final OrganisaatioRepository organisaatioRepository;
+
 
     @Pointcut("execution(public * fi.vm.sade.organisaatio.repository.OrganisaatioRepository.saveAndFlush(..))))")
     private void saveAndFlushOrganisaatio() {
@@ -49,8 +49,7 @@ public class AWSSNSAspect {
 
     private void handleLakkautusPvmChange(Organisaatio updatedOrg, Organisaatio oldOrg) throws JsonProcessingException {
         if (lakkautusPvmChanged(updatedOrg, oldOrg)) {
-            String message = new ObjectMapper().writeValueAsString(Map.of("oid", updatedOrg.getOid()));
-            lakkautusTopic.pubTopic(message);
+            lakkautusTopic.pubTopic(Map.of("oid", updatedOrg.getOid()));
         }
     }
 
