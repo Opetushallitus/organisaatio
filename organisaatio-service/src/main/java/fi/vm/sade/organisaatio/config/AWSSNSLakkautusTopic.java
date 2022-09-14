@@ -27,17 +27,19 @@ public class AWSSNSLakkautusTopic {
         log.info("Initialized AWSSNSLakkautusTopic {} {}", enabled, topicArn);
     }
 
-    public void pubTopic(Map message) throws JsonProcessingException {
+    public void pubTopic(Map<String, String> message) {
         if (enabled) {
             try {
                 PublishResult result = amazonSNSClient.publish(new PublishRequest()
                         .withTopicArn(topicArn)
                         .withMessage(objectMapper.writeValueAsString(message)));
-                log.debug("{} Message sent. Status is {}",
+                log.info("{} message sent with status {}",
                         result.getMessageId(),
                         result.getSdkHttpMetadata().getHttpStatusCode());
             } catch (AmazonSNSException e) {
-                log.error(e.getErrorMessage());
+                log.error(e.getErrorMessage(), e);
+            } catch (JsonProcessingException e) {
+                log.error(e.getMessage(), e);
             }
         } else {
             log.info("SNS Lakkautus aspect disabled {}", message);

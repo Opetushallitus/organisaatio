@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.service.aspects;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import fi.vm.sade.organisaatio.config.AWSSNSLakkautusTopic;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
@@ -36,7 +35,7 @@ public class AWSSNSAspect {
     }
 
     @Before("saveOrganisaatio() || saveAndFlushOrganisaatio()")
-    private void publishSNSOnSaveOrganisaatio(JoinPoint jp) throws Throwable {
+    private void publishSNSOnSaveOrganisaatio(JoinPoint jp)  {
         Object updated = jp.getArgs()[0];
         if (updated instanceof Organisaatio) {
             Organisaatio updatedOrg = (Organisaatio) updated;
@@ -47,7 +46,7 @@ public class AWSSNSAspect {
         }
     }
 
-    private void handleLakkautusPvmChange(Organisaatio updatedOrg, Organisaatio oldOrg) throws JsonProcessingException {
+    private void handleLakkautusPvmChange(Organisaatio updatedOrg, Organisaatio oldOrg)  {
         if (lakkautusPvmChanged(updatedOrg, oldOrg)) {
             lakkautusTopic.pubTopic(Map.of("oid", updatedOrg.getOid()));
         }
