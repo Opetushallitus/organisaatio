@@ -17,7 +17,7 @@ export function JotpaPaakayttajaFn(page: Page) {
     }
 
     async function fillEmail(email: string = 'paakayttaja@oph.fi') {
-        await page.fill('#email', email);
+        await page.fill('#paakayttajaEmail', email);
     }
 
     async function selectAsiointikieli(language: Language = 'fi') {
