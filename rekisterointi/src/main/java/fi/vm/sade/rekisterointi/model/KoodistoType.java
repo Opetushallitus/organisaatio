@@ -5,9 +5,7 @@ public enum KoodistoType {
     ORGANISAATIOTYYPPI("organisaatiotyyppi"),
     KUNTA("kunta"),
     MAAT_JA_VALTIOT_1("maatjavaltiot1"),
-    POSTI("posti"),
-    VARDA_TOIMINTAMUOTO("vardatoimintamuoto"),
-    OPETUSKIELI("oppilaitoksenopetuskieli");
+    POSTI("posti");
 
     public final String uri;
 
