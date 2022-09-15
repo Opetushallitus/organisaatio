@@ -16,7 +16,7 @@ test('Paakayttaja validation', async ({ pages }) => {
 
     await expect(paakayttaja.locators.error('etunimi')).toHaveText('Pakollinen tieto');
     await expect(paakayttaja.locators.error('sukunimi')).toHaveText('Pakollinen tieto');
-    await expect(paakayttaja.locators.error('email')).toHaveText('Pakollinen tieto');
+    await expect(paakayttaja.locators.error('paakayttajaEmail')).toHaveText('Pakollinen tieto');
     await expect(paakayttaja.locators.error('asiointikieli')).toHaveText('Pakollinen tieto');
 
     await paakayttaja.fillEtunimi();
@@ -26,9 +26,9 @@ test('Paakayttaja validation', async ({ pages }) => {
     await expect(paakayttaja.locators.error('sukunimi')).toBeHidden();
 
     await paakayttaja.fillEmail('sahko@posti');
-    await expect(organisaatio.locators.error('email')).toHaveText('Virheellinen sähköposti');
+    await expect(organisaatio.locators.error('paakayttajaEmail')).toHaveText('Virheellinen sähköposti');
     await paakayttaja.fillEmail();
-    await expect(organisaatio.locators.error('email')).toBeHidden();
+    await expect(organisaatio.locators.error('paakayttajaEmail')).toBeHidden();
 
     await paakayttaja.selectAsiointikieli('sv');
     await expect(organisaatio.locators.error('asiointikieli')).toBeHidden();
