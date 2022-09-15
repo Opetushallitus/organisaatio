@@ -11,17 +11,17 @@ import {
     PostiosoiteSchema,
     PuhelinnumeroSchema,
 } from './yupSchemas';
-import { Koodi, Organization, SelectOption } from './types';
+import { Koodi, Organisation, SelectOption } from './types';
 
-export const fetchOrganization = createAsyncThunk<Organization, void>(
-    'organization/fetchOrganization',
+export const fetchOrganisation = createAsyncThunk<Organisation, void>(
+    'organisation/fetchOrganisation',
     async (_, thunkAPI) => {
-        const resp = await axios.get<Organization>('/hakija/api/organisaatiot');
+        const resp = await axios.get<Organisation>('/hakija/api/organisaatiot');
         return resp.data;
     }
 );
 
-export interface OrganizationFormState {
+export interface OrganisationFormState {
     yritysmuoto: SelectOption;
     kotipaikka: SelectOption;
     alkamisaika: string;
@@ -37,43 +37,43 @@ export interface OrganizationFormState {
 
 interface State {
     loading: boolean;
-    initialOrganization?: Organization;
-    form?: OrganizationFormState;
+    initialOrganisation?: Organisation;
+    form?: OrganisationFormState;
 }
 
 const initialState: State = {
     loading: true,
 };
 
-const organizationSlice = createSlice({
-    name: 'organization',
+const organisationSlice = createSlice({
+    name: 'organisation',
     initialState,
     reducers: {
-        setForm: (state, action: PayloadAction<OrganizationFormState>) => {
+        setForm: (state, action: PayloadAction<OrganisationFormState>) => {
             state.form = action.payload;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchOrganization.pending, (state) => {
+            .addCase(fetchOrganisation.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(fetchOrganization.fulfilled, (state, action) => {
+            .addCase(fetchOrganisation.fulfilled, (state, action) => {
                 state.loading = false;
-                state.initialOrganization = action.payload;
+                state.initialOrganisation = action.payload;
             });
     },
 });
 
-export default organizationSlice.reducer;
+export default organisationSlice.reducer;
 
-export const { setForm } = organizationSlice.actions;
+export const { setForm } = organisationSlice.actions;
 
-export const OrganizationSchema = (
+export const OrganisationSchema = (
     yritysmuodot: Koodi[],
     kunnat: Koodi[],
     postinumerot: string[]
-): yup.SchemaOf<OrganizationFormState> =>
+): yup.SchemaOf<OrganisationFormState> =>
     yup.object().shape({
         yritysmuoto: KoodiSchema(yritysmuodot),
         kotipaikka: KoodiSchema(kunnat),

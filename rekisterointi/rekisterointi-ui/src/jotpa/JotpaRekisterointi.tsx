@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 
 import store from './store';
 import { JotpaOrganisaatio } from './JotpaOrganisaatio';
-import { fetchOrganization, OrganizationSchema } from '../organizationSlice';
+import { fetchOrganisation, OrganisationSchema } from '../organisationSlice';
 import { KoodistoContext, Koodistos } from '../KoodistoContext';
 import { Koodi, Language } from '../types';
 import { JotpaPaakayttaja } from './JotpaPaakayttaja';
@@ -16,7 +16,7 @@ import { useLanguageContext } from '../LanguageContext';
 import { UserSchema } from '../userSlice';
 import { JotpaYhteenveto } from './JotpaYhteenveto';
 
-store.dispatch(fetchOrganization());
+store.dispatch(fetchOrganisation());
 setLocale({
     mixed: {
         required: 'validaatio_pakollinen',
@@ -65,9 +65,9 @@ export function JotpaRekisterointi() {
         void fetchKoodisto();
     }, []);
 
-    const organizationValidation = {
-        slice: 'organization' as const,
-        schema: OrganizationSchema(koodisto.yritysmuodot, koodisto.kunnat, koodisto.postinumerot),
+    const organisationValidation = {
+        slice: 'organisation' as const,
+        schema: OrganisationSchema(koodisto.yritysmuodot, koodisto.kunnat, koodisto.postinumerot),
         redirectPath: '/hakija/jotpa/organisaatio',
     };
     const userValidation = {
@@ -87,7 +87,7 @@ export function JotpaRekisterointi() {
                     <Route
                         path="/paakayttaja"
                         element={
-                            <JotpaWizardValidator validate={[organizationValidation]}>
+                            <JotpaWizardValidator validate={[organisationValidation]}>
                                 <JotpaPaakayttaja />
                             </JotpaWizardValidator>
                         }
@@ -95,7 +95,7 @@ export function JotpaRekisterointi() {
                     <Route
                         path="/yhteenveto"
                         element={
-                            <JotpaWizardValidator validate={[organizationValidation, userValidation]}>
+                            <JotpaWizardValidator validate={[organisationValidation, userValidation]}>
                                 <JotpaYhteenveto />
                             </JotpaWizardValidator>
                         }

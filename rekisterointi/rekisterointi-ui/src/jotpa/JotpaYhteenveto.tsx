@@ -12,7 +12,7 @@ import { RegistrationProgressBar } from '../RegistrationProgressBar';
 import { RekisterointiRequest } from '../types';
 
 import styles from './jotpa.module.css';
-import { OrganizationFormState } from '../organizationSlice';
+import { OrganisationFormState } from '../organisationSlice';
 import { UserFormState } from '../userSlice';
 import { format, parse } from 'date-fns';
 
@@ -21,7 +21,7 @@ export function JotpaYhteenveto() {
     const { language, i18n } = useLanguageContext();
     const { organisaatiotyypit, posti } = useKoodistos();
     const {
-        organization: { initialOrganization, form: organizationForm },
+        organisation: { initialOrganisation, form: organisationForm },
         user: { form: userForm },
     } = useJotpaRekisterointiSelector((state) => state);
 
@@ -29,29 +29,29 @@ export function JotpaYhteenveto() {
         window.scrollTo(0, 0);
     }, []);
 
-    const kayntiosoite = organizationForm?.copyKayntiosoite
-        ? organizationForm.postiosoite
-        : organizationForm?.kayntiosoite!;
-    const kayntipostinumero = organizationForm?.copyKayntiosoite
-        ? organizationForm.postinumero
-        : organizationForm?.kayntipostinumero!;
+    const kayntiosoite = organisationForm?.copyKayntiosoite
+        ? organisationForm.postiosoite
+        : organisationForm?.kayntiosoite!;
+    const kayntipostinumero = organisationForm?.copyKayntiosoite
+        ? organisationForm.postinumero
+        : organisationForm?.kayntipostinumero!;
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        const organization: OrganizationFormState = organizationForm!;
+        const organisation: OrganisationFormState = organisationForm!;
         const user: UserFormState = userForm!;
         await axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
-            ...organization,
-            yritysmuoto: organization.yritysmuoto.value!,
-            kotipaikka: organization.kotipaikka.value!,
-            alkamisaika: format(parse(organization.alkamisaika, 'd.M.yyyy', new Date()), 'yyyy-MM-dd'),
-            postinumero: `posti_${organization.postinumero}`,
-            postitoimipaikka: findPostitoimipaikka(organization.postinumero, posti, language)!,
+            ...organisation,
+            yritysmuoto: organisation.yritysmuoto.value!,
+            kotipaikka: organisation.kotipaikka.value!,
+            alkamisaika: format(parse(organisation.alkamisaika, 'd.M.yyyy', new Date()), 'yyyy-MM-dd'),
+            postinumero: `posti_${organisation.postinumero}`,
+            postitoimipaikka: findPostitoimipaikka(organisation.postinumero, posti, language)!,
             kayntiosoite,
             kayntipostinumero: `posti_${kayntipostinumero}`,
             kayntipostitoimipaikka: findPostitoimipaikka(kayntipostinumero, posti, language)!,
-            emails: organization.emails.map((e) => e.email).filter((e) => !!e) as string[],
+            emails: organisation.emails.map((e) => e.email).filter((e) => !!e) as string[],
             ...user,
         });
         window.location.href = '/hakija/logout?redirect=/jotpa/valmis';
@@ -73,32 +73,32 @@ export function JotpaYhteenveto() {
                         </div>
                         <h3>{i18n.translate('organisaatio_otsikko')}</h3>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_nimi')}</label>
-                        <div data-test-id="yrityksen-nimi">{initialOrganization?.ytjNimi.nimi}</div>
+                        <div data-test-id="yrityksen-nimi">{initialOrganisation?.ytjNimi.nimi}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_ytunnus')}</label>
-                        <div data-test-id="ytunnus">{initialOrganization?.ytunnus}</div>
+                        <div data-test-id="ytunnus">{initialOrganisation?.ytunnus}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_yritysmuoto')}</label>
-                        <div data-test-id="yritysmuoto">{organizationForm?.yritysmuoto.label}</div>
+                        <div data-test-id="yritysmuoto">{organisationForm?.yritysmuoto.label}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_organisaatiotyyppi')}</label>
                         <div data-test-id="organisaatiotyyppi">
                             {organisaatiotyypit.find((o) => o.uri === 'organisaatiotyyppi_01')?.nimi[language]}
                         </div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_kotipaikka')}</label>
-                        <div data-test-id="kotipaikka">{organizationForm?.kotipaikka.label}</div>
+                        <div data-test-id="kotipaikka">{organisationForm?.kotipaikka.label}</div>
                         <label className="title">{i18n.translate('organisaatio_perustiedot_alkamisaika')}</label>
-                        <div data-test-id="alkamisaika">{organizationForm?.alkamisaika}</div>
+                        <div data-test-id="alkamisaika">{organisationForm?.alkamisaika}</div>
                         <h3>{i18n.translate('organisaatio_yhteystiedot')}</h3>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_puhelinnumero')}</label>
-                        <div data-test-id="puhelinnumero">{organizationForm?.puhelinnumero}</div>
+                        <div data-test-id="puhelinnumero">{organisationForm?.puhelinnumero}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_email')}</label>
-                        <div data-test-id="organisaatio-email">{organizationForm?.email}</div>
+                        <div data-test-id="organisaatio-email">{organisationForm?.email}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postiosoite')}</label>
-                        <div data-test-id="postiosoite">{organizationForm?.postiosoite}</div>
+                        <div data-test-id="postiosoite">{organisationForm?.postiosoite}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postinumero')}</label>
-                        <div data-test-id="postinumero">{organizationForm?.postinumero}</div>
+                        <div data-test-id="postinumero">{organisationForm?.postinumero}</div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_postitoimipaikka')}</label>
                         <div data-test-id="postitoimipaikka">
-                            {organizationForm?.postinumero &&
-                                findPostitoimipaikka(organizationForm?.postinumero, posti, language)}
+                            {organisationForm?.postinumero &&
+                                findPostitoimipaikka(organisationForm?.postinumero, posti, language)}
                         </div>
                         <label className="title">{i18n.translate('organisaatio_yhteystiedot_kayntiosoite')}</label>
                         <div data-test-id="kayntiosoite">{kayntiosoite}</div>
@@ -113,7 +113,7 @@ export function JotpaYhteenveto() {
                         <h3>{i18n.translate('organisaatio_email')}</h3>
                         <label className="title">{i18n.translate('organisaatio_email')}</label>
                         <div data-test-id="emails">
-                            {organizationForm?.emails.map((e) => (
+                            {organisationForm?.emails.map((e) => (
                                 <div key={e.email}>{e.email}</div>
                             ))}
                         </div>

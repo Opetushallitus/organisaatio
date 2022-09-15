@@ -28,7 +28,7 @@ type Yhteystiedot = {
     };
 };
 
-export type Organization = {
+export type Organisation = {
     alkuPvm: string;
     kieletUris: string[];
     kotipaikkaUri: string;

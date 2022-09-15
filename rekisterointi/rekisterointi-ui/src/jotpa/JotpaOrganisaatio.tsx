@@ -9,7 +9,7 @@ import { useKoodistos } from '../KoodistoContext';
 import { useJotpaRekisterointiDispatch, useJotpaRekisterointiSelector } from './store';
 import { Select } from '../Select';
 import { DatePicker } from '../DatePicker';
-import { OrganizationFormState, OrganizationSchema, setForm } from '../organizationSlice';
+import { OrganisationFormState, OrganisationSchema, setForm } from '../organisationSlice';
 import { Input } from '../Input';
 import { FormError } from '../FormError';
 import { useLanguageContext } from '../LanguageContext';
@@ -39,7 +39,7 @@ export function JotpaOrganisaatio() {
     const { language, i18n } = useLanguageContext();
     const navigate = useNavigate();
     const { yritysmuodot, organisaatiotyypit, kunnat, posti, postinumerot } = useKoodistos();
-    const { initialOrganization, form } = useJotpaRekisterointiSelector((state) => state.organization);
+    const { initialOrganisation, form } = useJotpaRekisterointiSelector((state) => state.organisation);
     const dispatch = useJotpaRekisterointiDispatch();
     const {
         control,
@@ -47,17 +47,17 @@ export function JotpaOrganisaatio() {
         handleSubmit,
         register,
         watch,
-    } = useForm<OrganizationFormState>({
+    } = useForm<OrganisationFormState>({
         defaultValues: useMemo(() => {
             return form;
         }, [form]),
-        resolver: yupResolver(OrganizationSchema(yritysmuodot, kunnat, postinumerot)),
+        resolver: yupResolver(OrganisationSchema(yritysmuodot, kunnat, postinumerot)),
     });
     const {
         fields: emailFields,
         append: appendEmail,
         remove: removeEmail,
-    } = useFieldArray<OrganizationFormState>({
+    } = useFieldArray<OrganisationFormState>({
         control,
         name: 'emails',
     });
@@ -70,7 +70,7 @@ export function JotpaOrganisaatio() {
         appendEmail({ email: '' }, { shouldFocus: false });
     }
 
-    const onSubmit = (data: OrganizationFormState) => {
+    const onSubmit = (data: OrganisationFormState) => {
         const kayntiosoite = !data.copyKayntiosoite
             ? {
                   kayntiosoite: data.kayntiosoite!,
@@ -82,7 +82,7 @@ export function JotpaOrganisaatio() {
                   kayntipostinumero: data.postinumero,
                   kayntipostitoimipaikka: postitoimipaikka,
               };
-        const formState: OrganizationFormState = {
+        const formState: OrganisationFormState = {
             yritysmuoto: data.yritysmuoto,
             kotipaikka: data.kotipaikka,
             alkamisaika: data.alkamisaika,
@@ -125,13 +125,13 @@ export function JotpaOrganisaatio() {
                             <Markdown>{i18n.translate('organisaatio_perustiedot_info')}</Markdown>
                         </div>
                         <div className="label">{i18n.translate('organisaatio_perustiedot_nimi')}</div>
-                        <div data-test-id="yrityksen-nimi">{initialOrganization?.ytjNimi.nimi ?? '...'}</div>
+                        <div data-test-id="yrityksen-nimi">{initialOrganisation?.ytjNimi.nimi ?? '...'}</div>
                         <div className="label">{i18n.translate('organisaatio_perustiedot_ytunnus')}</div>
-                        <div data-test-id="ytunnus">{initialOrganization?.ytunnus ?? '...'}</div>
+                        <div data-test-id="ytunnus">{initialOrganisation?.ytunnus ?? '...'}</div>
                         <label className="title" htmlFor="yritysmuoto">
                             {i18n.translate('organisaatio_perustiedot_yritysmuoto')} *
                         </label>
-                        <Select<OrganizationFormState>
+                        <Select<OrganisationFormState>
                             name="yritysmuoto"
                             ariaLabel={i18n.translate('organisaatio_perustiedot_yritysmuoto')}
                             control={control}
@@ -145,7 +145,7 @@ export function JotpaOrganisaatio() {
                         <label className="title" htmlFor="kotipaikka">
                             {i18n.translate('organisaatio_perustiedot_kotipaikka')} *
                         </label>
-                        <Select<OrganizationFormState>
+                        <Select<OrganisationFormState>
                             name="kotipaikka"
                             ariaLabel={i18n.translate('organisaatio_perustiedot_kotipaikka')}
                             control={control}
@@ -155,7 +155,7 @@ export function JotpaOrganisaatio() {
                         <label className="title" htmlFor="alkamisaika">
                             {i18n.translate('organisaatio_perustiedot_alkamisaika')} *
                         </label>
-                        <DatePicker<OrganizationFormState>
+                        <DatePicker<OrganisationFormState>
                             name="alkamisaika"
                             control={control}
                             error={errors.alkamisaika}
