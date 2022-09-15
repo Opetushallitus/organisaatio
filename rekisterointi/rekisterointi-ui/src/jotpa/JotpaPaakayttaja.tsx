@@ -61,7 +61,7 @@ export function JotpaPaakayttaja() {
                             {i18n.translate('paakayttaja_sukunimi')} *
                         </label>
                         <Input name="sukunimi" register={register} error={errors.sukunimi} />
-                        <label className="title" htmlFor="email">
+                        <label className="title" htmlFor="paakayttajaEmail">
                             {i18n.translate('paakayttaja_email')} *
                         </label>
                         <Input name="paakayttajaEmail" register={register} error={errors.paakayttajaEmail} />
