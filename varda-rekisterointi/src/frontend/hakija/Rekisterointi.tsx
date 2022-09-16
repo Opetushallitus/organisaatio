@@ -52,7 +52,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
     const [kayttaja, setKayttaja] = useReducer(reducer, initialKayttaja);
     const [kayttajaErrors, setKayttajaErrors] = useState({});
     const [postLoading, setPostLoading] = useState(false);
-    const [postError, setPostError] = useState(null);
+    const [postError, setPostError] = useState<any>(null);
 
     async function post() {
         try {
@@ -64,6 +64,7 @@ export default function Rekisterointi({initialOrganisaatio, organisaatio, setOrg
                 sahkopostit: sahkopostit,
                 toimintamuoto: toimintamuoto,
                 kayttaja: kayttaja,
+                tyyppi: 'varda',
             });
             window.location = response.data;
         } catch (error) {

@@ -39,3 +39,6 @@ varda-rekisterointi:
       paivakoti: 70008488
       ryhmaperhepaivakoti: 70008504
       perhepaivahoitaja: 70008477
+  rekisterointi-ui:
+    username: varda-rekisterointi
+    password: varda-rekisterointi

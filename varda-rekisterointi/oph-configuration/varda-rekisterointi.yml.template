@@ -49,3 +49,6 @@ varda-rekisterointi:
             perhepaivahoitaja: {{ kayttooikeus_ryhma_perhepaivahoitaja }}
     swagger:
         enabled: {{ varda_rekisterointi_swagger_enabled | default('false') }}
+    rekisterointi-ui:
+        username: {{ varda_rekisterointi_rekisterointi_ui_username }}
+        password: {{ varda_rekisterointi_rekisterointi_ui_password }}
