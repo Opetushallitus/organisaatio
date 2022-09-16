@@ -9,7 +9,7 @@ import { findPostitoimipaikka } from '../addressUtils';
 import { useKoodistos } from '../KoodistoContext';
 import { useLanguageContext } from '../LanguageContext';
 import { RegistrationProgressBar } from '../RegistrationProgressBar';
-import { RekisterointiRequest } from '../types';
+import { getLanguageName, RekisterointiRequest } from '../types';
 
 import styles from './jotpa.module.css';
 import { OrganisationFormState } from '../organisationSlice';
@@ -59,7 +59,7 @@ export function JotpaYhteenveto() {
 
     return (
         <>
-            <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
+            <Header title={i18n.translate('otsikko_rekisterointi')} />
             <form onSubmit={onSubmit}>
                 <main>
                     <div className="content">
@@ -125,7 +125,7 @@ export function JotpaYhteenveto() {
                         <label className="title">{i18n.translate('paakayttaja_email')}</label>
                         <div data-test-id="paakayttaja-email">{userForm?.paakayttajaEmail}</div>
                         <label className="title">{i18n.translate('paakayttaja_asiointikieli')}</label>
-                        <div data-test-id="asiointikieli">{userForm?.asiointikieli === 'fi' ? 'Suomi' : 'Ruotsi'}</div>
+                        <div data-test-id="asiointikieli">{getLanguageName(userForm?.asiointikieli!, language)}</div>
                         <label className="title">{i18n.translate('paakayttaja_saateteksti')}</label>
                         <div data-test-id="info">{userForm?.info}</div>
                         <div className={styles.buttons}>

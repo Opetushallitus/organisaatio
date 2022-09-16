@@ -41,7 +41,7 @@ export function JotpaPaakayttaja() {
 
     return (
         <>
-            <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
+            <Header title={i18n.translate('otsikko_rekisterointi')} />
             <form onSubmit={handleSubmit(onSubmit)} data-test-id="paakayttaja-form">
                 <main>
                     <div className="content">

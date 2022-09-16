@@ -1,6 +1,26 @@
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalizableText = Partial<Record<Language, string>>;
 
+export const getLanguageName = (langTranslation: Language, currentLanguage: Language): string => {
+    return {
+        fi: {
+            fi: 'Suomi',
+            sv: 'Ruotsi',
+            en: 'Englanti',
+        },
+        sv: {
+            fi: 'Finska',
+            sv: 'Svenska',
+            en: 'Engelska',
+        },
+        en: {
+            fi: 'Finnish',
+            sv: 'Swedish',
+            en: 'English',
+        },
+    }[langTranslation][currentLanguage];
+};
+
 // koodisto
 export type KoodiUri = string;
 export type KoodiArvo = string;

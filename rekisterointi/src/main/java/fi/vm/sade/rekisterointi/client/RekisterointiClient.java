@@ -2,15 +2,11 @@ package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpEntity;
-import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.model.RekisterointiDto;
 
 import java.util.Base64;
 
-import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,7 +36,6 @@ public class RekisterointiClient {
     var username = properties.getProperty("varda-rekisterointi.username");
     var password = properties.getProperty("varda-rekisterointi.password");
     var basicAuth = Base64.getEncoder().encodeToString(new String(username + ":" + password).getBytes());
-    System.out.println(basicAuth);
     var restTemplate = new RestTemplate();
     var headers = new HttpHeaders();
     headers.add("Authorization", "Basic " + basicAuth);

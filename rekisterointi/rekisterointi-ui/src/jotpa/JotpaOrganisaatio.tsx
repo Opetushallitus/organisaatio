@@ -112,7 +112,7 @@ export function JotpaOrganisaatio() {
     const kayntipostitoimipaikka = kayntipostinumero && findPostitoimipaikka(kayntipostinumero, posti, language);
     return (
         <>
-            <Header title="Koulutuksen järjestäjien rekisteröityminen Jotpaa varten" />
+            <Header title={i18n.translate('otsikko_rekisterointi')} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <main>
                     <div className="content">
