@@ -23,10 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(RekisterointiUiController.BASE_PATH)
 public class RekisterointiUiController {
-
   static final String BASE_PATH = "/api/rekisterointi";
+  private final RekisterointiService rekisterointiService;
 
-  public RekisterointiUiController() {
+  public RekisterointiUiController(RekisterointiService rekisterointiService) {
+    this.rekisterointiService = rekisterointiService;
   }
 
   /**
@@ -45,6 +46,7 @@ public class RekisterointiUiController {
       @ApiParam(name = "dto", type = "RekisterointiDto") @RequestBody @Validated RekisterointiDto dto,
       HttpServletRequest request,
       Authentication authentication) {
+    rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request, authentication));
     return "ok";
   }
 
