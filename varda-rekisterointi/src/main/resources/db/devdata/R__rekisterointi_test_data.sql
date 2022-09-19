@@ -4,10 +4,11 @@ DELETE FROM yhteystiedot;
 DELETE FROM organisaatio;
 DELETE FROM rekisterointi;
 
-INSERT INTO rekisterointi (id, toimintamuoto, kunnat, sahkopostit)
+INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit)
  VALUES (
      0,
      'vardatoimintamuoto_tm01',
+     'varda',
      '{"Helsinki"}',
      '{"testi.yritys@testiyrit.ys"}'
  );
