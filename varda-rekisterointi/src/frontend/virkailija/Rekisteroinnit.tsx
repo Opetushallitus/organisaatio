@@ -3,7 +3,6 @@ import {ConfigurationContext, KoodistoImpl, LanguageContext, MaatJaValtiotKoodis
 import {useDebounce} from "use-debounce";
 import RekisterointiLista from "./RekisterointiLista";
 import createTheme from "@opetushallitus/virkailija-ui-components/createTheme";
-import VirkailijaRaamit from "@opetushallitus/virkailija-ui-components/VirkailijaRaamit";
 import {ThemeProvider} from "styled-components";
 import {Tila} from "./rekisterointihakemus";
 import Tabs from "@opetushallitus/virkailija-ui-components/Tabs";
@@ -20,6 +19,7 @@ import {Koodi} from "../types";
 import Spinner from "../Spinner";
 import ErrorPage from "../virhe/VirheSivu";
 import Status, {StatusTila} from "./Status";
+import {Raamit} from "./Raamit";
 
 const theme = createTheme();
 
@@ -66,7 +66,7 @@ export default function Rekisteroinnit() {
     return (
         <ConfigurationContext.Provider value={configuration}>
             <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
-                <VirkailijaRaamit scriptUrl={configuration.virkailijaRaamitUrl} />
+                <Raamit>
                 <ThemeProvider theme={theme}>
                     <div className={styles.rekisteroinnit}>
                         <div className={styles.rekisterointiOsio}>
@@ -119,6 +119,7 @@ export default function Rekisteroinnit() {
                         : null}
                     </div>
                 </ThemeProvider>
+                </Raamit>
             </MaatJaValtiotKoodistoContext.Provider>
         </ConfigurationContext.Provider>
     );
