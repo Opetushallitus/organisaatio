@@ -18,11 +18,11 @@ public class TestiRekisterointi {
                         "maatjavaltiot1_fin", Set.of("oppilaitoksenopetuskieli_1#1"),
                         Yhteystiedot.of("101234567", "testi@testiyritys.fi", Osoite.TYHJA, Osoite.TYHJA),
                         false),
+                "varda",
                 "vardatoimintamuoto_tm01",
                 Collections.singleton("Helsinki"),
                 Set.of("foo@foo.bar"),
-                kayttaja
-        );
+                kayttaja);
     }
 
     private static Kayttaja validiKayttaja() {
