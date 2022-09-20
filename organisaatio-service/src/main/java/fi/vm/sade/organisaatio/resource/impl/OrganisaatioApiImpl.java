@@ -12,6 +12,7 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
+import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
@@ -31,19 +32,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 @Primary
 @RestController
 @RequestMapping("${server.api.context-path}")
 public class OrganisaatioApiImpl implements OrganisaatioApi {
     protected static final Logger LOG = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
+    public static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
     private final OppijanumeroClient oppijanumeroClient;
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
@@ -77,7 +84,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
-    // GET /organisaatio/oids?type=KOULUTUSTOIMIJA&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
+    // GET /api/oids?type=KOULUTUSTOIMIJA&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
     @Override
     public List<String> search(OrganisaatioTyyppi type, int count, int startIndex) {
         LOG.debug("search({}, {}, {})", type, count, startIndex);
@@ -206,7 +213,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation {}", oid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         if (oid.equals(rootOrganisaatioOid)) {
@@ -243,7 +250,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             try {
                 permissionChecker.checkReadOrganisation(oid);
             } catch (NotAuthorizedException nae) {
-                LOG.warn("Not authorized to read organisation: {}", oid);
+                LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
                 throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
             }
         }
@@ -300,7 +307,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to read organisation: {}", oid);
+            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
@@ -383,6 +390,36 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             throw new OrganisaatioResourceException(nae);
         }
         return organisaatioBusinessService.updateTarkastusPvm(oid);
+    }
+
+    // GET /api/{oid}/childoids
+    @Override
+    public List<String> childoids(String oid, boolean rekursiivisesti, boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) {
+        List<String> childOidList = new LinkedList<>();
+        if (rekursiivisesti) {
+            ChildOidsCriteria criteria = new ChildOidsCriteria(oid, aktiiviset, suunnitellut, lakkautetut, LocalDate.now());
+            childOidList.addAll(organisaatioFindBusinessService.findChildOidsRecursive(criteria));
+        } else {
+            Organisaatio parentOrg = organisaatioFindBusinessService.findById(oid);
+            if (parentOrg != null) {
+                for (Organisaatio child : parentOrg.getChildren(aktiiviset, suunnitellut, lakkautetut)) {
+                    childOidList.add(child.getOid());
+                }
+            }
+        }
+        return childOidList;
+    }
+
+    // GET /api/{oid}/parentoids
+    @Override
+    public List<String> parentoids(String oid) {
+        // find parents
+        return Optional.ofNullable(organisaatioFindBusinessService.findById(oid))
+                .map(organisaatio -> Optional.ofNullable(organisaatio.getParentOidPath())
+                        .map(parentOidPath -> Stream.concat(Arrays.stream(parentOidPath.split("\\|")), Stream.of(organisaatio.getOid())))
+                        .orElseGet(() -> Stream.of(organisaatio.getOid())))
+                .orElseGet(() -> Stream.of(rootOrganisaatioOid, oid))
+                .filter(StringUtils::hasLength).collect(Collectors.toList());
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

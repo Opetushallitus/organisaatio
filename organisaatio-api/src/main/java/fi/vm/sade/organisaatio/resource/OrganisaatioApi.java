@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,6 +28,7 @@ import java.util.Set;
  */
 
 public interface OrganisaatioApi {
+    String OID_SEPARATOR = "/";
 
     @GetMapping(path = "/oids", produces = MediaType.APPLICATION_JSON_VALUE)
     List<String> search(@RequestParam(required = false) OrganisaatioTyyppi type,
@@ -50,6 +52,16 @@ public interface OrganisaatioApi {
             @Parameter(description = "Organisaation oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi.", required = true) @PathVariable String oid,
             @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).", deprecated = true) @RequestParam(defaultValue = "false") boolean includeImage
     );
+
+    @GetMapping(path = "/{oid}/parentoids", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<String> parentoids(@PathVariable String oid);
+
+    @GetMapping(path = "/{oid}/childoids", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<String> childoids(@PathVariable String oid,
+                           @RequestParam(defaultValue = "false") boolean rekursiivisesti,
+                           @RequestParam(defaultValue = "true") boolean aktiiviset,
+                           @RequestParam(defaultValue = "true") boolean suunnitellut,
+                           @RequestParam(defaultValue = "true") boolean lakkautetut);
 
     @Operation(summary = "Päivittää oid:n määrittämän organisaation tiedot")
     @PutMapping(path = "/{oid}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
