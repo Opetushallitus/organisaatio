@@ -77,6 +77,15 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }
 
+    // GET /organisaatio/oids?type=KOULUTUSTOIMIJA&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
+    @Override
+    public List<String> search(OrganisaatioTyyppi type, int count, int startIndex) {
+        LOG.debug("search({}, {}, {})", type, count, startIndex);
+        List<String> result = organisaatioFindBusinessService.findOidsBy(count, startIndex, type);
+        LOG.debug("  result.size = {}", result.size());
+        return result;
+    }
+
     /**
      * POST /api/findbyoids
      */
