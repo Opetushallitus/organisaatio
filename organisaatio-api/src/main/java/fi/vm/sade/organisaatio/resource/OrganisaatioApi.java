@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.api.DateParam;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.v4.*;
@@ -26,6 +27,11 @@ import java.util.Set;
  */
 
 public interface OrganisaatioApi {
+
+    @GetMapping(path = "/oids", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<String> search(@RequestParam(required = false) OrganisaatioTyyppi type,
+                        @RequestParam(defaultValue = "0") int count,
+                        @RequestParam(defaultValue = "0") int startIndex);
 
     @Operation(summary = "Hakee monta ei-poistettua organisaatiota kerralla syötetyille OIDeille (maksimissaan 1000)")
     @PostMapping(path = "/findbyoids", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

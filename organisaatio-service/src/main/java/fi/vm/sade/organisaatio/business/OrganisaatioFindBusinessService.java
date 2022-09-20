@@ -63,7 +63,6 @@ public interface OrganisaatioFindBusinessService {
      *  5. TOIMIPISTEKOODI
      *
      * @param id Id, joka voi olla: oid, y-tunnus, virastotunnus, oppilaitoskoodi tai toimipistekoodi
-     *
      * @return Organisaatio
      */
     public Organisaatio findById(String id);
@@ -98,13 +97,13 @@ public interface OrganisaatioFindBusinessService {
 
     /**
      * Haetaan kannasta organiasaatioiden oidit listana.
-     * @param searchTerms
-     * @param count Lukumäärä
-     * @param startIndex Aloitusindeksi
-     * @param type Haettava organisaatiotyyppi
+     *
+     * @param count       Lukumäärä
+     * @param startIndex  Aloitusindeksi
+     * @param type        Haettava organisaatiotyyppi
      * @return Organisaatioiden oid:t
      */
-    public List<String> findOidsBy(String searchTerms, int count, int startIndex, OrganisaatioTyyppi type);
+    public List<String> findOidsBy(int count, int startIndex, OrganisaatioTyyppi type);
 
     /**
      * Haetaan kannasta kaikki organisaatioliitokset.
