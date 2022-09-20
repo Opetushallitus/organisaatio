@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +18,7 @@ public class PermissionCheckerAspect {
     public static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
     private final PermissionChecker permissionChecker;
 
-    @Pointcut("execution(* fi.vm.sade.organisaatio.resource.OrganisaatioApi.childoids(..)) ")
-    private void childoids() {
-        // Pointcut for childoids
-    }
-
-    @Pointcut("execution(* fi.vm.sade.organisaatio.resource.OrganisaatioApi.parentoids(..)) ")
-    private void parentoids() {
-        // Pointcut for parentoids
-    }
-
-    @Before("(childoids()||parentoids()) && args(oid,..)")
+    @Before("@annotation(fi.vm.sade.organisaatio.service.annotation.CheckReadPermission) && args(oid,..)")
     public void checkReadPermission(String oid) {
         try {
             permissionChecker.checkReadOrganisation(oid);

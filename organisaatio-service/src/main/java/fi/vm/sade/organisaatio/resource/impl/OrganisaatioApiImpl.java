@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
+import fi.vm.sade.organisaatio.service.annotation.CheckReadPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.joining;
 
 @Primary
 @RestController
@@ -394,6 +393,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     // GET /api/{oid}/childoids
     @Override
+    @CheckReadPermission
     public List<String> childoids(String oid, boolean rekursiivisesti, boolean aktiiviset, boolean suunnitellut, boolean lakkautetut) {
         List<String> childOidList = new LinkedList<>();
         if (rekursiivisesti) {
@@ -412,6 +412,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     // GET /api/{oid}/parentoids
     @Override
+    @CheckReadPermission
     public List<String> parentoids(String oid) {
         // find parents
         return Optional.ofNullable(organisaatioFindBusinessService.findById(oid))

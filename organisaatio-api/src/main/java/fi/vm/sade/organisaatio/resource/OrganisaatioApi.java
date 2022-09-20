@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,7 +27,6 @@ import java.util.Set;
  */
 
 public interface OrganisaatioApi {
-    String OID_SEPARATOR = "/";
 
     @GetMapping(path = "/oids", produces = MediaType.APPLICATION_JSON_VALUE)
     List<String> search(@RequestParam(required = false) OrganisaatioTyyppi type,
