@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class PermissionCheckerAspect {
-    public static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
     private final PermissionChecker permissionChecker;
 
     @Before("@annotation(CheckReadPermission) && args(oid,..)")
@@ -23,8 +22,7 @@ public class PermissionCheckerAspect {
         try {
             permissionChecker.checkReadOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            log.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
+            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, String.format("Not authorized to read organisation: %s", oid),"no.permission");
         }
     }
 }

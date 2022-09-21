@@ -10,8 +10,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.List;
 
@@ -86,12 +89,25 @@ class OrganisaatioApiSpringTest {
     }
 
     @Test
-    @DisplayName("Test child oids permission aspect")
+    @DisplayName("Test read permission aspect for protected oid")
     @Sql("/data/truncate_tables.sql")
     @Sql("/data/basic_organisaatio_data.sql")
-    void testChildOids2() throws Exception {
-        mockMvc.perform(get("/api/1.2.2020.1/childoids").param("rekursiivisesti", "true"))
+    @WithMockUser(value = "1.2.3.4.5", roles={"APP_ORGANISAATIOHALLINTA"})
+    void testReadProtection() throws Exception {
+        String oid = "1.2.2020.1";
+        String errorResponse = "{\"errorMessage\":\"Not authorized to read organisation: " + oid + "\",\"errorKey\":\"no.permission\"}";
+
+        expectForbiddenAtPath(get("/api/{oid}/childoids", oid).param("rekursiivisesti", "true"), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/parentoids", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/children", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/historia", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/paivittaja", oid), errorResponse);
+    }
+
+    private void expectForbiddenAtPath(MockHttpServletRequestBuilder request, String errorResponse) throws Exception {
+        mockMvc.perform(request)
                 .andExpect(status().isForbidden())
-                .andExpect(content().json("{\"errorMessage\":\"no.permission\",\"errorKey\":\"no.permission\"}"));
+                .andExpect(content().json(errorResponse));
     }
 }

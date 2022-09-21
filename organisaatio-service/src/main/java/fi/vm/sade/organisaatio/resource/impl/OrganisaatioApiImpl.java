@@ -104,12 +104,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * GET /api/{oid}/children
      */
     @Override
+    @CheckReadPermission
     public List<OrganisaatioRDTOV4> children(String oid, boolean includeImage) {
-        try {
-            permissionChecker.checkReadOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, String.format("Not authorized to read organisation: %s", oid));
-        }
         return this.organisaatioFindBusinessService.findChildrenById(oid, includeImage);
     }
 
@@ -117,12 +113,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * GET /api/{oid}
      */
     @Override
+    @CheckReadPermission
     public OrganisaatioRDTOV4 getOrganisaatioByOID(String oid, boolean includeImage) {
-        try {
-            permissionChecker.checkReadOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, String.format("Not authorized to read organisation: %s", oid));
-        }
         return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
     }
 
@@ -208,13 +200,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * GET /api/{oid}/historia
      */
     @Override
+    @CheckReadPermission
     public OrganisaatioHistoriaRDTOV4 getOrganizationHistory(String oid) {
-        try {
-            permissionChecker.checkReadOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
         if (oid.equals(rootOrganisaatioOid)) {
             return new OrganisaatioHistoriaRDTOV4();
         }
@@ -299,17 +286,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckReadPermission
     public OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(String oid) {
-        if (oid.isBlank()) {
-            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, "oid cannot be blank");
-        }
-        try {
-            permissionChecker.checkReadOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-        Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
+      Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
         if (org != null) {
             final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
             tulos.setPaivittaja(org.getPaivittaja());
