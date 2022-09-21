@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.service.annotation;
+package fi.vm.sade.organisaatio.service.aspects;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

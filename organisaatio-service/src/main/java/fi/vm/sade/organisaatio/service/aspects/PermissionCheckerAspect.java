@@ -18,7 +18,7 @@ public class PermissionCheckerAspect {
     public static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
     private final PermissionChecker permissionChecker;
 
-    @Before("@annotation(fi.vm.sade.organisaatio.service.annotation.CheckReadPermission) && args(oid,..)")
+    @Before("@annotation(CheckReadPermission) && args(oid,..)")
     public void checkReadPermission(String oid) {
         try {
             permissionChecker.checkReadOrganisation(oid);

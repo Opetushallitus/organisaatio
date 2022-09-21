@@ -25,7 +25,7 @@ import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.service.annotation.CheckReadPermission;
+import fi.vm.sade.organisaatio.service.aspects.CheckReadPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
