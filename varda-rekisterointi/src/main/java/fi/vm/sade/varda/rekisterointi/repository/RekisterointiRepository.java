@@ -10,7 +10,7 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
     // toistaiseksi Spring Data JDBC ei loihdi automaattisesti metodeista queryjä
     // huom. referoidun taulun sarakkeille annettava selectissä etuliite "<taulunimi>_"
     String REKISTEROINTI_SELECT =
-            "SELECT r.id, r.kunnat, o.ytunnus AS organisaatio_ytunnus, o.oid AS organisaatio_oid, " +
+            "SELECT r.id, r.kunnat, r.tyyppi, o.ytunnus AS organisaatio_ytunnus, o.oid AS organisaatio_oid, " +
             "o.rekisterointi_id AS organisaatio_rekisterointi_id, o.alkupvm AS organisaatio_alkupvm, " +
             "o.nimi AS organisaatio_nimi, o.nimi_kieli AS organisaatio_nimi_kieli, " +
             "o.nimi_alkupvm AS organisaatio_nimi_alkupvm, o.yritysmuoto AS organisaatio_yritysmuoto, " +
