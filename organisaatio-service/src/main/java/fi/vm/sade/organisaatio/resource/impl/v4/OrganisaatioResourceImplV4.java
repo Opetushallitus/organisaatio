@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${server.rest.context-path}/organisaatio/v4")
 public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         OrganisaatioResourceV4 {
+    protected final PermissionChecker permissionChecker;
 
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2, OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper, PermissionChecker permissionChecker, OrganisaatioBusinessService organisaatioBusinessService, OrganisaatioFindBusinessService organisaatioFindBusinessService, OppijanumeroClient oppijanumeroClient, OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        super(organisaatioResourceV2, organisaatioDTOV4ModelMapper, permissionChecker, organisaatioBusinessService, organisaatioFindBusinessService, oppijanumeroClient, organisaatioNimiModelMapper);
+        super(oppijanumeroClient, organisaatioResourceV2, organisaatioDTOV4ModelMapper, organisaatioNimiModelMapper, organisaatioBusinessService, organisaatioFindBusinessService);
+        this.permissionChecker = permissionChecker;
     }
 
     @Override

@@ -4,11 +4,9 @@ import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
@@ -25,9 +23,9 @@ import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import fi.vm.sade.organisaatio.service.aspects.CheckReadPermission;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.vm.sade.organisaatio.service.aspects.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
@@ -47,17 +45,15 @@ import java.util.stream.Stream;
 @Primary
 @RestController
 @RequestMapping("${server.api.context-path}")
+@RequiredArgsConstructor
+@Slf4j
 public class OrganisaatioApiImpl implements OrganisaatioApi {
-    protected static final Logger LOG = LoggerFactory.getLogger(OrganisaatioApiImpl.class);
-    public static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
     private final OppijanumeroClient oppijanumeroClient;
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
     private final OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper;
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
-
-    protected final PermissionChecker permissionChecker;
     @Autowired
     protected OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     private final OrganisaatioBusinessService organisaatioBusinessService;
@@ -66,29 +62,12 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
-    @Autowired
-    public OrganisaatioApiImpl(OrganisaatioResourceV2 organisaatioResourceV2,
-                               OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper,
-                               PermissionChecker permissionChecker,
-                               OrganisaatioBusinessService organisaatioBusinessService,
-                               OrganisaatioFindBusinessService organisaatioFindBusinessService,
-                               OppijanumeroClient oppijanumeroClient,
-                               OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        this.organisaatioResourceV2 = organisaatioResourceV2;
-        this.organisaatioDTOV4ModelMapper = organisaatioDTOV4ModelMapper;
-        this.permissionChecker = permissionChecker;
-        this.organisaatioBusinessService = organisaatioBusinessService;
-        this.organisaatioFindBusinessService = organisaatioFindBusinessService;
-        this.oppijanumeroClient = oppijanumeroClient;
-        this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
-    }
-
     // GET /api/oids?type=KOULUTUSTOIMIJA&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
     @Override
     public List<String> search(OrganisaatioTyyppi type, int count, int startIndex) {
-        LOG.debug("search({}, {}, {})", type, count, startIndex);
+        log.debug("search({}, {}, {})", type, count, startIndex);
         List<String> result = organisaatioFindBusinessService.findOidsBy(count, startIndex, type);
-        LOG.debug("  result.size = {}", result.size());
+        log.debug("  result.size = {}", result.size());
         return result;
     }
 
@@ -123,27 +102,21 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckUpdatePermission
     public ResultRDTOV4 updateOrganisaatio(String oid, OrganisaatioRDTOV4 ordto) {
-        LOG.info("Saving {}", oid);
-        try {
-            permissionChecker.checkSaveOrganisation(ordto, true);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("NotAuthorizedException for {}", oid);
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
-
+        log.info("Saving {}", oid);
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            LOG.warn("ValidationException while saving {}", oid);
+            log.warn("ValidationException while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            LOG.warn("SadeBusinessException while saving {}", oid);
+            log.warn("SadeBusinessException while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     sbe.getMessage(), "organisaatio.business.virhe");
         } catch (Exception t) {
-            LOG.warn("Throwable while saving {}", oid);
+            log.warn("Throwable while saving {}", oid);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
@@ -154,24 +127,19 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckAddPermission
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
-        try {
-            permissionChecker.checkSaveOrganisation(ordto, false);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to create child organisation for {}", ordto.getParentOid());
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-        }
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            LOG.warn("ValidationException saving new org");
+            log.warn("ValidationException saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            LOG.warn("SadeBusinessException saving new org");
+            log.warn("SadeBusinessException saving new org");
             throw new OrganisaatioResourceException(sbe);
         } catch (Exception t) {
-            LOG.warn("Throwable saving new org");
+            log.warn("Throwable saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
@@ -230,17 +198,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * GET /api/{oid}/jalkelaiset
      */
     @Override
+    @CheckReadPermission
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
-        boolean globalReadAccess = permissionChecker.isReadAccessToAll();
-        if (!globalReadAccess) {
-            try {
-                permissionChecker.checkReadOrganisation(oid);
-            } catch (NotAuthorizedException nae) {
-                LOG.warn(NOT_AUTHORIZED_TO_READ_ORGANISATION, oid);
-                throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
-            }
-        }
-        return processRows(organisaatioFindBusinessService.findDescendants(oid, globalReadAccess));
+        return processRows(organisaatioFindBusinessService.findDescendants(oid));
     }
 
     @Override
@@ -250,7 +210,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error merging organizations {}, {}, {}", oid, parentOid, merge);
+            log.warn("Error merging organizations {}, {}, {}", oid, parentOid, merge);
             throw new OrganisaatioResourceException(sbe);
         }
         return this.organisaatioFindBusinessService.findByIdV4(oid, false);
@@ -261,22 +221,17 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckDeletePermission
     public void deleteOrganisaatio(String oid) {
         try {
-            permissionChecker.checkRemoveOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to delete organisation: {}", oid);
-            throw new OrganisaatioResourceException(HttpStatus.UNAUTHORIZED, nae);
-        }
-        try {
             Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            LOG.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
+            log.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
         } catch (OrganisaatioNotFoundException e) {
             throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, e);
         } catch (OrganisaatioBusinessException e) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, e);
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error deleting org {} ", oid);
+            log.warn("Error deleting org {} ", oid);
             throw new OrganisaatioResourceException(sbe);
         }
     }
@@ -288,7 +243,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     @CheckReadPermission
     public OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(String oid) {
-      Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
+        Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
         if (org != null) {
             final OrganisaatioPaivittajaDTO tulos = new OrganisaatioPaivittajaDTO();
             tulos.setPaivittaja(org.getPaivittaja());
@@ -299,7 +254,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 tulos.setSukuNimi(henkilo.getSukunimi());
 
             } catch (Exception ex) {
-                LOG.error(ex.getMessage());
+                log.error(ex.getMessage());
                 tulos.setSukuNimi(org.getPaivittaja());
             }
             return tulos;
@@ -309,46 +264,48 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     }
 
+    /**
+     * POST /{oid}/nimet
+     *
+     * @param oid
+     * @param nimidto
+     * @return
+     */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckUpdateNamePermission
     public OrganisaatioNimiDTO newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
-        Preconditions.checkNotNull(oid);
-        try {
-            permissionChecker.checkUpdateOrganisationName(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
-        }
-
         OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.newOrganisaatioNimi(oid, nimidto);
         return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTO.class);
     }
 
+    /**
+     * PUT /{oid}/nimet
+     *
+     * @param oid
+     * @param nimiUpdateDto
+     * @return
+     */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckUpdateNamePermission
     public OrganisaatioNimiDTO updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDto) {
-        Preconditions.checkNotNull(oid);
         Preconditions.checkNotNull(nimiUpdateDto.getCurrentNimi().getAlkuPvm());
-        try {
-            permissionChecker.checkUpdateOrganisationName(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
-        }
         OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.updateOrganisaatioNimi(oid, nimiUpdateDto);
         return organisaatioNimiModelMapper.map(organisaatioNimi, OrganisaatioNimiDTO.class);
     }
 
+    /**
+     * DELETE /{oid}/nimet
+     *
+     * @param oid
+     * @param nimidto
+     */
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckUpdateNamePermission
     public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
-        Preconditions.checkNotNull(oid);
         Preconditions.checkNotNull(nimidto.getAlkuPvm());
-
-        try {
-            permissionChecker.checkUpdateOrganisationName(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
-        }
-
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, nimidto);
     }
 
@@ -361,12 +318,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @CheckTarkastusPermission
     public Timestamp updateTarkastusPvm(String oid) {
-        try {
-            permissionChecker.checkUpdateOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(nae);
-        }
         return organisaatioBusinessService.updateTarkastusPvm(oid);
     }
 
