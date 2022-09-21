@@ -13,12 +13,14 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.impl.OrganisaatioApiImpl;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("${server.rest.context-path}/organisaatio/v4")
 public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         OrganisaatioResourceV4 {
