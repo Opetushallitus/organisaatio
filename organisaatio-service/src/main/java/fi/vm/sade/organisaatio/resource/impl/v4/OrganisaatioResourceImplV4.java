@@ -35,15 +35,15 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         try {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to delete organisation: " + oid);
+            log.warn("Not authorized to delete organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            LOG.info("Deleted organisaatio: " + oid + " under parent: " + parent.getOid());
+            log.info("Deleted organisaatio: " + oid + " under parent: " + parent.getOid());
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error deleting org", sbe);
+            log.warn("Error deleting org", sbe);
             throw new OrganisaatioResourceException(sbe);
         }
 
