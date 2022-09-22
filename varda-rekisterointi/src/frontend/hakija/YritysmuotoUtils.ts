@@ -1,8 +1,8 @@
-import { Koodi, Language } from "../types";
+import { Koodi, Language } from '../types/types';
 
 export const kielletytYritysmuodot = [
     'yritysmuoto_41', //'Kunta',
-    'yritysmuoto_42' //'Kuntayhtymä',
+    'yritysmuoto_42', //'Kuntayhtymä',
 ];
 
 const yritysmuotoPriorityList = [
@@ -31,7 +31,7 @@ const yritysmuotoPriorityList = [
 ];
 
 export function yritysmuotoSortFnByLanguage(language: Language) {
-    return function(item1: {value: string, label: string}, item2: {value: string, label: string}) {
+    return function (item1: { value: string; label: string }, item2: { value: string; label: string }) {
         const item1Priority = yritysmuotoPriorityList.includes(item1.value);
         const item2Priority = yritysmuotoPriorityList.includes(item2.value);
         if (item1Priority && !item2Priority) {
@@ -41,7 +41,7 @@ export function yritysmuotoSortFnByLanguage(language: Language) {
             return 1;
         }
         return item1.label.localeCompare(item2.label, language);
-    }
+    };
 }
 
 export function yritysmuotoValueFn(koodi: Koodi) {

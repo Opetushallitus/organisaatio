@@ -1,0 +1,48 @@
+.tableContainer {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding: 1rem;
+    border: 1px solid #cccccc;
+    background: #ffffff;
+}
+
+.tableElement {
+    width: 100%;
+    min-height: 20vh;
+    max-height: 60vh;
+    border-spacing: 0;
+}
+
+.th {
+    text-align: left;
+}
+
+.td {
+    font-family: Roboto, Arial Unicode MS, Arial, sans-serif;
+    font-weight: 400;
+}
+
+.tHead {
+}
+
+.tr:first-child .th {
+    border-bottom: 1px solid rgba(151, 151, 151, 0.5);
+}
+
+.tr:nth-child(even) {
+    background: rgba(245, 245, 245, 1);
+}
+
+.tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0);
+}
+
+.filterInputContainer {
+    max-width: 25rem;
+    margin-bottom: 1rem;
+}
+
+
+
+
+

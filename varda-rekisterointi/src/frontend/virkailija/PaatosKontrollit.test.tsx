@@ -1,15 +1,17 @@
-import React from "react";
-import {render, unmountComponentAtNode} from "react-dom";
-import {act} from "react-dom/test-utils";
-import createTheme from "@opetushallitus/virkailija-ui-components/createTheme";
-import {ThemeProvider} from "styled-components";
-import PaatosKontrollit from "./PaatosKontrollit";
-import {Rekisterointihakemus} from "./rekisterointihakemus";
-import {dummyHakemus} from "../testTypes";
+import React from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { act } from 'react-dom/test-utils';
+import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
+import { ThemeProvider } from 'styled-components';
+import PaatosKontrollit from './PaatosKontrollit';
+import { Rekisterointihakemus } from './rekisterointihakemus';
+import { dummyHakemus } from '../testTypes';
 
 const theme = createTheme();
 const buttonIds = ['hylkaaButton', 'hyvaksyButton'];
-const dummyTyhjennaCallback = () => { /* no-op */ };
+const dummyTyhjennaCallback = () => {
+    /* no-op */
+};
 
 let container: Element;
 describe('PaatosKontrollit', () => {
@@ -23,13 +25,16 @@ describe('PaatosKontrollit', () => {
     });
 
     it('disabloi Buttonit, kun ei valittuja hakemuksia', async () => {
-        await act(async() => {
-            render(<ThemeProvider theme={theme}>
-                <PaatosKontrollit valitut={[]} tyhjennaValinnatCallback={dummyTyhjennaCallback}/>
-            </ThemeProvider>, container);
+        await act(async () => {
+            render(
+                <ThemeProvider theme={theme}>
+                    <PaatosKontrollit valitut={[]} tyhjennaValinnatCallback={dummyTyhjennaCallback} />
+                </ThemeProvider>,
+                container
+            );
         });
-        buttonIds.forEach(id => {
-            const button: Element | null = container.querySelector(`#${id}`);
+        buttonIds.forEach((id) => {
+            const button: Element | null = container.querySelector(`#${id}`);
             expect(button).not.toBeNull();
             if (button !== null) {
                 expect(button.hasAttribute('disabled')).toBeTruthy();
@@ -39,18 +44,20 @@ describe('PaatosKontrollit', () => {
 
     it('enabloi Buttonit, kun hakemuksia valittu', async () => {
         const hakemus: Rekisterointihakemus = dummyHakemus;
-        await act(async() => {
-            render(<ThemeProvider theme={theme}>
-                <PaatosKontrollit valitut={[hakemus]} tyhjennaValinnatCallback={dummyTyhjennaCallback}/>
-            </ThemeProvider>, container);
+        await act(async () => {
+            render(
+                <ThemeProvider theme={theme}>
+                    <PaatosKontrollit valitut={[hakemus]} tyhjennaValinnatCallback={dummyTyhjennaCallback} />
+                </ThemeProvider>,
+                container
+            );
         });
-        buttonIds.forEach(id => {
-            const button: Element | null = container.querySelector(`#${id}`);
+        buttonIds.forEach((id) => {
+            const button: Element | null = container.querySelector(`#${id}`);
             expect(button).not.toBeNull();
             if (button !== null) {
                 expect(button.hasAttribute('disabled')).toBeFalsy();
             }
         });
     });
-    
 });

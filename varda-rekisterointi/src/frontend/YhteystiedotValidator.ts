@@ -1,6 +1,6 @@
-import {Virheet, Yhteystiedot} from "./types";
-import {isNonEmpty} from "./StringUtils";
-import {validoiOsoite} from "./OsoiteValidator";
+import { Virheet, Yhteystiedot } from './types/types';
+import { isNonEmpty } from './StringUtils';
+import { validoiOsoite } from './OsoiteValidator';
 import EmailValidator from 'email-validator';
 import * as PuhelinnumeroValidator from './PuhelinnumeroValidator';
 

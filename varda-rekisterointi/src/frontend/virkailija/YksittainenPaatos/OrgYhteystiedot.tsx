@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import FormFieldContainer from '../../FormFieldContainer';
-import { Yhteystiedot } from '../../types';
+import { Yhteystiedot } from '../../types/types';
 import { LanguageContext } from '../../contexts';
 
 type Props = {
-    yhteystiedot: Yhteystiedot,
-}
+    yhteystiedot: Yhteystiedot;
+};
 
 export default function OrgYhteystiedot({ yhteystiedot }: Props) {
     const { i18n } = useContext(LanguageContext);

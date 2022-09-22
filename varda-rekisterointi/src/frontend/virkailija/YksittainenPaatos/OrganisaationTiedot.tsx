@@ -1,30 +1,31 @@
 import React, { useContext } from 'react';
 import FormFieldContainer from '../../FormFieldContainer';
-import {Koodi, Organisaatio} from '../../types';
+import { Koodi, Organisaatio } from '../../types/types';
 import { toLocalizedText } from '../../LocalizableTextUtils';
 import { parseISO, format } from 'date-fns';
 
-
-import {KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext} from '../../contexts';
-import useAxios from "axios-hooks";
-import Spinner from "../../Spinner";
-import ErrorPage from "../../virhe/VirheSivu";
+import { KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext } from '../../contexts';
+import useAxios from 'axios-hooks';
+import Spinner from '../../Spinner';
+import ErrorPage from '../../virhe/VirheSivu';
 
 type Props = {
-    toimintamuoto: string,
-    organisaatio: Organisaatio,
-    kunnat: string[]
-}
+    toimintamuoto: string;
+    organisaatio: Organisaatio;
+    kunnat: string[];
+};
 
 const UI_FORMAT = 'dd.MM.yyyy';
 
 export default function OrganisaationTiedot({ organisaatio, kunnat, toimintamuoto }: Props) {
     const { i18n, language } = useContext(LanguageContext);
-    const [{data: yritysmuodot, loading: yritysmuotoLoading, error: yritysmuodotError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true');
+    const [{ data: yritysmuodot, loading: yritysmuotoLoading, error: yritysmuodotError }] = useAxios<Koodi[]>(
+        '/varda-rekisterointi/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true'
+    );
 
-    const [{data: toimintamuodot, loading: toimintamuodotLoading, error: toimintamuodotError}]
-        = useAxios<Koodi[]>('/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi?onlyValid=true');
+    const [{ data: toimintamuodot, loading: toimintamuodotLoading, error: toimintamuodotError }] = useAxios<Koodi[]>(
+        '/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi?onlyValid=true'
+    );
 
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
@@ -42,21 +43,27 @@ export default function OrganisaationTiedot({ organisaatio, kunnat, toimintamuot
         const maa = maatJaValtiotKoodisto.uri2Nimi(organisaatio.maaUri);
         if (kunta) osat.push(kunta);
         if (maa) osat.push(maa);
-        return osat.join(", ");
+        return osat.join(', ');
     }
 
     function koodit2kunnat(kunnatArr: string[]): string {
-        return kunnatArr.map(k => kuntaKoodisto.uri2Nimi(k) || k).join(", ")
+        return kunnatArr.map((k) => kuntaKoodisto.uri2Nimi(k) || k).join(', ');
     }
 
     function koodi2toimintamuoto(toimintamuotoUri: string): string {
-        const osuvaToimintamuoto = toimintamuodot.find(y => y.uri === toimintamuotoUri || y.nimi.fi === toimintamuotoUri);
-        return osuvaToimintamuoto ? toLocalizedText(osuvaToimintamuoto.nimi, language, osuvaToimintamuoto.arvo) : i18n.translate('EI_TIEDOSSA');
+        const osuvaToimintamuoto = toimintamuodot.find(
+            (y) => y.uri === toimintamuotoUri || y.nimi.fi === toimintamuotoUri
+        );
+        return osuvaToimintamuoto
+            ? toLocalizedText(osuvaToimintamuoto.nimi, language, osuvaToimintamuoto.arvo)
+            : i18n.translate('EI_TIEDOSSA');
     }
 
     function yritysmuoto(yritysmuotoUri: string) {
-        const osuvaYritysMuoto = yritysmuodot.find(y => y.uri === yritysmuotoUri || y.nimi.fi === yritysmuotoUri);
-        return osuvaYritysMuoto ? toLocalizedText(osuvaYritysMuoto.nimi, language, osuvaYritysMuoto.arvo) : i18n.translate('EI_TIEDOSSA');
+        const osuvaYritysMuoto = yritysmuodot.find((y) => y.uri === yritysmuotoUri || y.nimi.fi === yritysmuotoUri);
+        return osuvaYritysMuoto
+            ? toLocalizedText(osuvaYritysMuoto.nimi, language, osuvaYritysMuoto.arvo)
+            : i18n.translate('EI_TIEDOSSA');
     }
 
     return (

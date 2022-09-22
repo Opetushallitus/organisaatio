@@ -1,16 +1,16 @@
-import {Rekisterointi} from "../types";
+import { Rekisterointi } from '../types/types';
 
 export enum Tila {
-    KASITTELYSSA = "KASITTELYSSA",
-    HYVAKSYTTY = "HYVAKSYTTY",
-    HYLATTY = "HYLATTY"
+    KASITTELYSSA = 'KASITTELYSSA',
+    HYVAKSYTTY = 'HYVAKSYTTY',
+    HYLATTY = 'HYLATTY',
 }
 
 export type Paatos = {
     hyvaksytty: boolean;
     aikaleima: string;
     perustelu?: string; // vain, jos HYLATTY
-}
+};
 
 export interface Rekisterointihakemus extends Rekisterointi {
     id: number;

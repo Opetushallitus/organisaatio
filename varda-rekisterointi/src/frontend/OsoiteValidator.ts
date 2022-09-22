@@ -1,10 +1,10 @@
-import {Osoite, Virheet} from "./types";
-import {isNonEmpty, hasLengthBetween} from "./StringUtils";
+import { Osoite, Virheet } from './types/types';
+import { isNonEmpty, hasLengthBetween } from './StringUtils';
 
 type OsoiteKentta = keyof Osoite;
 const minLenght = 3;
 const maxLength = 100;
-const zipCodePattern = /^posti_\d{5}$/
+const zipCodePattern = /^posti_\d{5}$/;
 
 export function validoiOsoite(osoite: Osoite): Virheet {
     const virheet: Virheet = {};

@@ -1,6 +1,7 @@
-.rekisteroinnit {
-    position: relative;
-    margin: 2em 4em;
+.pageBase {
+    background: #F2F2F2;
+    padding: 0 4rem 0 4rem;
+    min-height: 87vh;
 }
 
 .rekisterointiOsio {
