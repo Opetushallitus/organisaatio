@@ -44,17 +44,25 @@ public final class AuthenticationUtils {
     }
 
     public static String[] getRegistrationTypes(Authentication authentication) {
-        Optional<String> authority = authentication
+        Optional<String> role = getRole(authentication);
+        String[] registrationTypes = role
+            .map(AuthenticationUtils::mapRoleToRegistrationTypes)
+            .orElse(new String[]{});
+        return registrationTypes;
+    }
+
+    public static Optional<String> getRole(Authentication authentication) {
+        return getAuthority(authentication)
+            .flatMap(AuthenticationUtils::mapToRole);
+    }
+
+    private static Optional<String> getAuthority(Authentication authentication) {
+        return authentication
             .getAuthorities()
             .stream()
             .map(GrantedAuthority::getAuthority)
             .filter(a -> a.contains("ORGANISAATIOIDEN_REKISTEROITYMINEN"))
             .findFirst();
-        String[] registrationTypes = authority
-            .flatMap(AuthenticationUtils::mapToRole)
-            .map(AuthenticationUtils::mapRoleToRegistrationTypes)
-            .orElse(new String[]{});
-        return registrationTypes;
     }
 
 }

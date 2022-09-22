@@ -84,7 +84,6 @@ public class VirkailijaController {
      * @return paluuosoite.
      */
     @PostMapping(REKISTEROINNIT_PATH)
-    @PreAuthorize("hasPermission(null, 'rekisterointi', 'create')")
     @ApiOperation("Luo rekisteröintihakemus")
     @ApiResponse(
             code = 200,
@@ -92,10 +91,15 @@ public class VirkailijaController {
             response = String.class
     )
     public String luoRekisterointi(
+            Authentication authentication,
             @ApiParam("rekisteröintihakemus") @RequestBody @Validated RekisterointiDto dto,
             HttpServletRequest request) {
-        rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
-        return properties.url("varda-rekisterointi.virkailija");
+        Optional<String> role = AuthenticationUtils.getRole(authentication);
+        if (role.orElse("").startsWith("OPH")) {
+            rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
+            return properties.url("varda-rekisterointi.virkailija");
+        }
+        return null;
     }
 
     /**
