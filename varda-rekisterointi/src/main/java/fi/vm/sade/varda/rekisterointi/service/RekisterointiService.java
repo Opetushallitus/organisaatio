@@ -72,6 +72,14 @@ public class RekisterointiService {
                 tila.toString(), kunnat, organisaatio);
     }
 
+    public Iterable<Rekisterointi> listByVardaKunnat(String[] kunnat) {
+        return rekisterointiRepository.findByVardaKunnat(kunnat);
+    }
+
+    public Iterable<Rekisterointi> listByRegistrationTypes(String[] registrationTypes) {
+        return rekisterointiRepository.findByRegistrationTypes(registrationTypes);
+    }
+
     /**
      * Luo rekisteröintihakemuksen.
      * @param rekisterointi     rekisteröinnin tiedot

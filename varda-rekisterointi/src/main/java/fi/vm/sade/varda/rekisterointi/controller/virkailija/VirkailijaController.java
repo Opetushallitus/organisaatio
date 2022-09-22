@@ -6,6 +6,7 @@ import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
+import fi.vm.sade.varda.rekisterointi.util.AuthenticationUtils;
 import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import io.swagger.annotations.ApiOperation;
@@ -130,6 +131,32 @@ public class VirkailijaController {
         }
         return rekisterointiService.listByTilaAndKunnatAndOrganisaatio(
                 tila, kunnat.toArray(new String[0]), hakutermi);
+    }
+
+    /**
+     * Listaa rekisteröintihakemukset käyttäjän oikeuksien perusteella.
+     *
+     * @param authentication autentikointi
+     *
+     * @return hakemukset.
+     */
+    @GetMapping("/rekisterointi")
+    @ApiOperation("Listaa rekisteröintihakemukset, joihin käyttäjällä on oikeus")
+    @ApiResponse(
+            code = 200,
+            message = "rekisteröintihakemukset",
+            response = Rekisterointi.class,
+            responseContainer = "java.lang.Iterable"
+    )
+    public Iterable<Rekisterointi> listRegistrations(Authentication authentication) {
+        String[] registrationTypes = AuthenticationUtils.getRegistrationTypes(authentication);
+        if (registrationTypes.length == 1 && registrationTypes[0].equals("varda")) {
+            List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
+            List<String> kunnat = virkailijanKunnat(organisaatioOidit);
+            return rekisterointiService.listByVardaKunnat(kunnat.toArray(new String[0]));
+        } else {
+            return rekisterointiService.listByRegistrationTypes(registrationTypes);
+        }
     }
 
     /**

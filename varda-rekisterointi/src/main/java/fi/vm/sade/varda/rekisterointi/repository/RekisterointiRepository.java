@@ -51,6 +51,12 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND :kunnat::text[] && (r.kunnat)")
     Iterable<Rekisterointi> findByTilaAndKunnat(@Param("tila") String tila, @Param("kunnat") String[] kunnat);
 
+    @Query(value = REKISTEROINTI_SELECT + " WHERE r.tyyppi = 'varda' AND :kunnat::text[] && (r.kunnat)")
+    Iterable<Rekisterointi> findByVardaKunnat(@Param("kunnat") String[] kunnat);
+
+    @Query(value = REKISTEROINTI_SELECT + " WHERE :tyyppi::text[] && (r.tyyppi)")
+    Iterable<Rekisterointi> findByRegistrationTypes(@Param("tyyppi") String[] registrationTypes);
+
     @Query(value = REKISTEROINTI_SELECT + " WHERE r.tila = :tila AND o.nimi ILIKE '%' || :organisaatio || '%'")
     Iterable<Rekisterointi> findByTilaAndOrganisaatioContaining(@Param("tila") String tila,
                                                                 @Param("organisaatio") String organisaatio);
