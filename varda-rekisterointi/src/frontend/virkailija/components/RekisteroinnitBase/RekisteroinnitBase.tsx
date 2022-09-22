@@ -12,7 +12,7 @@ import useAxios from 'axios-hooks';
 import Spinner from '../../../Spinner';
 import ErrorPage from '../../../virhe/VirheSivu';
 
-const rekisteroinnitUrl = '/varda-rekisterointi/virkailija/api/rekisteroinnit';
+const rekisteroinnitUrl = '/varda-rekisterointi/virkailija/api/rekisterointi';
 
 export default function RekisteroinnitBase() {
     const { i18n } = useContext(LanguageContext);
@@ -24,7 +24,7 @@ export default function RekisteroinnitBase() {
 
     const [{ data: rekisteroinnitData, loading, error }] = useAxios<Rekisterointihakemus[]>({
         url: rekisteroinnitUrl,
-        params: { tila: Tila.KASITTELYSSA, hakutermi: '' },
+        //params: { tila: Tila.KASITTELYSSA, hakutermi: '' },
     });
 
     if (loading || !rekisteroinnitData) {

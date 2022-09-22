@@ -11,6 +11,12 @@ INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit)
      'varda',
      '{"Helsinki"}',
      '{"testi.yritys@testiyrit.ys"}'
+ ), (
+     1,
+     'vardatoimintamuoto_tm01',
+     'jotpa',
+     '{"Helsinki"}',
+     '{"testi.yritys2@testiyrit2.ys"}'
  );
 
 INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypit, kotipaikka, maa, nimi, nimi_alkupvm)
@@ -24,6 +30,16 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      'maatjavaltiot1_fin',
      'Testiyritys',
      CURRENT_DATE
+ ), (
+     1,
+     '0000000-1',
+     CURRENT_DATE,
+     'yritysmuoto_26',
+     '{"organisaatiotyyppi_07"}',
+     'kunta_091',
+     'maatjavaltiot1_fin',
+     'Testiyritys2',
+     CURRENT_DATE
  );
 
 INSERT INTO yhteystiedot (
@@ -35,6 +51,12 @@ INSERT INTO yhteystiedot (
     'testi.yritys@testiyrit.ys',
     'Haapaniemenkatu 14', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 14', 'posti_00530', 'kunta_091'
+), (
+    1,
+    '+35812345678',
+    'testi.yritys2@testiyrit2.ys',
+    'Haapaniemenkatu 12', 'posti_00530', 'kunta_091',
+    'Haapaniemenkatu 12', 'posti_00530', 'kunta_091'
 );
 
 INSERT INTO kayttaja (id, etunimi, sukunimi, sahkoposti, asiointikieli, saateteksti, rekisterointi)
@@ -46,4 +68,12 @@ INSERT INTO kayttaja (id, etunimi, sukunimi, sahkoposti, asiointikieli, saatetek
      'fi',
      null,
      0
+ ), (
+     1,
+     'kingi',
+     'Käyttäjä',
+     'testi.kayttaja2@testiyrit2.ys',
+     'fi',
+     null,
+     1
  );
