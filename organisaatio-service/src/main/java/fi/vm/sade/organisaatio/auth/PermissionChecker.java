@@ -55,8 +55,8 @@ public class PermissionChecker {
     }
 
     public void checkUpdateOrganisationName(String oid) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(oid);
-
+        Organisaatio current = organisaatioRepository.customFindByOid(oid);
+        final OrganisaatioContext authContext = OrganisaatioContext.get(current);
         checkPermission(permissionService.userCanEditName(authContext));
     }
 

@@ -329,8 +329,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden) {
-        return organisaatioRepository.findAllDescendants(oid, includeHidden);
+    public List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid) {
+        return organisaatioRepository.findAllDescendants(oid, permissionChecker.isReadAccessToAll());
     }
 
 }

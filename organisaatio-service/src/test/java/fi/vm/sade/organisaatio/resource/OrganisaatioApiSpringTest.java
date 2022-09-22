@@ -10,14 +10,18 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -86,12 +90,87 @@ class OrganisaatioApiSpringTest {
     }
 
     @Test
-    @DisplayName("Test child oids permission aspect")
+    @DisplayName("Test read permission aspect for protected oid")
     @Sql("/data/truncate_tables.sql")
     @Sql("/data/basic_organisaatio_data.sql")
-    void testChildOids2() throws Exception {
-        mockMvc.perform(get("/api/1.2.2020.1/childoids").param("rekursiivisesti", "true"))
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA"})
+    void testReadProtection() throws Exception {
+        String oid = "1.2.2020.1";
+        String errorResponse = "{\"errorMessage\":\"Not authorized to read organisation: " + oid + "\",\"errorKey\":\"no.permission\"}";
+
+        expectForbiddenAtPath(get("/api/{oid}/childoids", oid).param("rekursiivisesti", "true"), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/parentoids", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/children", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/historia", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/paivittaja", oid), errorResponse);
+        expectForbiddenAtPath(get("/api/{oid}/jalkelaiset", oid), errorResponse);
+    }
+
+    @Test
+    @DisplayName("Test CUD permission aspect")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA"})
+    void testCUDProtection() throws Exception {
+        String oid = "1.2.2020.1";
+        expectForbiddenAtPath(put("/api/{oid}", oid)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"oid\": \"" + oid + "\"}"),
+                "{\"errorMessage\":\"Not authorized to update organisation: " + oid + "\",\"errorKey\":\"no.permission\"}");
+
+        expectForbiddenAtPath(post("/api/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"oid\": \"" + oid + "\",\"parentOid\": \"9.9.9.9.9\"}"),
+                "{\"errorMessage\":\"Not authorized to create child organisation for 9.9.9.9.9\",\"errorKey\":\"no.permission\"}");
+        expectForbiddenAtPath(delete("/api/{oid}", oid),
+                "{\"errorMessage\":\"Not authorized to delete organisation: " + oid + "\",\"errorKey\":\"no.permission\"}");
+
+    }
+
+    @Test
+    @DisplayName("Test tarkasta permission aspect")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA"})
+    void testTarkastaProtection() throws Exception {
+        String oid = "1.2.2020.1";
+        expectForbiddenAtPath(put("/api/{oid}/tarkasta", oid)
+                        .contentType(MediaType.APPLICATION_JSON),
+                "{\"errorMessage\":\"Not authorized to update tarkastus for organisation: " + oid + "\",\"errorKey\":\"no.permission\"}");
+    }
+
+    @Test
+    @DisplayName("Test name CUD permission aspect ")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA"})
+    void testNameCUDProtection() throws Exception {
+
+        String nimiOid = "1.2.2004.1";
+        expectForbiddenAtPath(post("/api/{oid}/nimet", nimiOid)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"oid\": \"" + nimiOid + "\", " +
+                                "\"nimi\":{\"fi\": \"foo\"} }"),
+                "{\"errorMessage\":\"Not authorized to update name for organisation: " + nimiOid + "\",\"errorKey\":\"no.permission\"}");
+
+        expectForbiddenAtPath(put("/api/{oid}/nimet", nimiOid)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"oid\": \"" + nimiOid + "\", " +
+                                "\"nimi\":{\"fi\": \"foo\"} }"),
+                "{\"errorMessage\":\"Not authorized to update name for organisation: " + nimiOid + "\",\"errorKey\":\"no.permission\"}");
+
+        expectForbiddenAtPath(delete("/api/{oid}/nimet", nimiOid)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"oid\": \"" + nimiOid + "\", " +
+                                "\"nimi\":{\"fi\": \"foo\"} }"),
+                "{\"errorMessage\":\"Not authorized to update name for organisation: " + nimiOid + "\",\"errorKey\":\"no.permission\"}");
+
+    }
+
+    private void expectForbiddenAtPath(MockHttpServletRequestBuilder request, String errorResponse) throws Exception {
+        mockMvc.perform(request)
                 .andExpect(status().isForbidden())
-                .andExpect(content().json("{\"errorMessage\":\"no.permission\",\"errorKey\":\"no.permission\"}"));
+                .andExpect(content().json(errorResponse));
     }
 }

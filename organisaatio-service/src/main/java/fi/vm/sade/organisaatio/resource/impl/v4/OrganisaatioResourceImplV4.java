@@ -13,18 +13,22 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.impl.OrganisaatioApiImpl;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.resource.v4.OrganisaatioResourceV4;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @RequestMapping("${server.rest.context-path}/organisaatio/v4")
 public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         OrganisaatioResourceV4 {
+    protected final PermissionChecker permissionChecker;
 
     public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2, OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper, PermissionChecker permissionChecker, OrganisaatioBusinessService organisaatioBusinessService, OrganisaatioFindBusinessService organisaatioFindBusinessService, OppijanumeroClient oppijanumeroClient, OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        super(organisaatioResourceV2, organisaatioDTOV4ModelMapper, permissionChecker, organisaatioBusinessService, organisaatioFindBusinessService, oppijanumeroClient, organisaatioNimiModelMapper);
+        super(oppijanumeroClient, organisaatioResourceV2, organisaatioDTOV4ModelMapper, organisaatioNimiModelMapper, organisaatioBusinessService, organisaatioFindBusinessService);
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -33,15 +37,15 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         try {
             permissionChecker.checkRemoveOrganisation(oid);
         } catch (NotAuthorizedException nae) {
-            LOG.warn("Not authorized to delete organisation: " + oid);
+            log.warn("Not authorized to delete organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
         try {
             Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            LOG.info("Deleted organisaatio: " + oid + " under parent: " + parent.getOid());
+            log.info("Deleted organisaatio: " + oid + " under parent: " + parent.getOid());
         } catch (SadeBusinessException sbe) {
-            LOG.warn("Error deleting org", sbe);
+            log.warn("Error deleting org", sbe);
             throw new OrganisaatioResourceException(sbe);
         }
 

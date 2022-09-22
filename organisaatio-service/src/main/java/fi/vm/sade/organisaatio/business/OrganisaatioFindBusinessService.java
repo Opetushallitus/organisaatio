@@ -129,5 +129,5 @@ public interface OrganisaatioFindBusinessService {
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
 
-    List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid, boolean includeHidden);
+    List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid);
 }
