@@ -1,5 +1,5 @@
 import React from 'react';
-import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi } from './types/types';
+import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Permission, RegistrationType } from './types/types';
 
 export interface I18n {
     translate: (key: string) => string;
@@ -36,12 +36,9 @@ export const LanguageContext = React.createContext<LanguageContextType>({
     i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
 });
 
-type PermissionContextType = {
-    hasCreatePermission: boolean;
-};
-
-export const PermissionContext = React.createContext<PermissionContextType>({
+export const PermissionContext = React.createContext<Permission>({
     hasCreatePermission: false,
+    registrationTypes: [],
 });
 
 export interface Koodisto {

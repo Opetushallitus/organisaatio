@@ -11,6 +11,13 @@ export type Koodi = {
     nimi: LocalizableText,
 };
 
+export type RegistrationType = string
+
+export type Permission = {
+    hasCreatePermission: boolean
+    registrationTypes: RegistrationType[]
+}
+
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
 @RestController
-@PreAuthorize(VirkailijaController.ROOLI_TARKISTUS)
+@PreAuthorize(Constants.VIRKAILIJA_PRE_AUTH)
 @RequestMapping(VirkailijaController.BASE_PATH)
 @RequiredArgsConstructor
 public class VirkailijaController {
@@ -40,8 +40,6 @@ public class VirkailijaController {
     static final String REKISTEROINNIT_PATH = "/rekisteroinnit";
     static final String PAATOKSET_PATH = "/paatokset";
     static final String PAATOKSET_BATCH_PATH = PAATOKSET_PATH + "/batch";
-    static final String VIRKAILIJA_ROOLI = "ROLE_" + Constants.VIRKAILIJA_ROLE;
-    static final String ROOLI_TARKISTUS = "hasAnyRole('" + VIRKAILIJA_ROOLI + "')";
 
     private static final String ORGANISAATIOT_PATH = "/organisaatiot";
     private static final String OPH_OID = "1.2.246.562.10.00000000001"; // TODO: ei-kovakoodattuna jostain?
@@ -209,7 +207,7 @@ public class VirkailijaController {
 
     List<String> haeOrganisaatioOidit(Collection<? extends GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream()
-                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VIRKAILIJA_ROLE + '_'))
+                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VARDA_ROLE + '_'))
                 .map(grantedAuthority -> {
                     String authority = grantedAuthority.getAuthority();
                     return authority.substring(authority.lastIndexOf('_') + 1);

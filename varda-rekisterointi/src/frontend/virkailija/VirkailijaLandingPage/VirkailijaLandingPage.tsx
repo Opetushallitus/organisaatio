@@ -3,7 +3,7 @@ import { PermissionContext, KoodistoImpl, LanguageContext, MaatJaValtiotKoodisto
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { ThemeProvider } from 'styled-components';
 import useAxios from 'axios-hooks';
-import { Koodi } from '../../types/types';
+import { Koodi, Permission } from '../../types/types';
 import Spinner from '../../Spinner';
 import ErrorPage from '../../virhe/VirheSivu';
 import { Raamit } from '../Raamit';
@@ -16,8 +16,8 @@ export default function VirkailijaLandingPage() {
     const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError }] = useAxios<Koodi[]>(
         '/varda-rekisterointi/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true'
     );
-    const [{ data: permission, loading: permissionLoading, error: permissionError }] = useAxios<boolean>(
-        '/varda-rekisterointi/virkailija/api/permission/rekisterointi/create'
+    const [{ data: permission, loading: permissionLoading, error: permissionError }] = useAxios<Permission>(
+        '/varda-rekisterointi/virkailija/api/permission/rekisterointi'
     );
     if (maatJaValtiotLoading || permissionLoading) {
         return <Spinner />;
@@ -28,9 +28,8 @@ export default function VirkailijaLandingPage() {
     }
 
     const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
-
     return (
-        <PermissionContext.Provider value={{ hasCreatePermission: permission }}>
+        <PermissionContext.Provider value={permission}>
             <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
                 <Raamit>
                     <ThemeProvider theme={theme}>
