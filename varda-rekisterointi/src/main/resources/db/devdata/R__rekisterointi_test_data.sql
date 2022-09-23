@@ -13,9 +13,9 @@ INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit)
      '{"testi.yritys@testiyrit.ys"}'
  ), (
      1,
-     'vardatoimintamuoto_tm01',
+     null,
      'jotpa',
-     '{"Helsinki"}',
+     null,
      '{"testi.yritys2@testiyrit2.ys"}'
  );
 
@@ -28,17 +28,17 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      '{"organisaatiotyyppi_07"}',
      'kunta_091',
      'maatjavaltiot1_fin',
-     'Testiyritys',
+     'Varda-yritys',
      CURRENT_DATE
  ), (
      1,
      '0000000-1',
      CURRENT_DATE,
      'yritysmuoto_26',
-     '{"organisaatiotyyppi_07"}',
+     '{"organisaatiotyyppi_01"}',
      'kunta_091',
      'maatjavaltiot1_fin',
-     'Testiyritys2',
+     'Jotpa-yritys',
      CURRENT_DATE
  );
 

@@ -159,7 +159,7 @@ public class RekisterointiServiceTest {
                                                 null,
                                                 LocalDate.now(),
                                                 KielistettyNimi.of(
-                                                                "fi", "Testiyritys", null),
+                                                                "fi", "Varda-yritys", null),
                                                 "yritysmuoto_26",
                                                 Set.of("organisaatiotyyppi_07"),
                                                 "kunta_091",
