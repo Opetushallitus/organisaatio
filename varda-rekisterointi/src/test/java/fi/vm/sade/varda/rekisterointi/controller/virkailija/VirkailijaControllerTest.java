@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +112,7 @@ public class VirkailijaControllerTest {
     @Test
     public void haeOrganisaatioOiditReturnsOidSuffix() {
         String oid = "1.23.456.7890";
-        String authorityValue = String.format(VirkailijaController.VIRKAILIJA_ROOLI + "_%s", oid);
+        String authorityValue = String.format("ROLE_" + Constants.VIRKAILIJA_ROLE + "_%s", oid);
         VirkailijaController controller = new VirkailijaController(null, null, null, null);
         GrantedAuthority authority = (GrantedAuthority) () -> authorityValue;
         List<String> returnedOids = controller.haeOrganisaatioOidit(List.of(authority));
