@@ -42,6 +42,7 @@ export const dummyHakemus: Rekisterointihakemus = {
     kayttaja: dummyKayttaja,
     organisaatio: dummyOrganisaatio,
     toimintamuoto: 'päiväkoti',
+    tyyppi: 'varda',
     id: 0,
     vastaanotettu: '14.11.2019 10:44',
     tila: Tila.KASITTELYSSA,

@@ -1,18 +1,20 @@
-import React, { useContext, useState } from 'react';
-import { LanguageContext, PermissionContext } from '../../../contexts';
-import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
-import styles from './RekisteroinnitBase.module.css';
-import Divider from '@opetushallitus/virkailija-ui-components/Divider';
-import * as YtunnusValidator from '../../../YtunnusValidator';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
+import axios from 'axios';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
+import Divider from '@opetushallitus/virkailija-ui-components/Divider';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+
+import { LanguageContext, PermissionContext } from '../../../contexts';
+import { Rekisterointihakemus } from '../../rekisterointihakemus';
+import * as YtunnusValidator from '../../../YtunnusValidator';
 import RekisteroinnitTable from '../RekisteroinnitTable/RekisteroinnitTable';
-import useAxios from 'axios-hooks';
 import Spinner from '../../../Spinner';
 import ErrorPage from '../../../virhe/VirheSivu';
+import { Rekisterointityyppi } from '../../../types/types';
 
-const rekisteroinnitUrl = '/varda-rekisterointi/virkailija/api/rekisterointi';
+import styles from './RekisteroinnitBase.module.css';
 
 export default function RekisteroinnitBase() {
     const { i18n } = useContext(LanguageContext);
@@ -21,13 +23,33 @@ export default function RekisteroinnitBase() {
     const ytunnusTrimmed = ytunnus.trim();
     const ytunnusDisabled = !YtunnusValidator.validate(ytunnusTrimmed);
     const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]: ytunnusDisabled });
+    const [registrationTypes, setRegistrationTypes] = useState<Rekisterointityyppi[]>([]);
+    const [registrationType, setRegistrationType] = useState<Rekisterointityyppi>();
+    const [rekisteroinnit, setRekisteroinnit] = useState<Rekisterointihakemus[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
-    const [{ data: rekisteroinnitData, loading, error }] = useAxios<Rekisterointihakemus[]>({
-        url: rekisteroinnitUrl,
-        //params: { tila: Tila.KASITTELYSSA, hakutermi: '' },
-    });
+    useEffect(() => {
+        const fetchRekisteroinnit = async () => {
+            try {
+                const { data: rekisteroinnit } = await axios.get<Rekisterointihakemus[]>(
+                    '/varda-rekisterointi/virkailija/api/rekisterointi'
+                );
+                const uniqueRegistrationTypes = Array.from(new Set(rekisteroinnit.map((r) => r.tyyppi)));
+                uniqueRegistrationTypes.sort();
+                setRegistrationTypes(uniqueRegistrationTypes);
+                setRegistrationType(uniqueRegistrationTypes[0]);
+                setRekisteroinnit(rekisteroinnit);
+                setLoading(false);
+            } catch (e: unknown) {
+                setError(true);
+            }
+        };
 
-    if (loading || !rekisteroinnitData) {
+        void fetchRekisteroinnit();
+    }, []);
+
+    if (loading) {
         return <Spinner />;
     }
 
@@ -38,6 +60,19 @@ export default function RekisteroinnitBase() {
     return (
         <div className={styles.pageBase}>
             <div className={styles.mainContent}>
+                {registrationTypes.length > 1 && (
+                    <div className={styles.registrationTypeButtons}>
+                        {registrationTypes.map((t) => (
+                            <Button
+                                className={styles.registrationTypeButton}
+                                onClick={() => setRegistrationType(t)}
+                                variant={t === registrationType ? 'contained' : 'outlined'}
+                            >{`${t}-${i18n.translate('REKISTEROINNIT_OTSIKKO')}`}</Button>
+                        ))}
+                    </div>
+                )}
+                <h1 className={styles.header}>{`${registrationType}-${i18n.translate('REKISTEROINNIT_OTSIKKO')}`}</h1>
+                <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
                 {/*<div className={styles.rekisterointiOsio}>
                     <div>
                         <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
@@ -65,8 +100,8 @@ export default function RekisteroinnitBase() {
                     </div>
                 </div>
                 <RekisterointiLista tila={tila} hakutermi={hakutermi} statusCallback={statusCallback} />*/}
-                <RekisteroinnitTable rekisteroinnit={rekisteroinnitData} />
-                {hasCreatePermission && (
+                <RekisteroinnitTable rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)} />
+                {hasCreatePermission && registrationType === 'varda' && (
                     <div>
                         <Divider />
                         <div className={styles.lisaaHakemusOsio}>

@@ -91,11 +91,13 @@ export type Kayttaja = {
     saateteksti: string,
 }
 
-// varda-rekisterointi
+export type Rekisterointityyppi = 'varda' | 'jotpa'
+
 export type Rekisterointi = {
     toimintamuoto: string,
     kunnat: string[]
     id: number
+    tyyppi: Rekisterointityyppi
     organisaatio: Organisaatio,
     sahkopostit: string[],
     kayttaja: Kayttaja

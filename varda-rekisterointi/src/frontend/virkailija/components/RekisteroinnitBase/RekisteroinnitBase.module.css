@@ -71,3 +71,16 @@ a.nappiDisabled {
     pointer-events: none;
     opacity: 0.5;
 }
+
+.header {
+    text-transform: capitalize;
+}
+
+.registrationTypeButtons {
+    padding: 2rem 0;
+}
+
+.registrationTypeButton {
+    cursor: pointer;
+    text-transform: capitalize;
+}
