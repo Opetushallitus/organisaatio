@@ -2,6 +2,7 @@ import * as React from 'react';
 import styles from './Table.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import {
+    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -15,8 +16,6 @@ import { LanguageContext } from '../../../contexts';
 type TableProps = {
     columns: any[];
     data: any[];
-    tila: string[];
-    handleTilaChange: (tila: string) => void;
 };
 enum tilaTypes {
     KASITTELYSSA = 'kÄSITTELYSSÄ',
@@ -24,10 +23,12 @@ enum tilaTypes {
     HYLATTY = 'HYLÄTTY',
 }
 // TODO tyypit
-export const Table = ({ columns, data, handleTilaChange, tila }: TableProps) => {
+export const Table = ({ columns, data }: TableProps) => {
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
+
     const { i18n } = useContext(LanguageContext);
+    const [tilaFilter, setTilaFilter] = React.useState<string>('');
 
     const table = useReactTable({
         data,
@@ -35,6 +36,7 @@ export const Table = ({ columns, data, handleTilaChange, tila }: TableProps) => 
         state: {
             rowSelection,
             globalFilter,
+            columnFilters: [{ id: 'tila', value: tilaFilter }],
             columnVisibility: { tila: false },
         },
         onRowSelectionChange: setRowSelection,
@@ -55,9 +57,9 @@ export const Table = ({ columns, data, handleTilaChange, tila }: TableProps) => 
                 <div>
                     {Object.keys(tilaTypes).map((key) => (
                         <Button
-                            variant={tila.includes(key) ? 'contained' : 'outlined'}
+                            variant={tilaFilter === key ? 'contained' : 'outlined'}
                             onClick={() => {
-                                handleTilaChange(key);
+                                tilaFilter === key ? setTilaFilter('') : setTilaFilter(key);
                             }}
                         >
                             {i18n.translate(`TAULUKKO_TILA_${key}`)}

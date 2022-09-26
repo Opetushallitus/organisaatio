@@ -30,22 +30,11 @@ function IndeterminateCheckbox({
 //TODO tyypitystä
 export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTableProps) {
     const { i18n } = useContext(LanguageContext);
-    const [tilaFilter, setTilaFilter] = React.useState<string[]>([]);
     const data = useMemo<Rekisterointihakemus[]>(() => {
         rekisteroinnit.sort((a, b) => a.organisaatio.ytjNimi.nimi.localeCompare(b.organisaatio.ytjNimi.nimi));
         return [...rekisteroinnit];
     }, [rekisteroinnit]);
 
-    const handleTilaChange = (tilaCandidate: string) => {
-        if (tilaFilter.includes(tilaCandidate)) {
-            tilaFilter.splice(tilaFilter.indexOf(tilaCandidate), 1);
-            setTilaFilter([...tilaFilter]);
-        } else {
-            setTilaFilter([...tilaFilter, tilaCandidate]);
-        }
-    };
-
-    const tilaFilterFn = (row: any, columnId: string, filterValue: string) => tilaFilter.includes(filterValue);
     const columns = React.useMemo<ColumnDef<Rekisterointihakemus>[]>(
         () => [
             {
@@ -109,8 +98,9 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 ),
             },
             {
+                enableColumnFilter: true,
                 accessorKey: 'tila',
-                filterFn: tilaFilterFn,
+                filterFn: 'arrIncludes',
             },
         ],
         [i18n]
@@ -118,7 +108,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
 
     return (
         <>
-            <Table columns={columns} data={data} handleTilaChange={handleTilaChange} tila={tilaFilter} />
+            <Table columns={columns} data={data} />
         </>
     );
 }
