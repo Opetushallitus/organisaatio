@@ -100,7 +100,6 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
             {
                 enableColumnFilter: true,
                 accessorKey: 'tila',
-                filterFn: 'arrIncludes',
             },
         ],
         [i18n]
