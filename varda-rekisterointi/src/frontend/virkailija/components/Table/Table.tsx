@@ -8,15 +8,26 @@ import {
     getPaginationRowModel,
     useReactTable,
 } from '@tanstack/react-table';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+import { useContext } from 'react';
+import { LanguageContext } from '../../../contexts';
 
 type TableProps = {
     columns: any[];
     data: any[];
+    tila: string[];
+    handleTilaChange: (tila: string) => void;
 };
+enum tilaTypes {
+    KASITTELYSSA = 'kÄSITTELYSSÄ',
+    HYVAKSYTTY = 'HYVÄKSYTTY',
+    HYLATTY = 'HYLÄTTY',
+}
 // TODO tyypit
-export const Table = ({ columns, data }: TableProps) => {
+export const Table = ({ columns, data, handleTilaChange, tila }: TableProps) => {
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
+    const { i18n } = useContext(LanguageContext);
 
     const table = useReactTable({
         data,
@@ -24,23 +35,35 @@ export const Table = ({ columns, data }: TableProps) => {
         state: {
             rowSelection,
             globalFilter,
+            columnVisibility: { tila: false },
         },
         onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        debugTable: true,
     });
 
     return (
         <div className={styles.tableContainer}>
-            <div>
+            <div className={styles.headerRow}>
                 <input
                     value={globalFilter ?? ''}
                     onChange={(e) => setGlobalFilter(e.target.value)}
                     className={styles.filterInput}
-                    placeholder="ph"
+                    placeholder="TODO"
                 />
+                <div>
+                    {Object.keys(tilaTypes).map((key) => (
+                        <Button
+                            variant={tila.includes(key) ? 'contained' : 'outlined'}
+                            onClick={() => {
+                                handleTilaChange(key);
+                            }}
+                        >
+                            {i18n.translate(`TAULUKKO_TILA_${key}`)}
+                        </Button>
+                    ))}
+                </div>
             </div>
             <table className={styles.tableElement}>
                 <thead className={styles.tHead}>

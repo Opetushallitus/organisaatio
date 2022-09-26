@@ -6,6 +6,13 @@
     background: #ffffff;
 }
 
+.headerRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
 .tableElement {
     width: 100%;
     min-height: 20vh;

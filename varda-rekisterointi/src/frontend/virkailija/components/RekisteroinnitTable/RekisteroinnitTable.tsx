@@ -5,13 +5,10 @@ import { LanguageContext } from '../../../contexts';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 
 import { ColumnDef } from '@tanstack/react-table';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
-};
-
-type TableChecboxProps = {
-    indeterminate?: boolean;
 };
 
 function IndeterminateCheckbox({
@@ -33,11 +30,22 @@ function IndeterminateCheckbox({
 //TODO tyypitystä
 export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTableProps) {
     const { i18n } = useContext(LanguageContext);
-
+    const [tilaFilter, setTilaFilter] = React.useState<string[]>([]);
     const data = useMemo<Rekisterointihakemus[]>(() => {
         rekisteroinnit.sort((a, b) => a.organisaatio.ytjNimi.nimi.localeCompare(b.organisaatio.ytjNimi.nimi));
         return [...rekisteroinnit];
     }, [rekisteroinnit]);
+
+    const handleTilaChange = (tilaCandidate: string) => {
+        if (tilaFilter.includes(tilaCandidate)) {
+            tilaFilter.splice(tilaFilter.indexOf(tilaCandidate), 1);
+            setTilaFilter([...tilaFilter]);
+        } else {
+            setTilaFilter([...tilaFilter, tilaCandidate]);
+        }
+    };
+
+    const tilaFilterFn = (row: any, columnId: string, filterValue: string) => tilaFilter.includes(filterValue);
     const columns = React.useMemo<ColumnDef<Rekisterointihakemus>[]>(
         () => [
             {
@@ -77,17 +85,32 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
             },
 
             {
-                Header: i18n.translate('TAULUKKO_ORGANISAATIO_YTUNNUS_OTSIKKO'),
+                header: i18n.translate('TAULUKKO_ORGANISAATIO_YTUNNUS_OTSIKKO'),
                 id: 'ytunnus',
                 accessorFn: (values: Rekisterointihakemus) =>
                     values.organisaatio?.ytunnus || i18n.translate('TAULUKKO_YTUNNUS_PUUTTUU_ORGANISAATIOLTA'),
             },
             {
-                Header: i18n.translate('TAULUKKO_VASTAANOTETTU_OTSIKKO'),
+                header: i18n.translate('TAULUKKO_VASTAANOTETTU_OTSIKKO'),
                 id: 'vastaanotettu',
-                accessorFn: (values: any) =>
-                    // TODO date formatting
-                    values.vastaanotettu && <span className={styles.tableCell}>{values.vastaanotettu}</span>,
+                accessorKey: 'vastaanotettu',
+            },
+            {
+                id: 'hyvaksynta',
+                cell: (info) => (
+                    <div className={styles.HyvaksyntaButtonsContainer}>
+                        <Button onClick={() => alert('klikkasit hyväksyntää')}>
+                            {i18n.translate('TAULUKKO_HYVAKSY_HAKEMUS')}
+                        </Button>
+                        <Button variant={'outlined'} onClick={() => alert('klikkasit hyväksyntää')}>
+                            {i18n.translate('TAULUKKO_HYLKAA_HAKEMUS')}
+                        </Button>
+                    </div>
+                ),
+            },
+            {
+                accessorKey: 'tila',
+                filterFn: tilaFilterFn,
             },
         ],
         [i18n]
@@ -95,7 +118,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
 
     return (
         <>
-            <Table columns={columns} data={data} />
+            <Table columns={columns} data={data} handleTilaChange={handleTilaChange} tila={tilaFilter} />
         </>
     );
 }
