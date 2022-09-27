@@ -63,8 +63,9 @@ export default function RekisteroinnitBase() {
                 {registrationTypes.length > 1 && (
                     <div className={styles.registrationTypeButtons}>
                         <ButtonGroup>
-                            {registrationTypes.map((t) => (
+                            {registrationTypes.map((t, idx) => (
                                 <Button
+                                    key={`${t}_${idx}`}
                                     className={styles.registrationTypeButton}
                                     onClick={() => setRegistrationType(t)}
                                     variant={t === registrationType ? 'contained' : 'outlined'}

@@ -10,7 +10,6 @@ import { Rekisterointi } from '../types/types';
 import RekisterointiListaOtsikko from './RekisterointiListaOtsikko';
 import YksittainenPaatos from './YksittainenPaatos/YksittainenPaatos';
 import RekisterointiListaRivi, { ListaRivi } from './RekisterointiListaRivi';
-import PaatosKontrollit from './PaatosKontrollit';
 import styles from './RekisterointiLista.module.css';
 
 const rekisteroinnitUrl = '/varda-rekisterointi/virkailija/api/rekisteroinnit';

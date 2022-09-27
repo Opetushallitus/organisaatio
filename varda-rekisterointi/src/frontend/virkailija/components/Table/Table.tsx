@@ -13,7 +13,7 @@ import {
 } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { LanguageContext } from '../../../contexts';
-import PaatosKontrollit from '../../PaatosKontrollit';
+import ApprovalButtonsContainer from '../ApprovalButtonsContainer/ApprovalButtonsContainer';
 import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
 
@@ -67,6 +67,7 @@ export const Table = ({ columns, data }: TableProps) => {
                 <ButtonGroup>
                     {Object.keys(Tila).map((key) => (
                         <Button
+                            key={key}
                             variant={tilaFilter === key ? 'contained' : 'outlined'}
                             onClick={() => {
                                 tilaFilter === key ? setTilaFilter('') : setTilaFilter(key);
@@ -108,7 +109,7 @@ export const Table = ({ columns, data }: TableProps) => {
                 </tbody>
             </table>
             {(tilaFilter === Tila.KASITTELYSSA || selectedRows.length > 0) && (
-                <PaatosKontrollit valitut={selectedRows} valitutKasiteltyCallback={() => {}} />
+                <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
             )}
         </div>
     );

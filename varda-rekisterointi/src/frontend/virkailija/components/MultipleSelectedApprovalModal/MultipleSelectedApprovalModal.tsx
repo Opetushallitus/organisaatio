@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Axios from 'axios';
-import { KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext } from '../contexts';
+import { KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext } from '../../../contexts';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import Typography from '@opetushallitus/virkailija-ui-components/Typography';
@@ -10,10 +10,10 @@ import ModalBody from '@opetushallitus/virkailija-ui-components/ModalBody';
 import ModalFooter from '@opetushallitus/virkailija-ui-components/ModalFooter';
 import ModalHeader from '@opetushallitus/virkailija-ui-components/ModalHeader';
 import Divider from '@opetushallitus/virkailija-ui-components/Divider';
-import { Rekisterointihakemus } from './rekisterointihakemus';
-import { isNonEmpty } from '../StringUtils';
-import { Organisaatio } from '../types/types';
-import styles from './PaatosVahvistus.module.css';
+import { Rekisterointihakemus } from '../../rekisterointihakemus';
+import { isNonEmpty } from '../../../StringUtils';
+import { Organisaatio } from '../../../types/types';
+import styles from './MultipleSelectedApprovalModal.module.css';
 
 const paatoksetBatchUrl = '/varda-rekisterointi/virkailija/api/paatokset/batch';
 
@@ -24,11 +24,11 @@ type PaatosBatch = {
 };
 
 type Props = {
-    valitut: Rekisterointihakemus[];
-    hyvaksytty: boolean;
-    nayta: boolean;
-    valitutKasiteltyCallback: (hyvaksytty: boolean) => void;
-    suljeCallback: () => void;
+    chosenRegistrations: Rekisterointihakemus[];
+    approvalDecision: boolean;
+    modalOpen: boolean;
+    approvalDoneCb: (hyvaksytty: boolean) => void;
+    closeButtonCb: () => void;
 };
 
 class PaatosRivi {
@@ -47,12 +47,12 @@ class PaatosRivi {
     }
 }
 
-export default function PaatosVahvistus({
-    valitut,
-    hyvaksytty,
-    nayta,
-    valitutKasiteltyCallback,
-    suljeCallback,
+export default function MultipleSelectedApprovalModal({
+    chosenRegistrations,
+    approvalDecision,
+    modalOpen,
+    approvalDoneCb,
+    closeButtonCb,
 }: Props) {
     const { i18n } = useContext(LanguageContext);
     const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
@@ -64,18 +64,18 @@ export default function PaatosVahvistus({
     async function laheta() {
         setPerusteluError(false);
         const paatokset: PaatosBatch = {
-            hyvaksytty,
-            hakemukset: valitut.map((h) => h.id),
+            hyvaksytty: approvalDecision,
+            hakemukset: chosenRegistrations.map((h) => h.id),
         };
         if (isNonEmpty(perustelu)) {
             paatokset.perustelu = perustelu;
-        } else if (!hyvaksytty) {
+        } else if (!approvalDecision) {
             return setPerusteluError(true);
         }
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
-            valitutKasiteltyCallback(hyvaksytty);
-            suljeCallback();
+            approvalDoneCb(approvalDecision);
+            closeButtonCb();
         } catch (e) {
             setLahetaError(true);
             throw e;
@@ -92,9 +92,9 @@ export default function PaatosVahvistus({
     }
 
     return (
-        <Modal open={nayta} onClose={suljeCallback}>
-            <ModalHeader onClose={suljeCallback}>
-                {i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}
+        <Modal open={modalOpen} onClose={closeButtonCb}>
+            <ModalHeader onClose={closeButtonCb}>
+                {i18n.translate(approvalDecision ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}
             </ModalHeader>
             <ModalBody>
                 <table className={styles.paatosLista}>
@@ -107,7 +107,7 @@ export default function PaatosVahvistus({
                         </tr>
                     </thead>
                     <tbody>
-                        {valitut
+                        {chosenRegistrations
                             .map((hakemus) => new PaatosRivi(hakemus, `${kotipaikka(hakemus.organisaatio)}`))
                             .map((rivi) => (
                                 <tr key={rivi.hakemus.id}>
@@ -119,8 +119,8 @@ export default function PaatosVahvistus({
                             ))}
                     </tbody>
                 </table>
-                {!hyvaksytty && [
-                    valitut.length > 1
+                {!approvalDecision && [
+                    chosenRegistrations.length > 1
                         ? [
                               <Divider />,
                               <Typography>{i18n.translate('REKISTEROINTI_HYLKAYS_MONTAVALITTUNA')}</Typography>,
@@ -145,7 +145,7 @@ export default function PaatosVahvistus({
                             {i18n.translate('ERROR_SAVE')}
                         </div>
                     ) : null}
-                    <Button variant="text" onClick={suljeCallback}>
+                    <Button variant="text" onClick={closeButtonCb}>
                         {i18n.translate('REKISTEROINTI_PERUUTA')}
                     </Button>
                     <Button onClick={laheta}>{i18n.translate('REKISTEROINTI_LAHETA')}</Button>

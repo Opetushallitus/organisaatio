@@ -3,9 +3,9 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { ThemeProvider } from 'styled-components';
-import PaatosKontrollit from './PaatosKontrollit';
-import { Rekisterointihakemus } from './rekisterointihakemus';
-import { dummyHakemus } from '../testTypes';
+import ApprovalButtonsContainer from './ApprovalButtonsContainer';
+import { Rekisterointihakemus } from '../../rekisterointihakemus';
+import { dummyHakemus } from '../../../testTypes';
 
 const theme = createTheme();
 const buttonIds = ['hylkaaButton', 'hyvaksyButton'];
@@ -28,7 +28,10 @@ describe('PaatosKontrollit', () => {
         await act(async () => {
             render(
                 <ThemeProvider theme={theme}>
-                    <PaatosKontrollit valitut={[]} tyhjennaValinnatCallback={dummyTyhjennaCallback} />
+                    <ApprovalButtonsContainer
+                        chosenRekisteroinnit={[]}
+                        valitutKasiteltyCallback={dummyTyhjennaCallback}
+                    />
                 </ThemeProvider>,
                 container
             );
@@ -47,7 +50,10 @@ describe('PaatosKontrollit', () => {
         await act(async () => {
             render(
                 <ThemeProvider theme={theme}>
-                    <PaatosKontrollit valitut={[hakemus]} tyhjennaValinnatCallback={dummyTyhjennaCallback} />
+                    <ApprovalButtonsContainer
+                        chosenRekisteroinnit={[hakemus]}
+                        valitutKasiteltyCallback={dummyTyhjennaCallback}
+                    />
                 </ThemeProvider>,
                 container
             );

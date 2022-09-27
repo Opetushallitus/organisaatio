@@ -1,0 +1,14 @@
+.approvalButtonsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.approvalButtonsContainer button {
+    padding: 0 10px;
+}
+
+.approvalButtonsContainer button:not(:first-of-type) {
+    margin-left: 12px;
+}

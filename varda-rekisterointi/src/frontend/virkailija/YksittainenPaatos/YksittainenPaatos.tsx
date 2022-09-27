@@ -11,7 +11,7 @@ import Fieldset from '../../Fieldset';
 import OrganisaationTiedot from './OrganisaationTiedot';
 import OrgYhteystiedot from './OrgYhteystiedot';
 
-import styles from '../PaatosKontrollit.module.css';
+import styles from '../components/ApprovalButtonsContainer/PaatosKontrollit.module.css';
 import ModalHeader from '@opetushallitus/virkailija-ui-components/ModalHeader';
 
 type Props = {
