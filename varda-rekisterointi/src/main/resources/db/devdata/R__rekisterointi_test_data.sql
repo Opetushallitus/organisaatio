@@ -17,6 +17,18 @@ INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit)
      'jotpa',
      null,
      '{"testi.jotpa@testiyrit2.ys"}'
+), (
+     6,
+     null,
+     'jotpa',
+     null,
+     '{"testi.jotpa@testiyrit3.ys"}'
+), (
+     7,
+     null,
+     'jotpa',
+     null,
+     '{"testi.jotpa@testiyrit4.ys"}'
 );
 
 INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit, tila)
@@ -138,6 +150,26 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
     'maatjavaltiot1_fin',
     'Jotpa-yritys hylatty',
     CURRENT_DATE
+), (
+    6,
+    '0000000-6',
+    CURRENT_DATE,
+    'yritysmuoto_26',
+    '{"organisaatiotyyppi_01"}',
+    'kunta_091',
+    'maatjavaltiot1_fin',
+    'Jotpa-yritys 2',
+    CURRENT_DATE
+), (
+    7,
+    '0000000-7',
+    CURRENT_DATE,
+    'yritysmuoto_26',
+    '{"organisaatiotyyppi_01"}',
+    'kunta_091',
+    'maatjavaltiot1_fin',
+    'Jotpa-yritys 3',
+    CURRENT_DATE
 );
 
 INSERT INTO yhteystiedot (
@@ -177,6 +209,18 @@ INSERT INTO yhteystiedot (
     5,
     '+3581234353',
     'testi.yritys2@testiyrit2.ys',
+    'Haapaniemenkatu 8', 'posti_00530', 'kunta_091',
+    'Haapaniemenkatu 8', 'posti_00530', 'kunta_091'
+),(
+    6,
+    '+3581234353',
+    'testi.yritys6@testiyrit3.ys',
+    'Haapaniemenkatu 8', 'posti_00530', 'kunta_091',
+    'Haapaniemenkatu 8', 'posti_00530', 'kunta_091'
+),(
+    7,
+    '+3581234353',
+    'testi.yritys7@testiyrit4.ys',
     'Haapaniemenkatu 8', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 8', 'posti_00530', 'kunta_091'
 );
@@ -230,4 +274,20 @@ INSERT INTO kayttaja (id, etunimi, sukunimi, sahkoposti, asiointikieli, saatetek
      'fi',
      'saateteksti testi',
      5
+ ),(
+     6,
+     'Saate 6',
+     'Käyttäjä',
+     'testi.kayttaja75@testiyrit3.ys',
+     'fi',
+     'saateteksti testi',
+     6
+ ),(
+     7,
+     'Saate 7',
+     'Käyttäjä',
+     'testi.kayttaja7@testiyrit4.ys',
+     'fi',
+     'saateteksti testi',
+     7
  );

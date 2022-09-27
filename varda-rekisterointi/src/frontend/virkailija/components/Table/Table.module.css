@@ -31,15 +31,6 @@
     border-collapse: collapse;
 }
 
-.th {
-    text-align: left;
-}
-
-.td {
-    font-family: Roboto, Arial Unicode MS, Arial, sans-serif;
-    font-weight: 400;
-}
-
 .tHead {
     border-bottom: 1px solid rgba(151, 151, 151, 0.5);
 }
@@ -53,14 +44,10 @@
     padding: 15px 5px;
 }
 
-.tr:nth-child(even) {
-    background: rgba(245, 245, 245, 1);
-}
-
-.tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0);
-}
-
 .filterInputContainer {
     width: 350px;
+}
+
+.evenRow {
+    background: #F5F5F5;
 }

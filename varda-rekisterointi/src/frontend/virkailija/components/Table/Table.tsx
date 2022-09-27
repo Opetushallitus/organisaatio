@@ -3,11 +3,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import styles from './Table.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import {
+    Cell,
     ColumnDef,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
+    Header,
+    HeaderGroup,
     Row,
     useReactTable,
 } from '@tanstack/react-table';
@@ -43,7 +46,13 @@ export const Table = ({ columns, data }: TableProps) => {
             rowSelection,
             globalFilter,
             columnFilters: [{ id: 'tila', value: tilaFilter }],
-            columnVisibility: { tila: false },
+            columnVisibility: {
+                tila: false,
+                select: tilaFilter === Tila.KASITTELYSSA,
+                hyvaksynta: tilaFilter === Tila.KASITTELYSSA,
+                hylatty: tilaFilter === Tila.HYLATTY,
+                hyvaksytty: tilaFilter === Tila.HYVAKSYTTY,
+            },
         },
         onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
@@ -82,9 +91,9 @@ export const Table = ({ columns, data }: TableProps) => {
             </div>
             <table className={styles.tableElement}>
                 <thead className={styles.tHead}>
-                    {table.getHeaderGroups().map((headerGroup: any) => (
+                    {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
-                            {headerGroup.headers.map((header: any) => (
+                            {headerGroup.headers.map((header) => (
                                 <th key={header.id} colSpan={header.colSpan} className={styles.tHeadCell}>
                                     {header.isPlaceholder
                                         ? null
@@ -95,10 +104,10 @@ export const Table = ({ columns, data }: TableProps) => {
                     ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map((row) => {
+                    {table.getRowModel().rows.map((row, idx: number) => {
                         return (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map((cell: any) => {
+                            <tr key={row.id} className={idx % 2 === 1 ? styles.evenRow : ''}>
+                                {row.getVisibleCells().map((cell) => {
                                     return (
                                         <td key={cell.id} className={styles.tBodyCell}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -8,7 +8,7 @@ export enum Tila {
 
 export type Paatos = {
     hyvaksytty: boolean;
-    aikaleima: string;
+    paatetty: string;
     perustelu?: string; // vain, jos HYLATTY
 };
 

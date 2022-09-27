@@ -54,16 +54,14 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                         />
                     ),
                     cell: ({ row }: { row: Row<Rekisterointihakemus> }) => (
-                        <div className="px-1">
-                            <IndeterminateCheckbox
-                                {...{
-                                    disabled: row.original.tila !== Tila.KASITTELYSSA && true,
-                                    checked: row.original.tila !== Tila.KASITTELYSSA ? false : row.getIsSelected(),
-                                    indeterminate: row.getIsSomeSelected(),
-                                    onChange: row.getToggleSelectedHandler(),
-                                }}
-                            />
-                        </div>
+                        <IndeterminateCheckbox
+                            {...{
+                                disabled: row.original.tila !== Tila.KASITTELYSSA && true,
+                                checked: row.original.tila !== Tila.KASITTELYSSA ? false : row.getIsSelected(),
+                                indeterminate: row.getIsSomeSelected(),
+                                onChange: row.getToggleSelectedHandler(),
+                            }}
+                        />
                     ),
                 },
                 {
@@ -110,6 +108,18 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                             </Button>
                         </div>
                     ),
+                },
+                {
+                    header: i18n.translate('TAULUKKO_HYLATTY_OTSIKKO'),
+                    id: 'hylatty',
+                    accessorFn: (values: Rekisterointihakemus) =>
+                        values.paatos?.paatetty && format(parseISO(values.paatos?.paatetty), saapumisAikaFormat),
+                },
+                {
+                    header: i18n.translate('TAULUKKO_HYVAKSYTTY_OTSIKKO'),
+                    id: 'hyvaksytty',
+                    accessorFn: (values: Rekisterointihakemus) =>
+                        values.paatos?.paatetty && format(parseISO(values.paatos?.paatetty), saapumisAikaFormat),
                 },
                 {
                     enableColumnFilter: true,
