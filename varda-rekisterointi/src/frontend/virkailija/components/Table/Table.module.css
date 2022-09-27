@@ -48,6 +48,17 @@
     width: 350px;
 }
 
+.filterTilaContainer {
+    display: flex;
+}
+
+.pageSizeSelector {
+    color: #666;
+    display: flex;
+    align-items: center;
+    padding-left: 40px;
+}
+
 .evenRow {
     background: #F5F5F5;
 }

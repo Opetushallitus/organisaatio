@@ -1,7 +1,5 @@
 import React, { useContext, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
-import styles from './Table.module.css';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
 import {
     ColumnDef,
     flexRender,
@@ -11,11 +9,16 @@ import {
     Row,
     useReactTable,
 } from '@tanstack/react-table';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+
 import { LanguageContext } from '../../../contexts';
 import ApprovalButtonsContainer from '../ApprovalButtonsContainer/ApprovalButtonsContainer';
 import { Rekisterointihakemus, Tila, TILAT } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
+import { Pagination } from './Pagination';
+
+import styles from './Table.module.css';
 
 type TableProps = {
     columns: ColumnDef<Rekisterointihakemus>[];
@@ -32,6 +35,8 @@ export const Table = ({ columns, data }: TableProps) => {
     const [globalFilter, setGlobalFilter] = useState('');
     const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
+    const pageSize = 20;
+    const [pageIndex, setPageIndex] = useState(0);
 
     const table = useReactTable({
         data,
@@ -47,6 +52,10 @@ export const Table = ({ columns, data }: TableProps) => {
                 hylatty: tilaFilter === 'HYLATTY',
                 hyvaksytty: tilaFilter === 'HYVAKSYTTY',
             },
+            pagination: {
+                pageIndex,
+                pageSize,
+            },
         },
         onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
@@ -54,6 +63,7 @@ export const Table = ({ columns, data }: TableProps) => {
         getPaginationRowModel: getPaginationRowModel(),
     });
 
+    const pages = Math.ceil(table.getFilteredRowModel().rows.length / pageSize);
     const selectedRows = filterOnlyKasittelyssa(table.getSelectedRowModel().rows);
 
     return (
@@ -114,6 +124,7 @@ export const Table = ({ columns, data }: TableProps) => {
                     })}
                 </tbody>
             </table>
+            {pages > 1 && <Pagination pageIndex={pageIndex} setPageIndex={setPageIndex} pages={pages} />}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
                 <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
             )}
