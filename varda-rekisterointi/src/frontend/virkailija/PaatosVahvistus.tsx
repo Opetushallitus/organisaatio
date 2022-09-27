@@ -14,6 +14,7 @@ import { Rekisterointihakemus } from './rekisterointihakemus';
 import { isNonEmpty } from '../StringUtils';
 import { Organisaatio } from '../types/types';
 import styles from './PaatosVahvistus.module.css';
+import { Row } from '@tanstack/react-table';
 
 const paatoksetBatchUrl = '/varda-rekisterointi/virkailija/api/paatokset/batch';
 

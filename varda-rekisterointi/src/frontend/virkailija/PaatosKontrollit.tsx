@@ -5,6 +5,7 @@ import PaatosVahvistus from './PaatosVahvistus';
 import { Rekisterointihakemus } from './rekisterointihakemus';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 import styles from './PaatosKontrollit.module.css';
+import { Row } from '@tanstack/react-table';
 
 type Props = {
     valitut: Rekisterointihakemus[];

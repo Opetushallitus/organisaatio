@@ -73,37 +73,9 @@ export default function RekisteroinnitBase() {
                 )}
                 <h1 className={styles.header}>{`${registrationType}-${i18n.translate('REKISTEROINNIT_OTSIKKO')}`}</h1>
                 <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
-                {/*<div className={styles.rekisterointiOsio}>
-                    <div>
-                        <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>
-                        <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
-                    </div>
-                    <Status tila={statusTila} teksti={statusTeksti} asetaTila={asetaStatusTila} />
-                </div>
-                <div className={styles.rekisterointiOsio}>
-                    <div>
-                        <Input
-                            className={styles.suodata}
-                            type="text"
-                            placeholder={i18n.translate('REKISTEROINNIT_SUODATA')}
-                            value={hakutermiInput}
-                            prefix={<FilterVariantIcon className={styles.suodataIcon} />}
-                            onChange={(e: { target: HTMLInputElement }) => vaihdaHakutermi(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <Tabs className={styles.tilaTabit} value={tila} onChange={vaihdaTila}>
-                            <Tab value={Tila.KASITTELYSSA}>{i18n.translate(`REKISTEROINNIT_TILA_KASITTELYSSA`)}</Tab>
-                            <Tab value={Tila.HYVAKSYTTY}>{i18n.translate(`REKISTEROINNIT_TILA_HYVAKSYTTY`)}</Tab>
-                            <Tab value={Tila.HYLATTY}>{i18n.translate(`REKISTEROINNIT_TILA_HYLATTY`)}</Tab>
-                        </Tabs>
-                    </div>
-                </div>
-                <RekisterointiLista tila={tila} hakutermi={hakutermi} statusCallback={statusCallback} />*/}
                 <RekisteroinnitTable rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)} />
                 {hasCreatePermission && registrationType === 'varda' && (
                     <div>
-                        <Divider />
                         <div className={styles.lisaaHakemusOsio}>
                             <Input
                                 type="text"

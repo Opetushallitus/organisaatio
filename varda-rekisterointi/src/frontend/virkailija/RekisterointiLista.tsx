@@ -113,9 +113,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
                     ))}
                 </tbody>
             </table>
-            {VALINTA_KAYTOSSA && (
-                <PaatosKontrollit valitut={valitutHakemukset} valitutKasiteltyCallback={valitutKasiteltyCallback} />
-            )}
+            {VALINTA_KAYTOSSA && <div></div>}
             {naytaYksittainenInfo && yksiRekisterointi && (
                 <YksittainenPaatos valittu={yksiRekisterointi} suljeCallback={suljeInfoCallback} />
             )}

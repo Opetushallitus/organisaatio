@@ -2,10 +2,11 @@ import React, { useMemo, useRef, useContext, HTMLProps } from 'react';
 import styles from './RekisteroinnitTable.module.css';
 import { Table } from '../Table/Table';
 import { LanguageContext } from '../../../contexts';
-import { Rekisterointihakemus } from '../../rekisterointihakemus';
+import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 
 import { ColumnDef } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+import PaatosKontrollit from '../../PaatosKontrollit';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
@@ -39,7 +40,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
         () => [
             {
                 id: 'select',
-                header: ({ table }: { table: any }) => (
+                header: ({ table }) => (
                     <IndeterminateCheckbox
                         {...{
                             checked: table.getIsAllRowsSelected(),
@@ -48,11 +49,12 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                         }}
                     />
                 ),
-                cell: ({ row }: { row: any }) => (
+                cell: ({ row }) => (
                     <div className="px-1">
                         <IndeterminateCheckbox
                             {...{
-                                checked: row.getIsSelected(),
+                                disabled: row.original.tila !== Tila.KASITTELYSSA && true,
+                                checked: row.original.tila !== Tila.KASITTELYSSA ? false : row.getIsSelected(),
                                 indeterminate: row.getIsSomeSelected(),
                                 onChange: row.getToggleSelectedHandler(),
                             }}
@@ -105,9 +107,5 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
         [i18n]
     );
 
-    return (
-        <>
-            <Table columns={columns} data={data} />
-        </>
-    );
+    return <Table columns={columns} data={data} />;
 }

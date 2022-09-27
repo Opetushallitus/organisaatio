@@ -1,34 +1,37 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import styles from './Table.module.css';
-import Input from '@opetushallitus/virkailija-ui-components/Input';
 import {
-    ColumnFiltersState,
+    ColumnDef,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
+    Row,
     useReactTable,
 } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { useContext } from 'react';
 import { LanguageContext } from '../../../contexts';
+import PaatosKontrollit from '../../PaatosKontrollit';
+import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 
 type TableProps = {
-    columns: any[];
-    data: any[];
+    columns: ColumnDef<Rekisterointihakemus>[];
+    data: Rekisterointihakemus[];
 };
-enum tilaTypes {
-    KASITTELYSSA = 'kÄSITTELYSSÄ',
-    HYVAKSYTTY = 'HYVÄKSYTTY',
-    HYLATTY = 'HYLÄTTY',
-}
+
+const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
+    return rows
+        .filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === Tila.KASITTELYSSA)
+        .map((r) => r.original);
+};
 // TODO tyypit
 export const Table = ({ columns, data }: TableProps) => {
     const [rowSelection, setRowSelection] = React.useState({});
     const [globalFilter, setGlobalFilter] = React.useState('');
 
     const { i18n } = useContext(LanguageContext);
-    const [tilaFilter, setTilaFilter] = React.useState<string>('');
+    const [tilaFilter, setTilaFilter] = React.useState<string>(Tila.KASITTELYSSA);
 
     const table = useReactTable({
         data,
@@ -45,6 +48,8 @@ export const Table = ({ columns, data }: TableProps) => {
         getPaginationRowModel: getPaginationRowModel(),
     });
 
+    const selectedRows = filterOnlyKasittelyssa(table.getSelectedRowModel().rows);
+
     return (
         <div className={styles.tableContainer}>
             <div className={styles.headerRow}>
@@ -55,7 +60,7 @@ export const Table = ({ columns, data }: TableProps) => {
                     placeholder="TODO"
                 />
                 <div>
-                    {Object.keys(tilaTypes).map((key) => (
+                    {Object.keys(Tila).map((key) => (
                         <Button
                             variant={tilaFilter === key ? 'contained' : 'outlined'}
                             onClick={() => {
@@ -97,6 +102,9 @@ export const Table = ({ columns, data }: TableProps) => {
                     })}
                 </tbody>
             </table>
+            {(tilaFilter === Tila.KASITTELYSSA || selectedRows.length > 0) && (
+                <PaatosKontrollit valitut={selectedRows} valitutKasiteltyCallback={() => {}} />
+            )}
         </div>
     );
 };
