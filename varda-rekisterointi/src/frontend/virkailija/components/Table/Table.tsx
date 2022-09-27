@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
+import SearchIcon from '@material-ui/icons/Search';
 import styles from './Table.module.css';
+import Input from '@opetushallitus/virkailija-ui-components/Input';
 import {
     ColumnDef,
     flexRender,
@@ -14,6 +15,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { LanguageContext } from '../../../contexts';
 import PaatosKontrollit from '../../PaatosKontrollit';
 import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
+import { ButtonGroup } from '../../ButtonGroup';
 
 type TableProps = {
     columns: ColumnDef<Rekisterointihakemus>[];
@@ -53,13 +55,16 @@ export const Table = ({ columns, data }: TableProps) => {
     return (
         <div className={styles.tableContainer}>
             <div className={styles.headerRow}>
-                <input
-                    value={globalFilter ?? ''}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    className={styles.filterInput}
-                    placeholder="TODO"
-                />
-                <div>
+                <div className={styles.filterInputContainer}>
+                    <Input
+                        value={globalFilter}
+                        placeholder={i18n.translate('HAKU_PLACEHOLDER')}
+                        suffix={<SearchIcon color="disabled" />}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGlobalFilter(e.target.value)}
+                        className={styles.filterInput}
+                    />
+                </div>
+                <ButtonGroup>
                     {Object.keys(Tila).map((key) => (
                         <Button
                             variant={tilaFilter === key ? 'contained' : 'outlined'}
@@ -70,14 +75,14 @@ export const Table = ({ columns, data }: TableProps) => {
                             {i18n.translate(`TAULUKKO_TILA_${key}`)}
                         </Button>
                     ))}
-                </div>
+                </ButtonGroup>
             </div>
             <table className={styles.tableElement}>
                 <thead className={styles.tHead}>
                     {table.getHeaderGroups().map((headerGroup: any) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header: any) => (
-                                <th key={header.id} colSpan={header.colSpan}>
+                                <th key={header.id} colSpan={header.colSpan} className={styles.tHeadCell}>
                                     {header.isPlaceholder
                                         ? null
                                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -92,7 +97,7 @@ export const Table = ({ columns, data }: TableProps) => {
                             <tr key={row.id}>
                                 {row.getVisibleCells().map((cell: any) => {
                                     return (
-                                        <td key={cell.id}>
+                                        <td key={cell.id} className={styles.tBodyCell}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </td>
                                     );
