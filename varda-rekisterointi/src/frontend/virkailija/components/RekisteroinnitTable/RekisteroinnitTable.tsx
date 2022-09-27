@@ -39,7 +39,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
         return [...rekisteroinnit];
     }, [rekisteroinnit]);
 
-    const columns = React.useMemo<ColumnDef<Rekisterointihakemus>[]>(
+    const columns = useMemo<ColumnDef<Rekisterointihakemus>[]>(
         () => [
             {
                 id: 'select',
@@ -84,6 +84,13 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 accessorFn: (values: Rekisterointihakemus) =>
                     values.organisaatio?.ytunnus || i18n.translate('TAULUKKO_YTUNNUS_PUUTTUU_ORGANISAATIOLTA'),
             },
+            rekisteroinnit[0].tyyppi === 'varda'
+                ? {
+                    header: i18n.translate('TAULUKKO_KUNNAT_OTSIKKO'),
+                    id: 'kunnat',
+                    accessorFn: (values: Rekisterointihakemus) => values.kunnat.join(', '),
+                  }
+                : (undefined as unknown) as ColumnDef<Rekisterointihakemus>,
             {
                 header: i18n.translate('TAULUKKO_VASTAANOTETTU_OTSIKKO'),
                 id: 'vastaanotettu',
@@ -92,7 +99,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
             },
             {
                 id: 'hyvaksynta',
-                cell: (info) => (
+                cell: () => (
                     <div className={styles.hyvaksyntaButtonsContainer}>
                         <Button variant={'outlined'} onClick={() => alert('klikkasit hyväksyntää')}>
                             {i18n.translate('TAULUKKO_HYLKAA_HAKEMUS')}
@@ -107,8 +114,8 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 enableColumnFilter: true,
                 accessorKey: 'tila',
             },
-        ],
-        [i18n]
+        ].filter(c => !!c),
+        [i18n, rekisteroinnit]
     );
 
     return <Table columns={columns} data={data} />;
