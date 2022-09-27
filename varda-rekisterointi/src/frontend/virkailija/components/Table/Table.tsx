@@ -1,23 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import styles from './Table.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import {
-    Cell,
     ColumnDef,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    Header,
-    HeaderGroup,
     Row,
     useReactTable,
 } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { LanguageContext } from '../../../contexts';
 import ApprovalButtonsContainer from '../ApprovalButtonsContainer/ApprovalButtonsContainer';
-import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
+import { Rekisterointihakemus, Tila, TILAT } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
 
 type TableProps = {
@@ -26,17 +23,14 @@ type TableProps = {
 };
 
 const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
-    return rows
-        .filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === Tila.KASITTELYSSA)
-        .map((r) => r.original);
+    return rows.filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === 'KASITTELYSSA').map((r) => r.original);
 };
-// TODO tyypit
-export const Table = ({ columns, data }: TableProps) => {
-    const [rowSelection, setRowSelection] = React.useState({});
-    const [globalFilter, setGlobalFilter] = React.useState('');
 
+export const Table = ({ columns, data }: TableProps) => {
     const { i18n } = useContext(LanguageContext);
-    const [tilaFilter, setTilaFilter] = React.useState<string>(Tila.KASITTELYSSA);
+    const [rowSelection, setRowSelection] = useState({});
+    const [globalFilter, setGlobalFilter] = useState('');
+    const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
 
     const table = useReactTable({
@@ -48,10 +42,10 @@ export const Table = ({ columns, data }: TableProps) => {
             columnFilters: [{ id: 'tila', value: tilaFilter }],
             columnVisibility: {
                 tila: false,
-                select: tilaFilter === Tila.KASITTELYSSA,
-                hyvaksynta: tilaFilter === Tila.KASITTELYSSA,
-                hylatty: tilaFilter === Tila.HYLATTY,
-                hyvaksytty: tilaFilter === Tila.HYVAKSYTTY,
+                select: tilaFilter === 'KASITTELYSSA',
+                hyvaksynta: tilaFilter === 'KASITTELYSSA',
+                hylatty: tilaFilter === 'HYLATTY',
+                hyvaksytty: tilaFilter === 'HYVAKSYTTY',
             },
         },
         onRowSelectionChange: setRowSelection,
@@ -75,12 +69,13 @@ export const Table = ({ columns, data }: TableProps) => {
                     />
                 </div>
                 <ButtonGroup>
-                    {Object.keys(Tila).map((key) => (
+                    {TILAT.map((key) => (
                         <Button
+                            className={tilaFilter === key ? styles.selectedTila : ''}
                             key={key}
                             variant={tilaFilter === key ? 'contained' : 'outlined'}
                             onClick={() => {
-                                tilaFilter === key ? setTilaFilter('') : setTilaFilter(key);
+                                tilaFilter !== key && setTilaFilter(key);
                             }}
                         >
                             {i18n.translate(`TAULUKKO_TILA_${key}`)}
@@ -119,7 +114,7 @@ export const Table = ({ columns, data }: TableProps) => {
                     })}
                 </tbody>
             </table>
-            {(tilaFilter === Tila.KASITTELYSSA || selectedRows.length > 0) && (
+            {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
                 <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
             )}
         </div>

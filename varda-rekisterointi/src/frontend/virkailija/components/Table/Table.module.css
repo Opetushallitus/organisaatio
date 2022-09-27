@@ -51,3 +51,7 @@
 .evenRow {
     background: #F5F5F5;
 }
+
+.selectedTila {
+    cursor: default;
+}

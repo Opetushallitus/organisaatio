@@ -21,7 +21,7 @@ type Props = {
     statusCallback: (hyvaksytty: boolean, lukumaara: number) => void;
 };
 
-export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi, statusCallback }: Props) {
+export default function RekisterointiLista({ tila = 'KASITTELYSSA', hakutermi, statusCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [rekisteroinnit, asetaRekisteroinnit] = useState(tyhjaHakemusLista);
     const [yksiRekisterointi, asetaYksiRekisterointi] = useState<Rekisterointi | null>(null);
@@ -31,7 +31,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
     const [valitutHakemukset, asetaValitutHakemukset] = useState(tyhjaHakemusLista);
     const [naytaYksittainenInfo, asetaNaytaYksittainenInfo] = useState(false);
 
-    const VALINTA_KAYTOSSA = tila === Tila.KASITTELYSSA;
+    const VALINTA_KAYTOSSA = tila === 'KASITTELYSSA';
 
     useEffect(() => {
         async function lataa() {
@@ -95,7 +95,7 @@ export default function RekisterointiLista({ tila = Tila.KASITTELYSSA, hakutermi
         <Box>
             <table className={styles.vardaRekisterointiLista}>
                 <RekisterointiListaOtsikko
-                    valintaKaytossa={tila === Tila.KASITTELYSSA}
+                    valintaKaytossa={tila === 'KASITTELYSSA'}
                     kaikkiValittu={kaikkiValittu}
                     kaikkiValittuCallback={vaihdaKaikkiValittu}
                 />

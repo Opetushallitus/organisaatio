@@ -1,5 +1,5 @@
 import { Kayttaja, Organisaatio, Osoite } from './types/types';
-import { Rekisterointihakemus, Tila } from './virkailija/rekisterointihakemus';
+import { Rekisterointihakemus } from './virkailija/rekisterointihakemus';
 
 export const tyhjaOsoite: Osoite = {
     katuosoite: '',
@@ -45,5 +45,5 @@ export const dummyHakemus: Rekisterointihakemus = {
     tyyppi: 'varda',
     id: 0,
     vastaanotettu: '14.11.2019 10:44',
-    tila: Tila.KASITTELYSSA,
+    tila: 'KASITTELYSSA',
 };

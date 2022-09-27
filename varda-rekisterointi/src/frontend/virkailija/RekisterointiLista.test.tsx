@@ -2,7 +2,7 @@ import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import RekisterointiLista from './RekisterointiLista';
-import { Rekisterointihakemus, Tila } from './rekisterointihakemus';
+import { Rekisterointihakemus} from './rekisterointihakemus';
 import Axios from 'axios';
 import { Kayttaja, Organisaatio } from '../types/types';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
@@ -29,7 +29,21 @@ const dummyOrganisaatio: Organisaatio = {
     maaUri: '',
     oid: '12345',
     tyypit: [],
-    yhteystiedot: [],
+    kieletUris: [],
+    yhteystiedot: {
+        puhelinnumero: '',
+        sahkoposti: '',
+        postiosoite: {
+            katuosoite: '',
+            postinumeroUri: '',
+            postitoimipaikka: '',
+        },
+        kayntiosoite: {
+            katuosoite: '',
+            postinumeroUri: '',
+            postitoimipaikka: '',
+        },
+    },
     yritysmuoto: '',
 };
 
@@ -70,7 +84,8 @@ describe('RekisterointiLista', () => {
             sahkopostit: [],
             vastaanotettu: '',
             id: 1,
-            tila: Tila.KASITTELYSSA,
+            tyyppi: 'varda',
+            tila: 'KASITTELYSSA',
         };
         const rekisteroinnit = [rekisterointi];
         jest.spyOn(Axios, 'get').mockImplementation(() => Promise.resolve({ data: rekisteroinnit }));

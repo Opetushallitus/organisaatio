@@ -5,7 +5,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 import { Table } from '../Table/Table';
 import { LanguageContext } from '../../../contexts';
-import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
+import { Rekisterointihakemus } from '../../rekisterointihakemus';
 
 import styles from './RekisteroinnitTable.module.css';
 
@@ -56,8 +56,8 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                     cell: ({ row }: { row: Row<Rekisterointihakemus> }) => (
                         <IndeterminateCheckbox
                             {...{
-                                disabled: row.original.tila !== Tila.KASITTELYSSA && true,
-                                checked: row.original.tila !== Tila.KASITTELYSSA ? false : row.getIsSelected(),
+                                disabled: row.original.tila !== 'KASITTELYSSA' && true,
+                                checked: row.original.tila !== 'KASITTELYSSA' ? false : row.getIsSelected(),
                                 indeterminate: row.getIsSomeSelected(),
                                 onChange: row.getToggleSelectedHandler(),
                             }}
