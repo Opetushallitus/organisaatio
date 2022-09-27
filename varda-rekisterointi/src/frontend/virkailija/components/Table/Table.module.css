@@ -1,9 +1,18 @@
 .tableContainer {
+    width: 100%;
+    box-sizing: border-box;
     overflow-x: scroll;
     overflow-y: hidden;
-    padding: 1rem;
-    border: 1px solid #cccccc;
+    padding: 24px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.17);
+    border-radius: 3px;
     background: #ffffff;
+}
+
+.filterInput {
+    width: 100%;
+    padding-top: 9px;
+    padding-bottom: 9px;
 }
 
 .headerRow {
@@ -11,13 +20,15 @@
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
 
 .tableElement {
     width: 100%;
-    min-height: 20vh;
     max-height: 60vh;
     border-spacing: 0;
+    border-collapse: collapse;
 }
 
 .th {
@@ -30,10 +41,16 @@
 }
 
 .tHead {
+    border-bottom: 1px solid rgba(151, 151, 151, 0.5);
 }
 
-.tr:first-child .th {
-    border-bottom: 1px solid rgba(151, 151, 151, 0.5);
+.tHeadCell {
+    padding: 5px;
+    text-align: left;
+}
+
+.tBodyCell {
+    padding: 15px 5px;
 }
 
 .tr:nth-child(even) {
@@ -45,11 +62,5 @@
 }
 
 .filterInputContainer {
-    max-width: 25rem;
-    margin-bottom: 1rem;
+    width: 350px;
 }
-
-
-
-
-

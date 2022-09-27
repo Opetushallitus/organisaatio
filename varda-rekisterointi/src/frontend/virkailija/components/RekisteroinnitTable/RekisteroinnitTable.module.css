@@ -22,3 +22,18 @@
 .infoText {
     color: #666666;
 }
+
+.hyvaksyntaButtonsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.hyvaksyntaButtonsContainer button {
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.hyvaksyntaButtonsContainer button:not(:first-of-type) {
+    margin-left: 12px;
+}

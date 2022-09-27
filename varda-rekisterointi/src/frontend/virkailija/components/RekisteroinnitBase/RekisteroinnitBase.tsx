@@ -15,6 +15,7 @@ import ErrorPage from '../../../virhe/VirheSivu';
 import { Rekisterointityyppi } from '../../../types/types';
 
 import styles from './RekisteroinnitBase.module.css';
+import { ButtonGroup } from '../../ButtonGroup';
 
 export default function RekisteroinnitBase() {
     const { i18n } = useContext(LanguageContext);
@@ -62,17 +63,25 @@ export default function RekisteroinnitBase() {
             <div className={styles.mainContent}>
                 {registrationTypes.length > 1 && (
                     <div className={styles.registrationTypeButtons}>
-                        {registrationTypes.map((t) => (
-                            <Button
-                                className={styles.registrationTypeButton}
-                                onClick={() => setRegistrationType(t)}
-                                variant={t === registrationType ? 'contained' : 'outlined'}
-                            >{`${t}-${i18n.translate('REKISTEROINNIT_OTSIKKO')}`}</Button>
-                        ))}
+                        <ButtonGroup>
+                            {registrationTypes.map((t) => (
+                                <Button
+                                    className={styles.registrationTypeButton}
+                                    onClick={() => setRegistrationType(t)}
+                                    variant={t === registrationType ? 'contained' : 'outlined'}
+                                >
+                                    <span className={styles.headerPrefix}>{t}</span>-
+                                    {i18n.translate('REKISTEROINNIT_OTSIKKO_SUFFIX')}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
                     </div>
                 )}
-                <h1 className={styles.header}>{`${registrationType}-${i18n.translate('REKISTEROINNIT_OTSIKKO')}`}</h1>
-                <p>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
+                <h1>
+                    <span className={styles.headerPrefix}>{registrationType}</span>-
+                    {i18n.translate('REKISTEROINNIT_OTSIKKO_SUFFIX')}
+                </h1>
+                <p className={styles.description}>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
                 {/*<div className={styles.rekisterointiOsio}>
                     <div>
                         <h2>{i18n.translate('REKISTEROINNIT_OTSIKKO')}</h2>

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useContext, HTMLProps } from 'react';
+import React, { useMemo, useContext, HTMLProps } from 'react';
 import styles from './RekisteroinnitTable.module.css';
 import { Table } from '../Table/Table';
 import { LanguageContext } from '../../../contexts';
@@ -22,7 +22,7 @@ function IndeterminateCheckbox({
         if (typeof indeterminate === 'boolean') {
             ref.current.indeterminate = !rest.checked && indeterminate;
         }
-    }, [ref, indeterminate]);
+    }, [ref, indeterminate, rest.checked]);
 
     return <input type="checkbox" ref={ref} className={className + ' cursor-pointer'} {...rest} />;
 }
@@ -87,12 +87,12 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
             {
                 id: 'hyvaksynta',
                 cell: (info) => (
-                    <div className={styles.HyvaksyntaButtonsContainer}>
-                        <Button onClick={() => alert('klikkasit hyväksyntää')}>
-                            {i18n.translate('TAULUKKO_HYVAKSY_HAKEMUS')}
-                        </Button>
+                    <div className={styles.hyvaksyntaButtonsContainer}>
                         <Button variant={'outlined'} onClick={() => alert('klikkasit hyväksyntää')}>
                             {i18n.translate('TAULUKKO_HYLKAA_HAKEMUS')}
+                        </Button>
+                        <Button onClick={() => alert('klikkasit hyväksyntää')}>
+                            {i18n.translate('TAULUKKO_HYVAKSY_HAKEMUS')}
                         </Button>
                     </div>
                 ),
@@ -105,9 +105,5 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
         [i18n]
     );
 
-    return (
-        <>
-            <Table columns={columns} data={data} />
-        </>
-    );
+    return <Table columns={columns} data={data} />;
 }
