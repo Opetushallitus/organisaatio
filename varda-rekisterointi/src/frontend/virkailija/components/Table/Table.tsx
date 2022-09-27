@@ -95,7 +95,7 @@ export const Table = ({ columns, data }: TableProps) => {
                     ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map((row: any) => {
+                    {table.getRowModel().rows.map((row) => {
                         return (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map((cell: any) => {
