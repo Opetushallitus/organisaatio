@@ -1,15 +1,19 @@
 import React, { useMemo, useContext, HTMLProps } from 'react';
-import styles from './RekisteroinnitTable.module.css';
+import { format, parseISO } from 'date-fns';
+import { ColumnDef } from '@tanstack/react-table';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+
 import { Table } from '../Table/Table';
 import { LanguageContext } from '../../../contexts';
 import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 
-import { ColumnDef } from '@tanstack/react-table';
-import Button from '@opetushallitus/virkailija-ui-components/Button';
+import styles from './RekisteroinnitTable.module.css';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
 };
+
+const saapumisAikaFormat = 'd.M.y HH:mm';
 
 function IndeterminateCheckbox({
     indeterminate,
@@ -83,7 +87,8 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
             {
                 header: i18n.translate('TAULUKKO_VASTAANOTETTU_OTSIKKO'),
                 id: 'vastaanotettu',
-                accessorKey: 'vastaanotettu',
+                accessorFn: (values: Rekisterointihakemus) =>
+                        format(parseISO(values.vastaanotettu), saapumisAikaFormat),
             },
             {
                 id: 'hyvaksynta',
