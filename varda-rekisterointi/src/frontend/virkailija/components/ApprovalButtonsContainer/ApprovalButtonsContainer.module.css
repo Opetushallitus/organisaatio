@@ -6,7 +6,6 @@
 }
 
 .approvalButtonsContainer button {
-    padding: 0 10px;
 }
 
 .approvalButtonsContainer button:not(:first-of-type) {
