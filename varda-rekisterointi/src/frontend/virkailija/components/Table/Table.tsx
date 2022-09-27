@@ -34,6 +34,7 @@ export const Table = ({ columns, data }: TableProps) => {
 
     const { i18n } = useContext(LanguageContext);
     const [tilaFilter, setTilaFilter] = React.useState<string>(Tila.KASITTELYSSA);
+    const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
 
     const table = useReactTable({
         data,
@@ -74,6 +75,7 @@ export const Table = ({ columns, data }: TableProps) => {
                             }}
                         >
                             {i18n.translate(`TAULUKKO_TILA_${key}`)}
+                            {key === 'KASITTELYSSA' && kasittelyssa.length > 0 ? ` (${kasittelyssa.length})` : ''}
                         </Button>
                     ))}
                 </ButtonGroup>

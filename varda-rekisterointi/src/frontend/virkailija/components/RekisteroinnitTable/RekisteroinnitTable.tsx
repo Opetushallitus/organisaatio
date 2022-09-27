@@ -1,15 +1,19 @@
 import React, { useMemo, useContext, HTMLProps } from 'react';
-import styles from './RekisteroinnitTable.module.css';
+import { format, parseISO } from 'date-fns';
+import { ColumnDef } from '@tanstack/react-table';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
+
 import { Table } from '../Table/Table';
 import { LanguageContext } from '../../../contexts';
 import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 
-import { ColumnDef } from '@tanstack/react-table';
-import Button from '@opetushallitus/virkailija-ui-components/Button';
+import styles from './RekisteroinnitTable.module.css';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
 };
+
+const saapumisAikaFormat = 'd.M.y HH:mm';
 
 function IndeterminateCheckbox({
     indeterminate,
@@ -35,7 +39,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
         return [...rekisteroinnit];
     }, [rekisteroinnit]);
 
-    const columns = React.useMemo<ColumnDef<Rekisterointihakemus>[]>(
+    const columns = useMemo<ColumnDef<Rekisterointihakemus>[]>(
         () => [
             {
                 id: 'select',
@@ -80,14 +84,22 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 accessorFn: (values: Rekisterointihakemus) =>
                     values.organisaatio?.ytunnus || i18n.translate('TAULUKKO_YTUNNUS_PUUTTUU_ORGANISAATIOLTA'),
             },
+            rekisteroinnit[0].tyyppi === 'varda'
+                ? {
+                    header: i18n.translate('TAULUKKO_KUNNAT_OTSIKKO'),
+                    id: 'kunnat',
+                    accessorFn: (values: Rekisterointihakemus) => values.kunnat.join(', '),
+                  }
+                : (undefined as unknown) as ColumnDef<Rekisterointihakemus>,
             {
                 header: i18n.translate('TAULUKKO_VASTAANOTETTU_OTSIKKO'),
                 id: 'vastaanotettu',
-                accessorKey: 'vastaanotettu',
+                accessorFn: (values: Rekisterointihakemus) =>
+                        format(parseISO(values.vastaanotettu), saapumisAikaFormat),
             },
             {
                 id: 'hyvaksynta',
-                cell: (info) => (
+                cell: () => (
                     <div className={styles.hyvaksyntaButtonsContainer}>
                         <Button variant={'outlined'} onClick={() => alert('klikkasit hyväksyntää')}>
                             {i18n.translate('TAULUKKO_HYLKAA_HAKEMUS')}
@@ -102,8 +114,8 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 enableColumnFilter: true,
                 accessorKey: 'tila',
             },
-        ],
-        [i18n]
+        ].filter(c => !!c),
+        [i18n, rekisteroinnit]
     );
 
     return <Table columns={columns} data={data} />;
