@@ -6,7 +6,6 @@ import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 
 import { ColumnDef } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import PaatosKontrollit from '../../PaatosKontrollit';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];

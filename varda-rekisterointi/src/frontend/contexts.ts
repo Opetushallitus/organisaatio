@@ -1,5 +1,5 @@
 import React from 'react';
-import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Permission, RegistrationType } from './types/types';
+import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Permission } from './types/types';
 
 export interface I18n {
     translate: (key: string) => string;

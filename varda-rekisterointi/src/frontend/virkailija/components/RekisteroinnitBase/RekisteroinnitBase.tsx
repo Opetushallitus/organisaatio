@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import axios from 'axios';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-import Divider from '@opetushallitus/virkailija-ui-components/Divider';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 import { LanguageContext, PermissionContext } from '../../../contexts';
