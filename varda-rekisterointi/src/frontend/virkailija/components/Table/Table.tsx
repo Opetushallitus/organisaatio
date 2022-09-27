@@ -16,10 +16,8 @@ import { LanguageContext } from '../../../contexts';
 import PaatosKontrollit from '../../PaatosKontrollit';
 import { Rekisterointihakemus, Tila } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
-import { Rekisterointihakemus } from '../../rekisterointihakemus';
 
 type TableProps = {
-<<<<<<< HEAD
     columns: ColumnDef<Rekisterointihakemus>[];
     data: Rekisterointihakemus[];
 };
@@ -28,10 +26,6 @@ const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
     return rows
         .filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === Tila.KASITTELYSSA)
         .map((r) => r.original);
-=======
-    columns: any[];
-    data: Rekisterointihakemus[];
->>>>>>> 8d46bbc (show the amount of registrations waiting for processing)
 };
 // TODO tyypit
 export const Table = ({ columns, data }: TableProps) => {
@@ -39,12 +33,8 @@ export const Table = ({ columns, data }: TableProps) => {
     const [globalFilter, setGlobalFilter] = React.useState('');
 
     const { i18n } = useContext(LanguageContext);
-<<<<<<< HEAD
     const [tilaFilter, setTilaFilter] = React.useState<string>(Tila.KASITTELYSSA);
-=======
-    const [tilaFilter, setTilaFilter] = React.useState<string>('');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
->>>>>>> 8d46bbc (show the amount of registrations waiting for processing)
 
     const table = useReactTable({
         data,
