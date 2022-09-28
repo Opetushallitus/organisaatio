@@ -5,7 +5,7 @@ import axios from 'axios';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
-import { LanguageContext, PermissionContext } from '../../../contexts';
+import { LanguageContext, PermissionContext, useModalContext } from '../../../contexts';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import * as YtunnusValidator from '../../../YtunnusValidator';
 import RekisteroinnitTable from '../RekisteroinnitTable/RekisteroinnitTable';
@@ -28,6 +28,7 @@ export default function RekisteroinnitBase() {
     const [rekisteroinnit, setRekisteroinnit] = useState<Rekisterointihakemus[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const { modal } = useModalContext();
 
     useEffect(() => {
         const fetchRekisteroinnit = async () => {
@@ -111,6 +112,7 @@ export default function RekisteroinnitBase() {
                     </div>
                 )}
             </div>
+            {modal}
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { LanguageContext } from '../../../contexts';
+import { LanguageContext, useModalContext } from '../../../contexts';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
@@ -14,12 +14,16 @@ type Props = {
 export default function ApprovalButtonsContainer({ chosenRekisteroinnit, valitutKasiteltyCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [buttonsInUse, setButtonsInUse] = useState(false);
-    const [areApproved, setAreApproved] = useState(false);
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    const { setModal } = useModalContext();
 
     function confirmApprovalSelection(hyvaksytty: boolean) {
-        setAreApproved(hyvaksytty);
-        setShowConfirmation(true);
+        setModal(
+            <MultipleSelectedApprovalModal
+                chosenRegistrations={chosenRekisteroinnit}
+                approvalDecision={hyvaksytty}
+                approvalDoneCb={valitutKasiteltyCallback}
+            />
+        );
     }
 
     useEffect(() => {
@@ -39,15 +43,6 @@ export default function ApprovalButtonsContainer({ chosenRekisteroinnit, valitut
             <Button disabled={!buttonsInUse} onClick={() => confirmApprovalSelection(true)}>
                 <i className="material-icons md-18">&#xe5ca;</i> {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
             </Button>
-            {showConfirmation && (
-                <MultipleSelectedApprovalModal
-                    chosenRegistrations={chosenRekisteroinnit}
-                    approvalDecision={areApproved}
-                    modalOpen={showConfirmation}
-                    approvalDoneCb={valitutKasiteltyCallback}
-                    closeButtonCb={() => setShowConfirmation(false)}
-                />
-            )}
         </Box>
     );
 }

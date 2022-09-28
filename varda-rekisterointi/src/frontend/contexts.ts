@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Permission } from './types/types';
 
 export interface I18n {
@@ -85,7 +85,7 @@ type KoodistoContextType = {
     kunnat: Koodisto;
     yritysmuodot: Koodisto;
     vardaToimintamuodot: Koodisto;
-}
+};
 
 type MaatKoodistoContextType = {
     koodisto: Koodisto;
@@ -98,13 +98,35 @@ export const KoodistoContext = React.createContext<KoodistoContextType>({
 });
 
 export const useKoodistoContext = () => {
-    const context = useContext(KoodistoContext)
+    const context = useContext(KoodistoContext);
     if (!context) {
-      throw new Error('KoodistoContext is not available, Component needs to be child of KoodistoContext provider')
+        throw new Error('KoodistoContext is not available, Component needs to be child of KoodistoContext provider');
     }
-    return context
-  }
+    return context;
+};
 
 export const MaatJaValtiotKoodistoContext = React.createContext<MaatKoodistoContextType>({
     koodisto: new KoodistoImpl([], 'fi'),
 });
+
+type ModalContextType = {
+    modal?: ReactNode
+    setModal: (r: ReactNode) => void
+    closeModal: () => void
+}
+
+const defaultModalContext = {
+    modal: undefined,
+    setModal: () => {},
+    closeModal: () => {},
+}
+
+export const ModalContext = React.createContext<ModalContextType>(defaultModalContext);
+
+export const useModalContext = () => {
+    const context = useContext(ModalContext);
+    if (!context) {
+        throw new Error('ModalContext is not available, Component needs to be child of ModalContext provider');
+    }
+    return context;
+};

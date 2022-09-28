@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Axios from 'axios';
-import { LanguageContext, MaatJaValtiotKoodistoContext, useKoodistoContext } from '../../../contexts';
+import { LanguageContext, MaatJaValtiotKoodistoContext, useKoodistoContext, useModalContext } from '../../../contexts';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import Typography from '@opetushallitus/virkailija-ui-components/Typography';
@@ -26,9 +26,7 @@ type PaatosBatch = {
 type Props = {
     chosenRegistrations: Rekisterointihakemus[];
     approvalDecision: boolean;
-    modalOpen: boolean;
     approvalDoneCb: (hyvaksytty: boolean) => void;
-    closeButtonCb: () => void;
 };
 
 class PaatosRivi {
@@ -50,9 +48,7 @@ class PaatosRivi {
 export default function MultipleSelectedApprovalModal({
     chosenRegistrations,
     approvalDecision,
-    modalOpen,
     approvalDoneCb,
-    closeButtonCb,
 }: Props) {
     const { i18n } = useContext(LanguageContext);
     const { kunnat: kuntaKoodisto } = useKoodistoContext();
@@ -60,6 +56,7 @@ export default function MultipleSelectedApprovalModal({
     const [perustelu, asetaPerustelu] = useState('');
     const [perusteluError, setPerusteluError] = useState(false);
     const [lahetaError, setLahetaError] = useState(false);
+    const { closeModal } = useModalContext();
 
     async function laheta() {
         setPerusteluError(false);
@@ -75,7 +72,7 @@ export default function MultipleSelectedApprovalModal({
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
             approvalDoneCb(approvalDecision);
-            closeButtonCb();
+            closeModal();
         } catch (e) {
             setLahetaError(true);
             throw e;
@@ -92,8 +89,8 @@ export default function MultipleSelectedApprovalModal({
     }
 
     return (
-        <Modal open={modalOpen} onClose={closeButtonCb}>
-            <ModalHeader onClose={closeButtonCb}>
+        <Modal open onClose={closeModal}>
+            <ModalHeader onClose={closeModal}>
                 {i18n.translate(approvalDecision ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}
             </ModalHeader>
             <ModalBody>
@@ -145,7 +142,7 @@ export default function MultipleSelectedApprovalModal({
                             {i18n.translate('ERROR_SAVE')}
                         </div>
                     ) : null}
-                    <Button variant="text" onClick={closeButtonCb}>
+                    <Button variant="text" onClick={closeModal}>
                         {i18n.translate('REKISTEROINTI_PERUUTA')}
                     </Button>
                     <Button onClick={laheta}>{i18n.translate('REKISTEROINTI_LAHETA')}</Button>

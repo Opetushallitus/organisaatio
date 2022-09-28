@@ -1,5 +1,11 @@
-import React, { useContext } from 'react';
-import { PermissionContext, KoodistoImpl, LanguageContext, MaatJaValtiotKoodistoContext } from '../../contexts';
+import React, { ReactNode, useContext, useState } from 'react';
+import {
+    PermissionContext,
+    KoodistoImpl,
+    LanguageContext,
+    MaatJaValtiotKoodistoContext,
+    ModalContext,
+} from '../../contexts';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { ThemeProvider } from 'styled-components';
 import useAxios from 'axios-hooks';
@@ -13,6 +19,7 @@ const theme = createTheme();
 
 export default function VirkailijaLandingPage() {
     const { language } = useContext(LanguageContext);
+    const [modal, setModal] = useState<ReactNode>();
     const [{ data: maatJaValtiot, loading: maatJaValtiotLoading, error: maatJaValtiotError }] = useAxios<Koodi[]>(
         '/varda-rekisterointi/api/koodisto/MAAT_JA_VALTIOT_1/koodi?onlyValid=true'
     );
@@ -32,9 +39,11 @@ export default function VirkailijaLandingPage() {
         <PermissionContext.Provider value={permission}>
             <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
                 <Raamit>
-                    <ThemeProvider theme={theme}>
-                        <RekisteroinnitBase />
-                    </ThemeProvider>
+                    <ModalContext.Provider value={{ modal, setModal, closeModal: () => setModal(undefined) }}>
+                        <ThemeProvider theme={theme}>
+                            <RekisteroinnitBase />
+                        </ThemeProvider>
+                    </ModalContext.Provider>
                 </Raamit>
             </MaatJaValtiotKoodistoContext.Provider>
         </PermissionContext.Provider>
