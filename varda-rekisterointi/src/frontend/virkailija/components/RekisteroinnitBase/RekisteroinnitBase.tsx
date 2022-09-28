@@ -39,7 +39,7 @@ export default function RekisteroinnitBase() {
                 const uniqueRegistrationTypes = Array.from(new Set(rekisteroinnit.map((r) => r.tyyppi)));
                 uniqueRegistrationTypes.sort();
                 setRegistrationTypes(uniqueRegistrationTypes);
-                setRegistrationType(uniqueRegistrationTypes[0]);
+                setRegistrationType(uniqueRegistrationTypes[0] ?? 'varda');
                 setRekisteroinnit(rekisteroinnit);
                 setLoading(false);
             } catch (e: unknown) {
@@ -83,7 +83,7 @@ export default function RekisteroinnitBase() {
                     {i18n.translate('REKISTEROINNIT_OTSIKKO_SUFFIX')}
                 </h1>
                 <p className={styles.description}>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
-                <RekisteroinnitTable rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)} />
+                <RekisteroinnitTable rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)} rekisterointityyppi={registrationType ?? 'varda'} />
                 {hasCreatePermission && registrationType === 'varda' && (
                     <div>
                         <div className={styles.lisaaHakemusOsio}>

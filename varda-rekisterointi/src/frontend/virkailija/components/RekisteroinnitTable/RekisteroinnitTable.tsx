@@ -9,9 +9,11 @@ import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import ApprovalModal from '../ApprovalModal/ApprovalModal';
 
 import styles from './RekisteroinnitTable.module.css';
+import { Rekisterointityyppi } from '../../../types/types';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
+    rekisterointityyppi: Rekisterointityyppi
 };
 
 const saapumisAikaFormat = 'd.M.y HH:mm';
@@ -32,7 +34,7 @@ function IndeterminateCheckbox({
     return <input type="checkbox" ref={ref} className={className + ' cursor-pointer'} {...rest} />;
 }
 
-export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTableProps) {
+export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityyppi }: RekisteroinnitTableProps) {
     const { i18n } = useContext(LanguageContext);
     const { setModal } = useModalContext();
     const data = useMemo<Rekisterointihakemus[]>(() => {
@@ -94,7 +96,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 accessorFn: (values: Rekisterointihakemus) =>
                     values.organisaatio?.ytunnus || i18n.translate('TAULUKKO_YTUNNUS_PUUTTUU_ORGANISAATIOLTA'),
             },
-            rekisteroinnit[0].tyyppi === 'varda'
+            rekisterointityyppi === 'varda'
                 ? {
                       header: i18n.translate('TAULUKKO_KUNNAT_OTSIKKO'),
                       id: 'kunnat',
@@ -137,7 +139,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                 accessorKey: 'tila',
             },
         ].filter((c) => !!c);
-    }, [i18n, rekisteroinnit, setModal]);
+    }, [i18n, rekisterointityyppi, setModal]);
 
-    return <Table columns={columns} data={data} />;
+    return <Table columns={columns} data={data} rekisterointityyppi={rekisterointityyppi} />;
 }

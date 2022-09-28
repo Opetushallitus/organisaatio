@@ -18,19 +18,21 @@ import ApprovalButtonsContainer from '../ApprovalButtonsContainer/ApprovalButton
 import { Rekisterointihakemus, Tila, TILAT } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
 import { Pagination } from './Pagination';
+import { Rekisterointityyppi } from '../../../types/types';
 
 import styles from './Table.module.css';
 
 type TableProps = {
     columns: ColumnDef<Rekisterointihakemus>[];
     data: Rekisterointihakemus[];
+    rekisterointityyppi: Rekisterointityyppi
 };
 
 const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
     return rows.filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === 'KASITTELYSSA').map((r) => r.original);
 };
 
-export const Table = ({ columns, data }: TableProps) => {
+export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
     const { i18n } = useContext(LanguageContext);
     const { kunnat, yritysmuodot, vardaToimintamuodot } = useKoodistoContext();
     const [rowSelection, setRowSelection] = useState({});
@@ -212,7 +214,7 @@ export const Table = ({ columns, data }: TableProps) => {
                                             </td>
                                             <td
                                                 className={styles.expandedCell}
-                                                colSpan={data[0]?.tyyppi === 'varda' ? 3 : 2}
+                                                colSpan={rekisterointityyppi === 'varda' ? 3 : 2}
                                             >
                                                 {renderOrganizationAddress(row)}
                                             </td>
