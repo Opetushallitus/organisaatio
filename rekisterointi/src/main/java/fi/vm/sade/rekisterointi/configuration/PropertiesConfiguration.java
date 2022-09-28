@@ -19,7 +19,7 @@ public class PropertiesConfiguration {
     if (Arrays.asList(profiles).contains("dev")) {
       properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
     } else if (Arrays.asList(profiles).contains("test")) {
-        properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
+      properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
     } else if (Arrays.asList(profiles).contains("ci")) {
       properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-ci.properties");
     } else {
@@ -28,8 +28,15 @@ public class PropertiesConfiguration {
       properties.addDefault("url-virkailija", environment.getRequiredProperty("url-virkailija"));
       properties.addDefault("url-rekisterointi", environment.getRequiredProperty("url-rekisterointi"));
       properties.addDefault("url-alb", environment.getRequiredProperty("url-alb"));
-      properties.addDefault("rekisterointi.service.username", environment.getRequiredProperty("rekisterointi.service.username"));
-      properties.addDefault("rekisterointi.service.password", environment.getRequiredProperty("rekisterointi.service.password"));
+      properties.addDefault("rekisterointi.service.username",
+          environment.getRequiredProperty("rekisterointi.service.username"));
+      properties.addDefault("rekisterointi.service.password",
+          environment.getRequiredProperty("rekisterointi.service.password"));
+      properties.addDefault("varda-rekisterointi.url", environment.getRequiredProperty("varda-rekisterointi.url"));
+      properties.addDefault("varda-rekisterointi.username",
+          environment.getRequiredProperty("varda-rekisterointi.username"));
+      properties.addDefault("varda-rekisterointi.password",
+          environment.getRequiredProperty("varda-rekisterointi.password"));
     }
     return properties;
   }
