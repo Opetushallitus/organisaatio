@@ -65,7 +65,7 @@ public final class AuthenticationUtils {
             .getAuthorities()
             .stream()
             .map(GrantedAuthority::getAuthority)
-            .filter(a -> a.contains("ORGANISAATIOIDEN_REKISTEROITYMINEN"))
+            .filter(a -> a.contains("ORGANISAATIOIDEN_REKISTEROITYMINEN_"))
             .findFirst();
     }
 
