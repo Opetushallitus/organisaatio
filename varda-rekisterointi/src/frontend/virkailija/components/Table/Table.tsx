@@ -224,6 +224,20 @@ export const Table = ({ columns, data }: TableProps) => {
                     })}
                 </tbody>
             </table>
+            {table.getRowModel().rows.length <= 0 && (
+                <div className={styles.emptyList}>
+                    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="28" cy="28" r="28" fill="#F5F5F5" />
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M25.17 22L27.17 24H36V34H20V22H25.17ZM26 20H20C18.9 20 18.01 20.9 18.01 22L18 34C18 35.1 18.9 36 20 36H36C37.1 36 38 35.1 38 34V24C38 22.9 37.1 22 36 22H28L26 20Z"
+                            fill="#999999"
+                        />
+                    </svg>
+                    <p>{i18n.translate('TYHJA_LISTA')}</p>
+                </div>
+            )}
             {pages > 1 && <Pagination pageIndex={pageIndex} setPageIndex={setPageIndex} pages={pages} />}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
                 <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
