@@ -109,6 +109,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                 pageSize,
             },
         },
+        autoResetPageIndex: true,
         onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
