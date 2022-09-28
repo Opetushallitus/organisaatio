@@ -26,11 +26,11 @@ public class Rekisterointi {
     public final Organisaatio organisaatio;
 
     @NotNull
-    public final String toimintamuoto;
-
-    @NotNull
     public final String tyyppi;
 
+    @NotNull
+    public final String toimintamuoto;
+    
     @NotEmpty
     public final Set<@NotNull String> kunnat;
 
