@@ -4,10 +4,13 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 public final class AuthenticationUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationUtils.class);
 
     private AuthenticationUtils() {
     }
@@ -21,6 +24,7 @@ public final class AuthenticationUtils {
     }
 
     public static Optional<String> mapToRole(String authority) {
+        LOGGER.info("authority:" + authority);
         String regex = ".*ORGANISAATIOIDEN_REKISTEROITYMINEN_([^_]+).*";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(authority);
