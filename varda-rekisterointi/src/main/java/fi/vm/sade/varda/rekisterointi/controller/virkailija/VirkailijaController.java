@@ -207,7 +207,7 @@ public class VirkailijaController {
 
     List<String> haeOrganisaatioOidit(Collection<? extends GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream()
-                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VARDA_ROLE + '_'))
+                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VIRKAILIJA_ROLE + '_'))
                 .map(grantedAuthority -> {
                     String authority = grantedAuthority.getAuthority();
                     return authority.substring(authority.lastIndexOf('_') + 1);
