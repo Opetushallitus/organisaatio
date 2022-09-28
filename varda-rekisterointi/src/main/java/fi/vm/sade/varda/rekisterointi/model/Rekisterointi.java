@@ -57,7 +57,7 @@ public class Rekisterointi {
             Set<String> kunnat,
             Set<String> sahkopostit,
             Kayttaja kayttaja) {
-        return new Rekisterointi(null, organisaatio, toimintamuoto, tyyppi, kunnat, sahkopostit, kayttaja,
+        return new Rekisterointi(null, organisaatio, tyyppi, toimintamuoto, kunnat, sahkopostit, kayttaja,
                 LocalDateTime.now(), null, Tila.KASITTELYSSA);
     }
 
