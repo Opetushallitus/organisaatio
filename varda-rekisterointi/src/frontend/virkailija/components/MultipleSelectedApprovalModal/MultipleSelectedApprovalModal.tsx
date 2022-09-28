@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import Axios from 'axios';
-import { KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext } from '../../../contexts';
+import { LanguageContext, MaatJaValtiotKoodistoContext, useKoodistoContext } from '../../../contexts';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import Typography from '@opetushallitus/virkailija-ui-components/Typography';
@@ -55,7 +55,7 @@ export default function MultipleSelectedApprovalModal({
     closeButtonCb,
 }: Props) {
     const { i18n } = useContext(LanguageContext);
-    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+    const { kunnat: kuntaKoodisto } = useKoodistoContext();
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
     const [perustelu, asetaPerustelu] = useState('');
     const [perusteluError, setPerusteluError] = useState(false);

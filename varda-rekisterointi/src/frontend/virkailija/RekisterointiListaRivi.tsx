@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { Rekisterointihakemus } from './rekisterointihakemus';
 import styles from './RekisterointiListaRivi.module.css';
 
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
-import { KuntaKoodistoContext } from '../contexts';
+import { useKoodistoContext } from '../contexts';
 
 const saapumisAikaFormat = 'd.M.y HH:mm';
 
@@ -49,7 +49,7 @@ export default function RekisterointiListaRivi({
 }: Props) {
     const [valittu, asetaValittu] = useState(false);
 
-    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+    const { kunnat: kuntaKoodisto } = useKoodistoContext();
 
     useEffect(() => {
         asetaValittu(riviValittu);

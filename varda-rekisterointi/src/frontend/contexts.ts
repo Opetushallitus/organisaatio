@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Permission } from './types/types';
 
 export interface I18n {
@@ -82,13 +82,29 @@ export class KoodistoImpl implements Koodisto {
 }
 
 type KoodistoContextType = {
+    kunnat: Koodisto;
+    yritysmuodot: Koodisto;
+    vardaToimintamuodot: Koodisto;
+}
+
+type MaatKoodistoContextType = {
     koodisto: Koodisto;
 };
 
-export const KuntaKoodistoContext = React.createContext<KoodistoContextType>({
-    koodisto: new KoodistoImpl([], 'fi'),
+export const KoodistoContext = React.createContext<KoodistoContextType>({
+    kunnat: new KoodistoImpl([], 'fi'),
+    yritysmuodot: new KoodistoImpl([], 'fi'),
+    vardaToimintamuodot: new KoodistoImpl([], 'fi'),
 });
 
-export const MaatJaValtiotKoodistoContext = React.createContext<KoodistoContextType>({
+export const useKoodistoContext = () => {
+    const context = useContext(KoodistoContext)
+    if (!context) {
+      throw new Error('KoodistoContext is not available, Component needs to be child of KoodistoContext provider')
+    }
+    return context
+  }
+
+export const MaatJaValtiotKoodistoContext = React.createContext<MaatKoodistoContextType>({
     koodisto: new KoodistoImpl([], 'fi'),
 });

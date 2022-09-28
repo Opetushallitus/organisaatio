@@ -4,7 +4,7 @@ import 'oph-virkailija-style-guide/oph-styles.css';
 import RekisterointiHakija from './hakija/RekisterointiHakija';
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
-import { LanguageContext, I18nImpl, KoodistoImpl, KuntaKoodistoContext } from './contexts';
+import { LanguageContext, I18nImpl, KoodistoImpl, KoodistoContext } from './contexts';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Koodi, Language, Lokalisointi } from './types/types';
 import useAxios from 'axios-hooks';
@@ -41,18 +41,33 @@ const App: React.FC = () => {
     const [{ data: kunnat, loading: kunnatLoading, error: kunnatError }] = useAxios<Koodi[]>(
         '/varda-rekisterointi/api/koodisto/KUNTA/koodi?onlyValid=true'
     );
-    if (languageLoading || lokalisointiLoading || kunnatLoading) {
+    const [{ data: yritysmuodot, loading: yritysmuotoLoading, error: yritysmuodotError }] = useAxios<Koodi[]>(
+        '/varda-rekisterointi/api/koodisto/YRITYSMUOTO/koodi?onlyValid=true'
+    );
+
+    const [{ data: toimintamuodot, loading: toimintamuodotLoading, error: toimintamuodotError }] = useAxios<Koodi[]>(
+        '/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi?onlyValid=true'
+    );
+    if (languageLoading || lokalisointiLoading || kunnatLoading || toimintamuodotLoading || yritysmuotoLoading) {
         return <Spinner />;
     }
-    if (lokalisointiError || kunnatError) {
+    if (lokalisointiError || kunnatError || toimintamuodotError || yritysmuodotError) {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
     }
     const i18n = new I18nImpl(lokalisointi, language);
     const kuntaKoodisto = new KoodistoImpl(kunnat, language);
+    const yritysmuotoKoodisto = new KoodistoImpl(yritysmuodot, language);
+    const vardaToimintamuotoKoodisto = new KoodistoImpl(toimintamuodot, language);
     return (
         <Router basename="/varda-rekisterointi">
             <LanguageContext.Provider value={{ language: language, setLanguage: setLanguage, i18n: i18n }}>
-                <KuntaKoodistoContext.Provider value={{ koodisto: kuntaKoodisto }}>
+                <KoodistoContext.Provider
+                    value={{
+                        kunnat: kuntaKoodisto,
+                        yritysmuodot: yritysmuotoKoodisto,
+                        vardaToimintamuodot: vardaToimintamuotoKoodisto,
+                    }}
+                >
                     <Switch>
                         <Route path="/" exact component={RekisterointiAloitus} />
                         <Route path="/hakija" exact component={RekisterointiHakija} />
@@ -67,7 +82,7 @@ const App: React.FC = () => {
                             <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
                         </Route>
                     </Switch>
-                </KuntaKoodistoContext.Provider>
+                </KoodistoContext.Provider>
             </LanguageContext.Provider>
         </Router>
     );

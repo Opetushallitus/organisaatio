@@ -8,7 +8,7 @@ import './Rekisterointi.css';
 import Header from './Header';
 import Wizard from '../Wizard';
 import Navigation from './Navigation';
-import { KuntaKoodistoContext, LanguageContext } from '../contexts';
+import { LanguageContext, useKoodistoContext } from '../contexts';
 import EmailValidator from 'email-validator';
 import * as YtunnusValidator from '../YtunnusValidator';
 import { kielletytYritysmuodot } from './YritysmuotoUtils';
@@ -50,7 +50,7 @@ export default function Rekisterointi({
     isVirkailija = false,
 }: Props) {
     const { i18n } = useContext(LanguageContext);
-    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+    const { kunnat: kuntaKoodisto } = useKoodistoContext();
     const [organisaatioErrors, setOrganisaatioErrors] = useState({});
     const [kunnat, setKunnat] = useState(initialKunnat);
     const [sahkopostit, setSahkopostit] = useState(intialSahkopostit);

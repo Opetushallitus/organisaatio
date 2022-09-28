@@ -13,7 +13,7 @@ import {
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
-import { KuntaKoodistoContext, LanguageContext } from '../../../contexts';
+import { LanguageContext, useKoodistoContext } from '../../../contexts';
 import ApprovalButtonsContainer from '../ApprovalButtonsContainer/ApprovalButtonsContainer';
 import { Rekisterointihakemus, Tila, TILAT } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
@@ -32,7 +32,7 @@ const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
 
 export const Table = ({ columns, data }: TableProps) => {
     const { i18n } = useContext(LanguageContext);
-    const { koodisto: kunnat } = useContext(KuntaKoodistoContext);
+    const { kunnat, yritysmuodot, vardaToimintamuodot } = useKoodistoContext();
     const [rowSelection, setRowSelection] = useState({});
     const [globalFilter, setGlobalFilter] = useState('');
     const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
@@ -45,11 +45,11 @@ export const Table = ({ columns, data }: TableProps) => {
             <div className={styles.infoContainer}>
                 <h4 className={styles.infoHeader}>{i18n.translate('ORGANISAATION_TIEDOT')}</h4>
                 <h5 className={styles.infoLabel}>{i18n.translate('YRITYSMUOTO')}</h5>
-                <span>{row.original.organisaatio.yritysmuoto}</span>
+                <span>{yritysmuodot.uri2Nimi(row.original.organisaatio.yritysmuoto)}</span>
                 {row.original.toimintamuoto && (
                     <>
                         <h5 className={styles.infoLabel}>{i18n.translate('TOIMINTAMUOTO')}</h5>
-                        <span>{row.original.toimintamuoto}</span>
+                        <span>{vardaToimintamuodot.uri2Nimi(row.original.toimintamuoto)}</span>
                     </>
                 )}
                 <h5 className={styles.infoLabel}>{i18n.translate('KOTIPAIKKA')}</h5>
@@ -62,7 +62,7 @@ export const Table = ({ columns, data }: TableProps) => {
                 )}
             </div>
         ),
-        [i18n, kunnat]
+        [i18n, kunnat, yritysmuodot, vardaToimintamuodot]
     );
 
     const renderOrganizationAddress = React.useCallback(

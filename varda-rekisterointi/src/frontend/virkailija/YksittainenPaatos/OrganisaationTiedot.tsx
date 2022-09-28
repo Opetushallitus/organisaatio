@@ -4,7 +4,7 @@ import { Koodi, Organisaatio } from '../../types/types';
 import { toLocalizedText } from '../../LocalizableTextUtils';
 import { parseISO, format } from 'date-fns';
 
-import { KuntaKoodistoContext, LanguageContext, MaatJaValtiotKoodistoContext } from '../../contexts';
+import { LanguageContext, MaatJaValtiotKoodistoContext, useKoodistoContext } from '../../contexts';
 import useAxios from 'axios-hooks';
 import Spinner from '../../Spinner';
 import ErrorPage from '../../virhe/VirheSivu';
@@ -27,7 +27,7 @@ export default function OrganisaationTiedot({ organisaatio, kunnat, toimintamuot
         '/varda-rekisterointi/api/koodisto/VARDA_TOIMINTAMUOTO/koodi?onlyValid=true'
     );
 
-    const { koodisto: kuntaKoodisto } = useContext(KuntaKoodistoContext);
+    const { kunnat: kuntaKoodisto } = useKoodistoContext();
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
 
     if (yritysmuotoLoading || toimintamuodotLoading) {
