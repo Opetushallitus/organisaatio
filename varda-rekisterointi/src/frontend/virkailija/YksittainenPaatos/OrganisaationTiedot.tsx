@@ -10,7 +10,7 @@ import Spinner from '../../Spinner';
 import ErrorPage from '../../virhe/VirheSivu';
 
 type Props = {
-    toimintamuoto: string;
+    toimintamuoto?: string;
     organisaatio: Organisaatio;
     kunnat: string[];
 };
@@ -78,7 +78,7 @@ export default function OrganisaationTiedot({ organisaatio, kunnat, toimintamuot
                 <span>{yritysmuoto(organisaatio.yritysmuoto)}</span>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('ORGANISAATION_TOIMINTAMUOTO')}>
-                <span>{koodi2toimintamuoto(toimintamuoto)}</span>
+                <span>{toimintamuoto && koodi2toimintamuoto(toimintamuoto)}</span>
             </FormFieldContainer>
             <FormFieldContainer label={i18n.translate('KOTIPAIKKA')}>
                 <span>{kotipaikka(organisaatio)}</span>

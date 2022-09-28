@@ -94,7 +94,7 @@ export type Kayttaja = {
 export type Rekisterointityyppi = 'varda' | 'jotpa'
 
 export type Rekisterointi = {
-    toimintamuoto: string,
+    toimintamuoto?: string,
     kunnat: string[]
     id: number
     tyyppi: Rekisterointityyppi

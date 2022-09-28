@@ -63,12 +63,14 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                             }}
                         />
                     ),
+                    size: 20,
                 },
                 {
                     header: i18n.translate('TAULUKKO_ORGANISAATIO_NIMI_OTSIKKO'),
                     id: 'organisaationimi',
                     accessorFn: (values: Rekisterointihakemus) =>
                         values.organisaatio?.ytjNimi?.nimi || i18n.translate('TAULUKKO_NIMI_PUUTTUU_ORGANISAATIOLTA'),
+                    size: 250,
                 },
                 {
                     header: i18n.translate('TAULUKKO_ORGANISAATIO_PUHELINNUMERO_OTSIKKO'),
@@ -76,7 +78,6 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
                         values.organisaatio?.yhteystiedot?.puhelinnumero ||
                         i18n.translate('TAULUKKO_PUHELINNUMERO_PUUTTUU_ORGANISAATIOLTA'),
                 },
-
                 {
                     header: i18n.translate('TAULUKKO_ORGANISAATIO_YTUNNUS_OTSIKKO'),
                     id: 'ytunnus',
