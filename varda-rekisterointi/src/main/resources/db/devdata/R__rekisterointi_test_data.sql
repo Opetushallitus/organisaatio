@@ -53,14 +53,7 @@ VALUES (
            null,
            '{"testi.jotpa.hyvaksytty@jotpa.com"}',
            'HYVAKSYTTY'
-       ), (
-        5,
-        null,
-        'jotpa',
-        null,
-        '{"testi.jotpa.hylatty@jotpa2.com"}',
-        'HYLATTY'
-);
+       );
 
 INSERT INTO paatos (rekisterointi_id, hyvaksytty, paatetty, paattaja_oid, perustelu)
 VALUES (
@@ -81,13 +74,7 @@ VALUES (
     CURRENT_DATE,
     '1.2.3.4.5',
     'Hyväksytty päätös'
-), (
-           5,
-               false,
-           CURRENT_DATE,
-           '5.4.3.2.1',
-           'Hylätty päätös'
-       );
+);
 
 INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypit, kotipaikka, maa, nimi, nimi_alkupvm)
  VALUES (
@@ -141,16 +128,6 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      'Jotpa-yritys hyväksytty',
      CURRENT_DATE
  ), (
-    5,
-    '0000000-5',
-    CURRENT_DATE,
-    'yritysmuoto_26',
-    '{"organisaatiotyyppi_01"}',
-    'kunta_091',
-    'maatjavaltiot1_fin',
-    'Jotpa-yritys hylatty',
-    CURRENT_DATE
-), (
     6,
     '0000000-6',
     CURRENT_DATE,
@@ -206,12 +183,6 @@ INSERT INTO yhteystiedot (
     'Haapaniemenkatu 9', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 9', 'posti_00530', 'kunta_091'
 ),(
-    5,
-    '+3581234353',
-    'testi.yritys2@testiyrit2.ys',
-    'Haapaniemenkatu 8', 'posti_00530', 'kunta_091',
-    'Haapaniemenkatu 8', 'posti_00530', 'kunta_091'
-),(
     6,
     '+3581234353',
     'testi.yritys6@testiyrit3.ys',
@@ -266,14 +237,6 @@ INSERT INTO kayttaja (id, etunimi, sukunimi, sahkoposti, asiointikieli, saatetek
      'fi',
      null,
      4
- ),(
-     5,
-     'Saate',
-     'Käyttäjä',
-     'testi.kayttaja5@testiyrit2.ys',
-     'fi',
-     'saateteksti testi',
-     5
  ),(
      6,
      'Saate 6',
