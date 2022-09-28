@@ -290,12 +290,7 @@
                                     <port>${database.port}:5432</port>
                                 </ports>
                                 <wait>
-                                    <tcp>
-                                        <mode>mapped</mode>
-                                        <ports>
-                                            <port>5432</port>
-                                        </ports>
-                                    </tcp>
+                                    <log>PostgreSQL init process complete; ready for start up.</log>
                                 </wait>
                             </run>
                         </image>

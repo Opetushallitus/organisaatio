@@ -6,9 +6,9 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Table } from '../Table/Table';
 import { LanguageContext, useModalContext } from '../../../contexts';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
+import ApprovalModal from '../ApprovalModal/ApprovalModal';
 
 import styles from './RekisteroinnitTable.module.css';
-import MultipleSelectedApprovalModal from '../MultipleSelectedApprovalModal/MultipleSelectedApprovalModal';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
@@ -43,7 +43,7 @@ export default function RekisteroinnitTable({ rekisteroinnit }: RekisteroinnitTa
     const columns = useMemo<ColumnDef<Rekisterointihakemus>[]>(() => {
         const openApprovalModal = (row: Row<Rekisterointihakemus>, hyvaksytty: boolean) => {
             setModal(
-                <MultipleSelectedApprovalModal
+                <ApprovalModal
                     chosenRegistrations={[row.original]}
                     approvalDecision={hyvaksytty}
                     approvalDoneCb={() => {}} // TODO
