@@ -1,41 +1,89 @@
+.modalContainer {
+    border-top: 4px solid #0a789c;
+    border-radius: 3px;
+    max-width: 800px;
+}
+
+.modalContainer > div:nth-of-type(2) {
+    overflow: hidden;
+    max-height: 60vh;
+}
+
+.modalHeader {
+    border-bottom: none;
+    padding: 26px 26px 16px;
+}
+
+.modalHeader h5 {
+    font-size: 28px;
+}
+
+.modalBody {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+    padding: 0 26px;
+}
+
 .virheLomakkeella {
     color: #e05055 !important;
 }
 
-.lisattyMargin {
-    margin: 1em 0;
+.tableContainer {
+    overflow: auto;
+    max-height: 300px;
 }
 
-table.paatosLista {
+.paatosLista {
     width: 100%;
     border-spacing: 0;
     text-align: left;
+    margin-bottom: 2em;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.paatosLista thead tr th {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5em;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0px 0px 0 2px #ccc;
+    position: sticky;
+    top: 0;
+}
+
+.paatosLista tbody tr td {
+    font-weight: 400;
+    font-size: 16px;
     line-height: 2.5em;
-    margin-bottom: 3em;
+    border-bottom: none;
 }
 
-table.paatosLista thead tr th {
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
+.paatosLista tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
 }
 
-.virheAsettelu {
-    margin: auto 0;
+.organizationNameCell {
+    width: 250px;
 }
 
-table.paatosLista tbody tr td {
-    padding-right: 3em;
+.footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: none;
+    padding: 16px 26px 26px;
 }
 
-table.paatosLista tbody tr td:last-child {
-    padding-right: 0;
+.footerButtons button {
+    padding: 6px 2rem;
 }
 
-table.paatosLista tbody tr:nth-child(odd) {
-    background-color: #fafafa;
+
+.footerButtons button:not(:first-of-type) {
+    margin-left: 40px;
 }
 
-table.paatosLista tbody tr:last-child td {
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
+.hylkaysOhje {
+    font-weight: 600;
 }

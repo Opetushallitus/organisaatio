@@ -1,19 +1,18 @@
 import React, { useContext, useState } from 'react';
 import Axios from 'axios';
 import { LanguageContext, MaatJaValtiotKoodistoContext, useKoodistoContext, useModalContext } from '../../../contexts';
-import Box from '@opetushallitus/virkailija-ui-components/Box';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
-import Typography from '@opetushallitus/virkailija-ui-components/Typography';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+
+import styles from './ApprovalModal.module.css';
+
 import Modal from '@opetushallitus/virkailija-ui-components/Modal';
 import ModalBody from '@opetushallitus/virkailija-ui-components/ModalBody';
 import ModalFooter from '@opetushallitus/virkailija-ui-components/ModalFooter';
 import ModalHeader from '@opetushallitus/virkailija-ui-components/ModalHeader';
-import Divider from '@opetushallitus/virkailija-ui-components/Divider';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import { isNonEmpty } from '../../../StringUtils';
 import { Organisaatio } from '../../../types/types';
-import styles from './ApprovalModal.module.css';
 
 const paatoksetBatchUrl = '/varda-rekisterointi/virkailija/api/paatokset/batch';
 
@@ -45,11 +44,7 @@ class PaatosRivi {
     }
 }
 
-export default function ApprovalModal({
-    chosenRegistrations,
-    approvalDecision,
-    approvalDoneCb,
-}: Props) {
+export default function ApprovalModal({ chosenRegistrations, approvalDecision, approvalDoneCb }: Props) {
     const { i18n } = useContext(LanguageContext);
     const { kunnat: kuntaKoodisto } = useKoodistoContext();
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
@@ -89,64 +84,65 @@ export default function ApprovalModal({
     }
 
     return (
-        <Modal open onClose={closeModal}>
-            <ModalHeader onClose={closeModal}>
+        <Modal open onClose={closeModal} className={styles.modalContainer}>
+            <ModalHeader onClose={closeModal} className={styles.modalHeader}>
                 {i18n.translate(approvalDecision ? 'REKISTEROINNIT_HYVAKSYTTAVAT' : 'REKISTEROINNIT_HYLATTAVAT')}
             </ModalHeader>
-            <ModalBody>
-                <table className={styles.paatosLista}>
-                    <thead>
-                        <tr key="otsikot">
-                            <th>{i18n.translate('ORGANISAATION_NIMI')}</th>
-                            <th>{i18n.translate('PUHELINNUMERO')}</th>
-                            <th>{i18n.translate('YTUNNUS')}</th>
-                            <th>{i18n.translate('ORGANISAATION_KOTIPAIKKA')}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {chosenRegistrations
-                            .map((hakemus) => new PaatosRivi(hakemus, `${kotipaikka(hakemus.organisaatio)}`))
-                            .map((rivi) => (
-                                <tr key={rivi.hakemus.id}>
-                                    <td>{rivi.organisaatio}</td>
-                                    <td>{rivi.puhelinnumero}</td>
-                                    <td>{rivi.ytunnus}</td>
-                                    <td>{rivi.kotipaikka}</td>
-                                </tr>
-                            ))}
-                    </tbody>
-                </table>
-                {!approvalDecision && [
-                    chosenRegistrations.length > 1
-                        ? [
-                              <Divider />,
-                              <Typography>{i18n.translate('REKISTEROINTI_HYLKAYS_MONTAVALITTUNA')}</Typography>,
-                              <Divider />,
-                          ]
-                        : null,
-                    <Typography className={perusteluError ? styles.virheLomakkeella : ''}>
-                        {i18n.translate('REKISTEROINTI_HYLKAYS_OHJE')}
-                    </Typography>,
-                    <Textarea
-                        className={styles.lisattyMargin}
-                        error={perusteluError}
-                        value={perustelu}
-                        onChange={(event: { target: HTMLTextAreaElement }) => asetaPerustelu(event.target.value)}
-                    />,
-                ]}
+            <ModalBody className={styles.modalBody}>
+                <div className={styles.tableContainer}>
+                    <table className={styles.paatosLista}>
+                        <thead>
+                            <tr>
+                                <th className={styles.organizationNameCell}>{i18n.translate('ORGANISAATION_NIMI')}</th>
+                                <th>{i18n.translate('PUHELINNUMERO')}</th>
+                                <th>{i18n.translate('YTUNNUS')}</th>
+                                <th>{i18n.translate('KOTIPAIKKA')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {chosenRegistrations
+                                .map((hakemus) => new PaatosRivi(hakemus, `${kotipaikka(hakemus.organisaatio)}`))
+                                .map((rivi) => (
+                                    <tr key={rivi.hakemus.id}>
+                                        <td className={styles.organizationNameCell}>{rivi.organisaatio}</td>
+                                        <td>{rivi.puhelinnumero}</td>
+                                        <td>{rivi.ytunnus}</td>
+                                        <td>{rivi.kotipaikka}</td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </table>
+                </div>
+                {!approvalDecision && (
+                    <div>
+                        <p className={styles.hylkaysOhje}>{i18n.translate('REKISTEROINTI_HYLKAYS_OHJE')}</p>
+                        {chosenRegistrations.length > 1 ? (
+                            <p>{i18n.translate('REKISTEROINTI_HYLKAYS_MONTAVALITTUNA')}</p>
+                        ) : null}
+                        <Textarea
+                            error={perusteluError}
+                            value={perustelu}
+                            onChange={(event: { target: HTMLTextAreaElement }) => asetaPerustelu(event.target.value)}
+                        />
+                    </div>
+                )}
             </ModalBody>
-            <ModalFooter>
-                <Box display="flex" justifyContent="flex-end">
+            <ModalFooter className={styles.footer}>
+                <div>
                     {lahetaError ? (
                         <div className={` ${styles.virheLomakkeella} ${styles.virheAsettelu}`}>
                             {i18n.translate('ERROR_SAVE')}
                         </div>
                     ) : null}
+                </div>
+                <div className={styles.footerButtons}>
                     <Button variant="text" onClick={closeModal}>
-                        {i18n.translate('REKISTEROINTI_PERUUTA')}
+                        {i18n.translate('PERUUTA')}
                     </Button>
-                    <Button onClick={laheta}>{i18n.translate('REKISTEROINTI_LAHETA')}</Button>
-                </Box>
+                    <Button onClick={laheta}>
+                        {i18n.translate(approvalDecision ? 'TAULUKKO_HYVAKSY_HAKEMUS' : 'TAULUKKO_HYLKAA_HAKEMUS')}
+                    </Button>
+                </div>
             </ModalFooter>
         </Modal>
     );
