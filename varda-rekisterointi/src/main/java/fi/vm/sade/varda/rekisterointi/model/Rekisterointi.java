@@ -30,7 +30,7 @@ public class Rekisterointi {
 
     @NotNull
     public final String toimintamuoto;
-    
+
     @NotEmpty
     public final Set<@NotNull String> kunnat;
 

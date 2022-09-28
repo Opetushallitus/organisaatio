@@ -98,7 +98,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      '{"organisaatiotyyppi_07"}',
      'kunta_091',
      'maatjavaltiot1_fin',
-     'Varda-yritys',
+     'Varda-yritys1',
      CURRENT_DATE
  ), (
      1,
