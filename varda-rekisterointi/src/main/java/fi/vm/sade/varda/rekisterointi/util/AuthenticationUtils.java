@@ -24,7 +24,6 @@ public final class AuthenticationUtils {
     }
 
     public static Optional<String> mapToRole(String authority) {
-        LOGGER.info("authority:" + authority);
         String regex = ".*ORGANISAATIOIDEN_REKISTEROITYMINEN_([^_]+).*";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(authority);
