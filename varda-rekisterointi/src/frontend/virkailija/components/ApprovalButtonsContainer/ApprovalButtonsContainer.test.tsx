@@ -8,13 +8,12 @@ import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import { dummyHakemus } from '../../../testTypes';
 
 const theme = createTheme();
-const buttonIds = ['hylkaaButton', 'hyvaksyButton'];
 const dummyTyhjennaCallback = () => {
     /* no-op */
 };
 
 let container: Element;
-describe('PaatosKontrollit', () => {
+describe('ApprovalButtonsContainerTest', () => {
     beforeEach(() => {
         container = document.createElement('div');
         document.body.appendChild(container);
@@ -24,7 +23,7 @@ describe('PaatosKontrollit', () => {
         container.remove();
     });
 
-    it('disabloi Buttonit, kun ei valittuja hakemuksia', async () => {
+    it('Disables the application buttons when there is no applications', async () => {
         await act(async () => {
             render(
                 <ThemeProvider theme={theme}>
@@ -36,16 +35,12 @@ describe('PaatosKontrollit', () => {
                 container
             );
         });
-        buttonIds.forEach((id) => {
-            const button: Element | null = container.querySelector(`#${id}`);
-            expect(button).not.toBeNull();
-            if (button !== null) {
-                expect(button.hasAttribute('disabled')).toBeTruthy();
-            }
-        });
+        const buttons: HTMLCollectionOf<HTMLButtonElement> = container.getElementsByTagName('button');
+        expect(buttons).not.toBeNull();
+        Array.from(buttons).map((b) => expect(b.hasAttribute('disabled')).toBeTruthy());
     });
 
-    it('enabloi Buttonit, kun hakemuksia valittu', async () => {
+    it('Enables the application buttons when there are one or more applications', async () => {
         const hakemus: Rekisterointihakemus = dummyHakemus;
         await act(async () => {
             render(
@@ -58,12 +53,7 @@ describe('PaatosKontrollit', () => {
                 container
             );
         });
-        buttonIds.forEach((id) => {
-            const button: Element | null = container.querySelector(`#${id}`);
-            expect(button).not.toBeNull();
-            if (button !== null) {
-                expect(button.hasAttribute('disabled')).toBeFalsy();
-            }
-        });
+        const buttons: HTMLCollectionOf<HTMLButtonElement> = container.getElementsByTagName('button');
+        Array.from(buttons).map((b) => expect(b.hasAttribute('disabled')).toBeFalsy());
     });
 });
