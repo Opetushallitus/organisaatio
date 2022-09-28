@@ -4,7 +4,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 import styles from './ApprovalButtonsContainer.module.css';
-import MultipleSelectedApprovalModal from '../MultipleSelectedApprovalModal/MultipleSelectedApprovalModal';
+import ApprovalModal from '../ApprovalModal/ApprovalModal';
 
 type Props = {
     chosenRekisteroinnit: Rekisterointihakemus[];
@@ -18,7 +18,7 @@ export default function ApprovalButtonsContainer({ chosenRekisteroinnit, valitut
 
     function confirmApprovalSelection(hyvaksytty: boolean) {
         setModal(
-            <MultipleSelectedApprovalModal
+            <ApprovalModal
                 chosenRegistrations={chosenRekisteroinnit}
                 approvalDecision={hyvaksytty}
                 approvalDoneCb={valitutKasiteltyCallback}

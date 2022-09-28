@@ -13,7 +13,7 @@ import Divider from '@opetushallitus/virkailija-ui-components/Divider';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import { isNonEmpty } from '../../../StringUtils';
 import { Organisaatio } from '../../../types/types';
-import styles from './MultipleSelectedApprovalModal.module.css';
+import styles from './ApprovalModal.module.css';
 
 const paatoksetBatchUrl = '/varda-rekisterointi/virkailija/api/paatokset/batch';
 
@@ -45,7 +45,7 @@ class PaatosRivi {
     }
 }
 
-export default function MultipleSelectedApprovalModal({
+export default function ApprovalModal({
     chosenRegistrations,
     approvalDecision,
     approvalDoneCb,
