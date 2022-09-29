@@ -67,6 +67,8 @@
 
 .row:hover {
     box-shadow: 0px 9px 4px -6px #CCC;
+    transform: scale(1.001, 1.01);
+    transform-origin: center;
 }
 
 .evenRow {
