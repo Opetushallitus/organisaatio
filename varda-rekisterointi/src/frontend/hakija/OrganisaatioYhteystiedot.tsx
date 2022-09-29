@@ -41,7 +41,7 @@ export default function OrganisaatioYhteystiedot({
     if (postinumerotLoading) {
         return <Spinner />;
     }
-    if (postinumerotError) {
+    if (postinumerotError || !postinumerot) {
         return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 

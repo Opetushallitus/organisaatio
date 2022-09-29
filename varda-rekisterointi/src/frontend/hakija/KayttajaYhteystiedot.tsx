@@ -35,7 +35,7 @@ export default function KayttajaYhteystiedot({
     if (toimintamuodotLoading) {
         return <Spinner />;
     }
-    if (toimintamuodotError) {
+    if (toimintamuodotError || !toimintamuodot) {
         return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 

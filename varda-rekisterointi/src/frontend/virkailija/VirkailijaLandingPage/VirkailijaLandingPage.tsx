@@ -30,7 +30,7 @@ export default function VirkailijaLandingPage() {
         return <Spinner />;
     }
 
-    if (maatJaValtiotError || permissionError) {
+    if (maatJaValtiotError || permissionError || !maatJaValtiot || !permission) {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
     }
 
