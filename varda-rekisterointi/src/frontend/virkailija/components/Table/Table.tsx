@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import { parseISO, format } from 'date-fns';
 import {
@@ -25,7 +25,7 @@ import styles from './Table.module.css';
 type TableProps = {
     columns: ColumnDef<Rekisterointihakemus>[];
     data: Rekisterointihakemus[];
-    rekisterointityyppi: Rekisterointityyppi
+    rekisterointityyppi: Rekisterointityyppi;
 };
 
 const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
@@ -39,7 +39,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
     const [globalFilter, setGlobalFilter] = useState('');
     const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
-    const pageSize = 20;
+    const [pageSize, setPageSize] = useState(1);
     const [pageIndex, setPageIndex] = useState(0);
 
     const renderOrganizationDetails = React.useCallback(
@@ -116,7 +116,11 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
         getPaginationRowModel: getPaginationRowModel(),
     });
 
-    const pages = Math.ceil(table.getFilteredRowModel().rows.length / pageSize);
+    const filteredRowLength = table.getFilteredRowModel().rows.length
+    useEffect(() => {
+        setPageIndex(0)
+    }, [filteredRowLength])
+
     const selectedRows = filterOnlyKasittelyssa(table.getSelectedRowModel().rows);
 
     return (
@@ -227,7 +231,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                     })}
                 </tbody>
             </table>
-            {table.getRowModel().rows.length <= 0 && (
+            {table.getRowModel().rows.length <= 0 ? (
                 <div className={styles.emptyList}>
                     <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="28" cy="28" r="28" fill="#F5F5F5" />
@@ -240,8 +244,9 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                     </svg>
                     <p>{i18n.translate('TYHJA_LISTA')}</p>
                 </div>
+            ) : (
+                <Pagination pageIndex={pageIndex} setPageIndex={setPageIndex} pageOptions={table.getPageOptions()} pageSize={pageSize} setPageSize={setPageSize} />
             )}
-            {pages > 1 && <Pagination pageIndex={pageIndex} setPageIndex={setPageIndex} pages={pages} />}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
                 <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
             )}

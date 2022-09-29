@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
+import { LanguageContext } from '../../../contexts';
 
 import styles from './Pagination.module.css';
 
 type PaginationProps = {
     pageIndex: number;
     setPageIndex: (n: number) => void;
-    pages: number;
+    pageOptions: number[];
+    pageSize: number;
+    setPageSize: (n: number) => void;
 };
 
-export const Pagination = ({ pageIndex, setPageIndex, pages }: PaginationProps) => {
+export const Pagination = ({ pageIndex, setPageIndex, pageOptions, pageSize, setPageSize }: PaginationProps) => {
+    const { i18n } = useContext(LanguageContext);
+    const lastPage = pageOptions[pageOptions.length - 1];
     return (
         <div className={styles.container}>
             <button
@@ -18,18 +24,54 @@ export const Pagination = ({ pageIndex, setPageIndex, pages }: PaginationProps) 
             >
                 &lt;
             </button>
-            {Array.from({ length: pages }, (_, i) => (
-                <button className={i === pageIndex ? styles.currentPage : styles.page} onClick={() => setPageIndex(i)}>
+            {pageIndex >= 4 && (
+                <>
+                    <button className={styles.page} onClick={() => setPageIndex(0)}>
+                        1
+                    </button>
+                    <button className={styles.page} disabled={true}>
+                        ...
+                    </button>
+                </>
+            )}
+            {pageOptions.slice(...(pageIndex > 3 ? [pageIndex - 2, pageIndex + 3] : [0, 5])).map((i) => (
+                <button
+                    key={`page-${i}`}
+                    className={i === pageIndex ? styles.currentPage : styles.page}
+                    onClick={() => setPageIndex(i)}
+                >
                     {i + 1}
                 </button>
             ))}
+            {pageIndex < lastPage - 3 && (
+                <>
+                    <button className={styles.page} disabled={true}>
+                        ...
+                    </button>
+                    <button className={styles.page} onClick={() => setPageIndex(0)}>
+                        {lastPage}
+                    </button>
+                </>
+            )}
             <button
                 className={styles.page}
-                onClick={() => pageIndex < pages - 1 && setPageIndex(pageIndex + 1)}
-                disabled={pageIndex >= pages - 1}
+                onClick={() => pageIndex < lastPage && setPageIndex(pageIndex + 1)}
+                disabled={pageIndex >= lastPage}
             >
                 &gt;
             </button>
+            <div className={styles.pageSizeContainer}>
+                {i18n.translate('NAYTA_SIVULLA')}:{' '}
+                <select
+                    className={styles.pageSizeSelect}
+                    defaultValue={pageSize}
+                    onChange={(e) => setPageSize(Number.parseInt(e.target.value))}
+                >
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
         </div>
     );
 };
