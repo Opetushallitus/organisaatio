@@ -2,6 +2,7 @@ import React, { useMemo, useContext, HTMLProps } from 'react';
 import { format, parseISO } from 'date-fns';
 import { ColumnDef, Row, Table as TableType } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 
 import { Table } from '../Table/Table';
 import { LanguageContext, useKoodistoContext, useModalContext } from '../../../contexts';
@@ -20,7 +21,6 @@ const saapumisAikaFormat = 'd.M.y HH:mm';
 
 function IndeterminateCheckbox({
     indeterminate,
-    className = '',
     ...rest
 }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
     const ref = React.useRef<HTMLInputElement>(null!);
@@ -31,7 +31,7 @@ function IndeterminateCheckbox({
         }
     }, [ref, indeterminate, rest.checked]);
 
-    return <input type="checkbox" ref={ref} className={className + ' cursor-pointer'} {...rest} />;
+    return <Checkbox ref={ref as any} className="checkbox" {...rest} indeterminate={indeterminate} />;
 }
 
 export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityyppi }: RekisteroinnitTableProps) {

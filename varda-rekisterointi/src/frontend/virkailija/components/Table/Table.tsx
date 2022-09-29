@@ -39,7 +39,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
     const [globalFilter, setGlobalFilter] = useState('');
     const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
-    const [pageSize, setPageSize] = useState(1);
+    const [pageSize, setPageSize] = useState(20);
     const [pageIndex, setPageIndex] = useState(0);
 
     const renderOrganizationDetails = React.useCallback(
@@ -180,7 +180,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                                     className={idx % 2 === 1 ? styles.evenRow : ''}
                                     onClick={(e) =>
                                         e.target instanceof HTMLButtonElement ||
-                                        e.target instanceof HTMLInputElement ||
+                                        (e.target instanceof HTMLInputElement && e.target.getAttribute('class')?.includes('checkbox')) ||
                                         row.toggleExpanded()
                                     }
                                 >
