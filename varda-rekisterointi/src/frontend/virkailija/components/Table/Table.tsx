@@ -116,10 +116,10 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
         getPaginationRowModel: getPaginationRowModel(),
     });
 
-    const filteredRowLength = table.getFilteredRowModel().rows.length
+    const filteredRowLength = table.getFilteredRowModel().rows.length;
     useEffect(() => {
-        setPageIndex(0)
-    }, [filteredRowLength])
+        setPageIndex(0);
+    }, [filteredRowLength]);
 
     const selectedRows = filterOnlyKasittelyssa(table.getSelectedRowModel().rows);
 
@@ -177,10 +177,12 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                         return (
                             <React.Fragment key={row.id}>
                                 <tr
-                                    className={idx % 2 === 1 ? styles.evenRow : ''}
+                                    className={`${styles.row} ${idx % 2 === 1 ? styles.evenRow : ''}`}
+                                    style={{ zIndex: 150 - idx }}
                                     onClick={(e) =>
                                         e.target instanceof HTMLButtonElement ||
-                                        (e.target instanceof HTMLInputElement && e.target.getAttribute('class')?.includes('checkbox')) ||
+                                        (e.target instanceof HTMLInputElement &&
+                                            e.target.getAttribute('class')?.includes('checkbox')) ||
                                         row.toggleExpanded()
                                     }
                                 >
@@ -245,7 +247,13 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                     <p>{i18n.translate('TYHJA_LISTA')}</p>
                 </div>
             ) : (
-                <Pagination pageIndex={pageIndex} setPageIndex={setPageIndex} pageOptions={table.getPageOptions()} pageSize={pageSize} setPageSize={setPageSize} />
+                <Pagination
+                    pageIndex={pageIndex}
+                    setPageIndex={setPageIndex}
+                    pageOptions={table.getPageOptions()}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                />
             )}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
                 <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
