@@ -14,7 +14,7 @@ type PaginationProps = {
 
 export const Pagination = ({ pageIndex, setPageIndex, pageOptions, pageSize, setPageSize }: PaginationProps) => {
     const { i18n } = useContext(LanguageContext);
-    const lastPage = pageOptions[pageOptions.length - 1];
+    const lastPageIndex = pageOptions[pageOptions.length - 1];
     return (
         <div className={styles.container}>
             <button
@@ -43,20 +43,20 @@ export const Pagination = ({ pageIndex, setPageIndex, pageOptions, pageSize, set
                     {i + 1}
                 </button>
             ))}
-            {pageIndex < lastPage - 3 && (
+            {pageIndex < lastPageIndex - 3 && (
                 <>
                     <button className={styles.page} disabled={true}>
                         ...
                     </button>
-                    <button className={styles.page} onClick={() => setPageIndex(0)}>
-                        {lastPage}
+                    <button className={styles.page} onClick={() => setPageIndex(lastPageIndex)}>
+                        {lastPageIndex + 1}
                     </button>
                 </>
             )}
             <button
                 className={styles.page}
-                onClick={() => pageIndex < lastPage && setPageIndex(pageIndex + 1)}
-                disabled={pageIndex >= lastPage}
+                onClick={() => pageIndex < lastPageIndex && setPageIndex(pageIndex + 1)}
+                disabled={pageIndex >= lastPageIndex}
             >
                 &gt;
             </button>
