@@ -185,6 +185,9 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                                             e.target.getAttribute('class')?.includes('checkbox')) ||
                                         row.toggleExpanded()
                                     }
+                                    role="button"
+                                    aria-pressed={row.getIsExpanded()}
+                                    aria-label={i18n.translate('AVAA_REKISTEROINNIN_TIEDOT')}
                                 >
                                     {row.getVisibleCells().map((cell) => {
                                         return (
