@@ -4,27 +4,28 @@ DELETE FROM yhteystiedot;
 DELETE FROM organisaatio;
 DELETE FROM rekisterointi;
 
+
 INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit)
  VALUES (
-     0,
+     1000,
      'vardatoimintamuoto_tm01',
      'varda',
      '{"Helsinki"}',
      '{"testi.varda@testiyrit.ys"}'
  ), (
-     1,
+     1001,
      null,
      'jotpa',
      null,
      '{"testi.jotpa@testiyrit2.ys"}'
 ), (
-     6,
+     1006,
      null,
      'jotpa',
      null,
      '{"testi.jotpa@testiyrit3.ys"}'
 ), (
-     7,
+     1007,
      null,
      'jotpa',
      null,
@@ -33,21 +34,21 @@ INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit)
 
 INSERT INTO rekisterointi (id, toimintamuoto, tyyppi, kunnat, sahkopostit, tila)
 VALUES (
-           2,
+           1002,
            'vardatoimintamuoto_tm01',
            'varda',
            '{"Helsinki"}',
            '{"testi.varda.hyvaksytty@varda.com"}',
            'HYVAKSYTTY'
        ),  (
-            3,
+            1003,
             'vardatoimintamuoto_tm01',
             'varda',
             '{"Helsinki"}',
             '{"testi.varda.hylatty@varda.com"}',
             'HYLATTY'
         ), (
-           4,
+           1004,
            null,
            'jotpa',
            null,
@@ -57,19 +58,19 @@ VALUES (
 
 INSERT INTO paatos (rekisterointi_id, hyvaksytty, paatetty, paattaja_oid, perustelu)
 VALUES (
-           2,
+           1002,
            true,
            CURRENT_DATE,
            '1.2.3.4.5',
            'Hyväksytty päätös'
        ), (
-           3,
+           1003,
            false,
            CURRENT_DATE,
            '5.4.3.2.1',
            'Hylätty päätös'
        ),(
-    4,
+    1004,
         true,
     CURRENT_DATE,
     '1.2.3.4.5',
@@ -78,7 +79,7 @@ VALUES (
 
 INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypit, kotipaikka, maa, nimi, nimi_alkupvm)
  VALUES (
-     0,
+     1000,
      '0000000-0',
      CURRENT_DATE,
      'yritysmuoto_26',
@@ -88,7 +89,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      'Varda-yritys1',
      CURRENT_DATE
  ), (
-     1,
+     1001,
      '0000000-1',
      CURRENT_DATE,
      'yritysmuoto_26',
@@ -98,7 +99,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      'Jotpa-yritys',
      CURRENT_DATE
  ), (
-     2,
+     1002,
      '0000000-2',
      CURRENT_DATE,
      'yritysmuoto_26',
@@ -108,7 +109,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      'Varda-yritys hyväksytty',
      CURRENT_DATE
  ),(
-    3,
+    1003,
     '0000000-3',
     CURRENT_DATE,
     'yritysmuoto_26',
@@ -118,7 +119,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
     'Varda-yritys hylätty',
     CURRENT_DATE
 ), (
-     4,
+     1004,
      '0000000-4',
      CURRENT_DATE,
      'yritysmuoto_26',
@@ -128,7 +129,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
      'Jotpa-yritys hyväksytty',
      CURRENT_DATE
  ), (
-    6,
+    1006,
     '0000000-6',
     CURRENT_DATE,
     'yritysmuoto_26',
@@ -138,7 +139,7 @@ INSERT INTO organisaatio (rekisterointi_id, ytunnus, alkupvm, yritysmuoto, tyypi
     'Jotpa-yritys 2',
     CURRENT_DATE
 ), (
-    7,
+    1007,
     '0000000-7',
     CURRENT_DATE,
     'yritysmuoto_26',
@@ -153,43 +154,43 @@ INSERT INTO yhteystiedot (
     rekisterointi_id, puhelinnumero, sahkoposti, posti_katuosoite, posti_postinumero_uri, posti_postitoimipaikka,
     kaynti_katuosoite, kaynti_postinumero_uri, kaynti_postitoimipaikka
 ) VALUES (
-    0,
+    1000,
     '+358101234567',
     'testi.yritys@testiyrit.ys',
     'Haapaniemenkatu 14', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 14', 'posti_00530', 'kunta_091'
 ), (
-    1,
+    1001,
     '+35812112121',
     'testi.yritys2@testiyrit2.ys',
     'Haapaniemenkatu 12', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 12', 'posti_00530', 'kunta_091'
 ),(
-    2,
+    1002,
     '+3585021211',
     'testi.yritys2@testiyrit2.ys',
     'Haapaniemenkatu 11', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 11', 'posti_00530', 'kunta_091'
 ),(
-    3,
+    1003,
     '+3581132445',
     'testi.yritys2@testiyrit2.ys',
     'Haapaniemenkatu 10', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 10', 'posti_00530', 'kunta_091'
 ),(
-    4,
+    1004,
     '+358124563',
     'testi.yritys2@testiyrit2.ys',
     'Haapaniemenkatu 9', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 9', 'posti_00530', 'kunta_091'
 ),(
-    6,
+    1006,
     '+3581234353',
     'testi.yritys6@testiyrit3.ys',
     'Haapaniemenkatu 8', 'posti_00530', 'kunta_091',
     'Haapaniemenkatu 8', 'posti_00530', 'kunta_091'
 ),(
-    7,
+    1007,
     '+3581234353',
     'testi.yritys7@testiyrit4.ys',
     'Haapaniemenkatu 8', 'posti_00530', 'kunta_091',
@@ -198,59 +199,59 @@ INSERT INTO yhteystiedot (
 
 INSERT INTO kayttaja (id, etunimi, sukunimi, sahkoposti, asiointikieli, saateteksti, rekisterointi)
  VALUES (
-     0,
+     10,
      'Testi',
      'Käyttäjä',
      'testi.kayttaja@testiyrit.ys',
      'fi',
      null,
-     0
+     1000
  ), (
-     1,
+     11,
      'kingi',
      'Käyttäjä',
      'testi.kayttaja1@testiyrit2.ys',
      'fi',
      null,
-     1
+     1001
  ), (
-    2,
+    12,
     'ruotsi',
     'Käyttäjä',
     'testi.kayttaja2@testiyrit2.ys',
     'sv',
     null,
-    2
+    1002
 ), (
-    3,
+    13,
     'Taas',
     'Käyttäjä',
     'testi.kayttaja3@testiyrit2.ys',
     'fi',
     null,
-    3
+    1003
 ),(
-     4,
+     14,
      'neljäs',
      'Käyttäjä',
      'testi.kayttaja4@testiyrit2.ys',
      'fi',
      null,
-     4
+     1004
  ),(
-     6,
+     16,
      'Saate 6',
      'Käyttäjä',
      'testi.kayttaja75@testiyrit3.ys',
      'fi',
      'saateteksti testi',
-     6
+     1006
  ),(
-     7,
+     17,
      'Saate 7',
      'Käyttäjä',
      'testi.kayttaja7@testiyrit4.ys',
      'fi',
      'saateteksti testi',
-     7
+     1007
  );

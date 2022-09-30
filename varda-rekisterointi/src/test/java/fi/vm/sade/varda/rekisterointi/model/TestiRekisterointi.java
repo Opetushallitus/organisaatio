@@ -12,7 +12,7 @@ public class TestiRekisterointi {
 
     public static Rekisterointi rekisterointi(Kayttaja kayttaja) {
         return Rekisterointi.of(
-                Organisaatio.of("0000000-1", "oid", LocalDate.now(),
+                Organisaatio.of("0000001-9", "oid", LocalDate.now(),
                         KielistettyNimi.of("Varda-yritys", "fi", LocalDate.now()),
                         "yritysmuoto_26", Set.of("organisaatiotyyppi_07"), "kunta_091",
                         "maatjavaltiot1_fin", Set.of("oppilaitoksenopetuskieli_1#1"),

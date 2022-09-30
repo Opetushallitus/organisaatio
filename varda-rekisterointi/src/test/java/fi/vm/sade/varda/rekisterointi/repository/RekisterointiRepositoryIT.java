@@ -5,6 +5,7 @@ import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -103,7 +105,7 @@ public class RekisterointiRepositoryIT {
         iterable.forEach(results::add);
         assertEquals(1, results.size());
     }
-/* TODO these are removed bc they are broken
+
     @Test
     public void savesRekisterointi() {
         Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
@@ -123,7 +125,7 @@ public class RekisterointiRepositoryIT {
         assertNotEquals(rekisterointi.id, uudelleenRekisterointi.id);
         assertFalse(rekisterointi.organisaatio.uudelleenRekisterointi);
         assertTrue(uudelleenRekisterointi.organisaatio.uudelleenRekisterointi);
-    }*/
+    }
 
     @Test(expected = DbActionExecutionException.class)
     public void oidMustBeUniqueUnlessUudelleenRekisterointi() {
