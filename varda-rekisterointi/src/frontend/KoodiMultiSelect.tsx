@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Koodi } from './types/types';
 import { toLocalizedText } from './LocalizableTextUtils';
 import { LanguageContext } from './contexts';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 import Select from 'react-select';
 import { OptionTypeBase } from 'react-select/src/types';
 

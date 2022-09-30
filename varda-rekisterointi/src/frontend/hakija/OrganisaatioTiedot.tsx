@@ -8,7 +8,7 @@ import { toLocalizedText } from '../LocalizableTextUtils';
 import { isNonEmpty } from '../StringUtils';
 import Spinner from '../Spinner';
 import { LanguageContext } from '../contexts';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 import ErrorPage from '../virhe/VirheSivu';
 import { yritysmuotoSortFnByLanguage, yritysmuotoValueFn } from './YritysmuotoUtils';
 

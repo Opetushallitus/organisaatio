@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 import { LanguageContext } from '../contexts';
 import styles from './Navigation.module.css';
 

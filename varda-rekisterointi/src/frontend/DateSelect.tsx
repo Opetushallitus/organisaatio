@@ -4,7 +4,7 @@ import { LocalDate } from './types/types';
 import { parseISO, format } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css';
 import { LanguageContext } from './contexts';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 
 type Props = {
     id?: string;

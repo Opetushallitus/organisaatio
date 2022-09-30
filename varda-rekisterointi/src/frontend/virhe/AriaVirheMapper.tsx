@@ -35,7 +35,7 @@ const mapKeyToLocalization = (key: string) => {
     }
 };
 
-export default (props: Props) => {
+export default function Osoitevalidator(props: Props) {
     const { i18n } = useContext(LanguageContext);
     const errorKeys = Object.keys(props.errors);
     return(

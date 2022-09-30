@@ -1,5 +1,5 @@
 import {validoiOsoite} from "./OsoiteValidator";
-import {Osoite, Virheet, VirheKoodi} from "./types";
+import {Osoite, Virheet, VirheKoodi} from "./types/types";
 
 type OsoiteKentta = keyof Osoite;
 

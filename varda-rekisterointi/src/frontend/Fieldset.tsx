@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Fieldset.module.css';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 
 type Props = {
     title?: string,

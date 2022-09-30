@@ -4,7 +4,7 @@ import { LanguageContext } from './contexts';
 import styles from './InputMultiple.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 
 type Props = {
     id?: string,
