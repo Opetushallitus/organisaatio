@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import { parseISO, format } from 'date-fns';
 import {
@@ -25,7 +25,7 @@ import styles from './Table.module.css';
 type TableProps = {
     columns: ColumnDef<Rekisterointihakemus>[];
     data: Rekisterointihakemus[];
-    rekisterointityyppi: Rekisterointityyppi
+    rekisterointityyppi: Rekisterointityyppi;
 };
 
 const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
@@ -39,7 +39,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
     const [globalFilter, setGlobalFilter] = useState('');
     const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
-    const pageSize = 20;
+    const [pageSize, setPageSize] = useState(20);
     const [pageIndex, setPageIndex] = useState(0);
 
     const renderOrganizationDetails = React.useCallback(
@@ -73,8 +73,8 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                 <h4 className={styles.infoHeader}>{i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}</h4>
                 <h5 className={styles.infoLabel}>{i18n.translate('PUHELINNUMERO')}</h5>
                 <span>{row.original.organisaatio.yhteystiedot.puhelinnumero}</span>
-                <h5 className={styles.infoLabel}>{i18n.translate('TOIMINTAMUOTO')}</h5>
-                <span>{row.original.organisaatio.yhteystiedot.puhelinnumero}</span>
+                <h5 className={styles.infoLabel}>{i18n.translate('ORGANISAATION_SÄHKÖPOSTI')}</h5>
+                <span>{row.original.organisaatio.yhteystiedot.sahkoposti}</span>
             </div>
         ),
         [i18n]
@@ -109,13 +109,18 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                 pageSize,
             },
         },
+        autoResetPageIndex: true,
         onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
     });
 
-    const pages = Math.ceil(table.getFilteredRowModel().rows.length / pageSize);
+    const filteredRowLength = table.getFilteredRowModel().rows.length;
+    useEffect(() => {
+        setPageIndex(0);
+    }, [filteredRowLength]);
+
     const selectedRows = filterOnlyKasittelyssa(table.getSelectedRowModel().rows);
 
     return (
@@ -172,12 +177,17 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                         return (
                             <React.Fragment key={row.id}>
                                 <tr
-                                    className={idx % 2 === 1 ? styles.evenRow : ''}
+                                    className={`${styles.row} ${idx % 2 === 1 ? styles.evenRow : ''}`}
+                                    style={{ zIndex: 150 - idx }}
                                     onClick={(e) =>
                                         e.target instanceof HTMLButtonElement ||
-                                        e.target instanceof HTMLInputElement ||
+                                        (e.target instanceof HTMLInputElement &&
+                                            e.target.getAttribute('class')?.includes('checkbox')) ||
                                         row.toggleExpanded()
                                     }
+                                    role="button"
+                                    aria-pressed={row.getIsExpanded()}
+                                    aria-label={i18n.translate('AVAA_REKISTEROINNIN_TIEDOT')}
                                 >
                                     {row.getVisibleCells().map((cell) => {
                                         return (
@@ -226,7 +236,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                     })}
                 </tbody>
             </table>
-            {table.getRowModel().rows.length <= 0 && (
+            {table.getRowModel().rows.length <= 0 ? (
                 <div className={styles.emptyList}>
                     <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="28" cy="28" r="28" fill="#F5F5F5" />
@@ -239,8 +249,15 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                     </svg>
                     <p>{i18n.translate('TYHJA_LISTA')}</p>
                 </div>
+            ) : (
+                <Pagination
+                    pageIndex={pageIndex}
+                    setPageIndex={setPageIndex}
+                    pageOptions={table.getPageOptions()}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                />
             )}
-            {pages > 1 && <Pagination pageIndex={pageIndex} setPageIndex={setPageIndex} pages={pages} />}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
                 <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
             )}

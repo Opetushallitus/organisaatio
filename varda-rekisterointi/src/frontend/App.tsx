@@ -51,7 +51,16 @@ const App: React.FC = () => {
     if (languageLoading || lokalisointiLoading || kunnatLoading || toimintamuodotLoading || yritysmuotoLoading) {
         return <Spinner />;
     }
-    if (lokalisointiError || kunnatError || toimintamuodotError || yritysmuodotError) {
+    if (
+        lokalisointiError ||
+        kunnatError ||
+        toimintamuodotError ||
+        yritysmuodotError ||
+        !lokalisointi ||
+        !kunnat ||
+        !yritysmuodot ||
+        !toimintamuodot
+    ) {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
     }
     const i18n = new I18nImpl(lokalisointi, language);

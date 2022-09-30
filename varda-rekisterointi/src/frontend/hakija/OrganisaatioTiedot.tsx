@@ -40,7 +40,7 @@ export default function OrganisaatioTiedot({
     if (organisaatiotyypitLoading || yritysmuotoLoading) {
         return <Spinner />;
     }
-    if (organisaatiotyypitError || yritysmuodotError) {
+    if (organisaatiotyypitError || yritysmuodotError || !yritysmuodot || !organisaatiotyypit) {
         return <ErrorPage>{i18n.translate('ERROR_FETCH')}</ErrorPage>;
     }
 

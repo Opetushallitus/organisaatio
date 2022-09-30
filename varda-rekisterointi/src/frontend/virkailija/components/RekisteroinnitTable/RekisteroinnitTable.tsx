@@ -2,9 +2,10 @@ import React, { useMemo, useContext, HTMLProps } from 'react';
 import { format, parseISO } from 'date-fns';
 import { ColumnDef, Row, Table as TableType } from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 
 import { Table } from '../Table/Table';
-import { LanguageContext, useModalContext } from '../../../contexts';
+import { LanguageContext, useKoodistoContext, useModalContext } from '../../../contexts';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import ApprovalModal from '../ApprovalModal/ApprovalModal';
 
@@ -13,14 +14,13 @@ import { Rekisterointityyppi } from '../../../types/types';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
-    rekisterointityyppi: Rekisterointityyppi
+    rekisterointityyppi: Rekisterointityyppi;
 };
 
 const saapumisAikaFormat = 'd.M.y HH:mm';
 
 function IndeterminateCheckbox({
     indeterminate,
-    className = '',
     ...rest
 }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
     const ref = React.useRef<HTMLInputElement>(null!);
@@ -31,11 +31,12 @@ function IndeterminateCheckbox({
         }
     }, [ref, indeterminate, rest.checked]);
 
-    return <input type="checkbox" ref={ref} className={className + ' cursor-pointer'} {...rest} />;
+    return <Checkbox ref={ref as any} className="checkbox" {...rest} indeterminate={indeterminate} />;
 }
 
 export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityyppi }: RekisteroinnitTableProps) {
     const { i18n } = useContext(LanguageContext);
+    const { kunnat } = useKoodistoContext();
     const { setModal } = useModalContext();
     const data = useMemo<Rekisterointihakemus[]>(() => {
         rekisteroinnit.sort((a, b) => a.organisaatio.ytjNimi.nimi.localeCompare(b.organisaatio.ytjNimi.nimi));
@@ -100,7 +101,8 @@ export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityypp
                 ? {
                       header: i18n.translate('TAULUKKO_KUNNAT_OTSIKKO'),
                       id: 'kunnat',
-                      accessorFn: (values: Rekisterointihakemus) => values.kunnat.join(', '),
+                      accessorFn: (values: Rekisterointihakemus) =>
+                          values.kunnat.map((k) => kunnat.uri2Nimi(k)).join(', '),
                   }
                 : (undefined as unknown as ColumnDef<Rekisterointihakemus>),
             {
@@ -139,7 +141,7 @@ export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityypp
                 accessorKey: 'tila',
             },
         ].filter((c) => !!c);
-    }, [i18n, rekisterointityyppi, setModal]);
+    }, [i18n, kunnat, rekisterointityyppi, setModal]);
 
     return <Table columns={columns} data={data} rekisterointityyppi={rekisterointityyppi} />;
 }
