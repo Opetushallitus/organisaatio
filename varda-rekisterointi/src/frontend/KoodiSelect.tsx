@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Koodi, Language } from './types/types';
 import { toLocalizedText } from './LocalizableTextUtils';
 import { LanguageContext } from './contexts';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 
 type Props = {
     tabIndex?: number;

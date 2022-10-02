@@ -1,7 +1,6 @@
 import { Osoite, Virheet } from './types/types';
 import { isNonEmpty, hasLengthBetween } from './StringUtils';
 
-type OsoiteKentta = keyof Osoite;
 const minLenght = 3;
 const maxLength = 100;
 const zipCodePattern = /^posti_\d{5}$/;

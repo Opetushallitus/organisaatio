@@ -1,5 +1,5 @@
 import {validoiYhteystiedot} from "./YhteystiedotValidator";
-import {Yhteystiedot, Virheet} from "./types";
+import {Yhteystiedot, Virheet} from "./types/types";
 import {tyhjaOsoite} from "./testTypes";
 
 type YhteystiedotKentta = keyof Yhteystiedot;

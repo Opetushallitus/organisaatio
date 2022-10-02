@@ -6,7 +6,7 @@ import Select from '../Select';
 import KoodiSelectRadio from '../KoodiSelectRadio';
 import Spinner from '../Spinner';
 import { asiointikielet } from '../LocalizableTextUtils';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 import { LanguageContext } from '../contexts';
 import ErrorPage from '../virhe/VirheSivu';
 
