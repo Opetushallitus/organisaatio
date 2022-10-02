@@ -70,7 +70,7 @@ public class VirkailijaControllerTest {
     @WithMockVirkailijaUser
     public void listaaRekisteroinnitReturnsOk() throws Exception {
         when(rekisterointiService.listByTilaAndOrganisaatio(Rekisterointi.Tila.KASITTELYSSA, null))
-                .thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
+                .thenReturn(Collections.singleton(TestiRekisterointi.validiVardaRekisterointi()));
         mvc.perform(get(VirkailijaController.BASE_PATH + VirkailijaController.REKISTEROINNIT_PATH + "?tila={tila}", Rekisterointi.Tila.KASITTELYSSA.toString())
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
@@ -79,7 +79,7 @@ public class VirkailijaControllerTest {
     @Test
     @WithMockVirkailijaUser
     public void luoPaatosReturnsCreated() throws Exception {
-        Rekisterointi resolved = TestiRekisterointi.validiRekisterointi().withPaatos(
+        Rekisterointi resolved = TestiRekisterointi.validiVardaRekisterointi().withPaatos(
                 new Paatos(TESTI_PAATOS_DTO.hyvaksytty, LocalDateTime.now(), MOCK_VIRKAILIJA_OID, TESTI_PAATOS_DTO.perustelu)
         );
         when(rekisterointiService.resolve(eq(MOCK_VIRKAILIJA_OID), eq(TESTI_PAATOS_DTO), any())).thenReturn(resolved);

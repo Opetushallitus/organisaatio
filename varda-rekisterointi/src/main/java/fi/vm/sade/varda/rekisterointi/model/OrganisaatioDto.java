@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static java.util.Collections.singletonList;
 
-public class OrganisaatioV4Dto extends BaseDto {
+public class OrganisaatioDto extends BaseDto {
 
     public String oid;
     public String ytunnus;
@@ -24,8 +24,8 @@ public class OrganisaatioV4Dto extends BaseDto {
     public Set<String> kieletUris;
     public List<YhteystietoDto> yhteystiedot;
 
-    public static OrganisaatioV4Dto of(String businessId, String organisationName) {
-        OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
+    public static OrganisaatioDto of(String businessId, String organisationName) {
+        OrganisaatioDto organisaatio = new OrganisaatioDto();
         organisaatio.ytunnus = businessId;
         organisaatio.nimi = Map.of("fi", organisationName);
         organisaatio.alkuPvm = null;

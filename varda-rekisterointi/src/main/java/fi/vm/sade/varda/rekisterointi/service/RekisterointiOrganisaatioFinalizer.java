@@ -3,7 +3,7 @@ package fi.vm.sade.varda.rekisterointi.service;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,10 +15,13 @@ import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
-public class VardaOrganisaatioFinalizer {
+public class RekisterointiOrganisaatioFinalizer {
 
     static final String VARDA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_07";
-    private static final Logger LOGGER = LoggerFactory.getLogger(VardaOrganisaatioFinalizer.class);
+    static final String JOTPA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_01";
+    static final String REKISTEROINTITYYPPI_VARDA = "varda";
+    static final String REKISTEROINTITYYPPI_JOTPA = "jotpa";
+    private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiOrganisaatioFinalizer.class);
 
     private final OrganisaatioService organisaatioService;
     private final OrganisaatioClient organisaatioClient;
@@ -36,7 +39,11 @@ public class VardaOrganisaatioFinalizer {
         String oid = organisaatio.oid;
         if (oid != null) {
             LOGGER.info("Päivitetään organisaatiota: {}", oid);
-            paivitaVardaTiedot(oid);
+            if (rekisterointi.tyyppi.equals(REKISTEROINTITYYPPI_VARDA)) {
+                paivitaVardaTiedot(oid);
+            } else if(rekisterointi.tyyppi.equals(REKISTEROINTITYYPPI_JOTPA)) {
+                paivitaJotpaTiedot(oid);
+            }
         } else {
             LOGGER.info("Luodaan organisaatio nimellä: {}", organisaatio.ytjNimi.nimi);
             oid = luoOrganisaatio(organisaatio);
@@ -45,14 +52,14 @@ public class VardaOrganisaatioFinalizer {
     }
 
     private String luoOrganisaatio(Organisaatio organisaatio) {
-        OrganisaatioV4Dto dto = organisaatioService.muunnaOrganisaatio(organisaatio);
-        OrganisaatioV4Dto luotu = organisaatioClient.create(dto);
+        OrganisaatioDto dto = organisaatioService.muunnaOrganisaatio(organisaatio);
+        OrganisaatioDto luotu = organisaatioClient.create(dto);
         LOGGER.info("Luotu uusi organisaatio {} rekisteröinnin pohjalta.", luotu.oid);
         return luotu.oid;
     }
 
     private void paivitaVardaTiedot(String organisaatioOid) {
-        OrganisaatioV4Dto dto = organisaatioClient.getV4ByOid(organisaatioOid).orElseThrow(
+        OrganisaatioDto dto = organisaatioClient.getOrganisaatioByOid(organisaatioOid).orElseThrow(
                 () -> new InvalidInputException("Organisaatiota ei löydy, oid: " + organisaatioOid)
         );
         if (!dto.tyypit.contains(VARDA_ORGANISAATIOTYYPPI)) {
@@ -61,6 +68,25 @@ public class VardaOrganisaatioFinalizer {
             dto.lakkautusPvm = null;
             organisaatioClient.save(dto);
             LOGGER.info("Lisätty varhaiskasvatuksen organisaatiotyyppi organisaatiolle, oid: {}", organisaatioOid);
+        } else if (dto.lakkautusPvm != null) {
+            dto.lakkautusPvm = null;
+            organisaatioClient.save(dto);
+            LOGGER.info("Organisaation lakkautuspäivämäärä poistettu, oid: {}", organisaatioOid);
+        } else {
+            LOGGER.debug("Organisaatioon ei tarvittu muutoksia, oid: {}", organisaatioOid);
+        }
+    }
+
+    private void paivitaJotpaTiedot(String organisaatioOid) {
+        OrganisaatioDto dto = organisaatioClient.getOrganisaatioByOid(organisaatioOid).orElseThrow(
+                () -> new InvalidInputException("Organisaatiota ei löydy, oid: " + organisaatioOid)
+        );
+        if (!dto.tyypit.contains(JOTPA_ORGANISAATIOTYYPPI)) {
+            dto.tyypit = new HashSet<>(dto.tyypit);
+            dto.tyypit.add(JOTPA_ORGANISAATIOTYYPPI);
+            dto.lakkautusPvm = null;
+            organisaatioClient.save(dto);
+            LOGGER.info("Lisätty jotpa organisaatiotyyppi organisaatiolle, oid: {}", organisaatioOid);
         } else if (dto.lakkautusPvm != null) {
             dto.lakkautusPvm = null;
             organisaatioClient.save(dto);

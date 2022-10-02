@@ -6,11 +6,14 @@ import java.util.Set;
 
 public class TestiRekisterointi {
 
-    public static Rekisterointi validiRekisterointi() {
-        return rekisterointi(validiKayttaja());
+    public static Rekisterointi validiVardaRekisterointi() {
+        return vardaRekisterointi(validiKayttaja());
+    }
+    public static Rekisterointi validiJotpaRekisterointi() {
+        return jotpaRekisterointi(validiKayttaja());
     }
 
-    public static Rekisterointi rekisterointi(Kayttaja kayttaja) {
+    public static Rekisterointi vardaRekisterointi(Kayttaja kayttaja) {
         return Rekisterointi.of(
                 Organisaatio.of("0000001-9", "oid", LocalDate.now(),
                         KielistettyNimi.of("Varda-yritys", "fi", LocalDate.now()),
@@ -21,6 +24,21 @@ public class TestiRekisterointi {
                 "varda",
                 "vardatoimintamuoto_tm01",
                 Collections.singleton("Helsinki"),
+                Set.of("foo@foo.bar"),
+                kayttaja);
+    }
+
+    public static Rekisterointi jotpaRekisterointi(Kayttaja kayttaja) {
+        return Rekisterointi.of(
+                Organisaatio.of("0000001-9", "oid", LocalDate.now(),
+                        KielistettyNimi.of("Jotpa-yritys", "fi", LocalDate.now()),
+                        "yritysmuoto_26", Set.of("organisaatiotyyppi_07"), "kunta_091",
+                        "maatjavaltiot1_fin", Set.of("oppilaitoksenopetuskieli_1#1"),
+                        Yhteystiedot.of("101234567", "testi@testiyritys.fi", Osoite.TYHJA, Osoite.TYHJA),
+                        false),
+                "jotpa",
+                null,
+                Collections.emptySet(),
                 Set.of("foo@foo.bar"),
                 kayttaja);
     }

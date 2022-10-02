@@ -49,7 +49,7 @@ public class OrganisaatioService {
      * @param dto DTO
      * @return organisaatio-olio.
      */
-    public Organisaatio muunnaV4Dto(OrganisaatioV4Dto dto) {
+    public Organisaatio muunnaOrganisaatioDto(OrganisaatioDto dto) {
         return Organisaatio.of(
                 dto.ytunnus,
                 dto.oid,
@@ -70,8 +70,8 @@ public class OrganisaatioService {
      * @param organisaatio organisaatio-olio
      * @return organisaatiopalvelun DTO.
      */
-    public OrganisaatioV4Dto muunnaOrganisaatio(Organisaatio organisaatio) {
-        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+    public OrganisaatioDto muunnaOrganisaatio(Organisaatio organisaatio) {
+        OrganisaatioDto dto = new OrganisaatioDto();
         dto.ytunnus = organisaatio.ytunnus;
         dto.alkuPvm = organisaatio.alkuPvm;
         dto.nimet = organisaatioNimet(organisaatio.ytjNimi);
@@ -86,7 +86,7 @@ public class OrganisaatioService {
         return dto;
     }
 
-    KielistettyNimi kuranttiNimi(OrganisaatioV4Dto dto) {
+    KielistettyNimi kuranttiNimi(OrganisaatioDto dto) {
         LocalDate now = LocalDate.now();
         OrganisaatioNimi kurantti = dto.nimet.stream()
                 .reduce((nimi1, nimi2) -> {
@@ -131,7 +131,7 @@ public class OrganisaatioService {
         return nimi != null ? nimi : uri;
     }
 
-    private static String ytjKieliTaiOletusKieli(OrganisaatioV4Dto dto) {
+    private static String ytjKieliTaiOletusKieli(OrganisaatioDto dto) {
         return dto.ytjkieli != null ? dto.ytjkieli : DEFAULT_KIELI_KOODI_URI_VERSION;
     }
 
@@ -154,7 +154,7 @@ public class OrganisaatioService {
                 ).getKey();
     }
 
-    private static Yhteystiedot muunnaYhteystiedot(OrganisaatioV4Dto dto) {
+    private static Yhteystiedot muunnaYhteystiedot(OrganisaatioDto dto) {
         String ytjKieli = ytjKieliTaiOletusKieli(dto);
         List<YhteystietoDto> yhteystiedot = dto.yhteystiedot != null ? dto.yhteystiedot : List.of();
         Map<String, List<YhteystietoDto>> yhteystiedotTyypeittain = yhteystiedot.stream()

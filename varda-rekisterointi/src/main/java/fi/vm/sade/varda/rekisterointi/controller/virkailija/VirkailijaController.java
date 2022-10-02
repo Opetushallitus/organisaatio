@@ -65,9 +65,9 @@ public class VirkailijaController {
             response = Organisaatio.class
     )
     public Organisaatio getOrganisaatioByYtunnus(@ApiParam("y-tunnus") @PathVariable String ytunnus) {
-        Organisaatio organisaatio = organisaatioService.muunnaV4Dto(organisaatioClient.getV4ByYtunnus(ytunnus)
-                .or(exceptionToEmptySupplier(() -> organisaatioClient.getV4ByYtunnusFromYtj(ytunnus)))
-                .orElseGet(() -> OrganisaatioV4Dto.of(ytunnus, "")));
+        Organisaatio organisaatio = organisaatioService.muunnaOrganisaatioDto(organisaatioClient.getOrganisaatioByYtunnus(ytunnus)
+                .or(exceptionToEmptySupplier(() -> organisaatioClient.getOrganisaatioByYtunnusFromYtj(ytunnus)))
+                .orElseGet(() -> OrganisaatioDto.of(ytunnus, "")));
         if ( organisaatio.isKunta() ) {
             throw new InvalidInputException("ERROR_MUNICIPALITY");
         }

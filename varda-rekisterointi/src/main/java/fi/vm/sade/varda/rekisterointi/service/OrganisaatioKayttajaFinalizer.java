@@ -13,9 +13,11 @@ import java.util.Map;
  * Palvelu käyttäjän kutsumiseen.
  */
 @Service
-public class VardaKayttajaFinalizer {
+public class OrganisaatioKayttajaFinalizer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VardaKayttajaFinalizer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrganisaatioKayttajaFinalizer.class);
+    static final String KAYTTOOIKEUSRYHMA_JOTPA_PROPERTY =
+            "varda-rekisterointi.kayttooikeus.ryhma.jotpa";
     static final String KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY =
             "varda-rekisterointi.kayttooikeus.ryhma.paivakoti";
     static final String KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY =
@@ -28,8 +30,9 @@ public class VardaKayttajaFinalizer {
 
     private final KayttooikeusClient kayttooikeusClient;
     private final Map<String,Long> toimintamuotoKayttooikeusRyhmaId;
+    private final Long jotpaKayttooikeusRyhmaId;
 
-    public VardaKayttajaFinalizer(KayttooikeusClient kayttooikeusClient,
+    public OrganisaatioKayttajaFinalizer(KayttooikeusClient kayttooikeusClient,
                                   OphProperties properties) {
         this.kayttooikeusClient = kayttooikeusClient;
         toimintamuotoKayttooikeusRyhmaId = Map.of(
@@ -40,6 +43,7 @@ public class VardaKayttajaFinalizer {
                 VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOITO,
                 Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY))
         );
+        jotpaKayttooikeusRyhmaId = Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_JOTPA_PROPERTY));
     }
 
     /**
@@ -53,7 +57,7 @@ public class VardaKayttajaFinalizer {
                 rekisterointi.paatos.paattaja,
                 rekisterointi.kayttaja,
                 rekisterointi.organisaatio.oid,
-                kayttooikeusRyhmaId(rekisterointi.toimintamuoto)
+                rekisterointi.tyyppi.equals("varda") ? kayttooikeusRyhmaId(rekisterointi.toimintamuoto) : jotpaKayttooikeusRyhmaId
         );
         LOGGER.info(
                 "Kutsuttu käyttäjä {} organisaatioon {}.", rekisterointi.kayttaja.id, rekisterointi.organisaatio.oid);

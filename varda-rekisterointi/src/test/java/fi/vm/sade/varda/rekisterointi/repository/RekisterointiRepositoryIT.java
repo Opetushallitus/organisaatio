@@ -108,15 +108,15 @@ public class RekisterointiRepositoryIT {
 
     @Test
     public void savesRekisterointi() {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         rekisterointi = rekisterointiRepository.save(rekisterointi);
         assertNotNull(rekisterointi.id);
     }
     @Test
     public void savesUudelleenRekisterointi() {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         rekisterointi = rekisterointiRepository.save(rekisterointi);
-        Rekisterointi uudelleenRekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi uudelleenRekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         uudelleenRekisterointi.organisaatio.setUudelleenRekisterointi(true);
         uudelleenRekisterointi = rekisterointiRepository.save(uudelleenRekisterointi);
 
@@ -129,7 +129,7 @@ public class RekisterointiRepositoryIT {
 
     @Test(expected = DbActionExecutionException.class)
     public void oidMustBeUniqueUnlessUudelleenRekisterointi() {
-        rekisterointiRepository.save(TestiRekisterointi.validiRekisterointi());
-        rekisterointiRepository.save(TestiRekisterointi.validiRekisterointi());
+        rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
+        rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
     }
 }

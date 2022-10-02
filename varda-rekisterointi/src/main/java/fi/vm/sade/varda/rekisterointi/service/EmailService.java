@@ -148,7 +148,7 @@ public class EmailService {
                 .collect(groupingBy(identity(), counting()));
     }
 
-    private Collection<OrganisaatioV4Dto> getOrganisaatioByKunta(String kunta) {
+    private Collection<OrganisaatioDto> getOrganisaatioByKunta(String kunta) {
         OrganisaatioCriteria organisaatioCriteria = new OrganisaatioCriteria();
         organisaatioCriteria.aktiiviset = true;
         organisaatioCriteria.yritysmuoto = List.of("Kunta");

@@ -25,8 +25,8 @@ public class RekisterointiFinalizer {
     private static final long ORGANISAATIO_CACHE_KLUDGE_MINUUTIT = 15;
 
     private final RekisterointiRepository rekisterointiRepository;
-    private final VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer;
-    private final VardaKayttajaFinalizer vardaKayttajaFinalizer;
+    private final RekisterointiOrganisaatioFinalizer rekisterointiOrgFinalizer;
+    private final OrganisaatioKayttajaFinalizer organisaatioKayttajaFinalizer;
     private final SchedulerClient schedulerClient;
     @Qualifier("kutsuKayttajaTask")
     private final Task<Long> kutsuKayttajaTask;
@@ -40,7 +40,7 @@ public class RekisterointiFinalizer {
      */
     public void luoTaiPaivitaOrganisaatio(Long rekisterointiId) {
         Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
-        String oid = vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
+        String oid = rekisterointiOrgFinalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
         if (rekisterointi.organisaatio.oid == null) {
             LOGGER.debug("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
             rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
@@ -58,7 +58,7 @@ public class RekisterointiFinalizer {
      */
     public void kutsuKayttaja(Long rekisterointiId) {
         Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
-        vardaKayttajaFinalizer.kutsuKayttaja(rekisterointi);
+        organisaatioKayttajaFinalizer.kutsuKayttaja(rekisterointi);
         ajastaPaatosEmail(rekisterointiId);
     }
 

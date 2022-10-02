@@ -111,7 +111,7 @@ public class RekisterointiServiceTest {
         @Test(expected = IllegalStateException.class)
         public void resolveThrowsOnInvalidRekisterointiTila() {
                 PaatosDto paatos = new PaatosDto(123L, false, "Juuh elikkäs");
-                Rekisterointi hylatty = TestiRekisterointi.validiRekisterointi()
+                Rekisterointi hylatty = TestiRekisterointi.validiVardaRekisterointi()
                                 .withId(paatos.rekisterointi)
                                 .withPaatos(new Paatos(paatos.hyvaksytty, LocalDateTime.now(), PAATTAJA_OID,
                                                 paatos.perustelu));

@@ -37,7 +37,7 @@ public class RekisterointiControllerTest {
 
     @Test
     public void redirectionIlmanRoolia() throws Exception {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID, rekisterointi.organisaatio.ytunnus);
@@ -51,7 +51,7 @@ public class RekisterointiControllerTest {
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void okValidillaRekisteroinnillaJaSessiolla() throws Exception {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID, rekisterointi.organisaatio.ytunnus);
@@ -65,7 +65,7 @@ public class RekisterointiControllerTest {
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void badRequestEpavalidillaRekisteroinnilla() throws Exception {
-        Rekisterointi rekisterointi = TestiRekisterointi.rekisterointi(Kayttaja.builder()
+        Rekisterointi rekisterointi = TestiRekisterointi.vardaRekisterointi(Kayttaja.builder()
                 .etunimi("Testi")
                 .sukunimi("Henkilö")
                 .asiointikieli("fi")
@@ -83,7 +83,7 @@ public class RekisterointiControllerTest {
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void badRequestVaarallaYtunnuksella() throws Exception {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         String rekisterointiAsJson = objectMapper.writeValueAsString(rekisterointi);
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID, "0101010-1");

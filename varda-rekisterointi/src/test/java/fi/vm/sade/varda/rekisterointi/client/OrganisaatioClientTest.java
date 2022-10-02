@@ -3,7 +3,7 @@ package fi.vm.sade.varda.rekisterointi.client;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioCriteria;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,20 +43,20 @@ public class OrganisaatioClientTest {
 
     @Test
     public void getByYtunnus() {
-        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/ytunnus123"))
+        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/api/ytunnus123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
 
-        Optional<OrganisaatioV4Dto> organisaatio = client.getV4ByYtunnus("ytunnus123");
+        Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnus("ytunnus123");
 
         assertThat(organisaatio).isNotEmpty();
     }
 
     @Test
     public void getByYtunnusNotFound() {
-        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/ytunnus123"))
+        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/api/ytunnus123"))
                 .willReturn(aResponse().withStatus(404)));
 
-        Optional<OrganisaatioV4Dto> organisaatio = client.getV4ByYtunnus("ytunnus123");
+        Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnus("ytunnus123");
 
         assertThat(organisaatio).isEmpty();
     }
@@ -66,16 +66,16 @@ public class OrganisaatioClientTest {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/ytj/ytunnus123/v4"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
 
-        Optional<OrganisaatioV4Dto> organisaatio = client.getV4ByYtunnusFromYtj("ytunnus123");
+        Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnusFromYtj("ytunnus123");
 
         assertThat(organisaatio).isNotEmpty();
     }
 
     @Test
     public void create() {
-        stubFor(post(urlEqualTo("/organisaatio-service/rest/organisaatio/v4"))
+        stubFor(post(urlEqualTo("/organisaatio-service/rest/organisaatio/api"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
-        OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
+        OrganisaatioDto organisaatio = new OrganisaatioDto();
 
         organisaatio = client.save(organisaatio);
 
@@ -84,9 +84,9 @@ public class OrganisaatioClientTest {
 
     @Test
     public void update() {
-        stubFor(put(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/oid123"))
+        stubFor(put(urlEqualTo("/organisaatio-service/rest/organisaatio/api/oid123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
-        OrganisaatioV4Dto organisaatio = new OrganisaatioV4Dto();
+        OrganisaatioDto organisaatio = new OrganisaatioDto();
         organisaatio.oid = "oid123";
 
         organisaatio = client.save(organisaatio);
@@ -96,7 +96,7 @@ public class OrganisaatioClientTest {
 
     @Test
     public void listBy() {
-        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/v4/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
+        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/api/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"numHits\": 3, \"organisaatiot\": [" +
                         "{\"oid\": \"oid1\", \"alkuPvm\": \"1992-01-01\"}," +
                         "{\"oid\": \"oid2\", \"alkuPvm\": 258760800000}," +
@@ -106,7 +106,7 @@ public class OrganisaatioClientTest {
         criteria.yritysmuoto = List.of("Kunta");
         criteria.kunta = List.of("kunta_020", "kunta_030");
 
-        Collection<OrganisaatioV4Dto> list = client.listBy(criteria);
+        Collection<OrganisaatioDto> list = client.listBy(criteria);
 
         assertThat(list).extracting(organisaatio -> organisaatio.oid, organisaatio -> organisaatio.alkuPvm).containsExactly(
                 tuple("oid1", LocalDate.parse("1992-01-01")),
