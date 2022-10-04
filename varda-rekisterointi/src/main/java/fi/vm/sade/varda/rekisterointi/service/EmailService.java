@@ -70,7 +70,7 @@ public class EmailService {
      * Lähettää kuntien virkailijoille ilmoituksen käsittelemättömistä rekisteröintihakemuksista.
      */
     public void lahetaKuntaEmail() {
-        Iterable<Rekisterointi> kasittelemattomat = rekisterointiRepository.findByTila(Rekisterointi.Tila.KASITTELYSSA.toString());
+        Iterable<Rekisterointi> kasittelemattomat = rekisterointiRepository.findByRegistrationTypeAndTila(new String[]{"varda"}, Rekisterointi.Tila.KASITTELYSSA.toString());
         Set<String> kunnat = StreamSupport.stream(kasittelemattomat.spliterator(), false)
                 .flatMap(rekisterointi -> rekisterointi.kunnat.stream()).collect(toSet());
         Map<VirkailijaDto, Long> virkailijat = getVirkailijaByKunta(kunnat);
