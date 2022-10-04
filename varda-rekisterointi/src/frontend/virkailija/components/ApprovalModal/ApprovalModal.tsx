@@ -12,7 +12,7 @@ import ModalFooter from '@opetushallitus/virkailija-ui-components/ModalFooter';
 import ModalHeader from '@opetushallitus/virkailija-ui-components/ModalHeader';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import { isNonEmpty } from '../../../StringUtils';
-import { Organisaatio } from '../../../types/types';
+import { ApprovalCallback, Organisaatio } from '../../../types/types';
 
 const paatoksetBatchUrl = '/varda-rekisterointi/virkailija/api/paatokset/batch';
 
@@ -25,7 +25,7 @@ type PaatosBatch = {
 type Props = {
     chosenRegistrations: Rekisterointihakemus[];
     approvalDecision: boolean;
-    approvalDoneCb: (hyvaksytty: boolean) => void;
+    approvalCallback: ApprovalCallback;
 };
 
 class PaatosRivi {
@@ -44,11 +44,11 @@ class PaatosRivi {
     }
 }
 
-export default function ApprovalModal({ chosenRegistrations, approvalDecision, approvalDoneCb }: Props) {
+export default function ApprovalModal({ chosenRegistrations, approvalDecision, approvalCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const { kunnat: kuntaKoodisto } = useKoodistoContext();
     const { koodisto: maatJaValtiotKoodisto } = useContext(MaatJaValtiotKoodistoContext);
-    const [perustelu, asetaPerustelu] = useState('');
+    const [perustelu, asetaPerustelu] = useState<string>();
     const [perusteluError, setPerusteluError] = useState(false);
     const [lahetaError, setLahetaError] = useState(false);
     const { closeModal } = useModalContext();
@@ -66,7 +66,7 @@ export default function ApprovalModal({ chosenRegistrations, approvalDecision, a
         }
         try {
             await Axios.post(paatoksetBatchUrl, paatokset);
-            approvalDoneCb(approvalDecision);
+            approvalCallback(chosenRegistrations, approvalDecision, perustelu);
             closeModal();
         } catch (e) {
             setLahetaError(true);

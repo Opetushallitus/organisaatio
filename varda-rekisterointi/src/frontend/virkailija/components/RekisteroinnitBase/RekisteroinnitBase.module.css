@@ -84,3 +84,11 @@ a.nappiDisabled {
 .registrationTypeButton {
     cursor: pointer;
 }
+
+.toast > div {
+    background-color: #43A047 !important;
+    border-radius: 3px;
+    font-weight: 600;
+    font-family: 'Roboto', sans-serif;
+  }
+  

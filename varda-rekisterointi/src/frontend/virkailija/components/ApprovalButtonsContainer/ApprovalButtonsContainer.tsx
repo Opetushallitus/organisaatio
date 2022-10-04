@@ -5,13 +5,14 @@ import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 import styles from './ApprovalButtonsContainer.module.css';
 import ApprovalModal from '../ApprovalModal/ApprovalModal';
+import { ApprovalCallback } from '../../../types/types';
 
 type Props = {
     chosenRekisteroinnit: Rekisterointihakemus[];
-    valitutKasiteltyCallback: (hyvaksytty: boolean) => void;
+    approvalCallback: ApprovalCallback;
 };
 
-export default function ApprovalButtonsContainer({ chosenRekisteroinnit, valitutKasiteltyCallback }: Props) {
+export default function ApprovalButtonsContainer({ chosenRekisteroinnit, approvalCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
     const [buttonsInUse, setButtonsInUse] = useState(false);
     const { setModal } = useModalContext();
@@ -21,7 +22,7 @@ export default function ApprovalButtonsContainer({ chosenRekisteroinnit, valitut
             <ApprovalModal
                 chosenRegistrations={chosenRekisteroinnit}
                 approvalDecision={hyvaksytty}
-                approvalDoneCb={valitutKasiteltyCallback}
+                approvalCallback={approvalCallback}
             />
         );
     }
