@@ -355,6 +355,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 .filter(StringUtils::hasLength).collect(Collectors.toList());
     }
 
+    @Override
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    public void authHello() {
+        // just check authorization, no implementation needed
+    }
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();

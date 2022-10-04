@@ -143,5 +143,7 @@ public interface OrganisaatioApi {
     @PutMapping(path = "/{oid}/tarkasta", produces = MediaType.APPLICATION_JSON_VALUE)
     Timestamp updateTarkastusPvm(@Parameter(description = "Organisaation oid", required = true) @PathVariable("oid") String oid);
 
+    @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+    void authHello();
 
 }
