@@ -82,7 +82,6 @@ export default function RekisteroinnitBase() {
     return (
         <div className={styles.pageBase}>
             <ToastContainer
-                autoClose={false}
                 theme="colored"
                 hideProgressBar
                 className={styles.toast}
