@@ -74,7 +74,7 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
                 <h4 className={styles.infoHeader}>{i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}</h4>
                 <h5 className={styles.infoLabel}>{i18n.translate('PUHELINNUMERO')}</h5>
                 <span>{row.original.organisaatio.yhteystiedot.puhelinnumero}</span>
-                <h5 className={styles.infoLabel}>{i18n.translate('ORGANISAATION_SÄHKÖPOSTI')}</h5>
+                <h5 className={styles.infoLabel}>{i18n.translate('ORGANISAATION_SAHKOPOSTI')}</h5>
                 <span>{row.original.organisaatio.yhteystiedot.sahkoposti}</span>
             </div>
         ),
