@@ -7,6 +7,8 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
+import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
@@ -26,6 +28,7 @@ import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.aspects.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
@@ -57,6 +60,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Autowired
     protected OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     private final OrganisaatioBusinessService organisaatioBusinessService;
+    private final OrganisaatioNimiService organisaatioNimiService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
 
     @Value("${root.organisaatio.oid}")
@@ -360,6 +364,15 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public void authHello() {
         // just check authorization, no implementation needed
     }
+
+    // GET /api/{oid}/nimet
+    @Override
+    @CheckReadPermission
+    public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid) {
+        return organisaatioNimiService.getNimet(oid);
+    }
+
+
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();

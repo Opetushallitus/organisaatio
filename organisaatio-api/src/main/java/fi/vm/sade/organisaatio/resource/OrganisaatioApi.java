@@ -146,4 +146,7 @@ public interface OrganisaatioApi {
     @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
     void authHello();
 
+    @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid);
+
 }

@@ -1,9 +1,10 @@
-package fi.vm.sade.organisaatio.resource.impl.v2;
+package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -11,10 +12,11 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class OrganisaatioResourceImplV2Test {
+@SpringBootTest
+class OrganisaatioNimiServiceImplTest {
 
     @Autowired
-    private OrganisaatioResourceImplV2 resource = new OrganisaatioResourceImplV2();
+    private OrganisaatioNimiServiceImpl resource;
 
     @Test
     @DisplayName("Single toimipiste-name / single oppilaitos-name with possible date combintaions should reult in single name with date from toimipiste-name")
