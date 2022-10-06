@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.resource.impl.v2;
+package fi.vm.sade.organisaatio.resource;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class OrganisaatioResourceImplV2IntegrationTest {
+class OrganisaatioApiNimetTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -32,7 +32,11 @@ class OrganisaatioResourceImplV2IntegrationTest {
     void testRiveriaNiskala() throws Exception {
         this.mockMvc.perform(get("/rest/organisaatio/v2/1.2.246.562.10.87575903965/nimet"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(readFile("/fixtures/resource/v2/riveria.json")));
+                .andExpect(content().json(readFile("/fixtures/resource/api/riveria.json")));
+        this.mockMvc.perform(get("/api/1.2.246.562.10.87575903965/nimet"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(readFile("/fixtures/resource/api/riveria.json")));
+
     }
 
     @Test
@@ -43,7 +47,10 @@ class OrganisaatioResourceImplV2IntegrationTest {
     void testSataeduKokemaki() throws Exception {
         this.mockMvc.perform(get("/rest/organisaatio/v2/1.2.246.562.10.58061828313/nimet"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(readFile("/fixtures/resource/v2/sataedu.json")));
+                .andExpect(content().json(readFile("/fixtures/resource/api/sataedu.json")));
+        this.mockMvc.perform(get("/api/1.2.246.562.10.58061828313/nimet"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(readFile("/fixtures/resource/api/sataedu.json")));
     }
 
     private String readFile(String fileName) throws Exception {

@@ -4,6 +4,7 @@ import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
+import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
@@ -26,8 +27,8 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         OrganisaatioResourceV4 {
     protected final PermissionChecker permissionChecker;
 
-    public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2, OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper, PermissionChecker permissionChecker, OrganisaatioBusinessService organisaatioBusinessService, OrganisaatioFindBusinessService organisaatioFindBusinessService, OppijanumeroClient oppijanumeroClient, OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
-        super(oppijanumeroClient, organisaatioResourceV2, organisaatioDTOV4ModelMapper, organisaatioNimiModelMapper, organisaatioBusinessService, organisaatioFindBusinessService);
+    public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2, OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper, PermissionChecker permissionChecker, OrganisaatioBusinessService organisaatioBusinessService, OrganisaatioNimiService organisaatioNimiService, OrganisaatioFindBusinessService organisaatioFindBusinessService, OppijanumeroClient oppijanumeroClient, OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
+        super(oppijanumeroClient, organisaatioResourceV2, organisaatioDTOV4ModelMapper, organisaatioNimiModelMapper, organisaatioBusinessService, organisaatioNimiService, organisaatioFindBusinessService);
         this.permissionChecker = permissionChecker;
     }
 
