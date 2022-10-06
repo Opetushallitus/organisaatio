@@ -18,6 +18,7 @@ describe('Ryhma view Page', () => {
     });
 
     it('Finds just saved Suominimi from table', () => {
+        cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('input').first().type('Suominimi');
             expect(cy.get('a').contains('Suomi').first().value).to.have.valueOf('Suominimi');
