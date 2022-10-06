@@ -34,8 +34,7 @@ beforeEach(() => {
     jest.spyOn(console, 'info').mockImplementation(() => {});
     (axios.get as jest.Mock).mockImplementation(async (a) => {
         if (a.startsWith) {
-            if (a.startsWith('/organisaatio-service/rest/organisaatio/v3/ryhmat'))
-                return Promise.resolve(axiosResponse);
+            if (a.startsWith('/organisaatio-service/api/ryhmat')) return Promise.resolve(axiosResponse);
             if (a.startsWith('/organisaatio-service/internal/lokalisointi')) return { data: [] };
             if (a.startsWith('/organisaatio-service/internal/config/frontproperties')) return { data: {} };
             if (a.includes('/kayttooikeus-service/cas/me')) return { data: {} };
