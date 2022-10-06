@@ -57,7 +57,8 @@ public class OrganisaatioKayttajaFinalizer {
                 rekisterointi.paatos.paattaja,
                 rekisterointi.kayttaja,
                 rekisterointi.organisaatio.oid,
-                rekisterointi.tyyppi.equals("varda") ? kayttooikeusRyhmaId(rekisterointi.toimintamuoto) : jotpaKayttooikeusRyhmaId
+                rekisterointi.tyyppi.equals("varda") ? kayttooikeusRyhmaId(rekisterointi.toimintamuoto) : jotpaKayttooikeusRyhmaId,
+                rekisterointi.tyyppi.equals("varda") ? "VARDA" : "JOTPA"
         );
         LOGGER.info(
                 "Kutsuttu käyttäjä {} organisaatioon {}.", rekisterointi.kayttaja.id, rekisterointi.organisaatio.oid);

@@ -36,7 +36,8 @@ public class OrganisaatioKayttajaFinalizerTest {
                 rekisterointi.paatos.paattaja,
                 rekisterointi.kayttaja,
                 rekisterointi.organisaatio.oid,
-                PK_RYHMA_ID
+                PK_RYHMA_ID,
+                "VARDA"
         );
     }
 
@@ -57,7 +58,8 @@ public class OrganisaatioKayttajaFinalizerTest {
                 rekisterointi.paatos.paattaja,
                 rekisterointi.kayttaja,
                 rekisterointi.organisaatio.oid,
-                JOTPA_RYHMA_ID
+                JOTPA_RYHMA_ID,
+                "JOTPA"
         );
     }
 }

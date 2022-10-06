@@ -89,7 +89,7 @@ public class KayttooikeusClient {
      * @param organisaatioOid   käytäjän organisaation OID
      * @param oikeusRyhmaId     käyttäjälle myönnettävän oikeusryhmän OID
      */
-    public void kutsuKayttaja(String kutsujaOid, Kayttaja kayttaja, String organisaatioOid, Long oikeusRyhmaId) {
+    public void kutsuKayttaja(String kutsujaOid, Kayttaja kayttaja, String organisaatioOid, Long oikeusRyhmaId, String kutsuTyyppi) {
         KayttooikeusKutsuDto dto = KayttooikeusKutsuDto.builder()
                 .kutsujaOid(kutsujaOid)
                 .etunimi(kayttaja.etunimi)
@@ -97,6 +97,7 @@ public class KayttooikeusClient {
                 .asiointikieli(kayttaja.asiointikieli)
                 .saate(kayttaja.saateteksti)
                 .sahkoposti(kayttaja.sahkoposti)
+                .kutsuTyyppi(kutsuTyyppi)
                 .organisaatiot(Set.of(
                         KayttooikeusKutsuDto.KutsuOrganisaatioDto.of(
                                 organisaatioOid,

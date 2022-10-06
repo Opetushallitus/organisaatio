@@ -18,6 +18,9 @@ import java.util.Set;
 public class KayttooikeusKutsuDto {
 
     public final String kutsujaOid;
+
+    public final String kutsuTyyppi;
+
     @NotEmpty
     public final String etunimi;
     @NotEmpty
