@@ -74,7 +74,6 @@ jobs:
         run: |
           PGPASSWORD=postgres psql -c 'CREATE DATABASE organisaatio;' -h localhost -U postgres
           cd mock-api && npm install && cd -
-          cd organisaatio-ui && npm install && cd -
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build backend with no tests
@@ -89,7 +88,8 @@ jobs:
             java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available organisaatio-service/build/libs/organisaatio-service.jar &
             cd organisaatio-ui && npm run start
           wait-on: "http://localhost:3003/organisaatio-service"
-          command: cd organisaatio-ui && npm run cypress:ci && cd -
+          install-command: cd organisaatio-ui && npm install
+          command: cd organisaatio-ui && npm run cypress:run
   sonarcloud:
     needs: [cypress]
     runs-on: ubuntu-latest
