@@ -43,7 +43,7 @@ public class OrganisaatioClientTest {
 
     @Test
     public void getByYtunnus() {
-        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/api/ytunnus123"))
+        stubFor(get(urlEqualTo("/organisaatio-service/api/ytunnus123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
 
         Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnus("ytunnus123");
@@ -53,7 +53,7 @@ public class OrganisaatioClientTest {
 
     @Test
     public void getByYtunnusNotFound() {
-        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/api/ytunnus123"))
+        stubFor(get(urlEqualTo("/organisaatio-service/api/ytunnus123"))
                 .willReturn(aResponse().withStatus(404)));
 
         Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnus("ytunnus123");
@@ -73,7 +73,7 @@ public class OrganisaatioClientTest {
 
     @Test
     public void create() {
-        stubFor(post(urlEqualTo("/organisaatio-service/rest/organisaatio/api"))
+        stubFor(post(urlEqualTo("/organisaatio-service/api/"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
         OrganisaatioDto organisaatio = new OrganisaatioDto();
 
@@ -84,7 +84,7 @@ public class OrganisaatioClientTest {
 
     @Test
     public void update() {
-        stubFor(put(urlEqualTo("/organisaatio-service/rest/organisaatio/api/oid123"))
+        stubFor(put(urlEqualTo("/organisaatio-service/api/oid123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
         OrganisaatioDto organisaatio = new OrganisaatioDto();
         organisaatio.oid = "oid123";
@@ -96,7 +96,7 @@ public class OrganisaatioClientTest {
 
     @Test
     public void listBy() {
-        stubFor(get(urlEqualTo("/organisaatio-service/rest/organisaatio/api/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
+        stubFor(get(urlEqualTo("/organisaatio-service/api/hae?aktiiviset=true&suunnitellut=false&lakkautetut=false&yritysmuoto=Kunta&kunta=kunta_020&kunta=kunta_030"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"numHits\": 3, \"organisaatiot\": [" +
                         "{\"oid\": \"oid1\", \"alkuPvm\": \"1992-01-01\"}," +
                         "{\"oid\": \"oid2\", \"alkuPvm\": 258760800000}," +
