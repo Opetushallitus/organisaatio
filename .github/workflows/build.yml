@@ -74,6 +74,7 @@ jobs:
         run: |
           PGPASSWORD=postgres psql -c 'CREATE DATABASE organisaatio;' -h localhost -U postgres
           cd mock-api && npm install && cd -
+          cd organisaatio-ui && npm install && cd -
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build backend with no tests
