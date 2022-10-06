@@ -8,21 +8,19 @@ import { Table } from '../Table/Table';
 import { LanguageContext, useKoodistoContext, useModalContext } from '../../../contexts';
 import { Rekisterointihakemus } from '../../rekisterointihakemus';
 import ApprovalModal from '../ApprovalModal/ApprovalModal';
+import { ApprovalCallback, Rekisterointityyppi } from '../../../types/types';
 
 import styles from './RekisteroinnitTable.module.css';
-import { Rekisterointityyppi } from '../../../types/types';
 
 type RekisteroinnitTableProps = {
     rekisteroinnit: Rekisterointihakemus[];
     rekisterointityyppi: Rekisterointityyppi;
+    approvalCallback: ApprovalCallback;
 };
 
 const saapumisAikaFormat = 'd.M.y HH:mm';
 
-function IndeterminateCheckbox({
-    indeterminate,
-    ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+function IndeterminateCheckbox({ indeterminate, ...rest }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
     const ref = React.useRef<HTMLInputElement>(null!);
 
     React.useEffect(() => {
@@ -34,7 +32,11 @@ function IndeterminateCheckbox({
     return <Checkbox ref={ref as any} className="checkbox" {...rest} indeterminate={indeterminate} />;
 }
 
-export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityyppi }: RekisteroinnitTableProps) {
+export default function RekisteroinnitTable({
+    rekisteroinnit,
+    rekisterointityyppi,
+    approvalCallback,
+}: RekisteroinnitTableProps) {
     const { i18n } = useContext(LanguageContext);
     const { kunnat } = useKoodistoContext();
     const { setModal } = useModalContext();
@@ -49,7 +51,7 @@ export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityypp
                 <ApprovalModal
                     chosenRegistrations={[row.original]}
                     approvalDecision={hyvaksytty}
-                    approvalDoneCb={() => {}} // TODO
+                    approvalCallback={approvalCallback}
                 />
             );
         };
@@ -141,7 +143,14 @@ export default function RekisteroinnitTable({ rekisteroinnit, rekisterointityypp
                 accessorKey: 'tila',
             },
         ].filter((c) => !!c);
-    }, [i18n, kunnat, rekisterointityyppi, setModal]);
+    }, [i18n, kunnat, rekisterointityyppi, setModal, approvalCallback]);
 
-    return <Table columns={columns} data={data} rekisterointityyppi={rekisterointityyppi} />;
+    return (
+        <Table
+            columns={columns}
+            data={data}
+            rekisterointityyppi={rekisterointityyppi}
+            approvalCallback={approvalCallback}
+        />
+    );
 }

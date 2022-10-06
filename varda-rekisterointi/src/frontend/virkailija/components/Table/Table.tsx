@@ -18,7 +18,7 @@ import ApprovalButtonsContainer from '../ApprovalButtonsContainer/ApprovalButton
 import { Rekisterointihakemus, Tila, TILAT } from '../../rekisterointihakemus';
 import { ButtonGroup } from '../../ButtonGroup';
 import { Pagination } from './Pagination';
-import { Rekisterointityyppi } from '../../../types/types';
+import { ApprovalCallback, Rekisterointityyppi } from '../../../types/types';
 
 import styles from './Table.module.css';
 
@@ -26,13 +26,14 @@ type TableProps = {
     columns: ColumnDef<Rekisterointihakemus>[];
     data: Rekisterointihakemus[];
     rekisterointityyppi: Rekisterointityyppi;
+    approvalCallback: ApprovalCallback;
 };
 
 const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
     return rows.filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === 'KASITTELYSSA').map((r) => r.original);
 };
 
-export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
+export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: TableProps) => {
     const { i18n } = useContext(LanguageContext);
     const { kunnat, yritysmuodot, vardaToimintamuodot } = useKoodistoContext();
     const [rowSelection, setRowSelection] = useState({});
@@ -73,7 +74,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                 <h4 className={styles.infoHeader}>{i18n.translate('ORGANISAATION_YHTEYSTIEDOT')}</h4>
                 <h5 className={styles.infoLabel}>{i18n.translate('PUHELINNUMERO')}</h5>
                 <span>{row.original.organisaatio.yhteystiedot.puhelinnumero}</span>
-                <h5 className={styles.infoLabel}>{i18n.translate('ORGANISAATION_SÄHKÖPOSTI')}</h5>
+                <h5 className={styles.infoLabel}>{i18n.translate('ORGANISAATION_SAHKOPOSTI')}</h5>
                 <span>{row.original.organisaatio.yhteystiedot.sahkoposti}</span>
             </div>
         ),
@@ -259,7 +260,7 @@ export const Table = ({ columns, data, rekisterointityyppi }: TableProps) => {
                 />
             )}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
-                <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} valitutKasiteltyCallback={() => {}} />
+                <ApprovalButtonsContainer chosenRekisteroinnit={selectedRows} approvalCallback={approvalCallback} />
             )}
         </div>
     );

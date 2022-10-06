@@ -1,4 +1,8 @@
 import React, { ReactNode, useContext, useState } from 'react';
+import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
+import { ThemeProvider } from 'styled-components';
+import useAxios from 'axios-hooks';
+
 import {
     PermissionContext,
     KoodistoImpl,
@@ -6,9 +10,6 @@ import {
     MaatJaValtiotKoodistoContext,
     ModalContext,
 } from '../../contexts';
-import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
-import { ThemeProvider } from 'styled-components';
-import useAxios from 'axios-hooks';
 import { Koodi, Permission } from '../../types/types';
 import Spinner from '../../Spinner';
 import ErrorPage from '../../virhe/VirheSivu';

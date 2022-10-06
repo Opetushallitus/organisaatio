@@ -1,3 +1,5 @@
+import { Rekisterointihakemus } from "../virkailija/rekisterointihakemus";
+
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
 export type LocalizableText = Partial<Record<Language, string>>;
@@ -105,3 +107,5 @@ export type Rekisterointi = {
 
 export type VirheKoodi = string;
 export type Virheet = Record<string, VirheKoodi>
+
+export type ApprovalCallback = (r: Rekisterointihakemus[], hyvaksytty: boolean, perustelu?: string) => void

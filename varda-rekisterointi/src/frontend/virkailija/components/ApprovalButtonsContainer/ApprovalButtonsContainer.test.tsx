@@ -29,7 +29,7 @@ describe('ApprovalButtonsContainerTest', () => {
                 <ThemeProvider theme={theme}>
                     <ApprovalButtonsContainer
                         chosenRekisteroinnit={[]}
-                        valitutKasiteltyCallback={dummyTyhjennaCallback}
+                        approvalCallback={dummyTyhjennaCallback}
                     />
                 </ThemeProvider>,
                 container
@@ -47,7 +47,7 @@ describe('ApprovalButtonsContainerTest', () => {
                 <ThemeProvider theme={theme}>
                     <ApprovalButtonsContainer
                         chosenRekisteroinnit={[hakemus]}
-                        valitutKasiteltyCallback={dummyTyhjennaCallback}
+                        approvalCallback={dummyTyhjennaCallback}
                     />
                 </ThemeProvider>,
                 container
