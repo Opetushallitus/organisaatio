@@ -81,7 +81,7 @@
         "cypress:open": "cypress open",
         "cypress:run": "cypress run",
         "cypress:notused": "wait-on http://devaaja:devaaja@localhost:8080/organisaatio-service && CYPRESS_BASE_URL=http://devaaja:devaaja@localhost:8080/ npm run cypress:run",
-        "cypress:ci": "START_SERVER_AND_TEST_INSECURE=1 concurrently  --success first --kill-others 'wait-on http://localhost:3003/organisaatio-service && npm run cypress:run' 'npm run start'"
+        "cypress:ci": "wait-on http://localhost:3003/organisaatio-service && npm run cypress:run"
     },
     "eslintConfig": {
         "extends": [

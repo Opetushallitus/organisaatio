@@ -164,7 +164,7 @@ const MuokkausLomake = ({
                                 control={control}
                                 name={'ryhmatyypit'}
                                 defaultValue={ryhmaTyypit}
-                                render={({ field }) => (
+                                render={({ field: { ref: _ref, ...field } }) => (
                                     <Select
                                         id={'RYHMALOMAKE_RYHMAN_TYYPPI_SELECT'}
                                         {...field}
@@ -184,7 +184,7 @@ const MuokkausLomake = ({
                                 control={control}
                                 name={'kayttoryhmat'}
                                 defaultValue={kayttoRyhmat}
-                                render={({ field }) => (
+                                render={({ field: { ref: _ref, ...field } }) => (
                                     <Select
                                         id={'RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT'}
                                         {...field}

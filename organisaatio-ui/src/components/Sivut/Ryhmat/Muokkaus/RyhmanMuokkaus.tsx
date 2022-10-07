@@ -36,12 +36,8 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
 
     useEffect(() => {
         async function fetch(oid) {
-            try {
-                const ryhma = await getRyhma(oid);
-                setRyhma(ryhma as Ryhma);
-            } catch (error) {
-                console.error('error fetching', error);
-            }
+            const ryhma = await getRyhma(oid);
+            setRyhma(ryhma as Ryhma);
         }
         if (match.params.oid && !onUusi) {
             fetch(match.params.oid);
@@ -76,13 +72,8 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
                 ryhmatyypit: ryhmatyypit.map((a) => `${a.value}#${a.versio}`),
                 kayttoryhmat: kayttoryhmat.map((a) => `${a.value}#${a.versio}`),
             };
-            try {
-                const { organisaatio: updatedRyhma } = onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
-                setRyhma(updatedRyhma as Ryhma);
-                history.push('/ryhmat');
-            } catch (error) {
-                console.error('error while updating ryhma', error);
-            }
+            onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
+            history.push('/ryhmat');
         }
     };
 
@@ -91,12 +82,8 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
     };
     const handlePoista = async () => {
         const r = global.window.confirm(i18n.translate('RYHMAT_POISTO_VARMISTUSTEKSTI'));
-        try {
-            r && (await deleteRyhma(ryhma));
-            history.push('/ryhmat');
-        } catch (error) {
-            console.error('error while deleting ryhma', error);
-        }
+        r && (await deleteRyhma(ryhma));
+        history.push('/ryhmat');
     };
 
     const handlePassivoi = async () => {

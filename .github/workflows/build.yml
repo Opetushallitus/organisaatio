@@ -84,8 +84,9 @@ jobs:
       - name: Run Cypress
         run: |
           cd mock-api && npm run mock-api &
+          cd organisaatio-ui && npm run start &
           java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available organisaatio-service/build/libs/organisaatio-service.jar &
-          cd organisaatio-ui && npm run cypress:ci && cd -
+          cd organisaatio-ui && npm run cypress:ci
           kill $(jobs -p) || true
   sonarcloud:
     needs: [cypress]

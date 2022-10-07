@@ -4,7 +4,9 @@ import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
+import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.*;
+import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -148,5 +150,8 @@ public interface OrganisaatioApi {
 
     @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid);
+
+    @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria);
 
 }

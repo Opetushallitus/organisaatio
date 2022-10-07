@@ -1,9 +1,9 @@
-import { API_CONTEXT, BASE_PATH, LEGACY_API_CONTEXT } from '../../src/contexts/constants';
+import { BASE_PATH, PUBLIC_API_CONTEXT } from '../../src/contexts/constants';
 
 describe('Ryhmat Page', () => {
     beforeEach(() => {});
     it('Renders table of Ryhmat', () => {
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.intercept('GET', `${PUBLIC_API_CONTEXT}/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('h3').contains('RYHMAT_OTSIKKO', { timeout: 30000 }).should('exist');
         cy.get('table', { timeout: 30000 });
@@ -26,7 +26,7 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table pagination', () => {
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.intercept('GET', `${PUBLIC_API_CONTEXT}/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('tbody').children().should('have.length', 10);
@@ -45,7 +45,7 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can transition to create a new ryhma organisation', () => {
-        cy.intercept('GET', `${LEGACY_API_CONTEXT}/organisaatio/v3/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.intercept('GET', `${PUBLIC_API_CONTEXT}/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
         cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('button').first().click();
