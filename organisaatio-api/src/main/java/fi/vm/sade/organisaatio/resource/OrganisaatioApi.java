@@ -152,6 +152,6 @@ public interface OrganisaatioApi {
     List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid);
 
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria) throws Exception;
+    List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria);
 
 }
