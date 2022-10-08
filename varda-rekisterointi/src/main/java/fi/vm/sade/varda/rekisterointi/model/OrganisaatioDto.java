@@ -56,7 +56,7 @@ public class OrganisaatioDto extends BaseDto {
         organisaatio.kotipaikkaUri = parentDto.kotipaikkaUri;
         organisaatio.parentOid = parentDto.parentOid;
         organisaatio.tyypit = Set.of("organisaatiotyyppi_02");
-        organisaatio.oppilaitosTyyppiUri = "oppilaitostyyppi_XX"; // EI tiedossa koodisto
+        organisaatio.oppilaitosTyyppiUri = "oppilaitostyyppi_xx"; // EI tiedossa koodisto
         return organisaatio;
     }
 

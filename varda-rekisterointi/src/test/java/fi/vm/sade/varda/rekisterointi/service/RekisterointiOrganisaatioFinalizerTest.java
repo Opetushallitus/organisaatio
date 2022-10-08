@@ -53,7 +53,7 @@ public class RekisterointiOrganisaatioFinalizerTest {
     }
 
     @Test
-    public void paivittaaJotpaOrganisaatioTyypinJosPuuttuu() {
+    public void paivittaaJotpaOrganisaatioTyypinJosPuuttuuJaAliorganisaation() {
         String oid = "1.23.456";
         Organisaatio organisaatio = TestiOrganisaatio.organisaatio(oid);
         Rekisterointi rekisterointi = TestiRekisterointi.validiJotpaRekisterointi().withOrganisaatio(organisaatio);
@@ -61,9 +61,12 @@ public class RekisterointiOrganisaatioFinalizerTest {
         dto.tyypit = Set.of();
         when(organisaatioClient.getOrganisaatioByOid(oid)).thenReturn(Optional.of(dto));
         ArgumentCaptor<OrganisaatioDto> captor = ArgumentCaptor.forClass(OrganisaatioDto.class);
-        when(organisaatioClient.save(captor.capture())).thenReturn(dto);
+        OrganisaatioDto jotpaChild = OrganisaatioDto.jotpaChildOppilaitosFrom(dto);
+        when(organisaatioClient.save(captor.capture())).thenReturn(dto, jotpaChild);
 
         finalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
-        assertTrue(captor.getValue().tyypit.contains(RekisterointiOrganisaatioFinalizer.JOTPA_ORGANISAATIOTYYPPI));
+        assertTrue(captor.getAllValues().get(0).tyypit.contains(RekisterointiOrganisaatioFinalizer.JOTPA_ORGANISAATIOTYYPPI));
+        assertTrue(captor.getAllValues().get(1).oppilaitosTyyppiUri.equals("oppilaitostyyppi_xx"));
+        assertTrue(captor.getAllValues().get(1).tyypit.contains("organisaatiotyyppi_02"));
     }
 }
