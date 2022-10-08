@@ -81,19 +81,24 @@ public class RekisterointiOrganisaatioFinalizer {
         OrganisaatioDto dto = organisaatioClient.getOrganisaatioByOid(organisaatioOid).orElseThrow(
                 () -> new InvalidInputException("Organisaatiota ei löydy, oid: " + organisaatioOid)
         );
+        OrganisaatioDto saved = null;
         if (!dto.tyypit.contains(JOTPA_ORGANISAATIOTYYPPI)) {
             dto.tyypit = new HashSet<>(dto.tyypit);
             dto.tyypit.add(JOTPA_ORGANISAATIOTYYPPI);
             dto.lakkautusPvm = null;
-            organisaatioClient.save(dto);
+            saved = organisaatioClient.save(dto);
             LOGGER.info("Lisätty jotpa organisaatiotyyppi organisaatiolle, oid: {}", organisaatioOid);
         } else if (dto.lakkautusPvm != null) {
             dto.lakkautusPvm = null;
-            organisaatioClient.save(dto);
+            saved = organisaatioClient.save(dto);
             LOGGER.info("Organisaation lakkautuspäivämäärä poistettu, oid: {}", organisaatioOid);
         } else {
             LOGGER.debug("Organisaatioon ei tarvittu muutoksia, oid: {}", organisaatioOid);
         }
+        if (saved != null) {
+            OrganisaatioDto jotpaOppilaitosDto = OrganisaatioDto.jotpaChildOppilaitosFrom(dto);
+            OrganisaatioDto jotpaSaved = organisaatioClient.save(jotpaOppilaitosDto);
+            LOGGER.info("Luotu oppilaitostyyppinen aliorganisaatio(oid: {}) Jotpa organisaatiolle(oid: {})", jotpaSaved.oid, organisaatioOid);
+        }
     }
-
 }

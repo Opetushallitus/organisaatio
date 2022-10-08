@@ -1,6 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,8 @@ import static java.util.Collections.singletonList;
 public class OrganisaatioDto extends BaseDto {
 
     public String oid;
+    public String parentOid;
+    public String oppilaitosTyyppiUri;
     public String ytunnus;
     public boolean piilotettu;
     public Map<String, String> nimi;
@@ -24,6 +27,7 @@ public class OrganisaatioDto extends BaseDto {
     public Set<String> kieletUris;
     public List<YhteystietoDto> yhteystiedot;
 
+
     public static OrganisaatioDto of(String businessId, String organisationName) {
         OrganisaatioDto organisaatio = new OrganisaatioDto();
         organisaatio.ytunnus = businessId;
@@ -36,6 +40,23 @@ public class OrganisaatioDto extends BaseDto {
         organisaatio.nimet = singletonList(organisaatioNimi);
         organisaatio.maaUri = "maatjavaltiot1_fin";
         organisaatio.kieletUris = Set.of();
+        return organisaatio;
+    }
+
+    public static OrganisaatioDto jotpaChildOppilaitosFrom(OrganisaatioDto parentDto) {
+        OrganisaatioDto organisaatio = new OrganisaatioDto();
+        organisaatio.nimi = parentDto.nimi;
+        organisaatio.alkuPvm = parentDto.alkuPvm;
+        organisaatio.lakkautusPvm = null;
+        organisaatio.nimet = parentDto.nimet;
+        organisaatio.maaUri = parentDto.maaUri;
+        organisaatio.kieletUris = parentDto.kieletUris;
+        organisaatio.yhteystiedot = parentDto.yhteystiedot;
+        organisaatio.ytjkieli = parentDto.ytjkieli;
+        organisaatio.kotipaikkaUri = parentDto.kotipaikkaUri;
+        organisaatio.parentOid = parentDto.parentOid;
+        organisaatio.tyypit = Set.of("organisaatiotyyppi_02");
+        organisaatio.oppilaitosTyyppiUri = "oppilaitostyyppi_XX"; // EI tiedossa koodisto
         return organisaatio;
     }
 
