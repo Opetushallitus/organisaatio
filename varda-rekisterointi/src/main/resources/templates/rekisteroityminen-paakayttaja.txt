@@ -1,0 +1,11 @@
+Hei [(${nimi})],
+
+sinut on nimetty organisaatiostasi [(${tyyppi})]-pääkäyttäjäksi Opetushallituksen varhaiskasvatuksen tietovarantoon ([(${tyyppi})]). [(${tyyppi})]-pääkäyttäjä vastaa oman organisaationsa [(${tyyppi})]-käyttöoikeuksista.
+
+Saat vielä erillisen kutsun luoda tunnukset [(${tyyppi})]-pääkäyttäjäksi sen jälkeen, kun kunta on käsitellyt palveluntuottajasi rekisteröitymisen [(${tyyppi})]a varten. Kutsu lähetetään sinulle noreply@opintopolku.fi -osoitteesta.
+
+Sähköpostiosoitteesi on tallennettu Opetushallituksen Viestintäpalveluun ja se tallennetaan Käyttöoikeuspalveluun, kun kunta on hyväksynyt organisaation rekisteröitymisen. Henkilötiedot on saatu organisaation puolesta asioivalta henkilöltä, joka on tehnyt rekisteröitymisen [(${tyyppi})]a varten. Henkilötietosi tallennetaan Oppijanumeorekisteriin, kun rekisteröidyt palvelun käyttäjäksi. Henkilötietoja käsitellään käyttöoikeuksien myöntämiseen ja hallinnointiin. Käyttöoikeuspalvelussa henkilötiedot säilytetään niin pitkään kuin käyttöoikeudet ovat voimassa. Henkilötietoja käsittelevät Käyttöoikeuspalvelun ja Oppijanumerorekisterin asiantuntijat. Henkilötietojen käsittely perustuu lakisääteiseen tehtävään (varhaiskasvatuksen tietovaranto, varhaiskasvatuslaki (540/2018)). Lue lisää Oppijanumerorekisterin henkilötietojen käsittelystä ja tutustu [(${tyyppi})]n tietosuojaselosteeseen.
+
+Terveisin
+[(${tyyppi})]n asiakaspalvelu
+Opetushallitus

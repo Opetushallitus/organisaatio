@@ -22,7 +22,11 @@ public enum Template {
      * Sähköposti kunnan hyväksymisen jälkeen kaikille rekisteröinnin yhteydessä ilmoitetuille henkilöille.
      */
     REKISTEROITYMINEN_HYVAKSYTTY("email/rekisteroityminen-hyvaksytty.html"),
-    AJASTETTUJEN_TASKIEN_VIRHERAPORTTI("email/taskien-virheraportti.html")
+    AJASTETTUJEN_TASKIEN_VIRHERAPORTTI("email/taskien-virheraportti.html"),
+    GENERIC_KAYTTAJA("rekisteroityminen-kayttaja.txt"),
+    GENERIC_PAAKAYTTAJA("rekisteroityminen-paakayttaja.txt"),
+    GENERIC_HYLATTY("rekisteroityminen-hylatty.txt"),
+    GENERIC_HYVAKSYTTY("rekisteroityminen-hyvaksytty.txt"),
     ;
 
     private final String path;
