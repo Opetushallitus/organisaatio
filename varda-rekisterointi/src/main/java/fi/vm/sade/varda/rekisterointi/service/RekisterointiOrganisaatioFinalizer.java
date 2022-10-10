@@ -13,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
-import static fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto.JOTPA_CHILD_OPPILAITOSTYYPPI;
+import static fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ public class RekisterointiOrganisaatioFinalizer {
 
     static final String VARDA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_07";
     static final String JOTPA_ORGANISAATIOTYYPPI = "organisaatiotyyppi_01";
+    static final String JOTPA_CHILD_OPPILAITOSTYYPPI = "oppilaitostyyppi_xx";
     static final String REKISTEROINTITYYPPI_VARDA = "varda";
     static final String REKISTEROINTITYYPPI_JOTPA = "jotpa";
     private static final Logger LOGGER = LoggerFactory.getLogger(RekisterointiOrganisaatioFinalizer.class);

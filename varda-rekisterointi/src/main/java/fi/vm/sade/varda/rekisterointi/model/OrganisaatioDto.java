@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 public class OrganisaatioDto extends BaseDto {
 
     public static final String OPPILAITOS_ORGANISAATIOTYYPPI = "organisaatiotyyppi_02";
-    public static final String JOTPA_CHILD_OPPILAITOSTYYPPI = "oppilaitostyyppi_xx";
+    public static final String OPPILAITOSTYYPPI_EI_TIEDOSSA_WITH_VERSION = "oppilaitostyyppi_xx#1";
 
     public String oid;
     public String parentOid;
@@ -61,7 +61,7 @@ public class OrganisaatioDto extends BaseDto {
         organisaatio.kotipaikkaUri = parentDto.kotipaikkaUri;
         organisaatio.parentOid = parentDto.parentOid;
         organisaatio.tyypit = Set.of(OPPILAITOS_ORGANISAATIOTYYPPI);
-        organisaatio.oppilaitosTyyppiUri = JOTPA_CHILD_OPPILAITOSTYYPPI; // EI tiedossa koodisto
+        organisaatio.oppilaitosTyyppiUri = OPPILAITOSTYYPPI_EI_TIEDOSSA_WITH_VERSION; // EI tiedossa koodisto
         return organisaatio;
     }
 
