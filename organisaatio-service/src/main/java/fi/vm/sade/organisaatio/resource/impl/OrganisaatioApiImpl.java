@@ -387,8 +387,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
         try {
             return hakutoimistoService.hakutoimisto(organisaatioOid);
-        } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
-            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "not found");
+        } catch (OrganisaatioNotFoundException e) {
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, String.format("Organisaatio not found %s", organisaatioOid), "not found");
+        } catch (HakutoimistoNotFoundException e) {
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, String.format("Hakutoimisto not found for organisaatio %s", organisaatioOid), "not found");
         }
     }
 
