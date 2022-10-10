@@ -66,7 +66,7 @@ public class RekisterointiOrganisaatioFinalizerTest {
 
         finalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
         assertTrue(captor.getAllValues().get(0).tyypit.contains(RekisterointiOrganisaatioFinalizer.JOTPA_ORGANISAATIOTYYPPI));
-        assertTrue(captor.getAllValues().get(1).oppilaitosTyyppiUri.equals("oppilaitostyyppi_xx"));
+        assertTrue(captor.getAllValues().get(1).oppilaitosTyyppiUri.equals("oppilaitostyyppi_xx#1"));
         assertTrue(captor.getAllValues().get(1).tyypit.contains("organisaatiotyyppi_02"));
     }
 }
