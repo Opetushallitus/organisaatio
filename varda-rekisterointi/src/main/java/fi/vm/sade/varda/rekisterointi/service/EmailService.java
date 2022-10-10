@@ -71,14 +71,14 @@ public class EmailService {
     private EmailMessageDto luoPaatosViesti(String tyyppi, Paatos paatos, String organisaatioNimi) {
         if (paatos.hyvaksytty) {
             return EmailMessageDto.builder()
-                    .subject(subjectToAllLanguages("rekisteroityminen.hyvaksytty.otsikko"))
+                    .subject(subjectToAllLanguages("rekisteroityminen.otsikko.hyvaksytty"))
                     .body(templateService.getContent(Template.GENERIC_HYVAKSYTTY, new Locale("fi"),
                             Map.of( "organisaatioNimi", organisaatioNimi, "tyyppi", tyyppi)))
                     .html(false)
                     .build();
         }
         return EmailMessageDto.builder()
-                .subject(subjectToAllLanguages("rekisteroityminen.hylatty.otsikko"))
+                .subject(subjectToAllLanguages("rekisteroityminen.otsikko.hylatty"))
                 .body(templateService.getContent(Template.GENERIC_HYLATTY, new Locale("fi"),
                         Map.of( "organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu, "tyyppi", tyyppi)))
                 .html(false)
@@ -127,7 +127,7 @@ public class EmailService {
                 .build();
         } else {
             return EmailMessageDto.builder()
-                .subject(subjectToAllLanguages("rekisteroityminen.kayttaja.otsikko"))
+                .subject(subjectToAllLanguages("rekisteroityminen.otsikko.kayttaja"))
                 .body(templateService.getContent(Template.GENERIC_KAYTTAJA, new Locale("fi"),
                         Map.of("organisaatioNimi", organisaatioNimi)))
                 .html(false)
@@ -145,7 +145,7 @@ public class EmailService {
                         .html(true)
                         .build()
                 : EmailMessageDto.builder()
-                        .subject(messageSource.getMessage("rekisteroityminen.paakayttaja.otsikko", null, locale))
+                        .subject(subjectToAllLanguages("rekisteroityminen.otsikko.paakayttaja"))
                         .body(templateService.getContent(Template.GENERIC_PAAKAYTTAJA, locale,
                                 Map.of("etunimi", kayttaja.etunimi)))
                         .html(false)
