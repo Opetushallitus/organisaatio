@@ -59,7 +59,7 @@ public class OrganisaatioDto extends BaseDto {
         organisaatio.yhteystiedot = parentDto.yhteystiedot;
         organisaatio.ytjkieli = parentDto.ytjkieli;
         organisaatio.kotipaikkaUri = parentDto.kotipaikkaUri;
-        organisaatio.parentOid = parentDto.parentOid;
+        organisaatio.parentOid = parentDto.oid;
         organisaatio.tyypit = Set.of(OPPILAITOS_ORGANISAATIOTYYPPI);
         organisaatio.oppilaitosTyyppiUri = OPPILAITOSTYYPPI_EI_TIEDOSSA_WITH_VERSION; // EI tiedossa koodisto
         return organisaatio;
