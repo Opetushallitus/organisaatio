@@ -84,8 +84,6 @@ public class ViestintaClient {
                 .post(url)
                 .setEntity(entity)
                 .build();
-        System.out.println("paskaa");
-        System.out.println(toJson(email));
         SaveEmailResponseDto response = httpClient.<SaveEmailResponseDto>execute(request)
                 .expectedStatus(200)
                 .mapWith(json -> fromJson(json, SaveEmailResponseDto.class))
