@@ -10,9 +10,14 @@ import static java.util.Collections.singletonList;
 
 public class OrganisaatioDto extends BaseDto {
 
+    public static final String OPPILAITOS_ORGANISAATIOTYYPPI = "organisaatiotyyppi_02";
+    public static final String JOTPA_CHILD_OPPILAITOSTYYPPI = "oppilaitostyyppi_xx";
+
     public String oid;
     public String parentOid;
     public String oppilaitosTyyppiUri;
+    // jalkelaiset endpoint returns this but it equals oppilaitosTyyppiUri
+    public String oppilaitostyyppi;
     public String ytunnus;
     public boolean piilotettu;
     public Map<String, String> nimi;
@@ -55,8 +60,8 @@ public class OrganisaatioDto extends BaseDto {
         organisaatio.ytjkieli = parentDto.ytjkieli;
         organisaatio.kotipaikkaUri = parentDto.kotipaikkaUri;
         organisaatio.parentOid = parentDto.parentOid;
-        organisaatio.tyypit = Set.of("organisaatiotyyppi_02");
-        organisaatio.oppilaitosTyyppiUri = "oppilaitostyyppi_xx"; // EI tiedossa koodisto
+        organisaatio.tyypit = Set.of(OPPILAITOS_ORGANISAATIOTYYPPI);
+        organisaatio.oppilaitosTyyppiUri = JOTPA_CHILD_OPPILAITOSTYYPPI; // EI tiedossa koodisto
         return organisaatio;
     }
 

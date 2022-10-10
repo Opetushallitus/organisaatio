@@ -103,6 +103,15 @@ public class OrganisaatioClient {
                 .mapWith(json -> fromJson(json, OrganisaatioDto.class));
     }
 
+    public Collection<OrganisaatioDto> getOrganisaatioJalkelaisetByOid(String oid) {
+        String url = properties.url("organisaatio-service.organisaatio.api.jalkelaisetByOid", oid);
+        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
+        return httpClient.<Collection<OrganisaatioDto>>execute(request)
+                .expectedStatus(200)
+                .mapWith(json -> fromJson(json, OrganisaatioListDto.class).organisaatiot)
+                .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
+    }
+
     /**
      * Tallentaa organisaation organisaatiopalveluun. Olemassa olevan organisaation
      * kohdalla tallentaa muutokset, muutoin luo uuden.
