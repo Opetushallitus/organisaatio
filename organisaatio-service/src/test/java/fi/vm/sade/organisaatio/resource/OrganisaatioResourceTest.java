@@ -1,13 +1,11 @@
 package fi.vm.sade.organisaatio.resource;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
-import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -26,7 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -166,38 +167,9 @@ public class OrganisaatioResourceTest {
     }
 
 
-    @Test
-    public void testFetchingHakutoimisto() throws Exception {
-        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.2004.4");
-        assertEquals("Hakutoimiston nimi FI", hakutoimisto.nimi.get("kieli_fi#1"));
-        HakutoimistoDTO expected = new HakutoimistoDTO(
-                ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
-                ImmutableMap.of(
-                        "kieli_fi#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.4", "fi"), hakutoimistonOsoite("1.2.2004.5", "fi"), "http://www.foo.fi", "foo@bar.com", "123456789"),
-                        "kieli_sv#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.6", "sv"), null, null, null, null),
-                        "kieli_en#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.7", "en"), hakutoimistonOsoite("1.2.2004.8", "en"), "http://www.foo.fi/en", null, null)));
 
-        assertEquals(expected, hakutoimisto);
-    }
 
-    @Test
-    public void testMixedOsoitetyyppi() throws Exception {
-        HakutoimistoDTO hakutoimisto = (HakutoimistoDTO) res2.hakutoimisto("1.2.8000.1");
-        assertEquals("Hakutoimiston nimi EN", hakutoimisto.nimi.get("kieli_en#1"));
-        HakutoimistoDTO expected = new HakutoimistoDTO(
-                ImmutableMap.of("kieli_fi#1", "Hakutoimiston nimi FI", "kieli_en#1", "Hakutoimiston nimi EN"),
-                ImmutableMap.of(
-                        "kieli_en#1", new HakutoimistoDTO.HakutoimistonYhteystiedotDTO(hakutoimistonOsoite("1.2.2004.9", "en"), hakutoimistonOsoite("1.2.2004.10", "en"), null, null, null)));
 
-        assertEquals(expected, hakutoimisto);
-    }
-
-    private HakutoimistoDTO.OsoiteDTO hakutoimistonOsoite(String yhteystietoOid, String lang) {
-        if("en".equals(lang)) {
-            return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "Hassuttimenkatu 2, 10000 Juupajoki, Finland", null, null);
-        }
-        return new HakutoimistoDTO.OsoiteDTO(yhteystietoOid, "fi".equals(lang) ? "Hassuttimenkatu 2" : "Hassutingatan 2", "posti_10000" , "Juupajoki");
-    }
 
     @Test
     public void testFetchingHakutoimistoForMissingOrganisation() {

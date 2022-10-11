@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.resource.impl.v4;
 
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.business.HakutoimistoService;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
@@ -28,8 +29,8 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
         OrganisaatioResourceV4 {
     protected final PermissionChecker permissionChecker;
 
-    public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2, OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper, PermissionChecker permissionChecker, OrganisaatioBusinessService organisaatioBusinessService, OrganisaatioNimiService organisaatioNimiService, OrganisaatioFindBusinessService organisaatioFindBusinessService, OppijanumeroClient oppijanumeroClient, OrganisaatioNimiModelMapper organisaatioNimiModelMapper, GroupModelMapperV3 groupModelMapper) {
-        super(oppijanumeroClient, organisaatioResourceV2, organisaatioDTOV4ModelMapper, organisaatioNimiModelMapper,groupModelMapper, organisaatioBusinessService, organisaatioNimiService, organisaatioFindBusinessService);
+    public OrganisaatioResourceImplV4(OrganisaatioResourceV2 organisaatioResourceV2, OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper, PermissionChecker permissionChecker, OrganisaatioBusinessService organisaatioBusinessService, OrganisaatioNimiService organisaatioNimiService, OrganisaatioFindBusinessService organisaatioFindBusinessService, HakutoimistoService hakutoimistoService, OppijanumeroClient oppijanumeroClient, OrganisaatioNimiModelMapper organisaatioNimiModelMapper, GroupModelMapperV3 groupModelMapper) {
+        super(oppijanumeroClient, organisaatioResourceV2, organisaatioDTOV4ModelMapper, organisaatioNimiModelMapper, groupModelMapper, organisaatioBusinessService, organisaatioNimiService, organisaatioFindBusinessService, hakutoimistoService);
         this.permissionChecker = permissionChecker;
     }
 

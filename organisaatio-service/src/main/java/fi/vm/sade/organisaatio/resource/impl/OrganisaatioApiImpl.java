@@ -4,11 +4,8 @@ import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
-import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.business.*;
+import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
@@ -26,6 +23,7 @@ import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
+import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
 import fi.vm.sade.organisaatio.service.aspects.*;
@@ -42,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
-import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
@@ -66,6 +63,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioNimiService organisaatioNimiService;
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
+    private final HakutoimistoService hakutoimistoService;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -381,6 +379,19 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria) {
         return groupModelMapper.map(organisaatioFindBusinessService.findGroups(criteria), new TypeToken<List<OrganisaatioGroupDTOV3>>() {
         }.getType());
+    }
+
+    // GET /api/{oid}/hakutoimisto
+    @Override
+    @CheckReadPermission
+    public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
+        try {
+            return hakutoimistoService.hakutoimisto(organisaatioOid);
+        } catch (OrganisaatioNotFoundException e) {
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, String.format("Organisaatio not found %s", organisaatioOid), "not found");
+        } catch (HakutoimistoNotFoundException e) {
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, String.format("Hakutoimisto not found for organisaatio %s", organisaatioOid), "not found");
+        }
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

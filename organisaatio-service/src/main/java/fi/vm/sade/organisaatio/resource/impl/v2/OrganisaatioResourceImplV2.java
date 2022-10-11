@@ -22,7 +22,7 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.business.Hakutoimisto;
+import fi.vm.sade.organisaatio.business.HakutoimistoService;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
@@ -35,7 +35,10 @@ import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2;
 import fi.vm.sade.organisaatio.dto.v2.*;
-import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
@@ -103,6 +106,8 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     @Autowired
     private SearchCriteriaService searchCriteriaService;
 
+    @Autowired
+    private HakutoimistoService hakutoimistoService;
     // POST /organisaatio/v2/yhteystiedot/hae
     @Override
     @Transactional(readOnly = true)
@@ -505,7 +510,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
 
         try {
-            return hakutoimistoRec(organisaatioOid);
+            return hakutoimistoService.hakutoimisto(organisaatioOid);
         } catch (OrganisaatioNotFoundException | HakutoimistoNotFoundException e) {
             logger.warn("Hakutoimiston haku organisaatiolle {} epäonnistui.", organisaatioOid);
             throw new ResponseStatusException(
@@ -514,28 +519,4 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
     }
 
-    private HakutoimistoDTO hakutoimistoRec(String organisaatioOId) {
-
-        Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOId);
-        if (organisaatio == null) {
-            throw new OrganisaatioNotFoundException("Organisaatiota ei löydy: " + organisaatioOId);
-        }
-        OrganisaatioMetaData metadata = organisaatio.getMetadata();
-        return metadata == null ? hakutoimistoFromParent(organisaatio) : hakutoimistoFromOrganisaatio(organisaatio);
-    }
-
-    private HakutoimistoDTO hakutoimistoFromParent(Organisaatio organisaatio) {
-        if (organisaatio.getParent() != null) {
-            return hakutoimistoRec(organisaatio.getParent().getOid());
-        }
-        throw new HakutoimistoNotFoundException("Hakutoimistoa ei löydy, ylin organisaatio " + organisaatio.getOid());
-    }
-
-    private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {
-        if (Hakutoimisto.hasOsoite(organisaatio)) {
-            return new HakutoimistoDTO(Hakutoimisto.hakutoimistonNimet(organisaatio), Hakutoimisto.hakutoimistonOsoitteet(organisaatio));
-        } else {
-            return hakutoimistoFromParent(organisaatio);
-        }
-    }
 }
