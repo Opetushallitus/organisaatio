@@ -2,6 +2,9 @@ package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteKoulutuksiaException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioTarjonta;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
@@ -15,9 +18,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,9 +59,9 @@ class OrganisaatioApiDeleteTest {
     @Test
     @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001"})
     void testDeleteOidNotFound() {
-        OrganisaatioResourceException ex = Assertions.assertThrows(OrganisaatioResourceException.class,
-                () -> resource.deleteOrganisaatio("1.2.246.562.24.00000000000"), "OrganisaatioResourceException was expected");
-        assertEquals(HttpStatus.NOT_FOUND, ex.getResponseEntity().getStatusCode());
+        OrganisaatioNotFoundException ex = Assertions.assertThrows(OrganisaatioNotFoundException.class,
+                () -> resource.deleteOrganisaatio("1.2.246.562.24.00000000000"), "OrganisaatioNotFoundException was expected");
+        assertEquals("organisaatio.exception.organisaatio.not.found", ex.getErrorKey());
     }
 
     @Test
@@ -81,9 +82,8 @@ class OrganisaatioApiDeleteTest {
         OrganisaatioRDTOV4 ad = createOrganisaatio("AD", a);
         when(tarjontaMock.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
         String oid = ad.getOid();
-        OrganisaatioResourceException ex = Assertions.assertThrows(OrganisaatioResourceException.class,
-                () -> resource.deleteOrganisaatio(oid), "OrganisaatioResourceException was expected");
-        assertEquals(HttpStatus.BAD_REQUEST, ex.getResponseEntity().getStatusCode());
+        OrganisaatioDeleteKoulutuksiaException ex = Assertions.assertThrows(OrganisaatioDeleteKoulutuksiaException.class,
+                () -> resource.deleteOrganisaatio(oid), "OrganisaatioDeleteKoulutuksiaException was expected");
     }
 
     @Test
@@ -92,9 +92,8 @@ class OrganisaatioApiDeleteTest {
         OrganisaatioRDTOV4 parent = createOrganisaatio("Parent", null);
         createOrganisaatio("Child", parent);
         String parentOid = parent.getOid();
-        OrganisaatioResourceException ex = Assertions.assertThrows(OrganisaatioResourceException.class,
+        OrganisaatioCrudException ex = Assertions.assertThrows(OrganisaatioCrudException.class,
                 () -> resource.deleteOrganisaatio(parentOid), "OrganisaatioResourceException was expected");
-        assertEquals(HttpStatus.BAD_REQUEST, ex.getResponseEntity().getStatusCode());
     }
 
     private OrganisaatioRDTOV4 createOrganisaatio(String nimi, OrganisaatioRDTOV4 parent) {

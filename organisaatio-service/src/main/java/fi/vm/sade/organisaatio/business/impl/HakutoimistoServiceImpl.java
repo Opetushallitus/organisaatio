@@ -129,16 +129,15 @@ public class HakutoimistoServiceImpl implements HakutoimistoService {
     }
 
     private static Optional<Yhteystieto> findYhteystieto(Iterable<Yhteystieto> yhteystiedot, Predicate<Yhteystieto> predicate) {
-        return StreamSupport.stream(yhteystiedot.spliterator(),false).filter( predicate).findFirst();
+        return StreamSupport.stream(yhteystiedot.spliterator(), false).filter(predicate).findFirst();
     }
-
 
 
     private HakutoimistoDTO hakutoimistoRec(String organisaatioOId) {
 
         Organisaatio organisaatio = organisaatioFindBusinessService.findById(organisaatioOId);
         if (organisaatio == null) {
-            throw new OrganisaatioNotFoundException("Organisaatiota ei löydy: " + organisaatioOId);
+            throw new OrganisaatioNotFoundException( organisaatioOId);
         }
         OrganisaatioMetaData metadata = organisaatio.getMetadata();
         return metadata == null ? hakutoimistoFromParent(organisaatio) : hakutoimistoFromOrganisaatio(organisaatio);
@@ -148,7 +147,7 @@ public class HakutoimistoServiceImpl implements HakutoimistoService {
         if (organisaatio.getParent() != null) {
             return hakutoimistoRec(organisaatio.getParent().getOid());
         }
-        throw new HakutoimistoNotFoundException("Hakutoimistoa ei löydy, ylin organisaatio " + organisaatio.getOid());
+        throw new HakutoimistoNotFoundException(organisaatio.getOid());
     }
 
     private HakutoimistoDTO hakutoimistoFromOrganisaatio(Organisaatio organisaatio) {

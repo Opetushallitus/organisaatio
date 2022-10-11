@@ -220,7 +220,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
         if (o == null) {
             LOG.info("Failed to find organisaatio by: " + oid);
-            throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
         }
 
         // Jätetään kuva pois, jos sitä ei haluta

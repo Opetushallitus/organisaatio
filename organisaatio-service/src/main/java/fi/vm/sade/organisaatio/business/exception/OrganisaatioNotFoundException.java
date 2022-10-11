@@ -16,13 +16,12 @@
 package fi.vm.sade.organisaatio.business.exception;
 
 /**
- *
- *  @author simok
+ * @author simok
  */
 public class OrganisaatioNotFoundException extends OrganisaatioBusinessException {
 
     public OrganisaatioNotFoundException(String oid) {
-        super("organisaatio " + oid + " was not found");
+        super(String.format("Organisaatiota ei löytynyt %s", oid));
     }
 
     @Override

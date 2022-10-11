@@ -2,12 +2,8 @@ package fi.vm.sade.organisaatio.resource.impl;
 
 import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.*;
-import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
@@ -156,7 +152,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     public List<OrganisaatioRDTOV4> haeMuutetut(
-            DateParam lastModifiedSince,
+            LocalDate lastModifiedSince,
             boolean includeImage,
             List<String> organizationType,
             boolean excludeDiscontinued) {
@@ -164,10 +160,20 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             List<OrganisaatioTyyppi> organisaatioTyypit = organizationType == null ? Collections.emptyList() :
                     organizationType.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
             return this.organisaatioFindBusinessService.haeMuutetut(
-                    lastModifiedSince, includeImage, organisaatioTyypit, excludeDiscontinued);
+                    java.sql.Date.valueOf(lastModifiedSince), organisaatioTyypit, excludeDiscontinued);
         } catch (IllegalArgumentException iae) {
-            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST.value(), iae.getMessage());
+            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, iae.getMessage());
         }
+    }
+
+    // GET /api/muutetut/oid
+    @Override
+    public List<String> haeMuutettujenOid(
+            LocalDate lastModifiedSince,
+            List<OrganisaatioTyyppi> organisaatioTyypit,
+            boolean excludeDiscontinued) {
+        return this.organisaatioFindBusinessService.haeMuutetut(
+                java.sql.Date.valueOf(lastModifiedSince), organisaatioTyypit, excludeDiscontinued).stream().map(OrganisaatioRDTOV4::getOid).collect(Collectors.toList());
     }
 
     /**
@@ -211,8 +217,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, DateParam moveDate) {
-        Date date = moveDate.getValue();
+    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, LocalDate moveDate) {
+        Date date = java.sql.Date.valueOf(moveDate);
         try {
             organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
         } catch (SadeBusinessException sbe) {
@@ -229,17 +235,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     @CheckDeletePermission
     public void deleteOrganisaatio(String oid) {
-        try {
-            Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
-            log.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
-        } catch (OrganisaatioNotFoundException e) {
-            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, e);
-        } catch (OrganisaatioBusinessException e) {
-            throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, e);
-        } catch (SadeBusinessException sbe) {
-            log.warn("Error deleting org {} ", oid);
-            throw new OrganisaatioResourceException(sbe);
-        }
+        Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
+        log.info("Deleted organisaatio: {} under parent: {}", oid, parent.getOid());
+
     }
 
     /**
@@ -385,13 +383,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @CheckReadPermission
     public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
-        try {
-            return hakutoimistoService.hakutoimisto(organisaatioOid);
-        } catch (OrganisaatioNotFoundException e) {
-            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, String.format("Organisaatio not found %s", organisaatioOid), "not found");
-        } catch (HakutoimistoNotFoundException e) {
-            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, String.format("Hakutoimisto not found for organisaatio %s", organisaatioOid), "not found");
-        }
+        return hakutoimistoService.hakutoimisto(organisaatioOid);
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella

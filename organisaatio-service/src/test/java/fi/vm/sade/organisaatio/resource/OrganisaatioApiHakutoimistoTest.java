@@ -9,11 +9,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +26,9 @@ class OrganisaatioApiHakutoimistoTest {
     void test1() throws Exception {
           this.mockMvc.perform(get("/api/no-oid/hakutoimisto"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().json("{\"errorMessage\":\"Organisaatio not found no-oid\",\"errorKey\":\"not found\"}"));
+                .andExpect(content().json("{" +
+                        "\"errorMessage\":\"Organisaatiota ei löytynyt no-oid\"," +
+                        "\"errorKey\":\"organisaatio.exception.organisaatio.not.found\"}"));
     }
 
     @Test
@@ -42,7 +39,9 @@ class OrganisaatioApiHakutoimistoTest {
     void test2() throws Exception {
         this.mockMvc.perform(get("/api/1.2.2004.2/hakutoimisto"))
                 .andExpect(status().isNotFound())
-                .andExpect(content().json("{\"errorMessage\":\"Hakutoimisto not found for organisaatio 1.2.2004.2\",\"errorKey\":\"not found\"}"));
+                .andExpect(content().json("{" +
+                        "\"errorMessage\":\"Hakutoimistoa ei löytynyt, ylin organisaatio 1.2.246.562.24.00000000001\"," +
+                        "\"errorKey\":\"organisaatio.exception.organisaatio.hakutoimisto.not.found\"}"));
     }
 
     @Test
