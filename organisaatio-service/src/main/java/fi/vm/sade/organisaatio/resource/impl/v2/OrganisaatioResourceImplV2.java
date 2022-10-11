@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.resource.impl.v2;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
@@ -61,6 +60,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -366,7 +366,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/muutetut
     @Override
-    public List<OrganisaatioRDTO> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
+    public List<OrganisaatioRDTO> haeMuutetut(LocalDate lastModifiedSince, boolean includeImage) {
 
         Preconditions.checkNotNull(lastModifiedSince);
 
@@ -374,7 +374,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
-                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
+                !permissionChecker.isReadAccessToAll(), java.sql.Date.valueOf(lastModifiedSince));
 
         logger.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
@@ -402,14 +402,14 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/muutetut/oid
     @Override
-    public String haeMuutettujenOid(DateParam lastModifiedSince) {
+    public String haeMuutettujenOid(LocalDate lastModifiedSince) {
 
         Preconditions.checkNotNull(lastModifiedSince);
         logger.debug("haeMuutettujenOid: {}", lastModifiedSince);
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
-                lastModifiedSince.getValue());
+                java.sql.Date.valueOf(lastModifiedSince));
 
         List<String> oids = new ArrayList<>();
         for (Organisaatio org : organisaatiot) {
@@ -464,10 +464,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/liitokset
     @Override
-    public List<OrganisaatioLiitosDTOV2> haeLiitokset(DateParam liitoksetAlkaen) {
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(LocalDate liitoksetAlkaen) {
         Date date = null;
-        if (liitoksetAlkaen != null && liitoksetAlkaen.getValue() != null) {
-            date = liitoksetAlkaen.getValue();
+        if (liitoksetAlkaen != null && java.sql.Date.valueOf(liitoksetAlkaen) != null) {
+            date = java.sql.Date.valueOf(liitoksetAlkaen);
         }
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);

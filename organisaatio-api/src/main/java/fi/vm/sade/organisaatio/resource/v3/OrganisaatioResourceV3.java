@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.resource.v3;
 
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -8,6 +7,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public interface OrganisaatioResourceV3 {
 
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioRDTOV3> haeMuutetut(
-            @RequestParam DateParam lastModifiedSince,
+            @RequestParam LocalDate lastModifiedSince,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
 }

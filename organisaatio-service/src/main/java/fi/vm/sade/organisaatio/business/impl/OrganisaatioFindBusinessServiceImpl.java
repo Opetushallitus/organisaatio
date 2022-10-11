@@ -16,19 +16,18 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
+import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -41,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +59,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioFindBusinessServiceImpl.class);
     private static final int MAX_PARENT_OIDS = 2500;
-    private static final Pattern OID_PATTERN = Pattern.compile("\\d+(\\.\\d+)+");
+    private static final Pattern OID_PATTERN = Pattern.compile("\\d+(\\.\\d+){1,10}");
     // y-tunnus ja virastotunnus ovat samaa muotoa
     private static final Pattern YTUNNUS_VIRASTOTUNNUS_PATTERN = Pattern.compile("\\d{7}-\\d");
     private static final Pattern OPPILAITOSKOODI_PATTERN = Pattern.compile("\\d{5}");
@@ -223,7 +223,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
         if (o == null) {
             LOG.info("Failed to find organisaatio by: {}", id);
-            throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
         }
 
         // Jätetään kuva pois, jos sitä ei haluta
@@ -304,8 +304,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioRDTOV4> haeMuutetut(
-            DateParam lastModifiedSince,
-            boolean includeImage,
+            Date lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued) {
         Preconditions.checkNotNull(lastModifiedSince);
@@ -315,7 +314,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
-                lastModifiedSince.getValue(),
+                lastModifiedSince,
                 organizationTypes,
                 excludeDiscontinued);
 
@@ -324,7 +323,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         if (organisaatiot == null || organisaatiot.isEmpty()) {
             return Collections.emptyList();
         }
-        return this.mapToOrganisaatioRdtoV4(organisaatiot, includeImage);
+        return this.mapToOrganisaatioRdtoV4(organisaatiot, false);
     }
 
     @Override
