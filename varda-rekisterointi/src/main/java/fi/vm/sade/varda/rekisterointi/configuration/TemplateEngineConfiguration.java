@@ -13,7 +13,6 @@ public class TemplateEngineConfiguration {
   @Bean
   public TemplateEngine emailTemplateEngine() {
       final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-      // Resolver for TEXT emails
       templateEngine.addTemplateResolver(vardaTemplateResolver());
       templateEngine.addTemplateResolver(genericTemplateResolver());
       return templateEngine;
@@ -22,6 +21,7 @@ public class TemplateEngineConfiguration {
   private ITemplateResolver vardaTemplateResolver() {
     final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setOrder(Integer.valueOf(1));
+    templateResolver.setPrefix("/varda/");
     templateResolver.setTemplateMode(TemplateMode.HTML);
     templateResolver.setCacheable(false);
     return templateResolver;
