@@ -21,7 +21,7 @@ public class TemplateEngineConfiguration {
   private ITemplateResolver vardaTemplateResolver() {
     final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setOrder(Integer.valueOf(1));
-    templateResolver.setPrefix("/varda/");
+    templateResolver.setPrefix("varda/");
     templateResolver.setTemplateMode(TemplateMode.HTML);
     templateResolver.setCacheable(false);
     return templateResolver;
