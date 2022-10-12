@@ -129,7 +129,7 @@ public class EmailService {
             return EmailMessageDto.builder()
                 .subject(subjectToAllLanguages("rekisteroityminen.otsikko.kayttaja"))
                 .body(templateService.getContent(Template.GENERIC_KAYTTAJA, new Locale("fi"),
-                        Map.of("organisaatioNimi", organisaatioNimi)))
+                        Map.of("organisaatioNimi", organisaatioNimi, "tyyppi", rekisterointi.tyyppi)))
                 .html(false)
                 .build();
         }
@@ -147,7 +147,7 @@ public class EmailService {
                 : EmailMessageDto.builder()
                         .subject(subjectToAllLanguages("rekisteroityminen.otsikko.paakayttaja"))
                         .body(templateService.getContent(Template.GENERIC_PAAKAYTTAJA, locale,
-                                Map.of("etunimi", kayttaja.etunimi)))
+                                Map.of("etunimi", kayttaja.etunimi, "tyyppi", tyyppi)))
                         .html(false)
                         .build();
         EmailDto email = EmailDto.builder()

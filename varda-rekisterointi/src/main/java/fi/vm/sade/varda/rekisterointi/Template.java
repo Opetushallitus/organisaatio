@@ -5,24 +5,24 @@ public enum Template {
     /**
      * Sähköposti rekisteröinnin tehneelle henkilölle.
      */
-    REKISTEROITYMINEN_KAYTTAJA("email/rekisteroityminen-kayttaja.html"),
+    REKISTEROITYMINEN_KAYTTAJA("varda/rekisteroityminen-kayttaja.html"),
     /**
      * Sähköposti rekisteröinnin yhteydessä ilmoitetulle Varda-pääkäyttäjälle.
      */
-    REKISTEROITYMINEN_PAAKAYTTAJA("email/rekisteroityminen-paakayttaja.html"),
+    REKISTEROITYMINEN_PAAKAYTTAJA("varda/rekisteroityminen-paakayttaja.html"),
     /**
      * Sähköposti kuntaan.
      */
-    REKISTEROITYMINEN_KUNTA("email/rekisteroityminen-kunta.html"),
+    REKISTEROITYMINEN_KUNTA("varda/rekisteroityminen-kunta.html"),
     /**
      * Sähköposti kunnan hylkäämisen jälkeen kaikille rekisteröinnin yhteydessä ilmoitetuille henkilöille.
      */
-    REKISTEROITYMINEN_HYLATTY("email/rekisteroityminen-hylatty.html"),
+    REKISTEROITYMINEN_HYLATTY("varda/rekisteroityminen-hylatty.html"),
     /**
      * Sähköposti kunnan hyväksymisen jälkeen kaikille rekisteröinnin yhteydessä ilmoitetuille henkilöille.
      */
-    REKISTEROITYMINEN_HYVAKSYTTY("email/rekisteroityminen-hyvaksytty.html"),
-    AJASTETTUJEN_TASKIEN_VIRHERAPORTTI("email/taskien-virheraportti.html"),
+    REKISTEROITYMINEN_HYVAKSYTTY("varda/rekisteroityminen-hyvaksytty.html"),
+    AJASTETTUJEN_TASKIEN_VIRHERAPORTTI("varda/taskien-virheraportti.html"),
     GENERIC_KAYTTAJA("rekisteroityminen-kayttaja.txt"),
     GENERIC_PAAKAYTTAJA("rekisteroityminen-paakayttaja.txt"),
     GENERIC_HYLATTY("rekisteroityminen-hylatty.txt"),

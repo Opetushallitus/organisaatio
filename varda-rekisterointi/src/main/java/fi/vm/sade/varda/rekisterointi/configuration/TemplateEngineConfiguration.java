@@ -13,7 +13,6 @@ public class TemplateEngineConfiguration {
   @Bean
   public TemplateEngine emailTemplateEngine() {
       final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-      // Resolver for TEXT emails
       templateEngine.addTemplateResolver(vardaTemplateResolver());
       templateEngine.addTemplateResolver(genericTemplateResolver());
       return templateEngine;

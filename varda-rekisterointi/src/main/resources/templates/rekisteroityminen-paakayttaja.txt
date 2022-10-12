@@ -1,4 +1,4 @@
-Hei [(${nimi})],
+Hei [(${etunimi})],
 
 sinut on nimetty organisaatiostasi [(${tyyppi})]-pääkäyttäjäksi Opetushallituksen varhaiskasvatuksen tietovarantoon ([(${tyyppi})]). [(${tyyppi})]-pääkäyttäjä vastaa oman organisaationsa [(${tyyppi})]-käyttöoikeuksista.
 
