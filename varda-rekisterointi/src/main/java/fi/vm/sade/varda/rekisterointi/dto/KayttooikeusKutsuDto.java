@@ -19,7 +19,7 @@ public class KayttooikeusKutsuDto {
 
     public final String kutsujaOid;
 
-    public final String kutsuTyyppi;
+    public final String kutsujaForEmail;
 
     @NotEmpty
     public final String etunimi;

@@ -48,7 +48,7 @@ public class TestiRekisterointi {
                 .etunimi("John")
                 .sukunimi("Smith")
                 .sahkoposti("john.smith@example.com")
-                .asiointikieli("en")
+                .asiointikieli("fi")
                 .build();
     }
 
