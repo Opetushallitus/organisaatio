@@ -19,12 +19,16 @@ public class TemplateService {
         this.templateEngine = templateEngine;
     }
 
-    public String getContent(Template template, Locale locale) {
-        return getContent(template, locale, emptyMap());
+    public String getPath(String tyyppi) {
+        return tyyppi.equals("varda") ? "varda" : "generic";
     }
 
-    public String getContent(Template template, Locale locale, Map<String, Object> variables) {
-        return templateEngine.process(template.getPath(), new Context(locale, variables));
+    public String getContent(String tyyppi, Template template, Locale locale) {
+        return getContent(tyyppi, template, locale, emptyMap());
+    }
+
+    public String getContent(String tyyppi, Template template, Locale locale, Map<String, Object> variables) {
+        return templateEngine.process(getPath(tyyppi) + "/" + template.getPath(), new Context(locale, variables));
     }
 
 }

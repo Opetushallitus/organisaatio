@@ -1,13 +1,13 @@
 <!doctype html>
 <html layout:decorate="~{varda/pohja}">
 <head>
-    <title th:text="#{rekisteroityminen.kunta.otsikko}">otsikko</title>
+    <title th:text="#{varda.rekisteroityminen.kunta.otsikko}">otsikko</title>
 </head>
 <body>
 <div layout:fragment="sisalto">
     <span th:text="#{hei}">Hei</span>,<br>
-    <span th:utext="#{rekisteroityminen.kunta.teksti}">teksti</span>
-    <p th:text="#{rekisteroityminen.kunta.lisatieto(${organisaatioLkm})}">lisätieto</p>
+    <span th:utext="#{varda.rekisteroityminen.kunta.teksti}">teksti</span>
+    <p th:text="#{varda.rekisteroityminen.kunta.lisatieto(${organisaatioLkm})}">lisätieto</p>
 </div>
 </body>
 </html>

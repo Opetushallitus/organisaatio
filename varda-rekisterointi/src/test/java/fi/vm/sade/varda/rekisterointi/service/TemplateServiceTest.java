@@ -54,7 +54,7 @@ public class TemplateServiceTest {
     @Test
     public void renderWorks() {
         Map<String, Object> variables = Map.of("messageSource", messageSource, "locales", LOCALES);
-        String content = templateService.getContent(template, new Locale(language), variables);
+        String content = templateService.getContent("varda", template, new Locale(language), variables);
         System.out.println(content);
     }
 

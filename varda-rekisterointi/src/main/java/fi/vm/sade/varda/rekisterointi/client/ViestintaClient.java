@@ -80,6 +80,7 @@ public class ViestintaClient {
                 .content(toJson(email))
                 .contentType(ContentType.APPLICATION_JSON)
                 .build();
+        System.out.println(toJson(email));
         OphHttpRequest request = OphHttpRequest.Builder
                 .post(url)
                 .setEntity(entity)

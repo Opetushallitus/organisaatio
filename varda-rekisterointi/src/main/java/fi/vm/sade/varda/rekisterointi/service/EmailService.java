@@ -58,31 +58,12 @@ public class EmailService {
             String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
             EmailDto email = EmailDto.builder()
                     .emails(rekisterointi.sahkopostit)
-                    .message(rekisterointi.tyyppi.equals("varda")
-                        ? luoVardaPaatosViesti(rekisterointi.paatos, organisaatioNimi)
-                        : luoPaatosViesti(rekisterointi.tyyppi, rekisterointi.paatos, organisaatioNimi))
+                    .message(luoPaatosViesti(rekisterointi.tyyppi, rekisterointi.paatos, organisaatioNimi))
                     .build();
             LOGGER.info("Lähetetään ilmoitus rekisteröinnin {} päätöksestä osoitteisiin: {}",
                     id, String.join(", ", rekisterointi.sahkopostit));
             viestintaClient.save(email, false);
         });
-    }
-
-    private EmailMessageDto luoPaatosViesti(String tyyppi, Paatos paatos, String organisaatioNimi) {
-        if (paatos.hyvaksytty) {
-            return EmailMessageDto.builder()
-                    .subject(subjectToAllLanguages("rekisteroityminen.otsikko.hyvaksytty"))
-                    .body(templateService.getContent(Template.GENERIC_HYVAKSYTTY, new Locale("fi"),
-                            Map.of( "organisaatioNimi", organisaatioNimi, "tyyppi", tyyppi)))
-                    .html(false)
-                    .build();
-        }
-        return EmailMessageDto.builder()
-                .subject(subjectToAllLanguages("rekisteroityminen.otsikko.hylatty"))
-                .body(templateService.getContent(Template.GENERIC_HYLATTY, new Locale("fi"),
-                        Map.of( "organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu, "tyyppi", tyyppi)))
-                .html(false)
-                .build();
     }
 
     /**
@@ -118,37 +99,21 @@ public class EmailService {
 
     private EmailMessageDto luoKayttajaViesti(Rekisterointi rekisterointi) {
         String organisaatioNimi = rekisterointi.organisaatio.ytjNimi.nimi;
-        if (rekisterointi.tyyppi.equals("varda")) {
-            return EmailMessageDto.builder()
-                .subject(subjectToAllLanguages("rekisteroityminen.kayttaja.otsikko"))
-                .body(templateService.getContent(Template.REKISTEROITYMINEN_KAYTTAJA, new Locale("fi"),
+        return EmailMessageDto.builder()
+                .subject(subjectToAllLanguages(templateService.getPath(rekisterointi.tyyppi) + ".rekisteroityminen.kayttaja.otsikko"))
+                .body(templateService.getContent(rekisterointi.tyyppi, Template.REKISTEROITYMINEN_KAYTTAJA, new Locale("fi"),
                         Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi)))
                 .html(true)
                 .build();
-        } else {
-            return EmailMessageDto.builder()
-                .subject(subjectToAllLanguages("rekisteroityminen.otsikko.kayttaja"))
-                .body(templateService.getContent(Template.GENERIC_KAYTTAJA, new Locale("fi"),
-                        Map.of("organisaatioNimi", organisaatioNimi, "tyyppi", rekisterointi.tyyppi)))
-                .html(false)
-                .build();
-        }
     }
 
     private void lahetaRekisterointiEmail(Kayttaja kayttaja, String tyyppi) {
         Locale locale = new Locale(kayttaja.asiointikieli);
-        EmailMessageDto message = tyyppi.equals("varda")
-                ? EmailMessageDto.builder()
-                        .subject(messageSource.getMessage("rekisteroityminen.paakayttaja.otsikko", null, locale))
-                        .body(templateService.getContent(Template.REKISTEROITYMINEN_PAAKAYTTAJA, locale,
+        EmailMessageDto message = EmailMessageDto.builder()
+                        .subject(messageSource.getMessage(templateService.getPath(tyyppi) + ".rekisteroityminen.paakayttaja.otsikko", null, locale))
+                        .body(templateService.getContent(tyyppi, Template.REKISTEROITYMINEN_PAAKAYTTAJA, locale,
                                 Map.of("etunimi", kayttaja.etunimi)))
                         .html(true)
-                        .build()
-                : EmailMessageDto.builder()
-                        .subject(subjectToAllLanguages("rekisteroityminen.otsikko.paakayttaja"))
-                        .body(templateService.getContent(Template.GENERIC_PAAKAYTTAJA, locale,
-                                Map.of("etunimi", kayttaja.etunimi, "tyyppi", tyyppi)))
-                        .html(false)
                         .build();
         EmailDto email = EmailDto.builder()
                 .email(kayttaja.sahkoposti)
@@ -158,18 +123,18 @@ public class EmailService {
         viestintaClient.save(email, false);
     }
 
-    private EmailMessageDto luoVardaPaatosViesti(Paatos paatos, String organisaatioNimi) {
+    private EmailMessageDto luoPaatosViesti(String tyyppi, Paatos paatos, String organisaatioNimi) {
         if (paatos.hyvaksytty) {
             return EmailMessageDto.builder()
-                    .subject(subjectToAllLanguages("rekisteroityminen.hyvaksytty.otsikko"))
-                    .body(templateService.getContent(Template.REKISTEROITYMINEN_HYVAKSYTTY, new Locale("fi"),
+                    .subject(subjectToAllLanguages(templateService.getPath(tyyppi) + ".rekisteroityminen.hyvaksytty.otsikko"))
+                    .body(templateService.getContent(tyyppi, Template.REKISTEROITYMINEN_HYVAKSYTTY, new Locale("fi"),
                             Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi)))
                     .html(true)
                     .build();
         }
         return EmailMessageDto.builder()
-                .subject(subjectToAllLanguages("rekisteroityminen.hylatty.otsikko"))
-                .body(templateService.getContent(Template.REKISTEROITYMINEN_HYLATTY, new Locale("fi"),
+                .subject(subjectToAllLanguages(templateService.getPath(tyyppi) + ".rekisteroityminen.hylatty.otsikko"))
+                .body(templateService.getContent(tyyppi, Template.REKISTEROITYMINEN_HYLATTY, new Locale("fi"),
                         Map.of("messageSource", messageSource, "locales", LOCALES, "organisaatioNimi", organisaatioNimi, "perustelu", paatos.perustelu)))
                 .html(true)
                 .build();
@@ -202,9 +167,9 @@ public class EmailService {
 
     private void lahetaKuntaEmail(VirkailijaDto virkailija, Long organisaatioLkm) {
         Locale locale = new Locale(Optional.ofNullable(virkailija.asiointikieli).orElse("fi"));
-        String subject = messageSource.getMessage("rekisteroityminen.kunta.otsikko", null, locale);
+        String subject = messageSource.getMessage("varda.rekisteroityminen.kunta.otsikko", null, locale);
         Map<String, Object> variables = Map.of("organisaatioLkm", organisaatioLkm);
-        String body = templateService.getContent(Template.REKISTEROITYMINEN_KUNTA, locale, variables);
+        String body = templateService.getContent("varda", Template.REKISTEROITYMINEN_KUNTA, locale, variables);
         EmailDto email = EmailDto.builder()
                 .email(virkailija.sahkoposti)
                 .message(EmailMessageDto.builder()
@@ -223,7 +188,7 @@ public class EmailService {
         Map<String, Object> variables = Map.of(
                 "epaonnistuneetLkm", failures.size(),
                 "epaonnistuneet", failures);
-        String body = templateService.getContent(Template.AJASTETTUJEN_TASKIEN_VIRHERAPORTTI, locale, variables);
+        String body = templateService.getContent("generic", Template.AJASTETTUJEN_TASKIEN_VIRHERAPORTTI, locale, variables);
         EmailDto email = EmailDto.builder()
                 .email(FAILED_TASKS_EMAIL_ADDRESS)
                 .message(EmailMessageDto.builder()
