@@ -15,9 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -35,9 +36,9 @@ import java.util.Set;
 public interface OrganisaatioApi {
 
     @GetMapping(path = "/oids", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<String> search(@RequestParam(required = false) OrganisaatioTyyppi type,
-                        @RequestParam(defaultValue = "0") int count,
-                        @RequestParam(defaultValue = "0") int startIndex);
+    List<String> oids(@RequestParam(required = false) OrganisaatioTyyppi type,
+                        @RequestParam(name = "count", defaultValue = "0") @Min(0) int count,
+                        @RequestParam(defaultValue = "0") @Min(0) int startIndex);
 
     @Operation(summary = "Hakee monta ei-poistettua organisaatiota kerralla syötetyille OIDeille (maksimissaan 1000)")
     @PostMapping(path = "/findbyoids", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -81,7 +82,7 @@ public interface OrganisaatioApi {
     @Operation(summary = "Hakee organisaatioiden tiedot, joita muutettu annetun päivämäärän jälkeen")
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioRDTOV4> haeMuutetut(
-            @Parameter(description = "Muokattu jälkeen", required = true) @NotNull @RequestParam LocalDate lastModifiedSince,
+            @Parameter(description = "Muokattu jälkeen", required = true) @NotNull @RequestParam LocalDateTime lastModifiedSince,
             @Parameter(description = "Palaulautetaanko vastauksen mukana mahdollinen organisaation kuva (voi olla iso).", deprecated = true) @RequestParam(defaultValue = "false") boolean includeImage,
             @Parameter(description = "Halutut organisaatiotyypit") @RequestParam(defaultValue = "") List<String> organizationType,
             @Parameter(description = "Rajataanko lakkautetut organisaatiot pois") @RequestParam(defaultValue = "false") boolean excludeDiscontinued
@@ -89,7 +90,7 @@ public interface OrganisaatioApi {
 
     @GetMapping(path = "/muutetut/oid", produces = MediaType.APPLICATION_JSON_VALUE)
     List<String> haeMuutettujenOid(
-            @Parameter(description = "Muokattu jälkeen", required = true) @NotNull @RequestParam LocalDate lastModifiedSince,
+            @Parameter(description = "Muokattu jälkeen", required = true) @NotNull @RequestParam LocalDateTime lastModifiedSince,
             @Parameter(description = "Halutut organisaatiotyypit") @RequestParam(required = false, defaultValue = "") List<OrganisaatioTyyppi> organisaatioTyypit,
             @Parameter(description = "Rajataanko lakkautetut organisaatiot pois") @RequestParam(required = false, defaultValue = "false") boolean excludeDiscontinued);
 
@@ -125,7 +126,7 @@ public interface OrganisaatioApi {
             @Parameter(description = "Organisaation oid", required = true) @PathVariable("oid") String oid,
             @Parameter(description = "Uusi isäntäorganisaatio", required = true) @PathVariable("parentoid") String parentoid,
             @Parameter(description = "Sulautus", required = true) @RequestParam("merge") boolean merge,
-            @Parameter(description = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = true) @RequestParam("moveDate") LocalDate moveDate
+            @Parameter(description = "Siirto päivämäärä, jos päivämäärää ei ole asetettu käytetään tätä päivämäärää", required = true) @RequestParam("moveDate") LocalDateTime moveDate
     );
 
 

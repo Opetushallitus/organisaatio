@@ -60,7 +60,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -366,7 +366,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/muutetut
     @Override
-    public List<OrganisaatioRDTO> haeMuutetut(LocalDate lastModifiedSince, boolean includeImage) {
+    public List<OrganisaatioRDTO> haeMuutetut(LocalDateTime lastModifiedSince, boolean includeImage) {
 
         Preconditions.checkNotNull(lastModifiedSince);
 
@@ -374,7 +374,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
-                !permissionChecker.isReadAccessToAll(), java.sql.Date.valueOf(lastModifiedSince));
+                !permissionChecker.isReadAccessToAll(), lastModifiedSince);
 
         logger.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();
@@ -402,14 +402,14 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/muutetut/oid
     @Override
-    public String haeMuutettujenOid(LocalDate lastModifiedSince) {
+    public String haeMuutettujenOid(LocalDateTime lastModifiedSince) {
 
         Preconditions.checkNotNull(lastModifiedSince);
         logger.debug("haeMuutettujenOid: {}", lastModifiedSince);
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
                 !permissionChecker.isReadAccessToAll(),
-                java.sql.Date.valueOf(lastModifiedSince));
+                lastModifiedSince);
 
         List<String> oids = new ArrayList<>();
         for (Organisaatio org : organisaatiot) {
@@ -464,10 +464,10 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     // GET /organisaatio/v2/liitokset
     @Override
-    public List<OrganisaatioLiitosDTOV2> haeLiitokset(LocalDate liitoksetAlkaen) {
+    public List<OrganisaatioLiitosDTOV2> haeLiitokset(LocalDateTime liitoksetAlkaen) {
         Date date = null;
-        if (liitoksetAlkaen != null && java.sql.Date.valueOf(liitoksetAlkaen) != null) {
-            date = java.sql.Date.valueOf(liitoksetAlkaen);
+        if (liitoksetAlkaen != null) {
+            date = java.sql.Timestamp.valueOf(liitoksetAlkaen);
         }
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);

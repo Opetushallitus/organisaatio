@@ -41,7 +41,7 @@ public class OrganisaatioResourceException extends RuntimeException {
     }
 
     public OrganisaatioResourceException(HttpStatus status, String message) {
-        this(status, message, null);
+        this(status, message, message);
     }
 
 }

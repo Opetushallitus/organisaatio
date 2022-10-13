@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -304,7 +305,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Override
     @Transactional(readOnly = true)
     public List<OrganisaatioRDTOV4> haeMuutetut(
-            Date lastModifiedSince,
+            LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued) {
         Preconditions.checkNotNull(lastModifiedSince);

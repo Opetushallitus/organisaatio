@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.ValidationException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,7 +67,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     // GET /api/oids?type=KOULUTUSTOIMIJA&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
     @Override
-    public List<String> search(OrganisaatioTyyppi type, int count, int startIndex) {
+    public List<String> oids(OrganisaatioTyyppi type, int count, int startIndex) {
         log.debug("search({}, {}, {})", type, count, startIndex);
         List<String> result = organisaatioFindBusinessService.findOidsBy(count, startIndex, type);
         log.debug("  result.size = {}", result.size());
@@ -152,7 +153,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     public List<OrganisaatioRDTOV4> haeMuutetut(
-            LocalDate lastModifiedSince,
+            LocalDateTime lastModifiedSince,
             boolean includeImage,
             List<String> organizationType,
             boolean excludeDiscontinued) {
@@ -160,7 +161,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             List<OrganisaatioTyyppi> organisaatioTyypit = organizationType == null ? Collections.emptyList() :
                     organizationType.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
             return this.organisaatioFindBusinessService.haeMuutetut(
-                    java.sql.Date.valueOf(lastModifiedSince), organisaatioTyypit, excludeDiscontinued);
+                    lastModifiedSince, organisaatioTyypit, excludeDiscontinued);
         } catch (IllegalArgumentException iae) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, iae.getMessage());
         }
@@ -169,11 +170,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     // GET /api/muutetut/oid
     @Override
     public List<String> haeMuutettujenOid(
-            LocalDate lastModifiedSince,
+            LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organisaatioTyypit,
             boolean excludeDiscontinued) {
         return this.organisaatioFindBusinessService.haeMuutetut(
-                java.sql.Date.valueOf(lastModifiedSince), organisaatioTyypit, excludeDiscontinued).stream().map(OrganisaatioRDTOV4::getOid).collect(Collectors.toList());
+                lastModifiedSince, organisaatioTyypit, excludeDiscontinued).stream().map(OrganisaatioRDTOV4::getOid).collect(Collectors.toList());
     }
 
     /**
@@ -217,8 +218,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, LocalDate moveDate) {
-        Date date = java.sql.Date.valueOf(moveDate);
+    public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, LocalDateTime moveDate) {
+        Date date = java.sql.Timestamp.valueOf(moveDate);
         try {
             organisaatioBusinessService.mergeOrganisaatio(oid, parentOid, Optional.ofNullable(date), merge);
         } catch (SadeBusinessException sbe) {

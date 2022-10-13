@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -136,14 +136,14 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     // GET /organisaatio/v3/muutetut
     @Override
-    public List<OrganisaatioRDTOV3> haeMuutetut(LocalDate lastModifiedSince, boolean includeImage) {
+    public List<OrganisaatioRDTOV3> haeMuutetut(LocalDateTime lastModifiedSince, boolean includeImage) {
         Preconditions.checkNotNull(lastModifiedSince);
 
         LOG.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
-                !permissionChecker.isReadAccessToAll(), java.sql.Date.valueOf(lastModifiedSince));
+                !permissionChecker.isReadAccessToAll(), lastModifiedSince);
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();

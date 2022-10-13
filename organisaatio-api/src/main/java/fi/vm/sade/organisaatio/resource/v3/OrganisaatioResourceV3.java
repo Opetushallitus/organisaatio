@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public interface OrganisaatioResourceV3 {
 
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioRDTOV3> haeMuutetut(
-            @RequestParam LocalDate lastModifiedSince,
+            @RequestParam LocalDateTime lastModifiedSince,
             @RequestParam(defaultValue = "false") boolean includeImage);
 
 }

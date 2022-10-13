@@ -53,6 +53,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -300,16 +301,18 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     @Override
     public List<Organisaatio> findModifiedSince(
             boolean excludePiilotettu,
-            Date lastModifiedSince) {
+            LocalDateTime lastModifiedSince) {
         return findModifiedSince(excludePiilotettu, lastModifiedSince, Collections.emptyList(), true);
     }
 
     @Override
     public List<Organisaatio> findModifiedSince(
             boolean excludePiilotettu,
-            Date lastModifiedSince,
+            LocalDateTime lastModifiedSinceLocalDate,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued) {
+        Date lastModifiedSince = java.sql.Timestamp.valueOf(lastModifiedSinceLocalDate);
+
         logger.debug("findModifiedSince({})", lastModifiedSince);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
