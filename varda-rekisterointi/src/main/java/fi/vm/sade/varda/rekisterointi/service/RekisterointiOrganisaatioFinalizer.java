@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto.*;
-
 @Service
 @RequiredArgsConstructor
 public class RekisterointiOrganisaatioFinalizer {
@@ -40,14 +38,15 @@ public class RekisterointiOrganisaatioFinalizer {
     @Transactional
     public String luoTaiPaivitaOrganisaatio(Rekisterointi rekisterointi) {
         Organisaatio organisaatio = rekisterointi.organisaatio;
-        String oid = organisaatio.oid;
-        if (oid != null) {
+        if (organisaatio.oid != null) {
+            String oid = organisaatio.oid;
             LOGGER.info("Päivitetään organisaatiota: {}", oid);
             if (rekisterointi.tyyppi.equals(REKISTEROINTITYYPPI_VARDA)) {
                 paivitaVardaTiedot(oid);
             } else if(rekisterointi.tyyppi.equals(REKISTEROINTITYYPPI_JOTPA)) {
                 paivitaJotpaTiedot(oid);
             }
+            return oid;
         } else {
             LOGGER.info("Luodaan organisaatio nimellä: {}", organisaatio.ytjNimi.nimi);
             OrganisaatioDto createdOrg = organisaatioClient.create(organisaatioService.muunnaOrganisaatio(organisaatio));
@@ -58,8 +57,8 @@ public class RekisterointiOrganisaatioFinalizer {
                 LOGGER.info("Luotu uusi jotpa aliorganisaatio {}", jotpaChild.oid);
 
             }
+            return createdOrg.oid;
         }
-        return oid;
     }
 
     private void paivitaVardaTiedot(String organisaatioOid) {
