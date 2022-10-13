@@ -12,6 +12,7 @@ import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -183,7 +184,7 @@ public interface OrganisaatioRepositoryCustom {
      */
     List<Organisaatio> findModifiedSince(
             boolean excludePiilotettu,
-            Date lastModifiedSince);
+            LocalDateTime lastModifiedSince);
 
     /***
      * Palauttaa annetun päivän jälkeen muuttuneet organisaatiot. Hakua voi rajata organisaatiotyypeillä tai jättää
@@ -197,7 +198,7 @@ public interface OrganisaatioRepositoryCustom {
      */
     List<Organisaatio> findModifiedSince(
             boolean excludePiilotettu,
-            Date lastModifiedSince,
+            LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
 

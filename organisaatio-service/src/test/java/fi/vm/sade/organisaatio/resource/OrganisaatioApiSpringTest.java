@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +36,41 @@ class OrganisaatioApiSpringTest {
 
     @SpyBean
     OrganisaatioFindBusinessService organisaatioFindBusinessService;
+
+
+    @Test
+    @DisplayName("Test get oid")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    void testGetOid1() throws Exception {
+        mockMvc.perform(get("/api/1.2.246.562.24.00000000001"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"oid\": \"1.2.246.562.24.00000000001\"}"));
+    }
+
+    @Test
+    @DisplayName("Test empty database get oid")
+    @Sql("/data/truncate_tables.sql")
+    void testGetOid2() throws Exception {
+        mockMvc.perform(get("/api/1.2.246.562.24.00000000001"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{" +
+                        "\"errorMessage\":\"organisaatio.exception.organisaatio.not.found\"," +
+                        "\"errorKey\":\"organisaatio.exception.organisaatio.not.found\"}", true));
+    }
+
+    @Test
+    @DisplayName("Test get oid")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001"})
+    void testDeleteOid1() throws Exception {
+        mockMvc.perform(delete("/api/1.2.2004.1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{" +
+                        "\"errorMessage\":\"organisaatio.exception.delete.parent\"," +
+                        "\"errorKey\":\"organisaatio.exception.delete.parent\"}", true));
+    }
 
     @Test
     @DisplayName("Test empty database")
@@ -175,6 +211,7 @@ class OrganisaatioApiSpringTest {
                 .andExpect(status().is3xxRedirection());
 
     }
+
     @Test
     @DisplayName("Test auth, when authenticated, not authorized ")
     @WithMockUser(value = "1.2.3.4.5", roles = {"FOO"})
@@ -182,6 +219,7 @@ class OrganisaatioApiSpringTest {
         mockMvc.perform(get("/api/auth"))
                 .andExpect(status().isForbidden());
     }
+
     @Test
     @DisplayName("Test auth, when authenticated and authorized ")
     @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA"})
@@ -189,9 +227,71 @@ class OrganisaatioApiSpringTest {
         mockMvc.perform(get("/api/auth"))
                 .andExpect(status().isNoContent());
     }
+
     private void expectForbiddenAtPath(MockHttpServletRequestBuilder request, String errorResponse) throws Exception {
         mockMvc.perform(request)
                 .andExpect(status().isForbidden())
                 .andExpect(content().json(errorResponse));
+    }
+
+    @Test
+    @DisplayName("Test /api/oids happy path ")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    void testOids() throws Exception {
+        mockMvc.perform(get("/api/oids"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.2\",\"1.2.2004.3\",\"1.2.2004.4\",\"1.2.2005.4\",\"1.2.2004.5\",\"1.2.2004.6\",\"1.2.2005.5\",\"1.2.8000.1\"]"));
+        ;
+
+        mockMvc.perform(get("/api/oids")
+                        .param("type", "KOULUTUSTOIMIJA"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.5\"]"));
+        ;
+
+
+        mockMvc.perform(get("/api/oids")
+                        .param("count", "5"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.2\",\"1.2.2004.3\",\"1.2.2004.4\"]"));
+        ;
+
+        mockMvc.perform(get("/api/oids")
+                        .param("count", "5")
+                        .param("startIndex", "5"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"1.2.2005.4\",\"1.2.2004.5\",\"1.2.2004.6\",\"1.2.2005.5\",\"1.2.8000.1\"]"));
+        ;
+    }
+
+    @Test
+    @DisplayName("Test /api/oids validation ")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    void testOidsValidation() throws Exception {
+        mockMvc.perform(get("/api/oids")
+                        .param("count", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{" +
+                        "\"parameters\":[\"oids.arg1\"]," +
+                        "\"errorMessage\":\"oids.arg1: must be greater than or equal to 0\"," +
+                        "\"errorKey\":\"constraint.violation\"}"));
+
+        mockMvc.perform(get("/api/oids")
+                        .param("startIndex", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{" +
+                        "\"parameters\":[\"oids.arg2\"]," +
+                        "\"errorMessage\":\"oids.arg2: must be greater than or equal to 0\"," +
+                        "\"errorKey\":\"constraint.violation\"}"));
+
+        mockMvc.perform(get("/api/oids")
+                        .param("type", "FOO"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("" +
+                        "{\"parameters\":[\"type\"]," +
+                        "\"errorMessage\":\"No enum constant fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi.FOO\"," +
+                        "\"errorKey\":\"method.argument.type.mismatch\"}"));
     }
 }

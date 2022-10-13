@@ -20,6 +20,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -189,12 +191,12 @@ class OrganisaatioFindBusinessServiceImplTest {
         ArgumentCaptor<Boolean> excludesPiilotettuCaptor = ArgumentCaptor.forClass(Boolean.class);
         when(organisaatioDaoMock.findModifiedSince(
                     excludesPiilotettuCaptor.capture(),
-                    any(Date.class),
+                    any(LocalDateTime.class),
                     any(List.class),
                     anyBoolean()))
                 .thenReturn(asList(new Organisaatio()));
         organisaatioFindBusinessServiceImpl.haeMuutetut(
-                java.sql.Date.valueOf("2010-05-24"), Collections.emptyList(), true);
+                LocalDateTime.parse("2010-05-24T00:00:00"), Collections.emptyList(), true);
         return excludesPiilotettuCaptor.getValue();
     }
 

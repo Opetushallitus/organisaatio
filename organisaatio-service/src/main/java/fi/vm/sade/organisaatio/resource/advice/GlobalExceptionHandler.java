@@ -7,16 +7,21 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.ApiErrorDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -29,18 +34,31 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
         log.debug(DEBUG_LOG_MESSAGE, e);
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        String errorMessage = e.getMessage();
-        if (!violations.isEmpty()) {
-            StringBuilder builder = new StringBuilder(errorMessage);
-            violations.forEach(violation -> builder.append(" ").append(violation.getPropertyPath()).append(": ").append(violation.getMessage()));
-            errorMessage = builder.toString().trim();
-        }
-        return ResponseEntity.badRequest().body(errorMessage);
+        return ResponseEntity.badRequest()
+                .body(ApiErrorDTO.builder()
+                        .errorKey("constraint.violation")
+                        .errorMessage(e.getLocalizedMessage())
+                        .parameters(violations.stream().map(ConstraintViolation::getPropertyPath).map(Path::toString).collect(Collectors.toList())).build());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiErrorDTO.builder().errorKey("method.argument.type.mismatch").errorMessage(e.getRootCause().getLocalizedMessage()).parameters(List.of(e.getParameter().getParameterName())).build());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiErrorDTO.builder()
+                        .errorKey("method.argument.type.mismatch")
+                        .errorMessage(Optional.ofNullable(e.getRootCause()).map(Throwable::getLocalizedMessage).orElse("method.argument.type.mismatch"))
+                        .parameters(Optional.of(e.getParameter()).map(MethodParameter::getParameterName).stream().collect(Collectors.toList())).build());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Object> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiErrorDTO.builder()
+                        .errorKey("mising.servlet.request.parameter")
+                        .errorMessage("Missing parameter")
+                        .parameters(List.of(e.getParameterName())).build());
     }
 
     @ExceptionHandler(OrganisaatioNotFoundException.class)
@@ -53,13 +71,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleHakutoimistoNotFoundException(HakutoimistoNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiErrorDTO.builder().errorKey(e.getErrorKey()).errorMessage(e.getMessage()).build());
     }
-
-    @ExceptionHandler(OrganisaatioCrudException.class)
-    public ResponseEntity<Object> handleOrganisaatioCrudException(OrganisaatioCrudException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiErrorDTO.builder().errorKey(e.getErrorKey()).errorMessage(e.getMessage()).build());
-    }
-
-
 
     @ExceptionHandler(OrganisaatioBusinessException.class)
     public ResponseEntity<Object> handleOrganisaatioBusinessException(OrganisaatioBusinessException e) {

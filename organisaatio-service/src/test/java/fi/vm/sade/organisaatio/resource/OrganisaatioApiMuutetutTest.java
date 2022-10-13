@@ -49,7 +49,7 @@ class OrganisaatioApiMuutetutTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{" +
                         "\"parameters\":[\"lastModifiedSince\"]," +
-                        "\"errorMessage\":\"unable to parse (2009-11-66) supported formats are yyyy-MM-dd, yyyy-MM-dd HH:mm:ss\"," +
+                        "\"errorMessage\":\"unable to parse (2009-11-66) supported formats are yyyy-MM-dd, yyyy-MM-dd'T'HH:mm, yyyy-MM-dd HH:mm\"," +
                         "\"errorKey\": \"method.argument.type.mismatch\"}"));
 
         this.mockMvc.perform(get("/api/muutetut/oid?lastModifiedSince=2009-11-26&organisaatioTyypit=FOO"))
@@ -58,5 +58,12 @@ class OrganisaatioApiMuutetutTest {
                         "\"parameters\":[\"organisaatioTyypit\"]," +
                         "\"errorMessage\":\"No enum constant fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi.FOO\"," +
                         "\"errorKey\": \"method.argument.type.mismatch\"}"));
+
+        this.mockMvc.perform(get("/api/muutetut/oid"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{" +
+                        "\"parameters\":[\"lastModifiedSince\"]," +
+                        "\"errorMessage\":\"Missing parameter\"," +
+                        "\"errorKey\": \"mising.servlet.request.parameter\"}"));
     }
 }

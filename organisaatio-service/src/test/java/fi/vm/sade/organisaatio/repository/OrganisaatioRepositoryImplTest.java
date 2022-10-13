@@ -5,7 +5,6 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.model.*;
 import org.apache.commons.lang.StringUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -198,7 +198,7 @@ public class OrganisaatioRepositoryImplTest {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
-        Date before = new Date();
+        LocalDateTime before = LocalDateTime.now();
         Organisaatio b = createOrganisaatio("B", null, false, null, null);
         organisaatioRepository.save(b);
         List<Organisaatio> tulokset = organisaatioRepository.findModifiedSince(false, before);
@@ -208,8 +208,8 @@ public class OrganisaatioRepositoryImplTest {
 
     @Test
     public void findModifedSinceLimitsByOrganizationType() {
-        Date now = new Date();
-        Date after = new Date(now.getTime() + 100);
+        LocalDateTime now = LocalDateTime.now();
+        Date after = java.sql.Date.valueOf(now.plusSeconds(1).toLocalDate());
         OrganisaatioTyyppi organisaatioTyyppi = OrganisaatioTyyppi.OPPILAITOS;
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         a.setPaivitysPvm(after);
@@ -226,10 +226,10 @@ public class OrganisaatioRepositoryImplTest {
 
     @Test
     public void findModifedSinceExcludesDiscontinued() {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        a.setPaivitysPvm(new Date(now.getTime() + 100));
-        a.setLakkautusPvm(new Date(now.getTime() - 100));
+        a.setPaivitysPvm(java.sql.Date.valueOf(now.plusSeconds(1).toLocalDate()));
+        a.setLakkautusPvm(java.sql.Date.valueOf(now.minusSeconds(1).toLocalDate()));
         organisaatioRepository.save(a);
         List<Organisaatio> tulokset = organisaatioRepository.findModifiedSince(
                 false, now, Collections.emptyList(), true);
@@ -238,10 +238,10 @@ public class OrganisaatioRepositoryImplTest {
 
     @Test
     public void findModifedSinceIncludesDiscontinuedInTheFuture() {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
-        a.setPaivitysPvm(new Date(now.getTime() + 100));
-        a.setLakkautusPvm(new Date(now.getTime() + 24 * 60 * 60 * 1000));
+        a.setPaivitysPvm(java.sql.Date.valueOf(now.plusSeconds(1).toLocalDate()));
+        a.setLakkautusPvm(java.sql.Date.valueOf(now.plusHours(24).toLocalDate()));
         organisaatioRepository.save(a);
         List<Organisaatio> tulokset = organisaatioRepository.findModifiedSince(
                 false, now, Collections.emptyList(), true);
