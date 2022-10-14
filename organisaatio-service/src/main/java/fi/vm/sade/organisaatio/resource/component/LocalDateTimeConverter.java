@@ -11,24 +11,24 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
-
-    private static final List<String> SUPPORTED_FORMATS = Arrays.asList("yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd HH:mm");
-    private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = SUPPORTED_FORMATS
+    private static final String SUPPORTED_DATE_ONLY_FORMAT = "yyyy-MM-dd";
+    private static final List<String> SUPPORTED_DATE_TIME_FORMATS = List.of("yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd HH:mm");
+    private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = SUPPORTED_DATE_TIME_FORMATS
             .stream()
-            .filter(a -> a.length() > 10)
             .map(DateTimeFormatter::ofPattern)
             .collect(Collectors.toList());
 
     @Override
     public LocalDateTime convert(String s) {
-        if (s.length() == 10) {
+        if (s.length() == SUPPORTED_DATE_ONLY_FORMAT.length()) {
             try {
                 return LocalDate.parse(s, DateTimeFormatter.ISO_DATE).atStartOfDay();
             } catch (DateTimeParseException ex) {
-                // deliberate empty block so that all parsers run
+                // deliberate empty block, single exception thrown in end
             }
         } else {
             for (DateTimeFormatter dateTimeFormatter : DATE_TIME_FORMATTERS) {
@@ -40,7 +40,8 @@ public class LocalDateTimeConverter implements Converter<String, LocalDateTime> 
             }
         }
         throw new ConversionException(String.format("unable to parse (%s) supported formats are %s",
-                s, String.join(", ", SUPPORTED_FORMATS))) {
+                s, String.join(", ", Stream.concat(Stream.of(SUPPORTED_DATE_ONLY_FORMAT), SUPPORTED_DATE_TIME_FORMATS.stream())
+                        .collect(Collectors.toList())))) {
         };
     }
 }
