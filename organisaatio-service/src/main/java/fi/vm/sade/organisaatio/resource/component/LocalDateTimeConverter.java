@@ -8,39 +8,51 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
+import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
 public class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
-    private static final String SUPPORTED_DATE_ONLY_FORMAT = "yyyy-MM-dd";
-    private static final List<String> SUPPORTED_DATE_TIME_FORMATS = List.of("yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd HH:mm");
-    private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = SUPPORTED_DATE_TIME_FORMATS
-            .stream()
-            .map(DateTimeFormatter::ofPattern)
-            .collect(Collectors.toList());
+
+    private static final BiFunction<String, DateTimeFormatter, LocalDateTime> dateConverter = (input, formatter) -> LocalDate.parse(input, formatter).atStartOfDay();
+    private static final BiFunction<String, DateTimeFormatter, LocalDateTime> timestampConverter = (input, formatter) -> LocalDateTime.parse(input, formatter);
 
     @Override
-    public LocalDateTime convert(String s) {
-        if (s.length() == SUPPORTED_DATE_ONLY_FORMAT.length()) {
+    public LocalDateTime convert(final String input) {
+        return Stream.of(SupportedFormats.values())
+                .map(converter -> converter.convert(input))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(() ->
+                        new ConversionException(String.format("unable to parse (%s) supported formats are %s",
+                                input, String.join(", ", Stream.of(SupportedFormats.values()).map(converter -> converter.pattern)
+                                        .collect(Collectors.toList())
+                                ))));
+    }
+
+    private enum SupportedFormats {
+        DATE_ONLY("yyyy-MM-dd", dateConverter),
+        TIMESTAMP_T("yyyy-MM-dd'T'HH:mm", timestampConverter),
+        TIMESTAMP_SPACE("yyyy-MM-dd HH:mm", timestampConverter);
+
+        private final BiFunction<String, DateTimeFormatter, LocalDateTime> conversionFunction;
+        private final DateTimeFormatter formatter;
+        public String pattern;
+
+        SupportedFormats(String pattern, BiFunction<String, DateTimeFormatter, LocalDateTime> conversionFunction) {
+            this.pattern = pattern;
+            this.conversionFunction = conversionFunction;
+            this.formatter = DateTimeFormatter.ofPattern(pattern);
+        }
+
+        public LocalDateTime convert(String input) {
             try {
-                return LocalDate.parse(s, DateTimeFormatter.ISO_DATE).atStartOfDay();
+                return conversionFunction.apply(input, formatter);
             } catch (DateTimeParseException ex) {
-                // deliberate empty block, single exception thrown in end
-            }
-        } else {
-            for (DateTimeFormatter dateTimeFormatter : DATE_TIME_FORMATTERS) {
-                try {
-                    return LocalDateTime.parse(s, dateTimeFormatter);
-                } catch (DateTimeParseException ex) {
-                    // deliberate empty block so that all parsers run
-                }
+                return null;
             }
         }
-        throw new ConversionException(String.format("unable to parse (%s) supported formats are %s",
-                s, String.join(", ", Stream.concat(Stream.of(SUPPORTED_DATE_ONLY_FORMAT), SUPPORTED_DATE_TIME_FORMATS.stream())
-                        .collect(Collectors.toList())))) {
-        };
     }
 }
