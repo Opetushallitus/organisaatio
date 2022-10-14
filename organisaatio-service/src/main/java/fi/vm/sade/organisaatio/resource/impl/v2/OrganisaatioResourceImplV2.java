@@ -60,6 +60,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -108,6 +109,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     @Autowired
     private HakutoimistoService hakutoimistoService;
+
     // POST /organisaatio/v2/yhteystiedot/hae
     @Override
     @Transactional(readOnly = true)
@@ -465,10 +467,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     // GET /organisaatio/v2/liitokset
     @Override
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(LocalDateTime liitoksetAlkaen) {
-        Date date = null;
-        if (liitoksetAlkaen != null) {
-            date = java.sql.Timestamp.valueOf(liitoksetAlkaen);
-        }
+        Date date = Optional.of(liitoksetAlkaen).map(Timestamp::valueOf).orElse(null);
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);
 
