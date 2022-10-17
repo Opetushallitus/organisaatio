@@ -1,0 +1,14 @@
+<!doctype html>
+<html th:attr="lang=${#locale}">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE">layout</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    sisältö
+</div>
+<span th:text="#{terveisin}">Terveisin</span><br/>
+<span th:text="#{yhteisetpalvelut}">Yhteiset palvelut</span><br/>
+<span th:text="#{opetushallitus}">Opetushallitus</span>
+</body>
+</html>

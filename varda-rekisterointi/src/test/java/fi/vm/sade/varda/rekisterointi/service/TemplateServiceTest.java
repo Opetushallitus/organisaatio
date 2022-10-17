@@ -54,7 +54,7 @@ public class TemplateServiceTest {
     @Test
     public void renderWorks() {
         Map<String, Object> variables = Map.of("messageSource", messageSource, "locales", LOCALES);
-        String tyyppi = template.getPath().equals("taskien-virheraportti.html") ? "generic" : "varda";
+        String tyyppi = Set.of("taskien-virheraportti.html", "kasittelemattomat.html").contains(template.getPath()) ? "generic" : "varda";
         String content = templateService.getContent(tyyppi, template, new Locale(language), variables);
         System.out.println(content);
     }
