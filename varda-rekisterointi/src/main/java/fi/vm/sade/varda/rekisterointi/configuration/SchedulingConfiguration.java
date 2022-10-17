@@ -49,6 +49,14 @@ public class SchedulingConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty("varda-rekisterointi.schedule.kasittelyssa-email-task")
+    public Task<Void> kasittelyssaEmailTask(Environment environment) {
+        String scheduleString = environment.getRequiredProperty("varda-rekisterointi.schedule.kasittelyssa-email-task");
+        return Tasks.recurring("kasittelyssa-email-task", parseSchedule(scheduleString))
+                .execute((instance, ctx) -> emailService.lahetaKasittelyssaEmails());
+    }
+
+    @Bean
     public Task<Long> luoTaiPaivitaOrganisaatioTask() {
         return Tasks.oneTime("luo-tai-paivita-organisaatio-task", Long.class).execute(
                 (instance, ctx) -> rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(instance.getData())

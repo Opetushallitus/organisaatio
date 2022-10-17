@@ -24,6 +24,7 @@ public enum Template {
     REKISTEROITYMINEN_HYVAKSYTTY("rekisteroityminen-hyvaksytty.html"),
 
     AJASTETTUJEN_TASKIEN_VIRHERAPORTTI("taskien-virheraportti.html"),
+    KASITTELEMATTOMAT("kasittelemattomat.html"),
     ;
 
     private final String path;

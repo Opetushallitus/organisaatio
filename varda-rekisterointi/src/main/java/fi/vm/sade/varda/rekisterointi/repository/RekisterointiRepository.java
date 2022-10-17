@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.repository;
 
+import fi.vm.sade.varda.rekisterointi.model.Kasittelyssa;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -72,4 +73,7 @@ public interface RekisterointiRepository extends CrudRepository<Rekisterointi, L
 
     @Query(value = REKISTEROINTI_SELECT + " WHERE o.ytunnus = :ytunnus")
     Iterable<Rekisterointi> findByYtunnus(@Param("ytunnus") String ytunnus);
+
+    @Query(value = "SELECT tyyppi, count(*) AS amount FROM rekisterointi WHERE tila = 'KASITTELYSSA' AND tyyppi != 'varda' GROUP BY tyyppi")
+    Iterable<Kasittelyssa> findNonVardaKasittelyssa();
 }

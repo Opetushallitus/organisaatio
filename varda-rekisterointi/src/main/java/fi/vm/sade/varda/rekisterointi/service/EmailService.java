@@ -27,6 +27,9 @@ public class EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private static final String SUBJECT_DELIMITER = " / ";
     private static final String FAILED_TASKS_EMAIL_ADDRESS = "yhteisetpalvelut@opintopolku.fi";
+    private static final Map<String, String> EMAILS_FOR_REGISTRATION_TYPES = Map.of(
+        "jotpa", "info@jotpa.fi"
+    );
 
     private final RekisterointiRepository rekisterointiRepository;
     private final TemplateService templateService;
@@ -75,6 +78,33 @@ public class EmailService {
                 .flatMap(rekisterointi -> rekisterointi.kunnat.stream()).collect(toSet());
         Map<VirkailijaDto, Long> virkailijat = getVirkailijaByKunta(kunnat);
         virkailijat.forEach(this::lahetaKuntaEmail);
+    }
+
+    private void lahetaKasittelemattomat(Kasittelyssa kasittelyssa) {
+        String address = EMAILS_FOR_REGISTRATION_TYPES.get(kasittelyssa.tyyppi);
+        if (kasittelyssa.amount < 1 || address == null) {
+            return;
+        }
+
+        Locale locale = new Locale("fi");
+        String subject = messageSource.getMessage("generic.rekisteroityminen.kasittelemattomat.otsikko", null, locale);
+        Map<String, Object> variables = Map.of("kasittelemattomat", kasittelyssa.amount);
+        String body = templateService.getContent("generic", Template.KASITTELEMATTOMAT, locale, variables);
+        EmailDto email = EmailDto.builder()
+                .email(address)
+                .message(EmailMessageDto.builder()
+                        .subject(subject)
+                        .body(body)
+                        .html(true)
+                        .build())
+                .build();
+        LOGGER.info("Lähetetään ilmoitus rekisteröitymisestä: {}, {} kpl", address, kasittelyssa.amount);
+        viestintaClient.save(email, false);
+    }
+
+    public void lahetaKasittelyssaEmails() {
+        Iterable<Kasittelyssa> kasittelemattomat = rekisterointiRepository.findNonVardaKasittelyssa();
+        kasittelemattomat.forEach(this::lahetaKasittelemattomat);
     }
 
     public void lahetaOngelmaRaportti(Set<TaskMonitoringService.TaskFailure> epaonnistuneet) {
