@@ -52,7 +52,7 @@ test('Jotpa accessability', async ({ pages, page, axe }) => {
         const results = await axe.analyze();
         expect(results.violations).toEqual([]);
     });
-    /*
+
     await yhteenveto.submit();
     await valmis.locators.content.waitFor({ state: 'visible' });
 
@@ -61,5 +61,4 @@ test('Jotpa accessability', async ({ pages, page, axe }) => {
         const violations = removeExpectViolations(results.violations, [headingOrderId]);
         expect(violations).toEqual([]);
     });
-    */
 });

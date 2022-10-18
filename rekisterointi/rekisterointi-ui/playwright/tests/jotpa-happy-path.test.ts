@@ -40,8 +40,8 @@ test('Jotpa happy path', async ({ pages, page }) => {
     await expect(yhteenveto.locators.asiointikieli).toHaveText('Suomi');
     await expect(yhteenveto.locators.saateteksti).toHaveText('Saateteksti');
 
-    //await yhteenveto.submit();
+    await yhteenveto.submit();
 
-    //expect(page.url()).toContain(valmis.path);
-    //await expect(valmis.locators.heading).toHaveText('Rekisteröinti lähetetty');
+    expect(page.url()).toContain(valmis.path);
+    await expect(valmis.locators.heading).toHaveText('Rekisteröinti lähetetty');
 });

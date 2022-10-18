@@ -3,8 +3,8 @@
 /target/
 
 # dependencies
+node_modules/
 /rekisterointi-ui/dist/
-/rekisterointi-ui/node_modules
 /rekisterointi-ui/.pnp
 /rekisterointi-ui.pnp.js
 /rekisterointi-ui/playwright-results/

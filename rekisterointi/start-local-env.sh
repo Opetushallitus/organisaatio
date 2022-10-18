@@ -27,5 +27,11 @@ tmux select-pane -t 1 -T frontend
 echo "starting frontend"
 tmux send-keys "cd rekisterointi-ui && npm run build:watch" C-m
 
+tmux splitw -v
+
+tmux select-pane -t 2 -T mock-api
+echo "starting mock-api"
+tmux send-keys "cd mock-api && npm install && npm start" C-m
+
 tmux select-pane -t 0
 tmux attach-session -t $session
