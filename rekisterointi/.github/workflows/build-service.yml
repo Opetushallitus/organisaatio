@@ -84,7 +84,10 @@ jobs:
       - name: Run playwright tests
         run: |
           java -jar -Dspring.profiles.active=ci rekisterointi.jar &
-          cd rekisterointi-ui
+          cd mock-api
+          npm install
+          npm start &
+          cd ../rekisterointi-ui
           ./scripts/ci-wait-for-frontend.sh
           HEADLESS=true npm run playwright:test
       - uses: actions/upload-artifact@v2
