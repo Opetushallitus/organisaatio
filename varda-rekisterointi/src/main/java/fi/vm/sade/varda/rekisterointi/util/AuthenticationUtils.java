@@ -56,7 +56,7 @@ public final class AuthenticationUtils {
     public static String[] getRegistrationTypes(Authentication authentication) {
         List<String> roles = getRoles(authentication);
         Set<String> registrationTypes = mapRolesToRegistrationTypes(roles);
-        return (String[]) registrationTypes.toArray();
+        return registrationTypes.toArray(String[]::new);
     }
 
     public static List<String> getRoles(Authentication authentication) {
