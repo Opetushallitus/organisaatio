@@ -92,8 +92,8 @@ public class VirkailijaController {
             Authentication authentication,
             @ApiParam("rekisteröintihakemus") @RequestBody @Validated RekisterointiDto dto,
             HttpServletRequest request) {
-        Optional<String> role = AuthenticationUtils.getRole(authentication);
-        if (role.orElse("").startsWith("OPH")) {
+        List<String> roles = AuthenticationUtils.getRoles(authentication);
+        if (roles.contains("OPH")) {
             rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
             return properties.url("varda-rekisterointi.virkailija");
         }
