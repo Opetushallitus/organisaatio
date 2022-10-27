@@ -29,24 +29,6 @@ import java.util.List;
  */
 public interface OrganisaatioNimiRepositoryCustom {
 
-    /**
-     * Luodaan uusi nimi organisaatiolle annetuilla tiedoilla.
-     *
-     * @param organisaatio
-     * @param nimi
-     * @param alkuPvm
-     * @param paivittaja
-     * @return Luotu OrganisaatioNimi
-     */
-    OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja);
-
-    /**
-     * Haetaan annetun organisaation nimet
-     *
-     * @param organisaatio
-     * @return Annetun organisaation nimihistoria listana
-     */
-    List<OrganisaatioNimi> findNimet(Organisaatio organisaatio);
 
     /**
      * Haetaan annetun organisaation nimet
@@ -72,14 +54,6 @@ public interface OrganisaatioNimiRepositoryCustom {
      * @return
      */
     public OrganisaatioNimi findCurrentNimi(Organisaatio organisaatio);
-
-    /**
-     * Haetaan annetun organisaation (oid) nykyinen nimi.
-     *
-     * @param organisaatioOid
-     * @return
-     */
-    public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
 
     /**
      * Haetaan organisaatiot, joiden nimi ei ole sama kuin nimihistorian current nimi.

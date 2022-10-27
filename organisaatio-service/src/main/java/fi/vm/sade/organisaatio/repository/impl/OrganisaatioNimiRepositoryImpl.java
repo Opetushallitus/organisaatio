@@ -16,75 +16,25 @@
 package fi.vm.sade.organisaatio.repository.impl;
 
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepositoryCustom;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositoryCustom {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioNimiRepositoryImpl.class);
-
-    @Autowired(required = true)
-    OrganisaatioRepository organisaatioRepository;
-
-    @Autowired(required = true)
-    OrganisaatioNimiRepository organisaatioNimiRepository;
 
     @Autowired
     EntityManager em;
 
-    @Override
-    public OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja) {
-        if (organisaatio == null) {
-            throw new IllegalArgumentException();
-        }
-
-        LOG.info("addNimi({}, {}, {})", new Object[]{organisaatio.getOid(), alkuPvm, nimi.getValues()});
-
-        if (alkuPvm == null) {
-            alkuPvm = new Date();
-        }
-
-        //
-        // Luodaan uusi nimi organisaatiolle (nimihistorian entry)
-        //
-        OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
-        organisaatioNimi.setOrganisaatio(organisaatio);
-        organisaatioNimi.setAlkuPvm(alkuPvm);
-        organisaatioNimi.setNimi(nimi);
-        organisaatioNimi.setPaivittaja(paivittaja);
-
-        organisaatioNimi = organisaatioNimiRepository.save(organisaatioNimi);
-
-        return organisaatioNimi;
-    }
-
-    @Override
-    public List<OrganisaatioNimi> findNimet(Organisaatio organisaatio) {
-        if (organisaatio == null) {
-            throw new IllegalArgumentException("organisaatio cannot be null");
-        }
-
-        LOG.info("findNimet({})", organisaatio.getOid());
-
-        return organisaatioNimiRepository.findNimet(organisaatio);
-    }
 
     @Override
     public List<OrganisaatioNimi> findNimet(String organisaatioOid) {
@@ -100,7 +50,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.debug("findNimi({}, {})",organisaatio.getId(), nimi.getAlkuPvm());
+        log.debug("findNimi({}, {})", organisaatio.getId(), nimi.getAlkuPvm());
 
         // Kyselyä kokeilty myös QueryDsl:llä
         // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
@@ -117,7 +67,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", nimi.getAlkuPvm()).getResultList();
 
-        LOG.debug("findNimi() result size: {} ", organisaatioNimet.size());
+        log.debug("findNimi() result size: {} ", organisaatioNimet.size());
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
@@ -125,7 +75,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             return organisaatioNimet.stream().filter(foundNimi -> foundNimi.getNimi().getValues().equals(nimi.getNimi())).findFirst().orElse(null);
         }
 
-        LOG.debug("findNimi({}, {}) --> OrganisaatioNimi not found", organisaatio.getId(), nimi.getAlkuPvm());
+        log.debug("findNimi({}, {}) --> OrganisaatioNimi not found", organisaatio.getId(), nimi.getAlkuPvm());
 
         return null;
     }
@@ -136,7 +86,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        LOG.info("findCurrentNimi({})", organisaatio.getId());
+        log.info("findCurrentNimi({})", organisaatio.getId());
 
         String s = "SELECT n FROM OrganisaatioNimi n "
                 + "WHERE "
@@ -153,23 +103,15 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
         List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", new Date()).getResultList();
 
-        LOG.info("findCurrentNimi() result size: {}", organisaatioNimet.size());
+        log.info("findCurrentNimi() result size: {}", organisaatioNimet.size());
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
         }
 
-        LOG.info("findNimi({}) --> OrganisaatioNimi not found", organisaatio.getId());
+        log.info("findNimi({}) --> OrganisaatioNimi not found", organisaatio.getId());
 
         return null;
-    }
-
-
-    @Override
-    public OrganisaatioNimi findCurrentNimi(String organisaatioOid) {
-        Organisaatio organisaatio = organisaatioRepository.findFirstByOid(organisaatioOid);
-
-        return this.findCurrentNimi(organisaatio);
     }
 
 
