@@ -24,7 +24,6 @@ class AWSSNSAspectTest {
 
     @Test
     void testDisabledSNS(CapturedOutput capturedOutput) {
-        assertTrue(capturedOutput.getOut().contains("Initialized AWSSNSLakkautusTopic false undefined"));
         Organisaatio entity = new Organisaatio();
         entity.setOid("1.2.3.4.5");
         Organisaatio entity2 = organisaatioRepository.saveAndFlush(entity);
