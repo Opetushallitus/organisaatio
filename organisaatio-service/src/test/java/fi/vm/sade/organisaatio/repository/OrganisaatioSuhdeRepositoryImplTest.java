@@ -43,46 +43,46 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
         Date t = createDate("1.1.2000");
 
         Organisaatio a = createOrganisaatio("A", (String.valueOf(counter++).concat(".0")));
-        organisaatioSuhdeRepository.addChild(OPH.getId(), a.getId(), t, null);
+        addChild(OPH, a, t);
         Organisaatio b = createOrganisaatio("B", (String.valueOf(counter++).concat(".0")));
-        organisaatioSuhdeRepository.addChild(OPH.getId(), b.getId(), t, null);
+        addChild(OPH, b, t);
         Organisaatio c = createOrganisaatio("C", (String.valueOf(counter++).concat(".0")));
-        organisaatioSuhdeRepository.addChild(OPH.getId(), c.getId(), t, null);
+        addChild(OPH, c, t);
         Organisaatio d = createOrganisaatio("D", (String.valueOf(counter++).concat(".0")));
-        organisaatioSuhdeRepository.addChild(OPH.getId(), d.getId(), t, null);
+        addChild(OPH, d, t);
         Organisaatio e = createOrganisaatio("E", (String.valueOf(counter++).concat(".0")));
-        organisaatioSuhdeRepository.addChild(OPH.getId(), e.getId(), t, null);
+        addChild(OPH, e, t);
 
         printOrganisaatioSuhdeTable();
 
 
         t = createDate("1.1.2001");
-        organisaatioSuhdeRepository.addChild(a.getId(), b.getId(), t, null);
+        addChild(a, b, t);
         printOrganisaatioSuhdeTable();
         assertTrue(verifyChildren(t, a.getId(), b.getId()));
 
         t = createDate("2.1.2001");
-        organisaatioSuhdeRepository.addChild(a.getId(), c.getId(), t, null);
+        addChild(a, c, t);
         printOrganisaatioSuhdeTable();
         assertTrue(verifyChildren(t, a.getId(), b.getId(), c.getId()));
 
         t = createDate("3.1.2001");
-        organisaatioSuhdeRepository.addChild(d.getId(), e.getId(), t, null);
+        addChild(d, e, t);
         printOrganisaatioSuhdeTable();
         assertTrue(verifyChildren(t, d.getId(), e.getId()));
 
         t = createDate("4.1.2001");
-        organisaatioSuhdeRepository.addChild(OPH.getId(), e.getId(), t, null);
+        addChild(OPH, e, t);
         printOrganisaatioSuhdeTable();
         assertTrue(verifyChildren(t, d.getId()));
 
         t = createDate("5.1.2001");
-        organisaatioSuhdeRepository.addChild(c.getId(), b.getId(), t, null);
+        addChild(c, b, t);
         printOrganisaatioSuhdeTable();
         assertTrue(verifyChildren(t, c.getId(), b.getId()));
 
         t = createDate("6.1.2001");
-        organisaatioSuhdeRepository.addChild(c.getId(), d.getId(), t, null);
+        addChild(c, d, t);
         printOrganisaatioSuhdeTable();
         assertTrue(verifyChildren(t, c.getId(), b.getId(), d.getId()));
 
@@ -261,4 +261,13 @@ public class OrganisaatioSuhdeRepositoryImplTest extends AbstractTransactionalJU
         return o;
     }
 
+    private void addChild(Organisaatio parent, Organisaatio child, Date startingFrom){
+        OrganisaatioSuhde childRelation = new OrganisaatioSuhde();
+        childRelation.setAlkuPvm(startingFrom);
+        childRelation.setLoppuPvm(null);
+        childRelation.setChild(child);
+        childRelation.setParent(parent);
+        childRelation.setOpetuspisteenJarjNro(null);
+        childRelation = organisaatioSuhdeRepository.save(childRelation);
+    }
 }

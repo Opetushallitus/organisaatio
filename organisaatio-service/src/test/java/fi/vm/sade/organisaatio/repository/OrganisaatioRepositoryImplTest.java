@@ -5,7 +5,6 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.model.*;
 import org.apache.commons.lang.StringUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +24,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class OrganisaatioRepositoryImplTest {
+class OrganisaatioRepositoryImplTest {
 
     Random r = new Random(0);
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRepositoryImplTest.class);
+    private static final Logger log = LoggerFactory.getLogger(OrganisaatioRepositoryImplTest.class);
 
     @Autowired
     OrganisaatioRepository organisaatioRepository;
@@ -38,8 +37,8 @@ public class OrganisaatioRepositoryImplTest {
     OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
 
     @Test
-    public void doTest() {
-        LOG.info("doTest()...");
+    void doTest() {
+        log.info("doTest()...");
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
         Organisaatio c = createOrganisaatio("C", b, false, generateParentOids(b), generateParentIdPath(b));
@@ -57,7 +56,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void findGroupsTest() {
+    void findGroupsTest() {
         Organisaatio parent1 = createOrganisaatio(generateOid(), "parent1", null, false, null, null);
         Organisaatio parent2 = createOrganisaatio(generateOid(), "parent2", null, false, null, null);
         Organisaatio ryhma1 = organisaatioRepository.save(new RyhmaBuilder(generateOid())
@@ -147,7 +146,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void parentTest() {
+    void parentTest() {
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
 
@@ -157,7 +156,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void findChildrenTest() {
+    void findChildrenTest() {
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
         Organisaatio c = createOrganisaatio("C", a, false, generateParentOids(a), generateParentIdPath(a));
@@ -188,7 +187,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void findModifedSinceLimitsByModificationTime() {
+    void findModifedSinceLimitsByModificationTime() {
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         organisaatioRepository.saveAndFlush(a);
 
@@ -207,7 +206,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void findModifedSinceLimitsByOrganizationType() {
+    void findModifedSinceLimitsByOrganizationType() {
         Date now = new Date();
         Date after = new Date(now.getTime() + 100);
         OrganisaatioTyyppi organisaatioTyyppi = OrganisaatioTyyppi.OPPILAITOS;
@@ -225,7 +224,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void findModifedSinceExcludesDiscontinued() {
+    void findModifedSinceExcludesDiscontinued() {
         Date now = new Date();
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         a.setPaivitysPvm(new Date(now.getTime() + 100));
@@ -237,7 +236,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     @Test
-    public void findModifedSinceIncludesDiscontinuedInTheFuture() {
+    void findModifedSinceIncludesDiscontinuedInTheFuture() {
         Date now = new Date();
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         a.setPaivitysPvm(new Date(now.getTime() + 100));
@@ -282,7 +281,7 @@ public class OrganisaatioRepositoryImplTest {
     }
 
     private Organisaatio createOrganisaatio(String oid, String nimi, Organisaatio parent, boolean isPoistettu, List<String> parentOids, String parentIdPath) {
-        LOG.info("createOrganisaatio({})", nimi);
+        log.info("createOrganisaatio({})", nimi);
 
         Organisaatio o = new Organisaatio();
 
@@ -300,11 +299,17 @@ public class OrganisaatioRepositoryImplTest {
         o = organisaatioRepository.save(o);
 
         if (parent != null) {
-            OrganisaatioSuhde suhde = organisaatioSuhdeRepository.addChild(parent.getId(), o.getId(), null, null);
-            o.getParentSuhteet().add(suhde);
-            // organisaatioSuhdeRepository.getEntityManager().flush(); // TODO works??
-            LOG.info("YHTEYSTIEDOT: " + o.getYhteystiedot().size());
-            LOG.info("PARENTS: " + o.getParentSuhteet().size());
+            OrganisaatioSuhde childRelation = new OrganisaatioSuhde();
+            childRelation.setAlkuPvm(new Date());
+            childRelation.setLoppuPvm(null);
+            childRelation.setChild(o);
+            childRelation.setParent(parent);
+            childRelation.setOpetuspisteenJarjNro(null);
+            organisaatioSuhdeRepository.save(childRelation);
+
+            o.getParentSuhteet().add(childRelation);
+            log.info("YHTEYSTIEDOT: " + o.getYhteystiedot().size());
+            log.info("PARENTS: " + o.getParentSuhteet().size());
             o.setParentOids(parentOids);
             o.setParentIdPath(parentIdPath);
         }
