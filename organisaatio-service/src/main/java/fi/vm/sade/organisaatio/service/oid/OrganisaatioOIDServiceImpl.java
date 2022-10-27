@@ -145,7 +145,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
 
         if (nodeClassValue.equals("28") || nodeClass == NodeClassCode.TOIMIPAIKAT) {
             // Organisaation ja ryhmän OID:t löytyvät organisaatio-taulusta
-            Organisaatio org = organisaatioRepository.customFindByOid(oid);
+            Organisaatio org = organisaatioRepository.findFirstByOid(oid);
 
             // Jos organisaatio löytyy annetulla oidilla, niin se ei ole vapaana
             return (org == null);

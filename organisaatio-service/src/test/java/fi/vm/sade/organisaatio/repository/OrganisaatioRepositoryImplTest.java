@@ -150,7 +150,7 @@ class OrganisaatioRepositoryImplTest {
         Organisaatio a = createOrganisaatio("A", null, false, null, null);
         Organisaatio b = createOrganisaatio("B", a, false, generateParentOids(a), generateParentIdPath(a));
 
-        b = organisaatioRepository.customFindByOid(b.getOid());
+        b = organisaatioRepository.findFirstByOid(b.getOid());
 
         assertEquals(a.getOid(), b.getParent().getOid());
     }
@@ -320,5 +320,4 @@ class OrganisaatioRepositoryImplTest {
     private Osoite createOsoite() {
         return new Osoite(Osoite.TYYPPI_KAYNTIOSOITE, "katu", "0000", "Helsinki", UUID.randomUUID().toString());
     }
-
 }

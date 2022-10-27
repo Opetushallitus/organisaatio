@@ -51,7 +51,7 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
         Organisaatio parent;
 
         // Haetaan poistettava organisaatio
-        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         if (org == null) {
             LOG.warn("Cannot find organisaatio to be deleted: " + oid);
             throw new OrganisaatioNotFoundException(oid);

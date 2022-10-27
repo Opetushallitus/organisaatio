@@ -50,12 +50,12 @@ public class PermissionChecker {
     private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
     public void checkRemoveOrganisation(String oid) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.customFindByOid(oid));
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.findFirstByOid(oid));
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));
     }
 
     public void checkUpdateOrganisationName(String oid) {
-        Organisaatio current = organisaatioRepository.customFindByOid(oid);
+        Organisaatio current = organisaatioRepository.findFirstByOid(oid);
         final OrganisaatioContext authContext = OrganisaatioContext.get(current);
         checkPermission(permissionService.userCanEditName(authContext));
     }
@@ -75,7 +75,7 @@ public class PermissionChecker {
                                        String oid, Map<String, String> nimi,
                                        Date alkuPvm, Date lakkautusPvm) {
         if (update) {
-            final Organisaatio current = organisaatioRepository.customFindByOid(oid);
+            final Organisaatio current = organisaatioRepository.findFirstByOid(oid);
 
             if (!Objects.equal(current.getNimi().getValues(), nimi)) {
                 LOG.info("Nimi muuttunut");
@@ -114,7 +114,7 @@ public class PermissionChecker {
     }
 
     public void checkReadOrganisation(String oid) {
-        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.findFirstByOid(oid);
 
         if(organisaatio == null){
             return;

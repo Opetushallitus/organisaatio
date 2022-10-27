@@ -167,7 +167,7 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
     @Override
     public OrganisaatioNimi findCurrentNimi(String organisaatioOid) {
-        Organisaatio organisaatio = organisaatioRepository.customFindByOid(organisaatioOid);
+        Organisaatio organisaatio = organisaatioRepository.findFirstByOid(organisaatioOid);
 
         return this.findCurrentNimi(organisaatio);
     }

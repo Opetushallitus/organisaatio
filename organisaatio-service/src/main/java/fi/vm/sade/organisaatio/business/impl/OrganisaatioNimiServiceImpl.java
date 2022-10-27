@@ -27,7 +27,7 @@ public class OrganisaatioNimiServiceImpl implements OrganisaatioNimiService {
     public List<OrganisaatioNimiDTO> getNimet(String oid) {
         List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), new TypeToken<List<OrganisaatioNimiDTO>>() {
         }.getType());
-        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         return getOrganisaatioNimiDTOS(orgNimet, org).stream()
                 .sorted(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm)).collect(Collectors.toList());
     }

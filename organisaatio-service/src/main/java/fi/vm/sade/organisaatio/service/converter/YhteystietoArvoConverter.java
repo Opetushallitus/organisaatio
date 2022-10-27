@@ -45,7 +45,7 @@ public class YhteystietoArvoConverter extends Converter<YhteystietoArvoDTO, Yhte
         }
 
         if (dto.getOrganisaatioOid() != null) { // is null in insert, will be set when adding arvos to organisaatio.lisatietokentanArvos
-            entity.setOrganisaatio(organisaatioRepository.customFindByOid(dto.getOrganisaatioOid())); //entityManager. find(Organisaatio.class, dto.getOrganisaatioId()));
+            entity.setOrganisaatio(organisaatioRepository.findFirstByOid(dto.getOrganisaatioOid())); //entityManager. find(Organisaatio.class, dto.getOrganisaatioId()));
         }
         entity.setKentta(yhteistietoElementtiRepository.findByOid(dto.getKenttaOid()).get(0));//entityManager.find(YhteystietoElementti.class, dto.getKenttaId()));
         Object theArvo = dto.getArvo();

@@ -55,14 +55,6 @@ public interface OrganisaatioRepositoryCustom {
             Set<String> oidList,
             int limit);
 
-    /**
-     * Haetaan organisaatiota oidin perusteella.
-     *
-     * @param oid
-     * @return
-     */
-    Organisaatio customFindByOid(String oid);
-
     List<OrganisaatioRDTOV3> findByOids(Collection<String> oids);
 
     /**

@@ -274,7 +274,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     @Override
     @Transactional(readOnly = true)
     public void paivitaKoodisto(String oid) {
-        paivitaKoodisto(organisaatioRepository.customFindByOid(oid));
+        paivitaKoodisto(organisaatioRepository.findFirstByOid(oid));
     }
 
     /**

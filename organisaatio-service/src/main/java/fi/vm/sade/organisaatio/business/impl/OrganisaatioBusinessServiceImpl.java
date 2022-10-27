@@ -212,7 +212,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             persistOrganisaatioLisatietotyyppis(entity);
         }
 
-        Organisaatio oldOrg = organisaatioRepository.customFindByOid(entity.getOid());
+        Organisaatio oldOrg = organisaatioRepository.findFirstByOid(entity.getOid());
         if (oldOrg.isOrganisaatioPoistettu()) {
             throw new ValidationException("validation.Organisaatio.poistettu");
         }
@@ -285,7 +285,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private OrganisaatioResult save(Organisaatio entity, String parentOid) {
 
-        if ((entity.getOid() != null) && (organisaatioRepository.customFindByOid(entity.getOid()) != null)) {
+        if ((entity.getOid() != null) && (organisaatioRepository.findFirstByOid(entity.getOid()) != null)) {
             throw new OrganisaatioExistsException(entity.getOid());
         }
 
@@ -409,7 +409,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             addChild(parent, child, Calendar.getInstance().getTime(), opJarjNro);
         }
         child.setParentSuhteet(organisaatioSuhdeRepository.findByChild(child));
-        return this.organisaatioRepository.customFindByOid(child.getOid());
+        return this.organisaatioRepository.findFirstByOid(child.getOid());
     }
 
     private Set<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, Set<YhteystietoArvo> nys, boolean updating) {
@@ -1022,7 +1022,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private Organisaatio fetchParentOrg(String parentOid) {
         // Haetaan parent organisaatio
-        return (parentOid != null && !parentOid.equalsIgnoreCase(rootOrganisaatioOid)) ? organisaatioRepository.customFindByOid(parentOid) : null;
+        return (parentOid != null && !parentOid.equalsIgnoreCase(rootOrganisaatioOid)) ? organisaatioRepository.findFirstByOid(parentOid) : null;
 
     }
 
@@ -1093,7 +1093,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private Organisaatio saveParentSuhteet(Organisaatio entity, Organisaatio parentOrg, String opJarjNro) {
         if (parentOrg == null) {
             // Koulutustoimija in root level is stored under OPH
-            Organisaatio rootOrganisation = organisaatioRepository.customFindByOid(rootOrganisaatioOid);
+            Organisaatio rootOrganisation = organisaatioRepository.findFirstByOid(rootOrganisaatioOid);
             entity = saveParentSuhde(entity, rootOrganisation, opJarjNro);
         } else {
             entity = saveParentSuhde(entity, parentOrg, opJarjNro);
@@ -1113,7 +1113,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
 
     Organisaatio getOrganisaatio(String organisaatio) {
-        Organisaatio child = this.organisaatioRepository.customFindByOid(organisaatio);
+        Organisaatio child = this.organisaatioRepository.findFirstByOid(organisaatio);
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException(organisaatio);
         }

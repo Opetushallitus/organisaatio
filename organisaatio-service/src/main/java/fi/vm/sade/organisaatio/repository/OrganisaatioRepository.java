@@ -10,6 +10,6 @@ import java.util.List;
 public interface OrganisaatioRepository extends JpaRepository<Organisaatio, Long>, OrganisaatioRepositoryCustom {
     List<Organisaatio> findByOppilaitosKoodi(String oppilaitosKoodi);
     List<Organisaatio> findByToimipisteKoodi(String toimipisteKoodi);
-    List<Organisaatio> findByOid(String oid);
+    Organisaatio findFirstByOid(String oid);
 }
 

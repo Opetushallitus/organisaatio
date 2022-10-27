@@ -141,7 +141,7 @@ public class OrganisaatioBusinessChecker {
         LOG.debug("checkOrganisaatioHierarchy()");
 
         final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
-        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioRepository.customFindByOid(parentOid) : null;
+        Organisaatio parentOrg = (parentOid != null) ? this.organisaatioRepository.findFirstByOid(parentOid) : null;
         if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio))) {
             //check children
             if (organisaatio.getId() != null) { // we can have children only if we are already saved

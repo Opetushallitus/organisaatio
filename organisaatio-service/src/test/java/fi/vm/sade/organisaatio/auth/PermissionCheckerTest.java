@@ -42,7 +42,7 @@ public class PermissionCheckerTest {
         MonikielinenTeksti nimi = new MonikielinenTeksti();
         nimi.setValues(singletonMap("fi", "nimi suomeksi"));
         entity.setNimi(nimi);
-        when(organisaatioRepository.customFindByOid(any())).thenReturn(entity);
+        when(organisaatioRepository.findFirstByOid(any())).thenReturn(entity);
 
         OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
         dto.setOid("oid");
@@ -62,7 +62,7 @@ public class PermissionCheckerTest {
         MonikielinenTeksti nimi = new MonikielinenTeksti();
         nimi.setValues(singletonMap("fi", "nimi suomeksi"));
         entity.setNimi(nimi);
-        when(organisaatioRepository.customFindByOid(any())).thenReturn(entity);
+        when(organisaatioRepository.findFirstByOid(any())).thenReturn(entity);
 
         OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
         dto.setOid("oid");
