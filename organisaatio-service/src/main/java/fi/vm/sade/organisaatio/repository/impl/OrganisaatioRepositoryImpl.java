@@ -27,6 +27,7 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
@@ -504,7 +505,8 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         logger.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
 
-        Organisaatio org = findByOids(List.of(oid), false).stream().findFirst().orElse(null);
+        Organisaatio org = findByOids(List.of(oid), false).stream().findFirst()
+                .orElseThrow(() -> new OrganisaatioNotFoundException(oid));
         return Stream.concat(Stream.of(oid), org.getParentOids().stream()).collect(
                 Collectors.collectingAndThen(toList(), oids -> {
                     Collections.reverse(oids);

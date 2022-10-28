@@ -16,11 +16,9 @@
 package fi.vm.sade.organisaatio.repository;
 
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 
-import java.util.Date;
 import java.util.List;
 
 /**
