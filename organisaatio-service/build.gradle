@@ -57,7 +57,7 @@ dependencies {
     implementation 'fi.vm.sade:auditlogger:8.3.0-SNAPSHOT'
     compile group: 'org.jasig.cas.client', name: 'cas-client-core', version: '3.5.0'
     implementation('org.postgresql:postgresql')
-    compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '7.2'
+    compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '11.5'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
     compile 'net.sf.dozer:dozer:5.5.1'
 

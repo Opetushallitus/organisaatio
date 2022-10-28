@@ -37,6 +37,11 @@ public class Weekdays implements Schedule {
         return ZonedDateTime.of(nextDate, time, zone).toInstant();
     }
 
+    @Override
+    public boolean isDeterministic() {
+        return true;
+    }
+
     private static boolean isWeekend(DayOfWeek dayOfWeek) {
         return WEEKENDS.contains(dayOfWeek);
     }
