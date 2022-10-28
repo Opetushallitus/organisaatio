@@ -16,7 +16,7 @@ jobs:
           node-version: "16.17.0"
           cache: "npm"
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "adopt"
@@ -31,7 +31,7 @@ jobs:
         with:
           arguments: clean build
       - name: Upload organisaatio-service-jar
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: organisaatio-service-jar
           path: organisaatio-service/build/libs/organisaatio-service.jar
@@ -54,7 +54,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
       - name: Cypress coverrage cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-cypress-coverage
         with:
@@ -66,7 +66,7 @@ jobs:
           node-version: "16.17.0"
           cache: "npm"
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "adopt"
@@ -101,24 +101,25 @@ jobs:
         with:
           timezoneLinux: "Europe/Helsinki"
       - name: Cypress coverrage cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-cypress-coverage
         with:
           path: organisaatio-ui/cypress-coverage
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.sha }}
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
+          distribution: "adopt"
       - name: Cache SonarCloud packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Gradle packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -135,7 +136,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
       - name: Download organisaatio-service-jar
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: organisaatio-service-jar
       - name: Build Docker Conainer
@@ -161,7 +162,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "adopt"
@@ -182,7 +183,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: "11"
           distribution: "adopt"
