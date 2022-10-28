@@ -17,7 +17,7 @@ import org.mockito.ArgumentCaptor;
 import java.time.LocalDate;
 
 import static fi.vm.sade.organisaatio.ResourceUtils.classPathResourceAsString;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 

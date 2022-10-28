@@ -31,8 +31,8 @@ import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.K
 import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_SV;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 

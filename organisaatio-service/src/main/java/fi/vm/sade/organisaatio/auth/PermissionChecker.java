@@ -21,7 +21,6 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,6 @@ public class PermissionChecker {
     @Autowired
     private OrganisaatioPermissionServiceImpl permissionService;
 
-    private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
     public void checkRemoveOrganisation(String oid) {
         final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.findFirstByOid(oid));
