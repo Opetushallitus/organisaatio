@@ -11,7 +11,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
       - name: Use node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16.17.0"
           cache: "npm"
@@ -61,7 +61,7 @@ jobs:
           path: organisaatio-ui/cypress-coverage
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.sha }}
       - name: Use node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "16.17.0"
           cache: "npm"
