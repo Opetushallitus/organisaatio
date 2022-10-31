@@ -31,8 +31,8 @@ import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.K
 import static fi.vm.sade.organisaatio.business.impl.OrganisaatioYtjServiceImpl.KIELI_KOODI_SV;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -84,7 +84,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
         assertEquals(4, organisaatioList.size());
 
-        Organisaatio org = organisaatioRepository.customFindByOid("1.2.2005.5");
+        Organisaatio org = organisaatioRepository.findFirstByOid("1.2.2005.5");
         initTestData(org);
         // Case: Has sv name; gets new fi name from YTJ, no puhelin, www, alkupvm updated
         // name history not updated
@@ -119,7 +119,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         KIELI_KOODI_FI
                         );
 
-        org = organisaatioRepository.customFindByOid("1.2.2004.1");
+        org = organisaatioRepository.findFirstByOid("1.2.2004.1");
         initTestData(org);
         // Case: Has fi and sv name, puhelin, www, alkupvm; gets fi name updated from YTJ
         // new entry to name history
@@ -155,7 +155,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
                         KIELI_KOODI_FI
                 );
 
-        org = organisaatioRepository.customFindByOid("1.2.2004.5");
+        org = organisaatioRepository.findFirstByOid("1.2.2004.5");
         initTestData(org);
         // Case: Has fi name, puhelin, www, alkupvm; gets new sv name and updated puhelin, www from YTJ;
         // alkupvm not updated since ytj invalid data

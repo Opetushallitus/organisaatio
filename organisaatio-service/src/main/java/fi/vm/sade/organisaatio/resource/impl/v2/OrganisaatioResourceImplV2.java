@@ -278,7 +278,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
-        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org = organisaatioRepository.findFirstByOid(oid);
 
         if (org != null) {
             final OrganisaatioPaivittajaDTOV2 tulos = new OrganisaatioPaivittajaDTOV2();
@@ -334,7 +334,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         // 3. VIRASTOTUNNUS
         // 4. OPPILAITOSKOODI
         // 5. TOIMIPISTEKOODI
-        Organisaatio o = organisaatioRepository.customFindByOid(oid);
+        Organisaatio o = organisaatioRepository.findFirstByOid(oid);
         if (o == null) {
             o = organisaatioRepository.findByYTunnus(oid);
         }
@@ -432,7 +432,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);
         }
 
-        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.findFirstByOid(oid);
 
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException(oid);

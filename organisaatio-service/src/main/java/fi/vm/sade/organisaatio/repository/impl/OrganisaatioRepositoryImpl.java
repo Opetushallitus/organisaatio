@@ -27,14 +27,13 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
-import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import org.slf4j.Logger;
@@ -80,12 +79,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
 
     @Autowired
     EntityManager em;
-
-    @Autowired
-    OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
-
-    @Autowired
-    OrganisaatioRepository organisaatioRepository;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -272,7 +265,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     public List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut) {
         logger.debug("findChildren({})", parentOid);
 
-        Organisaatio parent = customFindByOid(parentOid);
+        Organisaatio parent = findByOids(List.of(parentOid), false).stream().findFirst().orElse(null);
         List<Organisaatio> result = new ArrayList<>();
         if (parent == null) {
             return result;
@@ -394,21 +387,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     }
 
     @Override
-    public Organisaatio customFindByOid(String oid) {
-        logger.debug("findByOid({})", oid);
-        oid = oid != null ? oid.trim() : null;
-        try {
-            List<Organisaatio> organisaatios = organisaatioRepository.findByOid(oid);
-            if (organisaatios.size() == 1) {
-                return organisaatios.get(0);
-            }
-        } catch (Exception ex) {
-            logger.info(ex.getMessage());
-        }
-        return null;
-    }
-
-    @Override
     public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
         logger.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
@@ -498,7 +476,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
      */
     @Override
     public Organisaatio markRemoved(String oid) {
-        Organisaatio org = customFindByOid(oid);
+        Organisaatio org = findByOids(List.of(oid), false).stream().findFirst().orElse(null);
 
         if (org == null) {
             throw new OrganisaatioCrudException("organisaatio.not.found.with.oid");
@@ -527,7 +505,8 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         logger.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
 
-        Organisaatio org = customFindByOid(oid);
+        Organisaatio org = findByOids(List.of(oid), false).stream().findFirst()
+                .orElseThrow(() -> new OrganisaatioNotFoundException(oid));
         return Stream.concat(Stream.of(oid), org.getParentOids().stream()).collect(
                 Collectors.collectingAndThen(toList(), oids -> {
                     Collections.reverse(oids);
@@ -538,7 +517,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
 
     /**
      * Return parent org oids to org, optimized for the auth use.
-     *
+     * <p>
      * Parents are returned in "root first" order.
      * <pre>
      * Example: a (b c (f g)) (d e)
@@ -554,7 +533,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         Preconditions.checkNotNull(oid);
         List<Organisaatio> parents = Lists.newArrayList();
 
-        Organisaatio org = customFindByOid(oid);
+        Organisaatio org = findByOids(List.of(oid), false).stream().findFirst().orElse(null);
 
         while (org != null) {
             parents.add(org);
@@ -828,10 +807,10 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
      * WHERE parentoidpath = '|1.2.246.562.10.00000000001|'
      * AND organisaatiopoistettu = FALSE
      * AND id IN (SELECT organisaatio_id FROM organisaatio_tyypit WHERE tyypit = 'Ryhma')
-     *
-     *
+     * <p>
+     * <p>
      * Toinen tapa hakea on hakea kaikki ryhmät tyypit taulusta
-     *
+     * <p>
      * SELECT org.*
      * FROM organisaatio org
      * RIGHT JOIN organisaatio_tyypit tp

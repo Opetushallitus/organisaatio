@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static java.util.Collections.singletonMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -42,7 +42,7 @@ public class PermissionCheckerTest {
         MonikielinenTeksti nimi = new MonikielinenTeksti();
         nimi.setValues(singletonMap("fi", "nimi suomeksi"));
         entity.setNimi(nimi);
-        when(organisaatioRepository.customFindByOid(any())).thenReturn(entity);
+        when(organisaatioRepository.findFirstByOid(any())).thenReturn(entity);
 
         OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
         dto.setOid("oid");
@@ -62,7 +62,7 @@ public class PermissionCheckerTest {
         MonikielinenTeksti nimi = new MonikielinenTeksti();
         nimi.setValues(singletonMap("fi", "nimi suomeksi"));
         entity.setNimi(nimi);
-        when(organisaatioRepository.customFindByOid(any())).thenReturn(entity);
+        when(organisaatioRepository.findFirstByOid(any())).thenReturn(entity);
 
         OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
         dto.setOid("oid");

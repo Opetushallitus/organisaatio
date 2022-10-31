@@ -1,14 +1,14 @@
 plugins {
-    id 'org.springframework.boot' version '2.3.0.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'java'
     id 'jacoco'
     id 'application'
     id "org.flywaydb.flyway" version "6.5.7"
 }
-
+sourceCompatibility = '11'
 ext {
-    queryDslVersion = '4.4.0'
+    queryDslVersion = '5.0.0'
     junitVersion = '5.6.2'
 }
 
@@ -57,7 +57,7 @@ dependencies {
     implementation 'fi.vm.sade:auditlogger:8.3.0-SNAPSHOT'
     compile group: 'org.jasig.cas.client', name: 'cas-client-core', version: '3.5.0'
     implementation('org.postgresql:postgresql')
-    compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '7.2'
+    compile group: 'com.github.kagkarlsson', name: 'db-scheduler-spring-boot-starter', version: '11.5'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.4.3'
     compile 'net.sf.dozer:dozer:5.5.1'
 
@@ -104,6 +104,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.security', name: 'spring-security-cas', version: '5.3.0.RELEASE'
 
 

@@ -15,36 +15,12 @@
 
 package fi.vm.sade.organisaatio.repository;
 
-import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
 public interface OrganisaatioSuhdeRepositoryCustom {
-
-    /**
-     * If child has a "current" parent, this actually "moves" child under another parent.
-     *
-     * @param parentId
-     * @param childId
-     * @param startingFrom null == now
-     * @param opetuspisteenJarjNro
-     * @return created relation
-     */
-    OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro);
-
-    /**
-     * Lisätään organisaatioliitos.
-     *
-     * @param organisaatio Yhdistyvä organisaatio
-     * @param kohde Organisaatio, johon yhdistytään
-     * @param startingFrom null == now
-     * @return Luotu liitos
-     */
-    OrganisaatioSuhde addLiitos(Organisaatio organisaatio, Organisaatio kohde, Date startingFrom);
 
     /**
      * @param parentId
@@ -90,16 +66,6 @@ public interface OrganisaatioSuhdeRepositoryCustom {
      * @return parent relation at given time - there can be only one.
      */
     OrganisaatioSuhde findParentTo(Long childId, Date atTime);
-
-    /**
-     * Updates existing parent-child relation for give parent-child.
-     * If parent is null ANY valid relation for child will be dated to be ended.
-     *
-     * @param parentId
-     * @param childId
-     * @param removalDate
-     */
-    void removeChild(Long parentId, Long childId, Date removalDate);
 
     /**
      * Finds all organisation relation changes that matches given day.

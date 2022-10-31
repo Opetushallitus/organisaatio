@@ -17,17 +17,13 @@ package fi.vm.sade.organisaatio.repository.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.model.QOrganisaatio;
 import fi.vm.sade.organisaatio.model.QOrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepositoryCustom;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -39,19 +35,9 @@ import java.util.Objects;
 /**
  * @author mlyly
  */
+@Slf4j
 @Repository
 public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeRepositoryCustom {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioSuhdeRepositoryImpl.class);
-
-    private OrganisaatioRepository organisaatioRepository;
-    private OrganisaatioSuhdeRepository organisaatioSuhdeRepository;
-
-    @Autowired(required = true)
-    public OrganisaatioSuhdeRepositoryImpl(@Lazy OrganisaatioRepository organisaatioRepository, OrganisaatioSuhdeRepository organisaatioSuhdeRepository) {
-        this.organisaatioRepository = organisaatioRepository;
-        this.organisaatioSuhdeRepository = organisaatioSuhdeRepository;
-    }
 
     @Autowired
     EntityManager em;
@@ -103,7 +89,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
             atTime = currentTimeStamp;
         }
 
-        LOG.info("findParentTo({}, {})", childId, atTime);
+        log.info("findParentTo({}, {})", childId, atTime);
 
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
@@ -144,7 +130,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
             atTime = currentTimeStamp;
         }
 
-        LOG.info("findChildrenTo({}, {})", parentId, atTime);
+        log.info("findChildrenTo({}, {})", parentId, atTime);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QOrganisaatioSuhde qSuhde = QOrganisaatioSuhde.organisaatioSuhde;
@@ -174,98 +160,6 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
 
         return result;
     }
-
-    /**
-     * If child has a "current" parent, this actually "moves" child under another parent.
-     *
-     * @param parentId
-     * @param childId
-     * @param startingFrom null == now
-     * @return created relation
-     */
-    @Override
-    public OrganisaatioSuhde addChild(Long parentId, Long childId, Date startingFrom, String opetuspisteenJarjNro) {
-        LOG.info("addChild({}, {}, {})", new Object[]{parentId, childId, startingFrom});
-
-        if (parentId == null || childId == null) {
-            throw new IllegalArgumentException();
-        }
-        if (startingFrom == null) {
-            startingFrom = new Date();
-        }
-
-        //
-        // Create the new relation
-        //
-        Organisaatio parent = organisaatioRepository.findById(parentId).orElseThrow(() -> new IllegalArgumentException("Not found"));
-        Organisaatio child = organisaatioRepository.findById(childId).orElseThrow(() -> new IllegalArgumentException("Not found"));
-
-        OrganisaatioSuhde childRelation = new OrganisaatioSuhde();
-        childRelation.setAlkuPvm(startingFrom);
-        childRelation.setLoppuPvm(null);
-        childRelation.setChild(child);
-        childRelation.setParent(parent);
-        childRelation.setOpetuspisteenJarjNro(opetuspisteenJarjNro);
-
-        childRelation = organisaatioSuhdeRepository.save(childRelation);
-
-        logRelation("  Created new child relation: ", childRelation);
-
-        return childRelation;
-    }
-
-    /**
-     * Updates existing parent-child relation for give parent-child.
-     * If parent is null ANY valid relation for child will be dated to be ended.
-     *
-     * @param parentId
-     * @param childId
-     * @param removalDate
-     */
-    @Override
-    public void removeChild(Long parentId, Long childId, Date removalDate) {
-        LOG.info("removeChild(pId={}, cId={}, t={})", new Object[]{parentId, childId, removalDate});
-
-        if (removalDate == null) {
-            removalDate = new Date();
-        }
-
-        // Get possible existing parent relation
-        OrganisaatioSuhde parentRelation = findParentTo(childId, removalDate);
-
-        if (parentRelation != null) {
-            organisaatioSuhdeRepository.delete(parentRelation);
-        }
-    }
-
-    @Override
-    public OrganisaatioSuhde addLiitos(Organisaatio organisaatio, Organisaatio kohde, Date startingFrom) {
-        LOG.info("addLiitos({}, {}, {})", new Object[]{organisaatio, kohde, startingFrom});
-
-        if (organisaatio == null || kohde == null) {
-            throw new IllegalArgumentException();
-        }
-        if (startingFrom == null) {
-            startingFrom = new Date();
-        }
-
-        //
-        // Create the new relation
-        //
-        OrganisaatioSuhde liitosRelation = new OrganisaatioSuhde();
-        liitosRelation.setAlkuPvm(startingFrom);
-        liitosRelation.setLoppuPvm(null);
-        liitosRelation.setChild(organisaatio);
-        liitosRelation.setParent(kohde);
-        liitosRelation.setSuhdeTyyppi(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS);
-
-        liitosRelation = organisaatioSuhdeRepository.save(liitosRelation);
-
-        logRelation("  Created new liitos relation: ", liitosRelation);
-
-        return liitosRelation;
-    }
-
 
     @Override
     public List<OrganisaatioSuhde> findForDay(Date day) {
@@ -302,13 +196,4 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
                 .select(qSuhde).fetch();
     }
 
-    private void logRelation(String message, OrganisaatioSuhde relation) {
-        if (relation == null) {
-            LOG.info("  {} - NULL", message);
-        } else {
-            LOG.info("  {} --> pId={}, cId={}, aPvm={}, lPvm={}",
-                    new Object[]{message, relation.getParent().getId(), relation.getChild().getId(),
-                            relation.getAlkuPvm(), relation.getLoppuPvm()});
-        }
-    }
 }

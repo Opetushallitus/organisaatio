@@ -16,11 +16,9 @@
 package fi.vm.sade.organisaatio.repository;
 
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,24 +27,6 @@ import java.util.List;
  */
 public interface OrganisaatioNimiRepositoryCustom {
 
-    /**
-     * Luodaan uusi nimi organisaatiolle annetuilla tiedoilla.
-     *
-     * @param organisaatio
-     * @param nimi
-     * @param alkuPvm
-     * @param paivittaja
-     * @return Luotu OrganisaatioNimi
-     */
-    OrganisaatioNimi addNimi(Organisaatio organisaatio, MonikielinenTeksti nimi, Date alkuPvm, String paivittaja);
-
-    /**
-     * Haetaan annetun organisaation nimet
-     *
-     * @param organisaatio
-     * @return Annetun organisaation nimihistoria listana
-     */
-    List<OrganisaatioNimi> findNimet(Organisaatio organisaatio);
 
     /**
      * Haetaan annetun organisaation nimet
@@ -72,14 +52,6 @@ public interface OrganisaatioNimiRepositoryCustom {
      * @return
      */
     public OrganisaatioNimi findCurrentNimi(Organisaatio organisaatio);
-
-    /**
-     * Haetaan annetun organisaation (oid) nykyinen nimi.
-     *
-     * @param organisaatioOid
-     * @return
-     */
-    public OrganisaatioNimi findCurrentNimi(String organisaatioOid);
 
     /**
      * Haetaan organisaatiot, joiden nimi ei ole sama kuin nimihistorian current nimi.

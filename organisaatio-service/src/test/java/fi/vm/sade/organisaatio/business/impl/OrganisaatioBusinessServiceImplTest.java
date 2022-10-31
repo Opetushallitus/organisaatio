@@ -147,15 +147,15 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertEquals("|" + rootOid + "|" + newParentOid + "|", modified.getParentOidPath());
 
         String oid = "1.2.2004.4";
-        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         assertEquals(modified.getParentOidPath() + modified.getOid() + "|", org.getParentOidPath());
 
         oid = "1.2.2005.4";
-        Organisaatio org2 = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org2 = organisaatioRepository.findFirstByOid(oid);
         assertEquals(modified.getParentOidPath() + modified.getOid() + "|", org2.getParentOidPath());
 
         oid = "1.2.2005.5";
-        org2 = organisaatioRepository.customFindByOid(oid);
+        org2 = organisaatioRepository.findFirstByOid(oid);
         assertEquals(org.getParentOidPath() + org.getOid() + "|", org2.getParentOidPath());
 
         checkParent(modified, "1.2.2004.4");
@@ -194,10 +194,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos.getOid());
 
-        assertThat(organisaatioRepository.customFindByOid(oppilaitos.getOid()))
+        assertThat(organisaatioRepository.findFirstByOid(oppilaitos.getOid()))
                 .returns(koulutustoimija2.getParentOidPath() + koulutustoimija2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija2.getParentIdPath() + koulutustoimija2.getId() + "|", Organisaatio::getParentIdPath);
-        assertThat(organisaatioRepository.customFindByOid(toimipiste.getOid()))
+        assertThat(organisaatioRepository.findFirstByOid(toimipiste.getOid()))
                 .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos.getParentIdPath() + oppilaitos.getId() + "|", Organisaatio::getParentIdPath);
     }
@@ -241,10 +241,10 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos1.getOid());
 
-        assertThat(organisaatioRepository.customFindByOid(oppilaitos1.getOid()))
+        assertThat(organisaatioRepository.findFirstByOid(oppilaitos1.getOid()))
                 .returns(koulutustoimija.getParentOidPath() + koulutustoimija.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija.getParentIdPath() + koulutustoimija.getId() + "|", Organisaatio::getParentIdPath);
-        assertThat(organisaatioRepository.customFindByOid(toimipiste1.getOid()))
+        assertThat(organisaatioRepository.findFirstByOid(toimipiste1.getOid()))
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
     }
@@ -290,25 +290,25 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         Set<Organisaatio> muokatut = service.processNewOrganisaatioSuhdeChanges();
         assertThat(muokatut).extracting(Organisaatio::getOid).contains(oppilaitos1.getOid());
 
-        assertThat(organisaatioRepository.customFindByOid(oppilaitos1.getOid()))
+        assertThat(organisaatioRepository.findFirstByOid(oppilaitos1.getOid()))
                 .returns(koulutustoimija1.getParentOidPath() + koulutustoimija1.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(koulutustoimija1.getParentIdPath() + koulutustoimija1.getId() + "|", Organisaatio::getParentIdPath);
-        assertThat(organisaatioRepository.customFindByOid(toimipiste1.getOid()))
+        assertThat(organisaatioRepository.findFirstByOid(toimipiste1.getOid()))
                 .returns(oppilaitos2.getParentOidPath() + oppilaitos2.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos2.getParentIdPath() + oppilaitos2.getId() + "|", Organisaatio::getParentIdPath);
     }
 
     private void checkParentOidPath(Organisaatio parent, String oid) {
-        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         assertEquals(parent.getParentOidPath() + parent.getOid() + "|", org.getParentOidPath());
     }
 
     private void checkParent(Organisaatio parent, String oid) {
-        Organisaatio org = organisaatioRepository.customFindByOid(oid);
+        Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         String pop = org.getParentOidPath();
         String[] list = pop.split("[|]+");
         String parentOid = list[list.length - 1];
-        Organisaatio orgParent = organisaatioRepository.customFindByOid(parentOid);
+        Organisaatio orgParent = organisaatioRepository.findFirstByOid(parentOid);
         assertEquals(parent.getOid(), orgParent.getOid());
     }
 

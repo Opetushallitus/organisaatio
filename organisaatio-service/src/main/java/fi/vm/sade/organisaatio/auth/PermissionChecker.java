@@ -21,7 +21,6 @@ import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.service.converter.MonikielinenTekstiTyyppiToEntityFunction;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,15 +46,14 @@ public class PermissionChecker {
     @Autowired
     private OrganisaatioPermissionServiceImpl permissionService;
 
-    private final MonikielinenTekstiTyyppiToEntityFunction mkt2entity = new MonikielinenTekstiTyyppiToEntityFunction();
 
     public void checkRemoveOrganisation(String oid) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.customFindByOid(oid));
+        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.findFirstByOid(oid));
         checkPermission(permissionService.userCanDeleteOrganisation(authContext));
     }
 
     public void checkUpdateOrganisationName(String oid) {
-        Organisaatio current = organisaatioRepository.customFindByOid(oid);
+        Organisaatio current = organisaatioRepository.findFirstByOid(oid);
         final OrganisaatioContext authContext = OrganisaatioContext.get(current);
         checkPermission(permissionService.userCanEditName(authContext));
     }
@@ -75,7 +73,7 @@ public class PermissionChecker {
                                        String oid, Map<String, String> nimi,
                                        Date alkuPvm, Date lakkautusPvm) {
         if (update) {
-            final Organisaatio current = organisaatioRepository.customFindByOid(oid);
+            final Organisaatio current = organisaatioRepository.findFirstByOid(oid);
 
             if (!Objects.equal(current.getNimi().getValues(), nimi)) {
                 LOG.info("Nimi muuttunut");
@@ -114,7 +112,7 @@ public class PermissionChecker {
     }
 
     public void checkReadOrganisation(String oid) {
-        Organisaatio organisaatio = organisaatioRepository.customFindByOid(oid);
+        Organisaatio organisaatio = organisaatioRepository.findFirstByOid(oid);
 
         if(organisaatio == null){
             return;

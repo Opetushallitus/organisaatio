@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.service;
 
+import com.github.kagkarlsson.scheduler.ScheduledExecution;
 import com.github.kagkarlsson.scheduler.SchedulerClient;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
@@ -12,9 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,10 +43,7 @@ public class KoodistoService {
     }
 
     public Collection<String> listKoodistoSyncOids() {
-        List<String> oids = new ArrayList<>();
-        schedulerClient.getScheduledExecutionsForTask(koodistoUpdateTask.getName(), String.class,
-                scheduledExecution -> oids.add(scheduledExecution.getData()));
-        return oids;
+        return schedulerClient.getScheduledExecutionsForTask(koodistoUpdateTask.getName(), String.class).stream().map(ScheduledExecution::getData).collect(Collectors.toList());
     }
 
     public void addKoodistoSyncByOid(String oid) {

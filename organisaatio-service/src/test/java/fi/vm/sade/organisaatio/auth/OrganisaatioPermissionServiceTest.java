@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 
 
@@ -92,9 +92,9 @@ public class OrganisaatioPermissionServiceTest {
     @Test
     public void testBasic() {
         OrganisaatioRepository organisaatioDaoMock = Mockito.mock(OrganisaatioRepository.class);
-        Mockito.when(organisaatioDaoMock.customFindByOid(eq(otherOrgOid))).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
-        Mockito.when(organisaatioDaoMock.customFindByOid(userOrgOid)).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
-        Mockito.when(organisaatioDaoMock.customFindByOid(rootOrgOid)).thenReturn(withParentOids(Collections.emptyList()));
+        Mockito.when(organisaatioDaoMock.findFirstByOid(eq(otherOrgOid))).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
+        Mockito.when(organisaatioDaoMock.findFirstByOid(userOrgOid)).thenReturn(withParentOids(Collections.singletonList(rootOrgOid)));
+        Mockito.when(organisaatioDaoMock.findFirstByOid(rootOrgOid)).thenReturn(withParentOids(Collections.emptyList()));
         permissionService.setAuthorizer(authorizer);
 
 

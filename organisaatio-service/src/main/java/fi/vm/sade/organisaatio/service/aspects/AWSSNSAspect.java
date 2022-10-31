@@ -39,7 +39,7 @@ public class AWSSNSAspect {
         Object updated = jp.getArgs()[0];
         if (updated instanceof Organisaatio) {
             Organisaatio updatedOrg = (Organisaatio) updated;
-            Organisaatio oldOrg = organisaatioRepository.customFindByOid(updatedOrg.getOid());
+            Organisaatio oldOrg = organisaatioRepository.findFirstByOid(updatedOrg.getOid());
             handleLakkautusPvmChange(updatedOrg, oldOrg);
         } else {
             log.error("SNS PULBISH FAILED for {}, {}", updated, updated.getClass().getName());

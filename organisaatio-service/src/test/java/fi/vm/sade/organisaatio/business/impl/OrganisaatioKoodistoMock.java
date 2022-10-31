@@ -4,12 +4,16 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.dto.Koodi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
+@Primary
+@Component
 public class OrganisaatioKoodistoMock implements OrganisaatioKoodisto {
 
     @Override

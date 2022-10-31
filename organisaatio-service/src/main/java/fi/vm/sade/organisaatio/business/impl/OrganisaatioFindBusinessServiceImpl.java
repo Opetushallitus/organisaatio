@@ -268,7 +268,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     public Organisaatio findById(String id) {
         Organisaatio o = null;
         if (OID_PATTERN.matcher(id).matches()) {
-            o = organisaatioRepository.customFindByOid(id);
+            o = organisaatioRepository.findFirstByOid(id);
         } else if (OPPILAITOSKOODI_PATTERN.matcher(id).matches()) {
             o = organisaatioRepository.findByOppilaitoskoodi(id);
         } else if (TOIMIPISTEKOODI_PATTERN.matcher(id).matches()) {
