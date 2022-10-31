@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
 
     private static final BiFunction<String, DateTimeFormatter, LocalDateTime> dateConverter = (input, formatter) -> LocalDate.parse(input, formatter).atStartOfDay();
-    private static final BiFunction<String, DateTimeFormatter, LocalDateTime> timestampConverter = (input, formatter) -> LocalDateTime.parse(input, formatter);
+    private static final BiFunction<String, DateTimeFormatter, LocalDateTime> timestampConverter = LocalDateTime::parse;
 
     @Override
     public LocalDateTime convert(final String input) {
@@ -39,7 +39,7 @@ public class LocalDateTimeConverter implements Converter<String, LocalDateTime> 
 
         private final BiFunction<String, DateTimeFormatter, LocalDateTime> conversionFunction;
         private final DateTimeFormatter formatter;
-        public String pattern;
+        private final String pattern;
 
         SupportedFormats(String pattern, BiFunction<String, DateTimeFormatter, LocalDateTime> conversionFunction) {
             this.pattern = pattern;
