@@ -19,20 +19,20 @@ package fi.vm.sade.organisaatio.service.filters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static fi.vm.sade.organisaatio.service.filters.IDContextMessageHelper.CSRF_HEADER_NAME;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
 public class CsrfHeaderFilterTest {
-
+    private static final String CSRF_HEADER_NAME = "CSRF";
     private final static String CSRF_COOKIE_VALUE = "cookie-value";
     private final static String CSRF_HEADER_OLD_VALUE = "old-value";
     private CsrfHeaderFilter csrfHeaderFilter;
