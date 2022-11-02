@@ -15,17 +15,17 @@
 
 package fi.vm.sade.organisaatio.resource.v2;
 
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
+import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.v2.*;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
-import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -73,19 +73,19 @@ public interface OrganisaatioResourceV2 {
     OrganisaatioLOPTietoDTOV2 getOrganisaationLOPTiedotByOID(@PathVariable("id") String oid);
 
     @GetMapping(path = "/muutetut/oid", produces = MediaType.APPLICATION_JSON_VALUE)
-    String haeMuutettujenOid(@RequestParam DateParam lastModifiedSince);
+    String haeMuutettujenOid(@RequestParam LocalDateTime lastModifiedSince);
 
     @GetMapping(path = "/muutetut", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated
         // käytä OrganisaatioResourceV3#haeMuutetut
-    List<OrganisaatioRDTO> haeMuutetut(@RequestParam DateParam lastModifiedSince,
+    List<OrganisaatioRDTO> haeMuutetut(@RequestParam LocalDateTime lastModifiedSince,
                                        @RequestParam(defaultValue = "false") boolean includeImage);
 
     @GetMapping(path = "/{oid}/historia", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioHistoriaRDTOV2 getOrganizationHistory(@PathVariable String oid);
 
     @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam(required = false) DateParam liitoksetAlkaen);
+    List<OrganisaatioLiitosDTOV2> haeLiitokset(@RequestParam(required = false) LocalDateTime liitoksetAlkaen);
 
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @Deprecated

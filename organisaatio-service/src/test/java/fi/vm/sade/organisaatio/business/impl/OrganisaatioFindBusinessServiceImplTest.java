@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.OrganisaatioBuilder;
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -21,6 +20,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +40,7 @@ import static org.mockito.Mockito.when;
 @Transactional
 @SpringBootTest
 @AutoConfigureTestDatabase
-public class OrganisaatioFindBusinessServiceImplTest {
+class OrganisaatioFindBusinessServiceImplTest {
 
     @Mock
     private OrganisaatioRepository organisaatioDaoMock;
@@ -60,7 +61,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     private OrganisaatioFindBusinessServiceImpl organisaatioFindBusinessServiceImpl;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         ReflectionTestUtils.setField(organisaatioFindBusinessServiceImpl, "rootOrganisaatioOid", "rootOid");
         when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
             Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
@@ -71,7 +72,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     }
 
     @Test
-    public void findBy() {
+    void findBy() {
         SearchCriteria criteria = new SearchCriteria();
         SearchConfig config = new SearchConfig(true, false, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
@@ -91,7 +92,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     }
 
     @Test
-    public void findByIncludeParents() {
+    void findByIncludeParents() {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(true, false, false);
@@ -113,7 +114,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     }
 
     @Test
-    public void findByIncludeChildren() {
+    void findByIncludeChildren() {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(false, true, false);
@@ -136,7 +137,7 @@ public class OrganisaatioFindBusinessServiceImplTest {
     }
 
     @Test
-    public void findByCountChildren() {
+    void findByCountChildren() {
         SearchCriteria criteria = new SearchCriteria();
         SearchConfig config = new SearchConfig(true, false, true);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
@@ -156,13 +157,13 @@ public class OrganisaatioFindBusinessServiceImplTest {
     }
 
     @Test
-    public void findByOidsV4ExcludesPiilotettu() {
+    void findByOidsV4ExcludesPiilotettu() {
         boolean excludedPiilotettu = invokeFindByOidsV4(false);
         assertThat(excludedPiilotettu).isTrue();
     }
 
     @Test
-    public void findByOidsV4IncludesPiilotettuIfReadAccessToAll() {
+    void findByOidsV4IncludesPiilotettuIfReadAccessToAll() {
         boolean excludedPiilotettu = invokeFindByOidsV4(true);
         assertThat(excludedPiilotettu).isFalse();
     }
@@ -177,13 +178,13 @@ public class OrganisaatioFindBusinessServiceImplTest {
     }
 
     @Test
-    public void haeMuutetutExcludesPiilotettu() {
+    void haeMuutetutExcludesPiilotettu() {
         boolean excludedPiilotettu = invokeFindModifiedSince(false);
         assertThat(excludedPiilotettu).isTrue();
     }
 
     @Test
-    public void haeMuutetutIncludesPiilotettuIfReadAccessToAll() {
+    void haeMuutetutIncludesPiilotettuIfReadAccessToAll() {
         boolean excludedPiilotettu = invokeFindModifiedSince(true);
         assertThat(excludedPiilotettu).isFalse();
     }
@@ -193,12 +194,12 @@ public class OrganisaatioFindBusinessServiceImplTest {
         ArgumentCaptor<Boolean> excludesPiilotettuCaptor = ArgumentCaptor.forClass(Boolean.class);
         when(organisaatioDaoMock.findModifiedSince(
                     excludesPiilotettuCaptor.capture(),
-                    any(Date.class),
+                    any(LocalDateTime.class),
                     any(List.class),
                     anyBoolean()))
                 .thenReturn(asList(new Organisaatio()));
         organisaatioFindBusinessServiceImpl.haeMuutetut(
-                new DateParam("2010-05-24"), false, Collections.emptyList(), true);
+                LocalDateTime.parse("2010-05-24T00:00:00"), Collections.emptyList(), true);
         return excludesPiilotettuCaptor.getValue();
     }
 

@@ -17,44 +17,31 @@
 package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 /**
  *
  */
-public class OrganisaatioResourceException extends ApiException {
+@RequiredArgsConstructor
+@Getter
+public class OrganisaatioResourceException extends RuntimeException {
 
-    public OrganisaatioResourceException(ErrorMessage errorMessage, HttpStatus status) {
-        super(new ResponseEntity<>(errorMessage, status));
+    private final HttpStatus status;
+    private final String errorMessage;
+    private final String errorKey;
+
+    public OrganisaatioResourceException(SadeBusinessException sbe) {
+        this(HttpStatus.INTERNAL_SERVER_ERROR, sbe.getMessage(), sbe.getErrorKey());
     }
 
-    public OrganisaatioResourceException(int status, ErrorMessage message) {
-        this(message, HttpStatus.valueOf(status));
-    }
-
-    public OrganisaatioResourceException(int status, String message) {
-        this(status, new ErrorMessage(message));
-    }
-
-    public OrganisaatioResourceException(int status, String message, String key) {
-        this(status, new ErrorMessage(message, key));
+    public OrganisaatioResourceException(HttpStatus status, SadeBusinessException sbe) {
+        this(status, sbe.getMessage(), sbe.getErrorKey());
     }
 
     public OrganisaatioResourceException(HttpStatus status, String message) {
-        this(new ErrorMessage(message), status);
-    }
-
-    public OrganisaatioResourceException(HttpStatus status, String message, String key) {
-        this(new ErrorMessage(message, key), status);
-    }
-
-    public OrganisaatioResourceException(SadeBusinessException sbe) {
-        this(new ErrorMessage(sbe), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    public OrganisaatioResourceException(HttpStatus status, SadeBusinessException exception) {
-        this(new ErrorMessage(exception), status);
+        this(status, message, message);
     }
 
 }

@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl.v3;
 
 import com.google.common.base.Preconditions;
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -120,7 +120,7 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
         if (o == null) {
             LOG.info("Failed to find organisaatio by: {}", oid);
-            throw new OrganisaatioResourceException(404, "organisaatio.exception.organisaatio.not.found");
+            throw new OrganisaatioResourceException(HttpStatus.NOT_FOUND, "organisaatio.exception.organisaatio.not.found");
         }
 
         // Jätetään kuva pois, jos sitä ei haluta
@@ -136,14 +136,14 @@ public class OrganisaatioResourceImplV3 implements OrganisaatioResourceV3 {
 
     // GET /organisaatio/v3/muutetut
     @Override
-    public List<OrganisaatioRDTOV3> haeMuutetut(DateParam lastModifiedSince, boolean includeImage) {
+    public List<OrganisaatioRDTOV3> haeMuutetut(LocalDateTime lastModifiedSince, boolean includeImage) {
         Preconditions.checkNotNull(lastModifiedSince);
 
         LOG.debug("haeMuutetut: {}", lastModifiedSince);
         long qstarted = System.currentTimeMillis();
 
         List<Organisaatio> organisaatiot = organisaatioRepository.findModifiedSince(
-                !permissionChecker.isReadAccessToAll(), lastModifiedSince.getValue());
+                !permissionChecker.isReadAccessToAll(), lastModifiedSince);
 
         LOG.debug("Muutettujen haku {} ms", System.currentTimeMillis() - qstarted);
         long qstarted2 = System.currentTimeMillis();

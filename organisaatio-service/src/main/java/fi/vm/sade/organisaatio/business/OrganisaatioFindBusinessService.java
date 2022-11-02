@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.business;
 
-import fi.vm.sade.organisaatio.api.DateParam;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
@@ -13,6 +12,7 @@ import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -118,14 +118,12 @@ public interface OrganisaatioFindBusinessService {
     /**
      * Hakee muuttuneet organisaatiot
      * @param lastModifiedSince Päivämäärä jonka jälkeen muuttuneita haetaan
-     * @param includeImage Haetaanko kuvat
      * @param organizationTypes Halutut organisaatiotyypit (tyhjä/null ei rajaa tyypillä)
      * @param excludeDiscontinued Rajataanko lakkautetut pois tuloksista
      * @return Muuttuneet organisaatiot muodossa OrganisaatioRDTOV4
      */
     List<OrganisaatioRDTOV4> haeMuutetut(
-            DateParam lastModifiedSince,
-            boolean includeImage,
+            LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
 
