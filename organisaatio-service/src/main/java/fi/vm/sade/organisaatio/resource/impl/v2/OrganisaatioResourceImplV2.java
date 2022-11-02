@@ -467,7 +467,7 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
     // GET /organisaatio/v2/liitokset
     @Override
     public List<OrganisaatioLiitosDTOV2> haeLiitokset(LocalDateTime liitoksetAlkaen) {
-        Date date = Optional.of(liitoksetAlkaen).map(Timestamp::valueOf).orElse(null);
+        Date date = Optional.ofNullable(liitoksetAlkaen).map(Timestamp::valueOf).orElse(null);
 
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(date);
 
