@@ -63,7 +63,7 @@ dependencies {
 
     implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     implementation group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
-    implementation group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxrs', version: '3.5.4'
+
     implementation group: 'fi.vm.sade.generic', name: 'generic-common', version: '9.6'
     // TODO dinosaurukset xssfilter ja AbstractPermissionService joista pitää päästä eroon
 
