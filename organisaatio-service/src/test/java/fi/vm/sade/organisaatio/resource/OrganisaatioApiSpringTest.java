@@ -88,7 +88,7 @@ class OrganisaatioApiSpringTest {
     void testOids2() throws Exception {
         mockMvc.perform(get("/api/oids"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.2\",\"1.2.2004.3\",\"1.2.2004.4\",\"1.2.2005.4\",\"1.2.2004.5\",\"1.2.2004.6\",\"1.2.2005.5\",\"1.2.8000.1\"]"));
+                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.2\",\"1.2.2004.3\",\"1.2.2004.4\",\"1.2.2005.4\",\"1.2.2004.5\",\"1.2.2004.6\",\"1.2.2005.5\",\"1.2.8000.1\",\"1.2.8001.1\"]"));
 
         mockMvc.perform(get("/api/oids").param("type", "KOULUTUSTOIMIJA"))
                 .andExpect(status().isOk())
@@ -241,7 +241,7 @@ class OrganisaatioApiSpringTest {
     void testOids() throws Exception {
         mockMvc.perform(get("/api/oids"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.2\",\"1.2.2004.3\",\"1.2.2004.4\",\"1.2.2005.4\",\"1.2.2004.5\",\"1.2.2004.6\",\"1.2.2005.5\",\"1.2.8000.1\"]"));
+                .andExpect(content().json("[\"1.2.246.562.24.00000000001\",\"1.2.2004.1\",\"1.2.2004.2\",\"1.2.2004.3\",\"1.2.2004.4\",\"1.2.2005.4\",\"1.2.2004.5\",\"1.2.2004.6\",\"1.2.2005.5\",\"1.2.8000.1\",\"1.2.8001.1\"]"));
         ;
 
         mockMvc.perform(get("/api/oids")
