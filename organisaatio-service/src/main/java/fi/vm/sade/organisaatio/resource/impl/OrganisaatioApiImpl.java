@@ -9,13 +9,16 @@ import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.v3.GroupModelMapperV3;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLiitosDTOV2;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ValidationException;
+import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,6 +59,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     private final OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper;
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
     private final GroupModelMapperV3 groupModelMapper;
+    @Autowired
+    private OrganisaatioLiitosModelMapper organisaatioLiitosModelMapper;
     @Autowired
     protected OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
     private final OrganisaatioBusinessService organisaatioBusinessService;
@@ -378,6 +384,14 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria) {
         return groupModelMapper.map(organisaatioFindBusinessService.findGroups(criteria), new TypeToken<List<OrganisaatioGroupDTOV3>>() {
         }.getType());
+    }
+
+    // GET /api/liitokset
+    @Override
+    public List<OrganisaatioLiitosDTOV2> liitokset() {
+        List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(null);
+        Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
+        return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
     }
 
     // GET /api/{oid}/hakutoimisto

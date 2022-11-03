@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
+import fi.vm.sade.organisaatio.dto.v2.OrganisaatioLiitosDTOV2;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioGroupDTOV3;
 import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
@@ -164,6 +165,9 @@ public interface OrganisaatioApi {
 
     @GetMapping(path = "/ryhmat", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioGroupDTOV3> groups(RyhmaCriteriaDtoV3 criteria);
+
+    @GetMapping(path = "/liitokset", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<OrganisaatioLiitosDTOV2> liitokset();
 
     @GetMapping(path = "/{oid}/hakutoimisto", produces = MediaType.APPLICATION_JSON_VALUE)
     HakutoimistoDTO hakutoimisto(@PathVariable("oid") String organisaatioOid);
