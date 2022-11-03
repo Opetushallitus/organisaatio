@@ -1,26 +1,21 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
-import com.github.kagkarlsson.scheduler.task.ExecutionContext;
-import com.github.kagkarlsson.scheduler.task.TaskInstance;
-import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalTime;
-
+@Slf4j
+@RequiredArgsConstructor
 @Component
-public class VanhentuneetTiedotSahkopostiTask extends RecurringTask<Void> {
+public class VanhentuneetTiedotSahkopostiTask {
 
     private final VanhentuneetTiedotSahkopostiService service;
 
-    public VanhentuneetTiedotSahkopostiTask(VanhentuneetTiedotSahkopostiService service) {
-        super("vanhentuneet tiedot sähköposti", new Weekdays(LocalTime.of(8, 0)), Void.class, null);
-        this.service = service;
-    }
-
-    @Override
-    public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
+    @Scheduled(cron = "${organisaatio-service.scheduled.vanhentuneet_tiedot_sahkoposti_task.cron.expression:0 * * * * *}")
+    public void executeRecurringly() {
+        log.info("Running scheduled {}", this.getClass().getName());
         service.lahetaSahkopostit();
     }
-
 }
