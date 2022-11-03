@@ -4,13 +4,12 @@ plugins{
 dependencies {
     implementation project(':ytj-client:ytj-api')
     implementation project(':ytj-client:ytj-generated-model')
-    implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:3.4.0'
-    implementation 'org.apache.cxf:cxf-rt-transports-http:3.4.0'
-    implementation 'commons-codec:commons-codec:1.6'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    runtime 'org.slf4j:slf4j-log4j12:1.7.30'
-    runtime 'log4j:log4j:1.2.14'
-    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:3.5.3'
+    implementation 'org.apache.cxf:cxf-rt-transports-http:3.5.3'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'org.slf4j:slf4j-api:2.0.3'
+    runtime 'org.slf4j:slf4j-log4j12:2.0.3'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
     implementation 'javax.xml.ws:jaxws-api:2.3.1'
     testImplementation 'junit:junit:4.13.2'
 }
