@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final String DEBUG_LOG_MESSAGE = "GlobalExceptionHandler handled this exception";
-    private static final String WARN_NOT_HANDELED_MESSAGE = "GlobalExceptionHandler passed this exception through";
+    private static final String WARN_NOT_HANDELED_MESSAGE = "GlobalExceptionHandler passed this exception through {}";
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception e) throws Exception {
-        log.warn(WARN_NOT_HANDELED_MESSAGE, e);
+        log.warn(WARN_NOT_HANDELED_MESSAGE, e.getClass().getName());
         throw e;
     }
 }
