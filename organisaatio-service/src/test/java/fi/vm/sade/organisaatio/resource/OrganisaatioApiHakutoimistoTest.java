@@ -27,8 +27,8 @@ class OrganisaatioApiHakutoimistoTest {
           this.mockMvc.perform(get("/api/no-oid/hakutoimisto"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{" +
-                        "\"errorMessage\":\"Organisaatiota ei löytynyt no-oid\"," +
-                        "\"errorKey\":\"organisaatio.exception.organisaatio.not.found\"}"));
+                        "\"errorMessage\":\"Hakutoimistoa ei löytynyt, ylin organisaatio no-oid\"," +
+                        "\"errorKey\":\"organisaatio.exception.organisaatio.hakutoimisto.not.found\"}"));
     }
 
     @Test
@@ -40,7 +40,7 @@ class OrganisaatioApiHakutoimistoTest {
         this.mockMvc.perform(get("/api/1.2.2004.2/hakutoimisto"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{" +
-                        "\"errorMessage\":\"Hakutoimistoa ei löytynyt, ylin organisaatio 1.2.246.562.24.00000000001\"," +
+                        "\"errorMessage\":\"Hakutoimistoa ei löytynyt, ylin organisaatio 1.2.2004.2\"," +
                         "\"errorKey\":\"organisaatio.exception.organisaatio.hakutoimisto.not.found\"}"));
     }
 
@@ -51,17 +51,10 @@ class OrganisaatioApiHakutoimistoTest {
     @WithMockUser(value = "1.2.3.4.5", authorities = {"FOO"})
     void test3() throws Exception {
         this.mockMvc.perform(get("/api/1.2.2004.4/hakutoimisto"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(content().json("{" +
-                        "\"nimi\":" +
-                        "{" +
-                        "\"kieli_en#1\":\"Hakutoimiston nimi EN\"," +
-                        "\"kieli_fi#1\":\"Hakutoimiston nimi FI\"" +
-                        "}," +
-                        "\"yhteystiedot\":{" +
-                        "\"kieli_fi#1\":{\"kaynti\":{\"yhteystietoOid\":\"1.2.2004.4\",\"katuosoite\":\"Hassuttimenkatu 2\",\"postinumero\":\"posti_10000\",\"postitoimipaikka\":\"Juupajoki\"},\"posti\":{\"yhteystietoOid\":\"1.2.2004.5\",\"katuosoite\":\"Hassuttimenkatu 2\",\"postinumero\":\"posti_10000\",\"postitoimipaikka\":\"Juupajoki\"},\"www\":\"http://www.foo.fi\",\"email\":\"foo@bar.com\",\"puhelin\":\"123456789\"}," +
-                        "\"kieli_sv#1\":{\"kaynti\":{\"yhteystietoOid\":\"1.2.2004.6\",\"katuosoite\":\"Hassutingatan 2\",\"postinumero\":\"posti_10000\",\"postitoimipaikka\":\"Juupajoki\"}}," +
-                        "\"kieli_en#1\":{\"kaynti\":{\"yhteystietoOid\":\"1.2.2004.7\",\"katuosoite\":\"Hassuttimenkatu 2, 10000 Juupajoki, Finland\"},\"posti\":{\"yhteystietoOid\":\"1.2.2004.8\",\"katuosoite\":\"Hassuttimenkatu 2, 10000 Juupajoki, Finland\"},\"www\":\"http://www.foo.fi/en\"}}}"));
+                        "\"errorMessage\":\"Hakutoimistoa ei löytynyt, ylin organisaatio 1.2.2004.4\"," +
+                        "\"errorKey\":\"organisaatio.exception.organisaatio.hakutoimisto.not.found\"}"));
     }
 
 }
