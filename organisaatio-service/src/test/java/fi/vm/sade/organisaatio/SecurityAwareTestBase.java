@@ -1,7 +1,9 @@
 package fi.vm.sade.organisaatio;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
+import fi.vm.sade.security.OidProvider;
+import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -13,13 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import com.google.common.collect.Lists;
-
-import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
-import fi.vm.sade.security.OidProvider;
-import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+
+import java.util.List;
 
 /**
  * By default executes tests as CRUD_USER, override before to customize
@@ -82,9 +80,4 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
     
-    
-    protected void printCurrentUser(){
-        System.out.println("oph-oid: " + ophOid);
-        System.out.println("current user: " + SecurityContextHolder.getContext().getAuthentication());
-    }
 }

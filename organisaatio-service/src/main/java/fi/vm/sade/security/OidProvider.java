@@ -1,8 +1,6 @@
 package fi.vm.sade.security;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,7 +14,6 @@ import java.util.Optional;
 @Component
 public class OidProvider {
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Value("${root.organisaatio.oid}")

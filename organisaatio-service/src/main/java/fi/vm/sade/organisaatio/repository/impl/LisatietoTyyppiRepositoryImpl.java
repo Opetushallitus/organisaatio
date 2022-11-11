@@ -1,8 +1,8 @@
 package fi.vm.sade.organisaatio.repository.impl;
 
 import com.querydsl.jpa.impl.JPAQuery;
-import fi.vm.sade.organisaatio.repository.LisatietoTyyppiRepositoryCustom;
 import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.repository.LisatietoTyyppiRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -36,7 +36,6 @@ public final class OrganisaatioRDTOTestUtil {
     public static final Map<String, String> DEFAULT_WWW = createWww("http://test.oph.fi");
     public static final Map<String, String> DEFAULT_EMAIL = createEmail("asd@asd.asd");
     public static final Map<String, String> DEFAULT_PUHELIN =  createPuhelin(PuhelinNumeroTyyppi.PUHELIN, "123");
-    public static final List<Map<String, String>> DEFAULT_YHTEYSTIEDOT = Arrays.asList(DEFAULT_PUHELIN, DEFAULT_POSTIOSOITE, DEFAULT_KAYNTIOSOITE, DEFAULT_EMAIL, DEFAULT_WWW);
     public static final Set<String> DEFAULT_KIELET = Collections.singleton("oppilaitoksenopetuskieli_1#1");
     public static final Date DEFAULT_VOIMASSAOLO_ALKU = createPvm(0);
     public static final String DEFAULT_KOTIPAIKKA = "kunta_092";
@@ -105,27 +104,8 @@ public final class OrganisaatioRDTOTestUtil {
         return nimiRDTO;
     }
 
-    public static String createYtunnus() {
-        return createYtunnus(System.currentTimeMillis(), 0);
-    }
-
-    public static String createYtunnus(long time, int lastDigit) {
-        String ytunnus = "" + time;
-        ytunnus = ytunnus.substring(ytunnus.length() - 7, ytunnus.length()) + "-" + lastDigit;
-        return ytunnus;
-    }
-
     private static Date createPvm(int n) {
         return new GregorianCalendar(2000+n, 0, 0).getTime();
-    }
-
-    public static OrganisaatioRDTO createKoulutustoimija(String nimi,
-                                                         String ytunnus,
-                                                         String oid) {
-        OrganisaatioRDTO koulutustoimija = createOrganisaatio(nimi, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(), oid, OPH_OID, false);
-        koulutustoimija.setYTunnus(ytunnus);
-
-        return koulutustoimija;
     }
 
     public static OrganisaatioRDTO createOrganisaatio(String nimi,
@@ -134,15 +114,6 @@ public final class OrganisaatioRDTOTestUtil {
         return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
     }
 
-    public static OrganisaatioRDTO createOrganisaatio(String nimi,
-                                                      String organisaatioTyyppi,
-                                                      OrganisaatioRDTO parent, boolean nullifyOid) {
-        String parentOid = OPH_OID;
-        if (parent != null) {
-            parentOid = parent.getOid();
-        }
-        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
-    }
     public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
                                                       String organisaatioTyyppi,
                                                       OrganisaatioRDTOV4 parent, boolean nullifyOid) {

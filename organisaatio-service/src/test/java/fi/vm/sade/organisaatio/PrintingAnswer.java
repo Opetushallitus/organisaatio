@@ -15,14 +15,6 @@ public class PrintingAnswer<T> implements Answer<T> {
         this(invocation -> null, System.out::println);
     }
 
-    public PrintingAnswer(T returnValue) {
-        this(invocation -> returnValue);
-    }
-
-    public PrintingAnswer(Answer<T> delegate) {
-        this(delegate, System.out::println);
-    }
-
     public PrintingAnswer(Answer<T> delegate, Consumer<Object> logger) {
         this.delegate = delegate;
         this.logger = logger;

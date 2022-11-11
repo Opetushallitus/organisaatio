@@ -19,7 +19,6 @@ import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
-import fi.vm.sade.organisaatio.service.converter.AbstractFromDomainConverter;
 import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import org.modelmapper.TypeToken;

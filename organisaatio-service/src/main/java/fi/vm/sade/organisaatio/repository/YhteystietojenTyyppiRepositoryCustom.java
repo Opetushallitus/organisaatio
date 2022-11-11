@@ -16,7 +16,6 @@
 package fi.vm.sade.organisaatio.repository;
 
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.Collection;
 import java.util.List;

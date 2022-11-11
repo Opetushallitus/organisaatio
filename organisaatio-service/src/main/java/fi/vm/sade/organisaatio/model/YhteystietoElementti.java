@@ -39,11 +39,6 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
     private YhteystietojenTyyppi yhteystietojenTyyppi;
     private boolean pakollinen;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "nimi_mkt")
-//    private MonikielinenTeksti nimi2;
-
-
     @NotNull
     @Size(min = GENERIC_MIN, max = GENERIC_MAX)
     private String nimi;  // TODO XSS filtteri
@@ -125,14 +120,6 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
     public void setNimiSv(String nimiSv) {
         this.nimiSv = nimiSv;
     }
-
-//    public MonikielinenTeksti getNimi2() {
-//        return nimi2;
-//    }
-//
-//    public void setNimi2(MonikielinenTeksti nimi2) {
-//        this.nimi2 = nimi2;
-//    }
 
     public String getNimiEn() {
         return nimiEn;

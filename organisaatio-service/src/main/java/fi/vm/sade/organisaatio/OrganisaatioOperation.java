@@ -11,8 +11,6 @@ public enum OrganisaatioOperation implements Operation {
     ORG_SUHDE_UPDATE,
     ORG_NIMI_UPDATE,
     ORG_NIMI_DELETE,
-    IMG_CREATE,
-    IMG_DELETE,
     ORG_UPDATE,
     ORG_TARKASTA
 

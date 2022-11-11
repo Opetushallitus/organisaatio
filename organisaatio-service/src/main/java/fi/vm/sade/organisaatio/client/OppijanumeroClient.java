@@ -5,6 +5,8 @@ import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioOppijanumeroException;
 import fi.vm.sade.properties.OphProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -27,34 +29,11 @@ public class OppijanumeroClient extends CustomClient {
                 .orElseThrow(() -> new OrganisaatioOppijanumeroException(String.format("Osoite %s palautti 204 tai 404", url)));
     }
 
+    @Getter
+    @Setter
     public static class OppijanumeroDto {
-
         private String oidHenkilo;
         private String etunimet;
         private String sukunimi;
-
-        public String getOidHenkilo() {
-            return oidHenkilo;
-        }
-
-        public void setOidHenkilo(String oidHenkilo) {
-            this.oidHenkilo = oidHenkilo;
-        }
-
-        public String getEtunimet() {
-            return etunimet;
-        }
-
-        public void setEtunimet(String etunimet) {
-            this.etunimet = etunimet;
-        }
-
-        public String getSukunimi() {
-            return sukunimi;
-        }
-
-        public void setSukunimi(String sukunimi) {
-            this.sukunimi = sukunimi;
-        }
     }
 }

@@ -5,7 +5,6 @@ import fi.vm.sade.organisaatio.model.OppilaitostyyppiRajoite;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatiotyyppiRajoite;
 import fi.vm.sade.organisaatio.repository.LisatietoTyyppiRepository;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

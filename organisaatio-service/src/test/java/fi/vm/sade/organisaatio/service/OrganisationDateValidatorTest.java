@@ -15,23 +15,16 @@
  */
 package fi.vm.sade.organisaatio.service;
 
+import com.google.common.collect.Maps;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
-
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrganisationDateValidatorTest {
 

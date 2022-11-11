@@ -19,9 +19,6 @@ import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
-
 @Repository
 public interface OrganisaatioNimiRepository extends CrudRepository<OrganisaatioNimi, Long>, OrganisaatioNimiRepositoryCustom {
 }
