@@ -1,6 +1,16 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="OrganisaatioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <envs>
+      <env name="url-virkailija" value="http://localhost:9000" />
+      <env name="host.virkailija" value="localhost:9000" />
+      <env name="url-ytj" value="http://localhost:9000/ytj" />
+      <env name="url-oidservice" value="http://localhost:9000/oidservice" />
+      <env name="cas.service.organisaatio-service" value="http://localhost:8080/organisaatio-service" />
+    </envs>
     <module name="fi.vm.sade.organisaatio.organisaatio-service.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="fi.vm.sade.organisaatio.OrganisaatioApplication" />
+    <option name="VM_PARAMETERS" value="-Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties -Dlogback.access=true" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
@@ -11,17 +21,6 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </extension>
-    <option name="SPRING_BOOT_MAIN_CLASS" value="fi.vm.sade.organisaatio.OrganisaatioApplication" />
-    <option name="ACTIVE_PROFILES" value="dev" />
-    <option name="VM_PARAMETERS" value="-Dspring.config.location=classpath:application.properties -Dlogback.access=true" />
-    <option name="ALTERNATIVE_JRE_PATH" />
-    <envs>
-      <env name="url-virkailija" value="http://localhost:9000" />
-      <env name="host.virkailija" value="localhost:9000" />
-      <env name="url-ytj" value="http://localhost:9000/ytj" />
-      <env name="url-oidservice" value="http://localhost:9000/oidservice" />
-      <env name="cas.service.organisaatio-service" value="http://localhost:8080/organisaatio-service" />
-    </envs>
     <method v="2">
       <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="-x test" />
     </method>

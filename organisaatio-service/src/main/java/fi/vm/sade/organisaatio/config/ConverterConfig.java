@@ -1,7 +1,10 @@
 package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
-import fi.vm.sade.organisaatio.service.converter.*;
+import fi.vm.sade.organisaatio.service.converter.LisatietoConverter;
+import fi.vm.sade.organisaatio.service.converter.OrganisaatioRDTOToOrganisaatioConverter;
+import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioPerustietoConverter;
+import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
 import fi.vm.sade.organisaatio.service.converter.v2.RyhmaCriteriaV2ToV3Converter;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioRDTOV3ToOrganisaatioConverter;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3Converter;
@@ -31,7 +34,6 @@ public class ConverterConfig implements WebMvcConfigurer {
         registry.addConverter(new OrganisaatioRDTOToOrganisaatioConverter(orgNimiMapper));
         registry.addConverter(new OrganisaatioToOrganisaatioPerustietoConverter());
         registry.addConverter(new OrganisaatioToOrganisaatioRDTOConverter(orgNimiMapper));
-        registry.addConverter(new YhteystietojenTyyppiToYhteystietojenTyyppiRDTOConverter());
         registry.addConverter(new RyhmaCriteriaV2ToV3Converter(modelMapper));
         registry.addConverter(new OrganisaatioRDTOV3ToOrganisaatioConverter(orgNimiMapper));
         registry.addConverter(new OrganisaatioToOrganisaatioRDTOV3Converter(orgNimiMapper));

@@ -104,24 +104,6 @@ public class AuditLogAspect {
         return genericAdvice(pjp,OrganisaatioOperation.ORG_NIMI_DELETE);
     }
 
-    // POST /yhteystietojentyyppi/
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.updateYhteystietoTyyppi(..))")
-    private Object updateYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        return genericAdvice(pjp,OrganisaatioOperation.YHTEYSTIETO_UPDATE);
-    }
-
-    // PUT /yhteystietojentyyppi/
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.createYhteystietojenTyyppi(..))")
-    private Object newYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        return genericAdvice(pjp,OrganisaatioOperation.YHTEYSTIETO_CREATE);
-    }
-
-    // DELETE /yhteystietojentyyppi/<oid>
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.YhteystietojenTyyppiResource.deleteYhteystietottyypi(..))")
-    private Object deleteYhtAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        return genericAdvice(pjp,OrganisaatioOperation.YHTEYSTIETO_DELETE);
-    }
-
     private Object genericAdvice(ProceedingJoinPoint pjp, OrganisaatioOperation operation) throws Throwable {
         Object result;
         try {

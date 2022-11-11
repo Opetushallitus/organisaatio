@@ -11,14 +11,14 @@ begin
         mkt     AS (INSERT INTO monikielinenteksti (id,version) select (select max(id)+1 from monikielinenteksti),0 from data RETURNING id),
         mktval  AS (INSERT INTO monikielinenteksti_values (id, value, key) SELECT mkt.id,data.nimi,kieli.id FROM mkt join data on 1=1 join (values('fi'),('sv'),('en'))as kieli(id) on 1=1),
         org     AS (INSERT into organisaatio (oid,id,version, nimi_mkt, piilotettu, organisaatiopoistettu, paivityspvm, paivittaja, alkupvm, kotipaikka, maa, parentidpath,oppilaitostyyppi, nimihaku)
-                    SELECT  data.oid, (select max(id)+1 from organisaatio),0, mkt.id, false, false, CURRENT_TIMESTAMP, data.paivittaja, CURRENT_DATE, 'kunta_153', 'maatjavaltiot1_fin', parentidpath, oppilaitostyyppi, createOrganisaatio.nimi FROM mkt join data on 1=1 RETURNING id, oid, organisaatio.parentidpath ),
-        orgnim  AS (INSERT INTO organisaatio_nimi (id, version, alkupvm, organisaatio_id, nimi_mkt, paivittaja) SELECT (select max(id)+1 from organisaatio_nimi),0, CURRENT_DATE, org.id, mkt.id, data.paivittaja  from org join mkt on 1=1 join data on 1=1 returning id),
+                    SELECT  data.oid, (select coalesce(max(id)+1,1) from organisaatio),0, mkt.id, false, false, CURRENT_TIMESTAMP, data.paivittaja, CURRENT_DATE, 'kunta_153', 'maatjavaltiot1_fin', parentidpath, oppilaitostyyppi, createOrganisaatio.nimi FROM mkt join data on 1=1 RETURNING id, oid, organisaatio.parentidpath ),
+        orgnim  AS (INSERT INTO organisaatio_nimi (id, version, alkupvm, organisaatio_id, nimi_mkt, paivittaja) SELECT (select coalesce(max(id)+1,1) from organisaatio_nimi),0, CURRENT_DATE, org.id, mkt.id, data.paivittaja  from org join mkt on 1=1 join data on 1=1 returning id),
         orgtyp  AS (INSERT INTO organisaatio_tyypit (organisaatio_id, tyypit) SELECT org.id, typ.id from org join unnest(types) as typ(id) on 1=1 returning organisaatio_tyypit.organisaatio_id, organisaatio_tyypit.tyypit),
         kieli1  AS (INSERT INTO organisaatio_kielet (organisaatio_id, kielet) SELECT id, 'oppilaitoksenopetuskieli_1' from org),
         parent  AS (INSERT INTO organisaatio_parent_oids (organisaatio_id, parent_position, parent_oid) SELECT org.id, 0, parentoid from org),
-        suhde   AS (INSERT INTO organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) SELECT (select max(id)+1 from organisaatiosuhde),0,'HISTORIA',org.id,parentid,CURRENT_DATE from org returning organisaatiosuhde.id),
+        suhde   AS (INSERT INTO organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) SELECT (select coalesce(max(id)+1,1) from organisaatiosuhde),0,'HISTORIA',org.id,parentid,CURRENT_DATE from org returning organisaatiosuhde.id),
         yhteys  AS (INSERT INTO yhteystieto (dtype, id, version,yhteystietooid, osoite, osoitetyyppi, postinumero, postitoimipaikka,email, organisaatio_id, kieli)
-                    SELECT osoite.type, (select max(id)+1 from yhteystieto)+osoite.number,0, osoite.oid,osoite.osoite, osoite.osoitetyyppi,osoite.postinumero, osoite.postitoimipaikka, osoite.email,org.id,osoite.kieli
+                    SELECT osoite.type, (select coalesce(max(id)+1,1) from yhteystieto)+osoite.number,0, osoite.oid,osoite.osoite, osoite.osoitetyyppi,osoite.postinumero, osoite.postitoimipaikka, osoite.email,org.id,osoite.kieli
                     FROM org,
                          (values ('Osoite',concat(oid1,'.1'),'Testikuja 5','posti','posti_00009','DIGITOINTI',null,'kieli_fi#1',1),
                                  ('Email' ,concat(oid1,'.2'),null,null,null,null,'testiposti@opetushallitus.fi','kieli_fi#1',2),
