@@ -13,7 +13,7 @@ export function Header({ title }: HeaderProps) {
         <header>
             <div className="header">
                 <div>
-                    <img className={styles.jotpaLogo} src="/jotpa_logo.png" alt="Jotpa logo" />
+                    <img className={styles.jotpaLogo} src="/jotpa_logo.png" alt="" />
                 </div>
                 <LanguageSwitcher />
             </div>
