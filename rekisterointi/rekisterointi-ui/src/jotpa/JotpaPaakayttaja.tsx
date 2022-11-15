@@ -72,6 +72,7 @@ export function JotpaPaakayttaja() {
                             aria-invalid={!!errors.asiointikieli}
                             aria-errormessage="#error-asiointikieli"
                             aria-live="polite"
+                            aria-required="true"
                             className={styles.radioButtons}
                         >
                             <label htmlFor="fi">
@@ -90,7 +91,7 @@ export function JotpaPaakayttaja() {
                         <label className="title" htmlFor="info">
                             {i18n.translate('paakayttaja_saateteksti')}
                         </label>
-                        <textarea id="info" {...register('info')} />
+                        <textarea id="info" aria-required={false} {...register('info')} />
                         <div className={styles.buttons}>
                             <button
                                 role="link"

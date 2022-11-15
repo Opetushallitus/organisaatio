@@ -37,6 +37,7 @@ export const Select = <T extends FieldValues>({ name, control, options, ariaLabe
                         aria-invalid={!!error}
                         aria-errormessage={`#error-${name}`}
                         aria-live="polite"
+                        aria-required={true}
                     />
                 )}
             />

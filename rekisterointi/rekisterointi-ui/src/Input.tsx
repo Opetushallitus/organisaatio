@@ -12,6 +12,7 @@ type InputProps<T extends FieldValues> = {
 };
 
 export const Input = <T extends FieldValues>({ name, required, register, error }: InputProps<T>) => {
+    const isRequired = required ?? true;
     return (
         <div>
             <input
@@ -22,7 +23,8 @@ export const Input = <T extends FieldValues>({ name, required, register, error }
                 aria-invalid={!!error}
                 aria-errormessage={`#error-${name}`}
                 aria-live="polite"
-                {...register(name, { required })}
+                aria-required={isRequired}
+                {...register(name, { required: isRequired })}
             />
             <FormError id={`#error-${name}`} error={error?.message} inputId={name} />
         </div>

@@ -37,6 +37,7 @@ export const DatePicker = <T extends FieldValues>({ name, control, error }: Date
                         aria-invalid={!!error}
                         aria-errormessage={`#error-${name}`}
                         aria-live="polite"
+                        aria-required={true}
                         onChange={(e) => field.onChange(e && format(e, dateFormat))}
                         selected={parseDate(field.value as string)}
                         dateFormat={dateFormat}
