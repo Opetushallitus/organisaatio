@@ -71,14 +71,15 @@ export function JotpaPaakayttaja() {
                             role="radiogroup"
                             aria-invalid={!!errors.asiointikieli}
                             aria-errormessage="#error-asiointikieli"
+                            aria-live="polite"
                             className={styles.radioButtons}
                         >
                             <label htmlFor="fi">
-                                <input id="fi" required type="radio" {...register('asiointikieli')} value="fi" /> Suomi
+                                <input id="fi" type="radio" {...register('asiointikieli')} value="fi" /> Suomi
                             </label>
                             <br />
                             <label htmlFor="sv">
-                                <input id="sv" required type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
+                                <input id="sv" type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
                             </label>
                             <FormError
                                 id="error-asiointikieli"

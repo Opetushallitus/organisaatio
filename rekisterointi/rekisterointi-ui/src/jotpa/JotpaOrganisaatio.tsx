@@ -236,6 +236,7 @@ export function JotpaOrganisaatio() {
                                             aria-labelledby="email-label"
                                             aria-invalid={!!error}
                                             aria-errormessage={`#error-emails-${index}`}
+                                            aria-live="polite"
                                             id={index === 0 ? 'firstEmail' : undefined}
                                             className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
                                             type="text"

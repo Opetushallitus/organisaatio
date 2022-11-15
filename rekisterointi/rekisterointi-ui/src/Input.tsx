@@ -21,6 +21,7 @@ export const Input = <T extends FieldValues>({ name, required, register, error }
                 autoComplete="off"
                 aria-invalid={!!error}
                 aria-errormessage={`#error-${name}`}
+                aria-live="polite"
                 {...register(name, { required })}
             />
             <FormError id={`#error-${name}`} error={error?.message} inputId={name} />
