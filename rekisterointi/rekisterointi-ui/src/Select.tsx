@@ -41,7 +41,7 @@ export const Select = <T extends FieldValues>({ name, control, options, ariaLabe
                     />
                 )}
             />
-            <FormError id={`#error-${name}`} error={error?.message} inputId={name} />
+            <FormError id={`error-${name}`} error={error?.message} inputId={name} />
         </div>
     );
 };

@@ -26,7 +26,7 @@ export const Input = <T extends FieldValues>({ name, required, register, error }
                 aria-required={isRequired}
                 {...register(name, { required: isRequired })}
             />
-            <FormError id={`#error-${name}`} error={error?.message} inputId={name} />
+            <FormError id={`error-${name}`} error={error?.message} inputId={name} />
         </div>
     );
 };
