@@ -61,8 +61,8 @@ export function JotpaYhteenveto() {
         <>
             <Header title={i18n.translate('otsikko_rekisterointi')} />
             <form onSubmit={onSubmit}>
-                <main>
-                    <div className="content">
+                <main id="main">
+                    <div id="content" className="content">
                         <RegistrationProgressBar
                             currentPhase={3}
                             phaseTranslationKeys={['organisaatio_otsikko', 'paakayttaja_otsikko', 'yhteenveto_otsikko']}

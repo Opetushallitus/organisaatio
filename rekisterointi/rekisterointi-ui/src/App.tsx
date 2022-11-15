@@ -50,6 +50,9 @@ function App() {
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, i18n }}>
+            <a className="skip-to-content" href="#main">
+                {i18n.translate('hyppaa_sisaltoon')}
+            </a>
             <Router>
                 <Routes>
                     <Route path="/jotpa" element={<JotpaLanding />} />

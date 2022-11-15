@@ -27,7 +27,7 @@ export function JotpaLanding() {
                 <title>{i18n.translate('title')}</title>
             </Helmet>
             <Header title={i18n.translate('otsikko_rekisterointi')} />
-            <main>
+            <main id="main">
                 <div className={styles.bannerContainer}>
                     <img className={styles.banner} src="/jotpa_banner.png" alt="" />
                 </div>

@@ -115,7 +115,7 @@ export function JotpaOrganisaatio() {
         <>
             <Header title={i18n.translate('otsikko_rekisterointi')} />
             <form onSubmit={handleSubmit(onSubmit)}>
-                <main>
+                <main id="main">
                     <div className="content">
                         <RegistrationProgressBar
                             currentPhase={1}

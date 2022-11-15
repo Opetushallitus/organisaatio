@@ -6,6 +6,7 @@ body {
     line-height: 1.45;
     text-size-adjust: 100%;
     color: var(--gray-font);
+    scroll-behavior: smooth;
 }
 
 h1,
@@ -212,4 +213,20 @@ textarea {
 .react-datepicker-popper[data-placement^='top'] {
     padding-bottom: 0;
     margin-bottom: -4px;
+}
+
+.skip-to-content {
+    height: 1em;
+    line-height: 1em;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-100%);
+    transition: transform 0.3s;
+    border-radius: 4px;
+    background: var(--white);
+}
+
+.skip-to-content:focus {
+    transform: translateY(0%);
 }

@@ -27,7 +27,7 @@ export function JotpaValmis() {
                 <meta name="robots" content="noindex" />
             </Helmet>
             <Header title={i18n.translate('otsikko_valmis')} />
-            <main>
+            <main id="main">
                 <div className="content" data-test-id="valmis-content">
                     <div className={styles.successContent}>
                         <div className={styles.success}>

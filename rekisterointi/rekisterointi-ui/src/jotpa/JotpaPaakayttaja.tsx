@@ -44,7 +44,7 @@ export function JotpaPaakayttaja() {
         <>
             <Header title={i18n.translate('otsikko_rekisterointi')} />
             <form onSubmit={handleSubmit(onSubmit)} data-test-id="paakayttaja-form">
-                <main>
+                <main id="main">
                     <div className="content">
                         <RegistrationProgressBar
                             currentPhase={2}
