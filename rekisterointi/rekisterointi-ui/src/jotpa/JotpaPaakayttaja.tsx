@@ -24,6 +24,7 @@ export function JotpaPaakayttaja() {
         handleSubmit,
         register,
     } = useForm<UserFormState>({
+        mode: 'onTouched',
         defaultValues: useMemo(() => {
             return form;
         }, [form]),
@@ -66,15 +67,24 @@ export function JotpaPaakayttaja() {
                         </label>
                         <Input name="paakayttajaEmail" register={register} error={errors.paakayttajaEmail} />
                         <label className="title">{i18n.translate('paakayttaja_asiointikieli')} *</label>
-                        <div className={styles.radioButtons}>
+                        <div
+                            role="radiogroup"
+                            aria-invalid={!!errors.asiointikieli}
+                            aria-errormessage="#error-asiointikieli"
+                            className={styles.radioButtons}
+                        >
                             <label htmlFor="fi">
-                                <input id="fi" type="radio" {...register('asiointikieli')} value="fi" /> Suomi
+                                <input id="fi" required type="radio" {...register('asiointikieli')} value="fi" /> Suomi
                             </label>
                             <br />
                             <label htmlFor="sv">
-                                <input id="sv" type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
+                                <input id="sv" required type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
                             </label>
-                            <FormError error={errors.asiointikieli?.message} inputId="asiointikieli" />
+                            <FormError
+                                id="error-asiointikieli"
+                                error={errors.asiointikieli?.message}
+                                inputId="asiointikieli"
+                            />
                         </div>
                         <label className="title" htmlFor="info">
                             {i18n.translate('paakayttaja_saateteksti')}

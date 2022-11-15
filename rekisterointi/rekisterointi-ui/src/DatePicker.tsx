@@ -34,6 +34,8 @@ export const DatePicker = <T extends FieldValues>({ name, control, error }: Date
                     <ReactDatePicker
                         id={name}
                         locale={language}
+                        aria-invalid={!!error}
+                        aria-errormessage={`#error-${name}`}
                         onChange={(e) => field.onChange(e && format(e, dateFormat))}
                         selected={parseDate(field.value as string)}
                         dateFormat={dateFormat}
@@ -41,7 +43,7 @@ export const DatePicker = <T extends FieldValues>({ name, control, error }: Date
                     />
                 )}
             />
-            <FormError error={error?.message} inputId={name} />
+            <FormError id={`error-${name}`} error={error?.message} inputId={name} />
         </div>
     );
 };

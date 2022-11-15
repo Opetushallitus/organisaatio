@@ -34,10 +34,12 @@ export const Select = <T extends FieldValues>({ name, control, options, ariaLabe
                         components={{ DropdownIndicator }}
                         options={options}
                         aria-label={ariaLabel}
+                        aria-invalid={!!error}
+                        aria-errormessage={`#error-${name}`}
                     />
                 )}
             />
-            <FormError error={error?.message} inputId={name} />
+            <FormError id={`#error-${name}`} error={error?.message} inputId={name} />
         </div>
     );
 };

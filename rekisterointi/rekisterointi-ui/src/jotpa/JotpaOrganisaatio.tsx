@@ -48,6 +48,7 @@ export function JotpaOrganisaatio() {
         register,
         watch,
     } = useForm<OrganisationFormState>({
+        mode: 'onTouched',
         defaultValues: useMemo(() => {
             return form;
         }, [form]),
@@ -225,7 +226,7 @@ export function JotpaOrganisaatio() {
                         <label id="email-label" className="title" htmlFor="firstEmail">
                             {i18n.translate('organisaatio_email')} *
                         </label>
-                        <FormError error={errors?.emails?.message} inputId="emails" />
+                        <FormError id="error-emails" error={errors?.emails?.message} inputId="emails" />
                         {emailFields.map((field, index) => {
                             const error = errors.emails?.[index]?.email;
                             return (
@@ -233,6 +234,8 @@ export function JotpaOrganisaatio() {
                                     <div className={styles.emailRow}>
                                         <input
                                             aria-labelledby="email-label"
+                                            aria-invalid={!!error}
+                                            aria-errormessage={`#error-emails-${index}`}
                                             id={index === 0 ? 'firstEmail' : undefined}
                                             className={`${styles.emailInput} ${error ? styles.errorInput : ''}`}
                                             type="text"
@@ -251,7 +254,11 @@ export function JotpaOrganisaatio() {
                                             </button>
                                         )}
                                     </div>
-                                    <FormError error={error?.message} inputId={`email-${index}`} />
+                                    <FormError
+                                        id={`error-emails-${index}`}
+                                        error={error?.message}
+                                        inputId={`email-${index}`}
+                                    />
                                 </div>
                             );
                         })}

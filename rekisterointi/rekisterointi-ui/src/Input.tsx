@@ -19,9 +19,11 @@ export const Input = <T extends FieldValues>({ name, required, register, error }
                 className={`${styles.input} ${error ? styles.error : ''}`}
                 type="text"
                 autoComplete="off"
+                aria-invalid={!!error}
+                aria-errormessage={`#error-${name}`}
                 {...register(name, { required })}
             />
-            <FormError error={error?.message} inputId={name} />
+            <FormError id={`#error-${name}`} error={error?.message} inputId={name} />
         </div>
     );
 };
