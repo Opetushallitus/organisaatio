@@ -46,7 +46,7 @@ const UpcomingPhase = ({ phase }: PhaseProps) => (
 export const RegistrationProgressBar = ({ currentPhase, phaseTranslationKeys }: RegistrationProgressBarProps) => {
     const { i18n } = useLanguageContext();
     return (
-        <div className={styles.progressBar}>
+        <div className={styles.progressBar} aria-hidden={true}>
             {phaseTranslationKeys.map((k, idx) => {
                 const dottedLineClassName =
                     idx === 0
