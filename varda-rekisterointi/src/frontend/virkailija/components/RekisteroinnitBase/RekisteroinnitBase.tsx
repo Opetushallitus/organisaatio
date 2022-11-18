@@ -20,12 +20,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function RekisteroinnitBase() {
     const { i18n } = useContext(LanguageContext);
-    const { hasCreatePermission } = useContext(PermissionContext);
+    const { hasCreatePermission, registrationTypes } = useContext(PermissionContext);
     const [ytunnus, setYtunnus] = useState('');
     const ytunnusTrimmed = ytunnus.trim();
     const ytunnusDisabled = !YtunnusValidator.validate(ytunnusTrimmed);
     const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]: ytunnusDisabled });
-    const [registrationTypes, setRegistrationTypes] = useState<Rekisterointityyppi[]>([]);
     const [registrationType, setRegistrationType] = useState<Rekisterointityyppi>();
     const [rekisteroinnit, setRekisteroinnit] = useState<Rekisterointihakemus[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,10 +37,7 @@ export default function RekisteroinnitBase() {
                 const { data: rekisteroinnit } = await axios.get<Rekisterointihakemus[]>(
                     '/varda-rekisterointi/virkailija/api/rekisterointi'
                 );
-                const uniqueRegistrationTypes = Array.from(new Set(rekisteroinnit.map((r) => r.tyyppi)));
-                uniqueRegistrationTypes.sort();
-                setRegistrationTypes(uniqueRegistrationTypes);
-                setRegistrationType(uniqueRegistrationTypes[0] ?? 'varda');
+                setRegistrationType(registrationTypes[0] ?? 'varda');
                 setRekisteroinnit(rekisteroinnit);
                 setLoading(false);
             } catch (e: unknown) {
@@ -50,7 +46,7 @@ export default function RekisteroinnitBase() {
         };
 
         void fetchRekisteroinnit();
-    }, []);
+    }, [registrationTypes]);
 
     const approvalCallback = (
         approvalRegistrations: Rekisterointihakemus[],
@@ -68,12 +64,8 @@ export default function RekisteroinnitBase() {
                 : r
         );
         setRekisteroinnit(registrations);
-        toast.success(i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTY' : 'REKISTEROINNIT_HYLATTY'))
+        toast.success(i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTY' : 'REKISTEROINNIT_HYLATTY'));
     };
-
-    if (loading) {
-        return <Spinner />;
-    }
 
     if (error) {
         return <ErrorPage>{i18n.translate('REKISTEROINNIT_LATAUSVIRHE')}</ErrorPage>;
@@ -111,11 +103,15 @@ export default function RekisteroinnitBase() {
                     {i18n.translate('REKISTEROINNIT_OTSIKKO_SUFFIX')}
                 </h1>
                 <p className={styles.description}>{i18n.translate('REKISTEROINNIT_KUVAUS')}</p>
-                <RekisteroinnitTable
-                    rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)}
-                    rekisterointityyppi={registrationType ?? 'varda'}
-                    approvalCallback={approvalCallback}
-                />
+                {loading ? (
+                    <Spinner />
+                ) : (
+                    <RekisteroinnitTable
+                        rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)}
+                        rekisterointityyppi={registrationType ?? 'varda'}
+                        approvalCallback={approvalCallback}
+                    />
+                )}
                 {hasCreatePermission && registrationType === 'varda' && (
                     <div>
                         <div className={styles.lisaaHakemusOsio}>
