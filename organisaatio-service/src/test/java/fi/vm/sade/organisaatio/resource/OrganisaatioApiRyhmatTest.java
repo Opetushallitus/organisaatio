@@ -40,7 +40,24 @@ class OrganisaatioApiRyhmatTest {
     void testSomeRyhmat() throws Exception {
         this.mockMvc.perform(get("/api/ryhmat"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"oid\":\"1.2.2004.2\"}]",false));
+                .andExpect(content().json("[{\"oid\":\"1.2.2004.2\"},{\"oid\":\"1.2.2004.3\"}]",false));
+    }
+
+    @Test
+    @DisplayName("Ryhmät can be filtered by lakkautuspäivämäärä")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/ryhma_organisaatio_data.sql"})
+    void testRyhmatLakkautusPvmParam() throws Exception {
+        this.mockMvc.perform(get("/api/ryhmat?lakkautusPvm=2015-12-31"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"oid\":\"1.2.2004.3\"}]",false));
+    }
+
+    @Test
+    @DisplayName("Invalid lakkautusPvm param returns 400")
+    void testRyhmatInvalidLakkautusPvmParam() throws Exception {
+        this.mockMvc.perform(get("/api/ryhmat?lakkautusPvm=foobar"))
+                .andExpect(status().isBadRequest());
     }
 
     private String readFile(String fileName) throws Exception {
