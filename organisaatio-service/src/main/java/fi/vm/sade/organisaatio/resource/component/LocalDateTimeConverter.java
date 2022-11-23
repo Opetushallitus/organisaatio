@@ -34,8 +34,9 @@ public class LocalDateTimeConverter implements Converter<String, LocalDateTime> 
 
     private enum SupportedFormats {
         DATE_ONLY("yyyy-MM-dd", dateConverter),
+        TIMESTAMP_SPACE("yyyy-MM-dd HH:mm", timestampConverter),
         TIMESTAMP_T("yyyy-MM-dd'T'HH:mm", timestampConverter),
-        TIMESTAMP_SPACE("yyyy-MM-dd HH:mm", timestampConverter);
+        TIMESTAMP_S("yyyy-MM-dd'T'HH:mm:ss", timestampConverter);
 
         private final BiFunction<String, DateTimeFormatter, LocalDateTime> conversionFunction;
         private final DateTimeFormatter formatter;

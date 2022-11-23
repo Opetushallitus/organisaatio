@@ -15,13 +15,15 @@ class LocalDateTimeConverterTest {
 
     @ParameterizedTest(name = "{index}: date input {0} has year {1} and hour {2}")
     @CsvSource({
-            "1970-01-01 12:12,1970,12",
-            "1970-01-01,1970,0",
-            "1970-01-01T12:12,1970,12"})
-    void convert1(String input, int year, int hour) {
+            "1970-01-01 12:12,1970,12,0",
+            "1970-01-01,1970,0,0",
+            "1970-01-01T12:12,1970,12,0",
+            "1970-01-01T12:12:14,1970,12,14"})
+    void convert1(String input, int year, int hour, int second) {
         LocalDateTime dateTime = res.convert(input);
         assertEquals(year, dateTime.getYear());
         assertEquals(hour, dateTime.getHour());
+        assertEquals(second, dateTime.getSecond());
     }
 
     @ParameterizedTest(name = "{index}: date input {0} throws exception")
