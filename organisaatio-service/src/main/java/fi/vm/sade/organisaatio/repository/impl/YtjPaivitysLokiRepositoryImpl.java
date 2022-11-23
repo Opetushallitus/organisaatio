@@ -16,8 +16,6 @@
 */
 package fi.vm.sade.organisaatio.repository.impl;
 
-import fi.vm.sade.generic.dao.AbstractJpaDAOImpl;
-import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;

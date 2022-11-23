@@ -22,8 +22,6 @@ import org.apache.commons.lang.time.DateUtils;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
-
 /**
  *
  * @author simok

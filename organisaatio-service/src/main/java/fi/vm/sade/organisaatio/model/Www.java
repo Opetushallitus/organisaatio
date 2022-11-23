@@ -18,7 +18,6 @@
 package fi.vm.sade.organisaatio.model;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 

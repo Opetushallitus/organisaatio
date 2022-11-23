@@ -19,11 +19,10 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
-import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -49,15 +48,6 @@ public class OrganisaatioBusinessChecker {
 
     @Autowired
     private OrganisaatioRepository organisaatioRepository;
-
-    @Autowired
-    protected YhteystietoArvoRepository yhteystietoArvoRepository;
-
-    @Autowired
-    protected YhteystietoElementtiRepository yhteystietoElementtiRepository;
-
-    @Autowired
-    protected OrganisaatioNimiRepository organisaatioNimiRepository;
 
     @Autowired
     private OrganisaatioTarjonta organisaatioTarjonta;

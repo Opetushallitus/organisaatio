@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ObjectMapperConfigurationTest {

@@ -1,12 +1,11 @@
 package fi.vm.sade.organisaatio.repository;
 
-import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import javax.persistence.EntityManager;
@@ -143,15 +142,6 @@ public interface OrganisaatioRepositoryCustom {
      */
     List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut);
 
-    /**
-     * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. Ei palauta piilotettuja organisaatioita.
-     * Hibernaten odotetaan lataavan laiskasti batcheissa puuttuvat tiedot.
-     * @param oids Organisaatioiden oidit
-     * @param excludePoistettu Jätetäänkö poistetut organisaatiot pois hausta
-     * @return Oideja vastaavat organisaatiot
-     * @see #findByOids(Collection, boolean, boolean)
-     */
-    List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu);
 
     /**
      * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. <b>Huom!</b> oikeus nähdä piilotetut
@@ -161,7 +151,6 @@ public interface OrganisaatioRepositoryCustom {
      * @param excludePoistettu jätetäänkö poistetut pois tuloksista
      * @param excludePiilotettu jätetäänkö piilotetut pois tuloksista
      * @return OID:ja vastaavat organisaatiot
-     * @see #findByOids(Collection, boolean)
      */
     List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu, boolean excludePiilotettu);
 
@@ -172,7 +161,6 @@ public interface OrganisaatioRepositoryCustom {
      * @param lastModifiedSince päivämäärä
      * @param excludePiilotettu jätetäänkö piilotetut organisaatiot pois tuloksista
      * @return annetun päivämäärän jälkeen muuttuneet organisaatiot
-     * @see #findModifiedSince(boolean, Date, List, boolean)
      */
     List<Organisaatio> findModifiedSince(
             boolean excludePiilotettu,
@@ -211,8 +199,6 @@ public interface OrganisaatioRepositoryCustom {
      * @throws OptimisticLockException
      */
     void updateOrg(Organisaatio org) throws OptimisticLockException;
-
-    void flush();
 
     EntityManager getJpaEntityManager();
 

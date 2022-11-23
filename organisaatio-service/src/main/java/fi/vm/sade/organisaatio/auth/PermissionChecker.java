@@ -107,10 +107,6 @@ public class PermissionChecker {
         }
     }
 
-    public void checkEditYhteystietojentyyppi() {
-        checkPermission(permissionService.userCanEditYhteystietojenTyypit());
-    }
-
     public void checkReadOrganisation(String oid) {
         Organisaatio organisaatio = organisaatioRepository.findFirstByOid(oid);
 

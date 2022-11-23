@@ -19,7 +19,6 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.service.converter.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
@@ -30,7 +29,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +43,6 @@ public class OrganisaatioRDTOV3ToOrganisaatioConverter implements Converter<Orga
 
     @Override
     public Organisaatio convert(OrganisaatioRDTOV3 t) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Set<Yhteystieto> yhteystietos = new HashSet<>();
         Organisaatio s = new Organisaatio();
 

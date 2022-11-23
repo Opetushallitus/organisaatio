@@ -18,6 +18,7 @@
 package fi.vm.sade.organisaatio.model;
 
 import fi.vm.sade.organisaatio.api.model.types.YhteystietoElementtiTyyppi;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -103,13 +104,6 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
         } else {
             throw new IllegalArgumentException("cannot get arvo, illegal target class: "+kentta.getTyyppi());
         }
-        /*if (YhteystietoDTO.class.isAssignableFrom(kentta.getTyyppi().getTargetClass())) {
-            return arvoYhteystieto;
-        } else if (String.class.isAssignableFrom(kentta.getTyyppi().getTargetClass())) {
-            return arvoText;
-        } else {
-            throw new IllegalArgumentException("cannot get arvo, illegal target class: "+kentta.getTyyppi().getTargetClass());
-        }*/
     }
 
     public String getYhteystietoArvoOid() {

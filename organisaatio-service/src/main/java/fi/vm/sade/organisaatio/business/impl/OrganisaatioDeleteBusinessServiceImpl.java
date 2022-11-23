@@ -19,8 +19,8 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteHakukohteita
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteParentException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

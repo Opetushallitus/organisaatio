@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
-import fi.vm.sade.organisaatio.service.converter.AbstractToDomainConverter;
 import fi.vm.sade.organisaatio.service.converter.util.MetadataConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.MonikielinenTekstiConverterUtils;
 import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;

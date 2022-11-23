@@ -28,8 +28,4 @@ public class LearningInstitutionExistsException extends OrganisaatioBusinessExce
         super(message);
     }
 
-    public LearningInstitutionExistsException() {
-        this("organisaatio.exception.learning.institution.exists");
-    }
-
 }

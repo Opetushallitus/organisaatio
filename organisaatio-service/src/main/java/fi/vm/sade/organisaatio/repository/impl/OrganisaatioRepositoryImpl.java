@@ -402,8 +402,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
                 .fetch();
     }
 
-    @Override
-    public List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu) {
+    private List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu) {
         return findByOids(oids, excludePoistettu, true);
     }
 
@@ -889,10 +888,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         return query.fetch();
     }
 
-    @Override
-    public void flush() {
-        em.flush();
-    }
 
     @Override
     public EntityManager getJpaEntityManager() {

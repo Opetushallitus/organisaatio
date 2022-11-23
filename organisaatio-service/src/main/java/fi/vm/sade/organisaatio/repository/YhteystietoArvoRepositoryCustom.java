@@ -17,8 +17,6 @@ package fi.vm.sade.organisaatio.repository;
 
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
@@ -28,16 +26,5 @@ import java.util.List;
  */
 public interface YhteystietoArvoRepositoryCustom {
 
-    @SuppressWarnings(value = "unchecked")
     List<YhteystietoArvo> findByOrganisaatio(Organisaatio org);
-
-    YhteystietoArvo findByOrganisaatioAndNimi(String organisaatioOid, String nimi);
-
-    /**
-     * Returns yhteystietoarvos for a given yhteystietojen tyyppi
-     * @param yhteystietojenTyyppi the yhteystietojen tyyppi given
-     * @return the yhteystietoarvo objects matching the given yhteystietojen tyyppi
-     */
-    List<YhteystietoArvo> findByYhteystietojenTyyppi(YhteystietojenTyyppi yhteystietojenTyyppi);
-    
 }

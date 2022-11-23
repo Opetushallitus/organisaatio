@@ -14,13 +14,9 @@
 */
 package fi.vm.sade.organisaatio.repository;
 
-import fi.vm.sade.generic.dao.JpaDAO;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public interface YtjPaivitysLokiRepository extends CrudRepository<YtjPaivitysLoki, Long>, YtjPaivitysLokiRepositoryCustom {

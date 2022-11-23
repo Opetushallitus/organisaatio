@@ -31,7 +31,6 @@ import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
-import fi.vm.sade.organisaatio.service.TimeService;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioTyyppiUtil;
@@ -77,9 +76,6 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     private ConversionService conversionService;
 
     @Autowired
-    private TimeService timeService;
-
-    @Autowired
     private PermissionChecker permissionChecker;
 
     @Value("${root.organisaatio.oid}")
@@ -89,7 +85,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     @Transactional(readOnly = true)
     public List<OrganisaatioPerustieto> findBy(SearchCriteria criteria, SearchConfig config) {
         // haetaan hakukriteerien mukaiset organisaatiot
-        Date now = timeService.getNow();
+        Date now = new Date();
         Set<Organisaatio> entities = new TreeSet<>(Comparator.comparing(Organisaatio::getOid));
         entities.addAll(organisaatioRepository.findBy(criteria, now));
         Set<String> oids = entities.stream()

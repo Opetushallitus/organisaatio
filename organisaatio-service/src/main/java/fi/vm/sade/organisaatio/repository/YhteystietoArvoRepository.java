@@ -15,10 +15,7 @@
 
 package fi.vm.sade.organisaatio.repository;
 
-import fi.vm.sade.generic.dao.JpaDAO;
-import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietoArvo;
-import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
