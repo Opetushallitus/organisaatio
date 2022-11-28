@@ -25,7 +25,7 @@ export default function RekisteroinnitBase() {
     const ytunnusTrimmed = ytunnus.trim();
     const ytunnusDisabled = !YtunnusValidator.validate(ytunnusTrimmed);
     const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]: ytunnusDisabled });
-    const [registrationType, setRegistrationType] = useState<Rekisterointityyppi>();
+    const [registrationType, setRegistrationType] = useState<Rekisterointityyppi>(registrationTypes[0] ?? 'varda');
     const [rekisteroinnit, setRekisteroinnit] = useState<Rekisterointihakemus[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -37,7 +37,6 @@ export default function RekisteroinnitBase() {
                 const { data: rekisteroinnit } = await axios.get<Rekisterointihakemus[]>(
                     '/varda-rekisterointi/virkailija/api/rekisterointi'
                 );
-                setRegistrationType(registrationTypes[0] ?? 'varda');
                 setRekisteroinnit(rekisteroinnit);
                 setLoading(false);
             } catch (e: unknown) {
