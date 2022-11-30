@@ -123,6 +123,7 @@ const apiOrganisaatio: ApiOrganisaatio = {
     yhteystietoArvos: [],
     ytunnus: undefined,
     piilotettu: undefined,
+    katketty: false,
 };
 
 const newApiOrganisaatio: NewApiOrganisaatio = {
@@ -171,6 +172,7 @@ const uiBaseTiedot: UiOrganisaatioBase = {
     currentNimi: { nimi: { fi: 'vanhanimi' }, alkuPvm: Uiyesterday, version: 0 },
     status: 'AKTIIVINEN',
     nimi: { fi: 'uusinimi' },
+    katketty: false,
 };
 
 const uiPerustiedot: Perustiedot = {

@@ -45,6 +45,7 @@ import YTJModaali from '../../Modaalit/YTJModaali/YTJModaali';
 import { ApiOrganisaatio } from '../../../types/apiTypes';
 import {
     AlaBanneri,
+    HiddenForm,
     LomakeButton,
     PaaOsio,
     ValiContainer,
@@ -357,15 +358,16 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     const validateChanges = (accordionUuids: string[]): void => {
         const accordionuuid = accordionUuids[0];
+        console.log(accordionuuid, readOnly);
         const setAvoinnaCb = () => {
             setLomakeAvoinna(accordionuuid);
         };
         switch (lomakeAvoinna) {
             case PERUSTIEDOTID:
-                perustiedotHandleSubmit(setAvoinnaCb)();
+                readOnly ? setAvoinnaCb() : perustiedotHandleSubmit(setAvoinnaCb)();
                 break;
             case YHTEYSTIEDOTID:
-                yhteystiedotHandleSubmit(setAvoinnaCb)();
+                readOnly ? setAvoinnaCb() : yhteystiedotHandleSubmit(setAvoinnaCb)();
                 break;
             default:
                 return setAvoinnaCb();
@@ -440,18 +442,24 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
-            <YhteystietoLomake
-                readOnly={readOnly && !casMe.canEditLomake('LOMAKE_YHTEYSTIEDOT', params.oid, organisaatioNimiPolku)}
-                getYhteystiedotValues={getYhteystiedotValues}
-                opetusKielet={opetusKielet}
-                watch={watchYhteystiedot}
-                setYhteystiedotValue={setYhteystiedotValue}
-                formControl={yhteystiedotControl}
-                hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
-                formRegister={yhteystiedotRegister}
-                key={YHTEYSTIEDOTID}
-                isYtj={!!ytunnus}
-            />
+            organisaatioBase.katketty ? (
+                <HiddenForm key={'HIDDEN_YHTEYSTIEDOT'} />
+            ) : (
+                <YhteystietoLomake
+                    readOnly={
+                        readOnly && !casMe.canEditLomake('LOMAKE_YHTEYSTIEDOT', params.oid, organisaatioNimiPolku)
+                    }
+                    getYhteystiedotValues={getYhteystiedotValues}
+                    opetusKielet={opetusKielet}
+                    watch={watchYhteystiedot}
+                    setYhteystiedotValue={setYhteystiedotValue}
+                    formControl={yhteystiedotControl}
+                    hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
+                    formRegister={yhteystiedotRegister}
+                    key={YHTEYSTIEDOTID}
+                    isYtj={!!ytunnus}
+                />
+            )
         );
         otsikot.push(i18n.translate('LOMAKE_YHTEYSTIEDOT'));
         if (
@@ -502,7 +510,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
         if (organisaatioBase?.oid !== ROOT_OID && organisaatioBase?.oid) {
-            lomakkeet.push(<OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} historia={historia} />);
+            lomakkeet.push(
+                organisaatioBase.katketty ? (
+                    <HiddenForm key={'HIDDEN_NIMIHISTORIA'} />
+                ) : (
+                    <OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} historia={historia} />
+                )
+            );
             otsikot.push(i18n.translate('LOMAKE_RAKENNE'));
         }
 

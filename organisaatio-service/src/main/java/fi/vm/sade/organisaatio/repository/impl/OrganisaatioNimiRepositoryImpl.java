@@ -37,14 +37,6 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
 
 
     @Override
-    public List<OrganisaatioNimi> findNimet(String organisaatioOid) {
-        TypedQuery<OrganisaatioNimi> query = em.createNamedQuery(
-                "OrganisaatioNimiDAO.findNimet", OrganisaatioNimi.class);
-        query.setParameter("organisaatioOid", organisaatioOid);
-        return query.getResultList();
-    }
-
-    @Override
     public OrganisaatioNimi findNimi(Organisaatio organisaatio, OrganisaatioNimiDTO nimi) {
         if (organisaatio == null) {
             throw new IllegalArgumentException("organisaatio cannot be null");

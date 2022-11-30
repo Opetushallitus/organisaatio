@@ -82,7 +82,7 @@ public class OrganisaatioToOrganisaatioRDTOV4Converter implements Converter<Orga
         t.setVirastoTunnus(s.getVirastoTunnus());
 
         t.setPiilotettu(s.isPiilotettu());
-
+        t.setKatketty(s.isMaskingActive());
         // Get dynamic Yhteysieto / Yhteystietotyppie / Elementti data
         Set<Map<String, String>> yhteystietoArvos = new HashSet<>();
         t.setYhteystietoArvos(yhteystietoArvos);

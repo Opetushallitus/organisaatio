@@ -68,6 +68,7 @@ export type OrganisaatioBase = {
     parentOid: string;
     parentOidPath: string;
     tarkastusPvm?: number;
+    katketty: boolean;
 };
 export type ApiYhteystietoArvo = {
     'YhteystietoArvo.arvoText'?: string;
@@ -143,4 +144,4 @@ export type OrganisaatioHakuOrganisaatio = {
     allOids: string[];
 };
 
-export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath'>;
+export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath' | 'katketty'>;

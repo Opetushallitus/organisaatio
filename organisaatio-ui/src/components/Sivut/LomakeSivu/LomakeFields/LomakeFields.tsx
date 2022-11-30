@@ -178,6 +178,15 @@ const LomakeIconButton = ({ onClick, label, icon, ...rest }) => {
         </Button>
     );
 };
+
+const HiddenForm = () => {
+    const [i18n] = useAtom(languageAtom);
+    return (
+        <UloinKehys>
+            <h3>{i18n.translate('KATKETTY_LOMAKE')}</h3>
+        </UloinKehys>
+    );
+};
 export {
     UloinKehys,
     YlaBanneri,
@@ -200,4 +209,5 @@ export {
     ReadOnlyDate,
     LomakeButton,
     LabelLink,
+    HiddenForm,
 };
