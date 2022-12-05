@@ -9,7 +9,6 @@ import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -192,13 +191,6 @@ public interface OrganisaatioRepositoryCustom {
      * @return tarkastamattomat organisaatiot
      */
     Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvm, Collection<String> oids, long limit);
-
-    /**
-     * Implementation of merge without flush, let hibernate decide when
-     * @param org
-     * @throws OptimisticLockException
-     */
-    void updateOrg(Organisaatio org) throws OptimisticLockException;
 
     EntityManager getJpaEntityManager();
 
