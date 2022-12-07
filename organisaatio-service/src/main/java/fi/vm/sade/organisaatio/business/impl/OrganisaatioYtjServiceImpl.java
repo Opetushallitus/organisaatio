@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 import static java.util.stream.Collectors.toList;
 
 @Service("organisaatioYtjService")
-@Transactional(rollbackFor = Throwable.class, readOnly = true)
+@Transactional(rollbackFor = Throwable.class)
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     private static final Pattern PUHELIN_VALIDATION = Pattern.compile(Puhelinnumero.VALIDATION_REGEXP);
@@ -146,7 +146,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 if(constraintViolations.size() > 0) {
                     throw new ValidationException(constraintViolations.iterator().next().getMessage());
                 }
-                organisaatioRepository.updateOrg(organisaatio);
                 // update koodisto (When name has changed)
                 try {
                     organisaatioKoodisto.paivitaKoodisto(organisaatio);
@@ -168,13 +167,9 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.TUNTEMATON, "ilmoitukset.log.virhe.tuntematon");
             }
         }
-        // TODO check flushing
-        // Call this since the class is readOnly so it won't be called automatically by transaction manager.
-        //organisaatioRepository.flush();
 
         ytjPaivitysLoki.setPaivitetytLkm(updateOrganisaatioList.size());
         ytjPaivitysLokiRepository.save(ytjPaivitysLoki);
-
         organisaatioViestinta.sendPaivitysLokiViestintaEmail(ytjPaivitysLoki);
 
         return ytjPaivitysLoki;

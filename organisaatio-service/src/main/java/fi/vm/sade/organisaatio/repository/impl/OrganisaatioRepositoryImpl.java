@@ -45,7 +45,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -364,10 +363,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
                 .orderBy(qOrganisaatio.tarkastusPvm.asc().nullsFirst(), qOrganisaatio.id.asc())
                 .limit(limit)
                 .fetch();
-    }
-
-    public void updateOrg(Organisaatio org) throws OptimisticLockException {
-        em.merge(org);
     }
 
     private BooleanExpression getVoimassaoloExpression(boolean suunnitellut, boolean lakkautetut, QOrganisaatio qOrganisaatio) {
