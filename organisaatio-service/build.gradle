@@ -48,7 +48,7 @@ dependencies {
     implementation group: 'org.springframework.session', name: 'spring-session-jdbc'
     implementation group: 'org.springframework.security', name: 'spring-security-cas', version: '5.3.0.RELEASE'
 
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.11'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.13'
     implementation group: 'fi.vm.sade.java-utils', name: 'java-http', version: '0.6.1-SNAPSHOT'
     implementation group: 'fi.vm.sade.java-utils', name: 'oid-generator', version: '0.1.0-SNAPSHOT'
     implementation group: 'fi.vm.sade.java-utils', name: 'opintopolku-cas-servlet-filter', version: '0.1.2-SNAPSHOT'

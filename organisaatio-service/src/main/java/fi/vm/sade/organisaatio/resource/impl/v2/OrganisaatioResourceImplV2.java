@@ -22,7 +22,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.HakutoimistoService;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
@@ -74,9 +73,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganisaatioResourceImplV2.class);
     private static final String NOT_AUTHORIZED_TO_READ_ORGANISATION = "Not authorized to read organisation: {}";
-
-    @Autowired
-    private OrganisaatioBusinessService organisaatioBusinessService;
 
     @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;

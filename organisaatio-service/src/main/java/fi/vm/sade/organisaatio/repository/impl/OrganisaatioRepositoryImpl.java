@@ -92,7 +92,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     private static final String URI_WITH_VERSION_REG_EXP = "^.*#[0-9]+$";
 
     @Override
-    public Collection<Organisaatio> findBy(SearchCriteria criteria, Date now) {
+    public Collection<Organisaatio> findBy(SearchCriteria criteria) {
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         StringPath qOrganisaatiotyyppi = Expressions.stringPath("tyyppi");
         QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
@@ -109,7 +109,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
                 .leftJoin(qOrganisaatio.parentOids, qParentOid).fetchJoin()
                 .select(qOrganisaatio);
 
-        Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio, now)).ifPresent(query::where);
+        Optional.ofNullable(getStatusPredicate(criteria, qOrganisaatio)).ifPresent(query::where);
 
         Optional.ofNullable(criteria.getPoistettu()).ifPresent(poistettu
                 -> query.where(qOrganisaatio.organisaatioPoistettu.eq(poistettu)));
@@ -165,8 +165,9 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         return query.fetch();
     }
 
-    private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio, Date now) {
+    private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio) {
         // Ei aktiivisia, suunniteltuja eikä lakkautettuja - tätä ei pitäisi tapahtua
+        Date now = new Date();
         if (!criteria.getAktiiviset() && !criteria.getSuunnitellut() && !criteria.getLakkautetut()) {
             return allOf(
                     qOrganisaatio.alkuPvm.before(now),

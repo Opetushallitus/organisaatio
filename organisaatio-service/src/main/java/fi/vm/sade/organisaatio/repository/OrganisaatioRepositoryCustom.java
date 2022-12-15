@@ -23,7 +23,7 @@ public interface OrganisaatioRepositoryCustom {
      * @param now nykyhetki
      * @return organisaatiot
      */
-    Collection<Organisaatio> findBy(SearchCriteria criteria, Date now);
+    Collection<Organisaatio> findBy(SearchCriteria criteria);
 
     /**
      * Palauttaa organisaatioiden aktiivisten aliorganisaatioiden lukumäärät.
