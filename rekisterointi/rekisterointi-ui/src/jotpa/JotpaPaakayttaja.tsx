@@ -13,9 +13,10 @@ import { RegistrationProgressBar } from '../RegistrationProgressBar';
 import { useLanguageContext } from '../LanguageContext';
 
 import styles from './jotpa.module.css';
+import { getLanguageName } from '../types';
 
 export function JotpaPaakayttaja() {
-    const { i18n } = useLanguageContext();
+    const { i18n, language } = useLanguageContext();
     const navigate = useNavigate();
     const { form } = useJotpaRekisterointiSelector((state) => state.user);
     const dispatch = useJotpaRekisterointiDispatch();
@@ -76,11 +77,13 @@ export function JotpaPaakayttaja() {
                             className={styles.radioButtons}
                         >
                             <label htmlFor="fi">
-                                <input id="fi" type="radio" {...register('asiointikieli')} value="fi" /> Suomi
+                                <input id="fi" type="radio" {...register('asiointikieli')} value="fi" />{' '}
+                                {getLanguageName('fi', language)}
                             </label>
                             <br />
                             <label htmlFor="sv">
-                                <input id="sv" type="radio" {...register('asiointikieli')} value="sv" /> Ruotsi
+                                <input id="sv" type="radio" {...register('asiointikieli')} value="sv" />{' '}
+                                {getLanguageName('sv', language)}
                             </label>
                             <FormError
                                 id="error-asiointikieli"

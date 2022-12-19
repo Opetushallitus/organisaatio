@@ -22,7 +22,6 @@ export const Input = <T extends FieldValues>({ name, required, register, error }
                 autoComplete="off"
                 aria-invalid={!!error}
                 aria-errormessage={`#error-${name}`}
-                aria-live="polite"
                 aria-required={isRequired}
                 {...register(name, { required: isRequired })}
             />
