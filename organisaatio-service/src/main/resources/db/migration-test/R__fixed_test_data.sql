@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION createOrganisaatio(oid1 varchar, nimi varchar, parentoid varchar, parentid bigint, parentidpath varchar, types varchar[], oppilaitostyyppi varchar, oppilaitoskoodi varchar) returns RECORD
+CREATE OR REPLACE FUNCTION createOrganisaatio(oid1 varchar, nimi varchar, parentoid varchar, parentid bigint, parentidpath varchar, types varchar[], oppilaitostyyppi varchar, oppilaitoskoodi varchar, yritysmuoto varchar, vardatoimintamuoto varchar) returns RECORD
     language plpgsql
 AS
 $$
@@ -10,8 +10,10 @@ begin
         data    AS (SELECT 'test_data' as paivittaja, checker.newoid as oid, nimi from checker),
         mkt     AS (INSERT INTO monikielinenteksti (id,version) select (select max(id)+1 from monikielinenteksti),0 from data RETURNING id),
         mktval  AS (INSERT INTO monikielinenteksti_values (id, value, key) SELECT mkt.id,data.nimi,kieli.id FROM mkt join data on 1=1 join (values('fi'),('sv'),('en'))as kieli(id) on 1=1),
-        org     AS (INSERT into organisaatio (oid,id,version, nimi_mkt, piilotettu, organisaatiopoistettu, paivityspvm, paivittaja, alkupvm, kotipaikka, maa, parentidpath,oppilaitostyyppi, oppilaitoskoodi, nimihaku)
-                    SELECT  data.oid, (select coalesce(max(id)+1,1) from organisaatio),0, mkt.id, false, false, CURRENT_TIMESTAMP, data.paivittaja, CURRENT_DATE, 'kunta_153', 'maatjavaltiot1_fin', parentidpath, oppilaitostyyppi, oppilaitoskoodi, createOrganisaatio.nimi FROM mkt join data on 1=1 RETURNING id, oid, organisaatio.parentidpath ),
+        vaka_tt AS (INSERT INTO varhaiskasvatuksen_toimipaikka_tiedot (id, version, toimintamuoto, kasvatusopillinen_jarjestelma, paikkojen_lukumaara)
+                    SELECT nextval('public.hibernate_sequence'), 0, vardatoimintamuoto, 'vardakasvatusopillinenjarjestelma_kj98', 0 FROM checker WHERE vardatoimintamuoto IS NOT NULL RETURNING id),
+        org     AS (INSERT into organisaatio (oid,id,version, nimi_mkt, piilotettu, organisaatiopoistettu, paivityspvm, paivittaja, alkupvm, kotipaikka, maa, parentidpath,oppilaitostyyppi, oppilaitoskoodi, nimihaku, yritysmuoto, varhaiskasvatuksen_toimipaikka_tiedot_id)
+                    SELECT  data.oid, (select coalesce(max(id)+1,1) from organisaatio),0, mkt.id, false, false, CURRENT_TIMESTAMP, data.paivittaja, CURRENT_DATE, 'kunta_153', 'maatjavaltiot1_fin', parentidpath, oppilaitostyyppi, oppilaitoskoodi, createOrganisaatio.nimi, yritysmuoto, vaka_tt.id FROM mkt LEFT JOIN vaka_tt ON true join data on 1=1 RETURNING id, oid, organisaatio.parentidpath),
         orgnim  AS (INSERT INTO organisaatio_nimi (id, version, alkupvm, organisaatio_id, nimi_mkt, paivittaja) SELECT (select coalesce(max(id)+1,1) from organisaatio_nimi),0, CURRENT_DATE, org.id, mkt.id, data.paivittaja  from org join mkt on 1=1 join data on 1=1 returning id),
         orgtyp  AS (INSERT INTO organisaatio_tyypit (organisaatio_id, tyypit) SELECT org.id, typ.id from org join unnest(types) as typ(id) on 1=1 returning organisaatio_tyypit.organisaatio_id, organisaatio_tyypit.tyypit),
         kieli1  AS (INSERT INTO organisaatio_kielet (organisaatio_id, kielet) SELECT id, 'oppilaitoksenopetuskieli_1' from org),
@@ -29,17 +31,32 @@ begin
 end;
 $$;
 
-with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000001','Mansikkalan testi kunta','1.2.246.562.10.00000000001',0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_09'], null, null) as foo(id bigint,oid varchar, parentidpath varchar)),
-     a as (select createOrganisaatio('1.2.246.562.99.00000000002','Mansikkalan testi peruskoulu',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_11#1', '30076') from parent where parent.oid is not null ),
-     b as (select createOrganisaatio('1.2.246.562.99.00000000003','Mansikkalan testi lukio',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_15#1', '30077') from parent where parent.oid is not null)
-select createOrganisaatio('1.2.246.562.99.00000000004','Ahomansikan päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null) from parent where parent.oid is not null union all select * from a union all select * from b;
+with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000001','Mansikkalan testi kunta','1.2.246.562.24.00000000001',0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_09'], null, null, null, null) as foo(id bigint,oid varchar, parentidpath varchar)),
+     a as (select createOrganisaatio('1.2.246.562.99.00000000002','Mansikkalan testi peruskoulu',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_11#1', '30076', null, null) from parent where parent.oid is not null ),
+     b as (select createOrganisaatio('1.2.246.562.99.00000000003','Mansikkalan testi lukio',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_15#1', '30077', null, null) from parent where parent.oid is not null)
+select createOrganisaatio('1.2.246.562.99.00000000004','Ahomansikan päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, null) from parent where parent.oid is not null
+union all select * from a union all select * from b;
 
-with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000005','Testi Koulutuskuntayhtymä Puolukka','1.2.246.562.10.00000000001',0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_09'], null, null) as foo(id bigint,oid varchar, parentidpath varchar)),
-     a as (select createOrganisaatio('1.2.246.562.99.00000000006','Testi Ammattiopisto Puolukka',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_21#1', '30079') from parent where parent.oid is not null )
-select createOrganisaatio('1.2.246.562.99.00000000007','Testi Puolukkalan liikuntaopisto',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_62#1', '30080') from parent where parent.oid is not null union all select * from a ;
+with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000005','Testi Koulutuskuntayhtymä Puolukka','1.2.246.562.24.00000000001',0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_09'], null, null, null, null) as foo(id bigint,oid varchar, parentidpath varchar)),
+     a as (select createOrganisaatio('1.2.246.562.99.00000000006','Testi Ammattiopisto Puolukka',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_21#1', '30079', null, null) from parent where parent.oid is not null )
+select createOrganisaatio('1.2.246.562.99.00000000007','Testi Puolukkalan liikuntaopisto',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_62#1', '30080', null, null) from parent where parent.oid is not null
+union all select * from a ;
 
 with parent as (select id,oid,parentidpath from organisaatio where oid = '1.2.246.562.99.00000000006')
-select createOrganisaatio('1.2.246.562.99.00000000010','Ammattiopisto Puolukka, testi toimipiste',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_03'], null, null) from parent where parent.oid is not null;
+select createOrganisaatio('1.2.246.562.99.00000000010','Ammattiopisto Puolukka, testi toimipiste',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_03'], null, null, null, null) from parent where parent.oid is not null;
 
-with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000008','Mustikkalan testi yhdistys','1.2.246.562.10.00000000001',0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_05'], null, null) as foo(id bigint,oid varchar, parentidpath varchar))
-select createOrganisaatio('1.2.246.562.99.00000000009','Mustikkalan testi opisto',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_63#1', '30081') from parent where parent.oid is not null;
+with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000008','Mustikkalan testi yhdistys','1.2.246.562.24.00000000001',0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_05'], null, null, null, null) as foo(id bigint,oid varchar, parentidpath varchar))
+select createOrganisaatio('1.2.246.562.99.00000000009','Mustikkalan testi opisto',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_63#1', '30081', null, null) from parent where parent.oid is not null;
+
+with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000011','Varhaiskasvatuksen järjestäjä kunta testi','1.2.246.562.24.00000000001',0, '|0|', array['organisaatiotyyppi_07'], null, null, null, null) as foo(id bigint,oid varchar, parentidpath varchar)),
+    a as (select createOrganisaatio('1.2.246.562.99.00000000012','Metsämansikan testi päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm01') from parent where parent.oid is not null),
+    b as (select createOrganisaatio('1.2.246.562.99.00000000013','Metsämuuraimen testi perhepäivähoito',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm02') from parent where parent.oid is not null)
+select createOrganisaatio('1.2.246.562.99.00000000014','Metsämarja testi ryhmäperhepäiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm03') from parent where parent.oid is not null
+union all select * from a union all select * from b;
+
+
+with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000015','Varhaiskasvatuksen järjestäjä yksityinen','1.2.246.562.24.00000000001',0, '|0|', array['organisaatiotyyppi_07'], null, null, 'Yksityinen elinkeinonharjoittaja', null) as foo(id bigint,oid varchar, parentidpath varchar)),
+    a as (select createOrganisaatio('1.2.246.562.99.00000000016','Metsärousko testi päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm01') from parent where parent.oid is not null),
+    b as (select createOrganisaatio('1.2.246.562.99.00000000017','Metsävahvero testi perhepäivähoito',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm02') from parent where parent.oid is not null)
+select createOrganisaatio('1.2.246.562.99.00000000018','Metsähapero testi ryhmäperhepäiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm03') from parent where parent.oid is not null
+union all select * from a union all select * from b;
