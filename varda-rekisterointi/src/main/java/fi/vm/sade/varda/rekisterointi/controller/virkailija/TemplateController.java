@@ -42,8 +42,9 @@ public class TemplateController {
             response = String.class
     )
     public String getTemplate(@ApiParam("viestipohja") @PathVariable Template template,
-                              @ApiParam("kieli") @RequestParam(required = false, defaultValue = "fi") String language) {
-        return templateService.getContent("varda", template, new Locale(language), getDefaultVariables(template));
+                              @ApiParam("kieli") @RequestParam(required = false, defaultValue = "fi") String language,
+                              @ApiParam("tyyppi") @RequestParam(required = false, defaultValue = "varda") String tyyppi) {
+        return templateService.getContent(tyyppi, template, new Locale(language), getDefaultVariables(template));
     }
 
     private Map<String, Object> getDefaultVariables(Template template) {
