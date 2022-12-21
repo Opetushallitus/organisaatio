@@ -13,3 +13,11 @@ Paikallisesti sovellus käynnistetään scriptillä:
 Scriptin pitäisi kertoa, jos jotain puuttuu.
 
 Paikallisessa kehityksessä `cas-oppija` ohitetaan ja sisään kirjaudutaan basic authilla (dev/dev). Organisaatiovaltuudet ovat asetettu staattisesti ja `varda-rekisterointi`-palvelun API on mockattu yhteen tmuxin ikkunoista.
+
+## Testaus
+
+Sovelluksen testit on toteutettu Playwrightillä hakemistoon `rekisterointi-ui/playwright`. Sovelluksen ollessa käynnissä ajo tapahtuu seuraavalla komennolla:
+
+```
+npm run playwright:test
+```
