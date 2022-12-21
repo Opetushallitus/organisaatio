@@ -10,6 +10,7 @@ function require_command {
 require_command tmux
 require_command mvn
 require_command npm
+require_command aws
 
 session="rekisterointi"
 
