@@ -1,0 +1,15 @@
+<!doctype html>
+<html layout:decorate="~{varda/pohja}">
+<head>
+    <title th:text="#{varda.rekisteroityminen.paakayttaja.otsikko}">otsikko</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    <span th:text="#{hei}">Hei</span>
+    <span th:text="${etunimi}">etunimi</span>,<br>
+    <span th:text="#{varda.rekisteroityminen.paakayttaja.teksti}">teksti</span>
+    <p th:text="#{varda.rekisteroityminen.paakayttaja.lisatieto}">lisätieto</p>
+    <p th:text="#{varda.rekisteroityminen.paakayttaja.tietosuoja}">tietosuoja</p>
+</div>
+</body>
+</html>

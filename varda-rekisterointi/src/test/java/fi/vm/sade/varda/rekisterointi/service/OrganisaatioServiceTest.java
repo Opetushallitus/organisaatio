@@ -18,14 +18,14 @@ public class OrganisaatioServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void kuranttiNimiThrowsWhenNoName() {
-        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        OrganisaatioDto dto = new OrganisaatioDto();
         dto.nimet = Collections.emptyList();
         service.kuranttiNimi(dto);
     }
 
     @Test
     public void kuranttiNimiReturnsBlankWhenNoNameMatchingLanguage() {
-        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        OrganisaatioDto dto = new OrganisaatioDto();
         dto.nimet = Collections.singletonList(organisaatioNimi(LocalDate.MIN, "en", "Finnish and Swedish names missing!"));
         dto.ytjkieli = "fi";
         KielistettyNimi kuranttiNimi = service.kuranttiNimi(dto);
@@ -34,7 +34,7 @@ public class OrganisaatioServiceTest {
 
     @Test
     public void kuranttiNimiPicksLatestName() {
-        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        OrganisaatioDto dto = new OrganisaatioDto();
         dto.nimet = List.of(
                 organisaatioNimi(LocalDate.MIN, "fi", "Vanha"),
                 organisaatioNimi(LocalDate.now(), "fi", "Uusi"),
@@ -48,7 +48,7 @@ public class OrganisaatioServiceTest {
 
     @Test
     public void kuranttiNimiPicksFirstNameForPlanned() {
-        OrganisaatioV4Dto dto = new OrganisaatioV4Dto();
+        OrganisaatioDto dto = new OrganisaatioDto();
         dto.nimet = List.of(
                 organisaatioNimi(LocalDate.now().plusDays(1), "fi", "Eka"),
                 organisaatioNimi(LocalDate.now().plusWeeks(1), "fi", "Uusi"),

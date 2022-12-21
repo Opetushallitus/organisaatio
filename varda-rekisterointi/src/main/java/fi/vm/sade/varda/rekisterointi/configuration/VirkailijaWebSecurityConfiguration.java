@@ -24,7 +24,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import javax.servlet.Filter;
 
-import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_ROLE;
+import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_UI_ROLES;;
 
 @Configuration
 @Order(1)
@@ -48,7 +48,7 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
         requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
         http.requestCache().requestCache(requestCache);
         http.antMatcher(VIRKAILIJA_PATH_CLOB).authorizeRequests()
-                .anyRequest().hasRole(VIRKAILIJA_ROLE)
+                .anyRequest().hasAnyRole(VIRKAILIJA_UI_ROLES)
                 .and()
                 .addFilterBefore(virkailijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)

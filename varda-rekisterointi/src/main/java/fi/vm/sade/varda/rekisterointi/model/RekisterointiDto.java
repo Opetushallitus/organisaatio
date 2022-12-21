@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,19 +14,27 @@ import java.util.Set;
 @AllArgsConstructor
 public class RekisterointiDto {
 
-    @NotNull @Valid
+    @NotNull
+    @Valid
     public final Organisaatio organisaatio;
 
-    @NotNull
     public final String toimintamuoto;
 
-    @NotEmpty
+    @NotNull
+    public final String tyyppi;
+
     public final Set<@NotNull String> kunnat;
 
     @NotEmpty
     public final Set<@Email String> sahkopostit;
 
-    @NotNull @Valid
+    @NotNull
+    @Valid
     public final Kayttaja kayttaja;
-    
+
+    @AssertTrue(message = "Invalid Varda registration")
+    private boolean isValidVardaRekisterointi() {
+        return !this.tyyppi.equals("varda")
+                || this.kunnat != null && this.kunnat.size() > 0 && this.toimintamuoto != null;
+    }
 }

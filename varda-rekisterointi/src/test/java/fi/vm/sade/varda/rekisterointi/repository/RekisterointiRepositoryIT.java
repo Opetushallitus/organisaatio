@@ -5,6 +5,7 @@ import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,18 +27,18 @@ public class RekisterointiRepositoryIT {
     @Autowired
     private RekisterointiRepository rekisterointiRepository;
 
-    @Test
+    @Test // new test data consists of 4 rekisterointis with tila Käsittelyssa
     public void findByTilaReturnsMatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTila(
                 Rekisterointi.Tila.KASITTELYSSA.toString());
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
-        assertEquals(1, results.size());
+        assertEquals(4, results.size());
     }
 
     @Test
     public void findByOrganisaatioReturnsMatch() {
-        Iterable<Rekisterointi> iterable = rekisterointiRepository.findByOrganisaatioContaining("Testi");
+        Iterable<Rekisterointi> iterable = rekisterointiRepository.findByOrganisaatioContaining("Varda-yritys1");
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(1, results.size());
@@ -45,7 +47,7 @@ public class RekisterointiRepositoryIT {
     @Test
     public void findByTilaAndOrganisaatioContainingRulesOutTilaMismatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndOrganisaatioContaining(
-                Rekisterointi.Tila.HYVAKSYTTY.toString(), "Testi");
+                Rekisterointi.Tila.HYVAKSYTTY.toString(), "Varda-yritys1");
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(0, results.size());
@@ -98,7 +100,7 @@ public class RekisterointiRepositoryIT {
     @Test
     public void findByTilaAndKunnatAndOrganisaatioReturnsMatch() {
         Iterable<Rekisterointi> iterable = rekisterointiRepository.findByTilaAndKunnatAndOrganisaatioContaining(
-                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[]{"Helsinki"}, "testi");
+                Rekisterointi.Tila.KASITTELYSSA.toString(), new String[]{"Helsinki"}, "Varda-yritys1");
         List<Rekisterointi> results = new ArrayList<>();
         iterable.forEach(results::add);
         assertEquals(1, results.size());
@@ -106,16 +108,15 @@ public class RekisterointiRepositoryIT {
 
     @Test
     public void savesRekisterointi() {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         rekisterointi = rekisterointiRepository.save(rekisterointi);
         assertNotNull(rekisterointi.id);
     }
-
     @Test
     public void savesUudelleenRekisterointi() {
-        Rekisterointi rekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         rekisterointi = rekisterointiRepository.save(rekisterointi);
-        Rekisterointi uudelleenRekisterointi = TestiRekisterointi.validiRekisterointi();
+        Rekisterointi uudelleenRekisterointi = TestiRekisterointi.validiVardaRekisterointi();
         uudelleenRekisterointi.organisaatio.setUudelleenRekisterointi(true);
         uudelleenRekisterointi = rekisterointiRepository.save(uudelleenRekisterointi);
 
@@ -128,7 +129,7 @@ public class RekisterointiRepositoryIT {
 
     @Test(expected = DbActionExecutionException.class)
     public void oidMustBeUniqueUnlessUudelleenRekisterointi() {
-        rekisterointiRepository.save(TestiRekisterointi.validiRekisterointi());
-        rekisterointiRepository.save(TestiRekisterointi.validiRekisterointi());
+        rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
+        rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
     }
 }

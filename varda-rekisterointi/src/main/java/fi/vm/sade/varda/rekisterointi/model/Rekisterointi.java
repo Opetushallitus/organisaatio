@@ -16,11 +16,17 @@ import java.util.Set;
 @AllArgsConstructor
 public class Rekisterointi {
 
-    @With @Id
+    @With
+    @Id
     public final Long id;
 
-    @With @NotNull @Column("rekisterointi_id")
+    @With
+    @NotNull
+    @Column("rekisterointi_id")
     public final Organisaatio organisaatio;
+
+    @NotNull
+    public final String tyyppi;
 
     @NotNull
     public final String toimintamuoto;
@@ -31,7 +37,8 @@ public class Rekisterointi {
     @NotEmpty
     public final Set<@Email String> sahkopostit;
 
-    @With @NotNull
+    @With
+    @NotNull
     public final Kayttaja kayttaja;
 
     @NotNull
@@ -45,36 +52,37 @@ public class Rekisterointi {
 
     public static Rekisterointi of(
             Organisaatio organisaatio,
+            String tyyppi,
             String toimintamuoto,
             Set<String> kunnat,
             Set<String> sahkopostit,
             Kayttaja kayttaja) {
-        return new Rekisterointi(null, organisaatio, toimintamuoto, kunnat, sahkopostit, kayttaja,
+        return new Rekisterointi(null, organisaatio, tyyppi, toimintamuoto, kunnat, sahkopostit, kayttaja,
                 LocalDateTime.now(), null, Tila.KASITTELYSSA);
     }
 
     public static Rekisterointi from(RekisterointiDto dto) {
         return Rekisterointi.of(
                 dto.organisaatio,
+                dto.tyyppi,
                 dto.toimintamuoto,
                 dto.kunnat,
                 dto.sahkopostit,
-                dto.kayttaja
-        );
+                dto.kayttaja);
     }
 
     public Rekisterointi withPaatos(Paatos paatos) {
         return new Rekisterointi(
                 this.id,
                 this.organisaatio,
+                this.tyyppi,
                 this.toimintamuoto,
                 this.kunnat,
                 this.sahkopostit,
                 this.kayttaja,
                 this.vastaanotettu,
                 paatos,
-                paatos.hyvaksytty ? Tila.HYVAKSYTTY : Tila.HYLATTY
-        );
+                paatos.hyvaksytty ? Tila.HYVAKSYTTY : Tila.HYLATTY);
     }
 
     public enum Tila {

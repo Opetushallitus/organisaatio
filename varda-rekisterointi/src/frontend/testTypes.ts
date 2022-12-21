@@ -1,17 +1,17 @@
-import {Kayttaja, Organisaatio, Osoite} from "./types";
-import {Rekisterointihakemus, Tila} from "./virkailija/rekisterointihakemus";
+import { Kayttaja, Organisaatio, Osoite } from './types/types';
+import { Rekisterointihakemus } from './virkailija/rekisterointihakemus';
 
 export const tyhjaOsoite: Osoite = {
     katuosoite: '',
     postinumeroUri: '',
-    postitoimipaikka: ''
+    postitoimipaikka: '',
 };
 
 export const dummyOrganisaatio: Organisaatio = {
     ytjNimi: {
         alkuPvm: null,
         kieli: 'fi',
-        nimi: 'Testi'
+        nimi: 'Testi',
     },
     kieletUris: [],
     maaUri: '',
@@ -20,12 +20,12 @@ export const dummyOrganisaatio: Organisaatio = {
         kayntiosoite: tyhjaOsoite,
         postiosoite: tyhjaOsoite,
         sahkoposti: '',
-        puhelinnumero: ''
+        puhelinnumero: '',
     },
     ytunnus: '',
     alkuPvm: null,
     tyypit: [],
-    yritysmuoto: ''
+    yritysmuoto: '',
 };
 
 export const dummyKayttaja: Kayttaja = {
@@ -33,7 +33,7 @@ export const dummyKayttaja: Kayttaja = {
     sahkoposti: '',
     saateteksti: '',
     etunimi: 'Testi',
-    sukunimi: 'Henkilö'
+    sukunimi: 'Henkilö',
 };
 
 export const dummyHakemus: Rekisterointihakemus = {
@@ -42,7 +42,8 @@ export const dummyHakemus: Rekisterointihakemus = {
     kayttaja: dummyKayttaja,
     organisaatio: dummyOrganisaatio,
     toimintamuoto: 'päiväkoti',
+    tyyppi: 'varda',
     id: 0,
     vastaanotettu: '14.11.2019 10:44',
-    tila: Tila.KASITTELYSSA
+    tila: 'KASITTELYSSA',
 };

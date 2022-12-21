@@ -23,7 +23,8 @@ public class PropertiesConfiguration {
         Arrays.asList(
                 "varda-rekisterointi.kayttooikeus.ryhma.paivakoti",
                 "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja",
-                "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti"
+                "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti",
+                "varda-rekisterointi.kayttooikeus.ryhma.jotpa"
         ).forEach((prop) -> properties.addDefault(prop, environment.getRequiredProperty(prop)));
         return properties;
     }

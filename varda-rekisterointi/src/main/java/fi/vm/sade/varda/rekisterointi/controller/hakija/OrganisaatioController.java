@@ -4,7 +4,7 @@ import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.exception.NotFoundException;
 import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
-import fi.vm.sade.varda.rekisterointi.model.OrganisaatioV4Dto;
+import fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -48,8 +48,8 @@ public class OrganisaatioController {
     public Organisaatio getOrganisaatio(HttpServletRequest request) {
         String businessId = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class)
                 .orElseThrow(() -> new NotFoundException("Organisaatiota ei löydy istunnosta"));
-        Organisaatio organisaatio = organisaatioService.muunnaV4Dto(organisaatioClient.getV4ByYtunnus(businessId)
-                .or(exceptionToEmptySupplier(() -> organisaatioClient.getV4ByYtunnusFromYtj(businessId)))
+        Organisaatio organisaatio = organisaatioService.muunnaOrganisaatioDto(organisaatioClient.getOrganisaatioByYtunnus(businessId)
+                .or(exceptionToEmptySupplier(() -> organisaatioClient.getOrganisaatioByYtunnusFromYtj(businessId)))
                 .orElseGet(() -> this.createMock(businessId, request)));
         if ( organisaatio.isKunta() ) {
             throw new InvalidInputException("ERROR_MUNICIPALITY");
@@ -57,9 +57,9 @@ public class OrganisaatioController {
         return organisaatio;
     }
 
-    private OrganisaatioV4Dto createMock(String businessId, HttpServletRequest request) {
+    private OrganisaatioDto createMock(String businessId, HttpServletRequest request) {
         String organisationName = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, String.class).orElse("");
-        return OrganisaatioV4Dto.of(businessId, organisationName);
+        return OrganisaatioDto.of(businessId, organisationName);
     }
 
 }

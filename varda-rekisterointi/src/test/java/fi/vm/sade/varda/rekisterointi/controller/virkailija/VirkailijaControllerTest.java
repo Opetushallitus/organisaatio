@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +70,7 @@ public class VirkailijaControllerTest {
     @WithMockVirkailijaUser
     public void listaaRekisteroinnitReturnsOk() throws Exception {
         when(rekisterointiService.listByTilaAndOrganisaatio(Rekisterointi.Tila.KASITTELYSSA, null))
-                .thenReturn(Collections.singleton(TestiRekisterointi.validiRekisterointi()));
+                .thenReturn(Collections.singleton(TestiRekisterointi.validiVardaRekisterointi()));
         mvc.perform(get(VirkailijaController.BASE_PATH + VirkailijaController.REKISTEROINNIT_PATH + "?tila={tila}", Rekisterointi.Tila.KASITTELYSSA.toString())
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
@@ -77,7 +79,7 @@ public class VirkailijaControllerTest {
     @Test
     @WithMockVirkailijaUser
     public void luoPaatosReturnsCreated() throws Exception {
-        Rekisterointi resolved = TestiRekisterointi.validiRekisterointi().withPaatos(
+        Rekisterointi resolved = TestiRekisterointi.validiVardaRekisterointi().withPaatos(
                 new Paatos(TESTI_PAATOS_DTO.hyvaksytty, LocalDateTime.now(), MOCK_VIRKAILIJA_OID, TESTI_PAATOS_DTO.perustelu)
         );
         when(rekisterointiService.resolve(eq(MOCK_VIRKAILIJA_OID), eq(TESTI_PAATOS_DTO), any())).thenReturn(resolved);
@@ -110,7 +112,7 @@ public class VirkailijaControllerTest {
     @Test
     public void haeOrganisaatioOiditReturnsOidSuffix() {
         String oid = "1.23.456.7890";
-        String authorityValue = String.format(VirkailijaController.VIRKAILIJA_ROOLI + "_%s", oid);
+        String authorityValue = String.format("ROLE_" + Constants.VIRKAILIJA_ROLE + "_%s", oid);
         VirkailijaController controller = new VirkailijaController(null, null, null, null);
         GrantedAuthority authority = (GrantedAuthority) () -> authorityValue;
         List<String> returnedOids = controller.haeOrganisaatioOidit(List.of(authority));

@@ -12,7 +12,12 @@ public final class Constants {
 
     public static final String CALLER_ID = "1.2.246.562.10.00000000001.varda-rekisterointi";
 
-    public static final String VIRKAILIJA_ROLE = "APP_YKSITYISTEN_REKISTEROITYMINEN_CRUD";
+    public static final String VIRKAILIJA_ROLE = "APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_OPH";
+    public static final String VARDA_ROLE = "APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_VARDA";
+    public static final String JOTPA_ROLE = "APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_JOTPA";
+    public static final String[] VIRKAILIJA_UI_ROLES = new String[]{VIRKAILIJA_ROLE, VARDA_ROLE, JOTPA_ROLE};
+    public static final String VIRKAILIJA_PRE_AUTH = "hasAnyRole('" + VIRKAILIJA_ROLE + "','" + VARDA_ROLE + "','" + JOTPA_ROLE + "')";
+
     public static final String PAAKAYTTAJA_AUTHORITY = "ROLE_" + VIRKAILIJA_ROLE + "_1.2.246.562.10.00000000001";
 
 }

@@ -1,5 +1,5 @@
 import {KoodistoImpl} from "./contexts";
-import {Koodi} from "./types";
+import {Koodi} from "./types/types";
 
 const koodit: Koodi[] = [
     {

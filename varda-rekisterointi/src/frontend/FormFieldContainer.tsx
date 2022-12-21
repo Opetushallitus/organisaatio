@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames/bind';
+import classNames from 'classnames';
 
 type Props = {
     readOnly?: boolean,

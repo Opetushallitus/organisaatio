@@ -1,0 +1,14 @@
+<!doctype html>
+<html layout:decorate="~{generic/pohja}">
+<head>
+    <title th:text="#{taskien-virheraportti.otsikko}">otsikko</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    <span th:text="#{taskien-virheraportti.teksti(${epaonnistuneetLkm})}">teksti</span>
+    <ul>
+        <li th:each="task: ${epaonnistuneet}" th:text="#{taskien-virheraportti.lisatieto(${task.virhe.tyyppi}, ${task.rekisterointi.organisaatio.ytunnus})}">lisätieto</li>
+    </ul>
+</div>
+</body>
+</html>

@@ -33,22 +33,22 @@ public class RekisterointiFinalizerTest {
     static class Configuration {
         @Bean
         public RekisterointiFinalizer rekisterointiFinalizer(RekisterointiRepository rekisterointiRepository,
-                                                             VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer,
-                                                             VardaKayttajaFinalizer vardaKayttajaFinalizer,
-                                                             SchedulerClient schedulerClient,
-                                                             Task<Long> kutsuKayttajaTask,
-                                                             Task<Long> paatosEmailTask) {
-            return new RekisterointiFinalizer(rekisterointiRepository, vardaOrganisaatioFinalizer,
-                    vardaKayttajaFinalizer, schedulerClient, kutsuKayttajaTask, paatosEmailTask);
+                RekisterointiOrganisaatioFinalizer rekisterointiOrgFinalizer,
+                OrganisaatioKayttajaFinalizer kayttajaFinalizer,
+                SchedulerClient schedulerClient,
+                Task<Long> kutsuKayttajaTask,
+                Task<Long> paatosEmailTask) {
+            return new RekisterointiFinalizer(rekisterointiRepository, rekisterointiOrgFinalizer,
+                    kayttajaFinalizer, schedulerClient, kutsuKayttajaTask, paatosEmailTask);
         }
     }
 
     @MockBean
     private RekisterointiRepository rekisterointiRepository;
     @MockBean
-    private VardaOrganisaatioFinalizer vardaOrganisaatioFinalizer;
+    private RekisterointiOrganisaatioFinalizer rekisterointiOrgFinalizer;
     @MockBean
-    private VardaKayttajaFinalizer vardaKayttajaFinalizer;
+    private OrganisaatioKayttajaFinalizer kayttajaFinalizer;
     @MockBean
     private SchedulerClient schedulerClient;
     @MockBean(name = "kutsuKayttajaTask")
@@ -63,13 +63,13 @@ public class RekisterointiFinalizerTest {
         Organisaatio organisaatio = TestiOrganisaatio.organisaatio(null);
         Rekisterointi rekisterointi = Rekisterointi.of(
                 organisaatio,
+                "varda",
                 "vardatoimintamuoto_tm01",
                 Set.of("kunta_123"),
                 Set.of("testi@osoite.foo"),
-                TESTI_KAYTTAJA
-        );
+                TESTI_KAYTTAJA);
         when(rekisterointiRepository.findById(anyLong())).thenReturn(Optional.of(rekisterointi));
-        when(vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class))).thenReturn("1.23.456");
+        when(rekisterointiOrgFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class))).thenReturn("1.23.456");
         rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
         verify(rekisterointiRepository).save(any(Rekisterointi.class));
         verify(kutsuKayttajaTask).instance(anyString(), anyLong());
@@ -81,13 +81,14 @@ public class RekisterointiFinalizerTest {
         Organisaatio organisaatio = TestiOrganisaatio.organisaatio("1.23.456");
         Rekisterointi rekisterointi = Rekisterointi.of(
                 organisaatio,
+                "varda",
                 "vardatoimintamuoto_tm01",
                 Set.of("kunta_123"),
                 Set.of("testi@osoite.foo"),
-                TESTI_KAYTTAJA
-        );
+                TESTI_KAYTTAJA);
         when(rekisterointiRepository.findById(anyLong())).thenReturn(Optional.of(rekisterointi));
-        when(vardaOrganisaatioFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class))).thenReturn(organisaatio.oid);
+        when(rekisterointiOrgFinalizer.luoTaiPaivitaOrganisaatio(any(Rekisterointi.class)))
+                .thenReturn(organisaatio.oid);
         rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
         verify(rekisterointiRepository, never()).save(any(Rekisterointi.class));
         verify(kutsuKayttajaTask).instance(anyString(), anyLong());
@@ -99,14 +100,14 @@ public class RekisterointiFinalizerTest {
         Organisaatio organisaatio = TestiOrganisaatio.organisaatio(null);
         Rekisterointi rekisterointi = Rekisterointi.of(
                 organisaatio,
+                "varda",
                 "vardatoimintamuoto_tm01",
                 Set.of("kunta_123"),
                 Set.of("testi@osoite.foo"),
-                TESTI_KAYTTAJA
-        );
+                TESTI_KAYTTAJA);
         when(rekisterointiRepository.findById(anyLong())).thenReturn(Optional.of(rekisterointi));
         rekisterointiFinalizer.kutsuKayttaja(1L);
-        verify(vardaKayttajaFinalizer).kutsuKayttaja(rekisterointi);
+        verify(kayttajaFinalizer).kutsuKayttaja(rekisterointi);
         verify(paatosEmailTask).instance(anyString(), anyLong());
         verify(schedulerClient).schedule(any(), any());
     }

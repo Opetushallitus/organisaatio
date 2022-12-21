@@ -146,6 +146,12 @@
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>
@@ -166,6 +172,10 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 
@@ -214,7 +224,7 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.8.0</version>
                 <configuration>
-                    <nodeVersion>v12.13.0</nodeVersion>
+                    <nodeVersion>v16.11.1</nodeVersion>
                     <installDirectory>target</installDirectory>
                 </configuration>
                 <executions>
@@ -290,12 +300,7 @@
                                     <port>${database.port}:5432</port>
                                 </ports>
                                 <wait>
-                                    <tcp>
-                                        <mode>mapped</mode>
-                                        <ports>
-                                            <port>5432</port>
-                                        </ports>
-                                    </tcp>
+                                    <log>PostgreSQL init process complete; ready for start up.</log>
                                 </wait>
                             </run>
                         </image>

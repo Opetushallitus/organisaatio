@@ -6,6 +6,7 @@ import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
+import fi.vm.sade.varda.rekisterointi.util.AuthenticationUtils;
 import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
 @RestController
-@PreAuthorize(VirkailijaController.ROOLI_TARKISTUS)
+@PreAuthorize(Constants.VIRKAILIJA_PRE_AUTH)
 @RequestMapping(VirkailijaController.BASE_PATH)
 @RequiredArgsConstructor
 public class VirkailijaController {
@@ -39,8 +40,6 @@ public class VirkailijaController {
     static final String REKISTEROINNIT_PATH = "/rekisteroinnit";
     static final String PAATOKSET_PATH = "/paatokset";
     static final String PAATOKSET_BATCH_PATH = PAATOKSET_PATH + "/batch";
-    static final String VIRKAILIJA_ROOLI = "ROLE_" + Constants.VIRKAILIJA_ROLE;
-    static final String ROOLI_TARKISTUS = "hasAnyRole('" + VIRKAILIJA_ROOLI + "')";
 
     private static final String ORGANISAATIOT_PATH = "/organisaatiot";
     private static final String OPH_OID = "1.2.246.562.10.00000000001"; // TODO: ei-kovakoodattuna jostain?
@@ -66,9 +65,9 @@ public class VirkailijaController {
             response = Organisaatio.class
     )
     public Organisaatio getOrganisaatioByYtunnus(@ApiParam("y-tunnus") @PathVariable String ytunnus) {
-        Organisaatio organisaatio = organisaatioService.muunnaV4Dto(organisaatioClient.getV4ByYtunnus(ytunnus)
-                .or(exceptionToEmptySupplier(() -> organisaatioClient.getV4ByYtunnusFromYtj(ytunnus)))
-                .orElseGet(() -> OrganisaatioV4Dto.of(ytunnus, "")));
+        Organisaatio organisaatio = organisaatioService.muunnaOrganisaatioDto(organisaatioClient.getOrganisaatioByYtunnus(ytunnus)
+                .or(exceptionToEmptySupplier(() -> organisaatioClient.getOrganisaatioByYtunnusFromYtj(ytunnus)))
+                .orElseGet(() -> OrganisaatioDto.of(ytunnus, "")));
         if ( organisaatio.isKunta() ) {
             throw new InvalidInputException("ERROR_MUNICIPALITY");
         }
@@ -83,7 +82,6 @@ public class VirkailijaController {
      * @return paluuosoite.
      */
     @PostMapping(REKISTEROINNIT_PATH)
-    @PreAuthorize("hasPermission(null, 'rekisterointi', 'create')")
     @ApiOperation("Luo rekisteröintihakemus")
     @ApiResponse(
             code = 200,
@@ -91,10 +89,15 @@ public class VirkailijaController {
             response = String.class
     )
     public String luoRekisterointi(
+            Authentication authentication,
             @ApiParam("rekisteröintihakemus") @RequestBody @Validated RekisterointiDto dto,
             HttpServletRequest request) {
-        rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
-        return properties.url("varda-rekisterointi.virkailija");
+        List<String> roles = AuthenticationUtils.getRoles(authentication);
+        if (roles.contains("OPH")) {
+            rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
+            return properties.url("varda-rekisterointi.virkailija");
+        }
+        return null;
     }
 
     /**
@@ -130,6 +133,32 @@ public class VirkailijaController {
         }
         return rekisterointiService.listByTilaAndKunnatAndOrganisaatio(
                 tila, kunnat.toArray(new String[0]), hakutermi);
+    }
+
+    /**
+     * Listaa rekisteröintihakemukset käyttäjän oikeuksien perusteella.
+     *
+     * @param authentication autentikointi
+     *
+     * @return hakemukset.
+     */
+    @GetMapping("/rekisterointi")
+    @ApiOperation("Listaa rekisteröintihakemukset, joihin käyttäjällä on oikeus")
+    @ApiResponse(
+            code = 200,
+            message = "rekisteröintihakemukset",
+            response = Rekisterointi.class,
+            responseContainer = "java.lang.Iterable"
+    )
+    public Iterable<Rekisterointi> listRegistrations(Authentication authentication) {
+        String[] registrationTypes = AuthenticationUtils.getRegistrationTypes(authentication);
+        if (registrationTypes.length == 1 && registrationTypes[0].equals("varda")) {
+            List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
+            List<String> kunnat = virkailijanKunnat(organisaatioOidit);
+            return rekisterointiService.listByVardaKunnat(kunnat.toArray(new String[0]));
+        } else {
+            return rekisterointiService.listByRegistrationTypes(registrationTypes);
+        }
     }
 
     /**

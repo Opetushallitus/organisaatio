@@ -1,9 +1,11 @@
-import { Language, LocalizableText, KoodiUri } from "./types";
-import { isNonEmpty } from "./StringUtils";
+import { Language, LocalizableText, KoodiUri } from './types/types';
+import { isNonEmpty } from './StringUtils';
 
-export function toLocalizedText(localizableText: LocalizableText | null | undefined,
-                                language: Language,
-                                defaultValue?: string): string {
+export function toLocalizedText(
+    localizableText: LocalizableText | null | undefined,
+    language: Language,
+    defaultValue?: string
+): string {
     if (localizableText) {
         let localizedText = localizableText[language] || localizableText.fi || localizableText.sv || localizableText.en;
         if (localizedText) {
@@ -13,8 +15,7 @@ export function toLocalizedText(localizableText: LocalizableText | null | undefi
     return defaultValue || '';
 }
 
-export function hasLengthInLang(localizableText: LocalizableText | null | undefined,
-                                language: Language) {
+export function hasLengthInLang(localizableText: LocalizableText | null | undefined, language: Language) {
     if (localizableText === null || localizableText === undefined) {
         return false;
     }
@@ -22,8 +23,8 @@ export function hasLengthInLang(localizableText: LocalizableText | null | undefi
 }
 
 export const asiointikielet = [
-    {value: 'fi', label: {fi: 'suomi', sv: 'finska', en: 'Finnish'}},
-    {value: 'sv', label: {fi: 'ruotsi', sv: 'svenska', en: 'Swedish'}},
+    { value: 'fi', label: { fi: 'suomi', sv: 'finska', en: 'Finnish' } },
+    { value: 'sv', label: { fi: 'ruotsi', sv: 'svenska', en: 'Swedish' } },
 ];
 
 export function ytjKieliToLanguage(ytjKieli: KoodiUri) {
