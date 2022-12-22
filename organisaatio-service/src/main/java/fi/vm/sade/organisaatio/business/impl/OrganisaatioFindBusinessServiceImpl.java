@@ -87,7 +87,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         // haetaan hakukriteerien mukaiset organisaatiot
         Date now = new Date();
         Set<Organisaatio> entities = new TreeSet<>(Comparator.comparing(Organisaatio::getOid));
-        entities.addAll(organisaatioRepository.findBy(criteria, now));
+        entities.addAll(organisaatioRepository.findBy(criteria));
         Set<String> oids = entities.stream()
                 .map(Organisaatio::getOid)
                 .collect(toSet());
@@ -103,7 +103,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 if (!parentOids.isEmpty()) {
                     SearchCriteria parentsCriteria = constructRelativeCriteria(criteria);
                     parentsCriteria.setOid(parentOids);
-                    entities.addAll(organisaatioRepository.findBy(parentsCriteria, now));
+                    entities.addAll(organisaatioRepository.findBy(parentsCriteria));
                 }
             }
             if (config.isChildrenIncluded() && !oids.isEmpty()) {
@@ -111,7 +111,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 // liian monta query parametria aiheuttaa StackOverflowErrorin, paloiteltava
                 Iterables.partition(oids, MAX_PARENT_OIDS).forEach(parentOids -> {
                     childrenCriteria.setParentOids(parentOids);
-                    entities.addAll(organisaatioRepository.findBy(childrenCriteria, now));
+                    entities.addAll(organisaatioRepository.findBy(childrenCriteria));
                 });
             }
         }

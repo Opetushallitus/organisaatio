@@ -196,15 +196,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     /**
-     * GET /api/hae
-     */
-    @Override
-    public OrganisaatioHakutulosV4 searchOrganisaatiot(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
-        OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatiot(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
-    }
-
-    /**
      * GET /api/hierarkia/hae
      */
     @Override
@@ -456,10 +447,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             finalizePerustieto(current, parentOids);
             oidToOrg.put(current.getOid(), current);
         }
-        OrganisaatioHakutulosV4 result = new OrganisaatioHakutulosV4();
-        result.setOrganisaatiot(rootOrgs);
-        result.setNumHits(oidToOrg.size());
-        return result;
+        return OrganisaatioHakutulosV4.builder()
+                .organisaatiot(rootOrgs)
+                .numHits(oidToOrg.size())
+                .build();
     }
 
     private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {

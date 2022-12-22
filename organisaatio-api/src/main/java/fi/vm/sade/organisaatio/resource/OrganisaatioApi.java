@@ -101,10 +101,6 @@ public interface OrganisaatioApi {
             @Parameter(description = "Organisaation oid", required = true) @PathVariable String oid
     );
 
-    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
-    OrganisaatioHakutulosV4 searchOrganisaatiot(@ParameterObject() OrganisaatioSearchCriteriaDTOV4 hakuEhdot);
-
-
     @Operation(
             summary = "Hakee organisaatiot puurakenteena annetuilla hakuehdoilla",
             description = "Operaatio palauttaa hakuehtoja vastaavat organisaatiot puurakenteena. "

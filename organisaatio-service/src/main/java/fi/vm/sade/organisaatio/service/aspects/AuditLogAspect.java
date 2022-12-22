@@ -24,7 +24,6 @@ import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosListaDTO;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
-import fi.vm.sade.organisaatio.resource.dto.ResultRDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -131,8 +130,6 @@ public class AuditLogAspect {
             }
         } else if (result instanceof YhteystietojenTyyppiDTO) {
             oid = ((YhteystietojenTyyppiDTO) result).getOid();
-        } else if (result instanceof ResultRDTO) {
-            oid = ((ResultRDTO) result).getOrganisaatio().getOid();
         } else if (result instanceof ResultRDTOV4) {
             oid = ((ResultRDTOV4) result).getOrganisaatio().getOid();
         } else if (result instanceof OrganisaatioRDTOV4) {
