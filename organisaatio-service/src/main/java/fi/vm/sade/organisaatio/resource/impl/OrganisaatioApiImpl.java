@@ -19,7 +19,6 @@ import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
@@ -210,7 +209,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @CheckReadPermission
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
-        return processRows(organisaatioFindBusinessService.findDescendants(oid));
+        return organisaatioFindBusinessService.findDescendants(oid);
     }
 
     @Override
@@ -391,80 +390,4 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public HakutoimistoDTO hakutoimisto(String organisaatioOid) {
         return hakutoimistoService.hakutoimisto(organisaatioOid);
     }
-
-    // prosessointi tarkoituksella transaktion ulkopuolella
-    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
-        final Set<OrganisaatioPerustietoV4> rootOrgs = new LinkedHashSet<>();
-        final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
-        OrganisaatioPerustietoV4 current = null;
-        Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
-        for (OrganisaatioRepositoryImpl.JalkelaisetRivi row : rows) {
-            if (current == null || !row.oid.equals(current.getOid())) {
-                if (current != null) { // edellinen valmis, asetetaan mappiin
-                    finalizePerustieto(current, parentOids);
-                    oidToOrg.put(current.getOid(), current);
-                    parentOids = new LinkedHashSet<>();
-                }
-                current = new OrganisaatioPerustietoV4();
-                current.setMatch(true);
-                current.setOid(row.oid);
-                current.setAlkuPvm(row.alkuPvm);
-                current.setLakkautusPvm(row.lakkautusPvm);
-                current.setYtunnus(row.ytunnus);
-                current.setVirastoTunnus(row.virastotunnus);
-                current.setOppilaitosKoodi(row.oppilaitoskoodi);
-                current.setOppilaitostyyppi(row.oppilaitostyyppi);
-                current.setToimipistekoodi(row.toimipistekoodi);
-                current.setKotipaikkaUri(row.kotipaikka);
-                current.setOrganisaatiotyypit(new HashSet<>());
-                current.setNimi(new HashMap<>());
-                current.setLyhytNimi(new HashMap<>());
-                current.setKieletUris(new LinkedHashSet<>());
-                current.setChildren(new LinkedHashSet<>());
-                current.setParentOid(row.parentOid);
-                OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
-                if (parent == null) {
-                    rootOrgs.add(current);
-                } else {
-                    parent.getChildren().add(current);
-                    parent.setAliOrganisaatioMaara(parent.getChildren().size());
-                }
-            }
-            if (row.parentOid != null) {
-                parentOids.add(row.parentOid);
-            }
-            if (row.organisaatiotyyppi != null) {
-                current.getOrganisaatiotyypit().add(row.organisaatiotyyppi);
-            }
-            if (row.nimiKieli != null) {
-                current.getNimi().put(row.nimiKieli, row.nimiArvo);
-            }
-            if (row.kieli != null) {
-                current.getKieletUris().add(row.kieli);
-            }
-        }
-        if (current != null) { // viimeistellään viimeinen käsitelty rivi
-            finalizePerustieto(current, parentOids);
-            oidToOrg.put(current.getOid(), current);
-        }
-        return OrganisaatioHakutulosV4.builder()
-                .organisaatiot(rootOrgs)
-                .numHits(oidToOrg.size())
-                .build();
-    }
-
-    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
-        perustieto.setParentOidPath(generateParentOidPath(parentOids));
-    }
-
-    private static String generateParentOidPath(Set<String> parentOids) {
-        if (parentOids.isEmpty()) {
-            return "";
-        }
-        List<String> parentOidsList = new ArrayList<>(parentOids);
-        Collections.reverse(parentOidsList);
-        return String.join("/", parentOidsList);
-    }
-
-
 }

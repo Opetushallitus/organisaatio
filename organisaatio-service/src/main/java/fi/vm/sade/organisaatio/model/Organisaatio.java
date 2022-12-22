@@ -3,7 +3,6 @@ package fi.vm.sade.organisaatio.model;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.listeners.ProtectedDataListener;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import lombok.Getter;
@@ -28,66 +27,6 @@ import static java.util.stream.Collectors.toSet;
                 @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
 )
 @org.hibernate.annotations.Table(appliesTo = "organisaatio", comment = "Sisältää kaikki organisaatiot.")
-
-@SqlResultSetMapping(
-        name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
-        classes = @ConstructorResult(
-                targetClass = OrganisaatioRepositoryImpl.JalkelaisetRivi.class,
-                columns = {
-                        @ColumnResult(name = "oid"),
-                        @ColumnResult(name = "alkuPvm", type = Date.class),
-                        @ColumnResult(name = "lakkautusPvm", type = Date.class),
-                        @ColumnResult(name = "parentOid"),
-                        @ColumnResult(name = "ytunnus"),
-                        @ColumnResult(name = "virastotunnus"),
-                        @ColumnResult(name = "oppilaitoskoodi"),
-                        @ColumnResult(name = "oppilaitostyyppi"),
-                        @ColumnResult(name = "toimipistekoodi"),
-                        @ColumnResult(name = "kotipaikka"),
-                        @ColumnResult(name = "organisaatiotyyppi"),
-                        @ColumnResult(name = "nimiKieli"),
-                        @ColumnResult(name = "nimiArvo"),
-                        @ColumnResult(name = "kieli"),
-                        @ColumnResult(name = "taso", type = Integer.class)
-                }
-        )
-)
-
-
-@NamedNativeQuery(
-        name = "Organisaatio.findAllDescendants",
-        query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
-                "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
-                "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
-                "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
-                "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
-                "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
-                "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
-                "LEFT JOIN monikielinenteksti n ON (n.id = o.nimi_mkt) " +
-                "JOIN monikielinenteksti_values nv ON (nv.id = n.id) " +
-                "LEFT JOIN organisaatio_kielet k ON (k.organisaatio_id = o.id) " +
-                "WHERE o.organisaatiopoistettu <> TRUE AND o.piilotettu <> TRUE AND o.id IN (" +
-                "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
-                "ORDER BY taso, o.oid, p.parent_position",
-        resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
-)
-@NamedNativeQuery(
-        name = "Organisaatio.findAllDescendantsInclHidden",
-        query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
-                "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
-                "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
-                "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
-                "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
-                "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
-                "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
-                "LEFT JOIN monikielinenteksti n ON (n.id = o.nimi_mkt) " +
-                "JOIN monikielinenteksti_values nv ON (nv.id = n.id) " +
-                "LEFT JOIN organisaatio_kielet k ON (k.organisaatio_id = o.id) " +
-                "WHERE o.organisaatiopoistettu <> TRUE AND o.id IN (" +
-                "SELECT organisaatio_id FROM organisaatio_parent_oids WHERE parent_oid = :root) " +
-                "ORDER BY taso, o.oid, p.parent_position",
-        resultSetMapping = "Organisaatio.findAllDescendants.jalkelaisetRivi"
-)
 
 public class Organisaatio extends OrganisaatioBaseEntity {
     private static final String[] YKSITYINEN_ELINKEINOHARJOITTAJA = {"Yksityinen elinkeinonharjoittaja", "Enskild näringsidkare", "Private trader"};

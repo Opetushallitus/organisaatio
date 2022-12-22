@@ -23,10 +23,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
@@ -91,6 +88,7 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
     }
 
     @Test
+    @Transactional
     void findDescendantsReturnsAllDescendants() {
         String parentOid = "1.2.246.562.24.00000000001";
         String[] allDescendants = new String[]{
@@ -100,6 +98,10 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
                 "1.2.2020.1"
         };
         OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
+        OrganisaatioPerustietoV4 firstOrg = results.getOrganisaatiot().stream()
+                .filter(a -> a.getOid().equals("1.2.2004.1")).findFirst().orElseThrow();
+        assertThat(firstOrg.getNimi()).containsExactlyInAnyOrderEntriesOf(Map.of("fi", "root test koulutustoimija", "sv", "root test utbildningsoperator"));
+        assertThat(firstOrg.getOrganisaatiotyypit()).containsExactly("organisaatiotyyppi_01");
         assertThat(results.getNumHits()).isEqualTo(10);
         List<String> resultOids = results.getOrganisaatiot().stream()
                 .map(OrganisaatioApiTest::collectOids)

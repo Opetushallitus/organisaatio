@@ -36,6 +36,7 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
+import org.hibernate.jpa.QueryHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -884,6 +885,22 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         return query.fetch();
     }
 
+    @Override
+    public List<Organisaatio> findByAncestorOid(String oid) {
+        String sql =
+                "select distinct o from Organisaatio o " +
+                        "join fetch o.parentOids p " +
+                        "join fetch o.tyypit t " +
+                        "join fetch o.nimi n " +
+                        "join fetch n.values nv " +
+                        "left join fetch o.kielet k " +
+                        "where t <> 'Ryhma' and o.organisaatioPoistettu <> true and o in (select x from Organisaatio x join x.parentOids xp where xp = :oid)";
+        TypedQuery<Organisaatio> query = em
+                .createQuery(sql, Organisaatio.class)
+                .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
+                .setParameter("oid", oid);
+        return query.getResultList();
+    }
 
     @Override
     public EntityManager getJpaEntityManager() {
@@ -917,54 +934,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         List<String> childOids = namedParameterJdbcTemplate.query(sql, new BeanPropertySqlParameterSource(criteria),
                 (ResultSet rs, int rowNum) -> rs.getString("oid"));
         return childOids.stream().filter(childOid -> !childOid.equals(criteria.getOid())).collect(toSet());
-    }
-
-    @Override
-    public List<JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden) {
-        TypedQuery<JalkelaisetRivi> query = em.createNamedQuery(
-                includeHidden ? "Organisaatio.findAllDescendantsInclHidden" : "Organisaatio.findAllDescendants",
-                JalkelaisetRivi.class);
-        query.setParameter("root", oid);
-        return query.getResultList();
-    }
-
-    public static class JalkelaisetRivi {
-        public final String oid;
-        public final Date alkuPvm;
-        public final Date lakkautusPvm;
-        public final String parentOid;
-        public final String ytunnus;
-        public final String virastotunnus;
-        public final String oppilaitoskoodi;
-        public final String oppilaitostyyppi;
-        public final String toimipistekoodi;
-        public final String kotipaikka;
-        public final String nimiKieli;
-        public final String nimiArvo;
-        public final String organisaatiotyyppi;
-        public final String kieli;
-        public final Integer taso;
-
-        public JalkelaisetRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOid,
-                               String ytunnus, String virastotunnus, String oppilaitoskoodi,
-                               String oppilaitostyyppi, String toimipistekoodi, String kotipaikka,
-                               String organisaatiotyyppi, String nimiKieli, String nimiArvo, String kieli, Integer taso) {
-            this.oid = oid;
-            this.alkuPvm = alkuPvm;
-            this.lakkautusPvm = lakkautusPvm;
-            this.parentOid = parentOid;
-            this.ytunnus = ytunnus;
-            this.virastotunnus = virastotunnus;
-            this.oppilaitoskoodi = oppilaitoskoodi;
-            this.oppilaitostyyppi = oppilaitostyyppi;
-            this.toimipistekoodi = toimipistekoodi;
-            this.kotipaikka = kotipaikka;
-            this.nimiKieli = nimiKieli;
-            this.nimiArvo = nimiArvo;
-            this.organisaatiotyyppi = organisaatiotyyppi;
-            this.kieli = kieli;
-            this.taso = taso;
-        }
     }
 
 }

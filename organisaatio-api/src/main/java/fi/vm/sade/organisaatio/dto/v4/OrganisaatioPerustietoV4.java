@@ -7,6 +7,8 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.api.views.Views;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -84,12 +86,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
         return children;
     }
 
+    @Getter
+    @Setter
     @Schema(description = "Organisaation alaorganisaatiot react tableen", requiredMode = Schema.RequiredMode.REQUIRED)
     private Set<OrganisaatioPerustietoV4> subRows = new LinkedHashSet<>();
-
-    public Set<OrganisaatioPerustietoV4> getSubRows() {
-        return subRows;
-    }
 
     public void setChildren(Set<OrganisaatioPerustietoV4> children) {
         this.children = children;

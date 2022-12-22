@@ -5,7 +5,6 @@ import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import javax.persistence.EntityManager;
@@ -196,16 +195,7 @@ public interface OrganisaatioRepositoryCustom {
 
     Collection<String> findChildOidsRecursive(ChildOidsCriteria criteria);
 
-    /**
-     * Palauttaa kaikki annetun organisaation jälkeläiset, pl. poistetut. Piilotettujen sisällyttämistä voi
-     * kontrolloida <code>includeHidden</code> -vivulla. <i>Huom!</i> oikeus piilotettujen näkemiseen tulee tarkistaa
-     * kutsuvassa koodissa! Palautettavat rivit ovat raakadataa, sisältäen duplikaattirivejä eri JOIN:ien tuloksena.
-     *
-     * @param oid           vanhemman OID.
-     * @param includeHidden sisällytetäänkö piilotetut organisaatiot tuloksiin?
-     * @return jälkeläiset.
-     */
-    List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden);
-
     List<String> findParentOidsTo(String oid);
+
+    List<Organisaatio> findByAncestorOid(String oid);
 }

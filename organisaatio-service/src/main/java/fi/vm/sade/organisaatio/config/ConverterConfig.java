@@ -10,6 +10,7 @@ import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioRDTOV3ToOrganisa
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3Converter;
 import fi.vm.sade.organisaatio.service.converter.v3.RyhmaCriteriaV3Converter;
 import fi.vm.sade.organisaatio.service.converter.v4.OrganisaatioRDTOV4ToOrganisaatioConverter;
+import fi.vm.sade.organisaatio.service.converter.v4.OrganisaatioToOrganisaatioPerustietoV4Converter;
 import fi.vm.sade.organisaatio.service.converter.v4.OrganisaatioToOrganisaatioRDTOV4Converter;
 import fi.vm.sade.organisaatio.service.converter.v4.YtjDtoToOrganisaatioConverter;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,7 @@ public class ConverterConfig implements WebMvcConfigurer {
         registry.addConverter(new LisatietoConverter());
         registry.addConverter(new OrganisaatioRDTOToOrganisaatioConverter(orgNimiMapper));
         registry.addConverter(new OrganisaatioToOrganisaatioPerustietoConverter());
+        registry.addConverter(new OrganisaatioToOrganisaatioPerustietoV4Converter());
         registry.addConverter(new OrganisaatioToOrganisaatioRDTOConverter(orgNimiMapper));
         registry.addConverter(new RyhmaCriteriaV2ToV3Converter(modelMapper));
         registry.addConverter(new OrganisaatioRDTOV3ToOrganisaatioConverter(orgNimiMapper));

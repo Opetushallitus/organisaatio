@@ -23,12 +23,13 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -325,8 +326,26 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid) {
-        return organisaatioRepository.findAllDescendants(oid, permissionChecker.isReadAccessToAll());
+    public OrganisaatioHakutulosV4 findDescendants(String oid) {
+        List<Organisaatio> rows = organisaatioRepository.findByAncestorOid(oid);
+        boolean accessToAll = permissionChecker.isReadAccessToAll();
+        final Set<OrganisaatioPerustietoV4> rootOrgs = new LinkedHashSet<>();
+        final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
+        rows.stream().filter(a -> accessToAll || !a.isPiilotettu()).map(row -> conversionService.convert(row, OrganisaatioPerustietoV4.class)).filter(Objects::nonNull).forEach(row -> {
+            OrganisaatioPerustietoV4 parent = oidToOrg.get(row.getParentOid());
+            if (parent == null) {
+                rootOrgs.add(row);
+            } else {
+                parent.getChildren().add(row);
+                parent.getSubRows().add(row);
+                parent.setAliOrganisaatioMaara(parent.getChildren().size());
+            }
+            oidToOrg.put(row.getOid(), row);
+        });
+        OrganisaatioHakutulosV4 result = new OrganisaatioHakutulosV4();
+        result.setOrganisaatiot(rootOrgs);
+        result.setNumHits(oidToOrg.size());
+        return result;
     }
 
 }
