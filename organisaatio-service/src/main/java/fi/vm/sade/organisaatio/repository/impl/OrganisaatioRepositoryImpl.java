@@ -45,7 +45,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -916,54 +915,6 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         List<String> childOids = namedParameterJdbcTemplate.query(sql, new BeanPropertySqlParameterSource(criteria),
                 (ResultSet rs, int rowNum) -> rs.getString("oid"));
         return childOids.stream().filter(childOid -> !childOid.equals(criteria.getOid())).collect(toSet());
-    }
-
-    @Override
-    public List<JalkelaisetRivi> findAllDescendants(String oid, boolean includeHidden) {
-        TypedQuery<JalkelaisetRivi> query = em.createNamedQuery(
-                includeHidden ? "Organisaatio.findAllDescendantsInclHidden" : "Organisaatio.findAllDescendants",
-                JalkelaisetRivi.class);
-        query.setParameter("root", oid);
-        return query.getResultList();
-    }
-
-    public static class JalkelaisetRivi {
-        public final String oid;
-        public final Date alkuPvm;
-        public final Date lakkautusPvm;
-        public final String parentOid;
-        public final String ytunnus;
-        public final String virastotunnus;
-        public final String oppilaitoskoodi;
-        public final String oppilaitostyyppi;
-        public final String toimipistekoodi;
-        public final String kotipaikka;
-        public final String nimiKieli;
-        public final String nimiArvo;
-        public final String organisaatiotyyppi;
-        public final String kieli;
-        public final Integer taso;
-
-        public JalkelaisetRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOid,
-                               String ytunnus, String virastotunnus, String oppilaitoskoodi,
-                               String oppilaitostyyppi, String toimipistekoodi, String kotipaikka,
-                               String organisaatiotyyppi, String nimiKieli, String nimiArvo, String kieli, Integer taso) {
-            this.oid = oid;
-            this.alkuPvm = alkuPvm;
-            this.lakkautusPvm = lakkautusPvm;
-            this.parentOid = parentOid;
-            this.ytunnus = ytunnus;
-            this.virastotunnus = virastotunnus;
-            this.oppilaitoskoodi = oppilaitoskoodi;
-            this.oppilaitostyyppi = oppilaitostyyppi;
-            this.toimipistekoodi = toimipistekoodi;
-            this.kotipaikka = kotipaikka;
-            this.nimiKieli = nimiKieli;
-            this.nimiArvo = nimiArvo;
-            this.organisaatiotyyppi = organisaatiotyyppi;
-            this.kieli = kieli;
-            this.taso = taso;
-        }
     }
 
 }

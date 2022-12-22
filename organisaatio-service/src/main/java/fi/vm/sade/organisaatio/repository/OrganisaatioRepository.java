@@ -11,5 +11,6 @@ public interface OrganisaatioRepository extends JpaRepository<Organisaatio, Long
     List<Organisaatio> findByOppilaitosKoodi(String oppilaitosKoodi);
     List<Organisaatio> findByToimipisteKoodi(String toimipisteKoodi);
     Organisaatio findFirstByOid(String oid);
+    List<Organisaatio> findByParentOids(String oid);
 }
 

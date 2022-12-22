@@ -21,14 +21,16 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
+import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioDTOV4ModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
-import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
@@ -65,7 +67,8 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
     private static final Pattern OPPILAITOSKOODI_PATTERN = Pattern.compile("\\d{5}");
     // oppilaitoskoodi, plus 2 numeroa (tarvittaessa 0 edessä), tai oppilaitoksella pelkkä oppilaitoskoodi
     private static final Pattern TOIMIPISTEKOODI_PATTERN = Pattern.compile("\\d{7}");
-
+    @Autowired
+    private OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper;
     @Autowired
     private OrganisaatioRepository organisaatioRepository;
 
@@ -325,8 +328,30 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid) {
-        return organisaatioRepository.findAllDescendants(oid, permissionChecker.isReadAccessToAll());
+    public OrganisaatioHakutulosV4 findDescendants(String oid) {
+        return processRows(organisaatioRepository.findByParentOids(oid));
+
+    }
+
+    private OrganisaatioHakutulosV4 processRows(List<Organisaatio> rows) {
+        boolean accessToAll = permissionChecker.isReadAccessToAll();
+        final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
+        final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
+        rows.stream().filter(a -> accessToAll || !a.isPiilotettu()).map(row -> organisaatioDTOV4ModelMapper.map(row, OrganisaatioPerustietoV4.class)).forEach(row -> {
+            row.setParentOidPath(Arrays.stream(row.getParentOidPath().split("\\|")).filter(a -> !a.isEmpty()).collect(Collectors.joining("/")));
+            OrganisaatioPerustietoV4 parent = oidToOrg.get(row.getParentOid());
+            if (parent == null) {
+                rootOrgs.add(row);
+            } else {
+                parent.getChildren().add(row);
+                parent.setAliOrganisaatioMaara(parent.getChildren().size());
+            }
+            oidToOrg.put(row.getOid(), row);
+        });
+        OrganisaatioHakutulosV4 result = new OrganisaatioHakutulosV4();
+        result.setOrganisaatiot(rootOrgs);
+        result.setNumHits(oidToOrg.size());
+        return result;
     }
 
 }
