@@ -37,15 +37,33 @@ export function JotpaLanding() {
                     <JotpaProsessikuvaus />
                     <Markdown>{i18n.translate('etusivu_rekisterointi')}</Markdown>
                     <p className={styles.link}>
-                        <a href="/">{i18n.translate('linkki_palvelun_kayttoohje')}</a>
+                        <a
+                            href={i18n.translate('linkki_palvelun_kayttoohje_osoite')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('linkki_palvelun_kayttoohje')}
+                        </a>
                         <ExternalLink />
                     </p>
                     <p className={styles.link}>
-                        <a href="/">{i18n.translate('linkki_jotpa_esittely')}</a>
+                        <a
+                            href={i18n.translate('linkki_jotpa_esittely_osoite')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('linkki_jotpa_esittely')}
+                        </a>
                         <ExternalLink />
                     </p>
                     <p className={styles.link}>
-                        <a href="/">{i18n.translate('linkki_saavutettavuusseloste')}</a>
+                        <a
+                            href={i18n.translate('linkki_saavutettavuusseloste_osoite')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {i18n.translate('linkki_saavutettavuusseloste')}
+                        </a>
                     </p>
                     <button
                         role="link"
