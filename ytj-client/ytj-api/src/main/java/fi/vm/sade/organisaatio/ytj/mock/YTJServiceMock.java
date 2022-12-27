@@ -139,7 +139,7 @@ public class YTJServiceMock implements YTJService {
             {"0312657-3", "HELSINGIN YLIOPISTOLLISEN KESKUSSAIRAALAN HENKILÖKUNTA KTV R... ", "Aatteellinen yhdistys"},
             {"1449784-7", "HELSINGIN YLIOPISTOLLISEN KESKUSSAIRAALAN PERUSHOITAJAT RY ", "Aatteellinen yhdistys"},
             {"1087544-1", "HELSINGIN YLIOPISTOLLISEN KESKUSSAIRAALAN URHEILUSEURA- ", "Aatteellinen yhdistys"},
-            {"1730639-9", "Helsingin yliopistomuseon säätiö ", "Säätiö"},
+            {"1730639-9", "Helsingin yliopistomuseon säätiö", "Säätiö"},
             {"1773346-2", "HELSINGIN YLIOPISTON ALUMNI RY HELSINGFORS UNIVERSITETS ALUM... ", "Aatteellinen yhdistys"},
             {"2199401-6", "Helsingin yliopiston ammattiosasto JHL.ry ", "Aatteellinen yhdistys"},
             {"1469720-8", "HELSINGIN YLIOPISTON DOSENTTIYHDISTYS-DOCENTFÖRENINGEN VID H... ", "Aatteellinen yhdistys"},

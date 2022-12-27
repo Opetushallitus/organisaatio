@@ -1,12 +1,12 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.TypeToken;
@@ -21,13 +21,15 @@ import java.util.stream.IntStream;
 public class OrganisaatioNimiServiceImpl implements OrganisaatioNimiService {
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
-    private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioRepository organisaatioRepository;
+    private final OrganisaatioNimiRepository organisaatioNimiRepository;
+
     @Override
     public List<OrganisaatioNimiDTO> getNimet(String oid) {
-        List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(oid), new TypeToken<List<OrganisaatioNimiDTO>>() {
-        }.getType());
+
         Organisaatio org = organisaatioRepository.findFirstByOid(oid);
+        List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(org.getNimet(), new TypeToken<List<OrganisaatioNimiDTO>>() {
+        }.getType());
         return getOrganisaatioNimiDTOS(orgNimet, org).stream()
                 .sorted(Comparator.comparing(OrganisaatioNimiDTO::getAlkuPvm)).collect(Collectors.toList());
     }
@@ -42,7 +44,7 @@ public class OrganisaatioNimiServiceImpl implements OrganisaatioNimiService {
     List<Map.Entry<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>> getOppilaitosNameIntervals(Organisaatio org) {
         return sanitizeParentSuhteet(org.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA), org).stream()
                 .map(parentSuhde -> {
-                    List<OrganisaatioNimiDTO> parentNimet = organisaatioNimiModelMapper.map(organisaatioBusinessService.getOrganisaatioNimet(parentSuhde.getParent().getOid()), new TypeToken<List<OrganisaatioNimiDTO>>() {
+                    List<OrganisaatioNimiDTO> parentNimet = organisaatioNimiModelMapper.map(parentSuhde.getParent().getNimet(), new TypeToken<List<OrganisaatioNimiDTO>>() {
                     }.getType());
                     List<OrganisaatioNimiDTO> relevantParentNimet = getRelevantParentNimet(org, parentNimet);
                     return Map.<Map.Entry<Date, Optional<Date>>, List<OrganisaatioNimiDTO>>entry(Map.entry(parentSuhde.getAlkuPvm(), Optional.ofNullable(parentSuhde.getLoppuPvm())), relevantParentNimet);

@@ -28,13 +28,6 @@ import java.util.List;
 public interface OrganisaatioNimiRepositoryCustom {
 
 
-    /**
-     * Haetaan annetun organisaation nimet
-     *
-     * @param organisaatioOid
-     * @return Annetun organisaation nimihistoria listana
-     */
-    List<OrganisaatioNimi> findNimet(String organisaatioOid);
 
     /**
      * Haetaan annetun organisaation nimi, annetulla nimen voimassaolon alkupäivämäärällä.

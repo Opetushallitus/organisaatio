@@ -12,6 +12,7 @@ INSERT INTO MONIKIELINENTEKSTI(ID, VERSION) VALUES
 (9, 0),
 (11, 0),
 (12, 0),
+(13, 0),
 (1000, 0);
 
 INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
@@ -27,6 +28,7 @@ INSERT INTO MONIKIELINENTEKSTI_VALUES(ID, VALUE, KEY) VALUES
 (9, 'node231 foo bar', 'sv'),
 (11, 'Varhaiskasvatuksen toimipiste', 'fi'),
 (12, 'Liitostesti', 'fi'),
+(13, 'Piilotustesti', 'fi'),
 (1000, 'Hakutoimiston nimi FI', 'kieli_fi#1'),
 (1000, 'Hakutoimiston nimi EN', 'kieli_en#1');
 
@@ -78,7 +80,10 @@ INSERT INTO ORGANISAATIO(ID, VERSION, PAIVITYSPVM, ALKUPVM, DOMAINNIMI, KOTIPAIK
 (9, 2, DATE '1960-02-16', DATE '1960-02-16', NULL, 'Helsinki', NULL, NULL, 'node231 foo bar piilotettu', '1.2.2005.5', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, '|1|2|4|5|', NULL, NULL, NULL, NULL, 'oy', NULL, '1730639-9', NULL, NULL, 9, FALSE),
 (10, 2, NULL, NULL, NULL, 'Helsinki', NULL, NULL, 'mixed osoitetyyppi organisaatio', '1.2.8000.1', NULL, NULL, 'oppilaitostyyppi_42#1', FALSE, NULL, '|1|', NULL, NULL, NULL, NULL, 'oy', NULL, '1234569-5', NULL, 2, 6, FALSE),
 (11, 0, NULL, NULL, NULL, 'Helsinki', NULL, NULL, 'varhaiskasvatuksen', '1.2.2020.1', NULL, NULL, NULL, FALSE, NULL, '|1|10|', NULL, NULL, NULL, NULL, 'oy', NULL, '8538031-2', NULL, NULL, 11, TRUE),
-(12, 0, NULL, NULL, NULL, 'Helsinki', NULL, NULL, 'varhaiskasvatuksen', '1.2.8001.1', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, NULL, NULL, NULL, 'oy', NULL, '6165182-7', NULL, NULL, 12, FALSE);
+(12, 0, NULL, NULL, NULL, 'Helsinki', NULL, NULL, 'varhaiskasvatuksen', '1.2.8001.1', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, NULL, NULL, NULL, 'oy', NULL, '6165182-7', NULL, NULL, 12, FALSE),
+(13, 0, NULL, NULL, NULL, 'Helsinki', NULL, NULL, 'varhaiskasvatuksen yksityinen', '1.2.8001.2', NULL, NULL, NULL, FALSE, NULL, NULL, NULL, NULL, NULL, NULL, 'Yksityinen elinkeinonharjoittaja', NULL, '6165189-7', NULL, NULL, 13, FALSE);
+
+
 
 INSERT INTO ORGANISAATIO_PARENT_OIDS(ORGANISAATIO_ID, PARENT_OID, PARENT_POSITION) VALUES
 (2, '1.2.246.562.24.00000000001', 0),
@@ -155,7 +160,8 @@ INSERT INTO ORGANISAATIO_NIMI(ID, VERSION, ALKUPVM, PAIVITTAJA, NIMI_MKT, ORGANI
 (6, 0, DATE '1970-01-01', NULL, 6, 6),
 (7, 0, DATE '1970-01-01', NULL, 7, 7),
 (8, 0, DATE '1970-01-01', NULL, 8, 8),
-(9, 0, DATE '1970-01-01', NULL, 9, 9);
+(9, 0, DATE '1970-01-01', NULL, 9, 9),
+(13, 0, DATE '1970-01-01', NULL, 13, 13);
 
 INSERT INTO ORGANISAATIO_TYYPIT(ORGANISAATIO_ID, TYYPIT) VALUES
 (1, 'organisaatiotyyppi_01'),

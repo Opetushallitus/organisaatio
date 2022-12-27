@@ -22,16 +22,6 @@ public class MonikielinenTeksti extends BaseEntity {
     private Map<String, String> values = new HashMap<>();
 
 
-    @PrePersist
-    @PreUpdate
-    public void filterXss() {
-    	for (Map.Entry<String, String> e : values.entrySet()) {
-    		//e.setValue(e.getValue().trim()); // TODO xss filter wrapperi oli?
-            // Allow ampersand character;
-            e.setValue(e.getValue().trim().replace("&amp;", "&"));
-    	}
-    }
-
     public Map<String, String> getValues() {
         return values;
     }

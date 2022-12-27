@@ -4,6 +4,8 @@ import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -121,6 +123,10 @@ public class OrganisaatioRDTOV4 implements Serializable {
     private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
     private VarhaiskasvatuksenToimipaikkaTiedotDto _varhaiskasvatuksenToimipaikkaTiedot;
+
+    @Getter
+    @Setter
+    private boolean katketty;
 
     @Schema(description = "Organisaation oid", required = true)
     public String getOid() {
