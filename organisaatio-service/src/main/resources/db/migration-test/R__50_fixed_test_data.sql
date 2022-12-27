@@ -56,7 +56,7 @@ union all select * from a union all select * from b;
 
 
 with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000015','Varhaiskasvatuksen järjestäjä yksityinen','1.2.246.562.24.00000000001',0, '|0|', array['organisaatiotyyppi_07'], null, null, 'Yksityinen elinkeinonharjoittaja', null) as foo(id bigint,oid varchar, parentidpath varchar)),
-    a as (select createOrganisaatio('1.2.246.562.99.00000000016','Metsärousko testi päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm01') from parent where parent.oid is not null),
+    a as (select createOrganisaatio('1.2.246.562.99.00000000016','Metsärousku testi päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm01') from parent where parent.oid is not null),
     b as (select createOrganisaatio('1.2.246.562.99.00000000017','Metsävahvero testi perhepäivähoito',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm02') from parent where parent.oid is not null)
 select createOrganisaatio('1.2.246.562.99.00000000018','Metsähapero testi ryhmäperhepäiväkoti',parent.oid,parent.id,concat(parent.parentidpath,'|',parent.id), array['organisaatiotyyppi_08'], null, null, null, 'vardatoimintamuoto_tm03') from parent where parent.oid is not null
 union all select * from a union all select * from b;
