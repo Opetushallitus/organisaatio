@@ -1,0 +1,661 @@
+{
+  "numHits": 9,
+  "organisaatiot": [
+    {
+      "aliOrganisaatioMaara": 2,
+      "alkuPvm": 1091912400000,
+      "children": [
+        {
+          "aliOrganisaatioMaara": 0,
+          "alkuPvm": 1372453200000,
+          "children": [],
+          "kieletUris": [],
+          "kotipaikkaUri": "Helsinki",
+          "lyhytNimi": {},
+          "match": true,
+          "nimi": {
+            "fi": "node1 asd"
+          },
+          "oid": "1.2.2004.2",
+          "oppilaitostyyppi": "oppilaitostyyppi_41#1",
+          "organisaatiotyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "parentOid": "1.2.2004.1",
+          "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1",
+          "status": "AKTIIVINEN",
+          "subRows": [],
+          "toimipistekoodi": "123451",
+          "tyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "ytunnus": "1234567-2"
+        },
+        {
+          "aliOrganisaatioMaara": 2,
+          "children": [
+            {
+              "aliOrganisaatioMaara": 1,
+              "children": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node22 foo bar"
+              },
+              "oid": "1.2.2004.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234567-4"
+            },
+            {
+              "aliOrganisaatioMaara": 0,
+              "alkuPvm": 1283029200000,
+              "children": [],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node23 foo bar"
+              },
+              "oid": "1.2.2005.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234568-4"
+            }
+          ],
+          "kieletUris": [],
+          "kotipaikkaUri": "Helsinki",
+          "lyhytNimi": {},
+          "match": true,
+          "nimi": {
+            "fi": "node2 foo"
+          },
+          "oid": "1.2.2004.3",
+          "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+          "organisaatiotyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "parentOid": "1.2.2004.1",
+          "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1",
+          "status": "AKTIIVINEN",
+          "subRows": [
+            {
+              "aliOrganisaatioMaara": 1,
+              "children": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node22 foo bar"
+              },
+              "oid": "1.2.2004.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234567-4"
+            },
+            {
+              "aliOrganisaatioMaara": 0,
+              "alkuPvm": 1283029200000,
+              "children": [],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node23 foo bar"
+              },
+              "oid": "1.2.2005.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234568-4"
+            }
+          ],
+          "toimipistekoodi": "123452",
+          "tyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "ytunnus": "1234567-3"
+        }
+      ],
+      "kieletUris": [],
+      "kotipaikkaUri": "Helsinki",
+      "lyhytNimi": {},
+      "match": true,
+      "nimi": {
+        "fi": "root test koulutustoimija",
+        "sv": "root test utbildningsoperator"
+      },
+      "oid": "1.2.2004.1",
+      "oppilaitosKoodi": "12345",
+      "organisaatiotyypit": ["organisaatiotyyppi_01"],
+      "parentOid": "1.2.246.562.24.00000000001",
+      "parentOidPath": "1.2.246.562.24.00000000001",
+      "status": "AKTIIVINEN",
+      "subRows": [
+        {
+          "aliOrganisaatioMaara": 0,
+          "alkuPvm": 1372453200000,
+          "children": [],
+          "kieletUris": [],
+          "kotipaikkaUri": "Helsinki",
+          "lyhytNimi": {},
+          "match": true,
+          "nimi": {
+            "fi": "node1 asd"
+          },
+          "oid": "1.2.2004.2",
+          "oppilaitostyyppi": "oppilaitostyyppi_41#1",
+          "organisaatiotyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "parentOid": "1.2.2004.1",
+          "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1",
+          "status": "AKTIIVINEN",
+          "subRows": [],
+          "toimipistekoodi": "123451",
+          "tyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "ytunnus": "1234567-2"
+        },
+        {
+          "aliOrganisaatioMaara": 2,
+          "children": [
+            {
+              "aliOrganisaatioMaara": 1,
+              "children": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node22 foo bar"
+              },
+              "oid": "1.2.2004.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234567-4"
+            },
+            {
+              "aliOrganisaatioMaara": 0,
+              "alkuPvm": 1283029200000,
+              "children": [],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node23 foo bar"
+              },
+              "oid": "1.2.2005.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234568-4"
+            }
+          ],
+          "kieletUris": [],
+          "kotipaikkaUri": "Helsinki",
+          "lyhytNimi": {},
+          "match": true,
+          "nimi": {
+            "fi": "node2 foo"
+          },
+          "oid": "1.2.2004.3",
+          "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+          "organisaatiotyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "parentOid": "1.2.2004.1",
+          "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1",
+          "status": "AKTIIVINEN",
+          "subRows": [
+            {
+              "aliOrganisaatioMaara": 1,
+              "children": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node22 foo bar"
+              },
+              "oid": "1.2.2004.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [
+                {
+                  "aliOrganisaatioMaara": 0,
+                  "alkuPvm": -311652000000,
+                  "children": [],
+                  "kieletUris": [],
+                  "kotipaikkaUri": "Helsinki",
+                  "lyhytNimi": {},
+                  "match": true,
+                  "nimi": {
+                    "sv": "node231 foo bar"
+                  },
+                  "oid": "1.2.2005.5",
+                  "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+                  "organisaatiotyypit": ["organisaatiotyyppi_06"],
+                  "parentOid": "1.2.2004.4",
+                  "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3/1.2.2004.4",
+                  "status": "AKTIIVINEN",
+                  "subRows": [],
+                  "tyypit": ["organisaatiotyyppi_06"],
+                  "ytunnus": "1730639-9"
+                }
+              ],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234567-4"
+            },
+            {
+              "aliOrganisaatioMaara": 0,
+              "alkuPvm": 1283029200000,
+              "children": [],
+              "kieletUris": [],
+              "kotipaikkaUri": "Helsinki",
+              "lyhytNimi": {},
+              "match": true,
+              "nimi": {
+                "fi": "node23 foo bar"
+              },
+              "oid": "1.2.2005.4",
+              "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+              "organisaatiotyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "parentOid": "1.2.2004.3",
+              "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.1/1.2.2004.3",
+              "status": "AKTIIVINEN",
+              "subRows": [],
+              "tyypit": [
+                "organisaatiotyyppi_02",
+                "organisaatiotyyppi_04",
+                "organisaatiotyyppi_03"
+              ],
+              "ytunnus": "1234568-4"
+            }
+          ],
+          "toimipistekoodi": "123452",
+          "tyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "ytunnus": "1234567-3"
+        }
+      ],
+      "tyypit": ["organisaatiotyyppi_01"],
+      "ytunnus": "2255802-1"
+    },
+    {
+      "aliOrganisaatioMaara": 1,
+      "alkuPvm": 1151528400000,
+      "children": [
+        {
+          "aliOrganisaatioMaara": 0,
+          "alkuPvm": 1207861200000,
+          "children": [],
+          "kieletUris": [],
+          "kotipaikkaUri": "Helsinki",
+          "lakkautusPvm": 1309294800000,
+          "lyhytNimi": {},
+          "match": true,
+          "nimi": {
+            "fi": "nodex bar"
+          },
+          "oid": "1.2.2004.6",
+          "oppilaitostyyppi": "oppilaitostyyppi_41#1",
+          "organisaatiotyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "parentOid": "1.2.2004.5",
+          "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.5",
+          "status": "PASSIIVINEN",
+          "subRows": [],
+          "tyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "ytunnus": "1234567-6"
+        }
+      ],
+      "kieletUris": [],
+      "kotipaikkaUri": "Helsinki",
+      "lyhytNimi": {},
+      "match": true,
+      "nimi": {
+        "fi": "root2 test2 koulutustoimija2"
+      },
+      "oid": "1.2.2004.5",
+      "organisaatiotyypit": ["organisaatiotyyppi_01"],
+      "parentOid": "1.2.246.562.24.00000000001",
+      "parentOidPath": "1.2.246.562.24.00000000001",
+      "status": "AKTIIVINEN",
+      "subRows": [
+        {
+          "aliOrganisaatioMaara": 0,
+          "alkuPvm": 1207861200000,
+          "children": [],
+          "kieletUris": [],
+          "kotipaikkaUri": "Helsinki",
+          "lakkautusPvm": 1309294800000,
+          "lyhytNimi": {},
+          "match": true,
+          "nimi": {
+            "fi": "nodex bar"
+          },
+          "oid": "1.2.2004.6",
+          "oppilaitostyyppi": "oppilaitostyyppi_41#1",
+          "organisaatiotyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "parentOid": "1.2.2004.5",
+          "parentOidPath": "1.2.246.562.24.00000000001/1.2.2004.5",
+          "status": "PASSIIVINEN",
+          "subRows": [],
+          "tyypit": [
+            "organisaatiotyyppi_02",
+            "organisaatiotyyppi_04",
+            "organisaatiotyyppi_03"
+          ],
+          "ytunnus": "1234567-6"
+        }
+      ],
+      "tyypit": ["organisaatiotyyppi_01"],
+      "ytunnus": "1492449-0"
+    },
+    {
+      "aliOrganisaatioMaara": 0,
+      "children": [],
+      "kieletUris": [
+        "oppilaitoksenopetuskieli_1#1",
+        "oppilaitoksenopetuskieli_2#1",
+        "oppilaitoksenopetuskieli_3#1"
+      ],
+      "kotipaikkaUri": "Helsinki",
+      "lyhytNimi": {},
+      "match": true,
+      "nimi": {
+        "fi": "node23 foo bar"
+      },
+      "oid": "1.2.8000.1",
+      "oppilaitostyyppi": "oppilaitostyyppi_42#1",
+      "organisaatiotyypit": ["organisaatiotyyppi_02", "organisaatiotyyppi_07"],
+      "parentOid": "1.2.246.562.24.00000000001",
+      "parentOidPath": "1.2.246.562.24.00000000001",
+      "status": "AKTIIVINEN",
+      "subRows": [],
+      "tyypit": ["organisaatiotyyppi_02", "organisaatiotyyppi_07"],
+      "ytunnus": "1234569-5"
+    }
+  ]
+}

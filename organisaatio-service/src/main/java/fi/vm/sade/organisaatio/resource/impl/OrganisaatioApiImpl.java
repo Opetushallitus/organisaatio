@@ -394,7 +394,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     // prosessointi tarkoituksella transaktion ulkopuolella
     private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
-        final Set<OrganisaatioPerustietoV4> rootOrgs = new HashSet<>();
+        final Set<OrganisaatioPerustietoV4> rootOrgs = new LinkedHashSet<>();
         final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
         Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
@@ -419,8 +419,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 current.setOrganisaatiotyypit(new HashSet<>());
                 current.setNimi(new HashMap<>());
                 current.setLyhytNimi(new HashMap<>());
-                current.setKieletUris(new HashSet<>());
-                current.setChildren(new HashSet<>());
+                current.setKieletUris(new LinkedHashSet<>());
+                current.setChildren(new LinkedHashSet<>());
                 current.setParentOid(row.parentOid);
                 OrganisaatioPerustietoV4 parent = oidToOrg.get(row.parentOid);
                 if (parent == null) {
