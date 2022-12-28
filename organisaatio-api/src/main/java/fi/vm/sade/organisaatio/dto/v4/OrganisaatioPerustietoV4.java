@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.dto.v4;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
@@ -14,6 +15,7 @@ import java.util.*;
 @XmlRootElement
 @Schema(description = "Organisaation perustiedot v4")
 @JsonView(Views.None.class)
+@JsonPropertyOrder(alphabetic=true)
 public class OrganisaatioPerustietoV4 implements Serializable {
 
     private final static long serialVersionUID = 100L;
@@ -67,23 +69,23 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     // Tyypit koodiarvoina
     @JsonView(Views.Tyyppi.class)
-    private Set<String> tyypit = new HashSet<>();
+    private Set<String> tyypit = new LinkedHashSet<>();
 
     @Schema(description = "Kielten URIt", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Set<String> kieletUris = new HashSet<>();
+    private Set<String> kieletUris = new LinkedHashSet<>();
 
     @Schema(description = "Kotipaikan URI", requiredMode = Schema.RequiredMode.REQUIRED)
     private String kotipaikkaUri;
 
     @Schema(description = "Organisaation alaorganisaatiot", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Set<OrganisaatioPerustietoV4> children = new HashSet<>();
+    private Set<OrganisaatioPerustietoV4> children = new LinkedHashSet<>();
 
     public Set<OrganisaatioPerustietoV4> getChildren() {
         return children;
     }
 
     @Schema(description = "Organisaation alaorganisaatiot react tableen", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Set<OrganisaatioPerustietoV4> subRows = new HashSet<>();
+    private Set<OrganisaatioPerustietoV4> subRows = new LinkedHashSet<>();
 
     public Set<OrganisaatioPerustietoV4> getSubRows() {
         return subRows;
