@@ -11,6 +11,7 @@ import fi.vm.sade.organisaatio.resource.dto.HakuTulos;
 import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.service.search.SearchCriteriaService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("${server.api.context-path}/hae")
+@Hidden
+@RequestMapping({"${server.api.context-path}/hae", "${server.rest.context-path}/organisaatio/v4"})
 @RequiredArgsConstructor
 @Slf4j
 public class OrganisaatioSearchApiImpl implements OrganisaatioSearchApi {
