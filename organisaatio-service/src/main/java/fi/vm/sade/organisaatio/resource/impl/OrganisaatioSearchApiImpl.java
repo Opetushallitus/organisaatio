@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Hidden
-@RequestMapping({"${server.api.context-path}/hae", "${server.rest.context-path}/organisaatio/v4"})
+@RequestMapping({"${server.api.context-path}/hae", "${server.rest.context-path}/organisaatio/v4/hae"})
 @RequiredArgsConstructor
 @Slf4j
 public class OrganisaatioSearchApiImpl implements OrganisaatioSearchApi {
