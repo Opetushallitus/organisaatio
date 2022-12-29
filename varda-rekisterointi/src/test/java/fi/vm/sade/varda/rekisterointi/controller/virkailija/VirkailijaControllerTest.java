@@ -112,7 +112,7 @@ public class VirkailijaControllerTest {
     @Test
     public void haeOrganisaatioOiditReturnsOidSuffix() {
         String oid = "1.23.456.7890";
-        String authorityValue = String.format("ROLE_" + Constants.VIRKAILIJA_ROLE + "_%s", oid);
+        String authorityValue = String.format("ROLE_" + Constants.VARDA_ROLE + "_%s", oid);
         VirkailijaController controller = new VirkailijaController(null, null, null, null);
         GrantedAuthority authority = (GrantedAuthority) () -> authorityValue;
         List<String> returnedOids = controller.haeOrganisaatioOidit(List.of(authority));
