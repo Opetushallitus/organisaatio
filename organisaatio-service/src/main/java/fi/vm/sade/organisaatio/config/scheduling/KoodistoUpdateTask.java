@@ -4,6 +4,7 @@ import com.github.kagkarlsson.scheduler.task.ExecutionContext;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.OneTimeTask;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
+import fi.vm.sade.organisaatio.model.listeners.ProtectedDataListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,13 +12,18 @@ public class KoodistoUpdateTask extends OneTimeTask<String> {
 
     private final OrganisaatioKoodisto organisaatioKoodisto;
 
-    public KoodistoUpdateTask(OrganisaatioKoodisto organisaatioKoodisto) {
+    private final AuthenticationUtil authenticationUtil;
+
+    public KoodistoUpdateTask(OrganisaatioKoodisto organisaatioKoodisto,
+                              AuthenticationUtil authenticationUtil) {
         super("koodisto päivitys", String.class);
         this.organisaatioKoodisto = organisaatioKoodisto;
+        this.authenticationUtil = authenticationUtil;
     }
 
     @Override
     public void executeOnce(TaskInstance<String> taskInstance, ExecutionContext executionContext) {
+        authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
         organisaatioKoodisto.paivitaKoodisto(taskInstance.getData());
     }
 
