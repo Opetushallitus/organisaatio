@@ -1,4 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-set -e
-cd rekisterointi-ui && npx pretty-quick --staged && git -c core.whitespace=trailing-space diff --cached --check && npm run lint
