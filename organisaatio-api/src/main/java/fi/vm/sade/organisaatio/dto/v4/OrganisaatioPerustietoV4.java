@@ -1,12 +1,15 @@
 package fi.vm.sade.organisaatio.dto.v4;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.api.views.Views;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -31,6 +34,11 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     @Schema(description = "Lakkautuspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date lakkautusPvm;
+
+    @JsonIgnore
+    @Getter
+    @Setter
+    private boolean maskingActive;
 
     @Schema(description = "TarkastusPäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)

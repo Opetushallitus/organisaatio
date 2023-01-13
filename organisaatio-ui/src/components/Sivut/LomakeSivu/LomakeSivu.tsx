@@ -358,13 +358,13 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     const validateChanges = (accordionUuids: string[]): void => {
         const accordionuuid = accordionUuids[0];
-        console.log(accordionuuid, readOnly);
         const setAvoinnaCb = () => {
             setLomakeAvoinna(accordionuuid);
         };
         switch (lomakeAvoinna) {
             case PERUSTIEDOTID:
                 readOnly ? setAvoinnaCb() : perustiedotHandleSubmit(setAvoinnaCb)();
+
                 break;
             case YHTEYSTIEDOTID:
                 readOnly ? setAvoinnaCb() : yhteystiedotHandleSubmit(setAvoinnaCb)();
@@ -442,7 +442,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         );
         otsikot.push(i18n.translate('LOMAKE_PERUSTIEDOT'));
         lomakkeet.push(
-            organisaatioBase.katketty ? (
+            organisaatioBase.maskingActive ? (
                 <HiddenForm key={'HIDDEN_YHTEYSTIEDOT'} />
             ) : (
                 <YhteystietoLomake
@@ -511,7 +511,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         otsikot.push(i18n.translate('LOMAKE_NIMIHISTORIA'));
         if (organisaatioBase?.oid !== ROOT_OID && organisaatioBase?.oid) {
             lomakkeet.push(
-                organisaatioBase.katketty ? (
+                organisaatioBase.maskingActive ? (
                     <HiddenForm key={'HIDDEN_NIMIHISTORIA'} />
                 ) : (
                     <OrganisaatioHistoriaLomake key={'organisaatiohistorialomake'} historia={historia} />

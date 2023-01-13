@@ -1,12 +1,12 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioNimiModelMapper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
-import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.TypeToken;
@@ -21,12 +21,10 @@ import java.util.stream.IntStream;
 public class OrganisaatioNimiServiceImpl implements OrganisaatioNimiService {
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+    private final OrganisaatioBusinessService organisaatioBusinessService;
     private final OrganisaatioRepository organisaatioRepository;
-    private final OrganisaatioNimiRepository organisaatioNimiRepository;
-
     @Override
     public List<OrganisaatioNimiDTO> getNimet(String oid) {
-
         Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         List<OrganisaatioNimiDTO> orgNimet = organisaatioNimiModelMapper.map(org.getNimet(), new TypeToken<List<OrganisaatioNimiDTO>>() {
         }.getType());

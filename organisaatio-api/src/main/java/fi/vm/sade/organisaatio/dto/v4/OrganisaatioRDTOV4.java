@@ -126,7 +126,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
 
     @Getter
     @Setter
-    private boolean katketty;
+    private boolean maskingActive;
 
     @Schema(description = "Organisaation oid", required = true)
     public String getOid() {

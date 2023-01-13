@@ -82,7 +82,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
         oidList.addAll(organisaatioRepository.findOidsBy(true, OrganisaatioYtjServiceImpl.SEARCH_LIMIT, 0, OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA));
         List<Organisaatio> organisaatioList = organisaatioRepository.findByOidList(oidList, OrganisaatioYtjServiceImpl.SEARCH_LIMIT);
 
-        assertEquals(4, organisaatioList.size());
+        assertEquals(5, organisaatioList.size());
 
         Organisaatio org = organisaatioRepository.findFirstByOid("1.2.2005.5");
         initTestData(org);

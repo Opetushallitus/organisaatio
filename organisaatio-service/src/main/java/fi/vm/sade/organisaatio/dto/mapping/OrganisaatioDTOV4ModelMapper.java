@@ -94,6 +94,7 @@ public class OrganisaatioDTOV4ModelMapper extends ModelMapper {
             @Override
             protected void configure() {
                 using(organisaatioTyypitEnumV3ToV4).map(source.getOrganisaatiotyypit()).setOrganisaatiotyypit(null);
+                map().setMaskingActive(source.isMaskingActive());
             }
         });
         this.addMappings(new PropertyMap<OrganisaatioPerustietoV4, OrganisaatioPerustieto>() {

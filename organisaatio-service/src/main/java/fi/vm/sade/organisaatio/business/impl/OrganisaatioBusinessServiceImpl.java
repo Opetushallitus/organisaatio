@@ -649,6 +649,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
+
+    @Override
+    public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
+        List<OrganisaatioNimi> nimet = organisaatioNimiRepository.findNimet(oid);
+        if (nimet.isEmpty()) {
+            throw new OrganisaatioNotFoundException(oid);
+        }
+        return nimet;
+    }
+
     @Override
     public OrganisaatioNimi newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Organisaatio orgEntity = getOrganisaatio(oid);

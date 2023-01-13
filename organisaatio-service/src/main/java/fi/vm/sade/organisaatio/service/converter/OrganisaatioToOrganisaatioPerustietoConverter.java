@@ -21,6 +21,7 @@ public class OrganisaatioToOrganisaatioPerustietoConverter implements Converter<
         destination.setAlkuPvm(clone(source.getAlkuPvm()));
         destination.setTarkastusPvm(clone(source.getTarkastusPvm()));
         destination.setLakkautusPvm(clone(source.getLakkautusPvm()));
+        destination.setMaskingActive(source.isMaskingActive());
         List<String> parentOids = Optional.ofNullable(source.getParentOidPath())
                 .map(parentOidPath -> Arrays.stream(parentOidPath.split("\\|")))
                 .orElseGet(() -> Stream.empty())

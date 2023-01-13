@@ -8,10 +8,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.PostLoad;
 
-
 @Configurable
 public class ProtectedDataListener {
     private static final String YKSITYINEN_ELINKEINOHARJOITTAJA = "Yksityinen elinkeinonharjoittaja";
+
     public static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
     public static final String ROLE_CRUD_OPH = "ROLE_APP_ORGANISAATIOHALLINTA_CRUD_";
 
@@ -21,15 +21,11 @@ public class ProtectedDataListener {
     @PostLoad
     public void handleProtectedData(Organisaatio org) {
         if (isProtected(org) && !canViewProtected()) {
-            maskProtectedData(org);
+            org.setMaskingActive(true);
         }
     }
 
-    private static void maskProtectedData(Organisaatio org) {
-        org.setMaskingActive(true);
-    }
-
-    private static boolean isProtected(Organisaatio org) {
+    private boolean isProtected(Organisaatio org) {
         return org.isPiilotettu() || YKSITYINEN_ELINKEINOHARJOITTAJA.equals(org.getYritysmuoto());
     }
 
@@ -38,7 +34,7 @@ public class ProtectedDataListener {
         return !isAnonymous(auth) && isOPH(auth);
     }
 
-    private static boolean isAnonymous(Authentication auth) {
+    private boolean isAnonymous(Authentication auth) {
         return auth == null || auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(ROLE_ANONYMOUS));
     }
 

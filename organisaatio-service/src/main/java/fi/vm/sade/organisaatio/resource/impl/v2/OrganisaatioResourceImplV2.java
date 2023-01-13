@@ -27,16 +27,14 @@ import fi.vm.sade.organisaatio.business.OrganisaatioNimiService;
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioNimiMasking;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioLiitosModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.OrganisaatioSuhdeModelMapper;
 import fi.vm.sade.organisaatio.dto.mapping.v2.GroupModelMapperV2;
 import fi.vm.sade.organisaatio.dto.v2.*;
-import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.NamedMonikielinenTeksti;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.HakutoimistoDTO;
@@ -105,6 +103,9 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
     @Autowired
     private HakutoimistoService hakutoimistoService;
+
+    @Autowired
+    private OrganisaatioNimiMasking organisaatioNimiMasking;
 
     // POST /organisaatio/v2/yhteystiedot/hae
     @Override
@@ -470,7 +471,11 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {
         }.getType();
 
-        return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
+        List<OrganisaatioLiitosDTOV2> result = organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
+        for (OrganisaatioLiitosDTOV2 liitos : result) {
+            organisaatioNimiMasking.maskOrganisaatioLiitosDTOV2(liitos);
+        }
+        return result;
     }
 
     // GET /organisaatio/v2/ryhmat

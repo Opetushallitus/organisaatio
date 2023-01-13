@@ -21,7 +21,6 @@ public class MonikielinenTeksti extends BaseEntity {
     @BatchSize(size = 1000)
     private Map<String, String> values = new HashMap<>();
 
-
     public Map<String, String> getValues() {
         return values;
     }
