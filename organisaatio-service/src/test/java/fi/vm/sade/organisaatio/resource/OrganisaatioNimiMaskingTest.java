@@ -176,7 +176,13 @@ class OrganisaatioNimiMaskingTest {
                                 "\"kuvaus2\":{}," +
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"," +
-                                "\"status\":\"AKTIIVINEN\"" +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"yhteystiedot\":[" +
+                                "{\"kieli\":\"kieli_fi#1\",\"yhteystietoOid\":\"1674212904.18573\",\"id\":\"51\",\"email\":\"testiorganisaatio13@example.com\"}," +
+                                "{\"osoiteTyyppi\":\"posti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212910.814504\",\"id\":\"52\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}," +
+                                "{\"kieli\":\"kieli_fi#1\",\"numero\":\"0400123456\",\"tyyppi\":\"puhelin\",\"yhteystietoOid\":\"1674212916.068001\",\"id\":\"53\"}," +
+                                "{\"osoiteTyyppi\":\"kaynti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212896.872914\",\"id\":\"50\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}" +
+                                "]" +
                                 "}]", false));
     }
 
@@ -211,7 +217,8 @@ class OrganisaatioNimiMaskingTest {
                                 "\"kuvaus2\":{}," +
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"," +
-                                "\"status\":\"AKTIIVINEN\"" +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"yhteystiedot\":[]" +
                                 "}]", false));
     }
 
@@ -253,7 +260,8 @@ class OrganisaatioNimiMaskingTest {
                                 "\"kuvaus2\":{}," +
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"," +
-                                "\"status\":\"AKTIIVINEN\"" +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"yhteystiedot\":[]" +
                                 "}]", false));
     }
     @Test

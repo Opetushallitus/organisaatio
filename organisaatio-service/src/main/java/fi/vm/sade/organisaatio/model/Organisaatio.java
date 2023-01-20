@@ -324,7 +324,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public Set<Yhteystieto> getYhteystiedot() {
-        return maskingActive ? Set.of() : Collections.unmodifiableSet(yhteystiedot);
+        return Collections.unmodifiableSet(yhteystiedot);
     }
 
 
@@ -364,7 +364,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     private Osoite getOsoite(String osoiteTyyppi) {
-        return maskingActive ? null : yhteystiedot.stream()
+        return yhteystiedot.stream()
                 .filter(Osoite.class::isInstance)
                 .map(Osoite.class::cast)
                 .filter(o -> osoiteTyyppi.equals(o.getOsoiteTyyppi()))
