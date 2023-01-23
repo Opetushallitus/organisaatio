@@ -944,11 +944,14 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         public final String organisaatiotyyppi;
         public final String kieli;
         public final Integer taso;
+        public final String yritysmuoto;
+        public final boolean piilotettu;
 
         public JalkelaisetRivi(String oid, Date alkuPvm, Date lakkautusPvm, String parentOid,
                                String ytunnus, String virastotunnus, String oppilaitoskoodi,
                                String oppilaitostyyppi, String toimipistekoodi, String kotipaikka,
-                               String organisaatiotyyppi, String nimiKieli, String nimiArvo, String kieli, Integer taso) {
+                               String organisaatiotyyppi, String nimiKieli, String nimiArvo, String kieli,
+                               Integer taso, String yritysmuoto, boolean piilotettu) {
             this.oid = oid;
             this.alkuPvm = alkuPvm;
             this.lakkautusPvm = lakkautusPvm;
@@ -964,6 +967,8 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
             this.organisaatiotyyppi = organisaatiotyyppi;
             this.kieli = kieli;
             this.taso = taso;
+            this.yritysmuoto = yritysmuoto;
+            this.piilotettu = piilotettu;
         }
     }
 

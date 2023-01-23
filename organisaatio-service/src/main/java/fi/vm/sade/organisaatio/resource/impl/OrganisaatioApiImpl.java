@@ -20,6 +20,7 @@ import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.listeners.ProtectedDataListener;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -71,6 +72,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     @Autowired
     private OrganisaatioNimiMasking organisaatioNimiMasking;
+    @Autowired
+    private ProtectedDataListener protectedDataListener;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -417,7 +420,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella
-    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
+    private OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
         final Set<OrganisaatioPerustietoV4> rootOrgs = new TreeSet<>(Comparator.comparing(OrganisaatioPerustietoV4::getOid));
         final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
@@ -431,6 +434,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 }
                 current = new OrganisaatioPerustietoV4();
                 current.setMatch(true);
+                boolean isProtectedOrg = row.piilotettu || ProtectedDataListener.YKSITYINEN_ELINKEINOHARJOITTAJA.equals(row.yritysmuoto);
+                current.setMaskingActive(isProtectedOrg && !protectedDataListener.canViewProtected());
                 current.setOid(row.oid);
                 current.setAlkuPvm(row.alkuPvm);
                 current.setLakkautusPvm(row.lakkautusPvm);
@@ -477,8 +482,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 .build();
     }
 
-    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
+    private void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
         perustieto.setParentOidPath(generateParentOidPath(parentOids));
+        organisaatioNimiMasking.maskOrganisaatioPerustietoV4(perustieto);
     }
 
     private static String generateParentOidPath(Set<String> parentOids) {

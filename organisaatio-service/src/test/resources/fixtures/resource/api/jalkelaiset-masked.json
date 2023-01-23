@@ -1,5 +1,5 @@
 {
-  "numHits": 11,
+  "numHits": 10,
   "organisaatiot": [
     {
       "aliOrganisaatioMaara": 2,
@@ -634,32 +634,8 @@
       "ytunnus": "1492449-0"
     },
     {
-      "aliOrganisaatioMaara": 1,
-      "children": [
-        {
-          "aliOrganisaatioMaara": 0,
-          "children": [],
-          "kieletUris": [],
-          "kotipaikkaUri": "Helsinki",
-          "lyhytNimi": {},
-          "match": true,
-          "nimi": {
-            "fi": "Varhaiskasvatuksen toimipiste"
-          },
-          "oid": "1.2.2020.1",
-          "organisaatiotyypit": [
-            "organisaatiotyyppi_08"
-          ],
-          "parentOid": "1.2.8000.1",
-          "parentOidPath": "1.2.246.562.24.00000000001/1.2.8000.1",
-          "status": "AKTIIVINEN",
-          "subRows": [],
-          "tyypit": [
-            "organisaatiotyyppi_08"
-          ],
-          "ytunnus": "8538031-2"
-        }
-      ],
+      "aliOrganisaatioMaara": 0,
+      "children": [],
       "kieletUris": [
         "oppilaitoksenopetuskieli_1#1",
         "oppilaitoksenopetuskieli_2#1",
@@ -677,31 +653,7 @@
       "parentOid": "1.2.246.562.24.00000000001",
       "parentOidPath": "1.2.246.562.24.00000000001",
       "status": "AKTIIVINEN",
-      "subRows": [
-        {
-          "aliOrganisaatioMaara": 0,
-          "children": [],
-          "kieletUris": [],
-          "kotipaikkaUri": "Helsinki",
-          "lyhytNimi": {},
-          "match": true,
-          "nimi": {
-            "fi": "Varhaiskasvatuksen toimipiste"
-          },
-          "oid": "1.2.2020.1",
-          "organisaatiotyypit": [
-            "organisaatiotyyppi_08"
-          ],
-          "parentOid": "1.2.8000.1",
-          "parentOidPath": "1.2.246.562.24.00000000001/1.2.8000.1",
-          "status": "AKTIIVINEN",
-          "subRows": [],
-          "tyypit": [
-            "organisaatiotyyppi_08"
-          ],
-          "ytunnus": "8538031-2"
-        }
-      ],
+      "subRows": [],
       "tyypit": ["organisaatiotyyppi_02", "organisaatiotyyppi_07"],
       "ytunnus": "1234569-5"
     },
@@ -710,10 +662,16 @@
       "children": [],
       "kieletUris": [],
       "kotipaikkaUri": "Helsinki",
-      "lyhytNimi": {},
+      "lyhytNimi": {
+        "fi": "Yksityinen elinkeinonharjoittaja (6165189-7)",
+        "sv": "Enskild näringsidkare (6165189-7)",
+        "en": "Private trader (6165189-7)"
+      },
       "match": true,
       "nimi": {
-        "fi": "Piilotustesti"
+        "fi": "Yksityinen elinkeinonharjoittaja (6165189-7)",
+        "sv": "Enskild näringsidkare (6165189-7)",
+        "en": "Private trader (6165189-7)"
       },
       "oid": "1.2.8001.2",
       "organisaatiotyypit": ["organisaatiotyyppi_07"],

@@ -97,10 +97,10 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
                 "1.2.2004.1", "1.2.2004.2", "1.2.2004.3",
                 "1.2.2004.4", "1.2.2004.5", "1.2.2004.6",
                 "1.2.2005.4", "1.2.2005.5", "1.2.8000.1",
-                "1.2.2020.1"
+                "1.2.2020.1", "1.2.8001.2"
         };
         OrganisaatioHakutulosV4 results = resource.findDescendants(parentOid);
-        assertThat(results.getNumHits()).isEqualTo(10);
+        assertThat(results.getNumHits()).isEqualTo(11);
         List<String> resultOids = results.getOrganisaatiot().stream()
                 .map(OrganisaatioApiTest::collectOids)
                 .flatMap(Collection::stream)

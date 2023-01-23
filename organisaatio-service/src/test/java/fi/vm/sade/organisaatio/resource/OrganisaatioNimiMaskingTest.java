@@ -163,7 +163,7 @@ class OrganisaatioNimiMaskingTest {
                                 "{" +
                                 "\"yritysmuoto\":\"Yksityinen elinkeinonharjoittaja\"," +
                                 "\"kotipaikkaUri\":\"Helsinki\"," +
-                                "\"parentOidPath\":\"\"," +
+                                "\"parentOidPath\":\"|1.2.246.562.24.00000000001|\"," +
                                 "\"kayntiosoite\":{}," +
                                 "\"postiosoite\":{}," +
                                 "\"lisatiedot\":[]," +
@@ -204,7 +204,7 @@ class OrganisaatioNimiMaskingTest {
                                 "{" +
                                 "\"yritysmuoto\":\"Yksityinen elinkeinonharjoittaja\"," +
                                 "\"kotipaikkaUri\":\"Helsinki\"," +
-                                "\"parentOidPath\":\"\"," +
+                                "\"parentOidPath\":\"|1.2.246.562.24.00000000001|\"," +
                                 "\"kayntiosoite\":{}," +
                                 "\"postiosoite\":{}," +
                                 "\"lisatiedot\":[]," +
@@ -240,7 +240,7 @@ class OrganisaatioNimiMaskingTest {
                                 "{" +
                                 "\"yritysmuoto\":\"Yksityinen elinkeinonharjoittaja\"," +
                                 "\"kotipaikkaUri\":\"Helsinki\"," +
-                                "\"parentOidPath\":\"\"," +
+                                "\"parentOidPath\":\"|1.2.246.562.24.00000000001|\"," +
                                 "\"kayntiosoite\":{}," +
                                 "\"postiosoite\":{}," +
                                 "\"lisatiedot\":[]," +
@@ -283,7 +283,7 @@ class OrganisaatioNimiMaskingTest {
                                 "\"nimi\":{\"fi\":\"Piilotustesti\"}," +
                                 "\"oid\":\"1.2.8001.2\"," +
                                 "\"organisaatiotyypit\":[\"organisaatiotyyppi_07\"]," +
-                                "\"parentOidPath\":\"1.2.8001.2\"," +
+                                "\"parentOidPath\":\"1.2.8001.2/1.2.246.562.24.00000000001\"," +
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"subRows\":[]," +
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
@@ -317,7 +317,7 @@ class OrganisaatioNimiMaskingTest {
                                 "\"en\":\"Private trader (6165189-7)\"}," +
                                 "\"oid\":\"1.2.8001.2\"," +
                                 "\"organisaatiotyypit\":[\"organisaatiotyyppi_07\"]," +
-                                "\"parentOidPath\":\"1.2.8001.2\"," +
+                                "\"parentOidPath\":\"1.2.8001.2/1.2.246.562.24.00000000001\"," +
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"subRows\":[]," +
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
@@ -351,7 +351,7 @@ class OrganisaatioNimiMaskingTest {
                                 "\"en\":\"Private trader (6165189-7)\"}," +
                                 "\"oid\":\"1.2.8001.2\"," +
                                 "\"organisaatiotyypit\":[\"organisaatiotyyppi_07\"]," +
-                                "\"parentOidPath\":\"1.2.8001.2\"," +
+                                "\"parentOidPath\":\"1.2.8001.2/1.2.246.562.24.00000000001\"," +
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"subRows\":[]," +
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
