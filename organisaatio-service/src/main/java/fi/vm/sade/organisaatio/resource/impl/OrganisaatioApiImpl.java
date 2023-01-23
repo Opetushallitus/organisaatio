@@ -176,8 +176,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             List<OrganisaatioTyyppi> organisaatioTyypit = organizationType == null ? Collections.emptyList() :
                     organizationType.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
-            return this.organisaatioFindBusinessService.haeMuutetut(
+            List<Organisaatio> organisaatiot = this.organisaatioFindBusinessService.haeMuutetut(
                     lastModifiedSince, organisaatioTyypit, excludeDiscontinued);
+
+            return organisaatioFindBusinessService.mapToOrganisaatioRdtoV4(organisaatiot, false);
         } catch (IllegalArgumentException iae) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, iae.getMessage());
         }
@@ -189,8 +191,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organisaatioTyypit,
             boolean excludeDiscontinued) {
-        return this.organisaatioFindBusinessService.haeMuutetut(
-                lastModifiedSince, organisaatioTyypit, excludeDiscontinued).stream().map(OrganisaatioRDTOV4::getOid).collect(Collectors.toList());
+        return this.organisaatioFindBusinessService.haeMuutetut(lastModifiedSince, organisaatioTyypit, excludeDiscontinued)
+            .stream().map(Organisaatio::getOid).collect(Collectors.toList());
     }
 
     /**

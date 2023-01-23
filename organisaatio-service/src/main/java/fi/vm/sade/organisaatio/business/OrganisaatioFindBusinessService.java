@@ -122,10 +122,12 @@ public interface OrganisaatioFindBusinessService {
      * @param excludeDiscontinued Rajataanko lakkautetut pois tuloksista
      * @return Muuttuneet organisaatiot muodossa OrganisaatioRDTOV4
      */
-    List<OrganisaatioRDTOV4> haeMuutetut(
+    List<Organisaatio> haeMuutetut(
             LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
 
     List<OrganisaatioRepositoryImpl.JalkelaisetRivi> findDescendants(String oid);
+
+    List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage);
 }
