@@ -15,9 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
+
 
 @EntityListeners(ProtectedDataListener.class)
 @Entity
@@ -48,7 +48,9 @@ import static java.util.stream.Collectors.toSet;
                         @ColumnResult(name = "nimiKieli"),
                         @ColumnResult(name = "nimiArvo"),
                         @ColumnResult(name = "kieli"),
-                        @ColumnResult(name = "taso", type = Integer.class)
+                        @ColumnResult(name = "taso", type = Integer.class),
+                        @ColumnResult(name = "yritysmuoto"),
+                        @ColumnResult(name = "piilotettu")
                 }
         )
 )
@@ -59,7 +61,7 @@ import static java.util.stream.Collectors.toSet;
         query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
                 "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
                 "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
-                "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
+                "k.kielet AS kieli, r.parent_position AS taso, o.yritysmuoto, o.piilotettu FROM organisaatio o " +
                 "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
                 "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
                 "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
@@ -76,7 +78,7 @@ import static java.util.stream.Collectors.toSet;
         query = "SELECT o.oid, o.alkuPvm, o.lakkautusPvm, p.parent_oid AS parentOid, o.ytunnus, " +
                 "o.virastotunnus, o.oppilaitoskoodi, o.oppilaitostyyppi, o.toimipistekoodi, o.kotipaikka, " +
                 "t.tyypit AS organisaatiotyyppi, nv.key AS nimiKieli, nv.value AS nimiArvo, " +
-                "k.kielet AS kieli, r.parent_position AS taso FROM organisaatio o " +
+                "k.kielet AS kieli, r.parent_position AS taso, o.yritysmuoto, o.piilotettu FROM organisaatio o " +
                 "JOIN organisaatio_parent_oids p ON (p.organisaatio_id = o.id) " +
                 "JOIN organisaatio_parent_oids r ON (r.organisaatio_id = o.id AND r.parent_oid = :root) " +
                 "JOIN organisaatio_tyypit t ON (t.organisaatio_id = o.id AND t.tyypit <> 'Ryhma') " +
@@ -90,8 +92,6 @@ import static java.util.stream.Collectors.toSet;
 )
 
 public class Organisaatio extends OrganisaatioBaseEntity {
-    private static final String[] YKSITYINEN_ELINKEINOHARJOITTAJA = {"Yksityinen elinkeinonharjoittaja", "Enskild näringsidkare", "Private trader"};
-    private static final String[] HIDDEN_NAME = {"Piilotettu", "Dold", "Hidden"};
 
     private static final long serialVersionUID = 1L;
 
@@ -238,6 +238,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @Setter
     @Getter
     private boolean maskingActive = false;
+
     /**
      * HUOM! parentOidPath -sarakkeelle on lisätty erikseen indeksi (ks. flyway skripti n. V011)
      */
@@ -325,7 +326,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public Set<Yhteystieto> getYhteystiedot() {
-        return maskingActive ? Set.of() : Collections.unmodifiableSet(yhteystiedot);
+        return Collections.unmodifiableSet(yhteystiedot);
     }
 
 
@@ -365,7 +366,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     private Osoite getOsoite(String osoiteTyyppi) {
-        return maskingActive ? null : yhteystiedot.stream()
+        return yhteystiedot.stream()
                 .filter(Osoite.class::isInstance)
                 .map(Osoite.class::cast)
                 .filter(o -> osoiteTyyppi.equals(o.getOsoiteTyyppi()))
@@ -645,15 +646,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return multilingual nimi (name)
      */
     public MonikielinenTeksti getNimi() {
-
-        MonikielinenTeksti maskedNimi = maskingActive ?
-                getYksityinenElinkeinoharjoittajaName() : this.nimi;
         Organisaatio parent = this.getParent();
         if (parent != null && this.tyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
             Map<String, String> values = new HashMap<>();
             MonikielinenTeksti parentNimi = parent.getNimi();
-            maskedNimi.getValues().keySet().forEach(a -> {
-                String currentNimiString = maskedNimi.getString(a);
+            this.nimi.getValues().keySet().forEach(a -> {
+                String currentNimiString = this.nimi.getString(a);
                 String parentNimiString = parentNimi.getString(a);
                 values.put(a, currentNimiString.equals(parentNimiString) ? currentNimiString : String.format("%s, %s", parentNimiString, currentNimiString));
             });
@@ -661,11 +659,11 @@ public class Organisaatio extends OrganisaatioBaseEntity {
             modified.setValues(values);
             return modified;
         }
-        return maskedNimi;
+        return this.nimi;
     }
 
     public MonikielinenTeksti getActualNimi() {
-        return maskingActive ? getYksityinenElinkeinoharjoittajaName() : this.nimi;
+        return this.nimi;
     }
 
     /**
@@ -937,11 +935,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
      * @return the nimet
      */
     public List<OrganisaatioNimi> getNimet() {
-        MonikielinenTeksti hidden = getYksityinenElinkeinoharjoittajaName();
-        return maskingActive ? nimet.stream().map(a -> {
-            a.setNimi(hidden);
-            return a;
-        }).collect(Collectors.toList()) : Collections.unmodifiableList(nimet);
+        return Collections.unmodifiableList(nimet);
     }
 
     /**
@@ -987,20 +981,5 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     public void setVarhaiskasvatuksenToimipaikkaTiedot(VarhaiskasvatuksenToimipaikkaTiedot varhaiskasvatuksenToimipaikkaTiedot) {
         this.varhaiskasvatuksenToimipaikkaTiedot = varhaiskasvatuksenToimipaikkaTiedot;
-    }
-
-    private MonikielinenTeksti getYksityinenElinkeinoharjoittajaName() {
-        MonikielinenTeksti hidden = new MonikielinenTeksti();
-        hidden.setValues(
-                this.isPiilotettu() ? hideName(HIDDEN_NAME, oid) :
-                        hideName(YKSITYINEN_ELINKEINOHARJOITTAJA, ytunnus));
-        return hidden;
-    }
-
-    private Map<String, String> hideName(String[] langNames, String id) {
-        String nameFormat = "%s (%s)";
-        return Map.of("fi", String.format(nameFormat, langNames[0], id),
-                "sv", String.format(nameFormat, langNames[1], id),
-                "en", String.format(nameFormat, langNames[2], id));
     }
 }

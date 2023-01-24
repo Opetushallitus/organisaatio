@@ -244,7 +244,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                 : mapToOrganisaatioRdtoV4(parentOrg.getChildren(true), includeImage);
     }
 
-    private List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
+    public List<OrganisaatioRDTOV4> mapToOrganisaatioRdtoV4(Collection<Organisaatio> children, boolean includeImage) {
         return children.stream()
                 .map(child -> {
                     // Jätetään kuva pois, jos sitä ei haluta
@@ -300,7 +300,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganisaatioRDTOV4> haeMuutetut(
+    public List<Organisaatio> haeMuutetut(
             LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued) {
@@ -320,7 +320,7 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
         if (organisaatiot == null || organisaatiot.isEmpty()) {
             return Collections.emptyList();
         }
-        return this.mapToOrganisaatioRdtoV4(organisaatiot, false);
+        return organisaatiot;
     }
 
     @Override

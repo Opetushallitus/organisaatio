@@ -71,6 +71,7 @@ public class OrganisaatioNimiModelMapper extends ModelMapper {
                 // Monikielinen nimi --> Map<String, String>
                 // Lisätään kaikki nimen kieliversiot, jotka eivät ole tyhjiä
                 using(mapRemoveEmptyValuesConverter).map(source.getNimi().getValues()).setNimi(null);
+                map().setOid(source.getOrganisaatio().getOid());
             }
         });
 

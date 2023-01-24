@@ -175,6 +175,7 @@ public class YTJServiceMock implements YTJService {
             {"2255802-1", "Katva Consulting", "Yksityinen elinkeinonharjoittaja"},
             {"1111111-1", "Diibadaa", "Yksityinen elinkeinonharjoittaja"},
             {"2222222-1", "Diibadaadaa", "Yksityinen elinkeinonharjoittaja"},
-            {"1492449-0", "Ruotsalainen & koulutustoimija", "Yksityinen elinkeinonharjoittaja"}
+            {"1492449-0", "Ruotsalainen & koulutustoimija", "Yksityinen elinkeinonharjoittaja"},
+            {"6165189-7", "Piilotustesti varhaiskasvatuksen yksityinen elinkeinonharjoittaja", "Yksityinen elinkeinonharjoittaja"}
     };
 }

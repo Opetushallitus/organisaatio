@@ -1,8 +1,11 @@
-package fi.vm.sade.organisaatio.model.listeners;
+package fi.vm.sade.organisaatio.resource;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -22,8 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 @AutoConfigureMockMvc
-class ProtectedDataListenerTest {
+@ExtendWith(MockitoExtension.class)
+@Sql("/data/truncate_tables.sql")
+@Sql("/data/basic_organisaatio_data.sql")
+class OrganisaatioNimiMaskingTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -156,7 +163,7 @@ class ProtectedDataListenerTest {
                                 "{" +
                                 "\"yritysmuoto\":\"Yksityinen elinkeinonharjoittaja\"," +
                                 "\"kotipaikkaUri\":\"Helsinki\"," +
-                                "\"parentOidPath\":\"\"," +
+                                "\"parentOidPath\":\"|1.2.246.562.24.00000000001|\"," +
                                 "\"kayntiosoite\":{}," +
                                 "\"postiosoite\":{}," +
                                 "\"lisatiedot\":[]," +
@@ -167,9 +174,15 @@ class ProtectedDataListenerTest {
                                 "\"nimet\":[{\"nimi\":{\"fi\":\"Piilotustesti\"},\"alkuPvm\":\"1970-01-01\",\"version\":0}]," +
                                 "\"nimi\":{\"fi\":\"Piilotustesti\"}," +
                                 "\"kuvaus2\":{}," +
-                                "\"tyypit\":[]," +
+                                "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"," +
-                                "\"status\":\"AKTIIVINEN\"" +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"yhteystiedot\":[" +
+                                "{\"kieli\":\"kieli_fi#1\",\"yhteystietoOid\":\"1674212904.18573\",\"id\":\"51\",\"email\":\"testiorganisaatio13@example.com\"}," +
+                                "{\"osoiteTyyppi\":\"posti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212910.814504\",\"id\":\"52\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}," +
+                                "{\"kieli\":\"kieli_fi#1\",\"numero\":\"0400123456\",\"tyyppi\":\"puhelin\",\"yhteystietoOid\":\"1674212916.068001\",\"id\":\"53\"}," +
+                                "{\"osoiteTyyppi\":\"kaynti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212896.872914\",\"id\":\"50\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}" +
+                                "]" +
                                 "}]", false));
     }
 
@@ -191,7 +204,7 @@ class ProtectedDataListenerTest {
                                 "{" +
                                 "\"yritysmuoto\":\"Yksityinen elinkeinonharjoittaja\"," +
                                 "\"kotipaikkaUri\":\"Helsinki\"," +
-                                "\"parentOidPath\":\"\"," +
+                                "\"parentOidPath\":\"|1.2.246.562.24.00000000001|\"," +
                                 "\"kayntiosoite\":{}," +
                                 "\"postiosoite\":{}," +
                                 "\"lisatiedot\":[]," +
@@ -202,9 +215,10 @@ class ProtectedDataListenerTest {
                                 "\"nimet\":[{\"nimi\":{\"fi\":\"Yksityinen elinkeinonharjoittaja (6165189-7)\"},\"alkuPvm\":\"1970-01-01\",\"version\":0}]," +
                                 "\"nimi\":{\"fi\":\"Yksityinen elinkeinonharjoittaja (6165189-7)\"}," +
                                 "\"kuvaus2\":{}," +
-                                "\"tyypit\":[]," +
+                                "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"," +
-                                "\"status\":\"AKTIIVINEN\"" +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"yhteystiedot\":[]" +
                                 "}]", false));
     }
 
@@ -226,7 +240,7 @@ class ProtectedDataListenerTest {
                                 "{" +
                                 "\"yritysmuoto\":\"Yksityinen elinkeinonharjoittaja\"," +
                                 "\"kotipaikkaUri\":\"Helsinki\"," +
-                                "\"parentOidPath\":\"\"," +
+                                "\"parentOidPath\":\"|1.2.246.562.24.00000000001|\"," +
                                 "\"kayntiosoite\":{}," +
                                 "\"postiosoite\":{}," +
                                 "\"lisatiedot\":[]," +
@@ -244,19 +258,116 @@ class ProtectedDataListenerTest {
                                 "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
                                 "\"en\":\"Private trader (6165189-7)\"}," +
                                 "\"kuvaus2\":{}," +
-                                "\"tyypit\":[]," +
+                                "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"," +
-                                "\"status\":\"AKTIIVINEN\"" +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"yhteystiedot\":[]" +
                                 "}]", false));
     }
+    @Test
+    @DisplayName("Hierarkia haku with OPH role")
+    @OPHUser
+    void testHierarkiaHaeWithRole() throws Exception {
+        this.mockMvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        "{" +
+                                "\"numHits\": 1," +
+                                "\"organisaatiot\": [" +
+                                "{\"aliOrganisaatioMaara\":0," +
+                                "\"children\":[]," +
+                                "\"kieletUris\":[]," +
+                                "\"kotipaikkaUri\":\"Helsinki\"," +
+                                "\"lyhytNimi\":{\"fi\":\"Piilotustesti\"}," +
+                                "\"match\":true," +
+                                "\"nimi\":{\"fi\":\"Piilotustesti\"}," +
+                                "\"oid\":\"1.2.8001.2\"," +
+                                "\"organisaatiotyypit\":[\"organisaatiotyyppi_07\"]," +
+                                "\"parentOidPath\":\"1.2.8001.2/1.2.246.562.24.00000000001\"," +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"subRows\":[]," +
+                                "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
+                                "\"ytunnus\":\"6165189-7\"}" +
+                                "]" +
+                                "}", false));
+    }
+
+    @Test
+    @DisplayName("Hierarkia haku with limited role")
+    @LimitedUser
+    void testHierarkiaHaeWithLimitedRole() throws Exception {
+        this.mockMvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        "{" +
+                                "\"numHits\": 1," +
+                                "\"organisaatiot\": [" +
+                                "{\"aliOrganisaatioMaara\":0," +
+                                "\"children\":[]," +
+                                "\"kieletUris\":[]," +
+                                "\"kotipaikkaUri\":\"Helsinki\"," +
+                                "\"lyhytNimi\":{" +
+                                "\"fi\":\"Yksityinen elinkeinonharjoittaja (6165189-7)\"," +
+                                "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
+                                "\"en\":\"Private trader (6165189-7)\"}," +
+                                "\"match\":true," +
+                                "\"nimi\":{" +
+                                "\"fi\":\"Yksityinen elinkeinonharjoittaja (6165189-7)\"," +
+                                "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
+                                "\"en\":\"Private trader (6165189-7)\"}," +
+                                "\"oid\":\"1.2.8001.2\"," +
+                                "\"organisaatiotyypit\":[\"organisaatiotyyppi_07\"]," +
+                                "\"parentOidPath\":\"1.2.8001.2/1.2.246.562.24.00000000001\"," +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"subRows\":[]," +
+                                "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
+                                "\"ytunnus\":\"6165189-7\"}" +
+                                "]" +
+                                "}", false));
+    }
+
+    @Test
+    @DisplayName("Hierarkia haku anonymously")
+    @AnonymousUser
+    void testHierarkiaHaeWithoutRole() throws Exception {
+        this.mockMvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        "{" +
+                                "\"numHits\": 1," +
+                                "\"organisaatiot\": [" +
+                                "{\"aliOrganisaatioMaara\":0," +
+                                "\"children\":[]," +
+                                "\"kieletUris\":[]," +
+                                "\"kotipaikkaUri\":\"Helsinki\"," +
+                                "\"lyhytNimi\":{" +
+                                "\"fi\":\"Yksityinen elinkeinonharjoittaja (6165189-7)\"," +
+                                "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
+                                "\"en\":\"Private trader (6165189-7)\"}," +
+                                "\"match\":true," +
+                                "\"nimi\":{" +
+                                "\"fi\":\"Yksityinen elinkeinonharjoittaja (6165189-7)\"," +
+                                "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
+                                "\"en\":\"Private trader (6165189-7)\"}," +
+                                "\"oid\":\"1.2.8001.2\"," +
+                                "\"organisaatiotyypit\":[\"organisaatiotyyppi_07\"]," +
+                                "\"parentOidPath\":\"1.2.8001.2/1.2.246.562.24.00000000001\"," +
+                                "\"status\":\"AKTIIVINEN\"," +
+                                "\"subRows\":[]," +
+                                "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
+                                "\"ytunnus\":\"6165189-7\"}" +
+                                "]" +
+                                "}", false));
+    }
+
     @Test
     @DisplayName("Get with limited role, check masked")
     @LimitedUser
     void testGetWithLimitedRole() throws Exception {
         this.mockMvc.perform(get("/api/{oid}","1.2.8001.2")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"katketty\": true}",false));
+                .andExpect(content().json("{\"maskingActive\": true}",false));
     }
     @Test
     @DisplayName("Get with OPH role, check not masked")
@@ -265,31 +376,26 @@ class ProtectedDataListenerTest {
         this.mockMvc.perform(get("/api/{oid}","1.2.8001.2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"katketty\": false}",false));
+                .andExpect(content().json("{\"maskingActive\": false}",false));
     }
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
-    @Sql({"/data/truncate_tables.sql"})
-    @Sql({"/data/basic_organisaatio_data.sql"})
     @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ", "APP_ORGANISAATIOHALLINTA_READ_1.2.246.562.10.90008375488"})
     @interface LimitedUser {
     }
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
-    @Sql({"/data/truncate_tables.sql"})
-    @Sql({"/data/basic_organisaatio_data.sql"})
     @WithAnonymousUser
     @interface AnonymousUser {
     }
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
-    @Sql({"/data/truncate_tables.sql"})
-    @Sql({"/data/basic_organisaatio_data.sql"})
     @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001"})
     @interface OPHUser {
     }
+
 
 }

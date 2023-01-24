@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import fi.vm.sade.generic.service.exception.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.*;
+import fi.vm.sade.organisaatio.business.impl.OrganisaatioNimiMasking;
 import fi.vm.sade.organisaatio.client.OppijanumeroClient;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
@@ -19,6 +20,7 @@ import fi.vm.sade.organisaatio.dto.v4.*;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
+import fi.vm.sade.organisaatio.model.listeners.ProtectedDataListener;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.resource.OrganisaatioApi;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -68,6 +70,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     private final OrganisaatioFindBusinessService organisaatioFindBusinessService;
     private final HakutoimistoService hakutoimistoService;
 
+    @Autowired
+    private OrganisaatioNimiMasking organisaatioNimiMasking;
+    @Autowired
+    private ProtectedDataListener protectedDataListener;
+
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
@@ -85,7 +92,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
     @Override
     public List<OrganisaatioRDTOV4> findByOids(Set<String> oids) {
-        return organisaatioFindBusinessService.findByOidsV4(oids);
+        List<OrganisaatioRDTOV4> byOidsV4 = organisaatioFindBusinessService.findByOidsV4(oids);
+        for (OrganisaatioRDTOV4 organisaatioRDTOV4 : byOidsV4) {
+            organisaatioNimiMasking.maskOrganisaatioRDTOV4(organisaatioRDTOV4);
+        }
+        return byOidsV4;
     }
 
     /**
@@ -103,7 +114,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @CheckReadPermission
     public OrganisaatioRDTOV4 getOrganisaatioByOID(String oid, boolean includeImage) {
-        return this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
+        OrganisaatioRDTOV4 org = this.organisaatioFindBusinessService.findByIdV4(oid, includeImage);
+        organisaatioNimiMasking.maskOrganisaatioRDTOV4(org);
+        return org;
     }
 
     /**
@@ -166,8 +179,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             List<OrganisaatioTyyppi> organisaatioTyypit = organizationType == null ? Collections.emptyList() :
                     organizationType.stream().map(OrganisaatioTyyppi::fromKoodiValue).collect(Collectors.toList());
-            return this.organisaatioFindBusinessService.haeMuutetut(
+            List<Organisaatio> organisaatiot = this.organisaatioFindBusinessService.haeMuutetut(
                     lastModifiedSince, organisaatioTyypit, excludeDiscontinued);
+
+            return organisaatioFindBusinessService.mapToOrganisaatioRdtoV4(organisaatiot, false);
         } catch (IllegalArgumentException iae) {
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, iae.getMessage());
         }
@@ -179,8 +194,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organisaatioTyypit,
             boolean excludeDiscontinued) {
-        return this.organisaatioFindBusinessService.haeMuutetut(
-                lastModifiedSince, organisaatioTyypit, excludeDiscontinued).stream().map(OrganisaatioRDTOV4::getOid).collect(Collectors.toList());
+        return this.organisaatioFindBusinessService.haeMuutetut(lastModifiedSince, organisaatioTyypit, excludeDiscontinued)
+            .stream().map(Organisaatio::getOid).collect(Collectors.toList());
     }
 
     /**
@@ -201,7 +216,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     public OrganisaatioHakutulosV4 searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
-        return this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatioHierarkia(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
+        OrganisaatioHakutulosV4 hakutulos = this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatioHierarkia(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
+        for (OrganisaatioPerustietoV4 org : hakutulos.getOrganisaatiot()) {
+            organisaatioNimiMasking.maskOrganisaatioPerustietoV4(org);
+        }
+        return hakutulos;
     }
 
     /**
@@ -367,7 +386,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @CheckReadPermission
     public List<OrganisaatioNimiDTO> getOrganisaatioNimet(String oid) {
-        return organisaatioNimiService.getNimet(oid);
+        List<OrganisaatioNimiDTO> nimet = organisaatioNimiService.getNimet(oid);
+        for (OrganisaatioNimiDTO nimi : nimet) {
+            organisaatioNimiMasking.maskOrganisaatioNimiDTO(nimi);
+        }
+        return nimet;
     }
 
     // GET /api/ryhmat
@@ -382,7 +405,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public List<OrganisaatioLiitosDTOV2> liitokset() {
         List<OrganisaatioSuhde> liitokset = organisaatioFindBusinessService.findLiitokset(null);
         Type organisaatioLiitosType = new TypeToken<List<OrganisaatioLiitosDTOV2>>() {}.getType();
-        return organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
+        List<OrganisaatioLiitosDTOV2> result = organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosType);
+        for (OrganisaatioLiitosDTOV2 liitos : result) {
+            organisaatioNimiMasking.maskOrganisaatioLiitosDTOV2(liitos);
+        }
+        return result;
     }
 
     // GET /api/{oid}/hakutoimisto
@@ -393,8 +420,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     // prosessointi tarkoituksella transaktion ulkopuolella
-    private static OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
-        final Set<OrganisaatioPerustietoV4> rootOrgs = new LinkedHashSet<>();
+    private OrganisaatioHakutulosV4 processRows(List<OrganisaatioRepositoryImpl.JalkelaisetRivi> rows) {
+        final Set<OrganisaatioPerustietoV4> rootOrgs = new TreeSet<>(Comparator.comparing(OrganisaatioPerustietoV4::getOid));
         final Map<String, OrganisaatioPerustietoV4> oidToOrg = new HashMap<>();
         OrganisaatioPerustietoV4 current = null;
         Set<String> parentOids = new LinkedHashSet<>(); // linked hash set säilyttää järjestyksen
@@ -407,6 +434,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 }
                 current = new OrganisaatioPerustietoV4();
                 current.setMatch(true);
+                boolean isProtectedOrg = row.piilotettu || ProtectedDataListener.YKSITYINEN_ELINKEINOHARJOITTAJA.equals(row.yritysmuoto);
+                current.setMaskingActive(isProtectedOrg && !protectedDataListener.canViewProtected());
                 current.setOid(row.oid);
                 current.setAlkuPvm(row.alkuPvm);
                 current.setLakkautusPvm(row.lakkautusPvm);
@@ -453,8 +482,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 .build();
     }
 
-    private static void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
+    private void finalizePerustieto(OrganisaatioPerustietoV4 perustieto, Set<String> parentOids) {
         perustieto.setParentOidPath(generateParentOidPath(parentOids));
+        organisaatioNimiMasking.maskOrganisaatioPerustietoV4(perustieto);
     }
 
     private static String generateParentOidPath(Set<String> parentOids) {

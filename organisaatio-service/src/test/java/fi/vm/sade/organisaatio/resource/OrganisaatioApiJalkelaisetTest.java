@@ -28,11 +28,25 @@ class OrganisaatioApiJalkelaisetTest {
     @DisplayName("Basic data, get jalkelaiset of root")
     @Sql({"/data/truncate_tables.sql"})
     @Sql({"/data/basic_organisaatio_data.sql"})
+    @OrganisaatioNimiMaskingTest.OPHUser
     void testBasicAllJalkelaiset() throws Exception {
         this.mockMvc.perform(get("/api/{rootOid}/jalkelaiset", "1.2.246.562.24.00000000001"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         readFile("/fixtures/resource/api/jalkelaiset.json")
+                        , true));
+    }
+
+    @Test
+    @DisplayName("Basic data, get jalkelaiset of root without OPH user permissions")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    @OrganisaatioNimiMaskingTest.AnonymousUser
+    void testBasicAllJalkelaisetAsAnonymousUser() throws Exception {
+        this.mockMvc.perform(get("/api/{rootOid}/jalkelaiset", "1.2.246.562.24.00000000001"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        readFile("/fixtures/resource/api/jalkelaiset-masked.json")
                         , true));
     }
 

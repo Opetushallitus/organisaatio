@@ -1,6 +1,9 @@
 package fi.vm.sade.organisaatio.dto.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +15,11 @@ public class OrganisaatioCoreInfoDTOV2 {
     private Map<String, String> nimi;
     private String status;
     private Set<String> _tyypit;
+
+    @JsonIgnore
+    @Getter
+    @Setter
+    private boolean maskingActive;
 
     /**
      * @return the oid

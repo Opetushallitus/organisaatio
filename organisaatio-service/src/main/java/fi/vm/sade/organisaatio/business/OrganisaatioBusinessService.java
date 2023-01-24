@@ -47,6 +47,11 @@ public interface OrganisaatioBusinessService {
      */
     public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException;
 
+    /**
+     * @param oid
+     * @return
+     */
+    public List<OrganisaatioNimi> getOrganisaatioNimet(String oid);
 
     /**
      * @param oid

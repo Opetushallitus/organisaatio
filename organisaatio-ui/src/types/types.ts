@@ -114,8 +114,7 @@ export type UiOrganisaatioBase = {
     nimi: Nimi; // long nimi for toimipistes
     varhaiskasvatuksenToimipaikkaTiedot?: ApiVakaTiedot;
     tarkastusPvm?: number;
-
-    katketty: boolean;
+    maskingActive: boolean;
 };
 
 export type UiOrganisaatio = UiOrganisaatioBase & Perustiedot & Yhteystiedot;

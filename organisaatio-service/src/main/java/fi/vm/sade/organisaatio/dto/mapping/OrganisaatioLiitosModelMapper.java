@@ -25,7 +25,9 @@ public class OrganisaatioLiitosModelMapper extends ModelMapper {
             protected void configure() {
                 // Monikielinen nimi
                 map().getOrganisaatio().setNimi(source.getChild().getNimi().getValues());
+                map().getOrganisaatio().setMaskingActive(source.getChild().isMaskingActive());
                 map().getKohde().setNimi(source.getParent().getNimi().getValues());
+                map().getKohde().setMaskingActive(source.getParent().isMaskingActive());
 
                 map().getOrganisaatio().setOid((source.getChild().getOid()));
                 // Katso tuolta miksi enum status --> string status

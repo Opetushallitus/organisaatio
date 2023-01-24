@@ -129,7 +129,7 @@ public class OrganisaatioResourceTest {
         assertEquals(2, result.getNumHits());
 
         //Finding only organisaatios that are of organisaatiotyyppi Varhaiskasvatuksen jarjestaja
-        searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), null, null, true, null);
+        searchCriteria = createOrgSearchCriteria(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.value(), null, "1.2.8000.1", true, null);
         result = res.searchHierarchy(searchCriteria);
         assertEquals(2, result.getNumHits()); // the matching organization plus its child
         assertThat(result.getOrganisaatiot())
@@ -147,7 +147,7 @@ public class OrganisaatioResourceTest {
         // Get the hierarchy
         OrganisaatioSearchCriteriaDTOV2 searchCriteria = createOrgSearchCriteriaDTOV2();
         OrganisaatioHakutulos result = res2.searchOrganisaatioHierarkia(searchCriteria);
-        assertEquals(9, result.getNumHits());
+        assertEquals(10, result.getNumHits());
         for (OrganisaatioPerustieto org : result.getOrganisaatiot()) {
             if(org.getOid().equals("1.2.2004.1")) {
                 assertNotNull(org.getOppilaitosKoodi());

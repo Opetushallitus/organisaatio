@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.PostLoad;
 
-
 @Configurable
+@Component
 public class ProtectedDataListener {
-    private static final String YKSITYINEN_ELINKEINOHARJOITTAJA = "Yksityinen elinkeinonharjoittaja";
+    public static final String YKSITYINEN_ELINKEINOHARJOITTAJA = "Yksityinen elinkeinonharjoittaja";
+
     public static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
     public static final String ROLE_CRUD_OPH = "ROLE_APP_ORGANISAATIOHALLINTA_CRUD_";
 
@@ -21,24 +23,20 @@ public class ProtectedDataListener {
     @PostLoad
     public void handleProtectedData(Organisaatio org) {
         if (isProtected(org) && !canViewProtected()) {
-            maskProtectedData(org);
+            org.setMaskingActive(true);
         }
     }
 
-    private static void maskProtectedData(Organisaatio org) {
-        org.setMaskingActive(true);
-    }
-
-    private static boolean isProtected(Organisaatio org) {
+    private boolean isProtected(Organisaatio org) {
         return org.isPiilotettu() || YKSITYINEN_ELINKEINOHARJOITTAJA.equals(org.getYritysmuoto());
     }
 
-    private boolean canViewProtected() {
+    public boolean canViewProtected() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return !isAnonymous(auth) && isOPH(auth);
     }
 
-    private static boolean isAnonymous(Authentication auth) {
+    private boolean isAnonymous(Authentication auth) {
         return auth == null || auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(ROLE_ANONYMOUS));
     }
 
