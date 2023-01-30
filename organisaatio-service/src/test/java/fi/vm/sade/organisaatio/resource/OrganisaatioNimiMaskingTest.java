@@ -21,8 +21,7 @@ import java.lang.annotation.Target;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -33,6 +32,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OrganisaatioNimiMaskingTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @OPHUser
+    void testGetByOidWithOPHUser() throws Exception {
+        mockMvc.perform(get("/api/1.2.8001.2")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.nimi.fi").value("Piilotustesti"))
+                .andExpect(jsonPath("$.yhteystiedot").isNotEmpty())
+                .andExpect(jsonPath("$.postiosoite").isNotEmpty())
+                .andExpect(jsonPath("$.kayntiosoite").isNotEmpty());
+    }
+
+    @Test
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @AnonymousUser
+    void testGetByOidAnonymously() throws Exception {
+        mockMvc.perform(get("/api/1.2.8001.2")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.nimi.fi").value("Yksityinen elinkeinonharjoittaja (6165189-7)"))
+                .andExpect(jsonPath("$.yhteystiedot").isEmpty())
+                .andExpect(jsonPath("$.postiosoite").isEmpty())
+                .andExpect(jsonPath("$.kayntiosoite").isEmpty());
+    }
 
     @Test
     @DisplayName("Liitokset with OPH role")

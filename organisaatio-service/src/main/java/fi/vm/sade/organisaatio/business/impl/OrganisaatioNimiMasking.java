@@ -46,6 +46,8 @@ public class OrganisaatioNimiMasking {
             }).collect(Collectors.toList());
             org.setNimet(nimet);
             org.setYhteystiedot(Set.of());
+            org.setKayntiosoite(null);
+            org.setPostiosoite(null);
         }
 
     }
