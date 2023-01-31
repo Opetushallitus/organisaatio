@@ -473,7 +473,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
      */
     @Override
     public Organisaatio markRemoved(String oid) {
-        Organisaatio org = findByOids(List.of(oid), false).stream().findFirst().orElse(null);
+        Organisaatio org = findByOids(List.of(oid), false, false).stream().findFirst().orElse(null);
 
         if (org == null) {
             throw new OrganisaatioCrudException("organisaatio.not.found.with.oid");
