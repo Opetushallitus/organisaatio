@@ -78,6 +78,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
+    @Value("${feature.name-masking}")
+    private boolean nameMaskingFeatureEnabled;
+
     // GET /api/oids?type=KOULUTUSTOIMIJA&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
     @Override
     public List<String> oids(OrganisaatioTyyppi type, int count, int startIndex) {
@@ -434,8 +437,12 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 }
                 current = new OrganisaatioPerustietoV4();
                 current.setMatch(true);
-                boolean isProtectedOrg = row.piilotettu || ProtectedDataListener.YKSITYINEN_ELINKEINOHARJOITTAJA.equals(row.yritysmuoto);
-                current.setMaskingActive(isProtectedOrg && !protectedDataListener.canViewProtected());
+                if (nameMaskingFeatureEnabled) {
+                    boolean isProtectedOrg = row.piilotettu || ProtectedDataListener.YKSITYINEN_ELINKEINOHARJOITTAJA.equals(row.yritysmuoto);
+                    current.setMaskingActive(isProtectedOrg && !protectedDataListener.canViewProtected());
+                } else {
+                    current.setMaskingActive(false);
+                }
                 current.setOid(row.oid);
                 current.setAlkuPvm(row.alkuPvm);
                 current.setLakkautusPvm(row.lakkautusPvm);
