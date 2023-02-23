@@ -39,6 +39,7 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.DateUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -677,6 +678,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Asetetaan organisaation nimi ja nimihistorian nykyinen nimi
             // osoittamaan varmasti samaan monikieliseen tekstiin
             orgEntity.setNimi(nimiEntity.getNimi());
+            orgEntity.setNimihaku(OrganisaatioNimiUtil.createNimihaku(orgEntity.getNimi()));
             organisaatioRepository.save(orgEntity);
         }
 
@@ -695,6 +697,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (nimiEntityOld == null) {
             throw new OrganisaatioNimiNotFoundException(oid, currentNimiDTO.getAlkuPvm());
         }
+        MonikielinenTeksti currentNimiMkt = Hibernate.unproxy(orgEntity.getActualNimi(), MonikielinenTeksti.class);
+        boolean isUpdatedNameTheCurrentName = Objects.equals(currentNimiMkt.getId(), nimiEntityOld.getNimi().getId());
 
         // Luodaan tallennettava entity objekti
         OrganisaatioNimi nimiEntityNew = organisaatioNimiModelMapper.map(updatedNimiDTO, OrganisaatioNimi.class);
@@ -711,7 +715,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitetään nimi
         organisaatioNimiRepository.save(nimiEntityNew);
-
+        if (isUpdatedNameTheCurrentName) {
+            log.info("Updated nimi is the current organization nimi; updating nimihaku");
+            orgEntity.setNimihaku(OrganisaatioNimiUtil.createNimihaku(orgEntity.getNimi()));
+            organisaatioRepository.save(orgEntity);
+        }
         // Palautetaan päivitetty nini
         nimiEntityNew = organisaatioNimiRepository.findById(nimiEntityNew.getId()).orElseThrow();
 
