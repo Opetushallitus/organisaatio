@@ -126,8 +126,6 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private OrganisaatioMetaData metadata;
 
-    // This long field is actually not used
-    @Deprecated
     @Column(length = 256000)
     private String nimihaku;
 
