@@ -76,7 +76,7 @@ export const OrganisationSchema = (
     yritysmuodot: Koodi[],
     kunnat: Koodi[],
     postinumerot: string[]
-): yup.SchemaOf<OrganisationFormState> =>
+): yup.ObjectSchema<OrganisationFormState> =>
     yup.object().shape({
         yritysmuoto: KoodiSchema(yritysmuodot),
         kotipaikka: KoodiSchema(kunnat),
@@ -89,12 +89,12 @@ export const OrganisationSchema = (
         copyKayntiosoite: yup.bool().required(),
         kayntiosoite: yup
             .string()
-            .when(['copyKayntiosoite'], (copyKayntiosoite, schema) =>
+            .when('copyKayntiosoite', ([copyKayntiosoite], schema) =>
                 copyKayntiosoite ? schema.optional() : PostiosoiteSchema.required()
             ),
         kayntipostinumero: yup
             .string()
-            .when(['copyKayntiosoite'], (copyKayntiosoite, schema) =>
+            .when('copyKayntiosoite', ([copyKayntiosoite], schema) =>
                 copyKayntiosoite ? schema.optional() : PostinumeroSchema(postinumerot).required()
             ),
     });

@@ -25,7 +25,7 @@ test('Paakayttaja validation', async ({ pages }) => {
     await paakayttaja.fillSukunimi();
     await expect(paakayttaja.locators.error('sukunimi')).toBeHidden();
 
-    await paakayttaja.fillEmail('sahko@posti');
+    await paakayttaja.fillEmail('sahkoposti');
     await expect(organisaatio.locators.error('paakayttajaEmail')).toHaveText('Virheellinen sähköposti');
     await paakayttaja.fillEmail();
     await expect(organisaatio.locators.error('paakayttajaEmail')).toBeHidden();

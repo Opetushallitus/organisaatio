@@ -8,12 +8,9 @@ import App from './App';
 const cookies = new Cookies();
 
 axios.interceptors.request.use((config) => {
-    const ophHeaders = {
-        'Caller-Id': '1.2.246.562.10.00000000001.varda-rekisterointi',
-        CSRF: cookies.get('CSRF'),
-    };
-    config.headers = { ...config.headers, ...ophHeaders };
-    return config;
+    config.headers.set('Caller-Id', '1.2.246.562.10.00000000001.varda-rekisterointi', true);
+    config.headers.set('CSRF', cookies.get('CSRF'), true);
+    return config
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
