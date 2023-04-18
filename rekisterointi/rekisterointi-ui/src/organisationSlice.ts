@@ -15,7 +15,7 @@ import { Koodi, Organisation, SelectOption } from './types';
 
 export const fetchOrganisation = createAsyncThunk<Organisation, void>(
     'organisation/fetchOrganisation',
-    async (_, thunkAPI) => {
+    async () => {
         const resp = await axios.get<Organisation>('/hakija/api/organisaatiot');
         return resp.data;
     }
@@ -61,6 +61,9 @@ const organisationSlice = createSlice({
             .addCase(fetchOrganisation.fulfilled, (state, action) => {
                 state.loading = false;
                 state.initialOrganisation = action.payload;
+            })
+            .addCase(fetchOrganisation.rejected, () => {
+                window.location.href = '/hakija/logout?redirect=/jotpa'
             });
     },
 });
