@@ -28,6 +28,7 @@ export const EmailSchema = yup.string().email('validaatio_email').required('vali
 
 export const EmailArraySchema = yup
     .array()
+    .required()
     .min(1, 'validaatio_email')
     .of(
         yup.object().shape({

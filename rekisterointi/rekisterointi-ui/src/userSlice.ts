@@ -32,10 +32,10 @@ export default userSlice.reducer;
 
 export const { setForm } = userSlice.actions;
 
-export const UserSchema: yup.SchemaOf<UserFormState> = yup.object().shape({
+export const UserSchema: yup.ObjectSchema<UserFormState> = yup.object().shape({
     etunimi: yup.string().required('validaatio_pakollinen'),
     sukunimi: yup.string().required('validaatio_pakollinen'),
     paakayttajaEmail: EmailSchema,
-    asiointikieli: yup.mixed().oneOf<Language>(['fi', 'sv']).required('validaatio_pakollinen'),
+    asiointikieli: yup.mixed<Language>().oneOf<Language>(['fi', 'sv']).required('validaatio_pakollinen'),
     info: yup.string().optional(),
 });

@@ -17,9 +17,9 @@ test.describe('Organisaatio validation', () => {
         await expect(organisaatio.locators.error('puhelinnumero')).toHaveText('Pakollinen tieto');
         await expect(organisaatio.locators.error('email')).toHaveText('Pakollinen tieto');
         await expect(organisaatio.locators.error('postiosoite')).toHaveText('Pakollinen tieto');
-        await expect(organisaatio.locators.error('postinumero')).toHaveText('Pakollinen tieto');
+        await expect(organisaatio.locators.error('postinumero')).toHaveText('Virheellinen postinumero');
         await expect(organisaatio.locators.error('kayntiosoite')).toHaveText('Pakollinen tieto');
-        await expect(organisaatio.locators.error('kayntipostinumero')).toHaveText('Pakollinen tieto');
+        await expect(organisaatio.locators.error('kayntipostinumero')).toHaveText('Virheellinen postinumero');
         await expect(organisaatio.locators.error('email-0')).toHaveText('Pakollinen tieto');
 
         await organisaatio.selectYritysmuoto();
@@ -36,7 +36,7 @@ test.describe('Organisaatio validation', () => {
         await organisaatio.fillPuhelinnumero();
         await expect(organisaatio.locators.error('puhelinnumero')).toBeHidden();
 
-        await organisaatio.fillEmail('sahko@posti');
+        await organisaatio.fillEmail('sahkoposti');
         await expect(organisaatio.locators.error('email')).toHaveText('Virheellinen sähköposti');
         await organisaatio.fillEmail();
         await expect(organisaatio.locators.error('email')).toBeHidden();
@@ -76,7 +76,7 @@ test.describe('Organisaatio validation', () => {
         await expect(organisaatio.locators.error('email-1')).toHaveText('Pakollinen tieto');
         await expect(organisaatio.locators.error('email-2')).toHaveText('Pakollinen tieto');
 
-        await organisaatio.fillEmailAt(0, 'sahko@posti');
+        await organisaatio.fillEmailAt(0, 'sahkoposti');
         await expect(organisaatio.locators.error('email-0')).toHaveText('Virheellinen sähköposti');
         await expect(organisaatio.locators.error('email-1')).toHaveText('Pakollinen tieto');
         await expect(organisaatio.locators.error('email-2')).toHaveText('Pakollinen tieto');

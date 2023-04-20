@@ -16,7 +16,6 @@ import { useLanguageContext } from '../LanguageContext';
 import { UserSchema } from '../userSlice';
 import { JotpaYhteenveto } from './JotpaYhteenveto';
 
-store.dispatch(fetchOrganisation());
 setLocale({
     mixed: {
         required: 'validaatio_pakollinen',
@@ -32,6 +31,7 @@ const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
     (a.nimi[language] ?? 'xxx') > (b.nimi[language] ?? 'xxx') ? 1 : -1;
 
 export function JotpaRekisterointi() {
+    store.dispatch(fetchOrganisation());
     const { language, i18n } = useLanguageContext();
     const [koodisto, setKoodisto] = useState<Koodistos>({
         kunnat: [],
