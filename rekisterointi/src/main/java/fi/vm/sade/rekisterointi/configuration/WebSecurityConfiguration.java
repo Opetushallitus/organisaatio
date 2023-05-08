@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
@@ -59,21 +59,24 @@ public class WebSecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    AuthenticationProvider authenticationProvider = hakijaAuthenticationProvider();
+    AuthenticationManager authenticationManager = authenticationManager(List.of(authenticationProvider));
+    Filter authenticationFilter = hakijaAuthenticationProcessingFilter(authenticationManager);
     http.headers().disable().csrf().disable()
         .authorizeHttpRequests((authz) -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
             .requestMatchers("/api/**").permitAll())
+        .authenticationProvider(authenticationProvider)
         .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
-        .addFilterBefore(hakijaAuthenticationProcessingFilter(http), BasicAuthenticationFilter.class)
+        .addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
     return http.build();
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-    AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-    return auth.authenticationProvider(hakijaAuthenticationProvider()).build();
+  public AuthenticationManager authenticationManager(List<AuthenticationProvider> myAuthenticationProviders) {
+    return new ProviderManager(myAuthenticationProviders);
   }
 
   @Bean
@@ -83,10 +86,10 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public Filter hakijaAuthenticationProcessingFilter(HttpSecurity http) throws Exception {
+  public Filter hakijaAuthenticationProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
     HakijaAuthenticationFilter filter = new HakijaAuthenticationFilter("/hakija/login", casOppijaticketValidator(),
         ophProperties);
-    filter.setAuthenticationManager(authenticationManager(http));
+    filter.setAuthenticationManager(authenticationManager);
     String authenticationSuccessUrl = ophProperties.url("rekisterointi.hakija.valtuudet.redirect");
     filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
     return filter;
