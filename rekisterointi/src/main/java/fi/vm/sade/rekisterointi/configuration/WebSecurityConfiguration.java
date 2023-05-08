@@ -9,16 +9,17 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -48,33 +49,31 @@ import java.io.IOException;
 @Configuration
 @Order(2)
 @EnableWebSecurity
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
+public class WebSecurityConfiguration {
   private static final String HAKIJA_ROLE = "APP_REKISTEROINTI_HAKIJA";
-  private static final String HAKIJA_PATH_CLOB = "/hakija/**";
-
   private final OphProperties ophProperties;
 
   public WebSecurityConfiguration(OphProperties ophProperties) {
     this.ophProperties = ophProperties;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.headers().disable().csrf().disable();
-    http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
-        .antMatchers("/api/**").permitAll()
-        .anyRequest().hasRole(HAKIJA_ROLE)
-        .and()
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.headers().disable().csrf().disable()
+        .authorizeHttpRequests((authz) -> authz
+            .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
+            .requestMatchers("/api/**").permitAll())
         .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
-        .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+        .addFilterBefore(hakijaAuthenticationProcessingFilter(http), BasicAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
+    return http.build();
   }
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(hakijaAuthenticationProvider());
+  @Bean
+  public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
+    return auth.authenticationProvider(hakijaAuthenticationProvider()).build();
   }
 
   @Bean
@@ -84,10 +83,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public Filter hakijaAuthenticationProcessingFilter() throws Exception {
+  public Filter hakijaAuthenticationProcessingFilter(HttpSecurity http) throws Exception {
     HakijaAuthenticationFilter filter = new HakijaAuthenticationFilter("/hakija/login", casOppijaticketValidator(),
         ophProperties);
-    filter.setAuthenticationManager(authenticationManager());
+    filter.setAuthenticationManager(authenticationManager(http));
     String authenticationSuccessUrl = ophProperties.url("rekisterointi.hakija.valtuudet.redirect");
     filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
     return filter;

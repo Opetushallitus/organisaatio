@@ -3,7 +3,8 @@ set -o errexit -o nounset -o pipefail
 
 function require_command {
   if ! command -v "$1" > /dev/null; then
-    fatal "I require $1 but it's not installed. Aborting."
+    echo "I require $1 but it's not installed. Aborting."
+    exit 1
   fi
 }
 
