@@ -45,7 +45,7 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
 
 import java.io.IOException;
 
-@Profile("!dev & !ci")
+@Profile("!dev")
 @Configuration
 @Order(2)
 @EnableWebSecurity

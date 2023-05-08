@@ -16,12 +16,8 @@ public class PropertiesConfiguration {
   public OphProperties properties(Environment environment) {
     var profiles = environment.getActiveProfiles();
     OphProperties properties;
-    if (Arrays.asList(profiles).contains("dev")) {
+    if (Arrays.asList(profiles).contains("dev") || Arrays.asList(profiles).contains("test")) {
       properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
-    } else if (Arrays.asList(profiles).contains("test")) {
-      properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-dev.properties");
-    } else if (Arrays.asList(profiles).contains("ci")) {
-      properties = new OphProperties("/rekisterointi_oph.properties", "/rekisterointi-oph-ci.properties");
     } else {
       properties = new OphProperties("/rekisterointi_oph.properties");
       properties.addDefault("url-oppija", environment.getRequiredProperty("url-oppija"));

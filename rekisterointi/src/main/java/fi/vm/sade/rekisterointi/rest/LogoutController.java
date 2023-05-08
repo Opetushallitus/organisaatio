@@ -21,7 +21,7 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
 
 @Controller
 @AllArgsConstructor
-@Profile("!dev & !ci")
+@Profile("!dev")
 public class LogoutController {
   private final OphProperties ophProperties;
 

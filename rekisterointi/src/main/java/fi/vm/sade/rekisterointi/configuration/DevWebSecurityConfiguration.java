@@ -26,7 +26,7 @@ import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUS
 import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 
-@Profile("dev | ci")
+@Profile("dev")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = false, prePostEnabled = false, securedEnabled = true)

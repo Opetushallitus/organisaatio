@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@Profile("dev | ci")
+@Profile("dev")
 public class DevLogoutController {
   @GetMapping("/hakija/logout")
   public View logout(HttpServletRequest request) {
