@@ -65,9 +65,11 @@ public class WebSecurityConfiguration {
     http.headers().disable().csrf().disable()
         .authorizeHttpRequests((authz) -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
-            .requestMatchers("/api/**").permitAll())
+            .requestMatchers("/api/**").permitAll()
+            .requestMatchers("/jotpa/**").permitAll()
+            .requestMatchers("/actuator/health").permitAll())
         .authenticationProvider(authenticationProvider)
-        .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
+        .addFilterBefore(new SaveLoginRedirectFilter(), BasicAuthenticationFilter.class)
         .addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class)
         .exceptionHandling()
         .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
@@ -86,7 +88,7 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public Filter hakijaAuthenticationProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
+  public Filter hakijaAuthenticationProcessingFilter(AuthenticationManager authenticationManager) {
     HakijaAuthenticationFilter filter = new HakijaAuthenticationFilter("/hakija/login", casOppijaticketValidator(),
         ophProperties);
     filter.setAuthenticationManager(authenticationManager);
@@ -131,20 +133,16 @@ public class WebSecurityConfiguration {
     return authenticationProvider;
   }
 
-  private static class SaveOriginalRequestFilter extends GenericFilterBean {
+  private static class SaveLoginRedirectFilter extends GenericFilterBean {
     @Override
     public void doFilter(
         ServletRequest request,
         ServletResponse response,
         FilterChain chain) throws IOException, ServletException {
-      if (request instanceof HttpServletRequest) {
-        var httpRequest = (HttpServletRequest) request;
-        var currentOriginalRequest = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST,
-            String.class);
-        var url = httpRequest.getRequestURL().toString();
-        if (currentOriginalRequest.isEmpty() && !url.contains("/api/")) {
-          setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, url);
-        }
+      var httpRequest = (HttpServletRequest) request;
+      var url = httpRequest.getRequestURL().toString();
+      if (httpRequest.getQueryString() != null && httpRequest.getQueryString().contains("login=true")) {
+        setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, url);
       }
       chain.doFilter(request, response);
     }
