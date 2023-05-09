@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -47,7 +46,6 @@ import java.io.IOException;
 
 @Profile("!dev")
 @Configuration
-@Order(2)
 @EnableWebSecurity
 public class WebSecurityConfiguration {
   private static final String HAKIJA_ROLE = "APP_REKISTEROINTI_HAKIJA";
@@ -63,11 +61,10 @@ public class WebSecurityConfiguration {
     AuthenticationManager authenticationManager = authenticationManager(List.of(authenticationProvider));
     Filter authenticationFilter = hakijaAuthenticationProcessingFilter(authenticationManager);
     http.headers().disable().csrf().disable()
+        .securityMatcher("/hakija/**")
         .authorizeHttpRequests((authz) -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
-            .requestMatchers("/api/**").permitAll()
-            .requestMatchers("/jotpa/**").permitAll()
-            .requestMatchers("/actuator/health").permitAll())
+            .anyRequest().authenticated())
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(new SaveLoginRedirectFilter(), BasicAuthenticationFilter.class)
         .addFilterBefore(authenticationFilter, BasicAuthenticationFilter.class)
