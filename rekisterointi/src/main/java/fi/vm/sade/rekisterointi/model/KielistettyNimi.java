@@ -3,7 +3,7 @@ package fi.vm.sade.rekisterointi.model;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @EqualsAndHashCode

@@ -12,8 +12,8 @@ import lombok.AllArgsConstructor;
 import java.util.Locale;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
 import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.DEFAULT_LOCALE;

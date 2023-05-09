@@ -1,11 +1,10 @@
 package fi.vm.sade.rekisterointi.util;
 
-import fi.vm.sade.javautils.http.HttpServletRequestUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public final class ServletUtils {
 
@@ -34,8 +33,22 @@ public final class ServletUtils {
     return Optional.ofNullable(request.getUserPrincipal()).map(Principal::getName);
   }
 
-  public static String resolveIp(HttpServletRequest request) {
-    return HttpServletRequestUtils.getRemoteAddress(request);
+  public static String getRemoteAddress(HttpServletRequest httpServletRequest) {
+      return getRemoteAddress(httpServletRequest.getHeader("X-Real-IP"),
+          httpServletRequest.getHeader("X-Forwarded-For"),
+          httpServletRequest.getRemoteAddr(),
+          httpServletRequest.getRequestURI());
+  }
+
+  public static String getRemoteAddress(String xRealIp, String xForwardedFor, String remoteAddr, String requestURI) {
+      Predicate<String> isNotBlank = (String txt) -> txt != null && !txt.isEmpty();
+      if (isNotBlank.test(xRealIp)) {
+          return xRealIp;
+      }
+      if (isNotBlank.test(xForwardedFor)) {
+          return xForwardedFor;
+      }
+      return remoteAddr;
   }
 
   public static Optional<String> resolveSession(HttpServletRequest request) {
