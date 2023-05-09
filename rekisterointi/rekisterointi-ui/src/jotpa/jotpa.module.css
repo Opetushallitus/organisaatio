@@ -99,3 +99,10 @@
 .copyKayntiosoite {
     margin-top: 26px;
 }
+
+.submitError {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    color: var(--red-error);
+}
