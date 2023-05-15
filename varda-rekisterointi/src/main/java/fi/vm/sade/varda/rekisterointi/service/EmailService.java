@@ -28,7 +28,7 @@ public class EmailService {
     private static final String SUBJECT_DELIMITER = " / ";
     private static final String FAILED_TASKS_EMAIL_ADDRESS = "yhteisetpalvelut@opintopolku.fi";
     private static final Map<String, String> EMAILS_FOR_REGISTRATION_TYPES = Map.of(
-        "jotpa", "info@jotpa.fi"
+        "jotpa", "rahoitus@jotpa.fi"
     );
 
     private final RekisterointiRepository rekisterointiRepository;
