@@ -62,7 +62,7 @@ public class WebSecurityConfiguration {
     Filter authenticationFilter = hakijaAuthenticationProcessingFilter(authenticationManager);
     http.headers().disable().csrf().disable()
         .securityMatcher("/hakija/**")
-        .authorizeHttpRequests((authz) -> authz
+        .authorizeHttpRequests(authz -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
             .anyRequest().authenticated())
         .authenticationProvider(authenticationProvider)

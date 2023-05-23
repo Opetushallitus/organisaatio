@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>fi.vm.sade.java-utils</groupId>
 			<artifactId>suomifi-valtuudet-client</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fi.vm.sade.java-utils</groupId>
@@ -89,6 +89,21 @@
     </dependencies>
 
 	<repositories>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/Opetushallitus/java-utils</url>
+		</repository>
 		<repository>
 			<id>oph-sade-artifactory-snapshots</id>
 			<url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>

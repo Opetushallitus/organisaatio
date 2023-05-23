@@ -36,11 +36,10 @@ public final class ServletUtils {
   public static String getRemoteAddress(HttpServletRequest httpServletRequest) {
       return getRemoteAddress(httpServletRequest.getHeader("X-Real-IP"),
           httpServletRequest.getHeader("X-Forwarded-For"),
-          httpServletRequest.getRemoteAddr(),
-          httpServletRequest.getRequestURI());
+          httpServletRequest.getRemoteAddr());
   }
 
-  public static String getRemoteAddress(String xRealIp, String xForwardedFor, String remoteAddr, String requestURI) {
+  public static String getRemoteAddress(String xRealIp, String xForwardedFor, String remoteAddr) {
       Predicate<String> isNotBlank = (String txt) -> txt != null && !txt.isEmpty();
       if (isNotBlank.test(xRealIp)) {
           return xRealIp;
