@@ -2,7 +2,10 @@ package fi.vm.sade.rekisterointi.configuration;
 
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.NameContainer;
-import org.jasig.cas.client.validation.*;
+
+import org.apereo.cas.client.validation.Cas20ServiceTicketValidator;
+import org.apereo.cas.client.validation.TicketValidationException;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
