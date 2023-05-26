@@ -50,6 +50,8 @@ public class ValtuudetController {
   public View getRedirect(HttpServletRequest request, Locale locale) {
     Principal principal = request.getUserPrincipal();
     String nationalIdentificationNumber = principal.getName();
+    System.out.println("nationalIdentificationNumber");
+    System.out.println(nationalIdentificationNumber);
     String callbackUrl = properties.url("rekisterointi.hakija.valtuudet.callback");
     SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
     String redirectUrl = valtuudetClient.getRedirectUrl(session.userId, callbackUrl, locale.getLanguage());
