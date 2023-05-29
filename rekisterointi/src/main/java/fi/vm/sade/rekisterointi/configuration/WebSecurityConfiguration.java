@@ -26,6 +26,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.filter.GenericFilterBean;
 
 import jakarta.servlet.FilterChain;
@@ -58,9 +60,13 @@ public class WebSecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter,
-      AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
+      AuthenticationEntryPoint authenticationEntryPoint, SecurityContextRepository securityContextRepository)
+      throws Exception {
     http.headers().disable().csrf().disable()
         .securityMatcher("/hakija/**")
+        .securityContext(securityContext -> securityContext
+                .requireExplicitSave(true)
+                .securityContextRepository(securityContextRepository))
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
             .anyRequest().authenticated()
@@ -79,6 +85,11 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
+  public HttpSessionSecurityContextRepository securityContextRepository() {
+    return new HttpSessionSecurityContextRepository();
+  }
+
+  @Bean
   public ServiceProperties casServiceProperties() {
     ServiceProperties properties = new ServiceProperties();
     properties.setService(ophProperties.url("rekisterointi.hakija.login") + "/j_spring_cas_security_check");
@@ -90,12 +101,14 @@ public class WebSecurityConfiguration {
   @Bean
   public CasAuthenticationFilter casAuthenticationFilter(
       AuthenticationConfiguration authenticationConfiguration,
-      ServiceProperties serviceProperties) throws Exception {
+      ServiceProperties serviceProperties,
+      SecurityContextRepository securityContextRepository) throws Exception {
     CasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties);
     casAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
     casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
     casAuthenticationFilter.setAuthenticationSuccessHandler(
         new SimpleUrlAuthenticationSuccessHandler(ophProperties.url("rekisterointi.hakija.valtuudet.redirect")));
+    casAuthenticationFilter.setSecurityContextRepository(securityContextRepository);
     return casAuthenticationFilter;
   }
 

@@ -93,6 +93,7 @@ jobs:
         working-directory: rekisterointi-ui
       - name: Run playwright tests
         run: |
+          docker-compose up &
           java -jar -Dspring.profiles.active=dev rekisterointi.jar &
           cd mock-api
           npm install
