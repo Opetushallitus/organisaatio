@@ -3,6 +3,7 @@ package fi.vm.sade.rekisterointi.configuration;
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.properties.OphProperties;
 
+import org.apache.http.HttpStatus;
 import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
@@ -32,11 +33,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST;
+import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID;
+import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 
 @Profile("!dev")
@@ -60,7 +66,8 @@ public class WebSecurityConfiguration {
             .anyRequest().authenticated()
             .and()
             .addFilter(casAuthenticationFilter)
-            .addFilterBefore(new SaveLoginRedirectFilter(), CasAuthenticationFilter.class))
+            .addFilterBefore(new SaveLoginRedirectFilter(), CasAuthenticationFilter.class)
+            .addFilterAfter(new ValtuudetRedirectFilter(), CasAuthenticationFilter.class))
         .exceptionHandling()
         .authenticationEntryPoint(authenticationEntryPoint);
     return http.build();
@@ -132,11 +139,32 @@ public class WebSecurityConfiguration {
     }
   }
 
+  private static class ValtuudetRedirectFilter extends GenericFilterBean {
+    @Override
+    public void doFilter(
+        ServletRequest request,
+        ServletResponse response,
+        FilterChain chain) throws IOException, ServletException {
+      HttpServletRequest httpRequest = (HttpServletRequest) request;
+      boolean hasBusinessId = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class)
+          .isPresent();
+      boolean hasOrgName = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME,
+          String.class).isPresent();
+      if (!httpRequest.getRequestURI().contains("/valtuudet/") && (!hasBusinessId || !hasOrgName)) {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        String encodedRedirectURL = httpResponse.encodeRedirectURL(
+            httpRequest.getContextPath() + "/hakija/valtuudet/redirect");
+        httpResponse.setStatus(HttpStatus.SC_TEMPORARY_REDIRECT);
+        httpResponse.setHeader("Location", encodedRedirectURL);
+      }
+      chain.doFilter(request, response);
+    }
+  }
+
   private class CasUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
     @Override
     public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
       String[] principal = ((String) token.getPrincipal()).split(",");
-      System.out.println(principal[1]);
       List<SimpleGrantedAuthority> authorities = singletonList(
           new SimpleGrantedAuthority(String.format("ROLE_%s", HAKIJA_ROLE)));
       return new User(principal[1], "", true, true, true, true, authorities);
