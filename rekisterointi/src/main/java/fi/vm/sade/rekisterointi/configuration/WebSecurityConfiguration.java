@@ -1,6 +1,5 @@
 package fi.vm.sade.rekisterointi.configuration;
 
-import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.properties.OphProperties;
 
 import org.apache.http.HttpStatus;
@@ -59,21 +58,21 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter,
+  public SecurityFilterChain filterChain(HttpSecurity http, FixedCasAuthenticationFilter casAuthenticationFilter,
       AuthenticationEntryPoint authenticationEntryPoint, SecurityContextRepository securityContextRepository)
       throws Exception {
     http.headers().disable().csrf().disable()
         .securityMatcher("/hakija/**")
-        .securityContext(securityContext -> securityContext
-                .requireExplicitSave(true)
-                .securityContextRepository(securityContextRepository))
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
             .anyRequest().authenticated()
             .and()
-            .addFilter(casAuthenticationFilter)
+            .addFilterAt(casAuthenticationFilter, CasAuthenticationFilter.class)
             .addFilterBefore(new SaveLoginRedirectFilter(), CasAuthenticationFilter.class)
             .addFilterAfter(new ValtuudetRedirectFilter(), CasAuthenticationFilter.class))
+        .securityContext(securityContext -> securityContext
+            .requireExplicitSave(true)
+            .securityContextRepository(securityContextRepository))
         .exceptionHandling()
         .authenticationEntryPoint(authenticationEntryPoint);
     return http.build();
@@ -99,12 +98,13 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public CasAuthenticationFilter casAuthenticationFilter(
+  public FixedCasAuthenticationFilter casAuthenticationFilter(
       AuthenticationConfiguration authenticationConfiguration,
       ServiceProperties serviceProperties,
       SecurityContextRepository securityContextRepository) throws Exception {
-    CasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties);
+    FixedCasAuthenticationFilter casAuthenticationFilter = new FixedCasAuthenticationFilter();
     casAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
+    casAuthenticationFilter.setServiceProperties(serviceProperties);
     casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
     casAuthenticationFilter.setAuthenticationSuccessHandler(
         new SimpleUrlAuthenticationSuccessHandler(ophProperties.url("rekisterointi.hakija.valtuudet.redirect")));
