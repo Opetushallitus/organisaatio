@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-@Profile("dev | ci")
+@Profile("dev")
 @Configuration
 public class DevUserDetailsServiceConfiguration {
   private static final String DEVAAJA = "dev";

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Markdown from 'react-markdown';
 import axios, { AxiosResponse } from 'axios';
+import { format, parse } from 'date-fns';
 
 import { useJotpaRekisterointiSelector } from './store';
 import { Header } from './JotpaHeader';
@@ -10,11 +11,10 @@ import { useKoodistos } from '../KoodistoContext';
 import { useLanguageContext } from '../LanguageContext';
 import { RegistrationProgressBar } from '../RegistrationProgressBar';
 import { getLanguageName, RekisterointiRequest } from '../types';
-
-import styles from './jotpa.module.css';
 import { OrganisationFormState } from '../organisationSlice';
 import { UserFormState } from '../userSlice';
-import { format, parse } from 'date-fns';
+
+import styles from './jotpa.module.css';
 
 export function JotpaYhteenveto() {
     const navigate = useNavigate();
@@ -24,6 +24,8 @@ export function JotpaYhteenveto() {
         organisation: { initialOrganisation, form: organisationForm },
         user: { form: userForm },
     } = useJotpaRekisterointiSelector((state) => state);
+    const [submitDisabled, setSubmitDisabled] = useState(false);
+    const [submitError, setSubmitError] = useState('');
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -41,20 +43,27 @@ export function JotpaYhteenveto() {
         e.stopPropagation();
         const organisation: OrganisationFormState = organisationForm!;
         const user: UserFormState = userForm!;
-        await axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
-            ...organisation,
-            yritysmuoto: organisation.yritysmuoto.value!,
-            kotipaikka: organisation.kotipaikka.value!,
-            alkamisaika: format(parse(organisation.alkamisaika, 'd.M.yyyy', new Date()), 'yyyy-MM-dd'),
-            postinumero: `posti_${organisation.postinumero}`,
-            postitoimipaikka: findPostitoimipaikka(organisation.postinumero, posti, language)!,
-            kayntiosoite,
-            kayntipostinumero: `posti_${kayntipostinumero}`,
-            kayntipostitoimipaikka: findPostitoimipaikka(kayntipostinumero, posti, language)!,
-            emails: organisation.emails.map((e) => e.email).filter((e) => !!e) as string[],
-            ...user,
-        });
-        window.location.href = '/hakija/logout?redirect=/jotpa/valmis';
+        setSubmitError('');
+        setSubmitDisabled(true);
+        try {
+            await axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
+                ...organisation,
+                yritysmuoto: organisation.yritysmuoto.value!,
+                kotipaikka: organisation.kotipaikka.value!,
+                alkamisaika: format(parse(organisation.alkamisaika, 'd.M.yyyy', new Date()), 'yyyy-MM-dd'),
+                postinumero: `posti_${organisation.postinumero}`,
+                postitoimipaikka: findPostitoimipaikka(organisation.postinumero, posti, language)!,
+                kayntiosoite,
+                kayntipostinumero: `posti_${kayntipostinumero}`,
+                kayntipostitoimipaikka: findPostitoimipaikka(kayntipostinumero, posti, language)!,
+                emails: organisation.emails.map((e) => e.email).filter((e) => !!e) as string[],
+                ...user,
+            });
+            window.location.href = '/hakija/logout?redirect=/jotpa/valmis';
+        } catch (e) {
+            setSubmitError(i18n.translate('lahetysvirhe'));
+            setSubmitDisabled(false);
+        }
     };
 
     return (
@@ -143,8 +152,9 @@ export function JotpaYhteenveto() {
                             >
                                 {i18n.translate('nappi_edellinen_vaihe')}
                             </button>
-                            <input type="submit" value={i18n.translate('nappi_laheta')} />
+                            <input type="submit" value={i18n.translate('nappi_laheta')} disabled={submitDisabled} />
                         </div>
+                        {submitError && <div className={styles.submitError}>{i18n.translate('lahetysvirhe')}</div>}
                     </div>
                 </main>
             </form>

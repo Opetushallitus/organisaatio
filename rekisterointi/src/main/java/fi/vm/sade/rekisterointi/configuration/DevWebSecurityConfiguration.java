@@ -2,18 +2,18 @@ package fi.vm.sade.rekisterointi.configuration;
 
 import java.io.IOException;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,10 +26,10 @@ import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUS
 import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 
-@Profile("dev | ci")
+@Profile("dev")
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(jsr250Enabled = false, prePostEnabled = false, securedEnabled = true)
+@EnableMethodSecurity(jsr250Enabled = false, prePostEnabled = false, securedEnabled = true)
 public class DevWebSecurityConfiguration {
 
   UserDetailsService userDetailsService;
@@ -51,11 +51,11 @@ public class DevWebSecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    return http.csrf().disable().authorizeRequests()
-        .antMatchers("/jotpa").permitAll()
-        .antMatchers("/jotpa/**").permitAll()
-        .antMatchers("/api/**").permitAll()
-        .antMatchers("/actuator/health").permitAll()
+    return http.csrf().disable().authorizeHttpRequests()
+        .requestMatchers("/jotpa").permitAll()
+        .requestMatchers("/jotpa/**").permitAll()
+        .requestMatchers("/api/**").permitAll()
+        .requestMatchers("/actuator/health").permitAll()
         .anyRequest().authenticated()
         .and()
         .authenticationProvider(authProvider())

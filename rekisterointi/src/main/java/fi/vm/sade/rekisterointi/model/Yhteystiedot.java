@@ -3,7 +3,7 @@ package fi.vm.sade.rekisterointi.model;
 import lombok.AllArgsConstructor;
 import lombok.With;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @AllArgsConstructor(staticName = "of")
 public class Yhteystiedot {

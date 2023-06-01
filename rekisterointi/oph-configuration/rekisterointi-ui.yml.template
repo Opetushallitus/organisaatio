@@ -20,6 +20,16 @@ server:
             max-days: 7
         port-header: X-Real-Port
         protocol-header: X-Real-Proto
+spring:
+    data:
+        redis:
+            host: {{ rekisterointi_redis_host }}
+            port: 6379
+    session:
+        store-type: redis
+        redis:
+            flush-mode: on_save
+            namespace: spring:session
 
 url-oppija:  https://{{ host_oppija }}
 url-virkailija: https://{{ host_virkailija }}

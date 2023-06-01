@@ -68,7 +68,7 @@ export function JotpaLanding() {
                     <button
                         role="link"
                         className={styles.registerButton}
-                        onClick={() => (window.location.href = '/hakija/jotpa/organisaatio')}
+                        onClick={() => (window.location.href = '/hakija/jotpa/organisaatio?login=true')}
                     >
                         {i18n.translate('etusivu_aloitus_nappi')}
                     </button>

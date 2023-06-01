@@ -8,11 +8,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
-@Profile("dev | ci")
+@Profile("dev")
 public class DevLogoutController {
   @GetMapping("/hakija/logout")
   public View logout(HttpServletRequest request) {

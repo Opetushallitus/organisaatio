@@ -1,232 +1,186 @@
 package fi.vm.sade.rekisterointi.configuration;
 
 import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.rekisterointi.NameContainer;
-import org.jasig.cas.client.validation.*;
+
+import org.apache.http.HttpStatus;
+import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.cas.ServiceProperties;
+import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
+import org.springframework.security.cas.authentication.CasAuthenticationProvider;
+import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
+import org.springframework.security.cas.web.CasAuthenticationFilter;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.preauth.*;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-
-import static java.util.Collections.singletonList;
-import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
-import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.DEFAULT_LOCALE;
-import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST;
-import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
-import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
-@Profile("!dev & !ci")
+import static java.util.Collections.singletonList;
+import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST;
+import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID;
+import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
+import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
+
+@Profile("!dev")
 @Configuration
-@Order(2)
 @EnableWebSecurity
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
+public class WebSecurityConfiguration {
   private static final String HAKIJA_ROLE = "APP_REKISTEROINTI_HAKIJA";
-  private static final String HAKIJA_PATH_CLOB = "/hakija/**";
-
   private final OphProperties ophProperties;
 
   public WebSecurityConfiguration(OphProperties ophProperties) {
     this.ophProperties = ophProperties;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.headers().disable().csrf().disable();
-    http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
-        .antMatchers("/api/**").permitAll()
-        .anyRequest().hasRole(HAKIJA_ROLE)
-        .and()
-        .addFilterBefore(new SaveOriginalRequestFilter(), BasicAuthenticationFilter.class)
-        .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http, FixedCasAuthenticationFilter casAuthenticationFilter,
+      AuthenticationEntryPoint authenticationEntryPoint, SecurityContextRepository securityContextRepository)
+      throws Exception {
+    http.headers().disable().csrf().disable()
+        .securityMatcher("/hakija/**")
+        .authorizeHttpRequests(authz -> authz
+            .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
+            .anyRequest().authenticated()
+            .and()
+            .addFilterAt(casAuthenticationFilter, CasAuthenticationFilter.class)
+            .addFilterBefore(new SaveLoginRedirectFilter(), CasAuthenticationFilter.class)
+            .addFilterAfter(new ValtuudetRedirectFilter(), CasAuthenticationFilter.class))
+        .securityContext(securityContext -> securityContext
+            .requireExplicitSave(true)
+            .securityContextRepository(securityContextRepository))
         .exceptionHandling()
-        .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
-  }
-
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(hakijaAuthenticationProvider());
+        .authenticationEntryPoint(authenticationEntryPoint);
+    return http.build();
   }
 
   @Bean
-  @DependsOn("properties")
   public TicketValidator casOppijaticketValidator() {
-    return new Cas20ServiceTicketValidator(ophProperties.url("cas-oppija.url"));
+    return new Cas30ServiceTicketValidator(ophProperties.url("cas-oppija.url"));
   }
 
   @Bean
-  public Filter hakijaAuthenticationProcessingFilter() throws Exception {
-    HakijaAuthenticationFilter filter = new HakijaAuthenticationFilter("/hakija/login", casOppijaticketValidator(),
-        ophProperties);
-    filter.setAuthenticationManager(authenticationManager());
-    String authenticationSuccessUrl = ophProperties.url("rekisterointi.hakija.valtuudet.redirect");
-    filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
-    return filter;
+  public HttpSessionSecurityContextRepository securityContextRepository() {
+    return new HttpSessionSecurityContextRepository();
   }
 
   @Bean
-  public AuthenticationEntryPoint hakijaAuthenticationEntryPoint() {
-    String loginCallbackUrl = ophProperties.url("rekisterointi.hakija.login");
-    String defaultLoginUrl = ophProperties.url("cas-oppija.login", loginCallbackUrl);
-    return new AuthenticationEntryPointImpl(defaultLoginUrl, ophProperties, loginCallbackUrl);
-  }
-
-  private static class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoint {
-
-    private final OphProperties properties;
-    private final String loginCallbackUrl;
-
-    public AuthenticationEntryPointImpl(String loginFormUrl, OphProperties properties, String loginCallbackUrl) {
-      super(loginFormUrl);
-      this.properties = properties;
-      this.loginCallbackUrl = loginCallbackUrl;
-    }
-
-    @Override
-    protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response,
-        AuthenticationException exception) {
-      Locale locale = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_LOCALE, Locale.class)
-          .orElse(DEFAULT_LOCALE);
-      String language = locale.getLanguage();
-      return properties.url("cas-oppija.login", loginCallbackUrl, language);
-    }
+  public ServiceProperties casServiceProperties() {
+    ServiceProperties properties = new ServiceProperties();
+    properties.setService(ophProperties.url("rekisterointi.hakija.login") + "/j_spring_cas_security_check");
+    properties.setSendRenew(false);
+    properties.setAuthenticateAllArtifacts(true);
+    return properties;
   }
 
   @Bean
-  public AuthenticationProvider hakijaAuthenticationProvider() {
-    PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
-    authenticationProvider
-        .setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
+  public FixedCasAuthenticationFilter casAuthenticationFilter(
+      AuthenticationConfiguration authenticationConfiguration,
+      ServiceProperties serviceProperties,
+      SecurityContextRepository securityContextRepository) throws Exception {
+    FixedCasAuthenticationFilter casAuthenticationFilter = new FixedCasAuthenticationFilter();
+    casAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
+    casAuthenticationFilter.setServiceProperties(serviceProperties);
+    casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
+    casAuthenticationFilter.setAuthenticationSuccessHandler(
+        new SimpleUrlAuthenticationSuccessHandler(ophProperties.url("rekisterointi.hakija.valtuudet.redirect")));
+    casAuthenticationFilter.setSecurityContextRepository(securityContextRepository);
+    return casAuthenticationFilter;
+  }
+
+  @Bean
+  public AuthenticationEntryPoint authenticationEntryPoint(ServiceProperties serviceProperties) {
+    CasAuthenticationEntryPoint authenticationEntryPoint = new CasAuthenticationEntryPoint();
+    authenticationEntryPoint.setLoginUrl(ophProperties.url("cas-oppija.login"));
+    authenticationEntryPoint.setServiceProperties(serviceProperties);
+    return authenticationEntryPoint;
+  }
+
+  @Bean
+  public AuthenticationProvider authenticationProvider(
+      AuthenticationUserDetailsService<CasAssertionAuthenticationToken> userDetailsService,
+      ServiceProperties serviceProperties, TicketValidator ticketValidator) {
+    CasAuthenticationProvider authenticationProvider = new CasAuthenticationProvider();
+    authenticationProvider.setAuthenticationUserDetailsService(userDetailsService);
+    authenticationProvider.setServiceProperties(serviceProperties);
+    authenticationProvider.setTicketValidator(ticketValidator);
+    authenticationProvider.setKey("rekisterointi");
     return authenticationProvider;
   }
 
-  private static class SaveOriginalRequestFilter extends GenericFilterBean {
+  @Bean
+  public CasUserDetailsService casUserDetailsService() {
+    return new CasUserDetailsService();
+  }
+
+  private static class SaveLoginRedirectFilter extends GenericFilterBean {
     @Override
     public void doFilter(
         ServletRequest request,
         ServletResponse response,
         FilterChain chain) throws IOException, ServletException {
-      if (request instanceof HttpServletRequest) {
-        var httpRequest = (HttpServletRequest) request;
-        var currentOriginalRequest = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST,
-            String.class);
-        var url = httpRequest.getRequestURL().toString();
-        if (currentOriginalRequest.isEmpty() && !url.contains("/api/")) {
-          setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, url);
-        }
+      var httpRequest = (HttpServletRequest) request;
+      var url = httpRequest.getRequestURL().toString();
+      if (httpRequest.getQueryString() != null && httpRequest.getQueryString().contains("login=true")) {
+        setSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, url);
       }
       chain.doFilter(request, response);
     }
   }
 
-  private static class HakijaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
-    private final TicketValidator oppijaticketValidator;
-    private final OphProperties properties;
-
-    public HakijaAuthenticationFilter(String defaultFilterProcessesUrl, TicketValidator oppijaticketValidator,
-        OphProperties properties) {
-      super(defaultFilterProcessesUrl);
-      this.properties = properties;
-      this.oppijaticketValidator = oppijaticketValidator;
-    }
-
+  private static class ValtuudetRedirectFilter extends GenericFilterBean {
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-        throws AuthenticationException {
-      try {
-        return getAuthenticationManager()
-            .authenticate(createAuthRequest(request, validateTicket(resolveTicket(request))));
-      } catch (TicketValidationException e) {
-        throw new AuthenticationCredentialsNotFoundException(
-            "Unable to authenticate because required param doesn't exist");
+    public void doFilter(
+        ServletRequest request,
+        ServletResponse response,
+        FilterChain chain) throws IOException, ServletException {
+      HttpServletRequest httpRequest = (HttpServletRequest) request;
+      boolean hasBusinessId = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class)
+          .isPresent();
+      boolean hasOrgName = findSessionAttribute(httpRequest, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME,
+          String.class).isPresent();
+      if (!httpRequest.getRequestURI().contains("/valtuudet/") && (!hasBusinessId || !hasOrgName)) {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        String encodedRedirectURL = httpResponse.encodeRedirectURL(
+            httpRequest.getContextPath() + "/hakija/valtuudet/redirect");
+        httpResponse.setStatus(HttpStatus.SC_TEMPORARY_REDIRECT);
+        httpResponse.setHeader("Location", encodedRedirectURL);
       }
+      chain.doFilter(request, response);
     }
+  }
 
-    private PreAuthenticatedAuthenticationToken createAuthRequest(HttpServletRequest request,
-        Map<String, Object> casPrincipalAttributes) {
-      String nationalIdentificationNumber = Optional
-          .ofNullable((String) casPrincipalAttributes.get("nationalIdentificationNumber"))
-          .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException(
-              "Unable to authenticate because required param doesn't exist"));
-      String surname = Optional.ofNullable((String) casPrincipalAttributes.get("sn"))
-          .orElse("");
-      String firstName = Optional.ofNullable((String) casPrincipalAttributes.get("firstName"))
-          .orElse("");
-
-      PreAuthenticatedAuthenticationToken authRequest = new PreAuthenticatedAuthenticationToken(
-          nationalIdentificationNumber, "N/A");
-      List<? extends GrantedAuthority> authorities = singletonList(
+  private class CasUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
+    @Override
+    public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
+      String[] principal = ((String) token.getPrincipal()).split(",");
+      List<SimpleGrantedAuthority> authorities = singletonList(
           new SimpleGrantedAuthority(String.format("ROLE_%s", HAKIJA_ROLE)));
-      authRequest.setDetails(new CasOppijaAuthenticationDetails(request, authorities, firstName, surname));
-      return authRequest;
+      return new User(principal[1], "", true, true, true, true, authorities);
     }
-
-    private String resolveTicket(HttpServletRequest request) {
-      return Optional.ofNullable(request.getParameter("ticket"))
-          .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException(
-              "Unable to authenticate because required param doesn't exist"));
-    }
-
-    private Map<String, Object> validateTicket(String ticket) throws TicketValidationException {
-      return oppijaticketValidator.validate(ticket, properties.url("rekisterointi.hakija.login")).getPrincipal()
-          .getAttributes();
-    }
-
   }
-
-  private static class CasOppijaAuthenticationDetails extends PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails
-      implements NameContainer {
-
-    private final String firstName;
-    private final String surname;
-
-    public CasOppijaAuthenticationDetails(HttpServletRequest request,
-        Collection<? extends GrantedAuthority> authorities, String firstName, String surname) {
-      super(request, authorities);
-      this.firstName = firstName;
-      this.surname = surname;
-    }
-
-    @Override
-    public String getFirstName() {
-      return firstName;
-    }
-
-    @Override
-    public String getSurname() {
-      return surname;
-    }
-
-  }
-
 }

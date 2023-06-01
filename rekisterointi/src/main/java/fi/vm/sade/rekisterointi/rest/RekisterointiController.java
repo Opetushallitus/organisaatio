@@ -1,6 +1,5 @@
 package fi.vm.sade.rekisterointi.rest;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.client.RekisterointiClient;
 import fi.vm.sade.rekisterointi.model.Kayttaja;
 import fi.vm.sade.rekisterointi.model.KielistettyNimi;
@@ -17,14 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.time.LocalDate;
-import java.util.Locale;
 import java.util.Set;
 
-import static fi.vm.sade.rekisterointi.configuration.LocaleConfiguration.SESSION_ATTRIBUTE_NAME_LOCALE;
 import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID;
 import static fi.vm.sade.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME;
 import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
@@ -33,11 +30,9 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.findSessionAttribute;
 @RequestMapping(RekisterointiController.BASE_PATH)
 public class RekisterointiController {
   static final String BASE_PATH = "/hakija/api/rekisterointi";
-  private final OphProperties properties;
   private final RekisterointiClient client;
 
-  public RekisterointiController(OphProperties properties, RekisterointiClient client) {
-    this.properties = properties;
+  public RekisterointiController(RekisterointiClient client) {
     this.client = client;
   }
 
