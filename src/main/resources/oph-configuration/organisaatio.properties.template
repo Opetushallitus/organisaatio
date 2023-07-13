@@ -95,5 +95,3 @@ web.url.cas=https\://${host.cas}/cas
 organisaatio-service.tarjonta-service.rest.url=https://${host.virkailija}:${port.tarjonta-service}/tarjonta-service/rest
 organisaatio-service.koodisto-service.rest.url=https://${host.virkailija}/koodisto-service
 organisaatio-service.ryhmasahkoposti-service.rest.url=https://${host.virkailija}/ryhmasahkoposti-service
-
-feature.name-masking={{organisaatio_feature_name_masking}}

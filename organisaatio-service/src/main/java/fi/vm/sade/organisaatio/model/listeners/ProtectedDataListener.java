@@ -20,15 +20,10 @@ public class ProtectedDataListener {
     @Value("${root.organisaatio.oid}")
     private String rootOid;
 
-    @Value("${feature.name-masking}")
-    private boolean nameMaskingFeatureEnabled;
-
     @PostLoad
     public void handleProtectedData(Organisaatio org) {
-        if (nameMaskingFeatureEnabled) {
-            if (isProtected(org) && !canViewProtected()) {
-                org.setMaskingActive(true);
-            }
+        if (isProtected(org) && !canViewProtected()) {
+            org.setMaskingActive(true);
         }
     }
 
