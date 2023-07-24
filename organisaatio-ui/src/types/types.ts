@@ -228,6 +228,7 @@ export type SelectOptionType = {
 
 export type FrontProperties = {
     urlVirkailija: string;
+    feature_OH_973_poistaKriisiviestinnanSahkopostiosoite?: boolean;
 };
 
 export interface Option {
