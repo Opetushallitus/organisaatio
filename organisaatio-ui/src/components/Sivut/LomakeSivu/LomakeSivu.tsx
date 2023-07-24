@@ -84,6 +84,7 @@ import { languageAtom } from '../../../api/lokalisaatio';
 import { DecoratedNimi } from '../../OrganisaatioComponents';
 import Popup from 'reactjs-popup';
 import { Confirmation } from '../../Modaalit/Confirmation/Confirmation';
+import { useFrontProperties } from '../../../contexts/FrontPropertiesContext';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -94,6 +95,8 @@ const PERUSTIEDOTID = 'perustietolomake';
 const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
+    const feature_OH_973_poistaKriisiviestinnanSahkopostiosoite =
+        useFrontProperties()?.feature_OH_973_poistaKriisiviestinnanSahkopostiosoite ?? false;
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
     useAtom(koodistotAtom);
@@ -476,7 +479,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
             );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
         }
-        if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA)) {
+        if (
+            !feature_OH_973_poistaKriisiviestinnanSahkopostiosoite &&
+            organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA)
+        ) {
             lomakkeet.push(
                 <ArvoLomake
                     readOnly={
