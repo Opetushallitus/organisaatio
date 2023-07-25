@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static fi.vm.sade.organisaatio.model.YhteystietoArvo.KRIISIVIESTINNAN_SAHKOPOSTIOSOITE_TYYPPI_OID;
 
 public class YhteystietoConverterUtils {
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioRDTOV4ToOrganisaatioConverter.class);
@@ -20,7 +21,6 @@ public class YhteystietoConverterUtils {
             YhteystietojenTyyppi yTyyppi;
 
             Map<String, String> val = new HashMap<>();
-            yhteystietoArvos.add(val);
 
             val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
             val.put("YhteystietoArvo.kieli", yhteystietoArvo.getKieli());
@@ -38,6 +38,7 @@ public class YhteystietoConverterUtils {
                 yTyyppi = yElementti.getYhteystietojenTyyppi();
 
                 if (yTyyppi != null) {
+                    if (KRIISIVIESTINNAN_SAHKOPOSTIOSOITE_TYYPPI_OID.equals(yTyyppi.getOid())) break;
                     Map<String, String> nimiMap = convertMKTToMap(yTyyppi.getNimi());
                     for (String kieli : nimiMap.keySet()) {
                         val.put("YhteystietojenTyyppi.nimi." + kieli, nimiMap.get(kieli));
@@ -46,6 +47,7 @@ public class YhteystietoConverterUtils {
                     val.put("YhteystietojenTyyppi.oid", yTyyppi.getOid());
                 }
             }
+            yhteystietoArvos.add(val);
         }
     }
 

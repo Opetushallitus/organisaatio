@@ -34,8 +34,9 @@ import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_M
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"kentta_id", "organisaatio_id", "kieli"})})
 public class YhteystietoArvo extends OrganisaatioBaseEntity {
+    public static final String KRIISIVIESTINNAN_SAHKOPOSTIOSOITE_TYYPPI_OID = "1.2.246.562.5.31532764098";
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @ManyToOne(optional = false)
     private YhteystietoElementti kentta;

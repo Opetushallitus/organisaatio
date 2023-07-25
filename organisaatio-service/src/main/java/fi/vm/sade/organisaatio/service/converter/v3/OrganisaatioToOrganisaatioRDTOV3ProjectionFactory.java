@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static fi.vm.sade.organisaatio.model.YhteystietoArvo.KRIISIVIESTINNAN_SAHKOPOSTIOSOITE_TYYPPI_OID;
 import static fi.vm.sade.organisaatio.service.util.DateUtil.toTimestamp;
 
 /**
@@ -99,7 +100,6 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
             YhteystietojenTyyppi yTyyppi;
 
             Map<String, String> val = new HashMap<>();
-            yhteystietoArvos.add(val);
 
             val.put("YhteystietoArvo.arvoText", yhteystietoArvo.getArvoText());
             val.put("YhteystietoArvo.kieli", yhteystietoArvo.getKieli());
@@ -117,6 +117,8 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
                 yTyyppi = yElementti.getYhteystietojenTyyppi();
 
                 if (yTyyppi != null) {
+                    if (KRIISIVIESTINNAN_SAHKOPOSTIOSOITE_TYYPPI_OID.equals(yTyyppi.getOid())) break;
+
                     Map<String, String> nimiMap = convertMKTToMap(yTyyppi.getNimi());
                     for (String kieli : nimiMap.keySet()) {
                         val.put("YhteystietojenTyyppi.nimi." + kieli, nimiMap.get(kieli));
@@ -125,6 +127,7 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
                     val.put("YhteystietojenTyyppi.oid", yTyyppi.getOid());
                 }
             }
+            yhteystietoArvos.add(val);
         }
 
         LOG.debug("convert: {} --> " + t.getClass().getSimpleName() + " in {} ms", s, System.currentTimeMillis() - qstarted);
