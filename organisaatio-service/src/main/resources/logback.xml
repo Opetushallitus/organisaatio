@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <appender name="STDOUT-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
-    <appender name="STDOUT-APP" class="ch.qos.logback.core.ConsoleAppender">
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/logs/oph-${NAME}.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>oph-${NAME}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory> <!-- days -->
+            <maxFileSize>100MB</maxFileSize>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
         <encoder>
             <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
-    <appender name="STDOUT-APP-NO-EX" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{ISO8601} %-5p [%t] %c: %m%nopex%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="STDOUT-AUDIT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>AUDIT:   %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
-        </encoder>
-    </appender>
+
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/logs/auditlog_${NAME}.log</file>
         <append>true</append>
@@ -37,18 +37,13 @@
         </encoder>
     </appender>
 
-    <logger name="fi.vm" level="INFO" additivity="false">
-        <appender-ref ref="STDOUT-APP"/>
-    </logger>
-    <logger name="fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl" additivity="false">
-        <appender-ref ref="STDOUT-APP-NO-EX"/>
-    </logger>
     <root level="INFO">
-        <appender-ref ref="STDOUT-CONSOLE"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
-    <logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="INFO" additivity="false">
+
+    <logger name="fi.vm.sade.organisaatio.service.aspects.AuditLogAspect" level="INFO">
         <appender-ref ref="AUDIT"/>
-        <appender-ref ref="STDOUT-AUDIT"/>
     </logger>
 
 </configuration>
