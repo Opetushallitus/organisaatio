@@ -56,7 +56,7 @@ import {
 } from './LomakeFields/LomakeFields';
 import Muokattu from '../../Muokattu/Muokattu';
 import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
-import ArvoLomake from './Koulutustoimija/ArvoLomake/ArvoLomake';
+import KoskiPostiLomake from './Koulutustoimija/KoskiPostiLomake/KoskiPostiLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { TarkastusLippuButton } from '../../TarkistusLippu/TarkastusLippu';
@@ -477,11 +477,10 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         }
         if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_OPPILAITOS)) {
             lomakkeet.push(
-                <ArvoLomake
+                <KoskiPostiLomake
                     readOnly={readOnly && !casMe.canEditLomake('LOMAKE_KOSKI_POSTI', params.oid, organisaatioNimiPolku)}
                     tyyppiOid={KOSKIPOSTI_TYYPI_OID}
                     yhteystietoArvoRegister={yhteystietoArvoRegister}
-                    field={'koskiposti'}
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_KOSKI_POSTI'));

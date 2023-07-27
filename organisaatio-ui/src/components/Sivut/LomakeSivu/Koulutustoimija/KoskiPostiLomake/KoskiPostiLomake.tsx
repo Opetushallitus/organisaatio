@@ -8,9 +8,8 @@ type Props = {
     tyyppiOid: string;
     yhteystietoArvoRegister: UseFormRegister<YhteystietoArvot>;
     readOnly: boolean;
-    field: 'koskiposti' | 'kriisiviestinta';
 };
-export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }: Props) {
+export default function KoskiPostiLomake({ yhteystietoArvoRegister, readOnly }: Props) {
     return (
         <UloinKehys>
             <Rivi>
@@ -18,8 +17,8 @@ export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }:
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_fi'}>
                         <Input
                             disabled={readOnly}
-                            id={`${field}.fi`}
-                            {...yhteystietoArvoRegister(`${field}.fi` as const)}
+                            id={`koskiposti.fi`}
+                            {...yhteystietoArvoRegister(`koskiposti.fi` as const)}
                         />
                     </Kentta>
                 </Rivi>
@@ -27,8 +26,8 @@ export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }:
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_sv'}>
                         <Input
                             disabled={readOnly}
-                            id={`${field}.sv`}
-                            {...yhteystietoArvoRegister(`${field}.sv` as const)}
+                            id={`koskiposti.sv`}
+                            {...yhteystietoArvoRegister(`koskiposti.sv` as const)}
                         />
                     </Kentta>
                 </Rivi>
@@ -36,8 +35,8 @@ export default function ArvoLomake({ yhteystietoArvoRegister, readOnly, field }:
                     <Kentta label={'YHTEYSTIEDOT_SAHKOPOSTIOSOITE_en'}>
                         <Input
                             disabled={readOnly}
-                            id={`${field}.en`}
-                            {...yhteystietoArvoRegister(`${field}.en` as const)}
+                            id={`koskiposti.en`}
+                            {...yhteystietoArvoRegister(`koskiposti.en` as const)}
                         />
                     </Kentta>
                 </Rivi>
