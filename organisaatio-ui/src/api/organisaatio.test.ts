@@ -18,7 +18,7 @@ import {
     mapUiOrganisaatioToApiToUpdate,
     mapUiYhteystiedotToApi,
 } from './organisaatio';
-import { KOSKIPOSTI_BASE, KRIISIVIESTINTA_BASE, ROOT_OID } from '../contexts/constants';
+import { KOSKIPOSTI_BASE, ROOT_OID } from '../contexts/constants';
 import { ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA } from './koodisto';
 
 const kieli = 'kieli_fi#1';
@@ -197,7 +197,7 @@ const uiPerustiedot: Perustiedot = {
 };
 describe('mapApiYhteysTietoArvotToUi', () => {
     it('Maps api yhteystietoarvot to Api format', () => {
-        const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' }, kriisiviestinta: { en: 'en' } };
+        const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' } };
         expect(
             mapApiYhteysTietoArvotToUi([
                 {
@@ -217,12 +217,6 @@ describe('mapApiYhteysTietoArvotToUi', () => {
                     'YhteystietoArvo.arvoText': 'en',
                     'YhteystietoArvo.kieli': 'kieli_en#12',
                     ...KOSKIPOSTI_BASE,
-                },
-                {
-                    //KOSKI sahkoposti
-                    'YhteystietoArvo.arvoText': 'en',
-                    'YhteystietoArvo.kieli': 'kieli_en#12',
-                    ...KRIISIVIESTINTA_BASE,
                 },
                 {
                     //KOSKI sahkoposti

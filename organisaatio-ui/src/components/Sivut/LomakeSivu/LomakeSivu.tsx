@@ -4,7 +4,7 @@ import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import Accordion from '../../Accordion/Accordion';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import homeIcon from '@iconify/icons-fa-solid/home';
-import { KOSKIPOSTI_TYYPI_OID, KRIISIVIESTINTA_TYYPI_OID, rakenne, ROOT_OID } from '../../../contexts/constants';
+import { KOSKIPOSTI_TYYPI_OID, rakenne, ROOT_OID } from '../../../contexts/constants';
 import {
     LiitaOrganisaatioon,
     Nimi,
@@ -69,7 +69,6 @@ import {
     maatJaValtiotKoodistoAtom,
     oppilaitoksenOpetuskieletKoodistoAtom,
     oppilaitostyyppiKoodistoAtom,
-    ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
     ORGANIAATIOTYYPPI_OPPILAITOS,
     ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA,
     organisaatioTyypitKoodistoAtom,
@@ -84,7 +83,6 @@ import { languageAtom } from '../../../api/lokalisaatio';
 import { DecoratedNimi } from '../../OrganisaatioComponents';
 import Popup from 'reactjs-popup';
 import { Confirmation } from '../../Modaalit/Confirmation/Confirmation';
-import { useFrontProperties } from '../../../contexts/FrontPropertiesContext';
 
 type LomakeSivuProps = {
     match: { params: { oid: string } };
@@ -95,8 +93,6 @@ const PERUSTIEDOTID = 'perustietolomake';
 const YHTEYSTIEDOTID = 'yhteystietolomake';
 
 const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
-    const feature_OH_973_poistaKriisiviestinnanSahkopostiosoite =
-        useFrontProperties()?.feature_OH_973_poistaKriisiviestinnanSahkopostiosoite ?? false;
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
     useAtom(koodistotAtom);
@@ -478,22 +474,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 />
             );
             otsikot.push(i18n.translate('LOMAKE_VAKA'));
-        }
-        if (
-            !feature_OH_973_poistaKriisiviestinnanSahkopostiosoite &&
-            organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA)
-        ) {
-            lomakkeet.push(
-                <ArvoLomake
-                    readOnly={
-                        readOnly && !casMe.canEditLomake('LOMAKE_KRIISI_VIESTINTA', params.oid, organisaatioNimiPolku)
-                    }
-                    tyyppiOid={KRIISIVIESTINTA_TYYPI_OID}
-                    yhteystietoArvoRegister={yhteystietoArvoRegister}
-                    field={'kriisiviestinta'}
-                />
-            );
-            otsikot.push(i18n.translate('LOMAKE_KRIISI_VIESTINTA'));
         }
         if (organisaatioTyypit?.includes(ORGANIAATIOTYYPPI_OPPILAITOS)) {
             lomakkeet.push(

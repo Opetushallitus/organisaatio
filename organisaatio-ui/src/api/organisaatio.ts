@@ -31,14 +31,7 @@ import {
 } from '../types/apiTypes';
 import useAxios from 'axios-hooks';
 import { errorHandlingWrapper, useErrorHandlingWrapper } from './errorHandling';
-import {
-    KOSKIPOSTI_BASE,
-    KOSKIPOSTI_TYYPI_OID,
-    KRIISIVIESTINTA_BASE,
-    KRIISIVIESTINTA_TYYPI_OID,
-    PUBLIC_API_CONTEXT,
-    ROOT_OID,
-} from '../contexts/constants';
+import { KOSKIPOSTI_BASE, KOSKIPOSTI_TYYPI_OID, PUBLIC_API_CONTEXT, ROOT_OID } from '../contexts/constants';
 import { UnpackNestedValue } from 'react-hook-form';
 import { formatUiDateStrToApi, getUiDateStr } from '../tools/mappers';
 
@@ -336,10 +329,7 @@ function mapUIYhteystietoArvotToApi(
     yhteystietoArvoFormValuet: YhteystietoArvot,
     originalOrganisaatioArvot: ApiYhteystietoArvo[]
 ): ApiYhteystietoArvo[] {
-    const arvot = [
-        ...mapArvot(yhteystietoArvoFormValuet, 'koskiposti', KOSKIPOSTI_BASE),
-        ...mapArvot(yhteystietoArvoFormValuet, 'kriisiviestinta', KRIISIVIESTINTA_BASE),
-    ];
+    const arvot = [...mapArvot(yhteystietoArvoFormValuet, 'koskiposti', KOSKIPOSTI_BASE)];
     originalOrganisaatioArvot.forEach((a) => {
         const found = arvot.find((b) => {
             return (
@@ -510,11 +500,6 @@ function mapApiYhteysTietoArvotToUi(yhteystietoArvos?: ApiYhteystietoArvo[]): Yh
         koskiposti: (yhteystietoArvos || [])
             .filter((a) => {
                 return a['YhteystietojenTyyppi.oid'] === KOSKIPOSTI_TYYPI_OID;
-            })
-            .reduce(yhteysTietoReducer, {}),
-        kriisiviestinta: (yhteystietoArvos || [])
-            .filter((a) => {
-                return a['YhteystietojenTyyppi.oid'] === KRIISIVIESTINTA_TYYPI_OID;
             })
             .reduce(yhteysTietoReducer, {}),
     };

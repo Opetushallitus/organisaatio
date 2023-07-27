@@ -78,7 +78,6 @@ export type Yhteystiedot = {
 };
 export type YhteystietoArvot = {
     koskiposti?: { fi?: string; sv?: string; en?: string };
-    kriisiviestinta?: { fi?: string; sv?: string; en?: string };
 };
 
 export type Nimi = {
@@ -228,7 +227,6 @@ export type SelectOptionType = {
 
 export type FrontProperties = {
     urlVirkailija: string;
-    feature_OH_973_poistaKriisiviestinnanSahkopostiosoite?: boolean;
 };
 
 export interface Option {

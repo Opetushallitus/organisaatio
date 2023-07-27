@@ -17,10 +17,3 @@ export const KOSKIPOSTI_BASE = {
     'YhteystietoElementti.pakollinen': false,
     'YhteystietoElementti.kaytossa': true,
 };
-export const KRIISIVIESTINTA_TYYPI_OID = '1.2.246.562.5.31532764098';
-export const KRIISIVIESTINTA_BASE = {
-    'YhteystietojenTyyppi.oid': KRIISIVIESTINTA_TYYPI_OID,
-    'YhteystietoElementti.oid': '1.2.246.562.5.30789631784',
-    'YhteystietoElementti.pakollinen': false,
-    'YhteystietoElementti.kaytossa': true,
-};
