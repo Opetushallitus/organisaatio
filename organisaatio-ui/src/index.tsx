@@ -9,7 +9,6 @@ import OrganisaatioApp from './OrganisaatioApp';
 import { Provider } from 'jotai';
 import Loading from './components/Loading/Loading';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
-import { fetchFrontProperties, FrontPropertiesContext } from './contexts/FrontPropertiesContext';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
@@ -41,21 +40,16 @@ export class ErrorBoundary extends React.Component<unknown, { hasError: boolean 
 }
 
 async function main() {
-    // TODO retry?
-    const frontProperties = await fetchFrontProperties();
-
     ReactDOM.render(
         <React.StrictMode>
             <Provider>
-                <FrontPropertiesContext.Provider value={frontProperties}>
-                    <ErrorBoundary>
-                        <React.Suspense fallback={<Loading />}>
-                            <InitializeApp>
-                                <OrganisaatioApp />{' '}
-                            </InitializeApp>
-                        </React.Suspense>
-                    </ErrorBoundary>
-                </FrontPropertiesContext.Provider>
+                <ErrorBoundary>
+                    <React.Suspense fallback={<Loading />}>
+                        <InitializeApp>
+                            <OrganisaatioApp />{' '}
+                        </InitializeApp>
+                    </React.Suspense>
+                </ErrorBoundary>
             </Provider>
         </React.StrictMode>,
         document.getElementById('root')
