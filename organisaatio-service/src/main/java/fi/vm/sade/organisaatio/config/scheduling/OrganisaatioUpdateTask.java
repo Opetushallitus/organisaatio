@@ -7,8 +7,10 @@ import com.github.kagkarlsson.scheduler.task.schedule.Daily;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.model.listeners.ProtectedDataListener;
+import fi.vm.sade.organisaatio.service.filters.RequestIdFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.support.CronSequenceGenerator;
@@ -47,10 +49,15 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
 
     @Override
     public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
-        logger.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
-        authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
-        organisaatioBusinessService.updateCurrentOrganisaatioNimet();
-        organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
-        organisaatioYtjService.updateYTJData(false);
+        try {
+            MDC.put("requestId", RequestIdFilter.generateRequestId());
+            logger.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
+            authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
+            organisaatioBusinessService.updateCurrentOrganisaatioNimet();
+            organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
+            organisaatioYtjService.updateYTJData(false);
+        } finally {
+            MDC.remove("requestId");
+        }
     }
 }
