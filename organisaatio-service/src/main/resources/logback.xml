@@ -3,22 +3,12 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <appender name="STDOUT-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="STDOUT-APP" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{ISO8601} %-5p [%t] %c: %m%n</pattern>
-        </encoder>
-    </appender>
-    <appender name="STDOUT-APP-NO-EX" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{ISO8601} %-5p [%t] %c: %m%nopex%n</pattern>
+            <pattern>%d{ISO8601} %X{requestId:--} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
     <appender name="STDOUT-AUDIT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>AUDIT:   %d{ISO8601} %-5p [%t] %c: %m%n</pattern>
+            <pattern>AUDIT:   %d{ISO8601} %X{requestId:--} %-5p [%t] %c: %m%n</pattern>
         </encoder>
     </appender>
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -37,12 +27,6 @@
         </encoder>
     </appender>
 
-    <logger name="fi.vm" level="INFO" additivity="false">
-        <appender-ref ref="STDOUT-APP"/>
-    </logger>
-    <logger name="fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl" additivity="false">
-        <appender-ref ref="STDOUT-APP-NO-EX"/>
-    </logger>
     <root level="INFO">
         <appender-ref ref="STDOUT-CONSOLE"/>
     </root>
