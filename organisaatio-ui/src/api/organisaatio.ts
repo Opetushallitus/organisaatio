@@ -106,7 +106,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     const orgTree = await Axios.post(`${baseUrl}findbyoids`, oids);
     return oids.map((oid: string) => ({
         oid,
-        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid).lyhytNimi,
+        nimi: orgTree.data.find((o: ApiOrganisaatio) => o.oid === oid)?.lyhytNimi ?? '???',
     }));
 }
 
