@@ -101,10 +101,14 @@
             "plugin:cypress/recommended",
             "plugin:jest/recommended"
         ],
+        "settings": {
+            "react": {
+                "version": "detect"
+            }
+        },
         "rules": {
             "jest/no-conditional-expect": "warn",
             "jest/no-done-callback": "warn",
-            "no-extra-boolean-cast": "warn",
             "no-prototype-builtins": "warn",
             "react/display-name": "warn",
             "react/prop-types": "warn",

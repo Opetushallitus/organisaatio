@@ -76,7 +76,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                 }
             } else if (name === 'alkuPvm') {
                 const nimiMatch = findNimiByAlkuPvm(nimet, value.alkuPvm);
-                if (!!nimiMatch) {
+                if (nimiMatch) {
                     reset({
                         nimi: nimiMatch.nimi,
                         alkuPvm: nimiMatch.alkuPvm,
