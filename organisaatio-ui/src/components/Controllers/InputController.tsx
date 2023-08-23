@@ -1,8 +1,8 @@
-import { Control, Controller, Path } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import * as React from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 
-export default function InputController<T>({
+export default function InputController<T extends FieldValues>({
     name,
     form,
     validationErrors,
