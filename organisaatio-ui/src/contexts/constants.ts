@@ -1,12 +1,11 @@
 import { Rakenne } from '../types/types';
 import organisaatioRakenne from './organisaatioRakenne.json';
-import { homepage } from '../../package.json';
 
 export const ROOT_OID = '1.2.246.562.10.00000000001';
-export const BASE_PATH = homepage;
-export const API_CONTEXT = `${homepage}/internal`;
-export const PUBLIC_API_CONTEXT = `${homepage}/api`;
-export const LEGACY_API_CONTEXT = `${homepage}/rest`;
+export const BASE_PATH = '/organisaatio-service';
+export const API_CONTEXT = `/organisaatio-service/internal`;
+export const PUBLIC_API_CONTEXT = `/organisaatio-service/api`;
+export const LEGACY_API_CONTEXT = `/organisaatio-service/rest`;
 export const rakenne = organisaatioRakenne as Rakenne[];
 export const LISATIEDOT_EXTERNAL_URI =
     'https://wiki.eduuni.fi/display/OPHPALV/Ohjeet+ja+yhteystiedot#Ohjeetjayhteystiedot-Organisaatioidentiedot(Organisaatiopalvelu)';

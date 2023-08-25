@@ -51,8 +51,8 @@ export const enrichWithAllNestedData = (
                 (prev: [string[], string[], string[]], c: OrganisaatioHakuOrganisaatio) => {
                     const [prevOrganisaatioTyypit, prevOppilaitosTyypit, prevOids] = prev;
                     const organisaatiotyypit = c.organisaatiotyypit || [];
-                    const oppilaitostyyppi = !!c.oppilaitostyyppi ? [dropKoodiVersionSuffix(c.oppilaitostyyppi)] : [];
-                    const [subOrganisaatioTyypit, subOppilaitosTyypit, subOids] = !!c.subRows
+                    const oppilaitostyyppi = c.oppilaitostyyppi ? [dropKoodiVersionSuffix(c.oppilaitostyyppi)] : [];
+                    const [subOrganisaatioTyypit, subOppilaitosTyypit, subOids] = c.subRows
                         ? tableDataEnricher(c.subRows)
                         : [[], [], []];
                     return [

@@ -169,7 +169,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
 
     useEffect(() => {
         findAndResetOrganisaatio(params.oid);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.oid]);
     useEffect(() => {
         const organisaatioRakenne = resolveOrganisaatio(rakenne, {

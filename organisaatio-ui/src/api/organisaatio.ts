@@ -169,7 +169,7 @@ async function readOrganisaatio(
     return errorHandlingWrapper(async () => {
         const response = await Axios.get<ApiOrganisaatio>(`${baseUrl}${oid}`);
         const organisaatio = response.data;
-        if (!!parent) {
+        if (parent) {
             return { organisaatio, polku: [] };
         }
         const idArr = organisaatio.parentOidPath.split('|').filter((val: string) => val !== '');
@@ -537,16 +537,16 @@ function mapUiYhteystiedotToApi({
                 kayntiosoite.postitoimipaikka = postiosoite.postitoimipaikka;
             }
             const puhelinnumero = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_PHONE) as YhteystiedotPhone;
-            if (!!uiYhteystiedot[kieli].puhelinnumero) {
+            if (uiYhteystiedot[kieli].puhelinnumero) {
                 puhelinnumero.tyyppi = 'puhelin';
                 puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero;
             }
             const email = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_EMAIL);
-            if (!!uiYhteystiedot[kieli].email) {
+            if (uiYhteystiedot[kieli].email) {
                 email[NAME_EMAIL] = uiYhteystiedot[kieli].email;
             }
             const www = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_WWW);
-            if (!!uiYhteystiedot[kieli].www) {
+            if (uiYhteystiedot[kieli].www) {
                 www[NAME_WWW] = uiYhteystiedot[kieli].www;
             }
             return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);

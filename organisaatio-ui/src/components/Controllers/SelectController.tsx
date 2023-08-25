@@ -1,10 +1,10 @@
-import { Control, Controller, Path } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import * as React from 'react';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { ValueType } from 'react-select';
 import { Koodisto } from '../../types/types';
 
-export default function SelectController<T>({
+export default function SelectController<T extends FieldValues>({
     name,
     form,
     validationErrors,

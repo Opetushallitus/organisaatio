@@ -18,7 +18,7 @@ export class I18nImpl implements I18n {
         !translation &&
             process.env.NODE_ENV !== 'development' &&
             console.info(`Translation is missing for ${key} in language ${language}`);
-        if (!!translation) return translation;
+        if (translation) return translation;
         return keyIfEmpty ? key : '';
     }
 
