@@ -15,18 +15,18 @@ if (!element) {
     const headingElement = document.createElement('h4');
     headingElement.append('OrganisaatioPalvelu DEV!');
     const magentaStyleText = 'color: white';
-    const linkstyle = 'color: rgb(229, 57, 53)';
     headingElement.style.cssText = magentaStyleText;
     const a1 = document.createElement('a');
-    a1.href = '/organisaatiot';
-    a1.text = '/organisaatiot';
-    const a2 = document.createElement('a');
-    a2.href = '/ryhmat';
-    a2.text = '/ryhmat';
-    a1.style.cssText = linkstyle;
-    a2.style.cssText = linkstyle;
     container.appendChild(headingElement);
-    container.appendChild(a1);
-    container.appendChild(a2);
+    container.appendChild(createLink('/organisaatiot'));
+    container.appendChild(createLink('/ryhmat'));
     document.body.prepend(container);
+}
+
+function createLink(text) {
+    const a = document.createElement('a');
+    a.href = text;
+    a.text = text;
+    a.style.cssText = 'color: rgb(229, 57, 53)';
+    return a;
 }
