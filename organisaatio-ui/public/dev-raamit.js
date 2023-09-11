@@ -19,6 +19,7 @@ if (!element) {
     const a1 = document.createElement('a');
     container.appendChild(headingElement);
     container.appendChild(createLink('/organisaatiot'));
+    container.appendChild(createLink('/osoitteet'));
     container.appendChild(createLink('/ryhmat'));
     document.body.prepend(container);
 }
