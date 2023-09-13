@@ -122,7 +122,7 @@ jobs:
           PGPASSWORD=postgres psql -c 'CREATE DATABASE organisaatio;' -h localhost -U postgres
           cd mock-api && npm ci && cd -
           cd organisaatio-ui && npm ci && cd -
-          cd playwright && npx playwright install --with-deps && cd -
+          cd playwright && npm ci && npx playwright install --with-deps && cd -
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build backend with no tests
@@ -134,13 +134,13 @@ jobs:
           cd mock-api && npm run mock-api &
           cd organisaatio-ui && npm run start &
           java -jar -Xms2g -Xmx2g -Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties -Dspring.profiles.active=dev -Dspring.flyway.enabled=true -Durl-virkailija=http://localhost:9000 -Dhost.virkailija=localhost:9000 -Durl-ytj=http://localhost:9000/ytj -Durl-oidservice=http://localhost:9000/oidservice -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available organisaatio-service/build/libs/organisaatio-service.jar &
-          playwright && npx playwright test
+          cd playwright && npx playwright test
           kill $(jobs -p) || true
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: playwright/playwright-report
+          path: playwright/playwright-report/
           retention-days: 30
 
   sonarcloud:
