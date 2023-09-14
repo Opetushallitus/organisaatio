@@ -149,7 +149,7 @@ jobs:
           path: playwright/playwright-report/
           retention-days: 30
   sonarcloud:
-    needs: [cypress]
+    needs: [cypress, playwright]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -190,7 +190,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build sonarqube
   deploy-container:
-    needs: [cypress, build]
+    needs: [cypress, build, playwright]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -215,7 +215,7 @@ jobs:
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
           ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
   deploy-artifacts:
-    needs: [build, cypress]
+    needs: [build, cypress, playwright]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
