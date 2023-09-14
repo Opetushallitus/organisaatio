@@ -236,7 +236,7 @@ jobs:
         with:
           arguments: publish -PversionSuffix=.RELEASE
   deploy-artifacts-snapshot:
-    needs: [build, cypress]
+    needs: [build, cypress, playwright]
     if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
