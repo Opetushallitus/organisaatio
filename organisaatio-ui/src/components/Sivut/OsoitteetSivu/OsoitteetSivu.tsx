@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PohjaSivu from '../PohjaSivu/PohjaSivu';
 import { PaaOsio } from '../LomakeSivu/LomakeFields/LomakeFields';
 
-import css from './OsoitteetSivu.module.css';
+import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
 import { Hakutulos } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
@@ -23,7 +23,7 @@ const OsoitteetSivu = () => {
     return (
         <PohjaSivu backgroundColor="#f0f3f7">
             <PaaOsio>
-                <div className={css.container}>
+                <div className={styles.Container}>
                     <Route exact path={'/osoitteet'}>
                         <SearchView onResult={onSearchResult} />
                     </Route>

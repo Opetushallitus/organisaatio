@@ -15,7 +15,7 @@ body {
     background: var(--color-gray-gray-lighten-6, #F0F3F7);
 }
 
-.container {
+.Container {
     /* Layout */
     max-width: 1440px;
     min-width: 1000px;
@@ -26,20 +26,20 @@ body {
     font-family: Roboto, Arial Unicode MS, Arial, sans-serif;
 }
 
-.title {
+.Title {
     font-size: 28px;
     font-style: normal;
     font-weight: 500;
     line-height: 33px;
 }
 
-.subtitleRivi {
+.SubtitleRivi {
     /* Layout */
     display: flex;
     flex-direction: row;
     gap: 16px;
 }
-.subtitle {
+.Subtitle {
     flex-grow: 1;
 
     color: var(--color-primary-blue);
@@ -50,7 +50,7 @@ body {
     line-height: normal;
 }
 
-.subtitle span {
+.Subtitle span {
     color: var(--color-primary-blue, #0A789C);
     font-feature-settings: 'clig' off, 'liga' off;
     font-size: 20px;
@@ -59,15 +59,7 @@ body {
     line-height: normal;
 }
 
-.paragraph {
-    /* Regular 16 */
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px; /* 150% */
-}
-
-.kohderyhmaSelections {
+.KohderyhmaSelections {
     /* Layout */
     display: flex;
     flex-direction: row;
@@ -75,7 +67,7 @@ body {
     gap: 16px;
 }
 
-.kohderyhmaColumn {
+.KohderyhmaColumn {
     /* Layout */
     display: flex;
     flex-direction: column;
@@ -83,7 +75,7 @@ body {
     gap: 16px;
 }
 
-.kohderyhma {
+.Kohderyhma {
     /* Layout */
     display: flex;
     width: 372px;
@@ -99,17 +91,17 @@ body {
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
 }
 
-.kohderyhma.selected {
+.Kohderyhma.Selected {
     border-radius: 3px;
     border: 2px solid var(--color-primary-blue);
     background: #FFF;
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
 }
-.kohderyhma.selected h3 {
+.Kohderyhma.Selected h3 {
     color: var(--color-primary-blue);
 }
 
-.kohderyhma.disabled {
+.Kohderyhma.Disabled {
     border-radius: 3px;
     border: 2px solid var(--color-gray-gray-lighten-3);
     background: #FFF;
@@ -117,18 +109,18 @@ body {
 
     color: var(--color-gray-gray-lighten-1);
 }
-.kohderyhma.disabled h3 {
+.Kohderyhma.Disabled h3 {
     color: var(--color-gray-gray-lighten-1);
 }
 
-.ylateksti {
+.KohderyhmaOtsikko {
     display: flex;
     width: 324px;
     align-items: flex-start;
     gap: 16px;
 }
 
-.ylateksti h3 {
+.KohderyhmaOtsikko h3 {
     /* Medium 20 */
     font-size: 20px;
     font-style: normal;
@@ -136,7 +128,7 @@ body {
     line-height: normal;
 }
 
-.alateksti {
+.KohderyhmaKuvaus {
     /* Layout */
     display: flex;
     padding-left: 36px;
@@ -152,16 +144,12 @@ body {
     letter-spacing: 0.035px;
 }
 
-.buttonRow {
+.ButtonRow {
     display: flex;
     align-items: flex-end;
     gap: 16px;
     height: 83px;
 }
-.buttonRow button[variant=outlined] {
+.ButtonRow button[variant=outlined] {
     background-color: white;
-}
-
-.hakutulosKortti {
-    width: 1312px; /* TODO tarkista */
 }

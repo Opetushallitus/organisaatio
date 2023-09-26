@@ -1,6 +1,6 @@
 import { haeOsoitteet, Hakutulos } from './OsoitteetApi';
 import React from 'react';
-import css from './OsoitteetSivu.module.css';
+import styles from './OsoitteetSivu.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 
@@ -15,49 +15,34 @@ export function SearchView({ onResult }: SearchViewProps) {
     }
     return (
         <>
-            <Title>Osoitepalvelu</Title>
+            <h1 className={styles.Title}>Osoitepalvelu</h1>
             <p>
                 Osoitepalveluun kerätään yhteystietoja OPH:n muista palveluista. Yhteystietojen ylläpidosta ja
                 ajantasaisuudesta huolehtivat koulutustoimijoiden virkailijat itse.
             </p>
-            <div className={css.subtitleRivi}>
-                <SubTitle>
+            <div className={styles.SubtitleRivi}>
+                <h2 className={styles.Subtitle}>
                     Valitse ensin haun kohderyhmä <span>(pakollinen)</span>
-                </SubTitle>
+                </h2>
                 {/*<Button variant={'text'}>Tyhjennä valinnat</Button>*/}
             </div>
-            <KohderyhmaSelections>
-                <KohderyhmaColumn>
+            <div className={styles.KohderyhmaSelections}>
+                <div className={styles.KohderyhmaColumn}>
                     <Kohderyhma
                         title="Koulutustoimijat"
                         description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
                         selected={true}
                         disabled={false}
                     />
-                </KohderyhmaColumn>
-            </KohderyhmaSelections>
-            <div className={css.buttonRow}>
+                </div>
+            </div>
+            <div className={styles.ButtonRow}>
                 <Button onClick={hae}>Hae</Button>
                 {/*<Button variant={'outlined'}>Tyhjennä</Button>*/}
             </div>
         </>
     );
 }
-function Title(props: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <h1 className={css.title}>{props.children}</h1>;
-}
-function SubTitle(props: React.HTMLAttributes<HTMLHeadingElement>) {
-    return <h2 className={css.subtitle}>{props.children}</h2>;
-}
-
-function KohderyhmaSelections(props: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={css.kohderyhmaSelections}>{props.children}</div>;
-}
-
-function KohderyhmaColumn(props: React.HTMLAttributes<HTMLDivElement>) {
-    return <div className={css.kohderyhmaColumn}>{props.children}</div>;
-}
-
 type KohderyhmaProps = {
     title: string;
     description: string;
@@ -66,23 +51,19 @@ type KohderyhmaProps = {
 };
 
 function Kohderyhma({ title, description, selected, disabled }: KohderyhmaProps) {
-    const classes = [css.kohderyhma];
+    const classes = [styles.Kohderyhma];
     if (disabled) {
-        classes.push(css.disabled);
+        classes.push(styles.Disabled);
     } else if (selected) {
-        classes.push(css.selected);
+        classes.push(styles.Selected);
     }
     return (
         <div className={classes.join(' ')}>
-            <div className={css.ylateksti}>
+            <div className={styles.KohderyhmaOtsikko}>
                 <Checkbox checked={selected} />
                 <h3>{title}</h3>
             </div>
-            <Alateksti>{description}</Alateksti>
+            <p className={styles.KohderyhmaKuvaus}>{description}</p>
         </div>
     );
-}
-
-function Alateksti(props: React.HTMLAttributes<HTMLParagraphElement>) {
-    return <p className={css.alateksti}>{props.children}</p>;
 }

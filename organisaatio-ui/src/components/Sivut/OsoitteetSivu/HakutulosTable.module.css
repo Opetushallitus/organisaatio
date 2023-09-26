@@ -1,6 +1,7 @@
 .Table {
     border-spacing: 0;
 }
+
 .Header {
     color: var(--color-neutral-black);
     font-size: 16px;
