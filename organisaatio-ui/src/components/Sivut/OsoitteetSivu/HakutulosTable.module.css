@@ -1,0 +1,38 @@
+.Table {
+    border-spacing: 0;
+}
+.Header {
+    color: var(--color-neutral-black);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.Header tr td {
+    border-bottom: 1px solid var(--color-gray-gray-lighten-3);
+    background: var(--color-neutral-white);
+    padding: 16px 24px 10px 8px;
+    height: 18px;
+}
+
+.Body {
+    /* Regular 16 */
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+}
+
+.Body tr:nth-child(even) { background: var(--color-neutral-white); }
+.Body tr:nth-child(odd) { background: var(--FAFAFA); }
+
+.Body tr td {
+    padding: 8px 24px 8px 8px;
+    height: 34px;
+}
+
+.CheckboxColumn {
+    width: 0%;
+    white-space: nowrap;
+}

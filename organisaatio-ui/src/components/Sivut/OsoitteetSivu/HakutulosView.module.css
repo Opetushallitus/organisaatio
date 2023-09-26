@@ -1,0 +1,63 @@
+.HakutulosView {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    width: 100%;
+    max-width: 1320px;
+    padding: 24px 24px 32px 24px;
+
+    color: var(--color-neutral-black);
+    background: var(--color-neutral-white);
+    border-radius: 3px;
+    box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
+}
+
+.TitleRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 48px;
+    border-bottom: 1px solid var(--color-gray-gray-lighten-3);
+}
+
+.TitleRow .Title {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.TitleRow .TitleText {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.TitleRow .TitleAlt {
+    color: var(--color-gray-gray);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+}
+
+.SininenPalkki {
+    display: flex;
+    height: 50px;
+    padding: 0px 16px;
+    align-items: center;
+    align-self: stretch;
+
+    border-radius: 3px;
+    background: var(--color-primary-blue);
+
+    color: var(--color-neutral-white);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

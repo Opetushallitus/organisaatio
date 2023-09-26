@@ -8,6 +8,10 @@ export default defineConfig({
   reporter: "html",
   use: {
     trace: "on-first-retry",
+    httpCredentials: {
+      username: "devaaja",
+      password: "devaaja",
+    }
   },
 
   projects: [

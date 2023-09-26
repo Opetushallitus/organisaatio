@@ -30,7 +30,7 @@ const OrganisaatioApp: React.FC = () => {
                     <BrowserRouter basename={BASE_PATH}>
                         <Switch>
                             <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                            <Route path={'/osoitteet'} exact component={OsoitteetSivu} />
+                            <Route path={'/osoitteet'} component={OsoitteetSivu} />
                             <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
                             <Route path={'/lomake/:oid'} component={LomakeSivu} />
                             <Route path={'/ryhmat'} exact component={Ryhmat} />

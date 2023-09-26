@@ -1,8 +1,16 @@
 import * as React from 'react';
 import styles from './PohjaSivu.module.css';
 
-const PohjaSivu: React.FC = (props) => {
-    return <div className={styles.OrganisaatioKehys}>{props.children}</div>;
+type PohjaSivuProps = {
+    backgroundColor?: string;
+};
+const PohjaSivu: React.FC<PohjaSivuProps> = (props) => {
+    const style = props.backgroundColor ? { backgroundColor: props.backgroundColor } : {};
+    return (
+        <div className={styles.OrganisaatioKehys} style={style}>
+            {props.children}
+        </div>
+    );
 };
 
 export default PohjaSivu;
