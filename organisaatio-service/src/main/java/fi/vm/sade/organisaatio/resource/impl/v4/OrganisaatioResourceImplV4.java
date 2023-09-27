@@ -38,7 +38,7 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public String deleteOrganisaatioOld(String oid) {
         try {
-            permissionChecker.checkRemoveOrganisation(oid);
+            permissionChecker.checkRemoveOrganisation();
         } catch (NotAuthorizedException nae) {
             log.warn("Not authorized to delete organisation: " + oid);
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN, nae);

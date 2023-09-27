@@ -150,25 +150,7 @@ public class OrganisaatioPermissionServiceImpl extends AbstractPermissionService
     }
 
 
-    public boolean userCanDeleteOrganisation(OrganisaatioContext context) {
-        /*
-         * Käyttöoikeudet huomioitava: Vain OPH:n pääkäyttäjä voi poistaa
-         * koulutuksen järjestäjän tai muun organisaation. Muut virkailijat
-         * voivat poistaa oman organisaatiotasonsa alapuolisia organisaatioita.
-         */
-
-        //OVT-4508
-//        if (checkAccess(context.getOrgOid(), ROLE_CRUD)) {
-//            if (!context.getOrgTypes().contains(OrganisaatioTyyppi.MUU_ORGANISAATIO)
-//                    && !context.getOrgTypes().contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA) && !context) {
-//                return true;
-//            }
-//        }
-        if (context.isRyhma() && userCanCreateDeleteRyhma()) {
-            return true;
-        }
-
-        // implicitly oph user can delete whatever, is this true?
+    public boolean userCanDeleteOrganisation() {
         return checkAccess(ophOid, ROLE_CRUD);
     }
 

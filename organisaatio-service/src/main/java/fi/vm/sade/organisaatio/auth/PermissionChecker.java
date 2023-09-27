@@ -47,9 +47,8 @@ public class PermissionChecker {
     private OrganisaatioPermissionServiceImpl permissionService;
 
 
-    public void checkRemoveOrganisation(String oid) {
-        final OrganisaatioContext authContext = OrganisaatioContext.get(organisaatioRepository.findFirstByOid(oid));
-        checkPermission(permissionService.userCanDeleteOrganisation(authContext));
+    public void checkRemoveOrganisation() {
+        checkPermission(permissionService.userCanDeleteOrganisation());
     }
 
     public void checkUpdateOrganisationName(String oid) {

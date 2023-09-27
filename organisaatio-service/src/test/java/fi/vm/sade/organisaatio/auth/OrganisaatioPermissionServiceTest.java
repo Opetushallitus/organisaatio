@@ -104,7 +104,6 @@ public class OrganisaatioPermissionServiceTest {
         OrganisaatioRDTO org = getOrganisaatio(userOid, otherOrgOid, OrganisaatioTyyppi.KOULUTUSTOIMIJA);
         assertFalse(permissionService.userCanUpdateYTJ());
         assertFalse(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(org)));
-        assertFalse(permissionService.userCanDeleteOrganisation(OrganisaatioContext.get(org)));
         assertFalse(permissionService.userCanUpdateOrganisation(OrganisaatioContext.get(org)));
         assertFalse(permissionService.userCanMoveOrganisation(OrganisaatioContext.get(org)));
 
@@ -123,7 +122,6 @@ public class OrganisaatioPermissionServiceTest {
         org = getOrganisaatio(userOid, null, userOrgOid, OrganisaatioTyyppi.TOIMIPISTE);
         assertTrue(permissionService.userCanCreateOrganisation(OrganisaatioContext.get(org)));
         org = getOrganisaatio(userOid, userOrgOid, OrganisaatioTyyppi.OPPILAITOS);
-        assertFalse(permissionService.userCanDeleteOrganisation(OrganisaatioContext.get(org)));
         assertTrue(permissionService.userCanUpdateOrganisation(OrganisaatioContext.get(org)));
         assertTrue(permissionService.userCanMoveOrganisation(OrganisaatioContext.get(org)));
 

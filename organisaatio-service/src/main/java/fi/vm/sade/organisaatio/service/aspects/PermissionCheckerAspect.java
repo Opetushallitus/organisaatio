@@ -58,7 +58,7 @@ public class PermissionCheckerAspect {
     @Before("@annotation(CheckDeletePermission) && args(oid,..)")
     public void checkDeletePermission(String oid) {
         try {
-            permissionChecker.checkRemoveOrganisation(oid);
+            permissionChecker.checkRemoveOrganisation();
         } catch (NotAuthorizedException nae) {
             throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN,
                     String.format("Not authorized to delete organisation: %s", oid)
