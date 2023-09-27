@@ -11,7 +11,7 @@ sonarqube {
     }
 }
 node {
-    version = '16'
+    version = '16.20.2'
     download = true
 }
 /*

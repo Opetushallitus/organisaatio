@@ -1,6 +1,0 @@
-{
-    "baseUrl": "http://devaaja:devaaja@localhost:3003/",
-    "defaultCommandTimeout": 10000,
-    "pageLoadTimeout": 15000,
-    "video": false
-}
