@@ -582,7 +582,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                                 label={'LOMAKE_LISAA_UUSI_TOIMIJA'}
                             />
                         )}
-                    {casMe.canHaveButton('LOMAKE_POISTA_ORGANISAATIO', params.oid, organisaatioNimiPolku) && (
+                    {casMe.isOphUser() && (
                         <Popup
                             position="bottom right"
                             trigger={() => (

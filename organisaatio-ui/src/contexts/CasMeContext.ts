@@ -97,4 +97,7 @@ export class CASMeImpl implements CASMe {
     getCRUDOids = () => {
         return getOidsFromRoles(this.roles);
     };
+    isOphUser = () => {
+        return this.roles.includes(OPH_CRUD);
+    };
 }

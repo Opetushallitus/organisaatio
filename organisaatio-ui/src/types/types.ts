@@ -350,4 +350,5 @@ export type CASMe = {
     canEditLomake: (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     canEditIfParent: (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => boolean;
     getCRUDOids: () => string[];
+    isOphUser: () => boolean;
 };
