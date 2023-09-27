@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   database:
     container_name: oph-organisaatio-db
@@ -10,5 +10,6 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5432:5432
+    command: ["postgres", "-c", "log_statement=all"]
 volumes:
   database-data:
