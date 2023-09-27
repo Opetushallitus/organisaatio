@@ -4,35 +4,51 @@ import moment from 'moment';
 describe('TarkastusLippu', () => {
     describe('hasWarning', () => {
         const tests = [
-            [
-                'is true when tarkastus is > 1 years old',
-                moment().subtract(5, 'years'),
-                moment().subtract(22, 'years'),
-                undefined,
-                true,
-            ],
-            ['is true when tarkastus is undefined', undefined, moment().subtract(22, 'years'), undefined, true],
-            [
-                'is false when tarkastus is < 1 years old',
-                moment().subtract(5, 'months'),
-                moment().subtract(22, 'years'),
-                undefined,
-                false,
-            ],
-            [
-                'is false when lakkautettu',
-                moment().subtract(5, 'years'),
-                moment().subtract(22, 'years'),
-                moment().subtract(1, 'years'),
-                false,
-            ],
-            ['is false when in future', undefined, moment().add(1, 'years'), undefined, false],
+            {
+                message: 'is true when tarkastus is > 1 years old',
+                tarkastusDate: moment().subtract(5, 'years'),
+                alkuDate: moment().subtract(22, 'years'),
+                lakkautusDate: undefined,
+                shouldWarn: true,
+            },
+            {
+                message: 'is true when tarkastus is undefined',
+                tarkastusDate: undefined,
+                alkuDate: moment().subtract(22, 'years'),
+                lakkautusDate: undefined,
+                shouldWarn: true,
+            },
+            {
+                message: 'is false when tarkastus is < 1 years old',
+                tarkastusDate: moment().subtract(5, 'months'),
+                alkuDate: moment().subtract(22, 'years'),
+
+                lakkautusDate: undefined,
+
+                shouldWarn: false,
+            },
+            {
+                message: 'is false when lakkautettu',
+                tarkastusDate: moment().subtract(5, 'years'),
+                alkuDate: moment().subtract(22, 'years'),
+
+                lakkautusDate: moment().subtract(1, 'years'),
+
+                shouldWarn: false,
+            },
+            {
+                message: 'is false when in future',
+                tarkastusDate: undefined,
+                alkuDate: moment().add(1, 'years'),
+                lakkautusDate: undefined,
+                shouldWarn: false,
+            },
         ];
-        test.each(tests)('%s message', (message, tarkastusDate, alkuDate, lakkautusDate, shouldWarn) => {
-            // @ts-ignore
-            const result = hasWarning({ tarkastusDate, alkuDate, lakkautusDate });
-            if (shouldWarn) expect(result).toBeTruthy();
-            else expect(result).toBeFalsy();
-        });
+        tests.forEach(({ message, tarkastusDate, alkuDate, lakkautusDate, shouldWarn }) =>
+            test(`${message} message`, () => {
+                const result = hasWarning({ tarkastusDate, alkuDate, lakkautusDate });
+                expect(result).toEqual(shouldWarn);
+            })
+        );
     });
 });
