@@ -2,7 +2,6 @@ package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.properties.OphProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -10,10 +9,6 @@ import org.springframework.core.env.Environment;
 @PropertySource("classpath:application.properties")
 @Configuration
 public class UrlConfiguration extends OphProperties {
-
-    @Value("${feature.ostj-182-uusi-osoitepalvelu}")
-    private boolean uusiOsoitepalveluEnabled;
-
     @Autowired
     public UrlConfiguration(Environment environment) {
         addFiles("/organisaatio-service-oph.properties");
@@ -32,6 +27,6 @@ public class UrlConfiguration extends OphProperties {
         this.addDefault("port.tarjonta-service", environment.getRequiredProperty("port.tarjonta-service"));
         this.addDefault("port.organisaatio-service", environment.getRequiredProperty("port.organisaatio-service"));
         this.frontProperties.setProperty("urlVirkailija", this.require("url-virkailija"));
-        this.frontProperties.setProperty("uusiOsoitepalveluEnabled", uusiOsoitepalveluEnabled ? "true" : "false");
+        this.frontProperties.setProperty("uusiOsoitepalveluEnabled", environment.getRequiredProperty("feature.ostj-182-uusi-osoitepalvelu"));
     }
 }
