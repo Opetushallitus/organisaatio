@@ -227,6 +227,7 @@ export type SelectOptionType = {
 
 export type FrontProperties = {
     urlVirkailija: string;
+    uusiOsoitepalveluEnabled: 'true' | 'false';
 };
 
 export interface Option {
