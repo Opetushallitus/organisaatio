@@ -60,6 +60,7 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author simok
@@ -440,8 +441,16 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
 
         // Haetaan organisaatiosuhteet
-        Set<OrganisaatioSuhde> childSuhteet = organisaatio.getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA);
-        Set<OrganisaatioSuhde> parentSuhteet = new HashSet<>(organisaatio.getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA));
+        Set<OrganisaatioSuhde> childSuhteet = organisaatio
+                .getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA)
+                .stream()
+                .filter((o) -> !o.getChild().isPiilotettu())
+                .collect(Collectors.toSet());
+        Set<OrganisaatioSuhde> parentSuhteet = organisaatio
+                .getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA)
+                .stream()
+                .filter((o) -> !o.getParent().isPiilotettu())
+                .collect(Collectors.toSet());
         Type organisaatioSuhdeSetType = new TypeToken<Set<OrganisaatioSuhdeDTOV2>>() {
         }.getType();
 
