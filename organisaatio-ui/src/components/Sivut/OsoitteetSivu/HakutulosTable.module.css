@@ -34,6 +34,6 @@
 }
 
 .CheckboxColumn {
-    width: 0%;
+    max-width: 0.001%;
     white-space: nowrap;
 }
