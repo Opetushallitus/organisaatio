@@ -433,23 +433,23 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         }
 
         Organisaatio organisaatio = organisaatioRepository.findFirstByOid(oid);
-
         if (organisaatio == null) {
             throw new OrganisaatioNotFoundException(oid);
         }
 
         OrganisaatioHistoriaRDTOV2 historia = new OrganisaatioHistoriaRDTOV2();
+        boolean canReadPiilotettu = permissionChecker.isReadAccessToAll();
 
         // Haetaan organisaatiosuhteet
         Set<OrganisaatioSuhde> childSuhteet = organisaatio
                 .getChildSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA)
                 .stream()
-                .filter((o) -> !o.getChild().isPiilotettu())
+                .filter((o) -> canReadPiilotettu || !o.getChild().isPiilotettu())
                 .collect(Collectors.toSet());
         Set<OrganisaatioSuhde> parentSuhteet = organisaatio
                 .getParentSuhteet(OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.HISTORIA)
                 .stream()
-                .filter((o) -> !o.getParent().isPiilotettu())
+                .filter((o) -> canReadPiilotettu || !o.getParent().isPiilotettu())
                 .collect(Collectors.toSet());
         Type organisaatioSuhdeSetType = new TypeToken<Set<OrganisaatioSuhdeDTOV2>>() {
         }.getType();
@@ -466,7 +466,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
 
         historia.setLiitokset(organisaatioLiitosModelMapper.map(liitokset, organisaatioLiitosSetType));
         historia.setLiittymiset(organisaatioLiitosModelMapper.map(liittynyt, organisaatioLiitosSetType));
-
         return historia;
     }
 
