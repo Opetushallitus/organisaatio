@@ -239,6 +239,7 @@ describe('mapUiYhteystiedotToApi', () => {
                 apiYhteystiedot: [...oldApiyhteystiedot],
                 uiYhteystiedot: {
                     ...uiYhteystiedot,
+                    fi: { ...uiYhteystiedot.fi, www: 'www.opetushallitus.fi' },
                     osoitteetOnEri: true,
                 },
             })
@@ -251,7 +252,7 @@ describe('mapUiYhteystiedotToApi', () => {
             mapUiYhteystiedotToApi({
                 postinumerotKoodisto: postinumerotKoodisto as Koodisto,
                 apiYhteystiedot: [...oldApiyhteystiedot],
-                uiYhteystiedot: { ...uiYhteystiedot },
+                uiYhteystiedot: { ...uiYhteystiedot, fi: { ...uiYhteystiedot.fi, www: 'www.opetushallitus.fi' } },
             })
         ).toEqual(expect.arrayContaining(expected));
     });
@@ -260,6 +261,7 @@ describe('mapUiYhteystiedotToApi', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
         const yhteystiedot = {
             ...uiYhteystiedot,
+            fi: { ...uiYhteystiedot.fi, www: 'www.opetushallitus.fi' },
             sv: { ...uiYhteystiedot.sv, kayntiOsoite: '', kayntiOsoitePostiNro: '' },
             osoitteetOnEri: true,
         };
@@ -303,7 +305,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             { ...apiOrganisaatio } as ApiOrganisaatio,
             postinumerotKoodisto as Koodisto,
             uiBaseTiedot,
-            uiYhteystiedot,
+            { ...uiYhteystiedot, fi: { ...uiYhteystiedot.fi, www: 'www.opetushallitus.fi' } },
             uiPerustiedot,
             {}
         );
