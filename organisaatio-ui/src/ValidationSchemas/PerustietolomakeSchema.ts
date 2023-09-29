@@ -1,9 +1,9 @@
-import JoiLess from 'joi';
+import JoiLess, { Root } from 'joi';
 import JoiDate from '@joi/date';
 import { ytunnusJoiValidator } from './YtunnusValidator';
 import { ORGANIAATIOTYYPPI_KUNTA } from '../api/koodisto';
 
-const Joi = JoiLess.extend(JoiDate);
+const Joi = JoiLess.extend(JoiDate) as Root;
 
 const perustietoOptionSchemaRequired = Joi.object({
     label: Joi.string().required(),

@@ -33,6 +33,7 @@
         "@cypress/code-coverage": "^3.12.1",
         "@cypress/instrument-cra": "^1.4.0",
         "@types/jest": "^27",
+        "@types/joi-phone-number": "^5.0.6",
         "@types/node": "^16.18.54",
         "@types/react": "^16.14.47",
         "@types/react-datepicker": "2.11.1",

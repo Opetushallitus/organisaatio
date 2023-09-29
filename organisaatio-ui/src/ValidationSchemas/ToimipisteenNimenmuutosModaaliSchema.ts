@@ -1,7 +1,7 @@
-import JoiLess from 'joi';
+import JoiLess, { Root } from 'joi';
 import JoiDate from '@joi/date';
 
-const Joi = JoiLess.extend(JoiDate);
+const Joi = JoiLess.extend(JoiDate) as Root;
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).required(),

@@ -1,6 +1,6 @@
-import JoiLess from 'joi';
+import JoiLess, { Root } from 'joi';
 import JoiPhoneNumber from 'joi-phone-number';
-const Joi = JoiLess.extend(JoiPhoneNumber);
+const Joi = JoiLess.extend(JoiPhoneNumber) as Root;
 
 export const postinumeroSchema = Joi.string().regex(/^\d{5}$/);
 
