@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import PohjaSivu from '../PohjaSivu/PohjaSivu';
-import { PaaOsio } from '../LomakeSivu/LomakeFields/LomakeFields';
 
 import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
@@ -21,18 +19,30 @@ const OsoitteetSivu = () => {
     }
 
     return (
-        <PohjaSivu backgroundColor="#f0f3f7">
-            <PaaOsio>
-                <div className={styles.Container}>
-                    <Route exact path={'/osoitteet'}>
-                        <SearchView onResult={onSearchResult} />
-                    </Route>
-                    <Route exact path={'/osoitteet/hakutulos'}>
-                        <HakutulosView results={state.hakutulos} />
-                    </Route>
+        <div className={styles.OsoitteetSivu}>
+            <Route exact path={'/osoitteet'}>
+                <div className={styles.Header}>
+                    <div className={styles.ContentContainer}>
+                        <p>
+                            Osoitepalveluun kerätään yhteystietoja OPH:n muista palveluista. Yhteystietojen ylläpidosta
+                            ja ajantasaisuudesta huolehtivat koulutustoimijoiden virkailijat itse.
+                        </p>
+                    </div>
                 </div>
-            </PaaOsio>
-        </PohjaSivu>
+                <div className={styles.MainContent}>
+                    <div className={styles.ContentContainer}>
+                        <SearchView onResult={onSearchResult} />
+                    </div>
+                </div>
+            </Route>
+            <Route exact path={'/osoitteet/hakutulos'}>
+                <div className={styles.MainContent}>
+                    <div className={styles.ContentContainer}>
+                        <HakutulosView results={state.hakutulos} />
+                    </div>
+                </div>
+            </Route>
+        </div>
     );
 };
 

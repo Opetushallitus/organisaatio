@@ -1,6 +1,6 @@
 import { haeOsoitteet, Hakutulos } from './OsoitteetApi';
 import React from 'react';
-import styles from './OsoitteetSivu.module.css';
+import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 
@@ -14,33 +14,31 @@ export function SearchView({ onResult }: SearchViewProps) {
         onResult(osoitteet);
     }
     return (
-        <>
-            <h1 className={styles.Title}>Osoitepalvelu</h1>
-            <p>
-                Osoitepalveluun kerätään yhteystietoja OPH:n muista palveluista. Yhteystietojen ylläpidosta ja
-                ajantasaisuudesta huolehtivat koulutustoimijoiden virkailijat itse.
-            </p>
-            <div className={styles.SubtitleRivi}>
-                <h2 className={styles.Subtitle}>
-                    Valitse ensin haun kohderyhmä <span>(pakollinen)</span>
-                </h2>
-                {/*<Button variant={'text'}>Tyhjennä valinnat</Button>*/}
+        <div className={styles.SearchView}>
+            <div>
+                <h1 className={styles.Title}>Osoitepalvelu</h1>
             </div>
-            <div className={styles.KohderyhmaSelections}>
-                <div className={styles.KohderyhmaColumn}>
-                    <Kohderyhma
-                        title="Koulutustoimijat"
-                        description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
-                        selected={true}
-                        disabled={false}
-                    />
+            <div>
+                <div className={styles.SectionTitle}>
+                    <h2>Valitse ensin haun kohderyhmä (pakollinen)</h2>
+                    {/*<Button variant={'text'}>Tyhjennä valinnat</Button>*/}
+                </div>
+                <div className={styles.KohderyhmaSelections}>
+                    <div className={styles.KohderyhmaColumn}>
+                        <Kohderyhma
+                            title="Koulutustoimijat"
+                            description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
+                            selected={true}
+                            disabled={false}
+                        />
+                    </div>
                 </div>
             </div>
             <div className={styles.ButtonRow}>
                 <Button onClick={hae}>Hae</Button>
                 {/*<Button variant={'outlined'}>Tyhjennä</Button>*/}
             </div>
-        </>
+        </div>
     );
 }
 type KohderyhmaProps = {
