@@ -12,9 +12,11 @@ export function HakutulosTable({ results }: HakutulosTableProps) {
             <thead className={styles.Header}>
                 <tr>
                     <td className={styles.CheckboxColumn}>
-                        <Checkbox checked={true} disabled={true} />
+                        <span className={styles.Checkbox}>
+                            <Checkbox checked={true} disabled={true} />
+                        </span>
+                        Organisaation nimi
                     </td>
-                    <td>Organisaation nimi</td>
                     <td>Sähköpostiosoite</td>
                 </tr>
             </thead>
@@ -22,9 +24,11 @@ export function HakutulosTable({ results }: HakutulosTableProps) {
                 {results.map((_) => (
                     <tr key={_.id}>
                         <td className={styles.CheckboxColumn}>
-                            <Checkbox checked={true} disabled={true} />
+                            <span className={styles.Checkbox}>
+                                <Checkbox checked={true} disabled={true} />
+                            </span>
+                            {_.nimi}
                         </td>
-                        <td>{_.nimi}</td>
                         <td>{_.sahkoposti ?? '-'}</td>
                     </tr>
                 ))}
