@@ -211,7 +211,7 @@ const initializeApiOsoite = (kieli: string, osoiteTyyppi: SupportedOsoiteType): 
 });
 
 const isApiOsoite = (yhteystieto: ApiYhteystiedot): yhteystieto is YhteystiedotOsoite =>
-    yhteystieto.hasOwnProperty('osoiteTyyppi');
+    Object.prototype.hasOwnProperty.call(yhteystieto, 'osoiteTyyppi');
 
 function getApiOsoite(
     yhteystiedot: ApiYhteystiedot[],
@@ -235,7 +235,8 @@ function getApiYhteystieto(
     osoiteTyyppi: SupportedYhteystietoType
 ): ApiYhteystiedot {
     const found = yhteystiedot.find(
-        (yhteystieto: ApiYhteystiedot) => yhteystieto.kieli === kieli && yhteystieto.hasOwnProperty(osoiteTyyppi)
+        (yhteystieto: ApiYhteystiedot) =>
+            yhteystieto.kieli === kieli && Object.prototype.hasOwnProperty.call(yhteystieto, osoiteTyyppi)
     );
     if (found) {
         return found;
@@ -524,20 +525,23 @@ function mapUiYhteystiedotToApi({
             postiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
             const kayntiosoite = getApiOsoite(apiYhteystiedot, apikieli, 'kaynti');
             if (
-                uiYhteystiedot.osoitteetOnEri === true &&
+                osoitteetOnEri === true &&
                 !!uiYhteystiedot[kieli].kayntiOsoite &&
                 !!uiYhteystiedot[kieli].kayntiOsoitePostiNro
             ) {
                 kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
                 kayntiosoite.postinumeroUri = postinumerotKoodisto.arvo2Uri(uiYhteystiedot[kieli].kayntiOsoitePostiNro);
                 kayntiosoite.postitoimipaikka = uiYhteystiedot[kieli].kayntiOsoiteToimipaikka;
-            } else if (uiYhteystiedot.osoitteetOnEri === false) {
+            } else if (osoitteetOnEri === false) {
                 kayntiosoite.osoite = postiosoite.osoite;
                 kayntiosoite.postinumeroUri = postiosoite.postinumeroUri;
                 kayntiosoite.postitoimipaikka = postiosoite.postitoimipaikka;
             }
-            const puhelinnumero = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_PHONE) as YhteystiedotPhone;
-            if (uiYhteystiedot[kieli].puhelinnumero) {
+            const puhelinnumero =
+                uiYhteystiedot[kieli].puhelinnumero === ''
+                    ? undefined
+                    : (getApiYhteystieto(apiYhteystiedot, apikieli, NAME_PHONE) as YhteystiedotPhone);
+            if (puhelinnumero && uiYhteystiedot[kieli].puhelinnumero) {
                 puhelinnumero.tyyppi = 'puhelin';
                 puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero;
             }
@@ -545,11 +549,14 @@ function mapUiYhteystiedotToApi({
             if (uiYhteystiedot[kieli].email) {
                 email[NAME_EMAIL] = uiYhteystiedot[kieli].email;
             }
-            const www = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_WWW);
-            if (uiYhteystiedot[kieli].www) {
+            const www =
+                uiYhteystiedot[kieli].www === '' ? undefined : getApiYhteystieto(apiYhteystiedot, apikieli, NAME_WWW);
+            if (www && uiYhteystiedot[kieli].www) {
                 www[NAME_WWW] = uiYhteystiedot[kieli].www;
             }
-            return checkAndMapValuesToYhteystiedot([postiosoite, kayntiosoite, puhelinnumero, email, www]);
+            return checkAndMapValuesToYhteystiedot(
+                [postiosoite, kayntiosoite, puhelinnumero, email, www].filter(Boolean) as ApiYhteystiedot[]
+            );
         })
         .reduce((a, b) => a.concat(b));
 }

@@ -53,11 +53,27 @@ const RiviKentta: React.FC<{ error?: KenttaError; label: string; isRequired?: bo
     );
 };
 
-const PostinumeroKentta = ({ children, toimipaikkaName: name, control, label, isRequired = false, error }) => {
+type PostinumeroKenttaProps = {
+    children: React.ReactNode;
+    toimipaikkaName: OsoitteentoimipaikkaProps['name'];
+    isRequired?: boolean;
+    control: Control<Yhteystiedot>;
+    label: string;
+    error: KenttaError;
+};
+
+const PostinumeroKentta = ({
+    children,
+    toimipaikkaName: name,
+    control,
+    label,
+    isRequired,
+    error,
+}: PostinumeroKenttaProps) => {
     const toimipaikka = useWatch({ control, name });
     return (
         <Rivi>
-            <KenttaLyhyt isRequired label={label} error={error}>
+            <KenttaLyhyt isRequired={isRequired ?? false} label={label} error={error}>
                 {children}
             </KenttaLyhyt>
             <span className={styles.ToimipaikkaText}>{toimipaikka}</span>
@@ -65,7 +81,7 @@ const PostinumeroKentta = ({ children, toimipaikkaName: name, control, label, is
     );
 };
 
-const OtsikkoRivi = ({ label }) => {
+const OtsikkoRivi = ({ label }: { label: string }) => {
     const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.EnsimmainenRivi}>
