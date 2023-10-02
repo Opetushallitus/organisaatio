@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.resource;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -68,6 +69,7 @@ public class OsoitteetResource {
     }
 
     @Data
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
     static class Hakutulos {
         final Long id;
         final String oid;
