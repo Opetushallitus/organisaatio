@@ -120,6 +120,17 @@ dependencies {
     testRuntime group: 'com.h2database', name: 'h2', version: '1.3.148'
 }
 
+application {
+    applicationDefaultJvmArgs = ['-Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties',
+                                 '-Dspring.profiles.active=dev',
+                                 '-Dspring.flyway.enabled=true',
+                                 '-Durl-virkailija=http://localhost:9000',
+                                 '-Dhost.virkailija=localhost:9000',
+                                 '-Durl-ytj=http://localhost:9000/ytj',
+                                 '-Durl-oidservice=http://localhost:9000/oidservice',
+                                 '-Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available']
+}
+
 configurations {
     all {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'

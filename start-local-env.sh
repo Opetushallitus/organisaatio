@@ -16,9 +16,13 @@ function main {
   tmux select-pane -t 1
   tmux send-keys "$repo/scripts/run-mocks.sh" C-m
 
-  tmux splitw -v
+  tmux splitw -h
   tmux select-pane -t 2
   tmux send-keys "$repo/scripts/run-organisaatio-ui.sh" C-m
+
+  tmux select-pane -t 0
+  tmux splitw -h
+  tmux send-keys "$repo/scripts/run-organisaatio-service.sh" C-m
 
   open "http://localhost:3003/organisaatiot"
 
