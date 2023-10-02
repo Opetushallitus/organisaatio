@@ -49,8 +49,8 @@ export function HakutulosTable({ results }: HakutulosTableProps) {
                             <td>{_.kunta}</td>
                             <td>{_.koskiVirheilmoituksenOsoite ?? '-'}</td>
                             <td>{_.ytunnus}</td>
-                            <td>{_.postiosoite}</td>
-                            <td>{_.kayntiosoite}</td>
+                            <td>{_.postiosoite ?? '-'}</td>
+                            <td>{_.kayntiosoite ?? '-'}</td>
                         </tr>
                     ))}
                 </tbody>

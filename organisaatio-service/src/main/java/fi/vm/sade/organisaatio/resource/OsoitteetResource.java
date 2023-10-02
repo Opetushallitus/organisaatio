@@ -53,8 +53,8 @@ public class OsoitteetResource {
                             o.getKotipaikka(),
                             Optional.empty(),
                             o.getYtunnus(),
-                            osoiteToString(o.getPostiosoite()),
-                            osoiteToString(o.getKayntiosoite())
+                            Optional.ofNullable(o.getPostiosoite()).map(this::osoiteToString),
+                            Optional.ofNullable(o.getKayntiosoite()).map(this::osoiteToString)
                     );
                 })
                 .collect(Collectors.toList());
@@ -82,7 +82,7 @@ public class OsoitteetResource {
         final String kunta;
         final Optional<String> koskiVirheilmoituksenOsoite;
         final String ytunnus;
-        final String postiosoite;
-        final String kayntiosoite;
+        final Optional<String> postiosoite;
+        final Optional<String> kayntiosoite;
     }
 }

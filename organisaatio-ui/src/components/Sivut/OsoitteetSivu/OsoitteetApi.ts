@@ -13,8 +13,8 @@ export type Hakutulos = {
     kunta: string;
     koskiVirheilmoituksenOsoite?: string;
     ytunnus: string;
-    postiosoite: string;
-    kayntiosoite: string;
+    postiosoite?: string;
+    kayntiosoite?: string;
 };
 
 export async function haeOsoitteet(): Promise<Hakutulos[]> {
