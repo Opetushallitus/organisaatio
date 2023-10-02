@@ -4,6 +4,8 @@ package fi.vm.sade.organisaatio.resource;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.Osoite;
+import fi.vm.sade.organisaatio.model.Puhelinnumero;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
@@ -36,20 +38,49 @@ public class OsoitteetResource {
         return koulutustoimijat.stream()
                 .map(o -> {
                     String nimi = o.getNimi().getString(kieli);
-                    Optional<Email> emailYhteystieto = o.getYhteystiedot().stream()
-                            .filter(yhteystieto -> kieli.equals(yhteystieto.getKieli()) && yhteystieto instanceof Email)
-                            .map(yhteystieto -> (Email) yhteystieto)
-                            .findFirst();
-                    Optional<String> sahkoposti = emailYhteystieto.map(Email::getEmail);
-                    return new Hakutulos(o.getId(), nimi, sahkoposti);
+                    Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieli)).map(Email::getEmail);
+                    Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieli)).map(Puhelinnumero::getPuhelinnumero);
+                    return new Hakutulos(
+                            o.getId(),
+                            o.getOid(),
+                            nimi,
+                            sahkoposti,
+                            o.getYritysmuoto(),
+                            puhelinnumero,
+                            Optional.empty(),
+                            Optional.empty(),
+                            o.getKotipaikka(),
+                            Optional.empty(),
+                            o.getYtunnus(),
+                            osoiteToString(o.getPostiosoite()),
+                            osoiteToString(o.getKayntiosoite())
+                    );
                 })
                 .collect(Collectors.toList());
     }
 
+    private String osoiteToString(Osoite osoite) {
+        return String.format("%s, %s %s",
+                osoite.getOsoite(),
+                osoite.getPostinumero(),
+                osoite.getPostitoimipaikka()
+        );
+    }
+
     @Data
-    public static class Hakutulos {
-        public final Long organisaatioId;
-        public final String nimi;
-        public final Optional<String> sahkoposti;
+    static class Hakutulos {
+        final Long id;
+        final String oid;
+        final String nimi;
+        final Optional<String> sahkoposti;
+        final String yritysmuoto;
+        final Optional<String> puhelinnumero;
+        final Optional<String> opetuskieli;
+        final Optional<String> oppilaitostunnus;
+        final String kunta;
+        final Optional<String> koskiVirheilmoituksenOsoite;
+        final String ytunnus;
+        final String postiosoite;
+        final String kayntiosoite;
     }
 }

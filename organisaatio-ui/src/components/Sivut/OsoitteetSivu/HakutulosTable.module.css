@@ -1,3 +1,9 @@
+.HakutulosTable {
+    width: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
 .Table {
     border-spacing: 0;
 }
