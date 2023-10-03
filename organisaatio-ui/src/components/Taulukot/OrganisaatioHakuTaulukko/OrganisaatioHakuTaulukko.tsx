@@ -44,7 +44,7 @@ export const containingSomeValueFilter = (
     if (filterValue.length === 0) return rows;
     return rows.filter((row) => {
         const rowValue = row.values[id];
-        return rowValue.some((r) => filterValue.includes(r));
+        return rowValue.some((r: string) => filterValue.includes(r));
     });
 };
 
@@ -133,7 +133,8 @@ export default function OrganisaatioHakuTaulukko() {
                             .join(', ')}
                     </span>
                 ),
-                filter: (rows, id, filterValue) => containingFilter(rows, id, mapOptionsToValues(filterValue)),
+                filter: (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: SelectOptionType[]) =>
+                    containingFilter(rows, id, mapOptionsToValues(filterValue)),
             },
             {
                 Header: i18n.translate('TAULUKKO_TUNNISTE'),

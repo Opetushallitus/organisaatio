@@ -51,7 +51,7 @@ export const sortNimet = (
     futureNimet: UiOrganisaationNimetNimi[];
 } => {
     const nowTime = moment();
-    const alkuPvmInFuture = (n) => {
+    const alkuPvmInFuture = (n: UiOrganisaationNimetNimi) => {
         return moment(n.alkuPvm, 'D.M.YYYY').isAfter(nowTime);
     };
     const [mappedFutureNimet, mappedPastNimet] = nimet

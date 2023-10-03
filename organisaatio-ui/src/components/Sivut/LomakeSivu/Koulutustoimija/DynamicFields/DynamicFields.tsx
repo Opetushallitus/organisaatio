@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DynamicField, Koodistot, Perustiedot } from '../../../../../types/types';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control } from 'react-hook-form/dist/types/form';
+import { Control, UseFormGetValues } from 'react-hook-form/dist/types/form';
 import { Kentta, LabelLink, Rivi } from '../../LomakeFields/LomakeFields';
 import InputController from '../../../../Controllers/InputController';
 import SelectController from '../../../../Controllers/SelectController';
@@ -11,14 +11,14 @@ type DynamicFieldsProps = {
     dynamicFields: DynamicField[];
     validationErrors: FieldErrors<Perustiedot>;
     formControl: Control<Perustiedot>;
-    getPerustiedotValues: () => Perustiedot;
+    getPerustiedotValues: UseFormGetValues<Perustiedot>;
     koodistot: Koodistot;
     readOnly?: boolean;
 };
 
 export const DynamicFieldMethods = () => {
-    const filterDynamicFields = (getPerustiedotValues: () => Perustiedot) => {
-        return (showField) => {
+    const filterDynamicFields = (getPerustiedotValues: UseFormGetValues<Perustiedot>) => {
+        return (showField: DynamicField) => {
             if (showField.when?.length > 0) {
                 return showField.when.reduce((p, c) => {
                     return p || getPerustiedotValues()[c.field]?.value.match(/([^#]*).*/)[1] === c.is;

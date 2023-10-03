@@ -6,7 +6,13 @@ import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGrou
 import Select from '@opetushallitus/virkailija-ui-components/Select';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form/dist/types/form';
+import {
+    Control,
+    UseFormGetValues,
+    UseFormRegister,
+    UseFormSetValue,
+    UseFormWatch,
+} from 'react-hook-form/dist/types/form';
 import { Controller } from 'react-hook-form';
 import {
     KenttaError,
@@ -41,7 +47,7 @@ type UusiOrgPerustiedotProps = {
     setPerustiedotValue: UseFormSetValue<Perustiedot>;
     setYhteystiedotValue: UseFormSetValue<Yhteystiedot>;
     watchPerustiedot: UseFormWatch<Perustiedot>;
-    getPerustiedotValues: () => Perustiedot;
+    getPerustiedotValues: UseFormGetValues<Perustiedot>;
 };
 
 export default function PerustietoLomake({

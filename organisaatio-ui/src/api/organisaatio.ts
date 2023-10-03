@@ -20,6 +20,7 @@ import {
     APIOrganisaatioLiitos,
     ApiOrganisaationNimetNimi,
     APIOrganisaatioSuhde,
+    ApiVakaTiedot,
     ApiYhteystiedot,
     ApiYhteystietoArvo,
     NewApiOrganisaatio,
@@ -439,9 +440,9 @@ function mapApiYhteystiedotToUi(
                     getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postinumeroUri
                 ),
                 kayntiOsoiteToimipaikka: getApiOsoite(yhteystiedot, apiKieli, 'kaynti').postitoimipaikka,
-                puhelinnumero: getApiYhteystieto(yhteystiedot, apiKieli, NAME_PHONE)[NAME_PHONE],
-                email: getApiYhteystieto(yhteystiedot, apiKieli, NAME_EMAIL)[NAME_EMAIL],
-                www: getApiYhteystieto(yhteystiedot, apiKieli, NAME_WWW)[NAME_WWW],
+                puhelinnumero: (getApiYhteystieto(yhteystiedot, apiKieli, NAME_PHONE) as YhteystiedotPhone)[NAME_PHONE],
+                email: (getApiYhteystieto(yhteystiedot, apiKieli, NAME_EMAIL) as YhteystiedotEmail)[NAME_EMAIL],
+                www: (getApiYhteystieto(yhteystiedot, apiKieli, NAME_WWW) as YhteystiedotWww)[NAME_WWW],
             }),
             uiYhteystiedot
         );
@@ -449,6 +450,17 @@ function mapApiYhteystiedotToUi(
     const osoitteetOnEri = kayntiOnEri(yhteysTiedot.fi) || kayntiOnEri(yhteysTiedot.sv);
     return { ...yhteysTiedot, osoitteetOnEri };
 }
+
+type ApiVaka = {
+    vaka?: ApiVakaTiedot;
+    koodistot: {
+        vardatoimintamuotoKoodisto: Koodisto;
+        vardakasvatusopillinenjarjestelmaKoodisto: Koodisto;
+        vardatoiminnallinenpainotusKoodisto: Koodisto;
+        vardajarjestamismuotoKoodisto: Koodisto;
+        kielikoodisto: Koodisto;
+    };
+};
 
 function mapApiVakaToUi({
     vaka: varhaiskasvatuksenToimipaikkaTiedot,
@@ -459,7 +471,7 @@ function mapApiVakaToUi({
         vardajarjestamismuotoKoodisto,
         kielikoodisto,
     },
-}) {
+}: ApiVaka) {
     if (!varhaiskasvatuksenToimipaikkaTiedot) return undefined;
     return {
         toimintamuoto: vardatoimintamuotoKoodisto.uri2SelectOption(varhaiskasvatuksenToimipaikkaTiedot.toimintamuoto),
@@ -488,7 +500,10 @@ function mapApiVakaToUi({
         ),
     };
 }
-const yhteysTietoReducer = (p, c) => {
+const yhteysTietoReducer = (
+    p: { fi?: string; sv?: string; en?: string },
+    c: { 'YhteystietoArvo.kieli': string; 'YhteystietoArvo.arvoText'?: string }
+) => {
     switch (c['YhteystietoArvo.kieli'].substr(0, 8)) {
         case 'kieli_fi':
             return { ...p, fi: c['YhteystietoArvo.arvoText'] };

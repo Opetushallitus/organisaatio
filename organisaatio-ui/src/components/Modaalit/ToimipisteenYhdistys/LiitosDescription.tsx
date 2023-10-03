@@ -9,11 +9,10 @@ import styles from './LiitosDescription.module.css';
 import { organisaatioTyypitKoodistoAtom } from '../../../api/koodisto';
 import { BodyRivi } from '../ModalFields/ModalFields';
 
-const flattenHierarchy = (p: OrganisaatioHakuOrganisaatio[], c: OrganisaatioHakuOrganisaatio) => [
-    ...p,
-    { ...c, subRows: [] },
-    ...c.subRows.reduce(flattenHierarchy, []),
-];
+const flattenHierarchy = (
+    p: OrganisaatioHakuOrganisaatio[],
+    c: OrganisaatioHakuOrganisaatio
+): OrganisaatioHakuOrganisaatio[] => [...p, { ...c, subRows: [] }, ...c.subRows.reduce(flattenHierarchy, [])];
 
 const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
     const [i18n] = useAtom(languageAtom);
@@ -32,21 +31,21 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
             {
                 Header: i18n.translate('LIITOS_TAULUKKO_NIMI'),
                 id: 'nimi',
-                accessor: (row) => {
+                accessor: (row: OrganisaatioHakuOrganisaatio) => {
                     return i18n.translateNimi(row.nimi);
                 },
             },
             {
                 Header: i18n.translate('LIITOS_TAULUKKO_OID'),
                 id: 'oid',
-                accessor: (row) => {
+                accessor: (row: OrganisaatioHakuOrganisaatio) => {
                     return row.oid;
                 },
             },
             {
                 Header: i18n.translate('LIITOS_TAULUKKO_TYYPIT'),
                 id: 'tyypit',
-                accessor: (row) => {
+                accessor: (row: OrganisaatioHakuOrganisaatio) => {
                     return row.organisaatiotyypit.map((a) => organisaatioTyypit.uri2Nimi(a)).join(', ');
                 },
             },
