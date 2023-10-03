@@ -75,20 +75,26 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
             <table {...getTableProps()} className={styles.LiitosDescriptionTable}>
                 <thead>
                     {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
                             {headerGroup.headers.map((column) => (
-                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                <th {...column.getHeaderProps()} key={column.getHeaderProps().key}>
+                                    {column.render('Header')}
+                                </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
+                    {rows.map((row) => {
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()}>
+                            <tr {...row.getRowProps()} key={row.getRowProps().key}>
                                 {row.cells.map((cell) => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                    return (
+                                        <td {...cell.getCellProps()} key={cell.getCellProps().key}>
+                                            {cell.render('Cell')}
+                                        </td>
+                                    );
                                 })}
                             </tr>
                         );

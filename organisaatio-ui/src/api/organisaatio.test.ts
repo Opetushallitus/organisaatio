@@ -28,7 +28,7 @@ const postinumerotKoodisto: Partial<Koodisto> = {
         if (uri === 'postinumeroUri_00530') return '00530';
         return '';
     },
-    arvo2Uri: (uri) => 'postinumeroUri_00530',
+    arvo2Uri: () => 'postinumeroUri_00530',
     uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
@@ -286,17 +286,17 @@ describe('mapApiYhteystiedotToUi', () => {
 
 describe('mapUiOrganisaatioToApiToUpdate', () => {
     const YhteystiedotsortCb = (a, b) =>
-        a.hasOwnProperty('tyyppi')
+        Object.prototype.hasOwnProperty.call(a, 'tyyppi')
             ? -1
-            : b.hasOwnProperty('tyyppi')
+            : Object.prototype.hasOwnProperty.call(b, 'tyyppi')
             ? 1
-            : 0 || a.hasOwnProperty('www')
+            : 0 || Object.prototype.hasOwnProperty.call(a, 'www')
             ? -1
-            : b.hasOwnProperty('www')
+            : Object.prototype.hasOwnProperty.call(b, 'www')
             ? 1
-            : 0 || a.hasOwnProperty('email')
+            : 0 || Object.prototype.hasOwnProperty.call(a, 'email')
             ? -1
-            : b.hasOwnProperty('email')
+            : Object.prototype.hasOwnProperty.call(b, 'email')
             ? 1
             : 0 || a.kieli.localeCompare(b.kieli);
     it('Maps Ui organisaatio to api for update', () => {
@@ -320,17 +320,17 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
 describe('mapUiOrganisaatioToApiToSave', () => {
     it('Maps Ui organisaatio to api for Save in correct format', () => {
         const YhteystiedotsortCb = (a, b) =>
-            a.hasOwnProperty('tyyppi')
+            Object.prototype.hasOwnProperty.call(a, 'tyyppi')
                 ? -1
-                : b.hasOwnProperty('tyyppi')
+                : Object.prototype.hasOwnProperty.call(b, 'tyyppi')
                 ? 1
-                : 0 || a.hasOwnProperty('www')
+                : 0 || Object.prototype.hasOwnProperty.call(a, 'www')
                 ? -1
-                : b.hasOwnProperty('www')
+                : Object.prototype.hasOwnProperty.call(b, 'www')
                 ? 1
-                : 0 || a.hasOwnProperty('email')
+                : 0 || Object.prototype.hasOwnProperty.call(a, 'email')
                 ? -1
-                : b.hasOwnProperty('email')
+                : Object.prototype.hasOwnProperty.call(b, 'email')
                 ? 1
                 : 0 || a.kieli.localeCompare(b.kieli);
         const mappedApiOrganisaatio = mapUiOrganisaatioToApiToSave(

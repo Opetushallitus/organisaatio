@@ -7,7 +7,7 @@ import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import { getRyhmat } from '../../../api/ryhma';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
-import { Column } from 'react-table';
+import { Column, Row } from 'react-table';
 import { Link, useHistory } from 'react-router-dom';
 import Loading from '../../Loading/Loading';
 import { useAtom } from 'jotai';
@@ -26,7 +26,7 @@ const Ryhmat = () => {
                 Header: i18n.translate('RYHMAT_RYHMAN_NIMI'),
                 collapse: true,
                 id: 'Nimi',
-                Cell: ({ row }) => {
+                Cell: ({ row }: { row: Row<Ryhma> }) => {
                     return (
                         <Link to={`/ryhmat/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
                             {i18n.translateNimi(row.original.nimi)}
@@ -40,7 +40,7 @@ const Ryhmat = () => {
             {
                 Header: i18n.translate('RYHMAT_RYHMAN_TYYPPI'),
                 id: 'Tyyppi',
-                Cell: ({ row }) => {
+                Cell: ({ row }: { row: Row<Ryhma> }) => {
                     if (row.original.ryhmatyypit.length > 0) {
                         return row.original.ryhmatyypit
                             .map((tyyppi: string) => ryhmaTyypitKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi)))
@@ -60,7 +60,7 @@ const Ryhmat = () => {
             {
                 Header: i18n.translate('RYHMAT_KAYTTOTARKOITUS'),
                 id: 'Kayttotarkoitus',
-                Cell: ({ row }) => {
+                Cell: ({ row }: { row: Row<Ryhma> }) => {
                     if (row.original.kayttoryhmat.length > 0) {
                         return row.original.kayttoryhmat
                             .map((tyyppi: string) => kayttoRyhmatKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi)))

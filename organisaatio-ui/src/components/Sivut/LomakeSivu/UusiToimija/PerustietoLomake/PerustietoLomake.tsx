@@ -99,7 +99,7 @@ export default function PerustietoLomake({
                                     { value: 'true', label: i18n.translate('PERUSTIETO_ON_YTUNNUS') },
                                     { value: 'false', label: i18n.translate('PERUSTIETO_EI_YTUNNUS') },
                                 ]}
-                                onChange={(e) => setOnYtunnus(!onYunnus)}
+                                onChange={() => setOnYtunnus(!onYunnus)}
                             />
                         </Kentta>
                     </Rivi>

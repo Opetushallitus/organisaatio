@@ -5,6 +5,7 @@ import {
     Column,
     FilterValue,
     HeaderGroup,
+    Row,
     TableInstance,
     useExpanded,
     useFilters,
@@ -40,7 +41,10 @@ export type NormaaliTaulukkoProps = {
 export type FiltteritProps = {
     setFilter: (columnId: string, updater: string | undefined | (string | null | undefined)[]) => void;
     setGlobalFilter: (filterValue: FilterValue) => void;
-    globalFilter: string;
+    globalFilter:
+        | string
+        | ((rows: Row<Ryhma>[], columnIds: string[], filterValue: unknown) => Row<Ryhma>[])
+        | undefined;
 };
 
 export const chooseTaulukkoData = (ryhmatData, ryhmatColumns) => {
@@ -208,7 +212,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
             <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
                 <thead>
                     {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
+                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
                             {headerGroup.headers.map((column) => (
                                 <th
                                     {...column.getHeaderProps({
@@ -216,6 +220,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                                             ? styles.collapse
                                             : '',
                                     })}
+                                    key={column.getHeaderProps().key}
                                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                                 >
                                     {column.render('Header')}
@@ -228,7 +233,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                     {page.map((row, index) => {
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()}>
+                            <tr {...row.getRowProps()} key={row.getRowProps().key}>
                                 {row.cells.map((cell) => {
                                     return (
                                         <td
@@ -238,6 +243,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                                                     ? styles.collapse
                                                     : '',
                                             })}
+                                            key={cell.getCellProps().key}
                                             style={{
                                                 background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
                                             }}

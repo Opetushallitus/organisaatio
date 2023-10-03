@@ -8,7 +8,6 @@ const LoadingBubbles = () => {
             height={'3rem'}
             color={'#159ecb'}
             name={'Loading-bubbles'}
-            alt={'loading...'}
         />
     );
 };

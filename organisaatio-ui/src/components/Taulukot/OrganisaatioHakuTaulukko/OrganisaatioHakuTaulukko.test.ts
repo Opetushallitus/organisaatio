@@ -31,7 +31,7 @@ describe('OrganisaatioHakuTaulukko', () => {
                 expandData([
                     {
                         subRows: [
-                            ...Array.from(Array(11).keys()).map((a) => {
+                            ...Array.from(Array(11).keys()).map(() => {
                                 return { subRows: [] as OrganisaatioHakuOrganisaatio[] };
                             }),
                         ] as OrganisaatioHakuOrganisaatio[],
@@ -44,7 +44,7 @@ describe('OrganisaatioHakuTaulukko', () => {
                 expandData([
                     {
                         subRows: [
-                            ...Array.from(Array(11).keys()).map((a) => {
+                            ...Array.from(Array(11).keys()).map(() => {
                                 return { subRows: [] as OrganisaatioHakuOrganisaatio[] };
                             }),
                         ] as OrganisaatioHakuOrganisaatio[],

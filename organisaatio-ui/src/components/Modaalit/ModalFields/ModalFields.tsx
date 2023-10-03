@@ -3,8 +3,8 @@ import styles from './ModalFields.module.css';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
 
-const BodyKehys = (props) => <div className={styles.BodyKehys}>{props.children}</div>;
-const BodyRivi = (props) => <div className={styles.BodyRivi}>{props.children}</div>;
+const BodyKehys = (props: { children: React.ReactNode }) => <div className={styles.BodyKehys}>{props.children}</div>;
+const BodyRivi = (props: { children: React.ReactNode }) => <div className={styles.BodyRivi}>{props.children}</div>;
 const BodyKentta = ({
     label,
     children,

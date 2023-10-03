@@ -468,7 +468,6 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                 <VakaToimipaikka
                     control={perustiedotControl}
                     key={'VakaToimipaikka'}
-                    getPerustiedotValues={getPerustiedotValues}
                     vaka={varhaiskasvatuksenToimipaikkaTiedot}
                 />
             );

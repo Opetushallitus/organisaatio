@@ -8,7 +8,7 @@ import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
 
-const TaulukkoSivu = (props) => {
+const TaulukkoSivu = (props: { history: string[] }) => {
     const handleLisaaUusiToimija = () => {
         return props.history.push(`/lomake/uusi?parentOid=${ROOT_OID}`);
     };

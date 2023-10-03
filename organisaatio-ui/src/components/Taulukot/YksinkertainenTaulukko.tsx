@@ -18,10 +18,11 @@ export default function YksinkertainenTaulukko({
         <table {...getTableProps()} style={{ borderSpacing: 0, paddingTop: 20 }}>
             <thead>
                 {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
+                    <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
                         {headerGroup.headers.map((column) => (
                             <th
                                 {...column.getHeaderProps()}
+                                key={column.getHeaderProps().key}
                                 style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                             >
                                 {column.render('Header')}
@@ -34,11 +35,12 @@ export default function YksinkertainenTaulukko({
                 {rows.map((row, index) => {
                     prepareRow(row);
                     return (
-                        <tr {...row.getRowProps()} style={{ height: '3.125rem' }}>
+                        <tr {...row.getRowProps()} key={row.getRowProps().key} style={{ height: '3.125rem' }}>
                             {row.cells.map((cell) => {
                                 return (
                                     <td
                                         {...cell.getCellProps()}
+                                        key={cell.getCellProps().key}
                                         style={{
                                             background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
                                         }}

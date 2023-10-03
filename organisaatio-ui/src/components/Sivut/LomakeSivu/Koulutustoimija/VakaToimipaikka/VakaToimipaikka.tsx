@@ -4,8 +4,7 @@ import { Perustiedot, VakaToimipaikkaTiedot } from '../../../../../types/types';
 import moment from 'moment';
 import { Control, Controller } from 'react-hook-form';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
-import { UseFormGetValues } from 'react-hook-form/dist/types/form';
-const ShowPair = ({ label, value, first }) => {
+const ShowPair = ({ label, value, first }: { label: string; value: string; first: boolean }) => {
     return (
         <>
             {first ? <AvainKevyestiBoldattu label={label} /> : <div></div>}
@@ -41,11 +40,9 @@ const jarjestamisMuoto = ({ data, label }) => {
 export default function VakaToimipaikka({
     vaka,
     control,
-    getPerustiedotValues,
 }: {
     vaka: VakaToimipaikkaTiedot;
     control: Control<Perustiedot>;
-    getPerustiedotValues: UseFormGetValues<Perustiedot>;
 }) {
     return (
         <UloinKehys>

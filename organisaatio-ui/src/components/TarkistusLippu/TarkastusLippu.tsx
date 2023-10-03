@@ -63,7 +63,6 @@ const TarkastusLippu: React.FC<TarkastusLippuProps> = ({
                 height={'1.2rem'}
                 color={iconColor}
                 name={'TARKISTUS_LIPPU'}
-                alt={message}
             />
         </div>
     );

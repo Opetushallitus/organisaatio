@@ -64,7 +64,7 @@ export const includeVakaToimijatFilter = (
         );
     });
 
-const ExpandIcon = ({ isExpanded }) => {
+const ExpandIcon = ({ isExpanded }: { isExpanded: boolean }) => {
     if (isExpanded) return <IconWrapper icon={chevronDown} />;
     return <IconWrapper icon={chevronRight} />;
 };
@@ -88,7 +88,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 id: 'expander',
                 collapse: true,
-                Cell: ({ row }) =>
+                Cell: ({ row }: { row: Row<OrganisaatioHakuOrganisaatio> }) =>
                     row.canExpand ? (
                         <span
                             className={styles.Expander}
@@ -105,7 +105,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: i18n.translate('TAULUKKO_NIMI'),
                 id: 'lyhytNimi',
-                Cell: ({ row }) => {
+                Cell: ({ row }: { row: Row<OrganisaatioHakuOrganisaatio> }) => {
                     return (
                         <OrganisaatioLink
                             oid={row.original.oid}
@@ -126,7 +126,7 @@ export default function OrganisaatioHakuTaulukko() {
                 Header: i18n.translate('TAULUKKO_TYYPPI'),
                 id: 'organisaatiotyypit',
                 accessor: (values) => values.allOrganisaatioTyypit,
-                Cell: ({ row }) => (
+                Cell: ({ row }: { row: Row<OrganisaatioHakuOrganisaatio> }) => (
                     <span>
                         {row.original.organisaatiotyypit
                             .map((ot) => organisaatioTyypitKoodisto.uri2Nimi(ot))
@@ -148,7 +148,7 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 Header: i18n.translate('TAULUKKO_TARKASTUS'),
                 id: 'tarkistus',
-                Cell: ({ row }) => {
+                Cell: ({ row }: { row: Row<OrganisaatioHakuOrganisaatio> }) => {
                     return (
                         <TarkastusLippu
                             tarkastusPvm={row.original.tarkastusPvm}
@@ -285,7 +285,7 @@ export default function OrganisaatioHakuTaulukko() {
                 <table {...getTableProps()} className={styles.Taulukko}>
                     <thead>
                         {headerGroups.map((headerGroup: HeaderGroup<OrganisaatioHakuOrganisaatio>) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
+                            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
                                 {headerGroup.headers.map((column) => (
                                     <th
                                         {...column.getHeaderProps({
@@ -295,6 +295,7 @@ export default function OrganisaatioHakuTaulukko() {
                                                 ? styles.collapse
                                                 : '',
                                         })}
+                                        key={column.getHeaderProps().key}
                                         style={{
                                             textAlign: 'left',
                                             borderBottom: '1px solid rgba(151,151,151,0.5)',
@@ -310,7 +311,7 @@ export default function OrganisaatioHakuTaulukko() {
                         {page.map((row, index) => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
+                                <tr {...row.getRowProps()} key={row.getRowProps().key}>
                                     {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
                                         return (
                                             <td
@@ -321,6 +322,7 @@ export default function OrganisaatioHakuTaulukko() {
                                                         ? styles.collapse
                                                         : '',
                                                 })}
+                                                key={cell.getCellProps().key}
                                                 style={{
                                                     background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
                                                 }}

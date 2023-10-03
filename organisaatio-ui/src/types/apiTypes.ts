@@ -142,6 +142,9 @@ export type OrganisaatioHakuOrganisaatio = {
     allOrganisaatioTyypit: string[];
     allOppilaitosTyypit: string[];
     allOids: string[];
+    lakkautusPvm?: number | LocalDate;
+    tarkastusPvm?: number;
+    canExpand?: boolean;
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath' | 'maskingActive'>;
