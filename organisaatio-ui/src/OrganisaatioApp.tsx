@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
@@ -42,7 +42,7 @@ const OrganisaatioApp: React.FC = () => {
                             <Route
                                 exact
                                 path={'/ryhmat/uusi'}
-                                component={(props) => <RyhmanMuokkaus {...props} isNew />}
+                                component={(props: RouteComponentProps) => <RyhmanMuokkaus {...props} isNew />}
                             />
                             <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
                             <Route path={'*'}>

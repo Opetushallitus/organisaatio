@@ -27,7 +27,7 @@ const getKoodisto = async (koodisto: string, onlyValid?: boolean): Promise<Koodi
 type Param = {
     koodi: string;
     onlyValid?: boolean;
-    disableOption?: (Koodi) => boolean;
+    disableOption?: (koodi: Koodi) => boolean;
 };
 const koodistoAtom = atomFamily(
     ({ koodi, onlyValid = false, disableOption }: Param): Atom<Promise<Koodisto>> =>

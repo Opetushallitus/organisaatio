@@ -27,7 +27,7 @@ import { useAtom } from 'jotai';
 import { languageAtom } from '../../api/lokalisaatio';
 import { kayttoRyhmatKoodistoAtom, ryhmanTilaKoodistoAtom, ryhmaTyypitKoodistoAtom } from '../../api/koodisto';
 
-const mapPaginationSelectors = (index) => {
+const mapPaginationSelectors = (index: number) => {
     if (index < 3) return [0, 5];
     return [index - 2, index + 3];
 };
@@ -47,7 +47,7 @@ export type FiltteritProps = {
         | undefined;
 };
 
-export const chooseTaulukkoData = (ryhmatData, ryhmatColumns) => {
+export const chooseTaulukkoData = (ryhmatData: Ryhma[], ryhmatColumns: Column<Ryhma>[]) => {
     if (ryhmatData && ryhmatData.length > 0) {
         return { data: ryhmatData, columns: ryhmatColumns };
     }
@@ -76,7 +76,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                     <div className={styles.FiltteriInputOsa}>
                         <Input
                             placeholder={i18n.translate('RYHMAT_HAKU_PLACEHOLDER')}
-                            onChange={(e) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
                             }}
                             value={globalFilter}

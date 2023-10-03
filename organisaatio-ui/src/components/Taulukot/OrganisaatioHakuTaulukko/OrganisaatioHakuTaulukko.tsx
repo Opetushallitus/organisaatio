@@ -20,7 +20,7 @@ import { OrganisaatioLink } from '../../OrganisaatioComponents';
 
 const MAX_EXPAND_ROWS = 10;
 
-const mapPaginationSelectors = (index) => {
+const mapPaginationSelectors = (index: number) => {
     if (index < 3) return [0, 5];
     return [index - 2, index + 3];
 };

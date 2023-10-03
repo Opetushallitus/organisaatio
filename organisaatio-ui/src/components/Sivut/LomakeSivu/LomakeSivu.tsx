@@ -270,14 +270,20 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
         };
     };
 
-    async function findAndResetOrganisaatio(oid) {
+    async function findAndResetOrganisaatio(oid: string) {
         const organisaatio = await readOrganisaatio(oid);
         if (organisaatio) {
             await resetOrganisaatio({ ...organisaatio });
         }
     }
 
-    async function resetOrganisaatio({ organisaatio, polku }) {
+    async function resetOrganisaatio({
+        organisaatio,
+        polku,
+    }: {
+        organisaatio: ApiOrganisaatio;
+        polku: OrganisaatioNimiJaOid[];
+    }) {
         const { Uiyhteystiedot, UibaseTiedot, Uiperustiedot, UIYhteysTietoArvot } = mapOrganisaatioToUi(organisaatio);
         setOrganisaatioNimiPolku(polku);
         setOrganisaatioBase(UibaseTiedot);

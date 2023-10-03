@@ -154,7 +154,7 @@ const newApiOrganisaatio: NewApiOrganisaatio = {
     vuosiluokat: [],
 };
 
-const kayntiosoite = {
+const kayntiosoite: ApiYhteystiedot = {
     kieli,
     osoiteTyyppi: 'kaynti',
     osoite: 'testiosoite',
@@ -285,7 +285,7 @@ describe('mapApiYhteystiedotToUi', () => {
 });
 
 describe('mapUiOrganisaatioToApiToUpdate', () => {
-    const YhteystiedotsortCb = (a, b) =>
+    const YhteystiedotsortCb = (a: ApiYhteystiedot, b: ApiYhteystiedot) =>
         Object.prototype.hasOwnProperty.call(a, 'tyyppi')
             ? -1
             : Object.prototype.hasOwnProperty.call(b, 'tyyppi')
@@ -319,7 +319,7 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
 
 describe('mapUiOrganisaatioToApiToSave', () => {
     it('Maps Ui organisaatio to api for Save in correct format', () => {
-        const YhteystiedotsortCb = (a, b) =>
+        const YhteystiedotsortCb = (a: ApiYhteystiedot, b: ApiYhteystiedot) =>
             Object.prototype.hasOwnProperty.call(a, 'tyyppi')
                 ? -1
                 : Object.prototype.hasOwnProperty.call(b, 'tyyppi')

@@ -12,7 +12,7 @@ export class KoodistoImpl implements Koodisto {
     }: {
         koodisto: Koodi[];
         kieli: Language;
-        disableOption?: (Koodi) => boolean;
+        disableOption?: (koodi: Koodi) => boolean;
     }) {
         this.koodisto = koodisto;
         this.kieli = kieli;

@@ -84,7 +84,7 @@ export const sortNimet = (
     return { currentNimi, pastNimet: mappedPastNimet, futureNimet: mappedFutureNimet };
 };
 
-const makeDate = (date, format) => {
+const makeDate = (date: Date | string | undefined, format: string[] | string | undefined) => {
     if (date) {
         return moment(date, format);
     }
@@ -102,7 +102,7 @@ export const getUiDateStr = (
         : '';
 };
 
-export const formatUiDateStrToApi = (date?): APIEndpontDate => {
+export const formatUiDateStrToApi = (date?: Date | string): APIEndpontDate => {
     const dateWithoutFormat = makeDate(date, 'DD.MM.YYYY');
     return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-MM-DD') as APIEndpontDate) : '';
 };

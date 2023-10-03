@@ -2,6 +2,7 @@ import {
     Koodisto,
     KoodistoSelectOption,
     KoodiUri,
+    Nimi,
     OrganisaatioChildType,
     Rakenne,
     ResolvedRakenne,
@@ -62,7 +63,7 @@ export const resolveOrganisaatioTyypit = (
         .sort((a, b) => a.label.localeCompare(b.label));
 };
 
-export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language: string) => {
+export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language: keyof Nimi) => {
     if (o)
         return {
             value: `${o.oid}`,
@@ -70,10 +71,10 @@ export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language
         };
     else return { value: '', label: '' };
 };
-export const organisaatioSelectMapper = (organisaatiot: ApiOrganisaatio[], language: string) =>
+export const organisaatioSelectMapper = (organisaatiot: ApiOrganisaatio[], language: keyof Nimi) =>
     organisaatiot.map((o: ApiOrganisaatio) => mapOrganisaatioToSelect(o, language));
 
-export const resolveParentOidByQuery = (searchStr): string => {
+export const resolveParentOidByQuery = (searchStr: string): string => {
     const { parentOid } = queryString.parse(searchStr);
     return (parentOid as string) || ROOT_OID;
 };

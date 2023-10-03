@@ -20,14 +20,14 @@ axios.interceptors.request.use((config) => {
 });
 
 export class ErrorBoundary extends React.Component<unknown, { hasError: boolean }> {
-    constructor(props) {
+    constructor(props: unknown) {
         super(props);
         this.state = { hasError: false };
     }
     static getDerivedStateFromError() {
         return { hasError: true };
     }
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error: unknown, errorInfo: unknown) {
         console.error(error, errorInfo);
     }
     render() {

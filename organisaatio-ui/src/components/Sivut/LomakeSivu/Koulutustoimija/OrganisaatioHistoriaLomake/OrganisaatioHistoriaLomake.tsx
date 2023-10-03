@@ -11,6 +11,7 @@ import { Column } from 'react-table';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
 import { OrganisaatioLink } from '../../../../OrganisaatioComponents';
+import { I18nImpl } from '../../../../../contexts/LanguageContext';
 
 const liittyneetColumns = [
     ['RAKENNE_LIITOSPVM', 'alkuPvm'],
@@ -45,7 +46,7 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
 };
 
 export const mapColumnsToTableFormat = (
-    i18n,
+    i18n: I18nImpl,
     orginalColumns: string[][] = []
 ): Column<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[] => {
     const columnMapper = (column: string[]) => ({

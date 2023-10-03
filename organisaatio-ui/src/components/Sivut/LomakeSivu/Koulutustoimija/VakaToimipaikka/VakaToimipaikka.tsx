@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AvainKevyestiBoldattu, ReadOnly, Rivi, Ruudukko, UloinKehys } from '../../LomakeFields/LomakeFields';
-import { Perustiedot, VakaToimipaikkaTiedot } from '../../../../../types/types';
+import { KoodistoSelectOption, Perustiedot, VakaPainotus, VakaToimipaikkaTiedot } from '../../../../../types/types';
 import moment from 'moment';
 import { Control, Controller } from 'react-hook-form';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
@@ -12,7 +12,7 @@ const ShowPair = ({ label, value, first }: { label: string; value: string; first
         </>
     );
 };
-const painotus = ({ data, label }) => {
+const painotus = ({ data, label }: { data: VakaPainotus[]; label: string }) => {
     return data
         .sort((a, b) => {
             return a.alkupvm > b.alkupvm ? 1 : -1;
@@ -30,7 +30,7 @@ const painotus = ({ data, label }) => {
             );
         });
 };
-const jarjestamisMuoto = ({ data, label }) => {
+const jarjestamisMuoto = ({ data, label }: { data: KoodistoSelectOption[]; label: string }) => {
     return data
         .sort((a, b) => (a.label > b.label ? 1 : -1))
         .map((a, index) => {

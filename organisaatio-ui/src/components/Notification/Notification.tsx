@@ -1,11 +1,11 @@
 import React from 'react';
-import ReactNotification, { store } from 'react-notifications-component';
+import ReactNotification, { ReactNotificationOptions, store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../api/lokalisaatio';
 
 const DEFAULT_TIMEOUT = 5000;
-const MESSAGE_DEFAULTS = {
+const MESSAGE_DEFAULTS: ReactNotificationOptions = {
     insert: 'top',
     container: 'top-right',
     animationIn: ['animate__animated', 'animate__fadeIn'],

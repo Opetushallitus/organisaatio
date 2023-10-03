@@ -197,17 +197,17 @@ const KenttaLyhyt = ({
         </div>
     );
 };
-
-const LomakeButton = (props) => {
-    return <LomakeIconButton icon={undefined} {...props} />;
-};
-type LomakeIconButtonProps = {
+type LomakeButtonProps = {
     onClick: () => void;
     label: string;
-    icon: () => ReactNode;
     disabled?: boolean;
     name?: string;
+    icon?: () => ReactNode;
 };
+const LomakeButton = (props: LomakeButtonProps) => {
+    return <LomakeIconButton {...props} />;
+};
+type LomakeIconButtonProps = LomakeButtonProps;
 const LomakeIconButton = ({ onClick, label, icon, disabled, name }: LomakeIconButtonProps) => {
     const [i18n] = useAtom(languageAtom);
     return (

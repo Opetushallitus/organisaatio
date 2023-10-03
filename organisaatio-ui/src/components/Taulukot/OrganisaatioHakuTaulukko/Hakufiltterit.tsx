@@ -45,7 +45,7 @@ export const enrichWithAllNestedData = (
     parentOpilaitosTypes: string[] = [],
     parentOids: string[] = []
 ): OrganisaatioHakuOrganisaatio[] => {
-    const tableDataEnricher = (organisaatioData): [string[], string[], string[]] =>
+    const tableDataEnricher = (organisaatioData: OrganisaatioHakuOrganisaatio[]): [string[], string[], string[]] =>
         organisaatioData
             .reduce(
                 (prev: [string[], string[], string[]], c: OrganisaatioHakuOrganisaatio) => {
@@ -64,11 +64,11 @@ export const enrichWithAllNestedData = (
                         ],
                         [...prevOppilaitosTyypit, ...subOppilaitosTyypit, ...oppilaitostyyppi, ...parentOpilaitosTypes],
                         [...prevOids, ...subOids, c.oid, ...c.parentOidPath.split('/'), ...parentOids],
-                    ];
+                    ] as [string[], string[], string[]];
                 },
                 [[], [], []]
             )
-            .map((arr) => [...new Set(arr)]);
+            .map((arr) => [...new Set(arr)]) as [string[], string[], string[]];
     return data.map((organisaatio) => {
         const [allOrganisaatioTyypit, allOppilaitosTyypit, allOids] = tableDataEnricher([organisaatio]);
         return {
@@ -171,10 +171,10 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
         });
     };
 
-    const handleLocalCheckBoxChange = ({ target: { name, checked } }) =>
+    const handleLocalCheckBoxChange = ({ target: { name, checked } }: React.ChangeEvent<HTMLInputElement>) =>
         setLocalFilters({ ...localFilters, [name]: checked });
 
-    const handleRemoteCheckBoxChange = ({ target: { name, checked } }) =>
+    const handleRemoteCheckBoxChange = ({ target: { name, checked } }: React.ChangeEvent<HTMLInputElement>) =>
         setRemoteFilters({ ...remoteFilters, [name]: checked });
 
     return (
@@ -186,7 +186,9 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
                             className={styles.SearchInput}
                             placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
                             value={remoteFilters.searchString || ''}
-                            onChange={(e) => setRemoteFilters({ ...remoteFilters, searchString: e.target.value })}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                setRemoteFilters({ ...remoteFilters, searchString: e.target.value })
+                            }
                             suffix={
                                 <Button
                                     variant={'text'}

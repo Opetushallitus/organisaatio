@@ -300,7 +300,11 @@ function mapUiOrganisaatioToApiToSave(
     };
 }
 
-function mapArvot(yhteystietoArvoFormValuet: YhteystietoArvot, field: keyof YhteystietoArvot, base) {
+function mapArvot(
+    yhteystietoArvoFormValuet: YhteystietoArvot,
+    field: keyof YhteystietoArvot,
+    base: typeof KOSKIPOSTI_BASE
+) {
     const arvot = [] as ApiYhteystietoArvo[];
     if (yhteystietoArvoFormValuet[field]?.fi) {
         arvot.push({
@@ -419,7 +423,7 @@ function kayntiOnEri(yhteysTieto: YhteystiedotBase): boolean {
 function mapApiYhteystiedotToUi(
     postinumerotKoodisto: Koodisto,
     yhteystiedot: ApiYhteystiedot[] = [],
-    kielet = ['fi', 'sv', 'en']
+    kielet = ['fi', 'sv', 'en'] as const
 ): Yhteystiedot {
     const yhteysTiedot = kielet.reduce((uiYhteystiedot, kieli) => {
         const apiKieli = `kieli_${kieli}#1`;
@@ -515,8 +519,8 @@ function mapUiYhteystiedotToApi({
     apiYhteystiedot?: ApiYhteystiedot[];
     uiYhteystiedot: Yhteystiedot;
 }): ApiYhteystiedot[] {
-    const { osoitteetOnEri, ...rest } = uiYhteystiedot;
-    return Object.keys(rest)
+    const { osoitteetOnEri } = uiYhteystiedot;
+    return (['fi', 'sv', 'en'] as const)
         .map((kieli) => {
             const apikieli = `kieli_${kieli}#1`;
             const postiosoite = getApiOsoite(apiYhteystiedot, apikieli, 'posti');
@@ -552,12 +556,14 @@ function mapUiYhteystiedotToApi({
                 puhelinnumero.tyyppi = 'puhelin';
                 puhelinnumero[NAME_PHONE] = uiYhteystiedot[kieli].puhelinnumero;
             }
-            const email = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_EMAIL);
+            const email = getApiYhteystieto(apiYhteystiedot, apikieli, NAME_EMAIL) as YhteystiedotEmail;
             if (uiYhteystiedot[kieli].email) {
                 email[NAME_EMAIL] = uiYhteystiedot[kieli].email;
             }
             const www =
-                uiYhteystiedot[kieli].www === '' ? undefined : getApiYhteystieto(apiYhteystiedot, apikieli, NAME_WWW);
+                uiYhteystiedot[kieli].www === ''
+                    ? undefined
+                    : (getApiYhteystieto(apiYhteystiedot, apikieli, NAME_WWW) as YhteystiedotWww);
             if (www && uiYhteystiedot[kieli].www) {
                 www[NAME_WWW] = uiYhteystiedot[kieli].www;
             }

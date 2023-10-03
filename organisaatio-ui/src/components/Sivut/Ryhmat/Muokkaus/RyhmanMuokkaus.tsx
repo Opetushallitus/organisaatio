@@ -35,7 +35,7 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
     const onUusi = isNew || history.location.pathname.includes('uusi');
 
     useEffect(() => {
-        async function fetch(oid) {
+        async function fetch(oid: string) {
             const ryhma = await getRyhma(oid);
             setRyhma(ryhma as Ryhma);
         }
@@ -69,8 +69,8 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
                     'kieli_sv#1': kuvaus2Sv,
                     'kieli_en#1': kuvaus2En,
                 },
-                ryhmatyypit: ryhmatyypit.map((a) => `${a.value}#${a.versio}`),
-                kayttoryhmat: kayttoryhmat.map((a) => `${a.value}#${a.versio}`),
+                ryhmatyypit: ryhmatyypit.map((a: { value: string; versio: number }) => `${a.value}#${a.versio}`),
+                kayttoryhmat: kayttoryhmat.map((a: { value: string; versio: number }) => `${a.value}#${a.versio}`),
             };
             onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
             history.push('/ryhmat');

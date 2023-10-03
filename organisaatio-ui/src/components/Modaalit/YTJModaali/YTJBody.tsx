@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 import { isYTunnus } from '../../../tools/ytj';
-import { getByYTunnus, isYtjData, searchByName, YtjHaku } from '../../../api/ytj';
+import { getByYTunnus, isYtjData, searchByName, YtjData, YtjHaku } from '../../../api/ytj';
 import { warning } from '../../Notification/Notification';
 import { Nimi, Perustiedot, Yhteystiedot } from '../../../types/types';
 import { UseFormSetValue } from 'react-hook-form/dist/types/form';
@@ -22,7 +22,13 @@ type Props = {
     setters: { setPerustiedotValue: UseFormSetValue<Perustiedot>; setYhteystiedotValue: UseFormSetValue<Yhteystiedot> };
 };
 
-const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }) => {
+type KorvaaOrganisaatioProps = {
+    ytjData: YtjData;
+    setters: { setPerustiedotValue: UseFormSetValue<Perustiedot>; setYhteystiedotValue: UseFormSetValue<Yhteystiedot> };
+    suljeModaali: (nimi: Nimi) => void;
+};
+
+const korvaaOrganisaatio = ({ ytjData, setters, suljeModaali }: KorvaaOrganisaatioProps) => {
     if (ytjData.kunta) setters.setPerustiedotValue('kotipaikka', ytjData.kunta);
     else warning({ message: 'YTJ_DATA_KOTIPAIKKA_NOT_FOUND_IN_KOODISTO' });
     if (ytjData.kieli) setters.setPerustiedotValue('kielet', [ytjData.kieli]);
@@ -75,9 +81,9 @@ export default function YTJBody({ ytunnus, suljeModaali, setters }: Props) {
                     <Input
                         ref={inputRef}
                         name={'ytjinput'}
-                        onChange={(e) => setInput(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
                         value={input}
-                        onKeyDown={(e) => {
+                        onKeyDown={(e: KeyboardEvent) => {
                             if (e.key === 'Enter') {
                                 haeYtjTiedot();
                             }

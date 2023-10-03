@@ -70,12 +70,7 @@ export type YhteystiedotBase = {
     www: string;
 };
 
-export type Yhteystiedot = {
-    fi: YhteystiedotBase;
-    sv: YhteystiedotBase;
-    en: YhteystiedotBase;
-    osoitteetOnEri?: boolean;
-};
+export type Yhteystiedot = { [lang in Language]: YhteystiedotBase } & { osoitteetOnEri?: boolean };
 export type YhteystietoArvot = {
     koskiposti?: { fi?: string; sv?: string; en?: string };
 };
@@ -275,7 +270,7 @@ export type I18n = {
 };
 
 export type Koodisto = {
-    uri2Arvo: (uri: KoodiUri) => string | number;
+    uri2Arvo: (uri: KoodiUri) => string;
     arvo2Uri: (arvo: KoodiArvo) => string;
     uri2Nimi: (uri: KoodiUri) => string;
     koodit: () => Koodi[];

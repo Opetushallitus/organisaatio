@@ -26,6 +26,18 @@ export const organisationAllowedInRoles = (
     return isAllowed;
 };
 
+type AllowedButton = { button: ConfigurableButton; fromLevel: number };
+type AllowedLomake = { lomake: ConfigurableLomake; fromLevel: number };
+type CasMeProps = {
+    firstName: string;
+    groups: string[];
+    lang: Language;
+    lastName: string;
+    oid: string;
+    roles: string[];
+    uid: string;
+};
+
 export class CASMeImpl implements CASMe {
     firstName: string;
     groups: string[];
@@ -34,9 +46,9 @@ export class CASMeImpl implements CASMe {
     oid: string;
     roles: string[];
     uid: string;
-    allowedButtons: { button: ConfigurableButton; fromLevel: number }[];
-    allowedLomakes: { lomake: ConfigurableLomake; fromLevel: number }[];
-    constructor(casMe) {
+    allowedButtons: AllowedButton[];
+    allowedLomakes: AllowedLomake[];
+    constructor(casMe: CasMeProps) {
         this.firstName = casMe.firstName;
         this.groups = casMe.groups;
         this.lang = casMe.lang;
@@ -45,19 +57,19 @@ export class CASMeImpl implements CASMe {
         this.roles = casMe.roles;
         this.uid = casMe.uid;
         this.allowedButtons = casMe.roles.reduce(
-            (p, c) => [
+            (p: AllowedButton[], c: string) => [
                 ...p,
-                ...getRoleItems<{ button: ConfigurableButton; fromLevel: number }>(c, ORGANISAATIO_CRUD, [
+                ...getRoleItems<AllowedButton>(c, ORGANISAATIO_CRUD, [
                     { button: 'LOMAKE_LISAA_UUSI_TOIMIJA', fromLevel: 1 },
                     { button: 'BUTTON_TALLENNA', fromLevel: 0 },
                 ]),
             ],
-            [] as ConfigurableButton[]
+            []
         );
         this.allowedLomakes = casMe.roles.reduce(
-            (p, c) => [
+            (p: AllowedLomake[], c: string) => [
                 ...p,
-                ...getRoleItems<{ lomake: ConfigurableLomake; fromLevel: number }>(c, ORGANISAATIO_CRUD, [
+                ...getRoleItems<AllowedLomake>(c, ORGANISAATIO_CRUD, [
                     { lomake: 'LOMAKE_KOSKI_POSTI', fromLevel: 1 },
                     { lomake: 'LOMAKE_YHTEYSTIEDOT', fromLevel: 1 },
                     { lomake: 'LOMAKE_KRIISI_VIESTINTA', fromLevel: 0 },
