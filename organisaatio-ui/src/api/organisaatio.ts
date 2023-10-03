@@ -523,8 +523,15 @@ function mapUiYhteystiedotToApi({
             postiosoite.osoite = uiYhteystiedot[kieli].postiOsoite;
             postiosoite.postinumeroUri = postinumerotKoodisto.arvo2Uri(uiYhteystiedot[kieli].postiOsoitePostiNro);
             postiosoite.postitoimipaikka = uiYhteystiedot[kieli].postiOsoiteToimipaikka;
-            const kayntiosoite = getApiOsoite(apiYhteystiedot, apikieli, 'kaynti');
+            const kayntiosoite =
+                osoitteetOnEri &&
+                uiYhteystiedot[kieli].kayntiOsoite === '' &&
+                uiYhteystiedot[kieli].kayntiOsoiteToimipaikka === '' &&
+                uiYhteystiedot[kieli].kayntiOsoitePostiNro === ''
+                    ? undefined
+                    : getApiOsoite(apiYhteystiedot, apikieli, 'kaynti');
             if (
+                kayntiosoite &&
                 osoitteetOnEri === true &&
                 !!uiYhteystiedot[kieli].kayntiOsoite &&
                 !!uiYhteystiedot[kieli].kayntiOsoitePostiNro
@@ -532,7 +539,7 @@ function mapUiYhteystiedotToApi({
                 kayntiosoite.osoite = uiYhteystiedot[kieli].kayntiOsoite;
                 kayntiosoite.postinumeroUri = postinumerotKoodisto.arvo2Uri(uiYhteystiedot[kieli].kayntiOsoitePostiNro);
                 kayntiosoite.postitoimipaikka = uiYhteystiedot[kieli].kayntiOsoiteToimipaikka;
-            } else if (osoitteetOnEri === false) {
+            } else if (kayntiosoite && osoitteetOnEri === false) {
                 kayntiosoite.osoite = postiosoite.osoite;
                 kayntiosoite.postinumeroUri = postiosoite.postinumeroUri;
                 kayntiosoite.postitoimipaikka = postiosoite.postitoimipaikka;
