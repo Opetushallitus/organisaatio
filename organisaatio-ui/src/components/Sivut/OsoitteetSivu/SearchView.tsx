@@ -43,7 +43,10 @@ export function SearchView({ onResult }: SearchViewProps) {
                     <h2>Rajaa hakua</h2>
                 </div>
                 <div className={styles.Rajaukset}>
-                    <RajausAccordion>
+                    <RajausAccordion
+                        header="Oppilaitostyyppi"
+                        selectionDescription={haeAmk ? 'Ammattikorkeakoulu' : ''}
+                    >
                         <Checkbox checked={haeAmk} onClick={() => setHaeAmk(!haeAmk)}>
                             Ammattikorkeakoulu
                         </Checkbox>
@@ -57,6 +60,7 @@ export function SearchView({ onResult }: SearchViewProps) {
         </div>
     );
 }
+
 type KohderyhmaProps = {
     title: string;
     description: string;
@@ -82,7 +86,12 @@ function Kohderyhma({ title, description, selected, disabled }: KohderyhmaProps)
     );
 }
 
-function RajausAccordion({ children }: { children?: React.ReactNode }) {
+type RajausAccordionProps = React.PropsWithChildren<{
+    header: string;
+    selectionDescription: string;
+}>;
+
+function RajausAccordion({ header, selectionDescription, children }: RajausAccordionProps) {
     const [open, setOpen] = useState(false);
     function toggleOpen() {
         setOpen(!open);
@@ -90,8 +99,8 @@ function RajausAccordion({ children }: { children?: React.ReactNode }) {
     return (
         <div className={styles.RajausAccordion}>
             <div className={styles.AccordionTitle} onClick={toggleOpen}>
-                <h3>Oppilatostyyppi</h3>
-                <span>Sähköpostiosoite</span>
+                <h3>{header}</h3>
+                <span className={styles.AccordionSelectionDescription}>{selectionDescription}</span>
                 <AccordionButton open={open} disabled={false} />
             </div>
             {open && (
