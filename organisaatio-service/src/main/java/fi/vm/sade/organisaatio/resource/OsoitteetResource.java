@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Hidden
@@ -36,6 +34,7 @@ import java.util.stream.Collectors;
 public class OsoitteetResource {
     private final OrganisaatioRepository organisaatioRepository;
     private final EntityManager em;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @GetMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
@@ -46,27 +45,31 @@ public class OsoitteetResource {
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";
         String organisaatiotyyppi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
-        List<Organisaatio> organisaatios = new ArrayList<>();
+        List<Long> organisaatioIds = new ArrayList<>();
 
         if (OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue().equals(organisaatiotyyppi)) {
             if (oppilaitostyypit.isEmpty()) {
-                organisaatios.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi));
+                organisaatioIds.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi));
             } else {
-                List<Long> koulutustoimijaIds = findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit);
-                organisaatios.addAll(organisaatioRepository.findAllById(koulutustoimijaIds));
+                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit));
             }
         }
 
 
-        List<Hakutulos> result = organisaatios.stream()
+        return makeSearchResult(organisaatioIds, kieli, kieliKoodi);
+    }
+
+    private List<Hakutulos> makeSearchResult(List<Long> organisaatioIds, String kieli, String kieliKoodi) {
+        Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
+
+        List<Hakutulos> result = organisaatioRepository.findAllById(organisaatioIds).stream()
                 .map(o -> {
-                    String nimi = o.getNimi().getString(kieli);
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
                     Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
                     return new Hakutulos(
                             o.getId(),
                             o.getOid(),
-                            nimi,
+                            orgNimet.get(o.getId()),
                             sahkoposti,
                             o.getYritysmuoto(),
                             puhelinnumero,
@@ -87,13 +90,29 @@ public class OsoitteetResource {
         return result;
     }
 
-    private List<Organisaatio> searchByOrganisaatioTyyppi(String organisaatiotyyppi) {
+    private HashMap<Long, String> fetchNimet(List<Long> organisaatioIds, String kieli) {
+        if (organisaatioIds.isEmpty())
+            return new HashMap<>();
+
+        String sql = "SELECT organisaatio.id, monikielinenteksti_values.value FROM organisaatio" +
+                " JOIN monikielinenteksti_values ON monikielinenteksti_values.id = organisaatio.nimi_mkt" +
+                " WHERE organisaatio.id IN (:ids) AND monikielinenteksti_values.key = :kieli";
+        return jdbcTemplate.queryForStream(
+                        sql,
+                        Map.of("ids", organisaatioIds, "kieli", kieli),
+                        (rs, rowNum) -> Map.entry(rs.getLong("id"), rs.getString("value"))
+                )
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+
+    }
+
+    private List<Long> searchByOrganisaatioTyyppi(String organisaatiotyyppi) {
         return em.createQuery(
-                        "SELECT o FROM Organisaatio o" +
+                        "SELECT o.id FROM Organisaatio o" +
                                 " WHERE :organisaatiotyyppi MEMBER OF o.tyypit" +
                                 " AND (o.lakkautusPvm IS NULL OR o.lakkautusPvm > current_date())" +
                                 " AND o.organisaatioPoistettu != true",
-                        Organisaatio.class
+                        Long.class
                 )
                 .setParameter("organisaatiotyyppi", organisaatiotyyppi)
                 .getResultList();
@@ -114,24 +133,22 @@ public class OsoitteetResource {
     }
 
     private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit) {
-        return em.createQuery(
-                        "SELECT parent.id FROM Organisaatio parent" +
-                                " JOIN parent.childSuhteet suhde" +
-                                " JOIN suhde.child child" +
-                                " WHERE :koulutustoimijaKoodi MEMBER OF parent.tyypit" +
-                                " AND (suhde.loppuPvm IS NULL OR (suhde.alkuPvm <= current_date() AND current_date() < suhde.loppuPvm))" +
-                                " AND (parent.lakkautusPvm IS NULL OR current_date() < parent.lakkautusPvm)" +
-                                " AND parent.organisaatioPoistettu != true" +
-                                " AND :organisaatiotyyppi MEMBER OF child.tyypit" +
-                                " AND child.oppilaitosTyyppi IN (:oppilaitostyypit)" +
-                                " AND (child.lakkautusPvm IS NULL OR current_date() < child.lakkautusPvm)" +
-                                " AND child.organisaatioPoistettu != true",
-                        Long.class
-                )
-                .setParameter("koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())
-                .setParameter("organisaatiotyyppi", OrganisaatioTyyppi.OPPILAITOS.koodiValue())
-                .setParameter("oppilaitostyypit", oppilaitostyypit)
-                .getResultList();
+        String sql = "SELECT DISTINCT parent.id" +
+                " FROM organisaatio parent" +
+                " JOIN organisaatio_tyypit parent_tyypit ON (parent_tyypit.organisaatio_id = parent.id AND parent_tyypit.tyypit = :koulutustoimijaKoodi)" +
+                " JOIN organisaatiosuhde suhde ON (suhde.parent_id = parent.id)" +
+                " JOIN organisaatio child ON (child.id = suhde.child_id)" +
+                " JOIN organisaatio_tyypit child_tyypit ON (child_tyypit.organisaatio_id = child.id AND child_tyypit.tyypit = :oppilaitosKoodi)" +
+                " WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)" +
+                " AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu" +
+                " AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu" +
+                " AND child.oppilaitostyyppi IN (:oppilaitostyypit)";
+        Map<String, Object> params = Map.of(
+                "koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
+                "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
+                "oppilaitostyypit", oppilaitostyypit
+        );
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
     private String osoiteToString(Osoite osoite) {
@@ -165,6 +182,7 @@ public class OsoitteetResource {
     public RawJson getParametrit() {
         return new RawJson("{ \"oppilaitostyypit\": " + oppilaitostyyppiKoodit + "}");
     }
+
     private String oppilaitostyyppiKoodit = "[\n" +
             "  {\n" +
             "    \"koodiUri\": \"oppilaitostyyppi_22\",\n" +
