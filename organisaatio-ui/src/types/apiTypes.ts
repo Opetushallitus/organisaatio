@@ -144,7 +144,6 @@ export type OrganisaatioHakuOrganisaatio = {
     allOids: string[];
     lakkautusPvm?: number | LocalDate;
     tarkastusPvm?: number;
-    canExpand?: boolean;
 };
 
 export type NewApiOrganisaatio = Omit<ApiOrganisaatio, 'oid' | 'status' | 'parentOidPath' | 'maskingActive'>;
