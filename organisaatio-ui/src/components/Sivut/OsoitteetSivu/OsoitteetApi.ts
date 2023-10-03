@@ -17,7 +17,15 @@ export type Hakutulos = {
     kayntiosoite?: string;
 };
 
-export async function haeOsoitteet(): Promise<Hakutulos[]> {
-    const response = await axios.get<Hakutulos[]>(`${API_CONTEXT}/osoitteet/hae`);
+type Koodiarvo = string;
+
+export type HaeRequest = {
+    organisaatiotyypit: Koodiarvo[];
+    oppilaitostyypit: Koodiarvo[];
+};
+
+export async function haeOsoitteet(req: HaeRequest): Promise<Hakutulos[]> {
+    const params = req;
+    const response = await axios.get<Hakutulos[]>(`${API_CONTEXT}/osoitteet/hae`, { params });
     return response.data;
 }

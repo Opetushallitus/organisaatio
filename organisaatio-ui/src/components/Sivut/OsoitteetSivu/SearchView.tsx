@@ -8,8 +8,12 @@ type SearchViewProps = {
     onResult(result: Hakutulos[]): void;
 };
 export function SearchView({ onResult }: SearchViewProps) {
+    const [haeAmk, setHaeAmk] = useState<boolean>(false);
     async function hae() {
-        const osoitteet = await haeOsoitteet();
+        const osoitteet = await haeOsoitteet({
+            organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
+            oppilaitostyypit: haeAmk ? ['oppilaitostyyppi_41#1'] : [],
+        });
         // TODO: Virheilmoitus
         onResult(osoitteet);
     }
@@ -39,7 +43,11 @@ export function SearchView({ onResult }: SearchViewProps) {
                     <h2>Rajaa hakua</h2>
                 </div>
                 <div className={styles.Rajaukset}>
-                    <RajausAccordion />
+                    <RajausAccordion>
+                        <Checkbox checked={haeAmk} onClick={() => setHaeAmk(!haeAmk)}>
+                            Ammattikorkeakoulu
+                        </Checkbox>
+                    </RajausAccordion>
                 </div>
             </div>
             <div className={styles.ButtonRow}>
@@ -74,7 +82,7 @@ function Kohderyhma({ title, description, selected, disabled }: KohderyhmaProps)
     );
 }
 
-function RajausAccordion() {
+function RajausAccordion({ children }: { children?: React.ReactNode }) {
     const [open, setOpen] = useState(false);
     function toggleOpen() {
         setOpen(!open);
@@ -88,7 +96,7 @@ function RajausAccordion() {
             </div>
             {open && (
                 <div className={styles.AccordionContentContainer}>
-                    <div className={styles.AccordionContent}>oben :DD</div>
+                    <div className={styles.AccordionContent}>{children}</div>
                 </div>
             )}
         </div>

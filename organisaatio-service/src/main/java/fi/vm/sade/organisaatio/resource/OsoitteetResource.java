@@ -13,12 +13,17 @@ import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,22 +32,37 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("${server.internal.context-path}/osoitteet")
 @RequiredArgsConstructor
+@Slf4j
 public class OsoitteetResource {
     private final OrganisaatioRepository organisaatioRepository;
+    private final EntityManager em;
 
     @GetMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
-    public List<Hakutulos> hae() throws InterruptedException {
+    public List<Hakutulos> hae(
+            @RequestParam("organisaatiotyypit[]") List<String> organisaatiotyypit,
+            @RequestParam(value = "oppilaitostyypit[]", defaultValue = "", required = false) List<String> oppilaitostyypit
+    ) throws InterruptedException {
         String kieli = "fi";
-        String koulutustoimijaKoodi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
+        String kieliKoodi = "kieli_fi#1";
+        String organisaatiotyyppi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
+        List<Organisaatio> organisaatios = new ArrayList<>();
 
-        List<Organisaatio> koulutustoimijat = organisaatioRepository.findByOrganisaatiotyyppi(koulutustoimijaKoodi);
+        if (OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue().equals(organisaatiotyyppi)) {
+            if (oppilaitostyypit.isEmpty()) {
+                organisaatios.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi));
+            } else {
+                List<Long> koulutustoimijaIds = findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit);
+                organisaatios.addAll(organisaatioRepository.findAllById(koulutustoimijaIds));
+            }
+        }
 
-        return koulutustoimijat.stream()
+
+        List<Hakutulos> result = organisaatios.stream()
                 .map(o -> {
                     String nimi = o.getNimi().getString(kieli);
-                    Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieli)).map(Email::getEmail);
-                    Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieli)).map(Puhelinnumero::getPuhelinnumero);
+                    Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
+                    Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
                     return new Hakutulos(
                             o.getId(),
                             o.getOid(),
@@ -60,6 +80,58 @@ public class OsoitteetResource {
                     );
                 })
                 .collect(Collectors.toList());
+
+
+        log.info("Hakutuloksia: {}", result.size());
+        result.sort(Comparator.comparing(Hakutulos::getNimi));
+        return result;
+    }
+
+    private List<Organisaatio> searchByOrganisaatioTyyppi(String organisaatiotyyppi) {
+        return em.createQuery(
+                        "SELECT o FROM Organisaatio o" +
+                                " WHERE :organisaatiotyyppi MEMBER OF o.tyypit" +
+                                " AND (o.lakkautusPvm IS NULL OR o.lakkautusPvm > current_date())" +
+                                " AND o.organisaatioPoistettu != true",
+                        Organisaatio.class
+                )
+                .setParameter("organisaatiotyyppi", organisaatiotyyppi)
+                .getResultList();
+    }
+
+    private List<Organisaatio> searchByOrganisaatioTyyppiAndOppilaitostyypit(String organisaatiotyyppi, List<String> oppilaitostyypit) {
+        return em.createQuery(
+                        "SELECT o FROM Organisaatio o" +
+                                " WHERE :organisaatiotyyppi MEMBER OF o.tyypit" +
+                                " AND o.oppilaitosTyyppi IN (:oppilaitostyypit)" +
+                                " AND (o.lakkautusPvm IS NULL OR o.lakkautusPvm > current_date())" +
+                                " AND o.organisaatioPoistettu != true",
+                        Organisaatio.class
+                )
+                .setParameter("organisaatiotyyppi", organisaatiotyyppi)
+                .setParameter("oppilaitostyypit", oppilaitostyypit)
+                .getResultList();
+    }
+
+    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit) {
+        return em.createQuery(
+                        "SELECT parent.id FROM Organisaatio parent" +
+                                " JOIN parent.childSuhteet suhde" +
+                                " JOIN suhde.child child" +
+                                " WHERE :koulutustoimijaKoodi MEMBER OF parent.tyypit" +
+                                " AND (suhde.loppuPvm IS NULL OR (suhde.alkuPvm <= current_date() AND current_date() < suhde.loppuPvm))" +
+                                " AND (parent.lakkautusPvm IS NULL OR current_date() < parent.lakkautusPvm)" +
+                                " AND parent.organisaatioPoistettu != true" +
+                                " AND :organisaatiotyyppi MEMBER OF child.tyypit" +
+                                " AND child.oppilaitosTyyppi IN (:oppilaitostyypit)" +
+                                " AND (child.lakkautusPvm IS NULL OR current_date() < child.lakkautusPvm)" +
+                                " AND child.organisaatioPoistettu != true",
+                        Long.class
+                )
+                .setParameter("koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())
+                .setParameter("organisaatiotyyppi", OrganisaatioTyyppi.OPPILAITOS.koodiValue())
+                .setParameter("oppilaitostyypit", oppilaitostyypit)
+                .getResultList();
     }
 
     private String osoiteToString(Osoite osoite) {
