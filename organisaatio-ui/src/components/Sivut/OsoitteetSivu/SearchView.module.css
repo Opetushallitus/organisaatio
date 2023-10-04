@@ -118,6 +118,10 @@
     letter-spacing: 0.035px;
 }
 
+.ErrorRow {
+    align-self: baseline;
+}
+
 .ButtonRow {
     display: flex;
     flex-direction: row;

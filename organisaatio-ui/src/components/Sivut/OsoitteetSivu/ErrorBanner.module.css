@@ -1,0 +1,30 @@
+.Banner {
+    display: flex;
+    height: 24px;
+    padding: 16px;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 3px;
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 21px; /* 150% */
+    letter-spacing: 0.035px;
+}
+.Banner.Partial {
+    background: var(--color-semantics-partial);
+    color: var(--text-text-heading);
+}
+.Banner.Error svg path {
+    fill: var(--text-text-heading);
+}
+
+.Banner.Error {
+    background: var(--color-semantics-error);
+    color: var(--color-neutral-white);
+}
+.Banner.Error svg path {
+    fill: var(--color-neutral-white);
+}

@@ -3,19 +3,25 @@ import React, { useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
+import { ErrorBanner } from './ErrorBanner';
 
 type SearchViewProps = {
     onResult(result: Hakutulos[]): void;
 };
 export function SearchView({ onResult }: SearchViewProps) {
     const [haeAmk, setHaeAmk] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
     async function hae() {
-        const osoitteet = await haeOsoitteet({
-            organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
-            oppilaitostyypit: haeAmk ? ['oppilaitostyyppi_41#1'] : [],
-        });
-        // TODO: Virheilmoitus
-        onResult(osoitteet);
+        try {
+            setError(false);
+            const osoitteet = await haeOsoitteet({
+                organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
+                oppilaitostyypit: haeAmk ? ['oppilaitostyyppi_41#1'] : [],
+            });
+            onResult(osoitteet);
+        } catch (e) {
+            setError(true);
+        }
     }
     return (
         <div className={styles.SearchView}>
@@ -53,6 +59,13 @@ export function SearchView({ onResult }: SearchViewProps) {
                     </RajausAccordion>
                 </div>
             </div>
+            {error && (
+                <div className={styles.ErrorRow}>
+                    <ErrorBanner onClose={() => setError(false)}>
+                        Haun suorituksessa tapahtui virhe. Yritä uudelleen.
+                    </ErrorBanner>
+                </div>
+            )}
             <div className={styles.ButtonRow}>
                 <Button onClick={hae}>Hae</Button>
                 {/*<Button variant={'outlined'}>Tyhjennä</Button>*/}

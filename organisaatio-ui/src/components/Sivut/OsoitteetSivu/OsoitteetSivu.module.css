@@ -10,6 +10,10 @@
     --color-gray-gray-lighten-3: #CCC;
     --color-gray-gray-lighten-6: #F0F3F7;
     --text-text-paragraph: #666;
+    --text-text-heading: #2A2A2A;
+
+    --color-semantics-partial: #FFD024;
+    --color-semantics-error: #DB2828;
 
     --content-width: 1152px;
 }
