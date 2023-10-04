@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Hidden
 @RestController
@@ -97,12 +98,13 @@ public class OsoitteetResource {
         String sql = "SELECT organisaatio.id, monikielinenteksti_values.value FROM organisaatio" +
                 " JOIN monikielinenteksti_values ON monikielinenteksti_values.id = organisaatio.nimi_mkt" +
                 " WHERE organisaatio.id IN (:ids) AND monikielinenteksti_values.key = :kieli";
-        return jdbcTemplate.queryForStream(
-                        sql,
-                        Map.of("ids", organisaatioIds, "kieli", kieli),
-                        (rs, rowNum) -> Map.entry(rs.getLong("id"), rs.getString("value"))
-                )
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+        try (Stream<Map.Entry<Long, String>> stream = jdbcTemplate.queryForStream(
+                sql,
+                Map.of("ids", organisaatioIds, "kieli", kieli),
+                (rs, rowNum) -> Map.entry(rs.getLong("id"), rs.getString("value"))
+        )) {
+            return stream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+        }
 
     }
 
