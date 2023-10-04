@@ -24,8 +24,22 @@ export type HaeRequest = {
     oppilaitostyypit: Koodiarvo[];
 };
 
+export type Koodisto = {
+    koodiUri: string;
+    nimi: string;
+};
+
+export type HakuParametrit = {
+    oppilaitostyypit: Array<Koodisto>;
+};
+
 export async function haeOsoitteet(req: HaeRequest): Promise<Hakutulos[]> {
     const params = req;
     const response = await axios.get<Hakutulos[]>(`${API_CONTEXT}/osoitteet/hae`, { params });
+    return response.data;
+}
+
+export async function haeHakuParametrit() {
+    const response = await axios.get<HakuParametrit>(`${API_CONTEXT}/osoitteet/parametrit`);
     return response.data;
 }

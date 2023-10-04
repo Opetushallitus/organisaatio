@@ -1,4 +1,4 @@
-import { haeOsoitteet, Hakutulos } from './OsoitteetApi';
+import { haeOsoitteet, HakuParametrit, Hakutulos, Koodisto } from './OsoitteetApi';
 import React, { useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -6,23 +6,59 @@ import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ErrorBanner } from './ErrorBanner';
 
 type SearchViewProps = {
+    hakuParametrit: HakuParametrit;
     onResult(result: Hakutulos[]): void;
 };
-export function SearchView({ onResult }: SearchViewProps) {
-    const [haeAmk, setHaeAmk] = useState<boolean>(false);
+
+export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
+    const a = hakuParametrit.oppilaitostyypit.reduce<Record<string, boolean>>((accu, k) => {
+        accu[k.koodiUri] = false;
+        return accu;
+    }, {});
+
+    const [selectedParameters, setSelectedParameters] = useState<Record<string, boolean>>(a);
     const [error, setError] = useState<boolean>(false);
+
     async function hae() {
         try {
             setError(false);
             const osoitteet = await haeOsoitteet({
                 organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
-                oppilaitostyypit: haeAmk ? ['oppilaitostyyppi_41#1'] : [],
+                oppilaitostyypit: Object.keys(selectedParameters).reduce<Array<string>>(
+                    (accu, key) => (selectedParameters[key] ? accu.concat([key]) : accu),
+                    []
+                ),
             });
             onResult(osoitteet);
         } catch (e) {
             setError(true);
         }
     }
+    function isChecked(koodiUri: string) {
+        return !!selectedParameters[koodiUri];
+    }
+    function toggleIsChecked(koodiUri: string) {
+        const value = { [koodiUri]: !selectedParameters[koodiUri] };
+        setSelectedParameters({ ...selectedParameters, ...value });
+    }
+    function koodistoLexically(left: Koodisto, right: Koodisto) {
+        const l = left.nimi.toUpperCase();
+        const r = right.nimi.toUpperCase();
+        let o = 0;
+        if (l < r) {
+            o = -1;
+        } else if (l > r) {
+            o = 1;
+        }
+        return o;
+    }
+    function buildSelectionDescription() {
+        const s = hakuParametrit.oppilaitostyypit.reduce<string>((accu, k) => {
+            return selectedParameters[k.koodiUri] ? `${accu}${k.nimi}, ` : accu;
+        }, '');
+        return s.slice(0, s.length - 2);
+    }
+
     return (
         <div className={styles.SearchView}>
             <div>
@@ -49,13 +85,22 @@ export function SearchView({ onResult }: SearchViewProps) {
                     <h2>Rajaa hakua</h2>
                 </div>
                 <div className={styles.Rajaukset}>
-                    <RajausAccordion
-                        header="Oppilaitostyyppi"
-                        selectionDescription={haeAmk ? 'Ammattikorkeakoulu' : ''}
-                    >
-                        <Checkbox checked={haeAmk} onClick={() => setHaeAmk(!haeAmk)}>
-                            Ammattikorkeakoulu
-                        </Checkbox>
+                    <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
+                        <ul>
+                            {hakuParametrit.oppilaitostyypit.sort(koodistoLexically).map((koodisto) => {
+                                return (
+                                    <li key={koodisto.koodiUri}>
+                                        <Checkbox
+                                            key={koodisto.koodiUri}
+                                            checked={isChecked(koodisto.koodiUri)}
+                                            onClick={() => toggleIsChecked(koodisto.koodiUri)}
+                                        >
+                                            {koodisto.nimi}
+                                        </Checkbox>
+                                    </li>
+                                );
+                            })}
+                        </ul>
                     </RajausAccordion>
                 </div>
             </div>

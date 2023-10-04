@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
-import { Hakutulos } from './OsoitteetApi';
+import { haeHakuParametrit, HakuParametrit, Hakutulos } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
+import Loading from '../../Loading/Loading';
 
 const OsoitteetSivu = () => {
     type State = {
         hakutulos?: Hakutulos[];
     };
+    const [hakuParametrit, setHakuParametrit] = useState<HakuParametrit | undefined>(undefined);
     const [state, setState] = useState<State>({});
     const history = useHistory();
 
@@ -18,7 +20,11 @@ const OsoitteetSivu = () => {
         history.push('/osoitteet/hakutulos');
     }
 
-    return (
+    useEffect(() => {
+        haeHakuParametrit().then(setHakuParametrit);
+    }, []);
+
+    return hakuParametrit ? (
         <div className={styles.OsoitteetSivu}>
             <Route exact path={'/osoitteet'}>
                 <div className={styles.Header}>
@@ -31,7 +37,7 @@ const OsoitteetSivu = () => {
                 </div>
                 <div className={styles.MainContent}>
                     <div className={styles.ContentContainer}>
-                        <SearchView onResult={onSearchResult} />
+                        <SearchView hakuParametrit={hakuParametrit} onResult={onSearchResult} />
                     </div>
                 </div>
             </Route>
@@ -43,6 +49,8 @@ const OsoitteetSivu = () => {
                 </div>
             </Route>
         </div>
+    ) : (
+        <Loading />
     );
 };
 
