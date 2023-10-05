@@ -10,7 +10,7 @@ function main {
   nvm use 16 || nvm install -b 16 && nvm use 16
 
   cd "$repo/organisaatio-ui"
-  #npm ci
+  npm ci
   npm run start
 }
 
