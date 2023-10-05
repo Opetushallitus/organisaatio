@@ -67,6 +67,7 @@ public class OsoitteetResource {
         List<Hakutulos> result = orgs.stream().map(o -> {
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
                     Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
+                    Optional<String> opetuskieli = o.getKielet().isEmpty() ? Optional.empty() : Optional.of(String.join(", ", o.getKielet()));
                     return new Hakutulos(
                             o.getId(),
                             o.getOid(),
@@ -74,7 +75,7 @@ public class OsoitteetResource {
                             sahkoposti,
                             o.getYritysmuoto(),
                             puhelinnumero,
-                            Optional.empty(),
+                            opetuskieli,
                             Optional.ofNullable(o.getOppilaitosKoodi()),
                             o.getKotipaikka(),
                             Optional.empty(),
@@ -92,7 +93,7 @@ public class OsoitteetResource {
     }
 
     private List<Organisaatio> fetchOrganisaatiosWithYhteystiedot(List<Long> organisaatioIds) {
-        return em.createQuery("SELECT DISTINCT o FROM Organisaatio o LEFT JOIN FETCH o.yhteystiedot WHERE o.id IN (:ids)", Organisaatio.class)
+        return em.createQuery("SELECT DISTINCT o FROM Organisaatio o LEFT JOIN FETCH o.yhteystiedot LEFT JOIN FETCH o.kielet WHERE o.id IN (:ids)", Organisaatio.class)
                 .setParameter("ids", organisaatioIds).getResultList();
     }
 
