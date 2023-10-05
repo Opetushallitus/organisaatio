@@ -37,8 +37,33 @@
 .Body tr td {
     padding: 8px 24px 8px 8px;
     height: 34px;
+    overflow: hidden;
+}
+
+.Fade {
+    position: relative;
+}
+
+.Fade:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+tr:nth-child(even) .Fade:before {
+    background: linear-gradient(to right, transparent 90%, var(--color-neutral-white) 95%);
+}
+tr:nth-child(odd) .Fade:before {
+    background: linear-gradient(to right, transparent 90%, var(--FAFAFA) 95%);
 }
 
 .Checkbox {
     padding-right: 8px;
 }
+
+.ColumnCheckbox { max-width: 448px; }
+.ColumnEmail { max-width: 344px; }
+.ColumnYritysmuoto { max-width: 160px; }
+.ColumnOid, .ColumnOsoite { max-width: 240px; }
