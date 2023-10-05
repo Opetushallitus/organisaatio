@@ -43,7 +43,7 @@ const OsoitteetSivu = () => {
             </Route>
             <Route exact path={'/osoitteet/hakutulos'}>
                 <div className={styles.MainContent}>
-                    <div className={styles.ContentContainer}>
+                    <div className={styles.WideContentContainer}>
                         <HakutulosView results={state.hakutulos} />
                     </div>
                 </div>

@@ -15,7 +15,6 @@
     --color-semantics-partial: #FFD024;
     --color-semantics-error: #DB2828;
 
-    --content-width: 1152px;
 }
 
 body {
@@ -34,7 +33,11 @@ body {
 
 .ContentContainer {
     width: 100%;
-    max-width: var(--content-width);
+    max-width: 1152px;
+}
+.WideContentContainer {
+    width: 100%;
+    max-width: 1320px;
 }
 
 .Header {
