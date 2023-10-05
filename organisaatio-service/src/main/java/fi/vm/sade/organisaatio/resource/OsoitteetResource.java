@@ -93,7 +93,11 @@ public class OsoitteetResource {
     }
 
     private List<Organisaatio> fetchOrganisaatiosWithYhteystiedot(List<Long> organisaatioIds) {
-        return em.createQuery("SELECT DISTINCT o FROM Organisaatio o LEFT JOIN FETCH o.yhteystiedot LEFT JOIN FETCH o.kielet WHERE o.id IN (:ids)", Organisaatio.class)
+        return em.createQuery("SELECT DISTINCT o FROM Organisaatio o" +
+                        " LEFT JOIN FETCH o.yhteystiedot" +
+                        " LEFT JOIN FETCH o.kielet" +
+                        " LEFT JOIN FETCH o.parentOids" + // Haetaan vain jotta Hibernate ei tee näille N+1 kyselyä
+                        " WHERE o.id IN (:ids)", Organisaatio.class)
                 .setParameter("ids", organisaatioIds).getResultList();
     }
 
