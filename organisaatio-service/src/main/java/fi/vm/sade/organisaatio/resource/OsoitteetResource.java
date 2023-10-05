@@ -61,10 +61,10 @@ public class OsoitteetResource {
     }
 
     private List<Hakutulos> makeSearchResult(List<Long> organisaatioIds, String kieli, String kieliKoodi) {
+        List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
         Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
 
-        List<Hakutulos> result = organisaatioRepository.findAllById(organisaatioIds).stream()
-                .map(o -> {
+        List<Hakutulos> result = orgs.stream().map(o -> {
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
                     Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
                     return new Hakutulos(
@@ -91,6 +91,11 @@ public class OsoitteetResource {
         return result;
     }
 
+    private List<Organisaatio> fetchOrganisaatiosWithYhteystiedot(List<Long> organisaatioIds) {
+        return em.createQuery("SELECT DISTINCT o FROM Organisaatio o LEFT JOIN FETCH o.yhteystiedot WHERE o.id IN (:ids)", Organisaatio.class)
+                .setParameter("ids", organisaatioIds).getResultList();
+    }
+
     private HashMap<Long, String> fetchNimet(List<Long> organisaatioIds, String kieli) {
         if (organisaatioIds.isEmpty())
             return new HashMap<>();
@@ -105,33 +110,13 @@ public class OsoitteetResource {
         )) {
             return stream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
         }
-
     }
 
     private List<Long> searchByOrganisaatioTyyppi(String organisaatiotyyppi) {
-        return em.createQuery(
-                        "SELECT o.id FROM Organisaatio o" +
-                                " WHERE :organisaatiotyyppi MEMBER OF o.tyypit" +
-                                " AND (o.lakkautusPvm IS NULL OR o.lakkautusPvm > current_date())" +
-                                " AND o.organisaatioPoistettu != true",
-                        Long.class
-                )
-                .setParameter("organisaatiotyyppi", organisaatiotyyppi)
-                .getResultList();
-    }
-
-    private List<Organisaatio> searchByOrganisaatioTyyppiAndOppilaitostyypit(String organisaatiotyyppi, List<String> oppilaitostyypit) {
-        return em.createQuery(
-                        "SELECT o FROM Organisaatio o" +
-                                " WHERE :organisaatiotyyppi MEMBER OF o.tyypit" +
-                                " AND o.oppilaitosTyyppi IN (:oppilaitostyypit)" +
-                                " AND (o.lakkautusPvm IS NULL OR o.lakkautusPvm > current_date())" +
-                                " AND o.organisaatioPoistettu != true",
-                        Organisaatio.class
-                )
-                .setParameter("organisaatiotyyppi", organisaatiotyyppi)
-                .setParameter("oppilaitostyypit", oppilaitostyypit)
-                .getResultList();
+        String sql = "SELECT DISTINCT o.id FROM organisaatio o" +
+                " JOIN organisaatio_tyypit ON (organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)" +
+                " WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu";
+        return jdbcTemplate.query(sql, Map.of("organisaatiotyyppi", organisaatiotyyppi), (rs, rowNum) -> rs.getLong("id"));
     }
 
     private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit) {
