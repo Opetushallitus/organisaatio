@@ -75,7 +75,7 @@ public class OsoitteetResource {
                             o.getYritysmuoto(),
                             puhelinnumero,
                             Optional.empty(),
-                            Optional.empty(),
+                            Optional.ofNullable(o.getOppilaitosKoodi()),
                             o.getKotipaikka(),
                             Optional.empty(),
                             o.getYtunnus(),
