@@ -4,15 +4,16 @@ package fi.vm.sade.organisaatio.resource;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.Osoite;
 import fi.vm.sade.organisaatio.model.Puhelinnumero;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,9 +35,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class OsoitteetResource {
-    private final OrganisaatioRepository organisaatioRepository;
     private final EntityManager em;
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
 
     @GetMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
@@ -63,11 +65,12 @@ public class OsoitteetResource {
     private List<Hakutulos> makeSearchResult(List<Long> organisaatioIds, String kieli, String kieliKoodi) {
         List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
         Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
+        Map<String, Koodiarvo> opetuskieletMap = loadKoodistoFromResources("oppilaitoksenopetuskieli");
 
         List<Hakutulos> result = orgs.stream().map(o -> {
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
                     Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
-                    Optional<String> opetuskieli = o.getKielet().isEmpty() ? Optional.empty() : Optional.of(String.join(", ", o.getKielet()));
+                    Set<String> opetuskielet = o.getKielet().stream().map(k -> parseOpetuskieliKoodi(opetuskieletMap, k, kieli)).collect(Collectors.toSet());
                     return new Hakutulos(
                             o.getId(),
                             o.getOid(),
@@ -75,7 +78,7 @@ public class OsoitteetResource {
                             sahkoposti,
                             o.getYritysmuoto(),
                             puhelinnumero,
-                            opetuskieli,
+                            opetuskielet.isEmpty() ? Optional.empty() : Optional.of(String.join(", ", opetuskielet)),
                             Optional.ofNullable(o.getOppilaitosKoodi()),
                             o.getKotipaikka(),
                             Optional.empty(),
@@ -90,6 +93,22 @@ public class OsoitteetResource {
         log.info("Hakutuloksia: {}", result.size());
         result.sort(Comparator.comparing(Hakutulos::getNimi));
         return result;
+    }
+
+    private String parseOpetuskieliKoodi(Map<String, Koodiarvo> opetuskielet, String versioituKoodiarvo, String kieli) {
+        int hashIndex = versioituKoodiarvo.lastIndexOf('#');
+        String koodiarvo = hashIndex == -1 ? versioituKoodiarvo : versioituKoodiarvo.substring(0, hashIndex);
+        Koodiarvo currentVersion = opetuskielet.get(koodiarvo);
+        return currentVersion.getMetadata().stream().filter(m -> m.getKieli().equals(kieli.toUpperCase())).findFirst().get().getNimi();
+    }
+
+    @SneakyThrows
+    private Map<String, Koodiarvo> loadKoodistoFromResources(String koodisto) {
+        try (InputStream is = this.getClass().getResourceAsStream("/koodisto/" + koodisto + ".json")) {
+            return Stream.of(objectMapper.readValue(is, Koodiarvo[].class))
+                    .map(koodi -> Map.entry(koodi.getKoodiUri(), koodi))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+        }
     }
 
     private List<Organisaatio> fetchOrganisaatiosWithYhteystiedot(List<Long> organisaatioIds) {
@@ -287,4 +306,19 @@ class RawJson {
     public String getPayload() {
         return this.payload;
     }
+}
+
+@Data
+class Koodiarvo {
+    private String koodiUri;
+    private List<Metadata> metadata;
+    private Long versio;
+    private String koodiArvo;
+}
+
+@Data
+class Metadata {
+    private String nimi;
+    private String lyhytNimi;
+    private String kieli;
 }

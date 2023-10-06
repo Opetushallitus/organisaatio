@@ -1,0 +1,134 @@
+[
+  {
+    "koodiUri": "oppilaitoksenopetuskieli_4",
+    "metadata": [
+      {
+        "nimi": "English",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      },
+      {
+        "nimi": "engelska",
+        "lyhytNimi": "engelska",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "englanti",
+        "lyhytNimi": "englanti",
+        "kieli": "FI"
+      }
+    ],
+    "versio": 2,
+    "koodiArvo": "4"
+  },
+  {
+    "koodiUri": "oppilaitoksenopetuskieli_2",
+    "metadata": [
+      {
+        "nimi": "svenska",
+        "lyhytNimi": "svenska",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "ruotsi",
+        "lyhytNimi": "ruotsi",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Swedish",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      }
+    ],
+    "versio": 2,
+    "koodiArvo": "2"
+  },
+  {
+    "koodiUri": "oppilaitoksenopetuskieli_3",
+    "metadata": [
+      {
+        "nimi": "suomi/ruotsi",
+        "lyhytNimi": "suomi/ruotsi",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "finska/svenska",
+        "lyhytNimi": "finska/svenska",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Finnish/Swedish",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      }
+    ],
+    "versio": 2,
+    "koodiArvo": "3"
+  },
+  {
+    "koodiUri": "oppilaitoksenopetuskieli_1",
+    "metadata": [
+      {
+        "nimi": "finska",
+        "lyhytNimi": "finska",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "suomi",
+        "lyhytNimi": "suomi",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Finnish",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      }
+    ],
+    "versio": 2,
+    "koodiArvo": "1"
+  },
+  {
+    "koodiUri": "oppilaitoksenopetuskieli_9",
+    "metadata": [
+      {
+        "nimi": "annat",
+        "lyhytNimi": "annat",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "muu",
+        "lyhytNimi": "muu",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Other",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      }
+    ],
+    "versio": 2,
+    "koodiArvo": "9"
+  },
+  {
+    "koodiUri": "oppilaitoksenopetuskieli_5",
+    "metadata": [
+      {
+        "nimi": "Sami",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      },
+      {
+        "nimi": "saame",
+        "lyhytNimi": "saame",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "samiska",
+        "lyhytNimi": "samiska",
+        "kieli": "SV"
+      }
+    ],
+    "versio": 2,
+    "koodiArvo": "5"
+  }
+]
