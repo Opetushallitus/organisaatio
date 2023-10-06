@@ -4,6 +4,7 @@ import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ErrorBanner } from './ErrorBanner';
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -11,6 +12,7 @@ type SearchViewProps = {
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
+    const [loading, setLoading] = useState<boolean>(false);
     const a = hakuParametrit.oppilaitostyypit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
         return accu;
@@ -21,6 +23,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
 
     async function hae() {
         try {
+            setLoading(true);
             setError(false);
             const osoitteet = await haeOsoitteet({
                 organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
@@ -33,6 +36,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         } catch (e) {
             setError(true);
         }
+        setLoading(false);
     }
     function isChecked(koodiUri: string) {
         return !!selectedParameters[koodiUri];
@@ -115,6 +119,11 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 <Button onClick={hae}>Hae</Button>
                 {/*<Button variant={'outlined'}>Tyhjennä</Button>*/}
             </div>
+            {loading && (
+                <div className={styles.LoadingOverlay}>
+                    <Spin />
+                </div>
+            )}
         </div>
     );
 }
