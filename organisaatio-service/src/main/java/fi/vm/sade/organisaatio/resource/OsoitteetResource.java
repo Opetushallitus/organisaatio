@@ -66,6 +66,9 @@ public class OsoitteetResource {
         List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
         Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
         Map<String, Koodiarvo> opetuskieletMap = loadKoodistoFromResources("oppilaitoksenopetuskieli");
+        Map<String, Koodiarvo> kuntaMap = loadKoodistoFromResources("kunta");
+        Map<String, Koodiarvo> postinumeroMap = loadKoodistoFromResources("posti");
+
 
         List<Hakutulos> result = orgs.stream().map(o -> {
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
@@ -80,11 +83,11 @@ public class OsoitteetResource {
                             puhelinnumero,
                             opetuskielet.isEmpty() ? Optional.empty() : Optional.of(String.join(", ", opetuskielet)),
                             Optional.ofNullable(o.getOppilaitosKoodi()),
-                            o.getKotipaikka(),
+                            kuntaMap.get(o.getKotipaikka()).getNimi(kieli),
                             Optional.empty(),
                             o.getYtunnus(),
-                            Optional.ofNullable(o.getPostiosoite()).map(this::osoiteToString),
-                            Optional.ofNullable(o.getKayntiosoite()).map(this::osoiteToString)
+                            Optional.ofNullable(o.getPostiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite, kieli)),
+                            Optional.ofNullable(o.getKayntiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite, kieli))
                     );
                 })
                 .collect(Collectors.toList());
@@ -99,7 +102,7 @@ public class OsoitteetResource {
         int hashIndex = versioituKoodiarvo.lastIndexOf('#');
         String koodiarvo = hashIndex == -1 ? versioituKoodiarvo : versioituKoodiarvo.substring(0, hashIndex);
         Koodiarvo currentVersion = opetuskielet.get(koodiarvo);
-        return currentVersion.getMetadata().stream().filter(m -> m.getKieli().equals(kieli.toUpperCase())).findFirst().get().getNimi();
+        return currentVersion.getNimi(kieli);
     }
 
     @SneakyThrows
@@ -162,11 +165,18 @@ public class OsoitteetResource {
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    private String osoiteToString(Osoite osoite) {
-        return String.format("%s, %s %s",
+    private String osoiteToString(Map<String, Koodiarvo> postinumeroMap, Osoite osoite, String kieli) {
+        if (osoite.getPostinumero() == null || osoite.getPostitoimipaikka() == null)
+            return osoite.getOsoite();
+        Koodiarvo postiKoodi = postinumeroMap.get(osoite.getPostinumero());
+        if (postiKoodi == null)
+            return osoite.getOsoite();
+
+        return String.format(
+                "%s, %s %s",
                 osoite.getOsoite(),
-                osoite.getPostinumero(),
-                osoite.getPostitoimipaikka()
+                postiKoodi.getKoodiArvo(),
+                postiKoodi.getNimi(kieli)
         );
     }
 
@@ -314,6 +324,10 @@ class Koodiarvo {
     private List<Metadata> metadata;
     private Long versio;
     private String koodiArvo;
+
+    public String getNimi(String kieli) {
+        return metadata.stream().filter(m -> m.getKieli().equals(kieli.toUpperCase())).findFirst().get().getNimi();
+    }
 }
 
 @Data
