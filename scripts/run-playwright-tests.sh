@@ -11,7 +11,7 @@ function main {
 
   cd "$repo/playwright"
   npm ci
-  npx playwright test
+  npx playwright test "$@"
 }
 
 main "$@"
