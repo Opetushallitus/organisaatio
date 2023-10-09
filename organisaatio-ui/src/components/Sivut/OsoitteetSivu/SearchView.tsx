@@ -163,11 +163,25 @@ function RajausAccordion({ header, selectionDescription, children }: RajausAccor
     function toggleOpen() {
         setOpen(!open);
     }
+    function toggleOpenOnSpaceOrEnter(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            toggleOpen();
+        }
+    }
     return (
-        <div className={styles.RajausAccordion}>
-            <div className={styles.AccordionTitle} onClick={toggleOpen}>
+        <section className={styles.RajausAccordion}>
+            <div
+                tabIndex={0}
+                role="button"
+                aria-pressed="false"
+                className={styles.AccordionTitle}
+                onKeyDown={toggleOpenOnSpaceOrEnter}
+                onClick={toggleOpen}
+            >
                 <h3>{header}</h3>
-                <span className={styles.AccordionSelectionDescription}>{selectionDescription}</span>
+                <span aria-live="off" className={styles.AccordionSelectionDescription}>
+                    {selectionDescription}
+                </span>
                 <AccordionButton open={open} disabled={false} />
             </div>
             {open && (
@@ -175,7 +189,7 @@ function RajausAccordion({ header, selectionDescription, children }: RajausAccor
                     <div className={styles.AccordionContent}>{children}</div>
                 </div>
             )}
-        </div>
+        </section>
     );
 }
 
