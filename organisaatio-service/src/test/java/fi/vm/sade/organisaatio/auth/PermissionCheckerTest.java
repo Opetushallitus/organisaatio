@@ -8,7 +8,6 @@ import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ import static org.mockito.Mockito.*;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest
-@AutoConfigureTestDatabase
 public class PermissionCheckerTest {
 
     @InjectMocks

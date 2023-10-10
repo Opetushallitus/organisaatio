@@ -42,7 +42,7 @@ public class YtjPaivitysLokiRepositoryImpl implements YtjPaivitysLokiRepositoryC
 
     @Override
     public List<YtjPaivitysLoki> findLatest(int limit) {
-        Query query = em.createQuery("SELECT loki FROM YtjPaivitysLoki loki ORDER BY loki.paivitysaika DESC");
+        Query query = em.createQuery("SELECT loki FROM YtjPaivitysLoki loki ORDER BY loki.paivitysaika DESC, loki.id DESC");
         query.setFirstResult(0);
         query.setMaxResults(limit);
         return query.getResultList();

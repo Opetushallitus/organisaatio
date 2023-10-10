@@ -4,6 +4,7 @@ import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.SdkHttpMetadata;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishResult;
+import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,7 @@ class AWSSNSAspectEnabledTest {
     void testEnabledSNS(CapturedOutput capturedOutput) {
         assertTrue(capturedOutput.getOut().contains("Initialized AWSSNSLakkautusTopic true foo"));
         Organisaatio entity = new Organisaatio();
+        entity.setNimi(new MonikielinenTeksti());
         entity.setOid("1.2.3.4.5");
         Organisaatio entity2 = organisaatioRepository.saveAndFlush(entity);
         entity2.setLakkautusPvm(Date.from(Instant.now()));

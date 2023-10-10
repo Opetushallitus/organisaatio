@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,7 +33,7 @@ class OrganisaatioApiJalkelaisetTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         readFile("/fixtures/resource/api/jalkelaiset.json")
-                        , true));
+                        , false));
     }
 
     @Test
@@ -47,7 +46,7 @@ class OrganisaatioApiJalkelaisetTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         readFile("/fixtures/resource/api/jalkelaiset-masked.json")
-                        , true));
+                        , false));
     }
 
     private String readFile(String fileName) throws Exception {

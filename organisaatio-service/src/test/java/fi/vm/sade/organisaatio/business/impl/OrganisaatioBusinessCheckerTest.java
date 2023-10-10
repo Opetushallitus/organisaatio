@@ -7,7 +7,6 @@ import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  */
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest
-@AutoConfigureTestDatabase
 public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
 
     @Autowired

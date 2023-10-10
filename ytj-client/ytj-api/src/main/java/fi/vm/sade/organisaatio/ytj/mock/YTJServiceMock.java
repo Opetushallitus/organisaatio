@@ -173,6 +173,8 @@ public class YTJServiceMock implements YTJService {
             {"2401713-0", "TEHYn HYKSin Naistensairaalan ammattiosasto ry ", "Aatteellinen yhdistys"},
             {"2397998-7", "Vasara, Helsingin yliopiston geologinen kerho ry ", "Aatteellinen yhdistys"},
             {"2255802-1", "Katva Consulting", "Yksityinen elinkeinonharjoittaja"},
+            {"2823782-7", "Varhaiskasvatuksen järjestäjä", "Kunta"},
+            {"8817238-3", "Varhaiskasvatuksen toimipaikka", "Yksityinen elinkeinonharjoittaja"},
             {"1111111-1", "Diibadaa", "Yksityinen elinkeinonharjoittaja"},
             {"2222222-1", "Diibadaadaa", "Yksityinen elinkeinonharjoittaja"},
             {"1492449-0", "Ruotsalainen & koulutustoimija", "Yksityinen elinkeinonharjoittaja"},

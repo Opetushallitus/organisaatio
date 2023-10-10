@@ -11,5 +11,16 @@ services:
     ports:
       - 5432:5432
     command: ["postgres", "-c", "log_statement=all"]
+  database-test:
+    container_name: oph-organisaatio-test-db
+    image: postgres:13.4
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=organisaatio
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5433:5432
+    command: ["postgres", "-c", "log_statement=all"]
 volumes:
   database-data:

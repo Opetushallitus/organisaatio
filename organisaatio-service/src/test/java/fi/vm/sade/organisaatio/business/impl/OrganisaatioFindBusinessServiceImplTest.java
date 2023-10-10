@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -30,7 +29,6 @@ import static org.mockito.Mockito.*;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureTestDatabase
 class OrganisaatioFindBusinessServiceImplTest {
 
     @Mock
