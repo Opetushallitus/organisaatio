@@ -61,14 +61,14 @@
     /* Style */
     color: var(--color-neutral-black);
     border-radius: 3px;
-    background: #FFF;
+    background: #fff;
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
 }
 
 .Kohderyhma.Selected {
     border-radius: 3px;
     border: 2px solid var(--color-primary-blue);
-    background: #FFF;
+    background: #fff;
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
 }
 .Kohderyhma.Selected h3 {
@@ -78,7 +78,7 @@
 .Kohderyhma.Disabled {
     border-radius: 3px;
     border: 2px solid var(--color-gray-gray-lighten-3);
-    background: #FFF;
+    background: #fff;
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
 
     color: var(--color-gray-gray-lighten-1);
@@ -128,7 +128,7 @@
     align-items: flex-end;
     gap: 16px;
 }
-.ButtonRow button[variant=outlined] {
+.ButtonRow button[variant='outlined'] {
     background-color: white;
 }
 
@@ -189,6 +189,12 @@
     border-top: 1px solid var(--color-gray-gray-lighten-3);
 }
 
+.SelectAll {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-weight: bold;
+}
+
 .RajausAccordion .AccordionContentContainer ul {
     column-count: 3;
     list-style: none;
@@ -200,7 +206,6 @@
     padding-top: 4px;
     margin-bottom: 8px;
 }
-
 
 .LoadingOverlay {
     position: absolute;

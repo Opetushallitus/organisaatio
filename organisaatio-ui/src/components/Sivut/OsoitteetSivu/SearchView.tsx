@@ -41,10 +41,24 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function isChecked(koodiUri: string) {
         return !!selectedParameters[koodiUri];
     }
+
+    function allIsChecked() {
+        return Object.entries(selectedParameters).every(([, isChecked]) => isChecked);
+    }
+
     function toggleIsChecked(koodiUri: string) {
         const value = { [koodiUri]: !selectedParameters[koodiUri] };
         setSelectedParameters({ ...selectedParameters, ...value });
     }
+
+    function toggleAllIsChecked() {
+        if (allIsChecked()) {
+            setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, false])));
+        } else {
+            setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, true])));
+        }
+    }
+
     function koodistoLexically(left: Koodisto, right: Koodisto) {
         const l = left.nimi.toUpperCase();
         const r = right.nimi.toUpperCase();
@@ -90,6 +104,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 </div>
                 <div className={styles.Rajaukset}>
                     <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
+                        <Checkbox checked={allIsChecked()} onClick={toggleAllIsChecked} className={styles.SelectAll}>
+                            Valitse kaikki
+                        </Checkbox>
                         <ul>
                             {hakuParametrit.oppilaitostyypit.sort(koodistoLexically).map((koodisto) => {
                                 return (
