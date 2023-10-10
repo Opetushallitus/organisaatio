@@ -2,43 +2,20 @@ package fi.vm.sade.organisaatio.resource;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureTestDatabase
-@AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
-@Sql("/data/truncate_tables.sql")
-@Sql("/data/basic_organisaatio_data.sql")
-class OrganisaatioNimiMaskingTest {
-    @Autowired
-    private MockMvc mockMvc;
-
+class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
     @Test
     @Sql("/data/truncate_tables.sql")
     @Sql("/data/basic_organisaatio_data.sql")
     @OPHUser
     void testGetByOidWithOPHUser() throws Exception {
-        mockMvc.perform(get("/api/1.2.8001.2")).andExpect(status().isOk())
+        mvc.perform(get("/api/1.2.8001.2")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.nimi.fi").value("Piilotustesti"))
                 .andExpect(jsonPath("$.yhteystiedot").isNotEmpty())
                 .andExpect(jsonPath("$.postiosoite").isNotEmpty())
@@ -50,7 +27,7 @@ class OrganisaatioNimiMaskingTest {
     @Sql("/data/basic_organisaatio_data.sql")
     @AnonymousUser
     void testGetByOidAnonymously() throws Exception {
-        mockMvc.perform(get("/api/1.2.8001.2")).andExpect(status().isOk())
+        mvc.perform(get("/api/1.2.8001.2")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.nimi.fi").value("Yksityinen elinkeinonharjoittaja (6165189-7)"))
                 .andExpect(jsonPath("$.yhteystiedot").isEmpty())
                 .andExpect(jsonPath("$.postiosoite").isEmpty())
@@ -61,7 +38,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Liitokset with OPH role")
     @OPHUser
     void testLiitoksetWithRole() throws Exception {
-        this.mockMvc.perform(get("/api/liitokset"))
+        mvc.perform(get("/api/liitokset"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{" +
                         "\"organisaatio\":{" +
@@ -84,7 +61,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Liitokset without role")
     @AnonymousUser
     void testLiitoksetWithoutRole() throws Exception {
-        this.mockMvc.perform(get("/api/liitokset"))
+        mvc.perform(get("/api/liitokset"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[{" +
@@ -106,7 +83,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Liitokset with limited role")
     @LimitedUser
     void testLiitoksetWithLimitedRole() throws Exception {
-        this.mockMvc.perform(get("/api/liitokset"))
+        mvc.perform(get("/api/liitokset"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[{" +
@@ -128,7 +105,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Names with OPH role")
     @OPHUser
     void testNimetWithOPHRole() throws Exception {
-        this.mockMvc.perform(get("/api/1.2.8001.2/nimet"))
+        mvc.perform(get("/api/1.2.8001.2/nimet"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[{\"nimi\":" +
@@ -140,7 +117,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Names without role")
     @AnonymousUser
     void testNimetWithoutRole() throws Exception {
-        this.mockMvc.perform(get("/api/1.2.8001.2/nimet"))
+        mvc.perform(get("/api/1.2.8001.2/nimet"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[" +
@@ -156,7 +133,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Names with limited role")
     @LimitedUser
     void testNimetLimitedRole() throws Exception {
-        this.mockMvc.perform(get("/api/1.2.8001.2/nimet"))
+        mvc.perform(get("/api/1.2.8001.2/nimet"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[" +
@@ -172,7 +149,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Findbyoids with OPH role")
     @OPHUser
     void testFindByOidsWithRole() throws Exception {
-        this.mockMvc.perform(post("/api/findbyoids")
+        mvc.perform(post("/api/findbyoids")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[\"1.2.8001.1\",\"1.2.8001.2\"]"))
                 .andExpect(status().isOk())
@@ -213,7 +190,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Findbyoids without role")
     @AnonymousUser
     void testFindByOidsWithOutRole() throws Exception {
-        this.mockMvc.perform(post("/api/findbyoids")
+        mvc.perform(post("/api/findbyoids")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[\"1.2.8001.1\",\"1.2.8001.2\"]"))
                 .andExpect(status().isOk())
@@ -249,7 +226,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Findbyoids with limited role")
     @LimitedUser
     void testFindByOidsWithLimitedRole() throws Exception {
-        this.mockMvc.perform(post("/api/findbyoids")
+        mvc.perform(post("/api/findbyoids")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[\"1.2.8001.1\",\"1.2.8001.2\"]"))
                 .andExpect(status().isOk())
@@ -287,11 +264,12 @@ class OrganisaatioNimiMaskingTest {
                                 "\"yhteystiedot\":[]" +
                                 "}]", false));
     }
+
     @Test
     @DisplayName("Hierarkia haku with OPH role")
     @OPHUser
     void testHierarkiaHaeWithRole() throws Exception {
-        this.mockMvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
+        mvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "{" +
@@ -319,7 +297,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Hierarkia haku with limited role")
     @LimitedUser
     void testHierarkiaHaeWithLimitedRole() throws Exception {
-        this.mockMvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
+        mvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "{" +
@@ -353,7 +331,7 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Hierarkia haku anonymously")
     @AnonymousUser
     void testHierarkiaHaeWithoutRole() throws Exception {
-        this.mockMvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
+        mvc.perform(get("/api/hierarkia/hae?searchStr=1.2.8001.2&lakkautetut=false&aktiiviset=true&suunnitellut=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "{" +
@@ -387,37 +365,20 @@ class OrganisaatioNimiMaskingTest {
     @DisplayName("Get with limited role, check masked")
     @LimitedUser
     void testGetWithLimitedRole() throws Exception {
-        this.mockMvc.perform(get("/api/{oid}","1.2.8001.2")
+        mvc.perform(get("/api/{oid}", "1.2.8001.2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"maskingActive\": true}",false));
+                .andExpect(content().json("{\"maskingActive\": true}", false));
     }
+
     @Test
     @DisplayName("Get with OPH role, check not masked")
     @OPHUser
     void testGetWithOPHRole() throws Exception {
-        this.mockMvc.perform(get("/api/{oid}","1.2.8001.2")
+        mvc.perform(get("/api/{oid}", "1.2.8001.2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"maskingActive\": false}",false));
-    }
-
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_READ", "APP_ORGANISAATIOHALLINTA_READ_1.2.246.562.10.90008375488"})
-    @interface LimitedUser {
-    }
-
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    @WithAnonymousUser
-    @interface AnonymousUser {
-    }
-
-    @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.RUNTIME)
-    @WithMockUser(roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001"})
-    @interface OPHUser {
+                .andExpect(content().json("{\"maskingActive\": false}", false));
     }
 
 

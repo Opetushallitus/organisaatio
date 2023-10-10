@@ -5,9 +5,8 @@ import fi.vm.sade.organisaatio.model.YtjVirhe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,9 +16,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@Transactional
 @SpringBootTest
-@AutoConfigureTestDatabase
+@Sql("/data/truncate_tables.sql")
 public class YtjPaivitysLokiRepositoryImplTest {
 
     @Autowired
@@ -31,20 +29,28 @@ public class YtjPaivitysLokiRepositoryImplTest {
     @BeforeEach
     public void setUp() {
         YtjVirhe virhe = new YtjVirhe();
+        virhe.setYtjPaivitysLoki(oldLog);
         virhe.setOid("12345.0");
         virhe.setVirhekohde(YtjVirhe.YTJVirheKohde.ALKUPVM);
         virhe.setVirheviesti("bar");
         // vanhempi loki
+        oldLog.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
         oldLog.setPaivitetytLkm(1);
         oldLog.setPaivitysaika(createDate(2017, 0, 1));
         oldLog.setYtjVirheet((new ArrayList<YtjVirhe>()));
         oldLog.getYtjVirheet().add(virhe);
         ytjPaivitysLokiRepository.save(oldLog);
+        YtjVirhe virhe2 = new YtjVirhe();
+        virhe2.setYtjPaivitysLoki(newLog);
+        virhe2.setOid("12345.0");
+        virhe2.setVirhekohde(YtjVirhe.YTJVirheKohde.ALKUPVM);
+        virhe2.setVirheviesti("bar");
         // uudempi loki
+        newLog.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
         newLog.setPaivitetytLkm(1);
-        newLog.setPaivitysaika(createDate(2017, 5 ,5));
+        newLog.setPaivitysaika(createDate(2017, 5, 5));
         newLog.setYtjVirheet((new ArrayList<YtjVirhe>()));
-        newLog.getYtjVirheet().add(virhe);
+        newLog.getYtjVirheet().add(virhe2);
         ytjPaivitysLokiRepository.save(newLog);
     }
 

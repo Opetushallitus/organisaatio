@@ -11,15 +11,14 @@ import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.vm.sade.organisaatio.ytj.mock.YTJServiceMock;
 import org.assertj.core.groups.Tuple;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -38,7 +37,8 @@ import static org.mockito.Mockito.when;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureTestDatabase
+@Sql("/data/truncate_tables.sql")
+@Sql("/data/basic_organisaatio_data.sql")
 public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
     @TestConfiguration
@@ -59,16 +59,10 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
 
     @BeforeEach
     public void setUp() throws YtjConnectionException {
-        executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
         when(ytjService.findByYTunnus(eq("1234569-5"), any(YTJKieli.class))).thenAnswer(invocation ->
                 new YTJDTOBuilder(invocation.getArgument(0, String.class))
                         .kieli(invocation.getArgument(1, YTJKieli.class))
                         .build());
-    }
-
-    @AfterEach
-    public void tearDown() {
-        executeSqlScript("classpath:data/truncate_tables.sql", false);
     }
 
     @Test

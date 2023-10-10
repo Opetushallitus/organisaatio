@@ -14,12 +14,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
-@AutoConfigureTestDatabase
+@Sql("/data/truncate_tables.sql")
 class OrganisaatioApiTest extends SecurityAwareTestBase {
 
 

@@ -1,14 +1,10 @@
 package fi.vm.sade.organisaatio.repository.impl;
 
-import fi.vm.sade.organisaatio.model.Lisatietotyyppi;
-import fi.vm.sade.organisaatio.model.OppilaitostyyppiRajoite;
-import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatiotyyppiRajoite;
+import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.LisatietoTyyppiRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureTestDatabase
 public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Autowired
     private LisatietoTyyppiRepository lisatietoTyyppiRepository;
@@ -41,6 +36,7 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
 
     private void createAndPersistOrganisation(String oid, String organisaatiotyyppi, String oppilaitostyyppi) {
         Organisaatio organisaatio = new Organisaatio();
+        organisaatio.setNimi(new MonikielinenTeksti());
         organisaatio.setOid(oid);
         organisaatio.setTyypit(Collections.singleton(organisaatiotyyppi));
         organisaatio.setOppilaitosTyyppi(oppilaitostyyppi);

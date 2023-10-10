@@ -582,7 +582,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
 
         logger.debug("  q = {}", q);
 
-        return q.select(org.oid).fetch();
+        return q.select(org.oid).orderBy(org.id.asc()).fetch();
     }
 
     /**

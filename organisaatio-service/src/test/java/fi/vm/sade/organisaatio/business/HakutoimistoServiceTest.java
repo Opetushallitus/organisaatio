@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,7 +17,6 @@ class HakutoimistoServiceTest {
     HakutoimistoService hakutoimistoService;
 
     @Test
-    @Transactional(readOnly = true)
     void testFetchingHakutoimisto() {
         assertThrows(HakutoimistoNotFoundException.class, () ->
                 hakutoimistoService.hakutoimisto("1.2.2004.4"));

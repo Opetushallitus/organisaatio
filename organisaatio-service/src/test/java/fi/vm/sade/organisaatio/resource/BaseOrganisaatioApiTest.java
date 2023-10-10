@@ -17,7 +17,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 @Sql("/data/truncate_tables.sql")
@@ -27,7 +26,6 @@ abstract public class BaseOrganisaatioApiTest {
     protected MockMvc mvc;
     @Autowired
     protected ObjectMapper objectMapper;
-
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)

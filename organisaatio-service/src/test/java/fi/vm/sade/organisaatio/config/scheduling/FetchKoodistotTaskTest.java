@@ -19,7 +19,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@Sql("/db/migration/V20231009000000000__add_table_for_koodistos.sql")
+@Sql("/data/truncate_tables.sql")
 class FetchKoodistotTaskTest extends BaseOrganisaatioApiTest {
     @Value("${host.virkailija}")
     String virkailijaHost;

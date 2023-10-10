@@ -8,16 +8,14 @@ import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.mock.YTJServiceMock;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,7 +26,8 @@ import static org.mockito.Mockito.spy;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureTestDatabase
+@Sql("/data/truncate_tables.sql")
+@Sql("/data/basic_organisaatio_data.sql")
 class YTJResourceTest extends SecurityAwareTestBase {
 
     @TestConfiguration
@@ -48,19 +47,9 @@ class YTJResourceTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioBusinessService organisaatioBusinessService;
 
-    @BeforeEach
-    public void setup() {
-        executeSqlScript("classpath:data/root_organisaatio_data.sql", false);
-    }
-
-    @AfterEach
-    public void cleanup() {
-        executeSqlScript("classpath:data/truncate_tables.sql", false);
-    }
-
     @Test
     void findByYTunnusV4() {
-        OrganisaatioRDTOV4 varhaiskasvatuksenJarjestaja = ytjResource.findByYTunnusV4("2255802-1");
+        OrganisaatioRDTOV4 varhaiskasvatuksenJarjestaja = ytjResource.findByYTunnusV4("8817238-3");
         // lisätään pakolliset tiedot ennen tallennusta
         varhaiskasvatuksenJarjestaja.setTyypit(singleton(OrganisaatioTyyppi.VARHAISKASVATUKSEN_JARJESTAJA.koodiValue()));
 
@@ -68,7 +57,7 @@ class YTJResourceTest extends SecurityAwareTestBase {
 
         assertThat(varhaiskasvatuksenJarjestaja).returns("1.2.246.562.24.00000000001", OrganisaatioRDTOV4::getParentOid);
 
-        OrganisaatioRDTOV4 varhaiskasvatuksenToimipaikka = ytjResource.findByYTunnusV4("2255802-1");
+        OrganisaatioRDTOV4 varhaiskasvatuksenToimipaikka = ytjResource.findByYTunnusV4("8817238-3");
         // lisätään pakolliset tiedot ennen tallennusta
         varhaiskasvatuksenToimipaikka.setYTunnus(null);
         varhaiskasvatuksenToimipaikka.setParentOid(varhaiskasvatuksenJarjestaja.getOid());

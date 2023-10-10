@@ -13,14 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,19 +29,9 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@org.springframework.test.context.jdbc.Sql(
-        scripts = "classpath:data/basic_organisaatio_data.sql",
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
-)
-@org.springframework.test.context.jdbc.Sql(
-        scripts = "classpath:data/truncate_tables.sql",
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
-)
-@ActiveProfiles("dev")
-@ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
-@AutoConfigureTestDatabase
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@Sql("/data/truncate_tables.sql")
+@Sql("/data/basic_organisaatio_data.sql")
 public class OrganisaatioResourceTest {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -89,7 +74,6 @@ public class OrganisaatioResourceTest {
         String s = res.parentoids("does_not_exist");
         assertEquals(reference, s);
     }
-
 
 
     @Test
@@ -165,10 +149,6 @@ public class OrganisaatioResourceTest {
             LOG.debug("ORG: {}", org.getOid());
         }
     }
-
-
-
-
 
 
     @Test

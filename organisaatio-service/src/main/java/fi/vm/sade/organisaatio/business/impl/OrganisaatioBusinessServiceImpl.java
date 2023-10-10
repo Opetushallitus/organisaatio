@@ -810,12 +810,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public Set<Organisaatio> processNewOrganisaatioSuhdeChanges() {
         Set<Organisaatio> results = new HashSet<>();
         List<OrganisaatioSuhde> suhdeList = organisaatioSuhdeRepository.findForDay(new Date());
+        log.info("Found {} organisaatiosuhdee with alkupvm of today", suhdeList.size());
         for (OrganisaatioSuhde os : suhdeList) {
-            log.info("Processing {}", os);
+            log.info("Processing organisaatiosuhde {}", os);
 
             Organisaatio child = os.getChild();
             // Liitos ei muuta parenttia (kts. Organisaatio#getParent)
             if (!OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(os.getSuhdeTyyppi())) {
+                log.info("Setting org {} parent to {}", child.getOid(), os.getParent().getOid());
                 setParentPath(child, os.getParent().getOid());
                 organisaatioRepository.save(child); // TODO works?
             }
