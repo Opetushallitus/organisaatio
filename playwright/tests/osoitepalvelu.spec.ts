@@ -45,26 +45,16 @@ test.describe("Osoitepalvelu", () => {
     test("checks and unchecks all selections", async ({ page }) => {
       await openOppilatostyyppiBox(page);
       await expect(getCheckedItems(page)).toHaveCount(0);
-      const checkAll = await page
-        .locator("label")
-        .filter({ hasText: "Valitse kaikki" })
-        .getByRole("checkbox");
-      await pressTabUntilFocusOn(page, checkAll);
-      await page.keyboard.press("Space");
+      await toggleCheckByText(page, "Valitse kaikki");
       await expect(getCheckedItems(page)).toHaveCount(
         await page.getByRole("listitem").count()
       );
-      await page.keyboard.press("Space");
+      await toggleCheckByText(page, "Valitse kaikki");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
     test("finds peruskoulut", async ({ page }) => {
       await openOppilatostyyppiBox(page);
-      const checkbox = await page
-        .getByRole("listitem")
-        .filter({ hasText: "Peruskoulut" })
-        .getByRole("checkbox");
-      await pressTabUntilFocusOn(page, checkbox);
-      await page.keyboard.press("Space");
+      await toggleCheckByText(page, "Peruskoulut");
       const searchButton = await page.getByRole("button", { name: "Hae" });
       await pressTabUntilFocusOn(page, searchButton);
       await page.keyboard.press("Space");
@@ -73,6 +63,15 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 });
+
+async function toggleCheckByText(page: Page, name: string) {
+  const checkbox = await page
+    .locator("label")
+    .filter({ hasText: name })
+    .getByRole("checkbox");
+  await pressTabUntilFocusOn(page, checkbox);
+  await page.keyboard.press("Space");
+}
 
 function getCheckedItems(page: Page) {
   return page
