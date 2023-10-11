@@ -30,9 +30,7 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByRole("list")).toBeHidden();
     });
     test("updates selection text", async ({ page }) => {
-      const button = page.getByRole("button", { name: "Oppilaitostyyppi" });
-      await pressTabUntilFocusOn(page, button);
-      await page.keyboard.press("Space");
+      const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
       await expect(page.getByRole("list")).toBeVisible();
       await expect(button.locator("[aria-live=off]")).toHaveText("");
       await checkRandomNumberofListItems(page);
@@ -45,9 +43,7 @@ test.describe("Osoitepalvelu", () => {
       await expect(button.locator("[aria-live=off]")).toHaveText(expectedText);
     });
     test("checks and unchecks all selections", async ({ page }) => {
-      const button = page.getByRole("button", { name: "Oppilaitostyyppi" });
-      await pressTabUntilFocusOn(page, button);
-      await page.keyboard.press("Space");
+      await openOppilatostyyppiBox(page);
       await expect(
         page
           .getByRole("listitem")
@@ -72,9 +68,7 @@ test.describe("Osoitepalvelu", () => {
       ).toHaveCount(0);
     });
     test("finds peruskoulut", async ({ page }) => {
-      const button = page.getByRole("button", { name: "Oppilaitostyyppi" });
-      await pressTabUntilFocusOn(page, button);
-      await page.keyboard.press("Space");
+      await openOppilatostyyppiBox(page);
       const checkbox = await page
         .getByRole("listitem")
         .filter({ hasText: "Peruskoulut" })
@@ -89,6 +83,18 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 });
+
+async function openOppilatostyyppiBox(page: Page) {
+  await openOppilatostyyppiBoxAndReturnOpeningButton(page);
+}
+
+async function openOppilatostyyppiBoxAndReturnOpeningButton(page: Page) {
+  const button = page.getByRole("button", { name: "Oppilaitostyyppi" });
+  await pressTabUntilFocusOn(page, button);
+  await page.keyboard.press("Space");
+
+  return button;
+}
 
 async function pressTabUntilFocusOn(page: Page, locator: Locator) {
   let correctLocatorHasFocus = false;
