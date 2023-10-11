@@ -74,14 +74,16 @@ async function toggleCheckboxByText(page: Page, name: string) {
 }
 
 function getCheckedItems(page: Page) {
-  return page
-    .getByRole("listitem")
-    .filter({ has: page.getByRole("checkbox", { checked: true }) });
+  return getItemsByCheckState(page, true);
 }
 
 function getUncheckedItems(page: Page) {
+  return getItemsByCheckState(page, false);
+}
+
+function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
-    has: page.getByRole("checkbox", { checked: false }),
+    has: page.getByRole("checkbox", { checked }),
   });
 }
 
