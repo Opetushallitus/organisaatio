@@ -65,12 +65,13 @@ test.describe("Osoitepalvelu", () => {
 });
 
 async function toggleCheckboxByText(page: Page, name: string) {
-  const checkbox = await page
-    .locator("label")
-    .filter({ hasText: name })
-    .getByRole("checkbox");
+  const checkbox = await getCheckboxByText(page, name);
   await pressTabUntilFocusOn(page, checkbox);
   await page.keyboard.press("Space");
+}
+
+function getCheckboxByText(page: Page, name: string) {
+  return page.getByLabel(name, { exact: true });
 }
 
 function getCheckedItems(page: Page) {
