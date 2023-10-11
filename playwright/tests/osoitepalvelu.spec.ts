@@ -44,28 +44,18 @@ test.describe("Osoitepalvelu", () => {
     });
     test("checks and unchecks all selections", async ({ page }) => {
       await openOppilatostyyppiBox(page);
-      await expect(
-        page
-          .getByRole("listitem")
-          .filter({ has: page.getByRole("checkbox", { checked: true }) })
-      ).toHaveCount(0);
+      await expect(getCheckedItems(page)).toHaveCount(0);
       const checkAll = await page
         .locator("label")
         .filter({ hasText: "Valitse kaikki" })
         .getByRole("checkbox");
       await pressTabUntilFocusOn(page, checkAll);
       await page.keyboard.press("Space");
-      await expect(
-        page
-          .getByRole("listitem")
-          .filter({ has: page.getByRole("checkbox", { checked: true }) })
-      ).toHaveCount(await page.getByRole("listitem").count());
+      await expect(getCheckedItems(page)).toHaveCount(
+        await page.getByRole("listitem").count()
+      );
       await page.keyboard.press("Space");
-      await expect(
-        page
-          .getByRole("listitem")
-          .filter({ has: page.getByRole("checkbox", { checked: true }) })
-      ).toHaveCount(0);
+      await expect(getCheckedItems(page)).toHaveCount(0);
     });
     test("finds peruskoulut", async ({ page }) => {
       await openOppilatostyyppiBox(page);
@@ -83,6 +73,12 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 });
+
+function getCheckedItems(page: Page) {
+  return page
+    .getByRole("listitem")
+    .filter({ has: page.getByRole("checkbox", { checked: true }) });
+}
 
 async function openOppilatostyyppiBox(page: Page) {
   await openOppilatostyyppiBoxAndReturnOpeningButton(page);
