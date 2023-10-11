@@ -195,6 +195,17 @@
     font-weight: bold;
 }
 
+.RajausRyhmat {
+    border-bottom: 1px solid var(--color-gray-gray-lighten-3);
+    padding-top: 24px;
+    padding-bottom: 24px;
+    font-weight: bold;
+}
+
+.RajausRyhmat label {
+    margin-right: 16px;
+}
+
 .RajausAccordion .AccordionContentContainer ul {
     column-count: 3;
     list-style: none;

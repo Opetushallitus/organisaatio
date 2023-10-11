@@ -201,8 +201,17 @@ public class OsoitteetResource {
     @GetMapping(value = "/parametrit")
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public RawJson getParametrit() {
-        return new RawJson("{ \"oppilaitostyypit\": " + oppilaitostyyppiKoodit + "}");
+        return new RawJson("{ \"oppilaitostyypit\": {\"koodit\": "+ oppilaitostyyppiKoodit + ", \"ryhmat\": "+ oppilaitostyyppiRyhmät + "}}");
     }
+
+    private String oppilaitostyyppiRyhmät = "{" +
+            "\"Perusopetus\": [\"oppilaitostyyppi_12#1\",\"oppilaitostyyppi_11#1\",\"oppilaitostyyppi_19#1\"]," +
+            "\"Lukiokoulutus\": [\"oppilaitostyyppi_15#1\",\"oppilaitostyyppi_19#1\"]," +
+            "\"Ammatillinen koulutus\": [\"oppilaitostyyppi_64#1\",\"oppilaitostyyppi_29#1\",\"oppilaitostyyppi_61#1\",\"oppilaitostyyppi_22#1\",\"oppilaitostyyppi_21#1\",\"oppilaitostyyppi_24#1\",\"oppilaitostyyppi_62#1\",\"oppilaitostyyppi_23#1\"]," +
+            "\"Korkeakoulutus\": [\"oppilaitostyyppi_42#1\",\"oppilaitostyyppi_43#1\",\"oppilaitostyyppi_41#1\"]," +
+            "\"Vapaan sivistystyön koulutus\": [\"oppilaitostyyppi_65#1\",\"oppilaitostyyppi_62#1\",\"oppilaitostyyppi_66#1\",\"oppilaitostyyppi_63#1\",\"oppilaitostyyppi_64#1\"]," +
+            "\"Taiteen perusopetus\": [\"oppilaitostyyppi_01#1\",\"oppilaitostyyppi_61#1\"]" +
+            "}";
 
     private String oppilaitostyyppiKoodit = "[\n" +
             "  {\n" +

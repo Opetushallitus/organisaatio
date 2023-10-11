@@ -61,6 +61,32 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     });
+    test("checks and unchecks all oppilaitostyyppi that are part of a group", async ({
+      page,
+    }) => {
+      await openOppilatostyyppiBox(page);
+      await expect(getCheckedItems(page)).toHaveCount(0);
+      await toggleCheckboxByText(page, "Korkeakoulutus");
+      await expect(getCheckedItems(page)).toHaveText([
+        "Ammattikorkeakoulut",
+        "Sotilaskorkeakoulut",
+        "Yliopistot",
+      ]);
+      await toggleCheckboxByText(page, "Korkeakoulutus");
+      await expect(getCheckedItems(page)).toHaveCount(0);
+    });
+    test("checks and unchecks an oppilatostyyppi group", async ({ page }) => {
+      await openOppilatostyyppiBox(page);
+      await expect(getCheckedItems(page)).toHaveCount(0);
+      await toggleCheckboxByText(page, "Ammattikorkeakoulut");
+      await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
+      await toggleCheckboxByText(page, "Sotilaskorkeakoulut");
+      await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
+      await toggleCheckboxByText(page, "Yliopistot");
+      await expect(getCheckboxByText(page, "Korkeakoulutus")).toBeChecked();
+      await toggleCheckboxByText(page, "Sotilaskorkeakoulut");
+      await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
+    });
   });
 });
 

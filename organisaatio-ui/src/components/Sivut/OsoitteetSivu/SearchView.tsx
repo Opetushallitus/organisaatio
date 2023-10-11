@@ -13,7 +13,7 @@ type SearchViewProps = {
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     const [loading, setLoading] = useState<boolean>(false);
-    const a = hakuParametrit.oppilaitostyypit.reduce<Record<string, boolean>>((accu, k) => {
+    const a = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
         return accu;
     }, {});
@@ -71,7 +71,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         return o;
     }
     function buildSelectionDescription() {
-        const s = hakuParametrit.oppilaitostyypit.reduce<string>((accu, k) => {
+        const s = hakuParametrit.oppilaitostyypit.koodit.reduce<string>((accu, k) => {
             return selectedParameters[k.koodiUri] ? `${accu}${k.nimi}, ` : accu;
         }, '');
         return s.slice(0, s.length - 2);
@@ -104,11 +104,27 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 </div>
                 <div className={styles.Rajaukset}>
                     <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
+                        <h4>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
+                        <div className={styles.RajausRyhmat}>
+                            {Object.entries(hakuParametrit.oppilaitostyypit.ryhmat).map(([name, koodit]) => {
+                                const checked = koodit.every(isChecked);
+                                const toggleGroup = () => {
+                                    const value = Object.fromEntries(koodit.map((k) => [k, !checked]));
+                                    setSelectedParameters({ ...selectedParameters, ...value });
+                                };
+
+                                return (
+                                    <Checkbox key={name} checked={checked} onClick={toggleGroup}>
+                                        {name}
+                                    </Checkbox>
+                                );
+                            })}
+                        </div>
                         <Checkbox checked={allIsChecked()} onClick={toggleAllIsChecked} className={styles.SelectAll}>
                             Valitse kaikki
                         </Checkbox>
                         <ul>
-                            {hakuParametrit.oppilaitostyypit.sort(koodistoLexically).map((koodisto) => {
+                            {hakuParametrit.oppilaitostyypit.koodit.sort(koodistoLexically).map((koodisto) => {
                                 return (
                                     <li key={koodisto.koodiUri}>
                                         <Checkbox

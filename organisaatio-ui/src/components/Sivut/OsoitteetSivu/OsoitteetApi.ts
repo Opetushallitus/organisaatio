@@ -30,7 +30,10 @@ export type Koodisto = {
 };
 
 export type HakuParametrit = {
-    oppilaitostyypit: Array<Koodisto>;
+    oppilaitostyypit: {
+        koodit: Array<Koodisto>;
+        ryhmat: Record<string, Array<string>>;
+    };
 };
 
 export async function haeOsoitteet(req: HaeRequest): Promise<Hakutulos[]> {
