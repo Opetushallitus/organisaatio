@@ -45,16 +45,16 @@ test.describe("Osoitepalvelu", () => {
     test("checks and unchecks all selections", async ({ page }) => {
       await openOppilatostyyppiBox(page);
       await expect(getCheckedItems(page)).toHaveCount(0);
-      await toggleCheckByText(page, "Valitse kaikki");
+      await toggleCheckboxByText(page, "Valitse kaikki");
       await expect(getCheckedItems(page)).toHaveCount(
         await page.getByRole("listitem").count()
       );
-      await toggleCheckByText(page, "Valitse kaikki");
+      await toggleCheckboxByText(page, "Valitse kaikki");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
     test("finds peruskoulut", async ({ page }) => {
       await openOppilatostyyppiBox(page);
-      await toggleCheckByText(page, "Peruskoulut");
+      await toggleCheckboxByText(page, "Peruskoulut");
       const searchButton = await page.getByRole("button", { name: "Hae" });
       await pressTabUntilFocusOn(page, searchButton);
       await page.keyboard.press("Space");
@@ -64,7 +64,7 @@ test.describe("Osoitepalvelu", () => {
   });
 });
 
-async function toggleCheckByText(page: Page, name: string) {
+async function toggleCheckboxByText(page: Page, name: string) {
   const checkbox = await page
     .locator("label")
     .filter({ hasText: name })
@@ -77,6 +77,12 @@ function getCheckedItems(page: Page) {
   return page
     .getByRole("listitem")
     .filter({ has: page.getByRole("checkbox", { checked: true }) });
+}
+
+function getUncheckedItems(page: Page) {
+  return page.getByRole("listitem").filter({
+    has: page.getByRole("checkbox", { checked: false }),
+  });
 }
 
 async function openOppilatostyyppiBox(page: Page) {
@@ -108,9 +114,7 @@ async function checkRandomNumberofListItems(page: Page) {
   const checkCount = randomIntFromInterval(1, 5);
 
   for (let i = 0; i < checkCount; i++) {
-    const uncheckedItems = await page.getByRole("listitem").filter({
-      has: page.getByRole("checkbox", { checked: false }),
-    });
+    const uncheckedItems = await getUncheckedItems(page);
     const count = await uncheckedItems.count();
     const selectedItem = await uncheckedItems
       .nth(randomIntFromInterval(1, count))
