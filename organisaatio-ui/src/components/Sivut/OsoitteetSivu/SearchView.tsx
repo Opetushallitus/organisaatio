@@ -2,9 +2,9 @@ import { haeOsoitteet, HakuParametrit, Hakutulos, OppilaitostyyppiKoodi } from '
 import React, { useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import { Checkbox } from './Checkbox';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -120,9 +120,11 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 );
                             })}
                         </div>
-                        <Checkbox checked={allIsChecked()} onClick={toggleAllIsChecked} className={styles.SelectAll}>
-                            Valitse kaikki
-                        </Checkbox>
+                        <div className={styles.SelectAll}>
+                            <Checkbox checked={allIsChecked()} onClick={toggleAllIsChecked}>
+                                Valitse kaikki
+                            </Checkbox>
+                        </div>
                         <ul>
                             {hakuParametrit.oppilaitostyypit.koodit.sort(koodistoLexically).map((koodisto) => {
                                 return (

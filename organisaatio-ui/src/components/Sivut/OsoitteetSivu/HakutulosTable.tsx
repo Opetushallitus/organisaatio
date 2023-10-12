@@ -1,7 +1,7 @@
 import React from 'react';
 import { Hakutulos } from './OsoitteetApi';
 import styles from './HakutulosTable.module.css';
-import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
+import { Checkbox } from './Checkbox';
 
 type HakutulosTableProps = {
     results: Hakutulos[];
@@ -14,9 +14,10 @@ export function HakutulosTable({ results }: HakutulosTableProps) {
                     <tr>
                         <td className={styles.ColumnCheckbox}>
                             <span className={styles.Checkbox}>
-                                <Checkbox checked={true} disabled={true} />
+                                <Checkbox checked={true} disabled={true}>
+                                    Organisaation nimi
+                                </Checkbox>
                             </span>
-                            Organisaation nimi
                         </td>
                         <td className={styles.ColumnEmail}>Sähköpostiosoite</td>
                         <td>Puhelinnumero</td>
@@ -36,9 +37,10 @@ export function HakutulosTable({ results }: HakutulosTableProps) {
                         <tr key={_.id}>
                             <td className={styles.ColumnCheckbox + ' ' + styles.Fade}>
                                 <span className={styles.Checkbox}>
-                                    <Checkbox checked={true} disabled={true} />
+                                    <Checkbox checked={true} disabled={true}>
+                                        {_.nimi}
+                                    </Checkbox>
                                 </span>
-                                {_.nimi}
                             </td>
                             <td className={styles.ColumnEmail + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</td>
                             <td>{_.puhelinnumero ?? '-'}</td>
