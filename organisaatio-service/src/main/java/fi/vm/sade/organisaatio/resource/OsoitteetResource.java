@@ -209,13 +209,13 @@ public class OsoitteetResource {
     @GetMapping(value = "/parametrit")
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public Parametrit getParametrit() {
-        Map<String, List<String>> ryhmat = Map.of(
-                "Perusopetus", List.of("oppilaitostyyppi_12#1", "oppilaitostyyppi_11#1", "oppilaitostyyppi_19#1"),
-                "Lukiokoulutus", List.of("oppilaitostyyppi_15#1", "oppilaitostyyppi_19#1"),
-                "Ammatillinen koulutus", List.of("oppilaitostyyppi_63#1", "oppilaitostyyppi_29#1", "oppilaitostyyppi_61#1", "oppilaitostyyppi_22#1", "oppilaitostyyppi_21#1", "oppilaitostyyppi_24#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_23#1"),
-                "Korkeakoulutus", List.of("oppilaitostyyppi_42#1", "oppilaitostyyppi_43#1", "oppilaitostyyppi_41#1"),
-                "Vapaan sivistystyön koulutus", List.of("oppilaitostyyppi_65#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_66#1", "oppilaitostyyppi_63#1", "oppilaitostyyppi_64#1"),
-                "Taiteen perusopetus", List.of("oppilaitostyyppi_01#1", "oppilaitostyyppi_61#1")
+        List<OppilaitosRyhma> ryhmat = List.of(
+                new OppilaitosRyhma("Perusopetus", List.of("oppilaitostyyppi_12#1", "oppilaitostyyppi_11#1", "oppilaitostyyppi_19#1")),
+                new OppilaitosRyhma("Lukiokoulutus", List.of("oppilaitostyyppi_15#1", "oppilaitostyyppi_19#1")),
+                new OppilaitosRyhma("Ammatillinen koulutus", List.of("oppilaitostyyppi_63#1", "oppilaitostyyppi_29#1", "oppilaitostyyppi_61#1", "oppilaitostyyppi_22#1", "oppilaitostyyppi_21#1", "oppilaitostyyppi_24#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_23#1")),
+                new OppilaitosRyhma("Korkeakoulutus", List.of("oppilaitostyyppi_42#1", "oppilaitostyyppi_43#1", "oppilaitostyyppi_41#1")),
+                new OppilaitosRyhma("Vapaan sivistystyön koulutus", List.of("oppilaitostyyppi_65#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_66#1", "oppilaitostyyppi_63#1", "oppilaitostyyppi_64#1")),
+                new OppilaitosRyhma("Taiteen perusopetus", List.of("oppilaitostyyppi_01#1", "oppilaitostyyppi_61#1"))
         );
         List<OppilaitostyyppiKoodi> oppilaitostyyppiKoodis = jdbcTemplate.query(
                 "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitostyyppi",
@@ -233,7 +233,13 @@ class Parametrit {
 @Data
 class OppilaitostyyppiParametrit {
     private final List<OppilaitostyyppiKoodi> koodit;
-    private final Map<String, List<String>> ryhmat;
+    private final List<OppilaitosRyhma> ryhmat;
+}
+
+@Data
+class OppilaitosRyhma {
+    private final String nimi;
+    private final List<String> koodit;
 }
 
 @Data

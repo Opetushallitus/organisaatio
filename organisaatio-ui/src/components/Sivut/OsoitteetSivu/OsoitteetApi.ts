@@ -24,15 +24,20 @@ export type HaeRequest = {
     oppilaitostyypit: Koodiarvo[];
 };
 
-export type Koodisto = {
+export type OppilaitostyyppiKoodi = {
     koodiUri: string;
     nimi: string;
 };
 
+export type OppilaitosRyhma = {
+    nimi: string;
+    koodit: string[];
+};
+
 export type HakuParametrit = {
     oppilaitostyypit: {
-        koodit: Array<Koodisto>;
-        ryhmat: Record<string, Array<string>>;
+        koodit: OppilaitostyyppiKoodi[];
+        ryhmat: OppilaitosRyhma[];
     };
 };
 

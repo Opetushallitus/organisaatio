@@ -1,4 +1,4 @@
-import { haeOsoitteet, HakuParametrit, Hakutulos, Koodisto } from './OsoitteetApi';
+import { haeOsoitteet, HakuParametrit, Hakutulos, OppilaitostyyppiKoodi } from './OsoitteetApi';
 import React, { useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -59,7 +59,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         }
     }
 
-    function koodistoLexically(left: Koodisto, right: Koodisto) {
+    function koodistoLexically(left: OppilaitostyyppiKoodi, right: OppilaitostyyppiKoodi) {
         const l = left.nimi.toUpperCase();
         const r = right.nimi.toUpperCase();
         let o = 0;
@@ -106,7 +106,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
                         <h4>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
                         <div className={styles.RajausRyhmat}>
-                            {Object.entries(hakuParametrit.oppilaitostyypit.ryhmat).map(([name, koodit]) => {
+                            {hakuParametrit.oppilaitostyypit.ryhmat.map(({ nimi, koodit }) => {
                                 const checked = koodit.every(isChecked);
                                 const toggleGroup = () => {
                                     const value = Object.fromEntries(koodit.map((k) => [k, !checked]));
@@ -114,8 +114,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 };
 
                                 return (
-                                    <Checkbox key={name} checked={checked} onClick={toggleGroup}>
-                                        {name}
+                                    <Checkbox key={nimi} checked={checked} onClick={toggleGroup}>
+                                        {nimi}
                                     </Checkbox>
                                 );
                             })}
