@@ -96,39 +96,29 @@ public class OsoitteetResource {
 
     private Map<String, String> fetchKuntaKoodisto(String kieli) {
         String sql = "fi".equals(kieli)
-                ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_kunta"
-                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_kunta";
-        return jdbcTemplate.query(sql, (rs, i) -> Map.entry(rs.getString("koodiuri"), Optional.ofNullable(rs.getString("nimi")))).stream()
-                .filter(e -> e.getValue().isPresent())
-                .map(e -> Map.entry(e.getKey(), e.getValue().get()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+                ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_kunta WHERE nimi_fi IS NOT NULL"
+                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_kunta WHERE nimi_sv IS NOT NULL";
+        return jdbcTemplate.query(sql, (rs, i) ->
+                Map.entry(rs.getString("koodiuri"), rs.getString("nimi"))
+        ).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
     private Map<String, String> fetchOpetuskielet(String kieli) {
         String sql = "fi".equals(kieli)
-                ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_oppilaitoksenopetuskieli"
-                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_oppilaitoksenopetuskieli";
-        return jdbcTemplate.query(sql, (rs, i) -> Map.entry(rs.getString("koodiuri"), Optional.ofNullable(rs.getString("nimi")))).stream()
-                .filter(e -> e.getValue().isPresent())
-                .map(e -> Map.entry(e.getKey(), e.getValue().get()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+                ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_oppilaitoksenopetuskieli WHERE nimi_fi IS NOT NULL"
+                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_oppilaitoksenopetuskieli WHERE nimi_sv IS NOT NULL";
+        return jdbcTemplate.query(sql, (rs, i) ->
+                Map.entry(rs.getString("koodiuri"), rs.getString("nimi"))
+        ).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
     private Map<String, String> fetchPostikoodis(String kieli) {
         String sql = "fi".equals(kieli)
-                ? "SELECT koodiuri, koodiarvo, nimi_fi AS nimi FROM koodisto_posti"
-                : "SELECT koodiuri, koodiarvo, nimi_sv AS nimi FROM koodisto_posti";
-        return jdbcTemplate.query(sql, (rs, i) -> {
-                    String koodiarvo = rs.getString("koodiarvo");
-                    return Map.entry(
-                            rs.getString("koodiuri"),
-                            Optional.ofNullable(rs.getString("nimi"))
-                                    .map(nimi -> koodiarvo + " " + nimi)
-                    );
-                }).stream()
-                .filter(e -> e.getValue().isPresent())
-                .map(e -> Map.entry(e.getKey(), e.getValue().get()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+                ? "SELECT koodiuri, koodiarvo, nimi_fi AS nimi FROM koodisto_posti WHERE nimi_fi IS NOT NULL"
+                : "SELECT koodiuri, koodiarvo, nimi_sv AS nimi FROM koodisto_posti WHERE nimi_sv IS NOT NULL";
+        return jdbcTemplate.query(sql, (rs, i) ->
+                Map.entry(rs.getString("koodiuri"), String.format("%s %s", rs.getString("koodiarvo"), rs.getString("nimi")))
+        ).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
     private String parseOpetuskieliKoodi(Map<String, String> opetuskielet, String versioituKoodiUri) {
