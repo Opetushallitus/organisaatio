@@ -61,6 +61,7 @@ public class OsoitteetResource {
     private List<Hakutulos> makeSearchResult(List<Long> organisaatioIds, String kieli, String kieliKoodi) {
         List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
         Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
+        Map<Long, String> koskiOsoitteet = fetchKoskiOsoitteet(organisaatioIds, kieliKoodi);
         Map<String, String> opetuskieletMap = fetchOpetuskielet(kieli);
         Map<String, String> kuntaMap = fetchKuntaKoodisto(kieli);
         Map<String, String> postinumeroMap = fetchPostikoodis(kieli);
@@ -80,7 +81,7 @@ public class OsoitteetResource {
                             opetuskielet.isEmpty() ? Optional.empty() : Optional.of(String.join(", ", opetuskielet)),
                             Optional.ofNullable(o.getOppilaitosKoodi()),
                             kuntaMap.get(o.getKotipaikka()),
-                            Optional.empty(),
+                            Optional.ofNullable(koskiOsoitteet.get(o.getId())),
                             o.getYtunnus(),
                             Optional.ofNullable(o.getPostiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite)),
                             Optional.ofNullable(o.getKayntiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite))
@@ -147,6 +148,27 @@ public class OsoitteetResource {
                 sql,
                 Map.of("ids", organisaatioIds, "kieli", kieli),
                 (rs, rowNum) -> Map.entry(rs.getLong("id"), rs.getString("value"))
+        )) {
+            return stream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+        }
+    }
+
+    private HashMap<Long, String> fetchKoskiOsoitteet(List<Long> organisaatioIds, String kieliKoodi) {
+        if (organisaatioIds.isEmpty())
+            return new HashMap<>();
+
+        String sql = "SELECT ya.organisaatio_id, ya.arvotext" +
+                " FROM yhteystietojentyyppi yt" +
+                " JOIN yhteystietoelementti ye ON yt.id = ye.yhteystietojentyyppi_id" +
+                " JOIN yhteystietoarvo ya ON ye.id = ya.kentta_id" +
+                " WHERE ya.organisaatio_id IN (:ids)" +
+                " AND yt.oid = '1.2.246.562.5.79385887983'" +
+                " AND ye.tyyppi = 'Email'" +
+                " AND ya.kieli = :kieliKoodi";
+        try (Stream<Map.Entry<Long, String>> stream = jdbcTemplate.queryForStream(
+                sql,
+                Map.of("ids", organisaatioIds, "kieliKoodi", kieliKoodi),
+                (rs, rowNum) -> Map.entry(rs.getLong("organisaatio_id"), rs.getString("arvotext"))
         )) {
             return stream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
         }
