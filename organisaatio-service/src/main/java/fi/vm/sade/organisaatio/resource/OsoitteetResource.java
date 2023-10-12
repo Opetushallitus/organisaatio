@@ -2,8 +2,6 @@ package fi.vm.sade.organisaatio.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
@@ -13,7 +11,6 @@ import fi.vm.sade.organisaatio.model.Puhelinnumero;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -65,15 +61,15 @@ public class OsoitteetResource {
     private List<Hakutulos> makeSearchResult(List<Long> organisaatioIds, String kieli, String kieliKoodi) {
         List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
         Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
-        Map<String, Koodiarvo> opetuskieletMap = loadKoodistoFromResources("oppilaitoksenopetuskieli");
-        Map<String, Koodiarvo> kuntaMap = loadKoodistoFromResources("kunta");
-        Map<String, Koodiarvo> postinumeroMap = loadKoodistoFromResources("posti");
+        Map<String, String> opetuskieletMap = fetchOpetuskielet(kieli);
+        Map<String, String> kuntaMap = fetchKuntaKoodisto(kieli);
+        Map<String, String> postinumeroMap = fetchPostikoodis(kieli);
 
 
         List<Hakutulos> result = orgs.stream().map(o -> {
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
                     Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
-                    Set<String> opetuskielet = o.getKielet().stream().map(k -> parseOpetuskieliKoodi(opetuskieletMap, k, kieli)).collect(Collectors.toSet());
+                    Set<String> opetuskielet = o.getKielet().stream().map(k -> parseOpetuskieliKoodi(opetuskieletMap, k)).collect(Collectors.toSet());
                     return new Hakutulos(
                             o.getId(),
                             o.getOid(),
@@ -83,11 +79,11 @@ public class OsoitteetResource {
                             puhelinnumero,
                             opetuskielet.isEmpty() ? Optional.empty() : Optional.of(String.join(", ", opetuskielet)),
                             Optional.ofNullable(o.getOppilaitosKoodi()),
-                            kuntaMap.get(o.getKotipaikka()).getNimi(kieli),
+                            kuntaMap.get(o.getKotipaikka()),
                             Optional.empty(),
                             o.getYtunnus(),
-                            Optional.ofNullable(o.getPostiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite, kieli)),
-                            Optional.ofNullable(o.getKayntiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite, kieli))
+                            Optional.ofNullable(o.getPostiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite)),
+                            Optional.ofNullable(o.getKayntiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite))
                     );
                 })
                 .collect(Collectors.toList());
@@ -98,20 +94,47 @@ public class OsoitteetResource {
         return result;
     }
 
-    private String parseOpetuskieliKoodi(Map<String, Koodiarvo> opetuskielet, String versioituKoodiarvo, String kieli) {
-        int hashIndex = versioituKoodiarvo.lastIndexOf('#');
-        String koodiarvo = hashIndex == -1 ? versioituKoodiarvo : versioituKoodiarvo.substring(0, hashIndex);
-        Koodiarvo currentVersion = opetuskielet.get(koodiarvo);
-        return currentVersion.getNimi(kieli);
+    private Map<String, String> fetchKuntaKoodisto(String kieli) {
+        String sql = "fi".equals(kieli)
+                ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_kunta"
+                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_oppilaitoksenopetuskieli";
+        return jdbcTemplate.query(sql, (rs, i) -> Map.entry(rs.getString("koodiuri"), Optional.ofNullable(rs.getString("nimi")))).stream()
+                .filter(e -> e.getValue().isPresent())
+                .map(e -> Map.entry(e.getKey(), e.getValue().get()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
-    @SneakyThrows
-    private Map<String, Koodiarvo> loadKoodistoFromResources(String koodisto) {
-        try (InputStream is = this.getClass().getResourceAsStream("/koodisto/" + koodisto + ".json")) {
-            return Stream.of(objectMapper.readValue(is, Koodiarvo[].class))
-                    .map(koodi -> Map.entry(koodi.getKoodiUri(), koodi))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
-        }
+    private Map<String, String> fetchOpetuskielet(String kieli) {
+        String sql = "fi".equals(kieli)
+                ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_oppilaitoksenopetuskieli"
+                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_oppilaitoksenopetuskieli";
+        return jdbcTemplate.query(sql, (rs, i) -> Map.entry(rs.getString("koodiuri"), Optional.ofNullable(rs.getString("nimi")))).stream()
+                .filter(e -> e.getValue().isPresent())
+                .map(e -> Map.entry(e.getKey(), e.getValue().get()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+    }
+
+    private Map<String, String> fetchPostikoodis(String kieli) {
+        String sql = "fi".equals(kieli)
+                ? "SELECT koodiuri, koodiarvo, nimi_fi AS nimi FROM koodisto_posti"
+                : "SELECT koodiuri, koodiarvo, nimi_sv AS nimi FROM koodisto_posti";
+        return jdbcTemplate.query(sql, (rs, i) -> {
+                    String koodiarvo = rs.getString("koodiarvo");
+                    return Map.entry(
+                            rs.getString("koodiuri"),
+                            Optional.ofNullable(rs.getString("nimi"))
+                                    .map(nimi -> koodiarvo + " " + nimi)
+                    );
+                }).stream()
+                .filter(e -> e.getValue().isPresent())
+                .map(e -> Map.entry(e.getKey(), e.getValue().get()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+    }
+
+    private String parseOpetuskieliKoodi(Map<String, String> opetuskielet, String versioituKoodiUri) {
+        int hashIndex = versioituKoodiUri.lastIndexOf('#');
+        String koodiuri = hashIndex == -1 ? versioituKoodiUri : versioituKoodiUri.substring(0, hashIndex);
+        return opetuskielet.get(koodiuri);
     }
 
     private List<Organisaatio> fetchOrganisaatiosWithYhteystiedot(List<Long> organisaatioIds) {
@@ -165,19 +188,14 @@ public class OsoitteetResource {
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    private String osoiteToString(Map<String, Koodiarvo> postinumeroMap, Osoite osoite, String kieli) {
+    private String osoiteToString(Map<String, String> postinumeroMap, Osoite osoite) {
         if (osoite.getPostinumero() == null || osoite.getPostitoimipaikka() == null)
             return osoite.getOsoite();
-        Koodiarvo postiKoodi = postinumeroMap.get(osoite.getPostinumero());
+        String postiKoodi = postinumeroMap.get(osoite.getPostinumero());
         if (postiKoodi == null)
             return osoite.getOsoite();
 
-        return String.format(
-                "%s, %s %s",
-                osoite.getOsoite(),
-                postiKoodi.getKoodiArvo(),
-                postiKoodi.getNimi(kieli)
-        );
+        return String.format("%s, %s", osoite.getOsoite(), postiKoodi);
     }
 
     @Data
@@ -200,148 +218,36 @@ public class OsoitteetResource {
 
     @GetMapping(value = "/parametrit")
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
-    public RawJson getParametrit() {
-        return new RawJson("{ \"oppilaitostyypit\": {\"koodit\": "+ oppilaitostyyppiKoodit + ", \"ryhmat\": "+ oppilaitostyyppiRyhmät + "}}");
-    }
-
-    private String oppilaitostyyppiRyhmät = "{" +
-            "\"Perusopetus\": [\"oppilaitostyyppi_12#1\",\"oppilaitostyyppi_11#1\",\"oppilaitostyyppi_19#1\"]," +
-            "\"Lukiokoulutus\": [\"oppilaitostyyppi_15#1\",\"oppilaitostyyppi_19#1\"]," +
-            "\"Ammatillinen koulutus\": [\"oppilaitostyyppi_63#1\",\"oppilaitostyyppi_29#1\",\"oppilaitostyyppi_61#1\",\"oppilaitostyyppi_22#1\",\"oppilaitostyyppi_21#1\",\"oppilaitostyyppi_24#1\",\"oppilaitostyyppi_62#1\",\"oppilaitostyyppi_23#1\"]," +
-            "\"Korkeakoulutus\": [\"oppilaitostyyppi_42#1\",\"oppilaitostyyppi_43#1\",\"oppilaitostyyppi_41#1\"]," +
-            "\"Vapaan sivistystyön koulutus\": [\"oppilaitostyyppi_65#1\",\"oppilaitostyyppi_62#1\",\"oppilaitostyyppi_66#1\",\"oppilaitostyyppi_63#1\",\"oppilaitostyyppi_64#1\"]," +
-            "\"Taiteen perusopetus\": [\"oppilaitostyyppi_01#1\",\"oppilaitostyyppi_61#1\"]" +
-            "}";
-
-    private String oppilaitostyyppiKoodit = "[\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_22#1\",\n" +
-            "    \"nimi\": \"Ammatilliset erityisoppilaitokset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_28#1\",\n" +
-            "    \"nimi\": \"Palo-, poliisi- ja vartiointialojen oppilaitokset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_93#1\",\n" +
-            "    \"nimi\": \"Muut koulutuksen järjestäjät\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_12#1\",\n" +
-            "    \"nimi\": \"Peruskouluasteen erityiskoulut\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_41#1\",\n" +
-            "    \"nimi\": \"Ammattikorkeakoulut\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_64#1\",\n" +
-            "    \"nimi\": \"Kansalaisopistot\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_01#1\",\n" +
-            "    \"nimi\": \"Taiteen perusopetuksen oppilaitokset (ei musiikki)\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_61#1\",\n" +
-            "    \"nimi\": \"Musiikkioppilaitokset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_19#1\",\n" +
-            "    \"nimi\": \"Perus- ja lukioasteen koulut\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_21#1\",\n" +
-            "    \"nimi\": \"Ammatilliset oppilaitokset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_24#1\",\n" +
-            "    \"nimi\": \"Ammatilliset aikuiskoulutuskeskukset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_xx#1\",\n" +
-            "    \"nimi\": \"Ei tiedossa (oppilaitostyyppi)\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_62#1\",\n" +
-            "    \"nimi\": \"Liikunnan koulutuskeskukset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_63#1\",\n" +
-            "    \"nimi\": \"Kansanopistot\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_65#1\",\n" +
-            "    \"nimi\": \"Opintokeskukset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_11#1\",\n" +
-            "    \"nimi\": \"Peruskoulut\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_42#1\",\n" +
-            "    \"nimi\": \"Yliopistot\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_43#1\",\n" +
-            "    \"nimi\": \"Sotilaskorkeakoulut\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_23#1\",\n" +
-            "    \"nimi\": \"Ammatilliset erikoisoppilaitokset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_15#1\",\n" +
-            "    \"nimi\": \"Lukiot\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_29#1\",\n" +
-            "    \"nimi\": \"Sotilasalan ammatilliset oppilaitokset\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_66#1\",\n" +
-            "    \"nimi\": \"Kesäyliopistot\"\n" +
-            "  },\n" +
-            "  {\n" +
-            "    \"koodiUri\": \"oppilaitostyyppi_99#1\",\n" +
-            "    \"nimi\": \"Muut oppilaitokset\"\n" +
-            "  }\n" +
-            "]\n";
-}
-
-class RawJson {
-    private String payload;
-
-    public RawJson(String payload) {
-        this.payload = payload;
-    }
-
-    public static RawJson from(String payload) {
-        return new RawJson(payload);
-    }
-
-    @JsonValue
-    @JsonRawValue
-    public String getPayload() {
-        return this.payload;
+    public Parametrit getParametrit() {
+        Map<String, List<String>> ryhmat = Map.of(
+                "Perusopetus", List.of("oppilaitostyyppi_12#1", "oppilaitostyyppi_11#1", "oppilaitostyyppi_19#1"),
+                "Lukiokoulutus", List.of("oppilaitostyyppi_15#1", "oppilaitostyyppi_19#1"),
+                "Ammatillinen koulutus", List.of("oppilaitostyyppi_63#1", "oppilaitostyyppi_29#1", "oppilaitostyyppi_61#1", "oppilaitostyyppi_22#1", "oppilaitostyyppi_21#1", "oppilaitostyyppi_24#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_23#1"),
+                "Korkeakoulutus", List.of("oppilaitostyyppi_42#1", "oppilaitostyyppi_43#1", "oppilaitostyyppi_41#1"),
+                "Vapaan sivistystyön koulutus", List.of("oppilaitostyyppi_65#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_66#1", "oppilaitostyyppi_63#1", "oppilaitostyyppi_64#1"),
+                "Taiteen perusopetus", List.of("oppilaitostyyppi_01#1", "oppilaitostyyppi_61#1")
+        );
+        List<OppilaitostyyppiKoodi> oppilaitostyyppiKoodis = jdbcTemplate.query(
+                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitostyyppi",
+                (rs, rowNum) -> new OppilaitostyyppiKoodi(rs.getString("koodi"), rs.getString("nimi"))
+        );
+        return new Parametrit(new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat));
     }
 }
 
 @Data
-class Koodiarvo {
-    private String koodiUri;
-    private List<Metadata> metadata;
-    private Long versio;
-    private String koodiArvo;
-
-    public String getNimi(String kieli) {
-        return metadata.stream().filter(m -> m.getKieli().equals(kieli.toUpperCase())).findFirst().get().getNimi();
-    }
+class Parametrit {
+    private final OppilaitostyyppiParametrit oppilaitostyypit;
 }
 
 @Data
-class Metadata {
-    private String nimi;
-    private String lyhytNimi;
-    private String kieli;
+class OppilaitostyyppiParametrit {
+    private final List<OppilaitostyyppiKoodi> koodit;
+    private final Map<String, List<String>> ryhmat;
+}
+
+@Data
+class OppilaitostyyppiKoodi {
+    private final String koodiUri;
+    private final String nimi;
 }
