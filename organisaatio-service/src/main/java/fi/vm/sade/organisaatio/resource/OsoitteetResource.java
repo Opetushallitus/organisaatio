@@ -97,7 +97,7 @@ public class OsoitteetResource {
     private Map<String, String> fetchKuntaKoodisto(String kieli) {
         String sql = "fi".equals(kieli)
                 ? "SELECT koodiuri, nimi_fi AS nimi FROM koodisto_kunta"
-                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_oppilaitoksenopetuskieli";
+                : "SELECT koodiuri, nimi_sv AS nimi FROM koodisto_kunta";
         return jdbcTemplate.query(sql, (rs, i) -> Map.entry(rs.getString("koodiuri"), Optional.ofNullable(rs.getString("nimi")))).stream()
                 .filter(e -> e.getValue().isPresent())
                 .map(e -> Map.entry(e.getKey(), e.getValue().get()))
