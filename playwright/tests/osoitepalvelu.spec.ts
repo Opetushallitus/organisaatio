@@ -19,6 +19,20 @@ test.describe("Osoitepalvelu", () => {
     ).toBeVisible();
     await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
   });
+
+  test("retains search parameters when going back from search results", async ({ page }) => {
+      const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
+      await toggleCheckboxByText(page, "Peruskoulut");
+      await toggleCheckboxByText(page, "Ammattikorkeakoulut");
+      await expect(button.locator("[aria-live=off]")).toHaveText("Ammattikorkeakoulut, Peruskoulut");
+      await page.getByRole("button", { name: "Hae" }).click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
+      await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+
+      await expect(button.locator("[aria-live=off]")).toHaveText("Ammattikorkeakoulut, Peruskoulut");
+  });
+
   test.describe("Search by oppilaitostyyppi box", () => {
     test("opens and closes", async ({ page }) => {
       const button = page.getByRole("button", { name: "Oppilaitostyyppi" });

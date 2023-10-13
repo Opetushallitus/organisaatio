@@ -1,10 +1,12 @@
 import { haeOsoitteet, HakuParametrit, Hakutulos, OppilaitostyyppiKoodi } from './OsoitteetApi';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Checkbox } from './Checkbox';
+import { LinklikeButton } from './LinklikeButton';
+import { useHistory } from 'react-router-dom';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -18,7 +20,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         return accu;
     }, {});
 
-    const [selectedParameters, setSelectedParameters] = useState<Record<string, boolean>>(a);
+    const [selectedParameters, setSelectedParameters] = useUrlHashBackedState<Record<string, boolean>>(a);
     const [error, setError] = useState<boolean>(false);
 
     async function hae() {
@@ -175,20 +177,6 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     );
 }
 
-type LinklikeButtonProps = React.PropsWithChildren<{
-    disabled?: boolean;
-    onClick: () => void;
-}>;
-function LinklikeButton({ onClick, disabled = false, children }: LinklikeButtonProps) {
-    const classes = [styles.LinklikeButton];
-    if (disabled) classes.push(styles.LinklikeButtonDisabled);
-    return (
-        <div className={classes.join(' ')} role="button" onClick={onClick}>
-            {children}
-        </div>
-    );
-}
-
 type KohderyhmaProps = {
     title: string;
     description: string;
@@ -296,4 +284,25 @@ function IconAccordionDisabledButton() {
             />
         </svg>
     );
+}
+
+function useUrlHashBackedState<T>(initialState: T): [T, (newState: T) => void] {
+    const history = useHistory();
+    const hasStateInUrl = history.location.hash !== '';
+    const trueInitialState = hasStateInUrl ? (parseHashState(history.location.hash) as T) : initialState;
+
+    const [state, setState] = useState<T>(trueInitialState);
+    const setLocalStorageState: (newState) => void = useCallback((newState) => {
+        history.replace({ hash: stringifyHashState(newState) });
+        setState(newState);
+    }, []);
+    return [state, setLocalStorageState];
+}
+
+function parseHashState(hash: string) {
+    return JSON.parse(decodeURIComponent(hash.substring(1)));
+}
+
+function stringifyHashState(state: Record<string, object>) {
+    return encodeURIComponent(JSON.stringify(state));
 }
