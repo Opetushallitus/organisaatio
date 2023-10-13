@@ -230,3 +230,30 @@
     align-items: center;
     justify-content: center;
 }
+
+.FlexRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.FlexRow .FlexGrow {
+    flex-grow: 1;
+}
+
+.LinklikeButton {
+    color: var(--color-primary-blue);
+
+    cursor: pointer;
+
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+}
+.LinklikeButtonDisabled {
+    color: var(--color-semantics-disabled);
+}

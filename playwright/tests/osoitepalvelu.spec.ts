@@ -42,6 +42,21 @@ test.describe("Osoitepalvelu", () => {
 
       await expect(button.locator("[aria-live=off]")).toHaveText(expectedText);
     });
+
+    test("Tyhjennä valinnat unchecks all selections", async ({page}) => {
+      const clearButton = page.getByRole("button", {name: "Tyhjennä valinnat"})
+      await openOppilatostyyppiBox(page);
+      await expect(getCheckedItems(page)).toHaveCount(0);
+      await expect(clearButton).toBeDisabled();
+      await toggleCheckboxByText(page, "Ammattikorkeakoulut")
+      await toggleCheckboxByText(page, "Peruskoulut")
+      await expect(getCheckedItems(page)).toHaveCount(2);
+      await expect(clearButton).toBeEnabled();
+      await page.getByRole("button", {name: "Tyhjennä valinnat"}).click();
+      await expect(getCheckedItems(page)).toHaveCount(0);
+      await expect(clearButton).toBeDisabled();
+    });
+
     test("checks and unchecks all selections", async ({ page }) => {
       await openOppilatostyyppiBox(page);
       await expect(getCheckedItems(page)).toHaveCount(0);

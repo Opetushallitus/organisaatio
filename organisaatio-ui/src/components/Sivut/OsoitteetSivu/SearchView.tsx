@@ -45,15 +45,22 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function allIsChecked() {
         return Object.entries(selectedParameters).every(([, isChecked]) => isChecked);
     }
+    function noneIsChecked() {
+        return Object.entries(selectedParameters).every(([, isChecked]) => !isChecked);
+    }
 
     function toggleIsChecked(koodiUri: string) {
         const value = { [koodiUri]: !selectedParameters[koodiUri] };
         setSelectedParameters({ ...selectedParameters, ...value });
     }
 
+    function clearOpppilaitostyyppiSelection() {
+        setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, false])));
+    }
+
     function toggleAllIsChecked() {
         if (allIsChecked()) {
-            setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, false])));
+            clearOpppilaitostyyppiSelection();
         } else {
             setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, true])));
         }
@@ -104,7 +111,12 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 </div>
                 <div className={styles.Rajaukset}>
                     <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
-                        <h4>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
+                        <div className={styles.FlexRow}>
+                            <h4 className={styles.FlexGrow}>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
+                            <LinklikeButton onClick={clearOpppilaitostyyppiSelection} disabled={noneIsChecked()}>
+                                Tyhjennä valinnat
+                            </LinklikeButton>
+                        </div>
                         <div className={styles.RajausRyhmat}>
                             {hakuParametrit.oppilaitostyypit.ryhmat.map(({ nimi, koodit }) => {
                                 const checked = koodit.every(isChecked);
@@ -159,6 +171,20 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     <Spin />
                 </div>
             )}
+        </div>
+    );
+}
+
+type LinklikeButtonProps = React.PropsWithChildren<{
+    disabled?: boolean;
+    onClick: () => void;
+}>;
+function LinklikeButton({ onClick, disabled = false, children }: LinklikeButtonProps) {
+    const classes = [styles.LinklikeButton];
+    if (disabled) classes.push(styles.LinklikeButtonDisabled);
+    return (
+        <div className={classes.join(' ')} role="button" onClick={onClick}>
+            {children}
         </div>
     );
 }
