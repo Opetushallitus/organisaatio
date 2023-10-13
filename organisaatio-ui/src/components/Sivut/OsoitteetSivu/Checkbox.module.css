@@ -8,3 +8,22 @@
     gap: 8px;
     cursor: pointer;
 }
+
+/* Visual focus effect for the icon as the true input is hidden */
+.Checkbox .VisuallyHiddenInput:focus + svg {
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 0 0 3px var(--color-primary-blue);
+}
+
+/* The input has to be hidden visually, but still accessible for e.g. screen readers and keyboard navigation */
+.VisuallyHiddenInput {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
+}

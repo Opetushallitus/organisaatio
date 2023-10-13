@@ -8,7 +8,13 @@ export type CustomCheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & 
 export function Checkbox({ children, checked, onClick, ...rest }: CustomCheckboxProps) {
     return (
         <label className={styles.Checkbox}>
-            <input {...rest} type="checkbox" hidden={true} checked={checked} onClick={onClick} />
+            <input
+                {...rest}
+                className={styles.VisuallyHiddenInput}
+                type="checkbox"
+                checked={checked}
+                onClick={onClick}
+            />
             {checked ? <CheckedIcon /> : <UncheckedIcon />}
             {children}
         </label>
@@ -16,7 +22,7 @@ export function Checkbox({ children, checked, onClick, ...rest }: CustomCheckbox
 }
 function CheckedIcon() {
     return (
-        <svg width="20" height="20" viewBox="2 2 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20" height="20" viewBox="2 2 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_di_2076_18368)">
                 <rect x="2" y="2" width="20" height="20" rx="3" fill="#0A789C" />
             </g>
@@ -71,6 +77,7 @@ function CheckedIcon() {
         </svg>
     );
 }
+
 function UncheckedIcon() {
     return (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
