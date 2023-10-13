@@ -12,7 +12,7 @@ export function LinklikeButton({ onClick = noop, disabled = false, children }: L
     const classes = [styles.LinklikeButton];
     if (disabled) classes.push(styles.LinklikeButtonDisabled);
     return (
-        <div className={classes.join(' ')} role="button" onClick={onClick}>
+        <div className={classes.join(' ')} role="button" onClick={onClick} aria-disabled={disabled}>
             {children}
         </div>
     );
