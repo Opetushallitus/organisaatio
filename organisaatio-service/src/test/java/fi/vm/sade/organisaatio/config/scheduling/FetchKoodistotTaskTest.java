@@ -32,7 +32,7 @@ class FetchKoodistotTaskTest extends BaseOrganisaatioApiTest {
 
     @Test
     void testDataImportFromKoodisto() throws IOException {
-        for (String koodisto : List.of("oppilaitostyyppi", "kunta", "posti", "oppilaitoksenopetuskieli")) {
+        for (String koodisto : List.of("oppilaitostyyppi", "kunta", "posti", "oppilaitoksenopetuskieli", "vuosiluokat")) {
             String url = "https://" + virkailijaHost + "/koodisto-service/rest/json/" + koodisto + "/koodi?onlyValidKoodis=true";
             when(koodistoClient.get(url)).thenReturn(loadKoodistoFromResources(koodisto));
         }
@@ -41,6 +41,7 @@ class FetchKoodistotTaskTest extends BaseOrganisaatioApiTest {
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_oppilaitoksenopetuskieli", Long.class)).isEqualTo(0L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_kunta", Long.class)).isEqualTo(0L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_posti", Long.class)).isEqualTo(0L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_vuosiluokat", Long.class)).isEqualTo(0L);
 
         fetchKoodistotTask.execute();
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_oppilaitostyyppi", Long.class)).isEqualTo(23L);
@@ -52,6 +53,7 @@ class FetchKoodistotTaskTest extends BaseOrganisaatioApiTest {
         assertThat(jdbcTemplate.queryForObject("SELECT nimi_fi FROM koodisto_posti WHERE koodiuri = 'posti_04400'", String.class)).isEqualTo("JÄRVENPÄÄ");
         assertThat(jdbcTemplate.queryForObject("SELECT versio FROM koodisto_posti WHERE koodiuri = 'posti_04400'", Long.class)).isEqualTo(2L);
         assertThat(jdbcTemplate.queryForObject("SELECT nimi_fi FROM koodisto_posti WHERE koodiarvo = '00960'", String.class)).isEqualTo("HELSINKI");
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_vuosiluokat", Long.class)).isEqualTo(12L);
     }
 
     private String loadKoodistoFromResources(String koodisto) throws IOException {

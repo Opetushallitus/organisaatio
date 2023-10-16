@@ -55,7 +55,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
             MDC.put("requestId", RequestIdFilter.generateRequestId());
             log.info("Starting FetchKoodistotTask");
             authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
-            for (String koodisto : List.of("oppilaitostyyppi", "kunta", "posti", "oppilaitoksenopetuskieli")) {
+            for (String koodisto : List.of("oppilaitostyyppi", "kunta", "posti", "oppilaitoksenopetuskieli", "vuosiluokat")) {
                 updateKoodisto(koodisto);
             }
         } finally {
