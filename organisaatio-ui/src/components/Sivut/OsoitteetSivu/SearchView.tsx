@@ -13,6 +13,11 @@ type SearchViewProps = {
     onResult(result: Hakutulos[]): void;
 };
 
+type SearchState = {
+    oppilaitosTypes: Record<string, boolean>;
+    vuosiluokat: string[];
+};
+
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const a = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
@@ -20,7 +25,11 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         return accu;
     }, {});
 
-    const [selectedParameters, setSelectedParameters] = useUrlHashBackedState<Record<string, boolean>>(a);
+    const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>({
+        oppilaitosTypes: a,
+        vuosiluokat: [],
+    });
+    const { oppilaitosTypes } = searchParameters;
     const [error, setError] = useState<boolean>(false);
 
     async function hae() {
@@ -29,8 +38,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             setError(false);
             const osoitteet = await haeOsoitteet({
                 organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
-                oppilaitostyypit: Object.keys(selectedParameters).reduce<Array<string>>(
-                    (accu, key) => (selectedParameters[key] ? accu.concat([key]) : accu),
+                oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(
+                    (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
                     []
                 ),
             });
@@ -41,30 +50,32 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setLoading(false);
     }
     function isChecked(koodiUri: string) {
-        return !!selectedParameters[koodiUri];
+        return oppilaitosTypes[koodiUri];
     }
 
     function allIsChecked() {
-        return Object.entries(selectedParameters).every(([, isChecked]) => isChecked);
+        return Object.entries(oppilaitosTypes).every(([, isChecked]) => isChecked);
     }
     function noneIsChecked() {
-        return Object.entries(selectedParameters).every(([, isChecked]) => !isChecked);
+        return Object.entries(oppilaitosTypes).every(([, isChecked]) => !isChecked);
     }
 
     function toggleIsChecked(koodiUri: string) {
-        const value = { [koodiUri]: !selectedParameters[koodiUri] };
-        setSelectedParameters({ ...selectedParameters, ...value });
+        const value = { [koodiUri]: !oppilaitosTypes[koodiUri] };
+        setSearchParameters({ ...searchParameters, oppilaitosTypes: { ...oppilaitosTypes, ...value } });
     }
 
     function clearOpppilaitostyyppiSelection() {
-        setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, false])));
+        const newOppilaitosTypes = Object.fromEntries(Object.entries(oppilaitosTypes).map(([a]) => [a, false]));
+        setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
     }
 
     function toggleAllIsChecked() {
         if (allIsChecked()) {
             clearOpppilaitostyyppiSelection();
         } else {
-            setSelectedParameters(Object.fromEntries(Object.entries(selectedParameters).map(([a]) => [a, true])));
+            const newOppilaitosTypes = Object.fromEntries(Object.entries(oppilaitosTypes).map(([a]) => [a, true]));
+            setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
         }
     }
 
@@ -81,7 +92,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
     function buildSelectionDescription() {
         const s = hakuParametrit.oppilaitostyypit.koodit.reduce<string>((accu, k) => {
-            return selectedParameters[k.koodiUri] ? `${accu}${k.nimi}, ` : accu;
+            return oppilaitosTypes[k.koodiUri] ? `${accu}${k.nimi}, ` : accu;
         }, '');
         return s.slice(0, s.length - 2);
     }
@@ -123,8 +134,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                             {hakuParametrit.oppilaitostyypit.ryhmat.map(({ nimi, koodit }) => {
                                 const checked = koodit.every(isChecked);
                                 const toggleGroup = () => {
-                                    const value = Object.fromEntries(koodit.map((k) => [k, !checked]));
-                                    setSelectedParameters({ ...selectedParameters, ...value });
+                                    const newOppilaitosTypes = Object.fromEntries(koodit.map((k) => [k, !checked]));
+                                    setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
                                 };
 
                                 return (
