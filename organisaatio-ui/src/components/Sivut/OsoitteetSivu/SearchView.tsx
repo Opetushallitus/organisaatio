@@ -21,15 +21,16 @@ type SearchState = {
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     const [loading, setLoading] = useState<boolean>(false);
-    const a = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
+    const defaultOppilaitosTypes = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
         return accu;
     }, {});
-
-    const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>({
-        oppilaitosTypes: a,
+    const defaultSearchState: SearchState = {
+        oppilaitosTypes: defaultOppilaitosTypes,
         vuosiluokat: [],
-    });
+    };
+
+    const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>(defaultSearchState);
     const { oppilaitosTypes } = searchParameters;
     const [error, setError] = useState<boolean>(false);
     const canFilterByVuosiluokat =
@@ -62,9 +63,6 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function allIsChecked() {
         return Object.entries(oppilaitosTypes).every(([, isChecked]) => isChecked);
     }
-    function noneIsChecked() {
-        return Object.entries(oppilaitosTypes).every(([, isChecked]) => !isChecked);
-    }
 
     function toggleIsChecked(koodiUri: string) {
         const value = { [koodiUri]: !oppilaitosTypes[koodiUri] };
@@ -83,6 +81,15 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             const newOppilaitosTypes = Object.fromEntries(Object.entries(oppilaitosTypes).map(([a]) => [a, true]));
             setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
         }
+    }
+
+    function searchParametersChanged(): boolean {
+        return (
+            Object.values(searchParameters.oppilaitosTypes).includes(true) || searchParameters.vuosiluokat.length != 0
+        );
+    }
+    function clearAllSearchSelections() {
+        setSearchParameters(defaultSearchState);
     }
 
     function koodistoLexically(left: KoodistoKoodi, right: KoodistoKoodi) {
@@ -132,7 +139,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
                         <div className={styles.FlexRow}>
                             <h4 className={styles.FlexGrow}>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
-                            <LinklikeButton onClick={clearOpppilaitostyyppiSelection} disabled={noneIsChecked()}>
+                            <LinklikeButton onClick={clearAllSearchSelections} disabled={!searchParametersChanged()}>
                                 Tyhjennä valinnat
                             </LinklikeButton>
                         </div>
@@ -176,7 +183,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                             <SelectDropdown
                                 label={'Hae perusopetuksen vuosiluokkatiedolla'}
                                 options={hakuParametrit.vuosiluokat.map((v) => ({ value: v.koodiUri, label: v.nimi }))}
-                                initialSelection={searchParameters.vuosiluokat}
+                                selections={searchParameters.vuosiluokat}
                                 disabled={!canFilterByVuosiluokat}
                                 onChange={(vuosiluokat) => setSearchParameters({ ...searchParameters, vuosiluokat })}
                             />

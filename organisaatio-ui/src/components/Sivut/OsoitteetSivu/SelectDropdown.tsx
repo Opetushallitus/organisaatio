@@ -8,28 +8,23 @@ export type DropdownProps = {
     options: DropdownOption[];
     onChange: (selection: string[]) => void;
     disabled?: boolean;
-    initialSelection: string[];
+    selections: string[];
 };
 export type DropdownOption = {
     label: string;
     value: string;
 };
-export function SelectDropdown({ onChange, label, options, disabled, initialSelection }: DropdownProps) {
-    const initialValue = options.filter((v) => initialSelection.includes(v.value));
-    const [selection, setSelection] = React.useState<DropdownOption[]>(initialValue);
-    function updateSelection(newSelection: DropdownOption[]) {
-        setSelection(newSelection);
-        onChange(newSelection.map((_) => _.value));
-    }
+export function SelectDropdown({ onChange, label, options, disabled, selections }: DropdownProps) {
+    const selection = options.filter((v) => selections.includes(v.value));
     function selectOnChange(selection: ValueType<DropdownOption>) {
         if (Array.isArray(selection)) {
-            updateSelection(selection);
+            onChange(selection.map((_) => _.value));
         } else {
             throw new Error('Selection is not an array');
         }
     }
     function removeSelection(value: string) {
-        updateSelection(selection.filter((_) => _.value !== value));
+        onChange(selection.filter((_) => _.value !== value).map((_) => _.value));
     }
 
     return (
@@ -40,13 +35,12 @@ export function SelectDropdown({ onChange, label, options, disabled, initialSele
                 escapeClearsValue={false}
                 hideSelectedOptions={false}
                 components={{
-                    ClearIndicator: () => null, // Disable clear button
                     Option: CustomOption,
                 }}
                 placeholder={label}
                 isMulti={true}
                 isDisabled={disabled}
-                isClearable={true}
+                isClearable={false}
                 options={options}
                 styles={{ option: () => ({}) }}
                 closeMenuOnSelect={false}

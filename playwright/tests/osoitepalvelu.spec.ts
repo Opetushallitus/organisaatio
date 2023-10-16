@@ -103,11 +103,7 @@ test.describe("Osoitepalvelu", () => {
         await expect(vuosiluokatInput).toBeEnabled();
       });
 
-      await page.getByText("Hae perusopetuksen vuosiluokkatiedolla").click();
-
-      const option = await page.waitForSelector(':text("Lisäopetuksessa"):below(:text("Hae perusopetuksen vuosiluokkatiedolla"))')
-      await option.click();
-
+      await selectVuosiluokka(page, "Lisäopetuksessa")
       await page.getByRole("button", { name: "Hae" }).click()
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });
@@ -140,6 +136,12 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 });
+
+async function selectVuosiluokka(page: Page, name: string) {
+  await page.getByText("Hae perusopetuksen vuosiluokkatiedolla").click();
+  const option = await page.waitForSelector(`:text("${name}"):below(:text("Hae perusopetuksen vuosiluokkatiedolla"))`)
+  await option.click();
+}
 
 async function toggleCheckboxByText(page: Page, name: string) {
   const checkbox = await getCheckboxByText(page, name);
