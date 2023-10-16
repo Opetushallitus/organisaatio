@@ -239,22 +239,30 @@ public class OsoitteetResource {
                 new OppilaitosRyhma("Vapaan sivistystyön koulutus", List.of("oppilaitostyyppi_65#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_66#1", "oppilaitostyyppi_63#1", "oppilaitostyyppi_64#1")),
                 new OppilaitosRyhma("Taiteen perusopetus", List.of("oppilaitostyyppi_01#1", "oppilaitostyyppi_61#1"))
         );
-        List<OppilaitostyyppiKoodi> oppilaitostyyppiKoodis = jdbcTemplate.query(
+        List<KoodistoKoodi> oppilaitostyyppiKoodis = jdbcTemplate.query(
                 "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitostyyppi",
-                (rs, rowNum) -> new OppilaitostyyppiKoodi(rs.getString("koodi"), rs.getString("nimi"))
+                (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
-        return new Parametrit(new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat));
+        List<KoodistoKoodi> vuosiluokat = jdbcTemplate.query(
+                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_vuosiluokat",
+                (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
+        );
+        return new Parametrit(
+                new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat),
+                vuosiluokat
+        );
     }
 }
 
 @Data
 class Parametrit {
     private final OppilaitostyyppiParametrit oppilaitostyypit;
+    private final List<KoodistoKoodi> vuosiluokat;
 }
 
 @Data
 class OppilaitostyyppiParametrit {
-    private final List<OppilaitostyyppiKoodi> koodit;
+    private final List<KoodistoKoodi> koodit;
     private final List<OppilaitosRyhma> ryhmat;
 }
 
@@ -265,7 +273,7 @@ class OppilaitosRyhma {
 }
 
 @Data
-class OppilaitostyyppiKoodi {
+class KoodistoKoodi {
     private final String koodiUri;
     private final String nimi;
 }
