@@ -41,17 +41,21 @@ public class OsoitteetResource {
             @RequestParam("organisaatiotyypit[]") List<String> organisaatiotyypit,
             @RequestParam(value = "oppilaitostyypit[]", defaultValue = "", required = false) List<String> oppilaitostyypit,
             @RequestParam(value = "vuosiluokat[]", defaultValue = "", required = false) List<String> vuosiluokat
-    ) throws InterruptedException {
+    ) {
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";
         String organisaatiotyyppi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
         List<Long> organisaatioIds = new ArrayList<>();
 
         if (OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue().equals(organisaatiotyyppi)) {
+            if (!vuosiluokat.isEmpty() && oppilaitostyypit.stream().noneMatch(perusopetusOppilaitostyypit::contains)) {
+                throw new RuntimeException("Vuosiluokkia voi hakea vain perusopetuksen oppilaitostyypeille");
+            }
+
             if (oppilaitostyypit.isEmpty()) {
                 organisaatioIds.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi));
             } else {
-                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit));
+                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat));
             }
         }
 
@@ -182,22 +186,33 @@ public class OsoitteetResource {
         return jdbcTemplate.query(sql, Map.of("organisaatiotyyppi", organisaatiotyyppi), (rs, rowNum) -> rs.getLong("id"));
     }
 
-    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit) {
+    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat) {
+        Map<String, Object> params = new HashMap<>(Map.of(
+                "koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
+                "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
+                "oppilaitostyypit", oppilaitostyypit
+        ));
+        if (!vuosiluokat.isEmpty()) {
+            params.put("vuosiluokat", vuosiluokat);
+        }
+
         String sql = "SELECT DISTINCT parent.id" +
                 " FROM organisaatio parent" +
                 " JOIN organisaatio_tyypit parent_tyypit ON (parent_tyypit.organisaatio_id = parent.id AND parent_tyypit.tyypit = :koulutustoimijaKoodi)" +
                 " JOIN organisaatiosuhde suhde ON (suhde.parent_id = parent.id)" +
                 " JOIN organisaatio child ON (child.id = suhde.child_id)" +
-                " JOIN organisaatio_tyypit child_tyypit ON (child_tyypit.organisaatio_id = child.id AND child_tyypit.tyypit = :oppilaitosKoodi)" +
-                " WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)" +
+                " JOIN organisaatio_tyypit child_tyypit ON (child_tyypit.organisaatio_id = child.id AND child_tyypit.tyypit = :oppilaitosKoodi)";
+        if (!vuosiluokat.isEmpty()) {
+            sql += " JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
+        }
+        sql += " WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)" +
                 " AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu" +
                 " AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu" +
                 " AND child.oppilaitostyyppi IN (:oppilaitostyypit)";
-        Map<String, Object> params = Map.of(
-                "koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
-                "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
-                "oppilaitostyypit", oppilaitostyypit
-        );
+        if (!vuosiluokat.isEmpty()) {
+            sql += " AND organisaatio_vuosiluokat.vuosiluokat IN (:vuosiluokat)";
+        }
+
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
@@ -229,11 +244,13 @@ public class OsoitteetResource {
         final Optional<String> kayntiosoite;
     }
 
+    private final List<String> perusopetusOppilaitostyypit = List.of("oppilaitostyyppi_12#1", "oppilaitostyyppi_11#1", "oppilaitostyyppi_19#1");
+
     @GetMapping(value = "/parametrit")
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public Parametrit getParametrit() {
         List<OppilaitosRyhma> ryhmat = List.of(
-                new OppilaitosRyhma("Perusopetus", List.of("oppilaitostyyppi_12#1", "oppilaitostyyppi_11#1", "oppilaitostyyppi_19#1")),
+                new OppilaitosRyhma("Perusopetus", perusopetusOppilaitostyypit),
                 new OppilaitosRyhma("Lukiokoulutus", List.of("oppilaitostyyppi_15#1", "oppilaitostyyppi_19#1")),
                 new OppilaitosRyhma("Ammatillinen koulutus", List.of("oppilaitostyyppi_63#1", "oppilaitostyyppi_29#1", "oppilaitostyyppi_61#1", "oppilaitostyyppi_22#1", "oppilaitostyyppi_21#1", "oppilaitostyyppi_24#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_23#1")),
                 new OppilaitosRyhma("Korkeakoulutus", List.of("oppilaitostyyppi_42#1", "oppilaitostyyppi_43#1", "oppilaitostyyppi_41#1")),

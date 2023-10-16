@@ -32,6 +32,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     });
     const { oppilaitosTypes } = searchParameters;
     const [error, setError] = useState<boolean>(false);
+    const canFilterByVuosiluokat =
+        hakuParametrit.oppilaitostyypit.ryhmat
+            .find((_) => _.nimi === 'Perusopetus')
+            ?.koodit.some((koodiUri) => oppilaitosTypes[koodiUri]) ?? false;
 
     async function hae() {
         try {
@@ -43,7 +47,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
                     []
                 ),
-                vuosiluokat: searchParameters.vuosiluokat,
+                vuosiluokat: canFilterByVuosiluokat ? searchParameters.vuosiluokat : [],
             });
             onResult(osoitteet);
         } catch (e) {
@@ -173,6 +177,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 label={'Hae perusopetuksen vuosiluokkatiedolla'}
                                 options={hakuParametrit.vuosiluokat.map((v) => ({ value: v.koodiUri, label: v.nimi }))}
                                 initialSelection={searchParameters.vuosiluokat}
+                                disabled={!canFilterByVuosiluokat}
                                 onChange={(vuosiluokat) => setSearchParameters({ ...searchParameters, vuosiluokat })}
                             />
                         </div>
