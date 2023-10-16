@@ -39,7 +39,8 @@ public class OsoitteetResource {
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public List<Hakutulos> hae(
             @RequestParam("organisaatiotyypit[]") List<String> organisaatiotyypit,
-            @RequestParam(value = "oppilaitostyypit[]", defaultValue = "", required = false) List<String> oppilaitostyypit
+            @RequestParam(value = "oppilaitostyypit[]", defaultValue = "", required = false) List<String> oppilaitostyypit,
+            @RequestParam(value = "vuosiluokat[]", defaultValue = "", required = false) List<String> vuosiluokat
     ) throws InterruptedException {
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";

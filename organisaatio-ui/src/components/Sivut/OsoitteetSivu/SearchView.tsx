@@ -1,4 +1,4 @@
-import { haeOsoitteet, HakuParametrit, Hakutulos, OppilaitostyyppiKoodi } from './OsoitteetApi';
+import { haeOsoitteet, HakuParametrit, Hakutulos, KoodistoKoodi } from './OsoitteetApi';
 import React, { useCallback, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -7,6 +7,7 @@ import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { Checkbox } from './Checkbox';
 import { LinklikeButton } from './LinklikeButton';
 import { useHistory } from 'react-router-dom';
+import { SelectDropdown } from './SelectDropdown';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -42,6 +43,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
                     []
                 ),
+                vuosiluokat: searchParameters.vuosiluokat,
             });
             onResult(osoitteet);
         } catch (e) {
@@ -79,7 +81,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         }
     }
 
-    function koodistoLexically(left: OppilaitostyyppiKoodi, right: OppilaitostyyppiKoodi) {
+    function koodistoLexically(left: KoodistoKoodi, right: KoodistoKoodi) {
         const l = left.nimi.toUpperCase();
         const r = right.nimi.toUpperCase();
         let o = 0;
@@ -165,6 +167,15 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 );
                             })}
                         </ul>
+                        <div className={styles.FlexCol}>
+                            <h4>Vuosiluokka</h4>
+                            <SelectDropdown
+                                label={'Hae perusopetuksen vuosiluokkatiedolla'}
+                                options={hakuParametrit.vuosiluokat.map((v) => ({ value: v.koodiUri, label: v.nimi }))}
+                                initialSelection={searchParameters.vuosiluokat}
+                                onChange={(vuosiluokat) => setSearchParameters({ ...searchParameters, vuosiluokat })}
+                            />
+                        </div>
                     </RajausAccordion>
                 </div>
             </div>
