@@ -20,7 +20,7 @@ export function Checkbox({ children, checked, onClick, ...rest }: CustomCheckbox
         </label>
     );
 }
-function CheckedIcon() {
+export function CheckedIcon() {
     return (
         <svg width="20" height="20" viewBox="2 2 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_di_2076_18368)">
@@ -78,7 +78,7 @@ function CheckedIcon() {
     );
 }
 
-function UncheckedIcon() {
+export function UncheckedIcon() {
     return (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_i_2076_18062)">

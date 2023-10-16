@@ -22,9 +22,10 @@ type Koodiarvo = string;
 export type HaeRequest = {
     organisaatiotyypit: Koodiarvo[];
     oppilaitostyypit: Koodiarvo[];
+    vuosiluokat: Koodiarvo[];
 };
 
-export type OppilaitostyyppiKoodi = {
+export type KoodistoKoodi = {
     koodiUri: string;
     nimi: string;
 };
@@ -36,9 +37,10 @@ export type OppilaitosRyhma = {
 
 export type HakuParametrit = {
     oppilaitostyypit: {
-        koodit: OppilaitostyyppiKoodi[];
+        koodit: KoodistoKoodi[];
         ryhmat: OppilaitosRyhma[];
     };
+    vuosiluokat: KoodistoKoodi[];
 };
 
 export async function haeOsoitteet(req: HaeRequest): Promise<Hakutulos[]> {

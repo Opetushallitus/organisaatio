@@ -90,6 +90,28 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     });
+
+    test("finds peruskoulut and filters by vuosiluokka", async ({ page }) => {
+      await openOppilatostyyppiBox(page);
+
+      const vuosiluokatInput = await page.getByLabel("Hae perusopetuksen vuosiluokkatiedolla");
+      await test.step("vuosiluokka selection is disabled if no peruskoulut is selected", async () => {
+        await expect(vuosiluokatInput).toBeDisabled();
+      });
+      await toggleCheckboxByText(page, "Peruskoulut");
+      await test.step("vuosiluokka selection is enabled after selecting peruskoulut", async () => {
+        await expect(vuosiluokatInput).toBeEnabled();
+      });
+
+      await page.getByText("Hae perusopetuksen vuosiluokkatiedolla").click();
+
+      const option = await page.waitForSelector(':text("Lisäopetuksessa"):below(:text("Hae perusopetuksen vuosiluokkatiedolla"))')
+      await option.click();
+
+      await page.getByRole("button", { name: "Hae" }).click()
+      await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
+    });
+
     test("checks and unchecks all oppilaitostyyppi that are part of a group", async ({
       page,
     }) => {

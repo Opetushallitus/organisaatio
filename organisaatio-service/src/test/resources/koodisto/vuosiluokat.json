@@ -1,0 +1,554 @@
+[
+  {
+    "koodiUri": "vuosiluokat_10",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_10",
+    "version": 1,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "10",
+    "paivitysPvm": "2023-08-17",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-10",
+    "voimassaLoppuPvm": "2022-08-01",
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "Lisäopetuksessa",
+        "kuvaus": null,
+        "lyhytNimi": "Lisäopetuksessa",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "EN"
+      },
+      {
+        "nimi": "Påbyggnadsundervisning",
+        "kuvaus": "Påbyggnadsundervisning",
+        "lyhytNimi": "Påbyggnadsundervisning",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Lisäopetuksessa",
+        "kuvaus": "Lisäopetuksessa",
+        "lyhytNimi": "Lisäopetuksessa",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_1",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_1",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "1",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-01",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "1. vuosiluokalla",
+        "kuvaus": "1. vuosiluokalla",
+        "lyhytNimi": "1. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "1. årsklass",
+        "kuvaus": "1. årsklass",
+        "lyhytNimi": "1. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_3",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_3",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "3",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-03",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "3. vuosiluokalla",
+        "kuvaus": "3. vuosiluokalla",
+        "lyhytNimi": "3. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "3. årsklass",
+        "kuvaus": "3. årsklass",
+        "lyhytNimi": "3. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_9",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_9",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "9",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-09",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "9. årsklass",
+        "kuvaus": "9. årsklass",
+        "lyhytNimi": "9. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      },
+      {
+        "nimi": "9. vuosiluokalla",
+        "kuvaus": "9. vuosiluokalla",
+        "lyhytNimi": "9. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_7",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_7",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "7",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-07",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "7. vuosiluokalla",
+        "kuvaus": "7. vuosiluokalla",
+        "lyhytNimi": "7. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "7. årsklass",
+        "kuvaus": "7. årsklass",
+        "lyhytNimi": "7. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_6",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_6",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "6",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-06",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "6. vuosiluokalla",
+        "kuvaus": "6. vuosiluokalla",
+        "lyhytNimi": "6. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "6. årsklass",
+        "kuvaus": "6. årsklass",
+        "lyhytNimi": "6. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_11",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_11",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "11",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-11",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "Förundervisning",
+        "kuvaus": "Förundervisning",
+        "lyhytNimi": "Förundervisning",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Esiopetuksessa",
+        "kuvaus": "Esiopetuksessa",
+        "lyhytNimi": "Esiopetuksessa",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_4",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_4",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "4",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-04",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "4. årsklass",
+        "kuvaus": "4. årsklass",
+        "lyhytNimi": "4. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      },
+      {
+        "nimi": "4. vuosiluokalla",
+        "kuvaus": "4. vuosiluokalla",
+        "lyhytNimi": "4. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_8",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_8",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "8",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-08",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "8. vuosiluokalla",
+        "kuvaus": "8. vuosiluokalla",
+        "lyhytNimi": "8. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "8. årsklass",
+        "kuvaus": "8. årsklass",
+        "lyhytNimi": "8. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_12",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_12",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "12",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-12",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "Aamu- ja/tai iltapäivätoiminnassa",
+        "kuvaus": "Aamu- ja/tai iltapäivätoiminnassa",
+        "lyhytNimi": "Aamu- ja/tai iltapäivätoiminnassa",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Morgon- och eftermiddagsverksamhet",
+        "kuvaus": "Morgon- och eftermiddagsverksamhet",
+        "lyhytNimi": "Morgon- och eftermiddagsverksamhet",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_2",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_2",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "2",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-02",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "2. vuosiluokalla",
+        "kuvaus": "2. vuosiluokalla",
+        "lyhytNimi": "2. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "2. årsklass",
+        "kuvaus": "2. årsklass",
+        "lyhytNimi": "2. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  },
+  {
+    "koodiUri": "vuosiluokat_5",
+    "resourceUri": "https://virkailija.testiopintopolku.fi/koodisto-service/rest/codeelement/vuosiluokat_5",
+    "version": 0,
+    "versio": 2,
+    "koodisto": {
+      "koodistoUri": "vuosiluokat",
+      "organisaatioOid": "1.2.246.562.10.00000000001",
+      "koodistoVersios": [
+        2
+      ]
+    },
+    "koodiArvo": "5",
+    "paivitysPvm": "2022-11-25",
+    "paivittajaOid": "1.2.246.562.24.25909319372",
+    "voimassaAlkuPvm": "2007-01-05",
+    "voimassaLoppuPvm": null,
+    "tila": "LUONNOS",
+    "metadata": [
+      {
+        "nimi": "5. vuosiluokalla",
+        "kuvaus": "5. vuosiluokalla",
+        "lyhytNimi": "5. vuosiluokalla",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "FI"
+      },
+      {
+        "nimi": "5. årsklass",
+        "kuvaus": "5. årsklass",
+        "lyhytNimi": "5. årsklass",
+        "kayttoohje": null,
+        "kasite": null,
+        "sisaltaaMerkityksen": null,
+        "eiSisallaMerkitysta": null,
+        "huomioitavaKoodi": null,
+        "sisaltaaKoodiston": null,
+        "kieli": "SV"
+      }
+    ]
+  }
+]
