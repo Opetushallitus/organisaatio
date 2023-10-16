@@ -35,6 +35,7 @@ export function SelectDropdown({ onChange, label, options, disabled, initialSele
     return (
         <div className={styles.SelectDropdown}>
             <Select<DropdownOption>
+                aria-label={label}
                 className={styles.Select}
                 escapeClearsValue={false}
                 hideSelectedOptions={false}
