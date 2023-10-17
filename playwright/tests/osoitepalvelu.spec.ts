@@ -111,7 +111,7 @@ test.describe("Osoitepalvelu", () => {
     test("checks and unchecks all oppilaitostyyppi that are part of a group", async ({
       page,
     }) => {
-      await openOppilatostyyppiBox(page);
+      const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
       await expect(getCheckedItems(page)).toHaveCount(0);
       await toggleCheckboxByText(page, "Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveText([
@@ -119,6 +119,9 @@ test.describe("Osoitepalvelu", () => {
         "Sotilaskorkeakoulut",
         "Yliopistot",
       ]);
+      await test.step("selection description shows group name instead of individiaul types", async () => {
+        await expect(button.locator("[aria-live=off]")).toHaveText("Korkeakoulutus");
+      });
       await toggleCheckboxByText(page, "Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });

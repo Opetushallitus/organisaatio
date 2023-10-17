@@ -1,4 +1,4 @@
-import { haeOsoitteet, HakuParametrit, Hakutulos, KoodistoKoodi } from './OsoitteetApi';
+import { haeOsoitteet, HakuParametrit, Hakutulos, KoodistoKoodi, OppilaitosRyhma } from './OsoitteetApi';
 import React, { useCallback, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -99,11 +99,16 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         }
         return o;
     }
-    function buildSelectionDescription() {
-        const s = hakuParametrit.oppilaitostyypit.koodit.reduce<string>((accu, k) => {
-            return oppilaitosTypes[k.koodiUri] ? `${accu}${k.nimi}, ` : accu;
-        }, '');
-        return s.slice(0, s.length - 2);
+
+    function buildSelectionDescription(): string {
+        const isRyhmaChecked = (ryhma: OppilaitosRyhma): boolean => ryhma.koodit.every(isChecked);
+        const checkedRyhmas = hakuParametrit.oppilaitostyypit.ryhmat.filter(isRyhmaChecked);
+        const ryhmaNames = checkedRyhmas.map((ryhma) => ryhma.nimi);
+        const kooditIncludedInRyhmat = new Set(checkedRyhmas.map((ryhma) => ryhma.koodit).flat());
+        const yksittaisetTyypit = hakuParametrit.oppilaitostyypit.koodit
+            .filter((k) => isChecked(k.koodiUri) && !kooditIncludedInRyhmat.has(k.koodiUri))
+            .map((k) => k.nimi);
+        return [...ryhmaNames, ...yksittaisetTyypit].join(', ');
     }
 
     return (
