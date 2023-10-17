@@ -262,7 +262,7 @@ function RajausAccordion({ header, selectionDescription, children }: RajausAccor
                 onClick={toggleOpen}
             >
                 <h3>{header}</h3>
-                <span aria-live="off" className={styles.AccordionSelectionDescription}>
+                <span aria-live="off" className={styles.AccordionSelectionDescription + ' ' + styles.Fade}>
                     {selectionDescription}
                 </span>
                 <AccordionButton open={open} disabled={false} />
