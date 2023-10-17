@@ -3,17 +3,22 @@ import styles from './Checkbox.module.css';
 
 export type CustomCheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
     checked: boolean;
-    onClick?: () => void;
+    onChange?: (checked: boolean) => void;
+    disabled?: boolean;
 };
-export function Checkbox({ children, checked, onClick, ...rest }: CustomCheckboxProps) {
+
+export function Checkbox({ children, checked, onChange, disabled }: CustomCheckboxProps) {
+    function onChangeHandler(e) {
+        if (onChange) onChange(e.target.checked);
+    }
     return (
         <label className={styles.Checkbox}>
             <input
-                {...rest}
                 className={styles.VisuallyHiddenInput}
                 type="checkbox"
                 checked={checked}
-                onClick={onClick}
+                disabled={disabled ?? false}
+                onChange={onChangeHandler}
             />
             {checked ? <CheckedIcon /> : <UncheckedIcon />}
             {children}

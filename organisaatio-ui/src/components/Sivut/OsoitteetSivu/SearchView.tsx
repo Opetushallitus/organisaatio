@@ -151,14 +151,14 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 };
 
                                 return (
-                                    <Checkbox key={nimi} checked={checked} onClick={toggleGroup}>
+                                    <Checkbox key={nimi} checked={checked} onChange={toggleGroup}>
                                         {nimi}
                                     </Checkbox>
                                 );
                             })}
                         </div>
                         <div className={styles.SelectAll}>
-                            <Checkbox checked={allIsChecked()} onClick={toggleAllIsChecked}>
+                            <Checkbox checked={allIsChecked()} onChange={toggleAllIsChecked}>
                                 Valitse kaikki
                             </Checkbox>
                         </div>
@@ -169,7 +169,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                         <Checkbox
                                             key={koodisto.koodiUri}
                                             checked={isChecked(koodisto.koodiUri)}
-                                            onClick={() => toggleIsChecked(koodisto.koodiUri)}
+                                            onChange={() => toggleIsChecked(koodisto.koodiUri)}
                                         >
                                             {koodisto.nimi}
                                         </Checkbox>
