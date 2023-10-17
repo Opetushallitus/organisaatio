@@ -111,7 +111,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         const yksittaisetTyypit = hakuParametrit.oppilaitostyypit.koodit
             .filter((k) => isChecked(k.koodiUri) && !kooditIncludedInRyhmat.has(k.koodiUri))
             .map((k) => k.nimi);
-        return [...ryhmaNames, ...yksittaisetTyypit].join(', ');
+        const vuosiluokat = hakuParametrit.vuosiluokat
+            .filter((_) => searchParameters.vuosiluokat.includes(_.koodiUri))
+            .map((_) => _.nimi);
+        return [...ryhmaNames, ...yksittaisetTyypit, ...vuosiluokat].join(', ');
     }
 
     return (
