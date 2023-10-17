@@ -1,0 +1,94 @@
+.RajausAccordion {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: var(--color-neutral-white);
+    box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
+}
+
+.RajausAccordion .AccordionTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    width: 100%;
+    height: 72px;
+    box-sizing: border-box;
+    padding: 0 32px;
+}
+
+.RajausAccordion .AccordionTitle h3 {
+    flex-grow: 1;
+
+    color: var(--color-neutral-black);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.RajausAccordion .AccordionTitle .AccordionSelectionDescription {
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 16px;
+    width: 504px;
+
+    color: var(--color-gray-gray);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.Fade {
+    position: relative;
+}
+
+.Fade:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.Fade:before {
+    background: linear-gradient(to right, transparent calc(100% - 16px), var(--color-neutral-white) 100%);
+}
+
+.RajausAccordion .AccordionTitle .AccordionButton {
+}
+
+.RajausAccordion .AccordionContentContainer {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 32px;
+}
+
+.RajausAccordion .AccordionContentContainer .AccordionContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px 0 32px 0;
+    border-top: 1px solid var(--color-gray-gray-lighten-3);
+}
+.RajausAccordion .AccordionContentContainer .AccordionContent > * {
+    width: 100%;
+}
+
+.RajausAccordion .AccordionContentContainer ul {
+    column-count: 3;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.RajausAccordion .AccordionContentContainer ul li {
+    padding-left: 0;
+    padding-top: 4px;
+    margin-bottom: 8px;
+}
