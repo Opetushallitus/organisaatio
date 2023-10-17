@@ -262,7 +262,7 @@ public class OsoitteetResource {
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
         List<KoodistoKoodi> vuosiluokat = jdbcTemplate.query(
-                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_vuosiluokat",
+                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_vuosiluokat ORDER BY lpad(koodiarvo, 3, '0')",
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
         return new Parametrit(
