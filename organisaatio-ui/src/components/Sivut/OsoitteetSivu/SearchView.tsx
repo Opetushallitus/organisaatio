@@ -38,6 +38,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         hakuParametrit.oppilaitostyypit.ryhmat
             .find((_) => _.nimi === 'Perusopetus')
             ?.koodit.some((koodiUri) => oppilaitosTypes[koodiUri]) ?? false;
+    if (!canFilterByVuosiluokat && searchParameters.vuosiluokat.length > 0) {
+        setSearchParameters({ ...searchParameters, vuosiluokat: [] });
+    }
 
     async function hae() {
         try {
