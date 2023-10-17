@@ -42,6 +42,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setSearchParameters({ ...searchParameters, vuosiluokat: [] });
     }
 
+    function resetSearchParams() {
+        setSearchParameters(defaultSearchState);
+    }
+
     async function hae() {
         try {
             setLoading(true);
@@ -210,7 +214,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             )}
             <div className={styles.ButtonRow}>
                 <Button onClick={hae}>Hae</Button>
-                {/*<Button variant={'outlined'}>Tyhjennä</Button>*/}
+                <LinklikeButton onClick={resetSearchParams}>Tyhjennä</LinklikeButton>
             </div>
             {loading && (
                 <div className={styles.LoadingOverlay}>
