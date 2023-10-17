@@ -1,1 +1,4 @@
+feature.mockapi: false
 feature.ostj-182-uusi-osoitepalvelu: false
+
+koodisto.baseurl: "https://${host.virkailija}/koodisto-service"

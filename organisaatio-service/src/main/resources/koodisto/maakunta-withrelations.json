@@ -1,0 +1,2969 @@
+[
+  {
+    "metadata": [
+      {
+        "nimi": "Uusimaa",
+        "kuvaus": "Uusimaa",
+        "lyhytNimi": "Uusimaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Nyland",
+        "kuvaus": "Nyland",
+        "lyhytNimi": "Nyland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Helsinki-Uusimaa Region",
+        "kuvaus": "Uusimaa",
+        "lyhytNimi": "Uusimaa",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_223",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_585",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_428",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_755",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_638",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_424",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_149",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_504",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_078",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_616",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_092",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_434",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_200",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_540",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_543",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_018",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_710",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_235",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_737",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_049",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_927",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_245",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_753",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_091",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_186",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_606",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_613",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_257",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_612",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_701",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_611",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_106",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_407",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_444",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_427",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_835",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_505",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_858",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_220",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_224",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_01",
+    "versio": 2,
+    "koodiArvo": "01"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Varsinais-Suomi",
+        "kuvaus": "Varsinais-Suomi",
+        "lyhytNimi": "Varsinais-Suomi",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Egentliga Finland",
+        "kuvaus": "Egentliga Finland",
+        "lyhytNimi": "Egentliga Finland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Southwest Finland",
+        "kuvaus": "Varsinais-Suomi",
+        "lyhytNimi": "Varsinais-Suomi",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_734",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_279",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_202",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_918",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_833",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_705",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_445",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_577",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_920",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_017",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_482",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_073",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_040",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_430",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_853",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_538",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_419",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_150",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_587",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_219",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_776",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_308",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_503",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_322",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_006",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_485",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_906",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_400",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_586",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_304",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_761",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_252",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_243",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_019",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_480",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_533",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_838",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_501",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_602",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_481",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_923",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_490",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_738",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_423",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_431",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_631",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_101",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_680",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_704",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_784",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_979",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_573",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_895",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_636",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_259",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_561",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_284",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_529",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_02",
+    "versio": 2,
+    "koodiArvo": "02"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Satakunta",
+        "kuvaus": "Satakunta",
+        "lyhytNimi": "Satakunta",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Satakunta",
+        "kuvaus": "Satakunta",
+        "lyhytNimi": "Satakunta",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Satakunta Region",
+        "kuvaus": "Satakunta",
+        "lyhytNimi": "Satakunta",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_102",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_608",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_783",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_319",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_293",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_051",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_442",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_484",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_913",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_262",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_079",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_747",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_531",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_001",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_214",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_609",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_254",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_413",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_271",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_537",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_099",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_181",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_684",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_266",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_230",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_886",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_406",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_050",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_04",
+    "versio": 2,
+    "koodiArvo": "04"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Kanta-Häme",
+        "kuvaus": "Kanta-Häme",
+        "lyhytNimi": "Kanta-Häme",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Egentliga Tavastland",
+        "kuvaus": "Egentliga Tavastland",
+        "lyhytNimi": "Egentliga Tavastland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Häme Region",
+        "kuvaus": "Kanta-Häme",
+        "lyhytNimi": "Kanta-Häme",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_981",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_855",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_694",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_109",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_169",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_165",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_433",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_210",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_103",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_401",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_086",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_082",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_061",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_834",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_692",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_083",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_05",
+    "versio": 2,
+    "koodiArvo": "05"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Pirkanmaa",
+        "kuvaus": "Pirkanmaa",
+        "lyhytNimi": "Pirkanmaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Birkaland",
+        "kuvaus": "Birkaland",
+        "lyhytNimi": "Birkaland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Tampere Region",
+        "kuvaus": "Pirkanmaa",
+        "lyhytNimi": "Pirkanmaa",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_508",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_635",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_994",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_922",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_928",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_772",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_439",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_250",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_790",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_291",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_619",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_730",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_932",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_108",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_980",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_289",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_536",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_177",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_020",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_912",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_887",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_837",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_936",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_604",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_418",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_443",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_908",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_864",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_933",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_211",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_581",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_493",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_303",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_506",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_299",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_988",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_143",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_702",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_562",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_310",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_06",
+    "versio": 2,
+    "koodiArvo": "06"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Päijät-Häme",
+        "kuvaus": "Päijät-Häme",
+        "lyhytNimi": "Päijät-Häme",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Päijänne-Tavastland",
+        "kuvaus": "Päijänne-Tavastland",
+        "lyhytNimi": "Päijänne-Tavastland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Päijät-Häme Region",
+        "kuvaus": "Päijät-Häme",
+        "lyhytNimi": "Päijät-Häme",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_142",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_098",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_111",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_316",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_398",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_088",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_016",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_015",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_283",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_532",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_089",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_560",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_081",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_576",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_781",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_07",
+    "versio": 2,
+    "koodiArvo": "07"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Kymenlaakso",
+        "kuvaus": "Kymenlaakso",
+        "lyhytNimi": "Kymenlaakso",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Kymmenedalen",
+        "kuvaus": "Kymmenedalen",
+        "lyhytNimi": "Kymmenedalen",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Kymenlaakso Region",
+        "kuvaus": "Kymenlaakso",
+        "lyhytNimi": "Kymenlaakso",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_489",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_935",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_306",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_624",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_285",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_286",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_909",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_754",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_044",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_917",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_163",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_075",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_08",
+    "versio": 2,
+    "koodiArvo": "08"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Etelä-Karjala",
+        "kuvaus": "Etelä-Karjala",
+        "lyhytNimi": "Etelä-Karjala",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Södra Karelen",
+        "kuvaus": "Södra Karelen",
+        "lyhytNimi": "Södra Karelen",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "South Karelia",
+        "kuvaus": "South Karelia",
+        "lyhytNimi": "South Karelia",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_700",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_739",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_405",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_831",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_775",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_728",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_978",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_416",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_689",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_441",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_173",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_891",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_153",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_580",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_09",
+    "versio": 2,
+    "koodiArvo": "09"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Etelä-Savo",
+        "kuvaus": "Etelä-Savo",
+        "lyhytNimi": "Etelä-Savo",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Södra Savolax",
+        "kuvaus": "Södra Savolax",
+        "lyhytNimi": "Södra Savolax",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "South Savo Region",
+        "kuvaus": "Etelä-Savo",
+        "lyhytNimi": "Etelä-Savo",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_178",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_937",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_640",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_492",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_681",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_593",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_507",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_594",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_097",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_741",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_491",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_618",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_740",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_046",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_696",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_768",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_623",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_014",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_588",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_085",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_246",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_213",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_184",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_10",
+    "versio": 2,
+    "koodiArvo": "10"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Pohjois-Savo",
+        "kuvaus": "Pohjois-Savo",
+        "lyhytNimi": "Pohjois-Savo",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Norra Savolax",
+        "kuvaus": "Norra Savolax",
+        "lyhytNimi": "Norra Savolax",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Pohjois-Savo Region",
+        "kuvaus": "Pohjois-Savo",
+        "lyhytNimi": "Pohjois-Savo",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_171",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_925",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_686",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_174",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_297",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_402",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_857",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_140",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_915",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_534",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_227",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_476",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_762",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_778",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_916",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_263",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_595",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_919",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_844",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_212",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_687",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_420",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_204",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_749",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_239",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_921",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_11",
+    "versio": 2,
+    "koodiArvo": "11"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Pohjois-Karjala",
+        "kuvaus": "Pohjois-Karjala",
+        "lyhytNimi": "Pohjois-Karjala",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Norra Karelen",
+        "kuvaus": "Norra Karelen",
+        "lyhytNimi": "Norra Karelen",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "North Karelia",
+        "kuvaus": "North Karelia",
+        "lyhytNimi": "North Karelia",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_248",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_707",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_911",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_541",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_260",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_090",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_422",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_856",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_848",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_276",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_251",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_176",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_045",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_167",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_607",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_426",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_146",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_309",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_632",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_943",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_12",
+    "versio": 2,
+    "koodiArvo": "12"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Keski-Suomi",
+        "kuvaus": "Keski-Suomi",
+        "lyhytNimi": "Keski-Suomi",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Mellersta Finland",
+        "kuvaus": "Mellersta Finland",
+        "lyhytNimi": "Mellersta Finland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Central Finland",
+        "kuvaus": "Central Finland",
+        "lyhytNimi": "Central Finland",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_179",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_892",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_495",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_226",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_180",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_265",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_183",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_182",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_256",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_592",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_172",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_770",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_312",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_410",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_633",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_601",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_729",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_275",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_216",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_249",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_435",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_931",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_850",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_992",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_415",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_077",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_500",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_774",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_277",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_13",
+    "versio": 2,
+    "koodiArvo": "13"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Etelä-Pohjanmaa",
+        "kuvaus": "Etelä-Pohjanmaa",
+        "lyhytNimi": "Etelä-Pohjanmaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Södra Österbotten",
+        "kuvaus": "Södra Österbotten",
+        "lyhytNimi": "Södra Österbotten",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "South Ostrobothnia",
+        "kuvaus": "South Ostrobothnia",
+        "lyhytNimi": "South Ostrobothnia",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_164",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_863",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_743",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_971",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_544",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_300",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_218",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_052",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_846",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_759",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_414",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_005",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_151",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_989",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_934",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_233",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_175",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_301",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_152",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_145",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_403",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_408",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_281",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_975",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_010",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_589",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_004",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_232",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_14",
+    "versio": 2,
+    "koodiArvo": "14"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Pohjanmaa",
+        "kuvaus": "Pohjanmaa",
+        "lyhytNimi": "Pohjanmaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Österbotten",
+        "kuvaus": "Österbotten",
+        "lyhytNimi": "Österbotten",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Ostrobothnia",
+        "kuvaus": "Ostrobothnia",
+        "lyhytNimi": "Ostrobothnia",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_905",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_287",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_946",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_893",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_942",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_945",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_559",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_475",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_545",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_598",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_399",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_440",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_479",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_499",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_288",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_599",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_944",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_280",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_231",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_15",
+    "versio": 2,
+    "koodiArvo": "15"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Keski-Pohjanmaa",
+        "kuvaus": "Keski-Pohjanmaa",
+        "lyhytNimi": "Keski-Pohjanmaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Mellersta Österbotten",
+        "kuvaus": "Mellersta Österbotten",
+        "lyhytNimi": "Mellersta Österbotten",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Central Ostrobothnia",
+        "kuvaus": "Central Ostrobothnia",
+        "lyhytNimi": "Central Ostrobothnia",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_074",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_429",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_885",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_849",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_217",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_315",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_236",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_924",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_584",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_421",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_272",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_16",
+    "versio": 2,
+    "koodiArvo": "16"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Pohjois-Pohjanmaa",
+        "kuvaus": "Pohjois-Pohjanmaa",
+        "lyhytNimi": "Pohjois-Pohjanmaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Norra Österbotten",
+        "kuvaus": "Norra Österbotten",
+        "lyhytNimi": "Norra Österbotten",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "North Ostrobothnia",
+        "kuvaus": "North Ostrobothnia",
+        "lyhytNimi": "North Ostrobothnia",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_564",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_841",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_567",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_832",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_889",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_305",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_748",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_425",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_682",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_926",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_483",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_071",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_625",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_678",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_139",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_691",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_563",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_535",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_436",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_746",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_072",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_859",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_617",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_084",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_009",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_244",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_972",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_255",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_708",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_630",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_292",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_973",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_208",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_095",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_317",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_582",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_247",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_791",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_785",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_603",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_977",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_069",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_615",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_626",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_494",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_17",
+    "versio": 2,
+    "koodiArvo": "17"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Kainuu",
+        "kuvaus": "Kainuu",
+        "lyhytNimi": "Kainuu",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Kajanaland",
+        "kuvaus": "Kajanaland",
+        "lyhytNimi": "Kajanaland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Kainuu Region",
+        "kuvaus": "Kainuu",
+        "lyhytNimi": "Kainuu",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_777",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_765",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_290",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_940",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_105",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_205",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_578",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_620",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_697",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_18",
+    "versio": 2,
+    "koodiArvo": "18"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Lappi",
+        "kuvaus": "Lappi",
+        "lyhytNimi": "Lappi",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Lappland",
+        "kuvaus": "Lappland",
+        "lyhytNimi": "Lappland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Lapland",
+        "kuvaus": "Lapland",
+        "lyhytNimi": "Lapland",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_699",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_732",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_758",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_854",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_845",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_320",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_498",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_583",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_698",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_614",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_240",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_890",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_742",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_241",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_261",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_148",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_851",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_273",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_683",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_047",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_976",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_751",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_19",
+    "versio": 2,
+    "koodiArvo": "19"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Itä-Uusimaa",
+        "kuvaus": "Itä-Uusimaa",
+        "lyhytNimi": "Itä-Uusimaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Östra Nyland",
+        "kuvaus": "Östra Nyland",
+        "lyhytNimi": "Östra Nyland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": null,
+        "kuvaus": null,
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_20",
+    "versio": 2,
+    "koodiArvo": "20"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Ahvenanmaa",
+        "kuvaus": "Ahvenanmaa",
+        "lyhytNimi": "Ahvenanmaa",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Åland",
+        "kuvaus": "Åland",
+        "lyhytNimi": "Åland",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Åland",
+        "kuvaus": "Åland",
+        "lyhytNimi": "Åland",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_478",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_438",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_941",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_417",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_076",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_060",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_170",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_043",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_062",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_035",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_736",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_295",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_065",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_766",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_771",
+        "codeElementVersion": 2,
+        "passive": false
+      },
+      {
+        "codeElementUri": "kunta_318",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_21",
+    "versio": 2,
+    "koodiArvo": "21"
+  },
+  {
+    "metadata": [
+      {
+        "nimi": "Ei tiedossa (maakunta)",
+        "kuvaus": "Ei tiedossa (maakunta)",
+        "lyhytNimi": "Ei tiedossa (maakunta)",
+        "kieli": "FI"
+      },
+      {
+        "nimi": "Okänt landskap",
+        "kuvaus": "Okänt landskap",
+        "lyhytNimi": "Okänt landskap",
+        "kieli": "SV"
+      },
+      {
+        "nimi": "Unknown",
+        "kuvaus": "",
+        "lyhytNimi": "",
+        "kieli": "EN"
+      }
+    ],
+    "withinCodeElements": [
+      {
+        "codeElementUri": "kunta_999",
+        "codeElementVersion": 2,
+        "passive": false
+      }
+    ],
+    "includesCodeElements": [],
+    "levelsWithCodeElements": [],
+    "koodiUri": "maakunta_99",
+    "versio": 2,
+    "koodiArvo": "99"
+  }
+]
