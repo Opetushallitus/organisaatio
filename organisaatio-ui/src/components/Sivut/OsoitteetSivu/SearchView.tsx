@@ -70,14 +70,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setSearchParameters({ ...searchParameters, oppilaitosTypes: { ...oppilaitosTypes, ...value } });
     }
 
-    function clearOpppilaitostyyppiSelection() {
-        const newOppilaitosTypes = Object.fromEntries(Object.entries(oppilaitosTypes).map(([a]) => [a, false]));
-        setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
-    }
-
     function toggleAllIsChecked() {
         if (allIsChecked()) {
-            clearOpppilaitostyyppiSelection();
+            setSearchParameters({ ...searchParameters, oppilaitosTypes: defaultOppilaitosTypes });
         } else {
             const newOppilaitosTypes = Object.fromEntries(Object.entries(oppilaitosTypes).map(([a]) => [a, true]));
             setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
@@ -149,7 +144,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 const checked = koodit.every(isChecked);
                                 const toggleGroup = () => {
                                     const newOppilaitosTypes = Object.fromEntries(koodit.map((k) => [k, !checked]));
-                                    setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
+                                    setSearchParameters({
+                                        ...searchParameters,
+                                        oppilaitosTypes: { ...oppilaitosTypes, ...newOppilaitosTypes },
+                                    });
                                 };
 
                                 return (
