@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,14 +24,17 @@ import javax.transaction.Transactional;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.TreeSet;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
 public class FetchKoodistotTask extends RecurringTask<Void> {
-    @Value("${host.virkailija}")
-    private String virkailijaHost;
+    @Value("${koodisto.baseurl}")
+    private String koodistoBaseurl;
     @Autowired
     private OrganisaatioKoodistoClient koodistoClient;
     @Autowired
@@ -47,30 +51,81 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     @Override
     @Transactional
     public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
-        execute();
-    }
-
-    protected void execute() {
         try {
             MDC.put("requestId", RequestIdFilter.generateRequestId());
-            log.info("Starting FetchKoodistotTask");
             authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
-            for (String koodisto : List.of("oppilaitostyyppi", "kunta", "posti", "oppilaitoksenopetuskieli", "vuosiluokat")) {
-                updateKoodisto(koodisto);
-            }
+            execute();
         } finally {
             MDC.remove("requestId");
         }
     }
 
+    public void execute() {
+        log.info("Starting FetchKoodistotTask");
+        for (String koodisto : List.of("oppilaitostyyppi", "posti", "oppilaitoksenopetuskieli", "vuosiluokat")) {
+            updateKoodisto(koodisto);
+        }
+        updateMaakuntaKuntaRelaatiot();
+    }
+
     private void updateKoodisto(String koodisto) {
         List<KoodistoRow> rows = fetchKoodisto(koodisto)
                 .map(this::mapToRow)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         String tableName = "koodisto_" + koodisto;
         truncateTable(tableName);
         insertKoodistoRows(tableName, rows);
+    }
+
+    private void updateMaakuntaKuntaRelaatiot() {
+        List<Relaatio> maakuntaKoodis = fetchKoodistoWithRelations("maakunta", 2L).collect(toList());
+        List<KoodistoRow> maakuntaRows = maakuntaKoodis.stream().map(this::mapToRow).collect(toList());
+        List<KoodistoRow> kuntaRows = fetchKoodisto("kunta").map(this::mapToRow).collect(toList());
+        TreeSet<String> kuntaUris = kuntaRows.stream().map(KoodistoRow::getKoodiUri).collect(toCollection(TreeSet::new));
+
+        List<Pair<String, String>> relaatiot = maakuntaKoodis.stream().flatMap(k -> {
+            String maakuntaUri = k.getKoodiUri();
+            return k.getWithinCodeElements().stream()
+                    // Some of the koodis given as relations are not valid anymore, so we need to filter them out
+                    // e.g. kunta_223 Karjalohja is not valid since 2012 or so
+                    .filter(r -> kuntaUris.contains(r.getCodeElementUri()))
+                    .map(r -> {
+                        String kuntaUri = r.getCodeElementUri();
+                        return Pair.of(maakuntaUri, kuntaUri);
+                    });
+        }).collect(toList());
+
+        truncateTable("koodisto_maakunta, koodisto_kunta, maakuntakuntarelation");
+        insertKoodistoRows("koodisto_kunta", kuntaRows);
+        insertKoodistoRows("koodisto_maakunta", maakuntaRows);
+        String sql = "INSERT INTO maakuntakuntarelation(maakuntauri, kuntauri) VALUES (?, ?)";
+        jdbc.batchUpdate(sql, relaatiot, 100, (ps, row) -> {
+            ps.setString(1, row.getLeft());
+            ps.setString(2, row.getRight());
+        });
+    }
+
+
+    private Stream<Relaatio> fetchKoodistoWithRelations(String koodisto, Long version) {
+        try {
+            String url = koodistoBaseurl + "/rest/codeelement/codes/withrelations/" + koodisto + "/" + version;
+            log.info("Getting koodisto values from {}", url);
+            String json = koodistoClient.get(url);
+            return Stream.of(objectMapper.readValue(json, Relaatio[].class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private KoodistoRow mapToRow(Relaatio k) {
+        return new KoodistoRow(
+                k.getKoodiUri(),
+                k.getKoodiArvo(),
+                k.getVersio(),
+                k.getNimi("fi"),
+                k.getNimi("sv")
+        );
     }
 
     private KoodistoRow mapToRow(KoodistoKoodi k) {
@@ -100,8 +155,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
 
     private Stream<KoodistoKoodi> fetchKoodisto(String koodisto) {
         try {
-            String koodistoHost = "https://" + virkailijaHost + "/koodisto-service";
-            String url = koodistoHost + "/rest/json/" + koodisto + "/koodi?onlyValidKoodis=true";
+            String url = koodistoBaseurl + "/rest/json/" + koodisto + "/koodi?onlyValidKoodis=true";
             log.info("Getting koodisto values from {}", url);
             String json = koodistoClient.get(url);
             return Stream.of(objectMapper.readValue(json, KoodistoKoodi[].class));
@@ -138,4 +192,26 @@ class KoodistoKoodi {
 class KoodistoMetadata {
     private String nimi;
     private String kieli;
+}
+
+@Getter
+@Setter
+class Relaatio {
+    List<KoodistoMetadata> metadata;
+    List<RelaatioTieto> withinCodeElements;
+    String koodiUri;
+    Long versio;
+    String koodiArvo;
+
+    public Optional<String> getNimi(String kieli) {
+        return metadata.stream().filter(m -> m.getKieli().equals(kieli.toUpperCase())).findFirst().map(KoodistoMetadata::getNimi);
+    }
+}
+
+@Getter
+@Setter
+class RelaatioTieto {
+    String codeElementUri;
+    String codeElementVersion;
+    boolean passive;
 }

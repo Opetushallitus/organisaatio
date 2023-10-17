@@ -48,6 +48,7 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/rest/**").permitAll()
+                .antMatchers("/mock/**").permitAll()
                 .anyRequest().authenticated().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler())
                 .and().httpBasic();
         ;

@@ -1,6 +1,11 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 
 test.describe("Osoitepalvelu", () => {
+  test.beforeAll(async ({ request }, testInfo) => {
+    await test.step("Load initial mock data", async () => {
+      await request.post("http://localhost:3003/organisaatio-service/mock/init");
+    });
+  });
   test.beforeEach(async ({ page }, testInfo) => {
     await page.goto("http://localhost:3003/osoitteet");
   });
