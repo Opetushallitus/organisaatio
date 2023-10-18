@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './RajausAccordion.module.css';
 
 type RajausAccordionProps = React.PropsWithChildren<{
@@ -7,7 +7,13 @@ type RajausAccordionProps = React.PropsWithChildren<{
 }>;
 
 export function RajausAccordion({ header, selectionDescription, children }: RajausAccordionProps) {
+    const descriptionRef = useRef<HTMLSpanElement>(null);
     const [open, setOpen] = useState(false);
+    const [descriptionOverflowing, setDescriptionOverflowing] = useState<boolean>(false);
+    useEffect(() => {
+        const overflowing = descriptionRef.current !== null && isContentOverflowing(descriptionRef.current);
+        if (overflowing !== descriptionOverflowing) setDescriptionOverflowing(overflowing);
+    });
 
     function toggleOpen() {
         setOpen(!open);
@@ -30,7 +36,11 @@ export function RajausAccordion({ header, selectionDescription, children }: Raja
                 onClick={toggleOpen}
             >
                 <h3>{header}</h3>
-                <span aria-live="off" className={styles.AccordionSelectionDescription + ' ' + styles.Fade}>
+                <span
+                    ref={descriptionRef}
+                    aria-live="off"
+                    className={styles.AccordionSelectionDescription + ' ' + (descriptionOverflowing ? styles.Fade : '')}
+                >
                     {selectionDescription}
                 </span>
                 <AccordionButton open={open} disabled={false} />
@@ -42,6 +52,9 @@ export function RajausAccordion({ header, selectionDescription, children }: Raja
             )}
         </section>
     );
+}
+function isContentOverflowing(element: HTMLElement) {
+    return element.clientWidth < element.scrollWidth;
 }
 
 type AccordionButtonProps = {
