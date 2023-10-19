@@ -14,7 +14,7 @@ import {
     UseFormRegisterReturn,
     UseFormSetValue,
 } from 'react-hook-form';
-import { KenttaError, Nimi } from '../../../../types/types';
+import { KenttaError, LocalDate, Nimi } from '../../../../types/types';
 
 const UloinKehys = (props: { children: ReactNode }) => <div className={styles.UloinKehys}>{props.children}</div>;
 const YlaBanneri = (props: { children: ReactNode }) => <div className={styles.YlaBanneri}>{props.children}</div>;
@@ -71,7 +71,7 @@ const LabelLink = ({ value, to }: { value: string; to: string }) => {
         </a>
     );
 };
-const ReadOnlyDate = ({ value }: { value: string }) => {
+const ReadOnlyDate = ({ value }: { value: LocalDate }) => {
     return <div className={styles.Kentta}>{value}</div>;
 };
 const Kentta: React.FC<{ error?: KenttaError | KenttaError[]; label: string; isRequired?: boolean }> = ({

@@ -32,6 +32,7 @@ import ToimipisteenLakkautus from '../../../../Modaalit/ToimipisteenLakkautus/To
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../../../api/kayttooikeus';
 import { koodistotAtom } from '../../../../../api/koodisto';
+import { getUiDateStr } from '../../../../../tools/mappers';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -171,21 +172,23 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         validationErrors={validationErrors}
                     />
                 </Kentta>
-                {lakkautusPvm && (
-                    <Kentta label={'PERUSTIETO_LAKKAUTUSPAIVA'}>
-                        <ReadOnlyDate value={lakkautusPvm} />
-                    </Kentta>
-                )}
-                {casMe.canHaveButton(
-                    'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI',
-                    organisaatioBase.oid,
-                    organisaatioNimiPolku
-                ) && (
-                    <LomakeButton
-                        label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
-                        onClick={() => setLakkautusModaaliAuki(true)}
-                    />
-                )}
+                <div>
+                    {lakkautusPvm && (
+                        <Kentta label={'PERUSTIETO_LAKKAUTUSPAIVA'}>
+                            <ReadOnlyDate value={lakkautusPvm} />
+                        </Kentta>
+                    )}
+                    {casMe.canHaveButton(
+                        'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI',
+                        organisaatioBase.oid,
+                        organisaatioNimiPolku
+                    ) && (
+                        <LomakeButton
+                            label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
+                            onClick={() => setLakkautusModaaliAuki(true)}
+                        />
+                    )}
+                </div>
             </Rivi>
             <Rivi>
                 <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
@@ -268,9 +271,9 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                 <ToimipisteenLakkautus
                     closeModaali={() => setLakkautusModaaliAuki(false)}
                     date={lakkautusPvm}
-                    handleTallennus={(date) => {
-                        setPerustiedotValue('lakkautusPvm', date);
-                    }}
+                    handleTallennus={(date) =>
+                        setPerustiedotValue('lakkautusPvm', date ? getUiDateStr(date) : undefined)
+                    }
                 />
             )}
         </UloinKehys>

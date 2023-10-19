@@ -1,23 +1,19 @@
 import React from 'react';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { LocalDate } from '../../../types/types';
-import { Control } from 'react-hook-form/dist/types/form';
-import DatePickerController from '../../Controllers/DatePickerController';
+import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
+
 import { BodyKehys, BodyKentta } from '../ModalFields/ModalFields';
+import { LocalDate } from '../../../types/types';
 
 type TLProps = {
-    validationErrors: FieldErrors<{ date: LocalDate }>;
-    control: Control<{ date: LocalDate }>;
+    date?: LocalDate;
+    setDate: (d: Date) => void;
 };
-export default function TLBody({ validationErrors, control }: TLProps) {
+
+export default function TLBody({ date, setDate }: TLProps) {
     return (
         <BodyKehys>
             <BodyKentta label={'TOIMIPISTEEN_LAKKAUTUS_PVM'}>
-                <DatePickerController<{ date: LocalDate }>
-                    form={control}
-                    validationErrors={validationErrors}
-                    name={'date'}
-                />
+                <DatePickerInput value={date} onChange={setDate} />
             </BodyKentta>
         </BodyKehys>
     );
