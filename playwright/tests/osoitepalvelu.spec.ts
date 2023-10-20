@@ -14,8 +14,8 @@ test.describe("Osoitepalvelu", () => {
     await expect(page).toHaveTitle(/Organisaatio/);
   });
   test("allows searching for koulutustoimijat", async ({ page }) => {
-    await expect(page.getByText("Hae")).toBeVisible();
-    await page.getByText("Hae").click();
+    await expect(page.getByRole("button", { name: "Hae" })).toBeVisible();
+    await page.getByRole("button", { name: "Hae" }).click()
 
     await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
@@ -108,8 +108,9 @@ test.describe("Osoitepalvelu", () => {
         await expect(vuosiluokatInput).toBeEnabled();
       });
 
-      await selectVuosiluokka(page, "Lisäopetuksessa")
-      await page.getByRole("button", { name: "Hae" }).click()
+      await openDropdown(page, "Hae perusopetuksen vuosiluokkatiedolla")
+      await selectFromDropdown(page, "Lisäopetuksessa");
+      await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });
 
@@ -143,12 +144,43 @@ test.describe("Osoitepalvelu", () => {
       await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
     });
   });
+
+  test("Sijainti filter", async ({ page }) => {
+    const button = page.getByRole("button", { name: "Sijainti" });
+
+    await test.step("Defaults to Manner-Suomi", async () => {
+      await expect(button.locator("[aria-live=off]")).toHaveText("Manner-Suomi (ei Ahvenanmaa)");
+    })
+
+    await button.click();
+
+    await test.step("Changes filter description on selection change", async () => {
+      await openDropdown(page, "Hae alueen tai maakunnan nimellä");
+
+      await selectFromDropdown(page, "Koko Suomi");
+      await expect(button.locator("[aria-live=off]")).toHaveText("Koko Suomi");
+
+      await selectFromDropdown(page, "Ahvenanmaa");
+      await expect(button.locator("[aria-live=off]")).toHaveText("Manner-Suomi (ei Ahvenanmaa)");
+
+      await selectFromDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
+      await expect(button.locator("[aria-live=off]")).toHaveText("");
+
+      await selectFromDropdown(page, "Ulkomaa");
+      await expect(button.locator("[aria-live=off]")).toHaveText("Ulkomaa");
+
+      await selectFromDropdown(page, "Uusimaa");
+      await expect(button.locator("[aria-live=off]")).toHaveText("Ulkomaa, Uusimaa");
+    })
+  })
 });
 
-async function selectVuosiluokka(page: Page, name: string) {
-  await page.getByText("Hae perusopetuksen vuosiluokkatiedolla").click();
-  const option = await page.waitForSelector(`:text("${name}"):below(:text("Hae perusopetuksen vuosiluokkatiedolla"))`)
-  await option.click();
+async function openDropdown(page: Page, label: string) {
+  await page.getByText(label, { exact: true }).click();
+}
+
+async function selectFromDropdown(page: Page, label: string) {
+  await page.getByLabel(label, { exact: true }).click()
 }
 
 async function toggleCheckboxByText(page: Page, name: string) {

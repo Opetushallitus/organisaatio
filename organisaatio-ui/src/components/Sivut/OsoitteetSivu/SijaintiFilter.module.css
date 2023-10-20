@@ -1,0 +1,12 @@
+.TwoColumns {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+
+.TwoColumns > .Column {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

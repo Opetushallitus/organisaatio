@@ -15,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import java.util.*;
@@ -35,13 +32,11 @@ public class OsoitteetResource {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
 
-    @GetMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
-    public List<Hakutulos> hae(
-            @RequestParam("organisaatiotyypit[]") List<String> organisaatiotyypit,
-            @RequestParam(value = "oppilaitostyypit[]", defaultValue = "", required = false) List<String> oppilaitostyypit,
-            @RequestParam(value = "vuosiluokat[]", defaultValue = "", required = false) List<String> vuosiluokat
-    ) {
+    public List<Hakutulos> hae(@RequestBody HaeRequest body) {
+        List<String> vuosiluokat = body.getVuosiluokat();
+        List<String> oppilaitostyypit = body.getOppilaitostyypit();
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";
         String organisaatiotyyppi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
@@ -265,9 +260,27 @@ public class OsoitteetResource {
                 "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_vuosiluokat ORDER BY lpad(koodiarvo, 3, '0')",
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
+        List<KoodistoKoodi> kunnat = jdbcTemplate.query(
+                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY koodiarvo",
+                (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
+        );
+        List<MaakuntaKoodi> maakunnat = jdbcTemplate.query(
+                "SELECT concat(maakunta.koodiuri, '#', maakunta.versio) AS koodi, maakunta.nimi_fi AS nimi, array_agg(concat(kunta.koodiuri, '#', kunta.versio) ORDER BY kunta.koodiarvo) AS kunnat" +
+                        " FROM koodisto_maakunta maakunta" +
+                        " JOIN maakuntakuntarelation ON maakunta.koodiuri = maakuntakuntarelation.maakuntauri" +
+                        " JOIN koodisto_kunta kunta ON kunta.koodiuri = maakuntakuntarelation.kuntauri" +
+                        " GROUP BY concat(maakunta.koodiuri, '#', maakunta.versio), maakunta.nimi_fi" +
+                        " ORDER BY concat(maakunta.koodiuri, '#', maakunta.versio)",
+                (rs, rowNum) -> {
+                    List<String> sisaltyvatKunnat = new ArrayList<>(List.of((String[]) (rs.getArray("kunnat").getArray())));
+                    return new MaakuntaKoodi(rs.getString("koodi"), rs.getString("nimi"), sisaltyvatKunnat);
+                }
+        );
         return new Parametrit(
                 new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat),
-                vuosiluokat
+                vuosiluokat,
+                maakunnat,
+                kunnat
         );
     }
 }
@@ -276,6 +289,8 @@ public class OsoitteetResource {
 class Parametrit {
     private final OppilaitostyyppiParametrit oppilaitostyypit;
     private final List<KoodistoKoodi> vuosiluokat;
+    private final List<MaakuntaKoodi> maakunnat;
+    private final List<KoodistoKoodi> kunnat;
 }
 
 @Data
@@ -294,4 +309,18 @@ class OppilaitosRyhma {
 class KoodistoKoodi {
     private final String koodiUri;
     private final String nimi;
+}
+
+@Data
+class MaakuntaKoodi {
+    private final String koodiUri;
+    private final String nimi;
+    private final List<String> kunnat;
+}
+
+@Data
+class HaeRequest {
+    private List<String> organisaatiotyypit;
+    private List<String> oppilaitostyypit;
+    private List<String> vuosiluokat;
 }
