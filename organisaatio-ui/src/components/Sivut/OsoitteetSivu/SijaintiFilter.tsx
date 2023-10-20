@@ -198,7 +198,6 @@ function AlueTaiMaakuntaFilter({
             : groupedOptions[1].options.filter((option) => isMaakuntaChecked(option.value)),
         selectedUlkomaa ? [{ value: ulkomaaAlue.id, label: ulkomaaAlue.label }] : [],
     ].flat();
-    console.log(selectionsWithAreasCombined);
     return (
         <div className={styles.Column}>
             <h4>Alue tai maakunta:</h4>

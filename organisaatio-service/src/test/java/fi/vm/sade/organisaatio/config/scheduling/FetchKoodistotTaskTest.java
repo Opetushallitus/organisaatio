@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
@@ -14,9 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Sql("/data/truncate_tables.sql")
 @Sql("/data/basic_organisaatio_data.sql")
-@TestPropertySource(properties = {
-        "koodisto.baseurl=http://localhost:${server.port}/organisaatio-service/mock/koodisto-service",
-})
 class FetchKoodistotTaskTest {
     @Autowired
     FetchKoodistotTask fetchKoodistotTask;
