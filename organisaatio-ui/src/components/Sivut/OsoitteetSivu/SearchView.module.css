@@ -118,6 +118,12 @@
     letter-spacing: 0.035px;
 }
 
+.Rajaukset {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .ErrorRow {
     align-self: baseline;
 }

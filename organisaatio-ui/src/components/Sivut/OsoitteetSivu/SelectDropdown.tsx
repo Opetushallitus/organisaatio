@@ -1,34 +1,44 @@
 import React from 'react';
 import styles from './SelectDropdown.module.css';
-import Select, { components, OptionProps, ValueType } from 'react-select';
+import Select, { ActionMeta, components, OptionProps, ValueType } from 'react-select';
 import { CheckedIcon, UncheckedIcon } from './Checkbox';
 
 export type DropdownProps = {
     label: string;
     options: DropdownOption[];
-    onChange: (selection: string[]) => void;
+    onChange: (selection: string[], action: 'add' | 'remove', value: string) => void;
     disabled?: boolean;
     selections: string[];
 };
+
 export type DropdownOption = {
     label: string;
     value: string;
 };
+
 export function SelectDropdown({ onChange, label, options, disabled, selections }: DropdownProps) {
     const selection = options.filter((v) => selections.includes(v.value));
-    function selectOnChange(selection: ValueType<DropdownOption>) {
+    function selectOnChange(selection: ValueType<DropdownOption>, action: ActionMeta<DropdownOption>) {
         if (Array.isArray(selection)) {
-            onChange(selection.map((_) => _.value));
+            onChange(
+                selection.map((_) => _.value),
+                action.action === 'select-option' ? 'add' : 'remove',
+                action.option!.value
+            );
         } else {
             throw new Error('Selection is not an array');
         }
     }
     function removeSelection(value: string) {
-        onChange(selection.filter((_) => _.value !== value).map((_) => _.value));
+        onChange(
+            selection.filter((_) => _.value !== value).map((_) => _.value),
+            'remove',
+            value
+        );
     }
 
     return (
-        <div className={styles.SelectDropdown}>
+        <div className={styles.SelectDropdown} role="listbox" aria-multiselectable={true}>
             <Select<DropdownOption>
                 aria-label={label}
                 className={styles.Select}
@@ -49,29 +59,46 @@ export function SelectDropdown({ onChange, label, options, disabled, selections 
                 backspaceRemovesValue={false}
                 controlShouldRenderValue={false}
             />
-            <div className={styles.SelectionList}>
+            <SelectionList>
                 {selection.map((v) => (
-                    <div key={v.value} className={styles.Selection}>
-                        <span>{v.label}</span>
-                        <IconRemoveSelection onClick={() => removeSelection(v.value)} />
-                    </div>
+                    <SelectionItem key={v.value} value={v.value} label={v.label} onRemove={removeSelection} />
                 ))}
-            </div>
+            </SelectionList>
         </div>
     );
 }
 
-function CustomOption(props: OptionProps<DropdownOption>) {
+export function SelectionList({ children }: { children: React.ReactNode }) {
+    return <div className={styles.SelectionList}>{children}</div>;
+}
+
+type SelectionItemProps = {
+    value: string;
+    label: string;
+    onRemove: (value: string) => void;
+};
+export function SelectionItem({ value, label, onRemove }: SelectionItemProps) {
+    return (
+        <div className={styles.Selection}>
+            <span>{label}</span>
+            <IconRemoveSelection onClick={() => onRemove(value)} />
+        </div>
+    );
+}
+
+export function CustomOption(props: OptionProps<DropdownOption>) {
     const { isSelected, children } = props;
     return (
-        <components.Option {...props} className={styles.Option}>
-            {isSelected ? <CheckedIcon /> : <UncheckedIcon />}
-            {children}
+        <components.Option {...props}>
+            <div className={styles.Option} aria-label={props.data.label} aria-selected={isSelected}>
+                {isSelected ? <CheckedIcon /> : <UncheckedIcon />}
+                {children}
+            </div>
         </components.Option>
     );
 }
 
-function IconRemoveSelection(props: React.SVGProps<SVGSVGElement>) {
+export function IconRemoveSelection(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg {...props} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

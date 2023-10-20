@@ -9,6 +9,8 @@ import { LinklikeButton } from './LinklikeButton';
 import { useHistory } from 'react-router-dom';
 import { SelectDropdown } from './SelectDropdown';
 import { RajausAccordion } from './RajausAccordion';
+import { makeDefaultSearchFilterValue, SijaintiFilter, SijaintiFilterValue } from './SijaintiFilter';
+import { KoodiUri } from '../../../types/types';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -18,17 +20,23 @@ type SearchViewProps = {
 type SearchState = {
     oppilaitosTypes: Record<string, boolean>;
     vuosiluokat: string[];
+    sijainti: SijaintiFilterValue;
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
+    const maakuntaLookup: Map<KoodiUri, KoodiUri[]> = new Map(
+        hakuParametrit.maakunnat.map((maakuntaKoodi) => [maakuntaKoodi.koodiUri, maakuntaKoodi.kunnat])
+    );
     const [loading, setLoading] = useState<boolean>(false);
     const defaultOppilaitosTypes = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
         return accu;
     }, {});
+
     const defaultSearchState: SearchState = {
         oppilaitosTypes: defaultOppilaitosTypes,
         vuosiluokat: [],
+        sijainti: makeDefaultSearchFilterValue(hakuParametrit.maakunnat),
     };
 
     const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>(defaultSearchState);
@@ -50,6 +58,12 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         try {
             setLoading(true);
             setError(false);
+
+            const kunnatFromSijantiFilter: KoodiUri[] = unique([
+                ...searchParameters.sijainti.kunnat,
+                ...searchParameters.sijainti.maakunnat.flatMap((maakuntaUri) => maakuntaLookup.get(maakuntaUri) ?? []),
+                ...(searchParameters.sijainti.ulkomaa ? ['kunta_200#2'] : []),
+            ]);
             const osoitteet = await haeOsoitteet({
                 organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
                 oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(
@@ -57,6 +71,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     []
                 ),
                 vuosiluokat: canFilterByVuosiluokat ? searchParameters.vuosiluokat : [],
+                kunnat: kunnatFromSijantiFilter,
             });
             onResult(osoitteet);
         } catch (e) {
@@ -105,6 +120,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             o = 1;
         }
         return o;
+    }
+
+    function onSijaintiFilterChanged(sijainti: SijaintiFilterValue) {
+        setSearchParameters({ ...searchParameters, sijainti });
     }
 
     function buildSelectionDescription(): string {
@@ -203,6 +222,12 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                             />
                         </div>
                     </RajausAccordion>
+                    <SijaintiFilter
+                        maakunnat={hakuParametrit.maakunnat}
+                        kunnat={hakuParametrit.kunnat}
+                        value={searchParameters.sijainti}
+                        onChange={onSijaintiFilterChanged}
+                    />
                 </div>
             </div>
             {error && (
@@ -269,4 +294,8 @@ function parseHashState(hash: string) {
 
 function stringifyHashState(state: Record<string, object>) {
     return encodeURIComponent(JSON.stringify(state));
+}
+
+function unique<T>(elements: T[]) {
+    return Array.from(new Set(elements));
 }

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_CONTEXT } from '../../../contexts/constants';
+import { KoodiUri } from '../../../types/types';
 
 export type Hakutulos = {
     id: number;
@@ -17,17 +18,20 @@ export type Hakutulos = {
     kayntiosoite?: string;
 };
 
-type Koodiarvo = string;
-
 export type HaeRequest = {
-    organisaatiotyypit: Koodiarvo[];
-    oppilaitostyypit: Koodiarvo[];
-    vuosiluokat: Koodiarvo[];
+    organisaatiotyypit: KoodiUri[];
+    oppilaitostyypit: KoodiUri[];
+    vuosiluokat: KoodiUri[];
+    kunnat: KoodiUri[];
 };
 
 export type KoodistoKoodi = {
     koodiUri: string;
     nimi: string;
+};
+
+export type MaakuntaKoodi = KoodistoKoodi & {
+    kunnat: KoodiUri[];
 };
 
 export type OppilaitosRyhma = {
@@ -41,11 +45,12 @@ export type HakuParametrit = {
         ryhmat: OppilaitosRyhma[];
     };
     vuosiluokat: KoodistoKoodi[];
+    maakunnat: MaakuntaKoodi[];
+    kunnat: KoodistoKoodi[];
 };
 
-export async function haeOsoitteet(req: HaeRequest): Promise<Hakutulos[]> {
-    const params = req;
-    const response = await axios.get<Hakutulos[]>(`${API_CONTEXT}/osoitteet/hae`, { params });
+export async function haeOsoitteet(request: HaeRequest): Promise<Hakutulos[]> {
+    const response = await axios.post<Hakutulos[]>(`${API_CONTEXT}/osoitteet/hae`, request);
     return response.data;
 }
 
