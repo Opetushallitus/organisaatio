@@ -10,6 +10,8 @@ type AlueId = 'alue_mannersuomi' | 'alue_kokosuomi' | 'alue_ulkomaa';
 type UlkomaaAlue = { id: 'alue_ulkomaa'; label: string };
 type MaakuntaAlue = { id: AlueId; label: string; maakunnat: KoodiUri[] };
 
+const MAAKUNTA_AHVENANMAA: KoodiUri = 'maakunta_21';
+
 export type SijaintiFilterValue = {
     maakunnat: KoodiUri[];
     ulkomaa: boolean;
@@ -30,8 +32,6 @@ type SijaintiFilterProps = {
     value: SijaintiFilterValue;
     onChange: (value: SijaintiFilterValue) => void;
 };
-
-const MAAKUNTA_AHVENANMAA: KoodiUri = 'maakunta_21#2';
 
 export function SijaintiFilter({ maakunnat, kunnat, value, onChange }: SijaintiFilterProps) {
     const alueMannerSuomi: MaakuntaAlue = {
@@ -187,7 +187,6 @@ function AlueTaiMaakuntaFilter({
     const reactSelectSelection = groupedOptions.flatMap((_) => _.options).filter((v) => selections.includes(v.value));
 
     // Jos alue on valittu, älä näytä siihen kuuluvia maakuntia
-    //const isMaakuntaChecked = (alue: KoodiUri): boolean => value.maakunnat.includes(alue);
     const isMannerSuomiChecked = alueMannerSuomi.maakunnat.every(isMaakuntaChecked);
     const isKokoSuomiChecked = alueKokoSuomi.maakunnat.every(isMaakuntaChecked);
     const selectionsWithAreasCombined: DropdownOption[] = [
@@ -206,13 +205,12 @@ function AlueTaiMaakuntaFilter({
                 className={styles.Select}
                 escapeClearsValue={false}
                 hideSelectedOptions={false}
-                components={{
-                    Option: CustomOption,
-                }}
+                components={{ Option: CustomOption }}
                 placeholder={label}
-                isMulti={true}
+                isMulti
                 isClearable={false}
                 options={groupedOptions}
+                classNamePrefix="alue-react-select"
                 classNames={{
                     option: styles.ReactSelectOption,
                     groupHeading: styles.ReactSelectGroupHeading,

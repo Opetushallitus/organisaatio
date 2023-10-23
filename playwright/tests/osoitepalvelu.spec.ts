@@ -138,6 +138,7 @@ test.describe("Osoitepalvelu", () => {
       await toggleCheckboxByText(page, "Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
+
     test("checks and unchecks an oppilatostyyppi group", async ({ page }) => {
       await openOppilatostyyppiBox(page);
       await expect(getCheckedItems(page)).toHaveCount(0);
@@ -154,9 +155,11 @@ test.describe("Osoitepalvelu", () => {
 
   test("Sijainti filter", async ({ page }) => {
     const button = page.getByRole("button", { name: "Sijainti" });
+    const assertSelectionText = async text =>
+      expect(button.locator("[aria-live=off]")).toHaveText(text)
 
     await test.step("Defaults to Manner-Suomi", async () => {
-      await expect(button.locator("[aria-live=off]")).toHaveText("Manner-Suomi (ei Ahvenanmaa)");
+      await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)")
     })
 
     await button.click();
@@ -165,23 +168,50 @@ test.describe("Osoitepalvelu", () => {
       await openDropdown(page, "Hae alueen tai maakunnan nimellä");
 
       await selectFromDropdown(page, "Koko Suomi");
-      await expect(button.locator("[aria-live=off]")).toHaveText("Koko Suomi");
+      await assertSelectionText("Koko Suomi")
 
+      await ensureAlueDropdownIsOpen(page)
       await selectFromDropdown(page, "Ahvenanmaa");
-      await expect(button.locator("[aria-live=off]")).toHaveText("Manner-Suomi (ei Ahvenanmaa)");
+      await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)")
 
+      await ensureAlueDropdownIsOpen(page)
       await selectFromDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
-      await expect(button.locator("[aria-live=off]")).toHaveText("");
+      await assertSelectionText("")
 
+      await ensureAlueDropdownIsOpen(page)
       await selectFromDropdown(page, "Ulkomaa");
-      await expect(button.locator("[aria-live=off]")).toHaveText("Ulkomaa");
+      await assertSelectionText("Ulkomaa")
 
+      await ensureAlueDropdownIsOpen(page)
       await selectFromDropdown(page, "Uusimaa");
-      await expect(button.locator("[aria-live=off]")).toHaveText("Ulkomaa, Uusimaa");
+      await assertSelectionText("Ulkomaa, Uusimaa")
+    })
+
+    await test.step("Filters results by alue", async () => {
+      await assertSelectionText("Ulkomaa, Uusimaa")
+      await page.getByRole("button", { name: "Hae" }).click()
+      await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
+      await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+
+      await openSijaintiBox(page)
+      await ensureAlueDropdownIsOpen(page)
+      await selectFromDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
+      await page.getByRole("button", { name: "Hae" }).click()
+      await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
+      const firstResult = await page.getByRole("row").nth(1);
+      await expect(firstResult).toBeVisible();
+      await expect(firstResult.getByText("Mansikkalan testi kunta")).toBeVisible();
+      await expect(firstResult.getByText("Imatra").first()).toBeVisible();
     })
   })
 });
 
+async function ensureAlueDropdownIsOpen(page: Page) {
+  // This is required on webkit tests
+  if (!await page.isVisible('.alue-react-select__menu')) {
+    await openDropdown(page, "Hae alueen tai maakunnan nimellä");
+  }
+}
 async function openDropdown(page: Page, label: string) {
   await page.getByText(label, { exact: true }).click();
 }
@@ -212,6 +242,14 @@ function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
     has: page.getByRole("checkbox", { checked }),
   });
+}
+
+async function openSijaintiBox(page: Page) {
+  const button = page.getByRole("button", { name: "Sijainti" });
+  await pressTabUntilFocusOn(page, button);
+  await page.keyboard.press("Space");
+
+  return button;
 }
 
 async function openOppilatostyyppiBox(page: Page) {

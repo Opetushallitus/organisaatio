@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './SelectDropdown.module.css';
-import Select, { ActionMeta, components, OptionProps, ValueType } from 'react-select';
+import Select, { components, OptionProps, ValueType } from 'react-select';
 import { CheckedIcon, UncheckedIcon } from './Checkbox';
 
 export type DropdownProps = {
     label: string;
     options: DropdownOption[];
-    onChange: (selection: string[], action: 'add' | 'remove', value: string) => void;
+    onChange: (selection: string[]) => void;
     disabled?: boolean;
     selections: string[];
 };
@@ -18,23 +18,15 @@ export type DropdownOption = {
 
 export function SelectDropdown({ onChange, label, options, disabled, selections }: DropdownProps) {
     const selection = options.filter((v) => selections.includes(v.value));
-    function selectOnChange(selection: ValueType<DropdownOption>, action: ActionMeta<DropdownOption>) {
+    function selectOnChange(selection: ValueType<DropdownOption>) {
         if (Array.isArray(selection)) {
-            onChange(
-                selection.map((_) => _.value),
-                action.action === 'select-option' ? 'add' : 'remove',
-                action.option!.value
-            );
+            onChange(selection.map((_) => _.value));
         } else {
             throw new Error('Selection is not an array');
         }
     }
     function removeSelection(value: string) {
-        onChange(
-            selection.filter((_) => _.value !== value).map((_) => _.value),
-            'remove',
-            value
-        );
+        onChange(selection.filter((_) => _.value !== value).map((_) => _.value));
     }
 
     return (
@@ -44,11 +36,9 @@ export function SelectDropdown({ onChange, label, options, disabled, selections 
                 className={styles.Select}
                 escapeClearsValue={false}
                 hideSelectedOptions={false}
-                components={{
-                    Option: CustomOption,
-                }}
+                components={{ Option: CustomOption }}
                 placeholder={label}
-                isMulti={true}
+                isMulti
                 isDisabled={disabled}
                 isClearable={false}
                 options={options}

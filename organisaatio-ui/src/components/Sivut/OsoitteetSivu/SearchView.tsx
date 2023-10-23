@@ -24,9 +24,6 @@ type SearchState = {
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
-    const maakuntaLookup: Map<KoodiUri, KoodiUri[]> = new Map(
-        hakuParametrit.maakunnat.map((maakuntaKoodi) => [maakuntaKoodi.koodiUri, maakuntaKoodi.kunnat])
-    );
     const [loading, setLoading] = useState<boolean>(false);
     const defaultOppilaitosTypes = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
@@ -59,11 +56,6 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             setLoading(true);
             setError(false);
 
-            const kunnatFromSijantiFilter: KoodiUri[] = unique([
-                ...searchParameters.sijainti.kunnat,
-                ...searchParameters.sijainti.maakunnat.flatMap((maakuntaUri) => maakuntaLookup.get(maakuntaUri) ?? []),
-                ...(searchParameters.sijainti.ulkomaa ? ['kunta_200#2'] : []),
-            ]);
             const osoitteet = await haeOsoitteet({
                 organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
                 oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(
@@ -71,7 +63,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     []
                 ),
                 vuosiluokat: canFilterByVuosiluokat ? searchParameters.vuosiluokat : [],
-                kunnat: kunnatFromSijantiFilter,
+                kunnat: mapSijaintiFilterToKunnat(hakuParametrit, searchParameters.sijainti),
             });
             onResult(osoitteet);
         } catch (e) {
@@ -294,6 +286,16 @@ function parseHashState(hash: string) {
 
 function stringifyHashState(state: Record<string, object>) {
     return encodeURIComponent(JSON.stringify(state));
+}
+
+function mapSijaintiFilterToKunnat(hakuParametrit: HakuParametrit, sijainti: SijaintiFilterValue): KoodiUri[] {
+    const KUNTA_ULKOMAA = 'kunta_200';
+    const maakuntaLookup: Map<KoodiUri, KoodiUri[]> = new Map(
+        hakuParametrit.maakunnat.map((maakuntaKoodi) => [maakuntaKoodi.koodiUri, maakuntaKoodi.kunnat])
+    );
+    const maakunnatAsKunnat = sijainti.maakunnat.flatMap((maakuntaUri) => maakuntaLookup.get(maakuntaUri) ?? []);
+    const ulkomaaAsKunnat = sijainti.ulkomaa ? [KUNTA_ULKOMAA] : [];
+    return unique([...sijainti.kunnat, ...maakunnatAsKunnat, ...ulkomaaAsKunnat]);
 }
 
 function unique<T>(elements: T[]) {
