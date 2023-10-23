@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from '@opetushallitus/virkailija-ui-components/Select';
@@ -33,6 +33,7 @@ import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../../../api/kayttooikeus';
 import { koodistotAtom } from '../../../../../api/koodisto';
 import { getUiDateStr } from '../../../../../tools/mappers';
+import IconWrapper from '../../../../IconWapper/IconWrapper';
 
 type PerustietoLomakeProps = {
     resolvedTyypit: KoodistoSelectOption[];
@@ -68,6 +69,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     } = props;
     const [nimenmuutosModaaliAuki, setNimenmuutosModaaliAuki] = useState<boolean>(false);
     const [lakkautusModaaliAuki, setLakkautusModaaliAuki] = useState<boolean>(false);
+    const [rerenderKey, forceRerender] = useReducer((x) => x + 1, 0);
 
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
@@ -77,6 +79,11 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     };
     const { organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
     const { currentNimi } = organisaatioBase;
+    const canEditLakkautuspvm = casMe.canHaveButton(
+        'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI',
+        organisaatioBase.oid,
+        organisaatioNimiPolku
+    );
     return (
         <UloinKehys>
             <Rivi>
@@ -172,23 +179,37 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         validationErrors={validationErrors}
                     />
                 </Kentta>
-                <div>
-                    {lakkautusPvm && (
+            </Rivi>
+            <Rivi>
+                {lakkautusPvm && (
+                    <div style={{ display: 'flex' }} key={`rerenderkey${rerenderKey}`}>
                         <Kentta label={'PERUSTIETO_LAKKAUTUSPAIVA'}>
                             <ReadOnlyDate value={lakkautusPvm} />
                         </Kentta>
-                    )}
-                    {casMe.canHaveButton(
-                        'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI',
-                        organisaatioBase.oid,
-                        organisaatioNimiPolku
-                    ) && (
-                        <LomakeButton
-                            label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
-                            onClick={() => setLakkautusModaaliAuki(true)}
-                        />
-                    )}
-                </div>
+                        {canEditLakkautuspvm && (
+                            <>
+                                <LomakeButton
+                                    label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
+                                    onClick={() => setLakkautusModaaliAuki(true)}
+                                />
+                                <LomakeButton
+                                    label={'PERUSTIETO_POISTA_LAKKAUTUS'}
+                                    onClick={() => {
+                                        setPerustiedotValue('lakkautusPvm', undefined);
+                                        forceRerender();
+                                    }}
+                                    icon={() => <IconWrapper inline={true} icon="ci:trash-full" height={'1.2rem'} />}
+                                />
+                            </>
+                        )}
+                    </div>
+                )}
+                {canEditLakkautuspvm && !lakkautusPvm && (
+                    <LomakeButton
+                        label={'PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI'}
+                        onClick={() => setLakkautusModaaliAuki(true)}
+                    />
+                )}
             </Rivi>
             <Rivi>
                 <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'}>
