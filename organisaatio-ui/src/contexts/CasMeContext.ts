@@ -6,17 +6,17 @@ const OPH_CRUD = `${ORGANISAATIO_CRUD}_${ROOT_OID}`;
 const getRoleItems = <A>(myRole: string, role: string, items: A[]): A[] => {
     return myRole === role ? items : [];
 };
-const getOidsFromRoles = (roles: string[]): string[] => {
+const getCrudOidsFromRoles = (roles: string[]): string[] => {
     return roles
         .filter((a) => a.startsWith(`${ORGANISAATIO_CRUD}_`))
         .map((a) => a.substr(ORGANISAATIO_CRUD.length + 1));
 };
-export const organisationAllowedInRoles = (
+export const organisationCrudAllowedInRoles = (
     oid: string,
     organisaatioNimiPolku: OrganisaatioNimiJaOid[],
     roles: string[]
 ): boolean => {
-    const oidsFromRoles = getOidsFromRoles(roles);
+    const oidsFromRoles = getCrudOidsFromRoles(roles);
     if (oidsFromRoles.includes(oid)) {
         return true;
     }
@@ -80,10 +80,10 @@ export class CASMeImpl implements CASMe {
     }
     canHaveButton = (button: ConfigurableButton, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
-        if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
+        if (organisaatioNimiPolku.length > 2 && organisationCrudAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
             return true;
         return (
-            organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
+            organisationCrudAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
             this.allowedButtons.reduce(
                 (p, c) => p || (c.button === button && organisaatioNimiPolku.length > c.fromLevel),
                 false
@@ -93,7 +93,7 @@ export class CASMeImpl implements CASMe {
     canEditLomake = (lomake: ConfigurableLomake, oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
         return (
-            organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
+            organisationCrudAllowedInRoles(oid, organisaatioNimiPolku, this.roles) &&
             this.allowedLomakes.reduce(
                 (p, c) => p || (c.lomake === lomake && organisaatioNimiPolku.length > c.fromLevel),
                 false
@@ -102,12 +102,17 @@ export class CASMeImpl implements CASMe {
     };
     canEditIfParent = (oid: string, organisaatioNimiPolku: OrganisaatioNimiJaOid[]) => {
         if (this.roles.includes(OPH_CRUD)) return true;
-        if (organisaatioNimiPolku.length > 2 && organisationAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
+        if (organisaatioNimiPolku.length > 2 && organisationCrudAllowedInRoles(oid, organisaatioNimiPolku, this.roles))
             return true;
         return false;
     };
-    getCRUDOids = () => {
-        return getOidsFromRoles(this.roles);
+    getOrganisationOidsWithAnyAccess = () => {
+        const oids = this.roles
+            .filter(
+                (r) => r.startsWith('APP_ORGANISAATIOHALLINTA_CRUD_') || r.startsWith('APP_ORGANISAATIOHALLINTA_READ_')
+            )
+            .map((r) => r.substring(r.lastIndexOf('_') + 1));
+        return [...new Set(oids)];
     };
     isOphUser = () => {
         return this.roles.includes(OPH_CRUD);

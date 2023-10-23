@@ -1,7 +1,7 @@
 import { KoodistoImpl } from './KoodistoContext';
 import { Koodi, Lokalisointi } from '../types/types';
 import { I18nImpl } from './LanguageContext';
-import { organisationAllowedInRoles } from './CasMeContext';
+import { organisationCrudAllowedInRoles } from './CasMeContext';
 
 describe('KoodistoImpl', () => {
     const koodit: Koodi[] = [
@@ -137,13 +137,13 @@ describe('I18nImpl', () => {
 describe('CASMeImpl', () => {
     it('cheks roles and organisation for button when organisations present', () => {
         const roles = ['APP_ORGANISAATIOHALLINTA_CRUD_111', 'APP_ORGANISAATIOHALLINTA_CRUD_666'];
-        expect(organisationAllowedInRoles('333', [{ oid: '111', nimi: { fi: '111' } }], roles)).toBeTruthy();
-        expect(organisationAllowedInRoles('333', [{ oid: '666', nimi: { fi: '666' } }], roles)).toBeTruthy();
-        expect(organisationAllowedInRoles('666', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeTruthy();
-        expect(organisationAllowedInRoles('333', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+        expect(organisationCrudAllowedInRoles('333', [{ oid: '111', nimi: { fi: '111' } }], roles)).toBeTruthy();
+        expect(organisationCrudAllowedInRoles('333', [{ oid: '666', nimi: { fi: '666' } }], roles)).toBeTruthy();
+        expect(organisationCrudAllowedInRoles('666', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeTruthy();
+        expect(organisationCrudAllowedInRoles('333', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
     });
     it('cheks roles and organisation for button when no organisation', () => {
         const roles = ['FOO', 'APP_ORGANISAATIOHALLINTA_CRUD'];
-        expect(organisationAllowedInRoles('111', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+        expect(organisationCrudAllowedInRoles('111', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
     });
 });

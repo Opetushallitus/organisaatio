@@ -74,7 +74,7 @@ const mapOptionsToValues = (options: SelectOptionType[]) => options.map((o) => o
 export default function OrganisaatioHakuTaulukko() {
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
-    const crudOids = useMemo(() => casMe.getCRUDOids(), [casMe]);
+    const omatOrganisaatiot = useMemo(() => casMe.getOrganisationOidsWithAnyAccess(), [casMe]);
     const [organisaatiot, setOrganisaatiot] = useState<OrganisaatioHakuOrganisaatio[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
@@ -226,7 +226,7 @@ export default function OrganisaatioHakuTaulukko() {
                 expanded: initialExpanded,
                 hiddenColumns: ['allOids', 'oppilaitostyyppi', 'showVakaToimijat'],
                 filters: [
-                    { id: 'allOids', value: crudOids },
+                    { id: 'allOids', value: omatOrganisaatiot },
                     {
                         id: 'organisaatiotyypit',
                         value: [],
@@ -255,7 +255,7 @@ export default function OrganisaatioHakuTaulukko() {
         setAllFilters([
             {
                 id: 'allOids',
-                value: omatOrganisaatiotSelected ? crudOids : [],
+                value: omatOrganisaatiotSelected ? omatOrganisaatiot : [],
             },
             {
                 id: 'organisaatiotyypit',
@@ -272,7 +272,7 @@ export default function OrganisaatioHakuTaulukko() {
         ]);
     }, [
         data,
-        crudOids,
+        omatOrganisaatiot,
         setAllFilters,
         omatOrganisaatiotSelected,
         organisaatioTyyppi,
