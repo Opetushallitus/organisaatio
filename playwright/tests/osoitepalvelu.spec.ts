@@ -48,18 +48,25 @@ test.describe("Osoitepalvelu", () => {
       await page.keyboard.press("Space");
       await expect(page.getByRole("list")).toBeHidden();
     });
+
     test("updates selection text", async ({ page }) => {
       const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
       await expect(page.getByRole("list")).toBeVisible();
-      await expect(button.locator("[aria-live=off]")).toHaveText("");
-      await checkRandomNumberofListItems(page);
-      const expectedText = await page
-        .getByRole("listitem")
-        .filter({ has: page.getByRole("checkbox", { checked: true }) })
-        .allTextContents()
-        .then((texts) => texts.join(", "));
 
-      await expect(button.locator("[aria-live=off]")).toHaveText(expectedText);
+      const assertSelectionText = async text =>
+        expect(button.locator("[aria-live=off]")).toHaveText(text)
+
+      await toggleCheckboxByText(page, "Kesäyliopistot")
+      await assertSelectionText("Kesäyliopistot")
+
+      await toggleCheckboxByText(page, "Lukiot")
+      await assertSelectionText("Kesäyliopistot, Lukiot")
+
+      await toggleCheckboxByText(page, "Perus- ja lukioasteen koulut")
+      await assertSelectionText("Lukiokoulutus, Kesäyliopistot")
+
+      await toggleCheckboxByText(page, "Lukiokoulutus")
+      await assertSelectionText("Kesäyliopistot")
     });
 
     test("Tyhjennä valinnat unchecks all selections", async ({page}) => {
@@ -229,23 +236,4 @@ async function pressTabUntilFocusOn(page: Page, locator: Locator) {
       await page.keyboard.press("Tab");
     }
   }
-}
-
-async function checkRandomNumberofListItems(page: Page) {
-  const listItemsCount = await page.getByRole("listitem").count();
-  const checkCount = randomIntFromInterval(1, 5);
-
-  for (let i = 0; i < checkCount; i++) {
-    const uncheckedItems = await getUncheckedItems(page);
-    const count = await uncheckedItems.count();
-    const selectedItem = await uncheckedItems
-      .nth(randomIntFromInterval(1, count))
-      .getByRole("checkbox");
-    await pressTabUntilFocusOn(page, selectedItem);
-    await page.keyboard.press("Space");
-  }
-}
-
-function randomIntFromInterval(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
 }
