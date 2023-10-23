@@ -34,9 +34,9 @@ public class OsoitteetResource {
 
     @PostMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
-    public List<Hakutulos> hae(@RequestBody HaeRequest body) {
-        List<String> vuosiluokat = body.getVuosiluokat();
-        List<String> oppilaitostyypit = body.getOppilaitostyypit();
+    public List<Hakutulos> hae(@RequestBody HaeRequest request) {
+        List<String> vuosiluokat = request.getVuosiluokat();
+        List<String> oppilaitostyypit = request.getOppilaitostyypit();
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";
         String organisaatiotyyppi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
@@ -48,12 +48,11 @@ public class OsoitteetResource {
             }
 
             if (oppilaitostyypit.isEmpty()) {
-                organisaatioIds.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi));
+                organisaatioIds.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi, request.getKunnat()));
             } else {
-                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat));
+                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat()));
             }
         }
-
 
         return makeSearchResult(organisaatioIds, kieli, kieliKoodi);
     }
@@ -174,18 +173,24 @@ public class OsoitteetResource {
         }
     }
 
-    private List<Long> searchByOrganisaatioTyyppi(String organisaatiotyyppi) {
+    private List<Long> searchByOrganisaatioTyyppi(String organisaatiotyyppi, List<String> kunnat) {
         String sql = "SELECT DISTINCT o.id FROM organisaatio o" +
                 " JOIN organisaatio_tyypit ON (organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)" +
-                " WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu";
-        return jdbcTemplate.query(sql, Map.of("organisaatiotyyppi", organisaatiotyyppi), (rs, rowNum) -> rs.getLong("id"));
+                " WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu" +
+                " AND o.kotipaikka IN (:kunnat)";
+
+        return jdbcTemplate.query(sql, Map.of(
+                "organisaatiotyyppi", organisaatiotyyppi,
+                "kunnat", kunnat
+        ), (rs, rowNum) -> rs.getLong("id"));
     }
 
-    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat) {
+    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat, List<String> kunnat) {
         Map<String, Object> params = new HashMap<>(Map.of(
                 "koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
                 "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
-                "oppilaitostyypit", oppilaitostyypit
+                "oppilaitostyypit", oppilaitostyypit,
+                "kunnat", kunnat
         ));
         if (!vuosiluokat.isEmpty()) {
             params.put("vuosiluokat", vuosiluokat);
@@ -203,7 +208,8 @@ public class OsoitteetResource {
         sql += " WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)" +
                 " AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu" +
                 " AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu" +
-                " AND child.oppilaitostyyppi IN (:oppilaitostyypit)";
+                " AND child.oppilaitostyyppi IN (:oppilaitostyypit)" +
+                " AND parent.kotipaikka IN (:kunnat)";
         if (!vuosiluokat.isEmpty()) {
             sql += " AND organisaatio_vuosiluokat.vuosiluokat IN (:vuosiluokat)";
         }
@@ -261,16 +267,16 @@ public class OsoitteetResource {
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
         List<KoodistoKoodi> kunnat = jdbcTemplate.query(
-                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY koodiarvo",
+                "SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY koodiarvo",
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
         List<MaakuntaKoodi> maakunnat = jdbcTemplate.query(
-                "SELECT concat(maakunta.koodiuri, '#', maakunta.versio) AS koodi, maakunta.nimi_fi AS nimi, array_agg(concat(kunta.koodiuri, '#', kunta.versio) ORDER BY kunta.koodiarvo) AS kunnat" +
+                "SELECT maakunta.koodiuri AS koodi, maakunta.nimi_fi AS nimi, array_agg(kunta.koodiuri ORDER BY kunta.koodiarvo) AS kunnat" +
                         " FROM koodisto_maakunta maakunta" +
                         " JOIN maakuntakuntarelation ON maakunta.koodiuri = maakuntakuntarelation.maakuntauri" +
                         " JOIN koodisto_kunta kunta ON kunta.koodiuri = maakuntakuntarelation.kuntauri" +
-                        " GROUP BY concat(maakunta.koodiuri, '#', maakunta.versio), maakunta.nimi_fi" +
-                        " ORDER BY concat(maakunta.koodiuri, '#', maakunta.versio)",
+                        " GROUP BY maakunta.koodiuri, maakunta.nimi_fi" +
+                        " ORDER BY maakunta.koodiuri",
                 (rs, rowNum) -> {
                     List<String> sisaltyvatKunnat = new ArrayList<>(List.of((String[]) (rs.getArray("kunnat").getArray())));
                     return new MaakuntaKoodi(rs.getString("koodi"), rs.getString("nimi"), sisaltyvatKunnat);
@@ -323,4 +329,5 @@ class HaeRequest {
     private List<String> organisaatiotyypit;
     private List<String> oppilaitostyypit;
     private List<String> vuosiluokat;
+    private List<String> kunnat;
 }
