@@ -62,7 +62,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
 
     public void execute() {
         log.info("Starting FetchKoodistotTask");
-        for (String koodisto : List.of("oppilaitostyyppi", "posti", "oppilaitoksenopetuskieli", "vuosiluokat")) {
+        for (String koodisto : List.of("oppilaitostyyppi", "posti", "oppilaitoksenopetuskieli", "vuosiluokat", "koulutus")) {
             updateKoodisto(koodisto);
         }
         updateMaakuntaKuntaRelaatiot();

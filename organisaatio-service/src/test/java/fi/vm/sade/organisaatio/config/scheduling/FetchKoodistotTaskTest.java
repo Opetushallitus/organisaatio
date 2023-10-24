@@ -26,6 +26,7 @@ class FetchKoodistotTaskTest {
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_kunta", Long.class)).isEqualTo(0L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_posti", Long.class)).isEqualTo(0L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_vuosiluokat", Long.class)).isEqualTo(0L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_koulutus", Long.class)).isEqualTo(0L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_maakunta", Long.class)).isEqualTo(0L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM maakuntakuntarelation", Long.class)).isEqualTo(0L);
 
@@ -37,6 +38,7 @@ class FetchKoodistotTaskTest {
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_posti", Long.class)).isEqualTo(4207L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_maakunta", Long.class)).isEqualTo(21L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM maakuntakuntarelation", Long.class)).isEqualTo(311L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_koulutus", Long.class)).isEqualTo(3172L);
 
 
         assertThat(jdbcTemplate.queryForObject("SELECT nimi_fi FROM koodisto_oppilaitostyyppi WHERE koodiuri = 'oppilaitostyyppi_41'", String.class)).isEqualTo("Ammattikorkeakoulut");
