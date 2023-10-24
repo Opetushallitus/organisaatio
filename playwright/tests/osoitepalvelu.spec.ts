@@ -170,34 +170,26 @@ test.describe("Osoitepalvelu", () => {
       await selectFromDropdown(page, "Koko Suomi");
       await assertSelectionText("Koko Suomi")
 
-      await ensureAlueDropdownIsOpen(page)
-      await selectFromDropdown(page, "Ahvenanmaa");
+      await selectFromAlueDropdown(page, "Ahvenanmaa");
       await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)")
 
-      await ensureAlueDropdownIsOpen(page)
-      await selectFromDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
+      await selectFromAlueDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
       await assertSelectionText("")
 
-      await ensureAlueDropdownIsOpen(page)
-      await selectFromDropdown(page, "Ulkomaa");
+      await selectFromAlueDropdown(page, "Ulkomaa");
       await assertSelectionText("Ulkomaa")
 
-      await ensureAlueDropdownIsOpen(page)
-      await selectFromDropdown(page, "Uusimaa");
+      await selectFromAlueDropdown(page, "Uusimaa");
       await assertSelectionText("Ulkomaa, Uusimaa")
 
-      await ensureKuntaDropdownIsOpen(page)
-      await selectFromDropdown(page, "Imatra");
+      await selectFromKuntaDropdown(page, "Imatra");
       await assertSelectionText("Ulkomaa, Uusimaa, Imatra")
 
-      await ensureKuntaDropdownIsOpen(page)
-      await selectFromDropdown(page, "Helsinki");
+      await selectFromKuntaDropdown(page, "Helsinki");
       await assertSelectionText("Ulkomaa, Uusimaa, Helsinki, Imatra")
 
-      await ensureKuntaDropdownIsOpen(page)
-      await selectFromDropdown(page, "Helsinki");
-      await ensureKuntaDropdownIsOpen(page)
-      await selectFromDropdown(page, "Imatra");
+      await selectFromKuntaDropdown(page, "Helsinki");
+      await selectFromKuntaDropdown(page, "Imatra");
       await assertSelectionText("Ulkomaa, Uusimaa")
     })
 
@@ -208,8 +200,7 @@ test.describe("Osoitepalvelu", () => {
       await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
       await openSijaintiBox(page)
-      await ensureAlueDropdownIsOpen(page)
-      await selectFromDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
+      await selectFromAlueDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
       await page.getByRole("button", { name: "Hae" }).click()
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
       const firstResult = await page.getByRole("row").nth(1);
@@ -220,20 +211,21 @@ test.describe("Osoitepalvelu", () => {
   })
 });
 
-async function ensureAlueDropdownIsOpen(page: Page) {
-  // This is required on webkit tests
+async function selectFromAlueDropdown(page: Page, label: string) {
+  // This is required on webkit tests as the dropdown closes after selection
   if (!await page.isVisible('.alue-react-select__menu')) {
     await openDropdown(page, "Hae alueen tai maakunnan nimellä");
   }
+  await page.getByLabel(label, { exact: true }).click()
 }
 
-async function ensureKuntaDropdownIsOpen(page: Page) {
-  // This is required on webkit tests
+async function selectFromKuntaDropdown(page: Page, label: string) {
+  // This is required on webkit tests as the dropdown closes after selection
   if (!await page.isVisible('.kunta-react-select__menu')) {
     await openDropdown(page, "Hae kunnan nimellä");
   }
+  await page.getByLabel(label, { exact: true }).click()
 }
-
 async function openDropdown(page: Page, label: string) {
   await page.getByText(label, { exact: true }).click();
 }
