@@ -9,6 +9,7 @@ export type DropdownProps = {
     onChange: (selection: string[]) => void;
     disabled?: boolean;
     selections: string[];
+    classNamePrefix?: string;
 };
 
 export type DropdownOption = {
@@ -16,7 +17,7 @@ export type DropdownOption = {
     value: string;
 };
 
-export function SelectDropdown({ onChange, label, options, disabled, selections }: DropdownProps) {
+export function SelectDropdown({ onChange, label, options, disabled, selections, classNamePrefix }: DropdownProps) {
     const selection = options.filter((v) => selections.includes(v.value));
     function selectOnChange(selection: ValueType<DropdownOption>) {
         if (Array.isArray(selection)) {
@@ -48,6 +49,7 @@ export function SelectDropdown({ onChange, label, options, disabled, selections 
                 onChange={selectOnChange}
                 backspaceRemovesValue={false}
                 controlShouldRenderValue={false}
+                classNamePrefix={classNamePrefix}
             />
             <SelectionList>
                 {selection.map((v) => (

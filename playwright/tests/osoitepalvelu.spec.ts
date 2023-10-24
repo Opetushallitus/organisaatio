@@ -185,6 +185,20 @@ test.describe("Osoitepalvelu", () => {
       await ensureAlueDropdownIsOpen(page)
       await selectFromDropdown(page, "Uusimaa");
       await assertSelectionText("Ulkomaa, Uusimaa")
+
+      await ensureKuntaDropdownIsOpen(page)
+      await selectFromDropdown(page, "Imatra");
+      await assertSelectionText("Ulkomaa, Uusimaa, Imatra")
+
+      await ensureKuntaDropdownIsOpen(page)
+      await selectFromDropdown(page, "Helsinki");
+      await assertSelectionText("Ulkomaa, Uusimaa, Helsinki, Imatra")
+
+      await ensureKuntaDropdownIsOpen(page)
+      await selectFromDropdown(page, "Helsinki");
+      await ensureKuntaDropdownIsOpen(page)
+      await selectFromDropdown(page, "Imatra");
+      await assertSelectionText("Ulkomaa, Uusimaa")
     })
 
     await test.step("Filters results by alue", async () => {
@@ -212,6 +226,14 @@ async function ensureAlueDropdownIsOpen(page: Page) {
     await openDropdown(page, "Hae alueen tai maakunnan nimellä");
   }
 }
+
+async function ensureKuntaDropdownIsOpen(page: Page) {
+  // This is required on webkit tests
+  if (!await page.isVisible('.kunta-react-select__menu')) {
+    await openDropdown(page, "Hae kunnan nimellä");
+  }
+}
+
 async function openDropdown(page: Page, label: string) {
   await page.getByText(label, { exact: true }).click();
 }

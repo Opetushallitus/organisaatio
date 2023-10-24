@@ -50,6 +50,15 @@ export function SijaintiFilter({ maakunnat, kunnat, value, onChange }: SijaintiF
     };
 
     function buildSelectionDescription(): string {
+        return [...buildAlueSelectionDescription(), ...buildKuntaSelectionDescription()].join(', ');
+    }
+
+    function buildKuntaSelectionDescription(): string[] {
+        const isKuntaChecked = (kunta: KoodistoKoodi): boolean => value.kunnat.includes(kunta.koodiUri);
+        return kunnat.filter(isKuntaChecked).map((_) => _.nimi);
+    }
+
+    function buildAlueSelectionDescription(): string[] {
         const isMaakuntaChecked = (alue: KoodiUri): boolean => value.maakunnat.includes(alue);
         const isMannerSuomiChecked = alueMannerSuomi.maakunnat.every(isMaakuntaChecked);
         const isKokoSuomiChecked = alueKokoSuomi.maakunnat.every(isMaakuntaChecked);
@@ -67,7 +76,7 @@ export function SijaintiFilter({ maakunnat, kunnat, value, onChange }: SijaintiF
             !isMannerSuomiChecked && !isKokoSuomiChecked
                 ? maakunnat.filter((m) => value.maakunnat.includes(m.koodiUri)).map((m) => m.nimi)
                 : [];
-        return [...alueNimet, ...ulkomaatNames, ...maakuntaNimet].join(', ');
+        return [...alueNimet, ...ulkomaatNames, ...maakuntaNimet];
     }
 
     const kuntaOptions: DropdownOption[] = kunnat.map((_) => ({ value: _.koodiUri, label: _.nimi }));
@@ -102,6 +111,7 @@ export function SijaintiFilter({ maakunnat, kunnat, value, onChange }: SijaintiF
                     <SelectDropdown
                         label="Hae kunnan nimellä"
                         options={kuntaOptions}
+                        classNamePrefix="kunta-react-select"
                         onChange={kuntaOnChange}
                         selections={value.kunnat}
                     />
