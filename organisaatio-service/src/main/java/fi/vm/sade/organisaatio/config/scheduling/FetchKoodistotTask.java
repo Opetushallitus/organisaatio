@@ -74,7 +74,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
                 .collect(toList());
 
         String tableName = "koodisto_" + koodisto;
-        truncateTable(tableName);
+        jdbc.execute("DELETE FROM " + tableName);
         insertKoodistoRows(tableName, rows);
     }
 

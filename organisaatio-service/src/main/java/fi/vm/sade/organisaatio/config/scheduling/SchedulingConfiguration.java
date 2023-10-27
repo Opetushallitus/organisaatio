@@ -22,9 +22,10 @@ public class SchedulingConfiguration {
                         VanhentuneetTiedotSahkopostiTask vanhentuneetTiedotSahkopostiTask,
                         KoodistoUpdateTask koodistoUpdateTask,
                         FetchKoodistotTask fetchKoodistotTask,
+                        FetchKoulutusluvatTask fetchKoulutusluvatTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
-                .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask)
+                .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask)
                 .threads(1)
                 .build();
         scheduler.start();

@@ -26,4 +26,4 @@ truncate table koodisto_oppilaitostyyppi;
 truncate table koodisto_oppilaitoksenopetuskieli;
 truncate table koodisto_posti;
 truncate table koodisto_vuosiluokat;
-truncate table koodisto_koulutus;
+truncate table koodisto_koulutus cascade;
