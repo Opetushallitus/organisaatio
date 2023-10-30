@@ -106,7 +106,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
                     });
         }).collect(toList());
 
-        truncateTable("koodisto_maakunta, koodisto_kunta, maakuntakuntarelation");
+        jdbc.execute("TRUNCATE TABLE koodisto_maakunta, koodisto_kunta, maakuntakuntarelation");
         insertKoodistoRows("koodisto_kunta", kuntaRows);
         insertKoodistoRows("koodisto_maakunta", maakuntaRows);
         String sql = "INSERT INTO maakuntakuntarelation(maakuntauri, kuntauri) VALUES (?, ?)";
@@ -157,10 +157,6 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
             ps.setString(4, row.getNimiFi().orElse(null));
             ps.setString(5, row.getNimiSv().orElse(null));
         });
-    }
-
-    private void truncateTable(String tableName) {
-        jdbc.execute("TRUNCATE TABLE " + tableName);
     }
 
     private Stream<KoodistoKoodi> fetchKoodisto(String koodisto) {
