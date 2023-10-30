@@ -62,9 +62,10 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
 
     public void execute() {
         log.info("Starting FetchKoodistotTask");
-        for (String koodisto : List.of("oppilaitostyyppi", "posti", "oppilaitoksenopetuskieli", "vuosiluokat", "koulutus")) {
+        for (String koodisto : List.of("oppilaitostyyppi", "posti", "oppilaitoksenopetuskieli", "vuosiluokat")) {
             updateKoodisto(koodisto);
         }
+        updateKoulutusKoodisto();
         updateMaakuntaKuntaRelaatiot();
     }
 
@@ -76,6 +77,15 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
         String tableName = "koodisto_" + koodisto;
         jdbc.execute("DELETE FROM " + tableName);
         insertKoodistoRows(tableName, rows);
+    }
+
+    private void updateKoulutusKoodisto() {
+        List<KoodistoRow> rows = fetchKoodisto("koulutus")
+                .map(this::mapToRow)
+                .collect(toList());
+
+        jdbc.execute("DELETE FROM koodisto_koulutus WHERE NOT exists (SELECT * FROM organisaatio_koulutuslupa WHERE koulutuskoodiarvo = koodiarvo)");
+        insertKoodistoRows("koodisto_koulutus", rows);
     }
 
     private void updateMaakuntaKuntaRelaatiot() {
@@ -139,7 +149,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     }
 
     private void insertKoodistoRows(String tableName, List<KoodistoRow> rows) {
-        String sql = "INSERT INTO " + tableName + "(koodiuri, koodiarvo, versio, nimi_fi, nimi_sv) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + tableName + "(koodiuri, koodiarvo, versio, nimi_fi, nimi_sv) VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING";
         jdbc.batchUpdate(sql, rows, 100, (ps, row) -> {
             ps.setString(1, row.getKoodiUri());
             ps.setString(2, row.getKoodiarvo());

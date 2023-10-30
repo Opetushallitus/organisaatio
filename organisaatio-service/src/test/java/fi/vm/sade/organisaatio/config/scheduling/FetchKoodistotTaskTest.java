@@ -9,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Sql("/data/truncate_tables.sql")
@@ -16,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FetchKoodistotTaskTest {
     @Autowired
     FetchKoodistotTask fetchKoodistotTask;
+    @Autowired
+    FetchKoulutusluvatTask fetchKoulutusluvatTask;
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -46,5 +49,12 @@ class FetchKoodistotTaskTest {
         assertThat(jdbcTemplate.queryForObject("SELECT versio FROM koodisto_posti WHERE koodiuri = 'posti_04400'", Long.class)).isEqualTo(2L);
         assertThat(jdbcTemplate.queryForObject("SELECT nimi_fi FROM koodisto_posti WHERE koodiarvo = '00960'", String.class)).isEqualTo("HELSINKI");
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM koodisto_vuosiluokat", Long.class)).isEqualTo(12L);
+    }
+
+    @Test
+    void worksEvenIfThereAreReferencestoKoulutusKoodisto() {
+        fetchKoodistotTask.execute();
+        fetchKoulutusluvatTask.execute();
+        assertDoesNotThrow(() -> fetchKoodistotTask.execute());
     }
 }
