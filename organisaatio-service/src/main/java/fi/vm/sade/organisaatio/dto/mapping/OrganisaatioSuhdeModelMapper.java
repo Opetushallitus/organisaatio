@@ -25,12 +25,17 @@ public class OrganisaatioSuhdeModelMapper extends ModelMapper {
                 ? null
                 : OrganisaatioTyyppi.fromKoodiToValue(mc.getSource().getChild().getTyypit());
 
+
         this.addMappings(new PropertyMap<OrganisaatioSuhde, OrganisaatioSuhdeDTOV2>() {
             @Override
             protected void configure() {
                 // Monikielinen nimi
                 map().getChild().setNimi(source.getChild().getNimi().getValues());
                 map().getParent().setNimi(source.getParent().getNimi().getValues());
+
+                map(source.getParent().getStatus()).getParent().setStatus(null);
+                map(source.getChild().getStatus()).getChild().setStatus(null);
+
                 using(parentTyypitConverter).map(source).getParent().setTyypit(new HashSet<>());
                 using(childTyypitConverter).map(source).getChild().setTyypit(new HashSet<>());
             }
