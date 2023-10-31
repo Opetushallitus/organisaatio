@@ -1,6 +1,8 @@
+import io.mateo.cxf.codegen.wsdl2java.Wsdl2Java
+
 plugins {
     id 'java-library'
-    id "io.mateo.cxf-codegen" version "1.0.0-rc.2"
+    id "io.mateo.cxf-codegen" version "1.2.1"
 }
 
 dependencies {
@@ -15,14 +17,12 @@ dependencies {
 
 description = "Organisaatio :: YTJ Client :: generated-model - ${version}"
 
-cxfCodegen {
-    wsdl2java {
-        ytj {
-            wsdl = file("src/main/resources/wsdl/yritystiedot.wsdl")
-            wsdlLocation = "classpath:wsdl/yritystiedot.wsdl"
-            markGenerated = true
-            extraArgs = ["-xjc-Xbg"]
-        }
+tasks.register("wsdl2javaYtj", Wsdl2Java) {
+    toolOptions {
+        wsdl.set(file("src/main/resources/wsdl/yritystiedot.wsdl"))
+        wsdlLocation.set("classpath:wsdl/yritystiedot.wsdl")
+        markGenerated.set(true)
+        extraArgs.set(["-xjc-Xbg"])
     }
 }
 

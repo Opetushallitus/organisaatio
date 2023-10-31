@@ -199,7 +199,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         boolean updateAlkupvm = false;
         boolean updateYritysmuoto = false;
         // don't update and notify if organisation is inactive in YTJ
-        if(ytjOrg.getYritysTunnus().getYritysLopetettu()) {
+        if (ytjOrg.getYritysTunnus().getYritysLopetettu()) {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.LOPPUPVM, "ilmoitukset.log.virhe.lopetettu");
             return false;
         }
