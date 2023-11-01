@@ -43,7 +43,15 @@ export function SelectDropdown({ onChange, label, options, disabled, selections,
                 isDisabled={disabled}
                 isClearable={false}
                 options={options}
-                styles={{ option: () => ({}) }}
+                styles={{
+                    option: (baseStyles, state) => ({
+                        margin: '0 8px',
+                        ['border-radius']: '3px',
+                        backgroundColor: state.isFocused
+                            ? 'var(--color-primary-blue-lighten-4)'
+                            : 'var(--color-neutral-white)',
+                    }),
+                }}
                 closeMenuOnSelect={false}
                 value={selection}
                 onChange={selectOnChange}

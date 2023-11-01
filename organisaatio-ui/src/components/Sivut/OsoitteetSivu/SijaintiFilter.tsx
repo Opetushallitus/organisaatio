@@ -226,7 +226,13 @@ function AlueTaiMaakuntaFilter({
                     groupHeading: styles.ReactSelectGroupHeading,
                 }}
                 styles={{
-                    option: () => ({}),
+                    option: (_, state) => ({
+                        margin: '0 8px',
+                        ['border-radius']: '3px',
+                        backgroundColor: state.isFocused
+                            ? 'var(--color-primary-blue-lighten-4)'
+                            : 'var(--color-neutral-white)',
+                    }),
                     groupHeading: (css: CSSProperties) => ({
                         ...css,
                         borderBottom: '1px solid rgba(153, 153, 153, 0.5018)',

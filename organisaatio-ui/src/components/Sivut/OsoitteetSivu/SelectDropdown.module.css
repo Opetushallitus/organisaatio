@@ -17,7 +17,6 @@
     margin: 0 8px;
     gap: 8px;
     height: 34px;
-    background-color: var(--color-neutral-white);
     color: var(--color-gray-gray);
 
     /* Regular 16 */
@@ -25,10 +24,6 @@
     font-style: normal;
     font-weight: 400;
     line-height: 24px; /* 150% */
-}
-.Option:hover {
-    border-radius: 3px;
-    background: var(--color-primary-blue-lighten-4);
 }
 
 .SelectionList {
