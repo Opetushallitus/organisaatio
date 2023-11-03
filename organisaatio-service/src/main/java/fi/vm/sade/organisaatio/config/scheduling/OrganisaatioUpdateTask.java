@@ -8,8 +8,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.model.listeners.ProtectedDataListener;
 import fi.vm.sade.organisaatio.service.filters.RequestIdFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -24,9 +23,8 @@ import java.util.Date;
  * Laukaisee organisaatioiden ajastetut päivitys operaatiot
  */
 @Component
+@Slf4j
 public class OrganisaatioUpdateTask extends RecurringTask<Void> {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     private final String nameUpdateCronExpression;
 
     private final OrganisaatioBusinessService organisaatioBusinessService;
@@ -51,11 +49,14 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
         try {
             MDC.put("requestId", RequestIdFilter.generateRequestId());
-            logger.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
+            log.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
             authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
             organisaatioBusinessService.updateCurrentOrganisaatioNimet();
             organisaatioBusinessService.processNewOrganisaatioSuhdeChanges();
             organisaatioYtjService.updateYTJData(false);
+        } catch (Exception e) {
+            log.info("OrganisaatioUpdateTask failed with exception", e);
+            throw e;
         } finally {
             MDC.remove("requestId");
         }
