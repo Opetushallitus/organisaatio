@@ -12,7 +12,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "morgan": "^1.10.0",
-    "prettier": "^2.4.1",
+    "prettier": "^2.8.8",
     "express-xml-bodyparser": "^0.3.0",
     "morgan-body": "^2.6.6"
   }
