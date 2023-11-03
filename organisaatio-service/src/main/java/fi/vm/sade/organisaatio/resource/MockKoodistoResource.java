@@ -24,10 +24,8 @@ public class MockKoodistoResource {
 
     @GetMapping(path = "/rest/json/{koodisto}/koodi", produces = MediaType.APPLICATION_JSON_VALUE)
     public JsonNode getKoodit(@PathVariable String koodisto, @RequestParam boolean onlyValidKoodis) throws IOException {
-        if (!onlyValidKoodis) {
-            throw new UnsupportedOperationException("onlyValidKoodis=false is not supported in MockKoodistoResource");
-        }
-        return objectMapper.readTree(loadKoodistoFromResources(koodisto));
+        String filename = onlyValidKoodis ? koodisto : koodisto + "-onlyValidKoodis-false";
+        return objectMapper.readTree(loadKoodistoFromResources(filename));
     }
 
     @GetMapping(path = "/rest/codeelement/codes/withrelations/{koodisto}/{versio}", produces = MediaType.APPLICATION_JSON_VALUE)

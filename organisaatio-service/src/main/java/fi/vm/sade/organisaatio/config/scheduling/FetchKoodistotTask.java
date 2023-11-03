@@ -70,7 +70,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     }
 
     private void updateKoodisto(String koodisto) {
-        List<KoodistoRow> rows = fetchKoodisto(koodisto)
+        List<KoodistoRow> rows = fetchKoodisto(koodisto, true)
                 .map(this::mapToRow)
                 .collect(toList());
 
@@ -80,7 +80,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     }
 
     private void updateKoulutusKoodisto() {
-        List<KoodistoRow> rows = fetchKoodisto("koulutus")
+        List<KoodistoRow> rows = fetchKoodisto("koulutus", false)
                 .map(this::mapToRow)
                 .collect(toList());
 
@@ -91,7 +91,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     private void updateMaakuntaKuntaRelaatiot() {
         List<Relaatio> maakuntaKoodis = fetchKoodistoWithRelations("maakunta", 2L).collect(toList());
         List<KoodistoRow> maakuntaRows = maakuntaKoodis.stream().map(this::mapToRow).collect(toList());
-        List<KoodistoRow> kuntaRows = fetchKoodisto("kunta").map(this::mapToRow).collect(toList());
+        List<KoodistoRow> kuntaRows = fetchKoodisto("kunta", true).map(this::mapToRow).collect(toList());
         TreeSet<String> kuntaUris = kuntaRows.stream().map(KoodistoRow::getKoodiUri).collect(toCollection(TreeSet::new));
 
         List<Pair<String, String>> relaatiot = maakuntaKoodis.stream().flatMap(k -> {
@@ -159,9 +159,9 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
         });
     }
 
-    private Stream<KoodistoKoodi> fetchKoodisto(String koodisto) {
+    private Stream<KoodistoKoodi> fetchKoodisto(String koodisto, boolean onlyValidKoodis) {
         try {
-            String url = koodistoBaseurl + "/rest/json/" + koodisto + "/koodi?onlyValidKoodis=true";
+            String url = koodistoBaseurl + "/rest/json/" + koodisto + "/koodi?onlyValidKoodis=" + (onlyValidKoodis ? "true" : "false");
             log.info("Getting koodisto values from {}", url);
             String json = koodistoClient.get(url);
             return Stream.of(objectMapper.readValue(json, KoodistoKoodi[].class));
