@@ -33,8 +33,8 @@ public class OrganisaatioSuhdeModelMapper extends ModelMapper {
                 map().getChild().setNimi(source.getChild().getNimi().getValues());
                 map().getParent().setNimi(source.getParent().getNimi().getValues());
 
-                map(source.getParent().getStatus()).getParent().setStatus(null);
-                map(source.getChild().getStatus()).getChild().setStatus(null);
+                map(source.getParent()).setParent(null);
+                map(source.getChild()).setChild(null);
 
                 using(parentTyypitConverter).map(source).getParent().setTyypit(new HashSet<>());
                 using(childTyypitConverter).map(source).getChild().setTyypit(new HashSet<>());
