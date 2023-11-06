@@ -81,7 +81,12 @@ export function SelectionItem({ value, label, onRemove }: SelectionItemProps) {
     return (
         <div className={styles.Selection}>
             <span>{label}</span>
-            <IconRemoveSelection onClick={() => onRemove(value)} />
+            <IconRemoveSelection
+                tabIndex={0}
+                role="button"
+                onKeyDown={() => onRemove(value)}
+                onClick={() => onRemove(value)}
+            />
         </div>
     );
 }
