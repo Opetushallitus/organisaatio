@@ -46,7 +46,7 @@ export function SelectDropdown({ onChange, label, options, disabled, selections,
                 styles={{
                     option: (baseStyles, state) => ({
                         margin: '0 8px',
-                        ['border-radius']: '3px',
+                        borderRadius: '3px',
                         backgroundColor: state.isFocused
                             ? 'var(--color-primary-blue-lighten-4)'
                             : 'var(--color-neutral-white)',
