@@ -15,6 +15,7 @@ public class Koulutuslupa {
     private Optional<String> laajaOppisopimuskoulutus = Optional.empty();
 
     public boolean isVoimassaoleva() {
-        return loppupvm.map(date -> LocalDate.now().isBefore(date)).orElse(true);
+        var now = LocalDate.now();
+        return loppupvm.map(loppu -> !now.isAfter(loppu)).orElse(true) && !now.isBefore(alkupvm);
     }
 }
