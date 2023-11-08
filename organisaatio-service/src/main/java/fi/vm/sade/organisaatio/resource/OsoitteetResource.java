@@ -172,23 +172,27 @@ public class OsoitteetResource {
     }
 
     private List<Long> searchByOrganisaatioTyyppi(String organisaatiotyyppi, List<String> kunnat) {
+        var params = new HashMap<String, Object>(Map.of(
+                "organisaatiotyyppi", organisaatiotyyppi
+        ));
+
         String sql = "SELECT DISTINCT o.id FROM organisaatio o" +
                 " JOIN organisaatio_tyypit ON (organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)" +
-                " WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu" +
-                " AND o.kotipaikka IN (:kunnat)";
+                " WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu";
 
-        return jdbcTemplate.query(sql, Map.of(
-                "organisaatiotyyppi", organisaatiotyyppi,
-                "kunnat", kunnat
-        ), (rs, rowNum) -> rs.getLong("id"));
+        if (!kunnat.isEmpty()) {
+            params.put("kunnat", kunnat);
+            sql += " AND o.kotipaikka IN (:kunnat)";
+        }
+
+        return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
     private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat, List<String> kunnat) {
         Map<String, Object> params = new HashMap<>(Map.of(
                 "koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
                 "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
-                "oppilaitostyypit", oppilaitostyypit,
-                "kunnat", kunnat
+                "oppilaitostyypit", oppilaitostyypit
         ));
         if (!vuosiluokat.isEmpty()) {
             params.put("vuosiluokat", vuosiluokat);
@@ -203,13 +207,18 @@ public class OsoitteetResource {
         if (!vuosiluokat.isEmpty()) {
             sql += " JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
         }
+
         sql += " WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)" +
                 " AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu" +
                 " AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu" +
-                " AND child.oppilaitostyyppi IN (:oppilaitostyypit)" +
-                " AND parent.kotipaikka IN (:kunnat)";
+                " AND child.oppilaitostyyppi IN (:oppilaitostyypit)";
         if (!vuosiluokat.isEmpty()) {
             sql += " AND organisaatio_vuosiluokat.vuosiluokat IN (:vuosiluokat)";
+        }
+
+        if (!kunnat.isEmpty()) {
+            params.put("kunnat", kunnat);
+            sql += " AND parent.kotipaikka IN (:kunnat)";
         }
 
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
