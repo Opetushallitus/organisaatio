@@ -265,7 +265,7 @@ public class OsoitteetResource {
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
         List<KoodistoKoodi> kunnat = jdbcTemplate.query(
-                "SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY koodiarvo",
+                "SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY nimi_fi COLLATE \"fi-FI-x-icu\", koodiarvo",
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
         List<MaakuntaKoodi> maakunnat = jdbcTemplate.query(
@@ -274,7 +274,7 @@ public class OsoitteetResource {
                         " JOIN maakuntakuntarelation ON maakunta.koodiuri = maakuntakuntarelation.maakuntauri" +
                         " JOIN koodisto_kunta kunta ON kunta.koodiuri = maakuntakuntarelation.kuntauri" +
                         " GROUP BY maakunta.koodiuri, maakunta.nimi_fi" +
-                        " ORDER BY maakunta.koodiuri",
+                        " ORDER BY maakunta.nimi_fi COLLATE \"fi-FI-x-icu\", maakunta.koodiuri",
                 (rs, rowNum) -> {
                     List<String> sisaltyvatKunnat = new ArrayList<>(List.of((String[]) (rs.getArray("kunnat").getArray())));
                     return new MaakuntaKoodi(rs.getString("koodi"), rs.getString("nimi"), sisaltyvatKunnat);
