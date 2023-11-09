@@ -11,8 +11,9 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("has title", async ({ page }) => {
-    await expect(page).toHaveTitle(/Organisaatio/);
+    await expect(page).toHaveTitle(/Osoitepalvelu/);
   });
+
   test("allows searching for koulutustoimijat", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Hae" })).toBeVisible();
     await page.getByRole("button", { name: "Hae" }).click()

@@ -8,6 +8,8 @@ import { SearchView } from './SearchView';
 import Loading from '../../Loading/Loading';
 
 const OsoitteetSivu = () => {
+    useTitle('Osoitepalvelu');
+
     type State = {
         hakutulos?: Hakutulos[];
     };
@@ -53,5 +55,11 @@ const OsoitteetSivu = () => {
         <Loading />
     );
 };
+
+function useTitle(title: string) {
+    useEffect(() => {
+        document.title = title;
+    }, []);
+}
 
 export default OsoitteetSivu;
