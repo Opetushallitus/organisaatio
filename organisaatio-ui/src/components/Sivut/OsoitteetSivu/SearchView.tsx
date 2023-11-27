@@ -11,6 +11,7 @@ import { SelectDropdown } from './SelectDropdown';
 import { RajausAccordion } from './RajausAccordion';
 import { makeDefaultSearchFilterValue, SijaintiFilter, SijaintiFilterValue } from './SijaintiFilter';
 import { KoodiUri } from '../../../types/types';
+import { JarjestamislupaFilter } from './JarjestamislupaFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -21,6 +22,8 @@ type SearchState = {
     oppilaitosTypes: Record<string, boolean>;
     vuosiluokat: string[];
     sijainti: SijaintiFilterValue;
+    anyJarjestamislupa: boolean;
+    jarjestamisluvat: string[];
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
@@ -34,6 +37,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         oppilaitosTypes: defaultOppilaitosTypes,
         vuosiluokat: [],
         sijainti: makeDefaultSearchFilterValue(hakuParametrit.maakunnat),
+        anyJarjestamislupa: false,
+        jarjestamisluvat: [],
     };
 
     const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>(defaultSearchState);
@@ -64,6 +69,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 ),
                 vuosiluokat: canFilterByVuosiluokat ? searchParameters.vuosiluokat : [],
                 kunnat: mapSijaintiFilterToKunnat(hakuParametrit, searchParameters.sijainti),
+                anyJarjestamislupa: searchParameters.anyJarjestamislupa,
+                jarjestamisluvat: searchParameters.jarjestamisluvat,
             });
             onResult(osoitteet);
         } catch (e) {
@@ -116,6 +123,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
 
     function onSijaintiFilterChanged(sijainti: SijaintiFilterValue) {
         setSearchParameters({ ...searchParameters, sijainti });
+    }
+    function onJarjestamisluvatFilterChanged(jarjestamisluvat: string[], anyJarjestamislupa: boolean): void {
+        setSearchParameters({ ...searchParameters, jarjestamisluvat, anyJarjestamislupa });
     }
 
     function buildSelectionDescription(): string {
@@ -214,6 +224,12 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                             />
                         </div>
                     </RajausAccordion>
+                    <JarjestamislupaFilter
+                        jarjestamisluvat={hakuParametrit.jarjestamisluvat}
+                        anyJarjestamislupa={searchParameters.anyJarjestamislupa}
+                        value={searchParameters.jarjestamisluvat}
+                        onChange={onJarjestamisluvatFilterChanged}
+                    />
                     <SijaintiFilter
                         maakunnat={hakuParametrit.maakunnat}
                         kunnat={hakuParametrit.kunnat}

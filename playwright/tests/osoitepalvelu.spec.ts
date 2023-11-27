@@ -210,7 +210,48 @@ test.describe("Osoitepalvelu", () => {
       await expect(firstResult.getByText("Imatra").first()).toBeVisible();
     })
   })
+
+  test("Järjestämislupa filter", async({ page }) => {
+    const button = page.getByRole("button", { name: "Ammatillisen koulutuksen järjestämislupa" });
+    const assertSelectionText = async text =>
+      expect(button.locator("[aria-live=off]")).toHaveText(text);
+
+    await button.click();
+
+    await test.step("Specific koulutuslupa", async () => {
+      await selectFromJärjestämislupaDropdown(page, "Hieronnan ammattitutkinto");
+      await assertSelectionText("Hieronnan ammattitutkinto");
+
+      await page.getByRole("button", { name: "Hae" }).click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      const firstResult = await page.getByRole("row").nth(1);
+      await expect(firstResult.getByText("Helsingin kaupunki")).toBeVisible();
+    });
+
+    await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+    await button.click();
+
+    await test.step("Any koulutuslupa", async () => {
+      await toggleCheckboxByText(page, "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa");
+      await assertSelectionText("Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa")
+
+      await page.getByRole("button", { name: "Hae" }).click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+
+      const firstResult = await page.getByRole("row").nth(1);
+      await expect(firstResult.getByText("Helsingin kaupunki")).toBeVisible();
+    });
+
+  });
 });
+
+async function selectFromJärjestämislupaDropdown(page: Page, label: string) {
+  // This is required on webkit tests as the dropdown closes after selection
+  if (!await page.isVisible('.jarjesetamislupa-react-select__menu')) {
+    await openDropdown(page, "Hae yksittäisten tutkintojen ja koulutusten nimillä");
+  }
+  await page.getByLabel(label, { exact: true }).click()
+}
 
 async function selectFromAlueDropdown(page: Page, label: string) {
   // This is required on webkit tests as the dropdown closes after selection

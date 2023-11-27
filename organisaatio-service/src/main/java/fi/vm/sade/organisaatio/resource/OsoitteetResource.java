@@ -46,7 +46,7 @@ public class OsoitteetResource {
             }
 
             if (oppilaitostyypit.isEmpty()) {
-                organisaatioIds.addAll(searchByOrganisaatioTyyppi(organisaatiotyyppi, request.getKunnat()));
+                organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, organisaatiotyyppi));
             } else {
                 organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat()));
             }
@@ -126,11 +126,13 @@ public class OsoitteetResource {
     }
 
     private List<Organisaatio> fetchOrganisaatiosWithYhteystiedot(List<Long> organisaatioIds) {
-        return em.createQuery("SELECT DISTINCT o FROM Organisaatio o" +
-                        " LEFT JOIN FETCH o.yhteystiedot" +
-                        " LEFT JOIN FETCH o.kielet" +
-                        " LEFT JOIN FETCH o.parentOids" + // Haetaan vain jotta Hibernate ei tee näille N+1 kyselyä
-                        " WHERE o.id IN (:ids)", Organisaatio.class)
+        // parentOids haetaan vain jotta Hibernate ei tee näille N+1 kyselyä
+        return em.createQuery("""
+                        SELECT DISTINCT o FROM Organisaatio o
+                        LEFT JOIN FETCH o.yhteystiedot
+                        LEFT JOIN FETCH o.kielet
+                        LEFT JOIN FETCH o.parentOids
+                        WHERE o.id IN (:ids)""", Organisaatio.class)
                 .setParameter("ids", organisaatioIds).getResultList();
     }
 
@@ -138,9 +140,11 @@ public class OsoitteetResource {
         if (organisaatioIds.isEmpty())
             return new HashMap<>();
 
-        String sql = "SELECT organisaatio.id, monikielinenteksti_values.value FROM organisaatio" +
-                " JOIN monikielinenteksti_values ON monikielinenteksti_values.id = organisaatio.nimi_mkt" +
-                " WHERE organisaatio.id IN (:ids) AND monikielinenteksti_values.key = :kieli";
+        String sql = """
+                SELECT organisaatio.id, monikielinenteksti_values.value FROM organisaatio
+                JOIN monikielinenteksti_values ON monikielinenteksti_values.id = organisaatio.nimi_mkt
+                WHERE organisaatio.id IN (:ids) AND monikielinenteksti_values.key = :kieli
+                """;
         try (Stream<Map.Entry<Long, String>> stream = jdbcTemplate.queryForStream(
                 sql,
                 Map.of("ids", organisaatioIds, "kieli", kieli),
@@ -154,14 +158,16 @@ public class OsoitteetResource {
         if (organisaatioIds.isEmpty())
             return new HashMap<>();
 
-        String sql = "SELECT ya.organisaatio_id, ya.arvotext" +
-                " FROM yhteystietojentyyppi yt" +
-                " JOIN yhteystietoelementti ye ON yt.id = ye.yhteystietojentyyppi_id" +
-                " JOIN yhteystietoarvo ya ON ye.id = ya.kentta_id" +
-                " WHERE ya.organisaatio_id IN (:ids)" +
-                " AND yt.oid = '1.2.246.562.5.79385887983'" +
-                " AND ye.tyyppi = 'Email'" +
-                " AND ya.kieli = :kieliKoodi";
+        String sql = """
+                SELECT ya.organisaatio_id, ya.arvotext
+                FROM yhteystietojentyyppi yt
+                JOIN yhteystietoelementti ye ON yt.id = ye.yhteystietojentyyppi_id
+                JOIN yhteystietoarvo ya ON ye.id = ya.kentta_id
+                WHERE ya.organisaatio_id IN (:ids)
+                AND yt.oid = '1.2.246.562.5.79385887983'
+                AND ye.tyyppi = 'Email'
+                AND ya.kieli = :kieliKoodi
+                """;
         try (Stream<Map.Entry<Long, String>> stream = jdbcTemplate.queryForStream(
                 sql,
                 Map.of("ids", organisaatioIds, "kieliKoodi", kieliKoodi),
@@ -171,21 +177,36 @@ public class OsoitteetResource {
         }
     }
 
-    private List<Long> searchByOrganisaatioTyyppi(String organisaatiotyyppi, List<String> kunnat) {
+    private List<Long> searchByOrganisaatioTyyppi(HaeRequest req, String organisaatiotyyppi) {
+        var sql = new ArrayList<String>();
         var params = new HashMap<String, Object>(Map.of(
                 "organisaatiotyyppi", organisaatiotyyppi
         ));
 
-        String sql = "SELECT DISTINCT o.id FROM organisaatio o" +
-                " JOIN organisaatio_tyypit ON (organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)" +
-                " WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu";
-
-        if (!kunnat.isEmpty()) {
-            params.put("kunnat", kunnat);
-            sql += " AND o.kotipaikka IN (:kunnat)";
+        sql.add("""
+                SELECT DISTINCT o.id FROM organisaatio o
+                JOIN organisaatio_tyypit ON (organisaatio_tyypit.organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)
+                """);
+        if (!req.getJarjestamisluvat().isEmpty()) {
+            sql.add("""
+                    JOIN organisaatio_koulutuslupa ON (organisaatio_koulutuslupa.organisaatio_id = o.id)
+                    JOIN koodisto_koulutus ON (organisaatio_koulutuslupa.koulutuskoodiarvo = koodisto_koulutus.koodiarvo)
+                    """);
+        }
+        sql.add("WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu");
+        if (!req.getJarjestamisluvat().isEmpty()) {
+            sql.add("AND koodisto_koulutus.koodiuri IN (:jarestamisluvat)");
+            params.put("jarestamisluvat", req.getJarjestamisluvat());
+        } else if (req.isAnyJarjestamislupa()) {
+            sql.add("AND EXISTS (SELECT 1 FROM organisaatio_koulutuslupa WHERE organisaatio_koulutuslupa.organisaatio_id = o.id)");
         }
 
-        return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+        if (!req.getKunnat().isEmpty()) {
+            sql.add("AND o.kotipaikka IN (:kunnat)");
+            params.put("kunnat", req.getKunnat());
+        }
+
+        return jdbcTemplate.query(String.join("\n", sql), params, (rs, rowNum) -> rs.getLong("id"));
     }
 
     private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat, List<String> kunnat) {
@@ -198,20 +219,24 @@ public class OsoitteetResource {
             params.put("vuosiluokat", vuosiluokat);
         }
 
-        String sql = "SELECT DISTINCT parent.id" +
-                " FROM organisaatio parent" +
-                " JOIN organisaatio_tyypit parent_tyypit ON (parent_tyypit.organisaatio_id = parent.id AND parent_tyypit.tyypit = :koulutustoimijaKoodi)" +
-                " JOIN organisaatiosuhde suhde ON (suhde.parent_id = parent.id)" +
-                " JOIN organisaatio child ON (child.id = suhde.child_id)" +
-                " JOIN organisaatio_tyypit child_tyypit ON (child_tyypit.organisaatio_id = child.id AND child_tyypit.tyypit = :oppilaitosKoodi)";
+        String sql = """
+                SELECT DISTINCT parent.id
+                FROM organisaatio parent
+                JOIN organisaatio_tyypit parent_tyypit ON (parent_tyypit.organisaatio_id = parent.id AND parent_tyypit.tyypit = :koulutustoimijaKoodi)
+                JOIN organisaatiosuhde suhde ON (suhde.parent_id = parent.id)
+                JOIN organisaatio child ON (child.id = suhde.child_id)
+                JOIN organisaatio_tyypit child_tyypit ON (child_tyypit.organisaatio_id = child.id AND child_tyypit.tyypit = :oppilaitosKoodi)
+                """;
         if (!vuosiluokat.isEmpty()) {
-            sql += " JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
+            sql += "JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
         }
 
-        sql += " WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)" +
-                " AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu" +
-                " AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu" +
-                " AND child.oppilaitostyyppi IN (:oppilaitostyypit)";
+        sql += """
+                WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)
+                AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu
+                AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu
+                AND child.oppilaitostyyppi IN (:oppilaitostyypit)
+                """;
         if (!vuosiluokat.isEmpty()) {
             sql += " AND organisaatio_vuosiluokat.vuosiluokat IN (:vuosiluokat)";
         }
@@ -277,23 +302,32 @@ public class OsoitteetResource {
                 "SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY nimi_fi COLLATE \"fi-FI-x-icu\", koodiarvo",
                 (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
         );
-        List<MaakuntaKoodi> maakunnat = jdbcTemplate.query(
-                "SELECT maakunta.koodiuri AS koodi, maakunta.nimi_fi AS nimi, array_agg(kunta.koodiuri ORDER BY kunta.koodiarvo) AS kunnat" +
-                        " FROM koodisto_maakunta maakunta" +
-                        " JOIN maakuntakuntarelation ON maakunta.koodiuri = maakuntakuntarelation.maakuntauri" +
-                        " JOIN koodisto_kunta kunta ON kunta.koodiuri = maakuntakuntarelation.kuntauri" +
-                        " GROUP BY maakunta.koodiuri, maakunta.nimi_fi" +
-                        " ORDER BY maakunta.nimi_fi COLLATE \"fi-FI-x-icu\", maakunta.koodiuri",
+        List<MaakuntaKoodi> maakunnat = jdbcTemplate.query("""
+                        SELECT maakunta.koodiuri AS koodi, maakunta.nimi_fi AS nimi, array_agg(kunta.koodiuri ORDER BY kunta.koodiarvo) AS kunnat
+                        FROM koodisto_maakunta maakunta
+                        JOIN maakuntakuntarelation ON maakunta.koodiuri = maakuntakuntarelation.maakuntauri
+                        JOIN koodisto_kunta kunta ON kunta.koodiuri = maakuntakuntarelation.kuntauri
+                        GROUP BY maakunta.koodiuri, maakunta.nimi_fi
+                        ORDER BY maakunta.nimi_fi COLLATE "fi-FI-x-icu", maakunta.koodiuri
+                        """,
                 (rs, rowNum) -> {
                     List<String> sisaltyvatKunnat = new ArrayList<>(List.of((String[]) (rs.getArray("kunnat").getArray())));
                     return new MaakuntaKoodi(rs.getString("koodi"), rs.getString("nimi"), sisaltyvatKunnat);
                 }
         );
+        List<KoodistoKoodi> jarjestamisluvat = jdbcTemplate.query("""
+                SELECT koodiuri AS koodi, nimi_fi AS nimi
+                FROM koodisto_koulutus
+                JOIN organisaatio_koulutuslupa ON koulutuskoodiarvo = koodiarvo
+                ORDER BY nimi_fi COLLATE "fi-FI-x-icu", koodiarvo
+                """, (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi")));
+
         return new Parametrit(
                 new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat),
                 vuosiluokat,
                 maakunnat,
-                kunnat
+                kunnat,
+                jarjestamisluvat
         );
     }
 }
@@ -304,6 +338,7 @@ class Parametrit {
     private final List<KoodistoKoodi> vuosiluokat;
     private final List<MaakuntaKoodi> maakunnat;
     private final List<KoodistoKoodi> kunnat;
+    private final List<KoodistoKoodi> jarjestamisluvat;
 }
 
 @Data
@@ -337,4 +372,6 @@ class HaeRequest {
     private List<String> oppilaitostyypit;
     private List<String> vuosiluokat;
     private List<String> kunnat;
+    private boolean anyJarjestamislupa;
+    private List<String> jarjestamisluvat;
 }
