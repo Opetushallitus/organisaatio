@@ -18,7 +18,7 @@ test.describe("Osoitepalvelu", () => {
     await expect(page.getByRole("button", { name: "Hae" })).toBeVisible();
     await page.getByRole("button", { name: "Hae" }).click()
 
-    await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
+    await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     await expect(
       page.getByText("Testi Koulutuskuntayhtymä Puolukka")
@@ -197,10 +197,11 @@ test.describe("Osoitepalvelu", () => {
     await test.step("Filters results by alue", async () => {
       await assertSelectionText("Ulkomaa, Uusimaa")
       await page.getByRole("button", { name: "Hae" }).click()
-      await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
       await openSijaintiBox(page)
+      await selectFromAlueDropdown(page, "Uusimaa");
       await selectFromAlueDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
       await page.getByRole("button", { name: "Hae" }).click()
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
