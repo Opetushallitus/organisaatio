@@ -316,9 +316,12 @@ public class OsoitteetResource {
                 }
         );
         List<KoodistoKoodi> jarjestamisluvat = jdbcTemplate.query("""
-                SELECT koodiuri AS koodi, nimi_fi AS nimi
-                FROM koodisto_koulutus
-                JOIN organisaatio_koulutuslupa ON koulutuskoodiarvo = koodiarvo
+                WITH luvat AS (
+                    SELECT DISTINCT koodiuri FROM koodisto_koulutus
+                    JOIN organisaatio_koulutuslupa ON koulutuskoodiarvo = koodiarvo
+                )
+                SELECT koodiuri AS koodi, koodiarvo, nimi_fi AS nimi
+                FROM koodisto_koulutus JOIN luvat USING (koodiuri)
                 ORDER BY nimi_fi COLLATE "fi-FI-x-icu", koodiarvo
                 """, (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi")));
 
