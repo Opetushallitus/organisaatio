@@ -242,7 +242,49 @@ test.describe("Osoitepalvelu", () => {
       const firstResult = await page.getByRole("row").nth(1);
       await expect(firstResult.getByText("Helsingin kaupunki")).toBeVisible();
     });
+  });
 
+  test("Oppilaitoksen kieli filter", async({ page }) => {
+    const button = page.getByRole("button", { name: "Organisaation kieli" });
+    const assertSelectionText = async text =>
+      expect(button.locator("[aria-live=off]")).toHaveText(text);
+
+    await button.click();
+
+    await test.step("No filter searches all", async () => {
+      await assertSelectionText("")
+      await page.getByRole("button", { name: "Hae" }).click();
+      await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Helsingin kaupunki")).toBeVisible();
+      await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
+      await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
+      await expect(page.getByText("Testi Koulutuskuntayhtymä Puolukka")).toBeVisible();
+    });
+
+    await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+    await button.click();
+
+    await test.step("suomi and ruotsi finds testiorganisaatiot", async () => {
+      await toggleCheckboxByText(page, "suomi");
+      await toggleCheckboxByText(page, "ruotsi");
+      await assertSelectionText("suomi, ruotsi")
+
+      await page.getByRole("button", { name: "Hae" }).click();
+      await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
+      await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
+      await expect(page.getByText("Testi Koulutuskuntayhtymä Puolukka")).toBeVisible();
+    });
+
+    await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+    await button.click();
+
+    await test.step("ruotsi finds none", async () => {
+      await toggleCheckboxByText(page, "suomi");
+      await assertSelectionText("ruotsi")
+      await page.getByRole("button", { name: "Hae" }).click();
+      await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
+    });
   });
 });
 

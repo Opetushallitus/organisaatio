@@ -12,6 +12,7 @@ import { RajausAccordion } from './RajausAccordion';
 import { makeDefaultSearchFilterValue, SijaintiFilter, SijaintiFilterValue } from './SijaintiFilter';
 import { KoodiUri } from '../../../types/types';
 import { JarjestamislupaFilter } from './JarjestamislupaFilter';
+import { KieliFilter } from './KieliFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -24,6 +25,7 @@ type SearchState = {
     sijainti: SijaintiFilterValue;
     anyJarjestamislupa: boolean;
     jarjestamisluvat: string[];
+    kielet: string[];
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
@@ -39,6 +41,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         sijainti: makeDefaultSearchFilterValue(hakuParametrit.maakunnat),
         anyJarjestamislupa: false,
         jarjestamisluvat: [],
+        kielet: [],
     };
 
     const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>(defaultSearchState);
@@ -71,6 +74,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 kunnat: mapSijaintiFilterToKunnat(hakuParametrit, searchParameters.sijainti),
                 anyJarjestamislupa: searchParameters.anyJarjestamislupa,
                 jarjestamisluvat: searchParameters.jarjestamisluvat,
+                kielet: searchParameters.kielet,
             });
             onResult(osoitteet);
         } catch (e) {
@@ -126,6 +130,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
     function onJarjestamisluvatFilterChanged(jarjestamisluvat: string[], anyJarjestamislupa: boolean): void {
         setSearchParameters({ ...searchParameters, jarjestamisluvat, anyJarjestamislupa });
+    }
+    function onKieliFilterChanged(kielet: string[]): void {
+        setSearchParameters({ ...searchParameters, kielet });
     }
 
     function buildSelectionDescription(): string {
@@ -198,7 +205,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                                 Valitse kaikki
                             </Checkbox>
                         </div>
-                        <ul>
+                        <ul className={styles.OppilaitostyypitList}>
                             {hakuParametrit.oppilaitostyypit.koodit.sort(koodistoLexically).map((koodisto) => {
                                 return (
                                     <li key={koodisto.koodiUri}>
@@ -235,6 +242,11 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         kunnat={hakuParametrit.kunnat}
                         value={searchParameters.sijainti}
                         onChange={onSijaintiFilterChanged}
+                    />
+                    <KieliFilter
+                        kielet={hakuParametrit.kielet}
+                        value={searchParameters.kielet}
+                        onChange={onKieliFilterChanged}
                     />
                 </div>
             </div>

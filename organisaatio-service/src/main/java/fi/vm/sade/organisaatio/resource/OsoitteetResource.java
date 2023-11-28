@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class OsoitteetResource {
             if (oppilaitostyypit.isEmpty()) {
                 organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, organisaatiotyyppi));
             } else {
-                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat()));
+                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat(), request.getKielet()));
             }
         }
 
@@ -193,6 +194,10 @@ public class OsoitteetResource {
                     JOIN koodisto_koulutus ON (organisaatio_koulutuslupa.koulutuskoodiarvo = koodisto_koulutus.koodiarvo)
                     """);
         }
+        if (!req.getKielet().isEmpty()) {
+            sql.add("JOIN organisaatio_kielet ON (organisaatio_kielet.organisaatio_id = o.id)");
+        }
+
         sql.add("WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu");
         if (!req.getJarjestamisluvat().isEmpty()) {
             sql.add("AND koodisto_koulutus.koodiuri IN (:jarestamisluvat)");
@@ -206,10 +211,15 @@ public class OsoitteetResource {
             params.put("kunnat", req.getKunnat());
         }
 
+        if (!req.getKielet().isEmpty()) {
+            sql.add("AND organisaatio_kielet.kielet IN (:kielet)");
+            params.put("kielet", req.getKielet());
+        }
+
         return jdbcTemplate.query(String.join("\n", sql), params, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat, List<String> kunnat) {
+    private List<Long> findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(List<String> oppilaitostyypit, List<String> vuosiluokat, List<String> kunnat, List<String> kielet) {
         Map<String, Object> params = new HashMap<>(Map.of(
                 "koulutustoimijaKoodi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
                 "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
@@ -230,6 +240,9 @@ public class OsoitteetResource {
         if (!vuosiluokat.isEmpty()) {
             sql += "JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
         }
+        if (!kielet.isEmpty()) {
+            sql += " JOIN organisaatio_kielet parent_kkielet ON (parent_kkielet.organisaatio_id = parent.id)";
+        }
 
         sql += """
                 WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)
@@ -239,6 +252,11 @@ public class OsoitteetResource {
                 """;
         if (!vuosiluokat.isEmpty()) {
             sql += " AND organisaatio_vuosiluokat.vuosiluokat IN (:vuosiluokat)";
+        }
+
+        if (!kielet.isEmpty()) {
+            sql += " AND parent_kkielet.kielet IN (:kielet)";
+            params.put("kielet", kielet);
         }
 
         if (!kunnat.isEmpty()) {
@@ -290,18 +308,10 @@ public class OsoitteetResource {
                 new OppilaitosRyhma("Vapaan sivistystyön koulutus", List.of("oppilaitostyyppi_65#1", "oppilaitostyyppi_62#1", "oppilaitostyyppi_66#1", "oppilaitostyyppi_63#1", "oppilaitostyyppi_64#1")),
                 new OppilaitosRyhma("Taiteen perusopetus", List.of("oppilaitostyyppi_01#1", "oppilaitostyyppi_61#1"))
         );
-        List<KoodistoKoodi> oppilaitostyyppiKoodis = jdbcTemplate.query(
-                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitostyyppi",
-                (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
-        );
-        List<KoodistoKoodi> vuosiluokat = jdbcTemplate.query(
-                "SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_vuosiluokat ORDER BY lpad(koodiarvo, 3, '0')",
-                (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
-        );
-        List<KoodistoKoodi> kunnat = jdbcTemplate.query(
-                "SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY nimi_fi COLLATE \"fi-FI-x-icu\", koodiarvo",
-                (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"))
-        );
+        RowMapper<KoodistoKoodi> koodiMapper = (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi"));
+        var oppilaitostyyppiKoodis = jdbcTemplate.query("SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitostyyppi", koodiMapper);
+        var vuosiluokat = jdbcTemplate.query("SELECT concat(koodiuri, '#', versio) AS koodi, nimi_fi AS nimi FROM koodisto_vuosiluokat ORDER BY lpad(koodiarvo, 3, '0')", koodiMapper);
+        var kunnat = jdbcTemplate.query("SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_kunta ORDER BY nimi_fi COLLATE \"fi-FI-x-icu\", koodiarvo", koodiMapper);
         List<MaakuntaKoodi> maakunnat = jdbcTemplate.query("""
                         SELECT maakunta.koodiuri AS koodi, maakunta.nimi_fi AS nimi, array_agg(kunta.koodiuri ORDER BY kunta.koodiarvo) AS kunnat
                         FROM koodisto_maakunta maakunta
@@ -323,14 +333,16 @@ public class OsoitteetResource {
                 SELECT koodiuri AS koodi, koodiarvo, nimi_fi AS nimi
                 FROM koodisto_koulutus JOIN luvat USING (koodiuri)
                 ORDER BY nimi_fi COLLATE "fi-FI-x-icu", koodiarvo
-                """, (rs, rowNum) -> new KoodistoKoodi(rs.getString("koodi"), rs.getString("nimi")));
+                """, koodiMapper);
+        var opetuskielet = jdbcTemplate.query("SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitoksenopetuskieli ORDER BY lpad(koodiarvo, 3, '0')", koodiMapper);
 
         return new Parametrit(
                 new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat),
                 vuosiluokat,
                 maakunnat,
                 kunnat,
-                jarjestamisluvat
+                jarjestamisluvat,
+                opetuskielet
         );
     }
 }
@@ -342,6 +354,7 @@ class Parametrit {
     private final List<MaakuntaKoodi> maakunnat;
     private final List<KoodistoKoodi> kunnat;
     private final List<KoodistoKoodi> jarjestamisluvat;
+    private final List<KoodistoKoodi> kielet;
 }
 
 @Data
@@ -377,4 +390,5 @@ class HaeRequest {
     private List<String> kunnat;
     private boolean anyJarjestamislupa;
     private List<String> jarjestamisluvat;
+    private List<String> kielet;
 }

@@ -82,7 +82,6 @@
 }
 
 .RajausAccordion .AccordionContentContainer ul {
-    column-count: 3;
     list-style: none;
     padding: 0;
     margin: 0;

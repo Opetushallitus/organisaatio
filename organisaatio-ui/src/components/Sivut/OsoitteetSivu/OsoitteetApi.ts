@@ -25,6 +25,7 @@ export type HaeRequest = {
     kunnat: KoodiUri[];
     anyJarjestamislupa: boolean;
     jarjestamisluvat: KoodiUri[];
+    kielet: KoodiUri[];
 };
 
 export type KoodistoKoodi = {
@@ -50,6 +51,7 @@ export type HakuParametrit = {
     maakunnat: MaakuntaKoodi[];
     kunnat: KoodistoKoodi[];
     jarjestamisluvat: KoodistoKoodi[];
+    kielet: KoodistoKoodi[];
 };
 
 export async function haeOsoitteet(request: HaeRequest): Promise<Hakutulos[]> {
