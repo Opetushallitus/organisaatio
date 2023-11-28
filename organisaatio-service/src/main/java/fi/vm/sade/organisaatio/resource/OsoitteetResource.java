@@ -212,7 +212,7 @@ public class OsoitteetResource {
         }
 
         if (!req.getKielet().isEmpty()) {
-            sql.add("AND organisaatio_kielet.kielet IN (:kielet)");
+            sql.add("AND split_part(organisaatio_kielet.kielet, '#', 1) IN (:kielet)");
             params.put("kielet", req.getKielet());
         }
 
@@ -241,7 +241,7 @@ public class OsoitteetResource {
             sql += "JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
         }
         if (!kielet.isEmpty()) {
-            sql += " JOIN organisaatio_kielet parent_kkielet ON (parent_kkielet.organisaatio_id = parent.id)";
+            sql += " JOIN organisaatio_kielet parent_kielet ON (parent_kielet.organisaatio_id = parent.id)";
         }
 
         sql += """
@@ -255,7 +255,7 @@ public class OsoitteetResource {
         }
 
         if (!kielet.isEmpty()) {
-            sql += " AND parent_kkielet.kielet IN (:kielet)";
+            sql += " AND split_part(parent_kielet.kielet, '#', 1) IN (:kielet)";
             params.put("kielet", kielet);
         }
 
