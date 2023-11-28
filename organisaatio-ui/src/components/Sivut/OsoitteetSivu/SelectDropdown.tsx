@@ -96,8 +96,8 @@ export function CustomOption(props: OptionProps<DropdownOption>) {
     return (
         <components.Option {...props}>
             <div className={styles.Option} aria-label={props.data.label} aria-selected={isSelected}>
-                {isSelected ? <CheckedIcon /> : <UncheckedIcon />}
-                {children}
+                <div className={styles.OptionCheckbox}>{isSelected ? <CheckedIcon /> : <UncheckedIcon />}</div>
+                <div className={styles.OptionText}>{children}</div>
             </div>
         </components.Option>
     );

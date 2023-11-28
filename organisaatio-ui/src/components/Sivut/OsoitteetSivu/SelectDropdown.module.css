@@ -11,16 +11,26 @@
 .Option {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    padding-left: 8px;
-    padding-right: 8px;
+    align-items: flex-start;
+
+    cursor: pointer;
+    padding-top: 5px;
+    padding-bottom: 5px;
     margin: 0 8px;
     gap: 8px;
-    height: 34px;
-    color: var(--color-gray-gray);
-    cursor: pointer;
+}
 
-    /* Regular 16 */
+.OptionCheckbox {
+    /* Icon is 20px, line height 24px,
+       a 2px margin is needed to align with the first line of text
+       */
+    margin-top: 2px;
+    height: 20px;
+}
+
+.OptionText {
+    color: var(--color-gray-gray);
+
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
