@@ -198,7 +198,7 @@ public class OsoitteetResource {
             sql.add("JOIN organisaatio_kielet ON (organisaatio_kielet.organisaatio_id = o.id)");
         }
 
-        sql.add("WHERE o.alkupvm <= current_date AND (o.lakkautuspvm IS NULL OR current_date < o.lakkautuspvm) AND NOT o.organisaatiopoistettu");
+        sql.add("WHERE organisaatio_is_active(o)");
         if (!req.getJarjestamisluvat().isEmpty()) {
             sql.add("AND koodisto_koulutus.koodiuri IN (:jarestamisluvat)");
             params.put("jarestamisluvat", req.getJarjestamisluvat());
@@ -246,8 +246,8 @@ public class OsoitteetResource {
 
         sql += """
                 WHERE suhde.alkupvm <= current_date AND (suhde.loppupvm IS NULL OR current_date < suhde.loppupvm)
-                AND parent.alkupvm <= current_date AND (parent.lakkautuspvm IS NULL OR current_date < parent.lakkautuspvm) AND NOT parent.organisaatiopoistettu
-                AND child.alkupvm <= current_date AND (child.lakkautuspvm IS NULL OR current_date < child.lakkautuspvm) AND NOT child.organisaatiopoistettu
+                AND organisaatio_is_active(parent)
+                AND organisaatio_is_active(child)
                 AND child.oppilaitostyyppi IN (:oppilaitostyypit)
                 """;
         if (!vuosiluokat.isEmpty()) {
@@ -329,6 +329,8 @@ public class OsoitteetResource {
                 WITH luvat AS (
                     SELECT DISTINCT koodiuri FROM koodisto_koulutus
                     JOIN organisaatio_koulutuslupa ON koulutuskoodiarvo = koodiarvo
+                    JOIN organisaatio o ON organisaatio_koulutuslupa.organisaatio_id = o.id
+                    WHERE organisaatio_is_active(o)
                 )
                 SELECT koodiuri AS koodi, koodiarvo, nimi_fi AS nimi
                 FROM koodisto_koulutus JOIN luvat USING (koodiuri)
