@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +39,13 @@ public class RekisterointiOrganisaatioFinalizer {
     @Transactional
     public String luoTaiPaivitaOrganisaatio(Rekisterointi rekisterointi) {
         Organisaatio organisaatio = rekisterointi.organisaatio;
-        if (organisaatio.oid != null) {
-            String oid = organisaatio.oid;
+        String oid = Optional.ofNullable(organisaatio.oid)
+                .or(() -> organisaatioClient.getOrganisaatioByYtunnus(organisaatio.ytunnus).map(o -> {
+                    LOGGER.info("Löydettiin olemassoleva organisaatio {} ytunnuksella {}", o.oid, o.ytunnus);
+                    return o.oid;
+                }))
+                .orElse(null);
+        if (oid != null) {
             LOGGER.info("Päivitetään organisaatiota: {}", oid);
             if (rekisterointi.tyyppi.equals(REKISTEROINTITYYPPI_VARDA)) {
                 paivitaVardaTiedot(oid);
