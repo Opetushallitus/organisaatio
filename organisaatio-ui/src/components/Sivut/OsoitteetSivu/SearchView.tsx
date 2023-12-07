@@ -1,4 +1,4 @@
-import { haeOsoitteet, HakuParametrit, Hakutulos, KoodistoKoodi, OppilaitosRyhma } from './OsoitteetApi';
+import { haeOsoitteet, HaeRequest, HakuParametrit, Hakutulos, KoodistoKoodi, OppilaitosRyhma } from './OsoitteetApi';
 import React, { useCallback, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -16,7 +16,7 @@ import { KieliFilter } from './KieliFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
-    onResult(result: Hakutulos[]): void;
+    onResult(request: HaeRequest, result: Hakutulos[]): void;
 };
 
 type SearchState = {
@@ -64,7 +64,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             setLoading(true);
             setError(false);
 
-            const osoitteet = await haeOsoitteet({
+            const haeOsoitteetRequest = {
                 organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
                 oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(
                     (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
@@ -75,13 +75,15 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 anyJarjestamislupa: searchParameters.anyJarjestamislupa,
                 jarjestamisluvat: searchParameters.jarjestamisluvat,
                 kielet: searchParameters.kielet,
-            });
-            onResult(osoitteet);
+            };
+            const osoitteet = await haeOsoitteet(haeOsoitteetRequest);
+            onResult(haeOsoitteetRequest, osoitteet);
         } catch (e) {
             setError(true);
         }
         setLoading(false);
     }
+
     function isChecked(koodiUri: string) {
         return oppilaitosTypes[koodiUri];
     }

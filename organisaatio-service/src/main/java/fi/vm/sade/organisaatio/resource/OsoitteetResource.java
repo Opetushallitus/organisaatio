@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -11,16 +12,26 @@ import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
+import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.apache.poi.ss.util.CellUtil.createCell;
 
 @Hidden
 @RestController
@@ -34,6 +45,10 @@ public class OsoitteetResource {
     @PostMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public List<Hakutulos> hae(@RequestBody HaeRequest request) {
+        return getHakutulos(request);
+    }
+
+    private List<Hakutulos> getHakutulos(HaeRequest request) {
         List<String> vuosiluokat = request.getVuosiluokat();
         List<String> oppilaitostyypit = request.getOppilaitostyypit();
         String kieli = "fi";
@@ -54,6 +69,71 @@ public class OsoitteetResource {
         }
 
         return makeSearchResult(organisaatioIds, kieli, kieliKoodi);
+    }
+
+    @PostMapping(value = "/hae/xls",
+    consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+    produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            HaeRequest haeRequest = objectMapper.readValue(request.getFirst("request"), HaeRequest.class);
+            List<Hakutulos> tulos = getHakutulos(haeRequest);
+            Integer columnCount = 11;
+
+            String fileName = "osoitteet.xls";
+            Workbook wb = new HSSFWorkbook();
+            Sheet sheet = wb.createSheet("Osoitteet");
+
+            Row header = sheet.createRow(0);
+            CellStyle style = wb.createCellStyle();
+            Font font = wb.createFont();
+            font.setBold(true);
+            style.setFont(font);
+            createCell(header, 0, "Organisaation nimi", style);
+            createCell(header, 1, "Puhelinnumero", style);
+            createCell(header, 2, "Yritysmuoto", style);
+            createCell(header, 3, "Puhelinnumero", style);
+            createCell(header, 4, "Opetuskieli", style);
+            createCell(header, 5, "Oppilaitostunnus", style);
+            createCell(header, 6, "Kunta", style);
+            createCell(header, 7, "KOSKI-virheilmoituksen osoite", style);
+            createCell(header, 8, "Y-tunnus", style);
+            createCell(header, 9, "Postiosoite", style);
+            createCell(header, 10, "Käyntiosoite", style);
+
+            for (Integer row = 1; row <= tulos.size(); row++) {
+                Hakutulos h = tulos.get(row - 1);
+                Row r = sheet.createRow(row);
+                r.createCell(0).setCellValue(h.nimi);
+                r.createCell(1).setCellValue(h.sahkoposti.orElse(""));
+                r.createCell(2).setCellValue(h.yritysmuoto);
+                r.createCell(3).setCellValue(h.puhelinnumero.orElse(""));
+                r.createCell(4).setCellValue(h.opetuskieli.orElse(""));
+                r.createCell(5).setCellValue(h.oppilaitostunnus.orElse(""));
+                r.createCell(6).setCellValue(h.kunta);
+                r.createCell(7).setCellValue(h.koskiVirheilmoituksenOsoite.orElse(""));
+                r.createCell(8).setCellValue(h.ytunnus);
+                r.createCell(9).setCellValue(h.postiosoite.orElse(""));
+                r.createCell(10).setCellValue(h.kayntiosoite.orElse(""));
+            }
+
+            for (Integer i = 0; i < columnCount; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            wb.write(out);
+            out.close();
+            wb.close();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                    .body(new ByteArrayResource(out.toByteArray()));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private List<Hakutulos> makeSearchResult(List<Long> organisaatioIds, String kieli, String kieliKoodi) {

@@ -1,15 +1,18 @@
-import { Hakutulos } from './OsoitteetApi';
+import { HaeRequest, Hakutulos } from './OsoitteetApi';
 import styles from './HakutulosView.module.css';
 import { useHistory } from 'react-router-dom';
 import { HakutulosTable } from './HakutulosTable';
 import React from 'react';
 import { LinklikeButton } from './LinklikeButton';
+import { API_CONTEXT } from '../../../contexts/constants';
+import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 type HakutulosViewProps = {
+    request?: HaeRequest;
     results?: Hakutulos[];
 };
 
-export function HakutulosView({ results }: HakutulosViewProps) {
+export function HakutulosView({ request, results }: HakutulosViewProps) {
     const history = useHistory();
 
     function navigateBackToSearch() {
@@ -34,6 +37,10 @@ export function HakutulosView({ results }: HakutulosViewProps) {
             </div>
             <div className={styles.SininenPalkki}>{results.length} hakutulosta valittu</div>
             <HakutulosTable results={results} />
+            <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
+                <input type={'hidden'} name={'request'} value={JSON.stringify(request)} />
+                <Button type={'submit'}>Lataa Excel</Button>
+            </form>
         </div>
     );
 }

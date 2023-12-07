@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
-import { haeHakuParametrit, HakuParametrit, Hakutulos } from './OsoitteetApi';
+import { haeHakuParametrit, HaeRequest, HakuParametrit, Hakutulos } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import Loading from '../../Loading/Loading';
@@ -11,14 +11,15 @@ const OsoitteetSivu = () => {
     useTitle('Osoitepalvelu');
 
     type State = {
+        request?: HaeRequest;
         hakutulos?: Hakutulos[];
     };
     const [hakuParametrit, setHakuParametrit] = useState<HakuParametrit | undefined>(undefined);
     const [state, setState] = useState<State>({});
     const history = useHistory();
 
-    function onSearchResult(hakutulos: Hakutulos[]) {
-        setState({ hakutulos });
+    function onSearchResult(request: HaeRequest, hakutulos: Hakutulos[]) {
+        setState({ request, hakutulos });
         history.push('/osoitteet/hakutulos');
     }
 
@@ -46,7 +47,7 @@ const OsoitteetSivu = () => {
             <Route exact path={'/osoitteet/hakutulos'}>
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
-                        <HakutulosView results={state.hakutulos} />
+                        <HakutulosView request={state.request} results={state.hakutulos} />
                     </div>
                 </div>
             </Route>

@@ -3,7 +3,9 @@ import { expect, Locator, Page, test } from "@playwright/test";
 test.describe("Osoitepalvelu", () => {
   test.beforeAll(async ({ request }, testInfo) => {
     await test.step("Load initial mock data", async () => {
-      await request.post("http://localhost:3003/organisaatio-service/mock/init");
+      await request.post(
+        "http://localhost:3003/organisaatio-service/mock/init"
+      );
     });
   });
   test.beforeEach(async ({ page }, testInfo) => {
@@ -16,7 +18,7 @@ test.describe("Osoitepalvelu", () => {
 
   test("allows searching for koulutustoimijat", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Hae" })).toBeVisible();
-    await page.getByRole("button", { name: "Hae" }).click()
+    await page.getByRole("button", { name: "Hae" }).click();
 
     await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
@@ -26,17 +28,23 @@ test.describe("Osoitepalvelu", () => {
     await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
   });
 
-  test("retains search parameters when going back from search results", async ({ page }) => {
-      const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
-      await toggleCheckboxByText(page, "Peruskoulut");
-      await toggleCheckboxByText(page, "Ammattikorkeakoulut");
-      await expect(button.locator("[aria-live=off]")).toHaveText("Ammattikorkeakoulut, Peruskoulut");
-      await page.getByRole("button", { name: "Hae" }).click();
-      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
-      await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
-      await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+  test("retains search parameters when going back from search results", async ({
+    page,
+  }) => {
+    const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
+    await toggleCheckboxByText(page, "Peruskoulut");
+    await toggleCheckboxByText(page, "Ammattikorkeakoulut");
+    await expect(button.locator("[aria-live=off]")).toHaveText(
+      "Ammattikorkeakoulut, Peruskoulut"
+    );
+    await page.getByRole("button", { name: "Hae" }).click();
+    await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+    await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
+    await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
-      await expect(button.locator("[aria-live=off]")).toHaveText("Ammattikorkeakoulut, Peruskoulut");
+    await expect(button.locator("[aria-live=off]")).toHaveText(
+      "Ammattikorkeakoulut, Peruskoulut"
+    );
   });
 
   test.describe("Search by oppilaitostyyppi box", () => {
@@ -54,32 +62,34 @@ test.describe("Osoitepalvelu", () => {
       const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
       await expect(page.getByRole("list")).toBeVisible();
 
-      const assertSelectionText = async text =>
-        expect(button.locator("[aria-live=off]")).toHaveText(text)
+      const assertSelectionText = async (text) =>
+        expect(button.locator("[aria-live=off]")).toHaveText(text);
 
-      await toggleCheckboxByText(page, "Kesäyliopistot")
-      await assertSelectionText("Kesäyliopistot")
+      await toggleCheckboxByText(page, "Kesäyliopistot");
+      await assertSelectionText("Kesäyliopistot");
 
-      await toggleCheckboxByText(page, "Lukiot")
-      await assertSelectionText("Kesäyliopistot, Lukiot")
+      await toggleCheckboxByText(page, "Lukiot");
+      await assertSelectionText("Kesäyliopistot, Lukiot");
 
-      await toggleCheckboxByText(page, "Perus- ja lukioasteen koulut")
-      await assertSelectionText("Lukiokoulutus, Kesäyliopistot")
+      await toggleCheckboxByText(page, "Perus- ja lukioasteen koulut");
+      await assertSelectionText("Lukiokoulutus, Kesäyliopistot");
 
-      await toggleCheckboxByText(page, "Lukiokoulutus")
-      await assertSelectionText("Kesäyliopistot")
+      await toggleCheckboxByText(page, "Lukiokoulutus");
+      await assertSelectionText("Kesäyliopistot");
     });
 
-    test("Tyhjennä valinnat unchecks all selections", async ({page}) => {
-      const clearButton = page.getByRole("button", {name: "Tyhjennä valinnat"})
+    test("Tyhjennä valinnat unchecks all selections", async ({ page }) => {
+      const clearButton = page.getByRole("button", {
+        name: "Tyhjennä valinnat",
+      });
       await openOppilatostyyppiBox(page);
       await expect(getCheckedItems(page)).toHaveCount(0);
       await expect(clearButton).toBeDisabled();
-      await toggleCheckboxByText(page, "Ammattikorkeakoulut")
-      await toggleCheckboxByText(page, "Peruskoulut")
+      await toggleCheckboxByText(page, "Ammattikorkeakoulut");
+      await toggleCheckboxByText(page, "Peruskoulut");
       await expect(getCheckedItems(page)).toHaveCount(2);
       await expect(clearButton).toBeEnabled();
-      await page.getByRole("button", {name: "Tyhjennä valinnat"}).click();
+      await page.getByRole("button", { name: "Tyhjennä valinnat" }).click();
       await expect(getCheckedItems(page)).toHaveCount(0);
       await expect(clearButton).toBeDisabled();
     });
@@ -107,16 +117,24 @@ test.describe("Osoitepalvelu", () => {
     test("finds peruskoulut and filters by vuosiluokka", async ({ page }) => {
       await openOppilatostyyppiBox(page);
 
-      const vuosiluokatInput = await page.getByLabel("Hae perusopetuksen vuosiluokkatiedolla");
-      await test.step("vuosiluokka selection is disabled if no peruskoulut is selected", async () => {
-        await expect(vuosiluokatInput).toBeDisabled();
-      });
+      const vuosiluokatInput = await page.getByLabel(
+        "Hae perusopetuksen vuosiluokkatiedolla"
+      );
+      await test.step(
+        "vuosiluokka selection is disabled if no peruskoulut is selected",
+        async () => {
+          await expect(vuosiluokatInput).toBeDisabled();
+        }
+      );
       await toggleCheckboxByText(page, "Peruskoulut");
-      await test.step("vuosiluokka selection is enabled after selecting peruskoulut", async () => {
-        await expect(vuosiluokatInput).toBeEnabled();
-      });
+      await test.step(
+        "vuosiluokka selection is enabled after selecting peruskoulut",
+        async () => {
+          await expect(vuosiluokatInput).toBeEnabled();
+        }
+      );
 
-      await openDropdown(page, "Hae perusopetuksen vuosiluokkatiedolla")
+      await openDropdown(page, "Hae perusopetuksen vuosiluokkatiedolla");
       await selectFromDropdown(page, "Lisäopetuksessa");
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
@@ -133,9 +151,14 @@ test.describe("Osoitepalvelu", () => {
         "Sotilaskorkeakoulut",
         "Yliopistot",
       ]);
-      await test.step("selection description shows group name instead of individiaul types", async () => {
-        await expect(button.locator("[aria-live=off]")).toHaveText("Korkeakoulutus");
-      });
+      await test.step(
+        "selection description shows group name instead of individiaul types",
+        async () => {
+          await expect(button.locator("[aria-live=off]")).toHaveText(
+            "Korkeakoulutus"
+          );
+        }
+      );
       await toggleCheckboxByText(page, "Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
@@ -156,71 +179,81 @@ test.describe("Osoitepalvelu", () => {
 
   test("Sijainti filter", async ({ page }) => {
     const button = page.getByRole("button", { name: "Sijainti" });
-    const assertSelectionText = async text =>
-      expect(button.locator("[aria-live=off]")).toHaveText(text)
+    const assertSelectionText = async (text) =>
+      expect(button.locator("[aria-live=off]")).toHaveText(text);
 
     await test.step("Defaults to Manner-Suomi", async () => {
-      await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)")
-    })
+      await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)");
+    });
 
     await button.click();
 
-    await test.step("Changes filter description on selection change", async () => {
-      await openDropdown(page, "Hae alueen tai maakunnan nimellä");
+    await test.step(
+      "Changes filter description on selection change",
+      async () => {
+        await openDropdown(page, "Hae alueen tai maakunnan nimellä");
 
-      await selectFromDropdown(page, "Koko Suomi");
-      await assertSelectionText("Koko Suomi")
+        await selectFromDropdown(page, "Koko Suomi");
+        await assertSelectionText("Koko Suomi");
 
-      await selectFromAlueDropdown(page, "Ahvenanmaa");
-      await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)")
+        await selectFromAlueDropdown(page, "Ahvenanmaa");
+        await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)");
 
-      await selectFromAlueDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
-      await assertSelectionText("")
+        await selectFromAlueDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
+        await assertSelectionText("");
 
-      await selectFromAlueDropdown(page, "Ulkomaa");
-      await assertSelectionText("Ulkomaa")
+        await selectFromAlueDropdown(page, "Ulkomaa");
+        await assertSelectionText("Ulkomaa");
 
-      await selectFromAlueDropdown(page, "Uusimaa");
-      await assertSelectionText("Ulkomaa, Uusimaa")
+        await selectFromAlueDropdown(page, "Uusimaa");
+        await assertSelectionText("Ulkomaa, Uusimaa");
 
-      await selectFromKuntaDropdown(page, "Imatra");
-      await assertSelectionText("Ulkomaa, Uusimaa, Imatra")
+        await selectFromKuntaDropdown(page, "Imatra");
+        await assertSelectionText("Ulkomaa, Uusimaa, Imatra");
 
-      await selectFromKuntaDropdown(page, "Helsinki");
-      await assertSelectionText("Ulkomaa, Uusimaa, Helsinki, Imatra")
+        await selectFromKuntaDropdown(page, "Helsinki");
+        await assertSelectionText("Ulkomaa, Uusimaa, Helsinki, Imatra");
 
-      await selectFromKuntaDropdown(page, "Helsinki");
-      await selectFromKuntaDropdown(page, "Imatra");
-      await assertSelectionText("Ulkomaa, Uusimaa")
-    })
+        await selectFromKuntaDropdown(page, "Helsinki");
+        await selectFromKuntaDropdown(page, "Imatra");
+        await assertSelectionText("Ulkomaa, Uusimaa");
+      }
+    );
 
     await test.step("Filters results by alue", async () => {
-      await assertSelectionText("Ulkomaa, Uusimaa")
-      await page.getByRole("button", { name: "Hae" }).click()
+      await assertSelectionText("Ulkomaa, Uusimaa");
+      await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
-      await openSijaintiBox(page)
+      await openSijaintiBox(page);
       await selectFromAlueDropdown(page, "Uusimaa");
       await selectFromAlueDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
-      await page.getByRole("button", { name: "Hae" }).click()
+      await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
       const firstResult = await page.getByRole("row").nth(1);
       await expect(firstResult).toBeVisible();
-      await expect(firstResult.getByText("Mansikkalan testi kunta")).toBeVisible();
+      await expect(
+        firstResult.getByText("Mansikkalan testi kunta")
+      ).toBeVisible();
       await expect(firstResult.getByText("Imatra").first()).toBeVisible();
-    })
-  })
+    });
+  });
 
-  test("Järjestämislupa filter", async({ page }) => {
-    const button = page.getByRole("button", { name: "Ammatillisen koulutuksen järjestämislupa" });
-    const assertSelectionText = async text =>
+  test("Järjestämislupa filter", async ({ page }) => {
+    const button = page.getByRole("button", {
+      name: "Ammatillisen koulutuksen järjestämislupa",
+    });
+    const assertSelectionText = async (text) =>
       expect(button.locator("[aria-live=off]")).toHaveText(text);
 
     await button.click();
 
     await test.step("Specific koulutuslupa", async () => {
-      await selectFromJärjestämislupaDropdown(page, "Hieronnan ammattitutkinto");
+      await selectFromJärjestämislupaDropdown(
+        page,
+        "Hieronnan ammattitutkinto"
+      );
       await assertSelectionText("Hieronnan ammattitutkinto");
 
       await page.getByRole("button", { name: "Hae" }).click();
@@ -233,8 +266,13 @@ test.describe("Osoitepalvelu", () => {
     await button.click();
 
     await test.step("Any koulutuslupa", async () => {
-      await toggleCheckboxByText(page, "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa");
-      await assertSelectionText("Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa")
+      await toggleCheckboxByText(
+        page,
+        "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
+      );
+      await assertSelectionText(
+        "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
+      );
 
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
@@ -244,21 +282,23 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test("Oppilaitoksen kieli filter", async({ page }) => {
+  test("Oppilaitoksen kieli filter", async ({ page }) => {
     const button = page.getByRole("button", { name: "Organisaation kieli" });
-    const assertSelectionText = async text =>
+    const assertSelectionText = async (text) =>
       expect(button.locator("[aria-live=off]")).toHaveText(text);
 
     await button.click();
 
     await test.step("No filter searches all", async () => {
-      await assertSelectionText("")
+      await assertSelectionText("");
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Helsingin kaupunki")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
       await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
-      await expect(page.getByText("Testi Koulutuskuntayhtymä Puolukka")).toBeVisible();
+      await expect(
+        page.getByText("Testi Koulutuskuntayhtymä Puolukka")
+      ).toBeVisible();
     });
 
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
@@ -267,13 +307,15 @@ test.describe("Osoitepalvelu", () => {
     await test.step("suomi and ruotsi finds testiorganisaatiot", async () => {
       await toggleCheckboxByText(page, "suomi");
       await toggleCheckboxByText(page, "ruotsi");
-      await assertSelectionText("suomi, ruotsi")
+      await assertSelectionText("suomi, ruotsi");
 
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
       await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
-      await expect(page.getByText("Testi Koulutuskuntayhtymä Puolukka")).toBeVisible();
+      await expect(
+        page.getByText("Testi Koulutuskuntayhtymä Puolukka")
+      ).toBeVisible();
     });
 
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
@@ -281,42 +323,59 @@ test.describe("Osoitepalvelu", () => {
 
     await test.step("ruotsi finds none", async () => {
       await toggleCheckboxByText(page, "suomi");
-      await assertSelectionText("ruotsi")
+      await assertSelectionText("ruotsi");
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });
+  });
+
+  test.only("Lataa Excel button", async ({ page }) => {
+    await test.step(
+      "downloads search results as an excel document",
+      async () => {
+        await page.getByRole("button", { name: "Hae" }).click();
+        const [download] = await Promise.all([
+          page.waitForEvent("download"),
+          page.getByRole("button", { name: "Lataa Excel" }).click(),
+        ]);
+        expect(download.suggestedFilename()).toBe("osoitteet.xls");
+      }
+    );
   });
 });
 
 async function selectFromJärjestämislupaDropdown(page: Page, label: string) {
   // This is required on webkit tests as the dropdown closes after selection
-  if (!await page.isVisible('.jarjesetamislupa-react-select__menu')) {
-    await openDropdown(page, "Hae yksittäisten tutkintojen ja koulutusten nimillä");
+  if (!(await page.isVisible(".jarjesetamislupa-react-select__menu"))) {
+    await openDropdown(
+      page,
+      "Hae yksittäisten tutkintojen ja koulutusten nimillä"
+    );
   }
-  await page.getByLabel(label, { exact: true }).click()
+  await page.getByLabel(label, { exact: true }).click();
 }
 
 async function selectFromAlueDropdown(page: Page, label: string) {
   // This is required on webkit tests as the dropdown closes after selection
-  if (!await page.isVisible('.alue-react-select__menu')) {
+  if (!(await page.isVisible(".alue-react-select__menu"))) {
     await openDropdown(page, "Hae alueen tai maakunnan nimellä");
   }
-  await page.getByLabel(label, { exact: true }).click()
+  await page.getByLabel(label, { exact: true }).click();
 }
 
 async function selectFromKuntaDropdown(page: Page, label: string) {
   // This is required on webkit tests as the dropdown closes after selection
-  if (!await page.isVisible('.kunta-react-select__menu')) {
+  if (!(await page.isVisible(".kunta-react-select__menu"))) {
     await openDropdown(page, "Hae kunnan nimellä");
   }
-  await page.getByLabel(label, { exact: true }).click()
+  await page.getByLabel(label, { exact: true }).click();
 }
 async function openDropdown(page: Page, label: string) {
   await page.getByText(label, { exact: true }).click();
 }
 
 async function selectFromDropdown(page: Page, label: string) {
-  await page.getByLabel(label, { exact: true }).click()
+  await page.getByLabel(label, { exact: true }).click();
 }
 
 async function toggleCheckboxByText(page: Page, name: string) {
