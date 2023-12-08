@@ -130,15 +130,15 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         try {
             return organisaatioBusinessService.saveOrUpdate(ordto);
         } catch (ValidationException ex) {
-            log.warn("ValidationException while saving {}", oid);
+            log.warn("ValidationException while saving {}", oid, ex);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     ex.getMessage(), "organisaatio.validointi.virhe");
         } catch (SadeBusinessException sbe) {
-            log.warn("SadeBusinessException while saving {}", oid);
+            log.warn("SadeBusinessException while saving {}", oid, sbe);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     sbe.getMessage(), "organisaatio.business.virhe");
         } catch (Exception t) {
-            log.warn("Throwable while saving {}", oid);
+            log.warn("Throwable while saving {}", oid, t);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
