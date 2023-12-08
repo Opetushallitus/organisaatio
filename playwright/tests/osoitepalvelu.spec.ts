@@ -329,7 +329,7 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test.only("Lataa Excel button", async ({ page }) => {
+  test("Lataa Excel button", async ({ page }) => {
     await test.step(
       "downloads search results as an excel document",
       async () => {
