@@ -74,6 +74,7 @@ public class OsoitteetResource {
     @PostMapping(value = "/hae/xls",
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
     produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
