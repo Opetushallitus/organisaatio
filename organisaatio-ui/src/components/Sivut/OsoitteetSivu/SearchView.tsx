@@ -1,19 +1,17 @@
-import { haeOsoitteet, HaeRequest, HakuParametrit, Hakutulos, KoodistoKoodi, OppilaitosRyhma } from './OsoitteetApi';
+import { haeOsoitteet, HaeRequest, HakuParametrit, Hakutulos } from './OsoitteetApi';
 import React, { useCallback, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { Checkbox } from './Checkbox';
 import { LinklikeButton } from './LinklikeButton';
 import { useHistory } from 'react-router-dom';
-import { SelectDropdown } from './SelectDropdown';
-import { RajausAccordion } from './RajausAccordion';
 import { makeDefaultSearchFilterValue, SijaintiFilter, SijaintiFilterValue } from './SijaintiFilter';
 import { KoodiUri } from '../../../types/types';
 import { JarjestamislupaFilter } from './JarjestamislupaFilter';
 import { KieliFilter } from './KieliFilter';
 import { KohderyhmaFilter } from './KohderyhmaFilter';
+import { OppilaitostyyppiFilter } from './OppilaitostyyppiFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -85,49 +83,6 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setLoading(false);
     }
 
-    function isChecked(koodiUri: string) {
-        return oppilaitosTypes[koodiUri];
-    }
-
-    function allIsChecked() {
-        return Object.entries(oppilaitosTypes).every(([, isChecked]) => isChecked);
-    }
-
-    function toggleIsChecked(koodiUri: string) {
-        const value = { [koodiUri]: !oppilaitosTypes[koodiUri] };
-        setSearchParameters({ ...searchParameters, oppilaitosTypes: { ...oppilaitosTypes, ...value } });
-    }
-
-    function toggleAllIsChecked() {
-        if (allIsChecked()) {
-            setSearchParameters({ ...searchParameters, oppilaitosTypes: defaultOppilaitosTypes });
-        } else {
-            const newOppilaitosTypes = Object.fromEntries(Object.entries(oppilaitosTypes).map(([a]) => [a, true]));
-            setSearchParameters({ ...searchParameters, oppilaitosTypes: newOppilaitosTypes });
-        }
-    }
-
-    function searchParametersChanged(): boolean {
-        return (
-            Object.values(searchParameters.oppilaitosTypes).includes(true) || searchParameters.vuosiluokat.length != 0
-        );
-    }
-    function clearAllSearchSelections() {
-        setSearchParameters(defaultSearchState);
-    }
-
-    function koodistoLexically(left: KoodistoKoodi, right: KoodistoKoodi) {
-        const l = left.nimi.toUpperCase();
-        const r = right.nimi.toUpperCase();
-        let o = 0;
-        if (l < r) {
-            o = -1;
-        } else if (l > r) {
-            o = 1;
-        }
-        return o;
-    }
-
     function onSijaintiFilterChanged(sijainti: SijaintiFilterValue) {
         setSearchParameters({ ...searchParameters, sijainti });
     }
@@ -137,19 +92,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function onKieliFilterChanged(kielet: string[]): void {
         setSearchParameters({ ...searchParameters, kielet });
     }
-
-    function buildSelectionDescription(): string {
-        const isRyhmaChecked = (ryhma: OppilaitosRyhma): boolean => ryhma.koodit.every(isChecked);
-        const checkedRyhmas = hakuParametrit.oppilaitostyypit.ryhmat.filter(isRyhmaChecked);
-        const ryhmaNames = checkedRyhmas.map((ryhma) => ryhma.nimi);
-        const kooditIncludedInRyhmat = new Set(checkedRyhmas.map((ryhma) => ryhma.koodit).flat());
-        const yksittaisetTyypit = hakuParametrit.oppilaitostyypit.koodit
-            .filter((k) => isChecked(k.koodiUri) && !kooditIncludedInRyhmat.has(k.koodiUri))
-            .map((k) => k.nimi);
-        const vuosiluokat = hakuParametrit.vuosiluokat
-            .filter((_) => searchParameters.vuosiluokat.includes(_.koodiUri))
-            .map((_) => _.nimi);
-        return [...ryhmaNames, ...yksittaisetTyypit, ...vuosiluokat].join(', ');
+    function onOppilaitostyyppiFilterChanged(oppilaitosTypes: Record<string, boolean>, vuosiluokat: string[]) {
+        setSearchParameters({ ...searchParameters, oppilaitosTypes, vuosiluokat });
     }
 
     return (
@@ -163,62 +107,12 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     <h2>Rajaa hakua</h2>
                 </div>
                 <div className={styles.Rajaukset}>
-                    <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
-                        <div className={styles.FlexRow}>
-                            <h4 className={styles.FlexGrow}>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
-                            <LinklikeButton onClick={clearAllSearchSelections} disabled={!searchParametersChanged()}>
-                                Tyhjennä valinnat
-                            </LinklikeButton>
-                        </div>
-                        <div className={styles.RajausRyhmat}>
-                            {hakuParametrit.oppilaitostyypit.ryhmat.map(({ nimi, koodit }) => {
-                                const checked = koodit.every(isChecked);
-                                const toggleGroup = () => {
-                                    const newOppilaitosTypes = Object.fromEntries(koodit.map((k) => [k, !checked]));
-                                    setSearchParameters({
-                                        ...searchParameters,
-                                        oppilaitosTypes: { ...oppilaitosTypes, ...newOppilaitosTypes },
-                                    });
-                                };
-
-                                return (
-                                    <Checkbox key={nimi} checked={checked} onChange={toggleGroup}>
-                                        {nimi}
-                                    </Checkbox>
-                                );
-                            })}
-                        </div>
-                        <div className={styles.SelectAll}>
-                            <Checkbox checked={allIsChecked()} onChange={toggleAllIsChecked}>
-                                Valitse kaikki
-                            </Checkbox>
-                        </div>
-                        <ul className={styles.OppilaitostyypitList}>
-                            {hakuParametrit.oppilaitostyypit.koodit.sort(koodistoLexically).map((koodisto) => {
-                                return (
-                                    <li key={koodisto.koodiUri}>
-                                        <Checkbox
-                                            key={koodisto.koodiUri}
-                                            checked={isChecked(koodisto.koodiUri)}
-                                            onChange={() => toggleIsChecked(koodisto.koodiUri)}
-                                        >
-                                            {koodisto.nimi}
-                                        </Checkbox>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                        <div className={styles.FlexCol}>
-                            <h4>Vuosiluokka</h4>
-                            <SelectDropdown
-                                label={'Hae perusopetuksen vuosiluokkatiedolla'}
-                                options={hakuParametrit.vuosiluokat.map((v) => ({ value: v.koodiUri, label: v.nimi }))}
-                                selections={searchParameters.vuosiluokat}
-                                disabled={!canFilterByVuosiluokat}
-                                onChange={(vuosiluokat) => setSearchParameters({ ...searchParameters, vuosiluokat })}
-                            />
-                        </div>
-                    </RajausAccordion>
+                    <OppilaitostyyppiFilter
+                        hakuParametrit={hakuParametrit}
+                        oppilaitosTypes={searchParameters.oppilaitosTypes}
+                        vuosiluokat={searchParameters.vuosiluokat}
+                        onChange={onOppilaitostyyppiFilterChanged}
+                    />
                     <JarjestamislupaFilter
                         jarjestamisluvat={hakuParametrit.jarjestamisluvat}
                         anyJarjestamislupa={searchParameters.anyJarjestamislupa}
