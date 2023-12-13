@@ -4,24 +4,21 @@ import styles from './RajausAccordion.module.css';
 type RajausAccordionProps = React.PropsWithChildren<{
     header: string;
     selectionDescription: string;
+    open: boolean;
+    onToggleOpen: () => void;
 }>;
 
-export function RajausAccordion({ header, selectionDescription, children }: RajausAccordionProps) {
+export function RajausAccordion({ header, selectionDescription, open, onToggleOpen, children }: RajausAccordionProps) {
     const descriptionRef = useRef<HTMLSpanElement>(null);
-    const [open, setOpen] = useState(false);
     const [descriptionOverflowing, setDescriptionOverflowing] = useState<boolean>(false);
     useEffect(() => {
         const overflowing = descriptionRef.current !== null && isContentOverflowing(descriptionRef.current);
         if (overflowing !== descriptionOverflowing) setDescriptionOverflowing(overflowing);
     });
 
-    function toggleOpen() {
-        setOpen(!open);
-    }
-
     function toggleOpenOnSpaceOrEnter(event) {
         if (event.key === 'Enter' || event.key === ' ') {
-            toggleOpen();
+            onToggleOpen();
         }
     }
 
@@ -33,7 +30,7 @@ export function RajausAccordion({ header, selectionDescription, children }: Raja
                 aria-pressed="false"
                 className={styles.AccordionTitle}
                 onKeyDown={toggleOpenOnSpaceOrEnter}
-                onClick={toggleOpen}
+                onClick={onToggleOpen}
             >
                 <h3>{header}</h3>
                 <span

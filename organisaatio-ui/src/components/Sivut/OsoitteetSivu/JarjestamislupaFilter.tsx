@@ -12,6 +12,8 @@ type JarjestamislupaFilterProps = {
     onChange: (jarjestamisluvat: ValueType, anyJarjestamislupa: boolean) => void;
     value: ValueType;
     anyJarjestamislupa: boolean;
+    open: boolean;
+    onToggleOpen: () => void;
 };
 
 export function JarjestamislupaFilter({
@@ -19,6 +21,8 @@ export function JarjestamislupaFilter({
     value,
     anyJarjestamislupa,
     onChange,
+    open,
+    onToggleOpen,
 }: JarjestamislupaFilterProps) {
     const options = jarjestamisluvat.map((koodi) => ({
         value: koodi.koodiUri,
@@ -48,6 +52,8 @@ export function JarjestamislupaFilter({
         <RajausAccordion
             header="Ammatillisen koulutuksen järjestämislupa"
             selectionDescription={buildSelectionDescription()}
+            open={open}
+            onToggleOpen={onToggleOpen}
         >
             <div>
                 <Checkbox checked={anyJarjestamislupa} onChange={(checked) => onChange(checked ? [] : value, checked)}>

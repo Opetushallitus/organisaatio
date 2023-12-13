@@ -10,6 +10,8 @@ type OppilaitostyyppiFilterProps = {
     hakuParametrit: HakuParametrit;
     oppilaitosTypes: Record<string, boolean>;
     vuosiluokat: string[];
+    open: boolean;
+    onToggleOpen: () => void;
     onChange: (oppilaitosTypes: Record<string, boolean>, vuosiluokat: string[]) => void;
 };
 
@@ -17,6 +19,8 @@ export function OppilaitostyyppiFilter({
     hakuParametrit,
     oppilaitosTypes,
     vuosiluokat,
+    open,
+    onToggleOpen,
     onChange,
 }: OppilaitostyyppiFilterProps) {
     type SearchParameters = {
@@ -97,7 +101,12 @@ export function OppilaitostyyppiFilter({
     }
 
     return (
-        <RajausAccordion header="Oppilaitostyyppi" selectionDescription={buildSelectionDescription()}>
+        <RajausAccordion
+            header="Oppilaitostyyppi"
+            selectionDescription={buildSelectionDescription()}
+            open={open}
+            onToggleOpen={onToggleOpen}
+        >
             <div className={styles.FlexRow}>
                 <h4 className={styles.FlexGrow}>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>
                 <LinklikeButton onClick={clearAllSearchSelections} disabled={!searchParametersChanged()}>

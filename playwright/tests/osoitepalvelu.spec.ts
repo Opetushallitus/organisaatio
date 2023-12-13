@@ -226,7 +226,6 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
-      await openSijaintiBox(page);
       await selectFromAlueDropdown(page, "Uusimaa");
       await selectFromAlueDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
       await page.getByRole("button", { name: "Hae" }).click();
@@ -263,7 +262,6 @@ test.describe("Osoitepalvelu", () => {
     });
 
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
-    await button.click();
 
     await test.step("Any koulutuslupa", async () => {
       await toggleCheckboxByText(
@@ -302,7 +300,6 @@ test.describe("Osoitepalvelu", () => {
     });
 
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
-    await button.click();
 
     await test.step("suomi and ruotsi finds testiorganisaatiot", async () => {
       await toggleCheckboxByText(page, "suomi");
@@ -319,7 +316,6 @@ test.describe("Osoitepalvelu", () => {
     });
 
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
-    await button.click();
 
     await test.step("ruotsi finds none", async () => {
       await toggleCheckboxByText(page, "suomi");

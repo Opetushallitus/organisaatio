@@ -7,9 +7,11 @@ import styles from './KieliFilter.module.css';
 type KieliFilterProps = {
     kielet: KoodistoKoodi[];
     value: string[];
+    open: boolean;
+    onToggleOpen: () => void;
     onChange: (value: string[]) => void;
 };
-export function KieliFilter({ value, kielet, onChange }: KieliFilterProps) {
+export function KieliFilter({ value, kielet, open, onToggleOpen, onChange }: KieliFilterProps) {
     function buildSelectionDescription() {
         const isKieliChecked = (_: KoodistoKoodi): boolean => value.includes(_.koodiUri);
         return kielet
@@ -25,7 +27,12 @@ export function KieliFilter({ value, kielet, onChange }: KieliFilterProps) {
     };
 
     return (
-        <RajausAccordion header="Organisaation kieli" selectionDescription={buildSelectionDescription()}>
+        <RajausAccordion
+            header="Organisaation kieli"
+            selectionDescription={buildSelectionDescription()}
+            open={open}
+            onToggleOpen={onToggleOpen}
+        >
             <h4>Valitse organisaatiot, joiden kieli on:</h4>
             <div className={styles.KieletList}>
                 {kielet.map((koodisto) => {

@@ -25,6 +25,7 @@ type SearchState = {
     anyJarjestamislupa: boolean;
     jarjestamisluvat: string[];
     kielet: string[];
+    openFilters: string[];
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
@@ -41,6 +42,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         anyJarjestamislupa: false,
         jarjestamisluvat: [],
         kielet: [],
+        openFilters: [],
     };
 
     const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>(defaultSearchState);
@@ -95,6 +97,17 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function onOppilaitostyyppiFilterChanged(oppilaitosTypes: Record<string, boolean>, vuosiluokat: string[]) {
         setSearchParameters({ ...searchParameters, oppilaitosTypes, vuosiluokat });
     }
+    function onToggleOpenFn(filterId: string) {
+        return () => {
+            const openFilters = isFilterOpen(filterId)
+                ? searchParameters.openFilters.filter((_) => _ !== filterId)
+                : searchParameters.openFilters.concat(filterId);
+            setSearchParameters({ ...searchParameters, openFilters });
+        };
+    }
+    function isFilterOpen(filterId: string) {
+        return searchParameters.openFilters.includes(filterId);
+    }
 
     return (
         <div className={styles.SearchView}>
@@ -112,23 +125,31 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         oppilaitosTypes={searchParameters.oppilaitosTypes}
                         vuosiluokat={searchParameters.vuosiluokat}
                         onChange={onOppilaitostyyppiFilterChanged}
+                        open={isFilterOpen('oppilaitostyyppi')}
+                        onToggleOpen={onToggleOpenFn('oppilaitostyyppi')}
                     />
                     <JarjestamislupaFilter
                         jarjestamisluvat={hakuParametrit.jarjestamisluvat}
                         anyJarjestamislupa={searchParameters.anyJarjestamislupa}
                         value={searchParameters.jarjestamisluvat}
                         onChange={onJarjestamisluvatFilterChanged}
+                        open={isFilterOpen('jarjestamislupa')}
+                        onToggleOpen={onToggleOpenFn('jarjestamislupa')}
                     />
                     <SijaintiFilter
                         maakunnat={hakuParametrit.maakunnat}
                         kunnat={hakuParametrit.kunnat}
                         value={searchParameters.sijainti}
                         onChange={onSijaintiFilterChanged}
+                        open={isFilterOpen('sijainti')}
+                        onToggleOpen={onToggleOpenFn('sijainti')}
                     />
                     <KieliFilter
                         kielet={hakuParametrit.kielet}
                         value={searchParameters.kielet}
                         onChange={onKieliFilterChanged}
+                        open={isFilterOpen('kielet')}
+                        onToggleOpen={onToggleOpenFn('kielet')}
                     />
                 </div>
             </div>

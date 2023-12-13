@@ -30,10 +30,12 @@ type SijaintiFilterProps = {
     maakunnat: MaakuntaKoodi[];
     kunnat: KoodistoKoodi[];
     value: SijaintiFilterValue;
+    open: boolean;
+    onToggleOpen: () => void;
     onChange: (value: SijaintiFilterValue) => void;
 };
 
-export function SijaintiFilter({ maakunnat, kunnat, value, onChange }: SijaintiFilterProps) {
+export function SijaintiFilter({ maakunnat, kunnat, value, open, onToggleOpen, onChange }: SijaintiFilterProps) {
     const alueMannerSuomi: MaakuntaAlue = {
         id: 'alue_mannersuomi',
         label: 'Manner-Suomi (ei Ahvenanmaa)',
@@ -89,7 +91,12 @@ export function SijaintiFilter({ maakunnat, kunnat, value, onChange }: SijaintiF
         });
     }
     return (
-        <RajausAccordion header="Sijainti" selectionDescription={buildSelectionDescription()}>
+        <RajausAccordion
+            header="Sijainti"
+            selectionDescription={buildSelectionDescription()}
+            open={open}
+            onToggleOpen={onToggleOpen}
+        >
             <div className={styles.TwoColumns}>
                 <AlueTaiMaakuntaFilter
                     alueKokoSuomi={alueKokoSuomi}
