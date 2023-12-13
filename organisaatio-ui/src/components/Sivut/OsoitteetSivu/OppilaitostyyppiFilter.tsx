@@ -13,6 +13,7 @@ type OppilaitostyyppiFilterProps = {
     open: boolean;
     onToggleOpen: () => void;
     onChange: (oppilaitosTypes: Record<string, boolean>, vuosiluokat: string[]) => void;
+    disabled: boolean;
 };
 
 export function OppilaitostyyppiFilter({
@@ -22,6 +23,7 @@ export function OppilaitostyyppiFilter({
     open,
     onToggleOpen,
     onChange,
+    disabled,
 }: OppilaitostyyppiFilterProps) {
     type SearchParameters = {
         oppilaitosTypes: Record<string, boolean>;
@@ -106,6 +108,7 @@ export function OppilaitostyyppiFilter({
             selectionDescription={buildSelectionDescription()}
             open={open}
             onToggleOpen={onToggleOpen}
+            disabled={disabled}
         >
             <div className={styles.FlexRow}>
                 <h4 className={styles.FlexGrow}>Valitse valmiiden ryhmien mukaan tai yksitellen</h4>

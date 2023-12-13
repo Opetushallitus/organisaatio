@@ -33,9 +33,18 @@ type SijaintiFilterProps = {
     open: boolean;
     onToggleOpen: () => void;
     onChange: (value: SijaintiFilterValue) => void;
+    disabled: boolean;
 };
 
-export function SijaintiFilter({ maakunnat, kunnat, value, open, onToggleOpen, onChange }: SijaintiFilterProps) {
+export function SijaintiFilter({
+    maakunnat,
+    kunnat,
+    value,
+    onChange,
+    open,
+    onToggleOpen,
+    disabled,
+}: SijaintiFilterProps) {
     const alueMannerSuomi: MaakuntaAlue = {
         id: 'alue_mannersuomi',
         label: 'Manner-Suomi (ei Ahvenanmaa)',
@@ -96,6 +105,7 @@ export function SijaintiFilter({ maakunnat, kunnat, value, open, onToggleOpen, o
             selectionDescription={buildSelectionDescription()}
             open={open}
             onToggleOpen={onToggleOpen}
+            disabled={disabled}
         >
             <div className={styles.TwoColumns}>
                 <AlueTaiMaakuntaFilter

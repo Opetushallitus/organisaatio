@@ -12,8 +12,11 @@ test.describe("Osoitepalvelu", () => {
     await page.goto("http://localhost:3003/osoitteet");
   });
 
-  test("has title", async ({ page }) => {
-    await expect(page).toHaveTitle(/Osoitepalvelu/);
+  test("is in the initial state when openened", async ({ page }) => {
+    await test.step("the page has a title", async () => {
+      await expect(page).toHaveTitle(/Osoitepalvelu/);
+    });
+    await test.step("no Kohderyhmä is selected", async () => {});
   });
 
   test("allows searching for koulutustoimijat", async ({ page }) => {

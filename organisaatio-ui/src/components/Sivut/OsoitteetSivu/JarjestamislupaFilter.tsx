@@ -14,6 +14,7 @@ type JarjestamislupaFilterProps = {
     anyJarjestamislupa: boolean;
     open: boolean;
     onToggleOpen: () => void;
+    disabled: boolean;
 };
 
 export function JarjestamislupaFilter({
@@ -23,6 +24,7 @@ export function JarjestamislupaFilter({
     onChange,
     open,
     onToggleOpen,
+    disabled,
 }: JarjestamislupaFilterProps) {
     const options = jarjestamisluvat.map((koodi) => ({
         value: koodi.koodiUri,
@@ -54,6 +56,7 @@ export function JarjestamislupaFilter({
             selectionDescription={buildSelectionDescription()}
             open={open}
             onToggleOpen={onToggleOpen}
+            disabled={disabled}
         >
             <div>
                 <Checkbox checked={anyJarjestamislupa} onChange={(checked) => onChange(checked ? [] : value, checked)}>

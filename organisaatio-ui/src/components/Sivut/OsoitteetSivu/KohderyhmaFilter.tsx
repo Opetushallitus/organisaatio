@@ -2,11 +2,16 @@ import styles from './SearchView.module.css';
 import { Checkbox } from './Checkbox';
 import React from 'react';
 
-export function KohderyhmaFilter() {
+type KohderyhmaFilterProps = {
+    value: string[];
+    onChange: (value: string[]) => void;
+};
+
+export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
     return (
         <div>
             <div className={styles.SectionTitle}>
-                <h2>Valitse ensin haun kohderyhmä (pakollinen)</h2>
+                <h2>{value.length > 0 ? 'Hae*' : 'Valitse ensin haun kohderyhmä (pakollinen)'}</h2>
                 {/*<Button variant={'text'}>Tyhjennä valinnat</Button>*/}
             </div>
             <div className={styles.KohderyhmaSelections}>
@@ -14,7 +19,14 @@ export function KohderyhmaFilter() {
                     <Kohderyhma
                         title="Koulutustoimijat"
                         description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
-                        selected={true}
+                        selected={value.includes('organisaatiotyyppi_01')}
+                        onChange={(checked) => {
+                            if (checked) {
+                                onChange(['organisaatiotyyppi_01']);
+                            } else {
+                                onChange([]);
+                            }
+                        }}
                         disabled={false}
                     />
                 </div>
@@ -28,9 +40,10 @@ type KohderyhmaProps = {
     description: string;
     selected: boolean;
     disabled: boolean;
+    onChange: (checked: boolean) => void;
 };
 
-function Kohderyhma({ title, description, selected, disabled }: KohderyhmaProps) {
+function Kohderyhma({ title, description, selected, disabled, onChange }: KohderyhmaProps) {
     const classes = [styles.Kohderyhma];
     if (disabled) {
         classes.push(styles.Disabled);
@@ -40,7 +53,7 @@ function Kohderyhma({ title, description, selected, disabled }: KohderyhmaProps)
     return (
         <div className={classes.join(' ')}>
             <div className={styles.KohderyhmaOtsikko}>
-                <Checkbox checked={selected} />
+                <Checkbox checked={selected} onChange={(value) => onChange(value)} />
                 <h3>{title}</h3>
             </div>
             <p className={styles.KohderyhmaKuvaus}>{description}</p>

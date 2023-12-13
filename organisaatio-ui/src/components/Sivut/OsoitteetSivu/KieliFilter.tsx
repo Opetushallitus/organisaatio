@@ -10,8 +10,9 @@ type KieliFilterProps = {
     open: boolean;
     onToggleOpen: () => void;
     onChange: (value: string[]) => void;
+    disabled: boolean;
 };
-export function KieliFilter({ value, kielet, open, onToggleOpen, onChange }: KieliFilterProps) {
+export function KieliFilter({ value, kielet, onChange, open, onToggleOpen, disabled }: KieliFilterProps) {
     function buildSelectionDescription() {
         const isKieliChecked = (_: KoodistoKoodi): boolean => value.includes(_.koodiUri);
         return kielet
@@ -32,6 +33,7 @@ export function KieliFilter({ value, kielet, open, onToggleOpen, onChange }: Kie
             selectionDescription={buildSelectionDescription()}
             open={open}
             onToggleOpen={onToggleOpen}
+            disabled={disabled}
         >
             <h4>Valitse organisaatiot, joiden kieli on:</h4>
             <div className={styles.KieletList}>

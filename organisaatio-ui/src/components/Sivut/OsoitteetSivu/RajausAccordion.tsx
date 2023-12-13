@@ -6,9 +6,17 @@ type RajausAccordionProps = React.PropsWithChildren<{
     selectionDescription: string;
     open: boolean;
     onToggleOpen: () => void;
+    disabled: boolean;
 }>;
 
-export function RajausAccordion({ header, selectionDescription, open, onToggleOpen, children }: RajausAccordionProps) {
+export function RajausAccordion({
+    header,
+    selectionDescription,
+    open,
+    onToggleOpen,
+    disabled,
+    children,
+}: RajausAccordionProps) {
     const descriptionRef = useRef<HTMLSpanElement>(null);
     const [descriptionOverflowing, setDescriptionOverflowing] = useState<boolean>(false);
     useEffect(() => {
@@ -18,19 +26,30 @@ export function RajausAccordion({ header, selectionDescription, open, onToggleOp
 
     function toggleOpenOnSpaceOrEnter(event) {
         if (event.key === 'Enter' || event.key === ' ') {
+            toggleOpenIfEnabled();
+        }
+    }
+
+    function toggleOpenIfEnabled() {
+        if (!disabled) {
             onToggleOpen();
         }
     }
 
+    const classes = [styles.RajausAccordion];
+    if (disabled) {
+        classes.push(styles.Disabled);
+    }
+
     return (
-        <section className={styles.RajausAccordion}>
+        <section className={classes.join(' ')}>
             <div
                 tabIndex={0}
                 role="button"
                 aria-pressed="false"
                 className={styles.AccordionTitle}
                 onKeyDown={toggleOpenOnSpaceOrEnter}
-                onClick={onToggleOpen}
+                onClick={toggleOpenIfEnabled}
             >
                 <h3>{header}</h3>
                 <span
@@ -40,7 +59,7 @@ export function RajausAccordion({ header, selectionDescription, open, onToggleOp
                 >
                     {selectionDescription}
                 </span>
-                <AccordionButton open={open} disabled={false} />
+                <AccordionButton open={open} disabled={disabled} />
             </div>
             {open && (
                 <div className={styles.AccordionContentContainer}>

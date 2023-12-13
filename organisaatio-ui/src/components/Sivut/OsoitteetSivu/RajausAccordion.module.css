@@ -29,6 +29,14 @@
     line-height: normal;
 }
 
+.RajausAccordion.Disabled .AccordionTitle h3 {
+    color: var(--color-semantics-disabled);
+}
+
+.RajausAccordion .AccordionTitle h3.disabled {
+    color: var(--color-semantics-disabled);
+}
+
 .RajausAccordion .AccordionTitle .AccordionSelectionDescription {
     text-align: right;
     white-space: nowrap;

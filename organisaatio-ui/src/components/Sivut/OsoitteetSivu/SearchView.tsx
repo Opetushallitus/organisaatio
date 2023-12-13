@@ -19,6 +19,7 @@ type SearchViewProps = {
 };
 
 type SearchState = {
+    organisaatiotyypit: string[];
     oppilaitosTypes: Record<string, boolean>;
     vuosiluokat: string[];
     sijainti: SijaintiFilterValue;
@@ -36,6 +37,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }, {});
 
     const defaultSearchState: SearchState = {
+        organisaatiotyypit: ['organisaatiotyyppi_01'],
         oppilaitosTypes: defaultOppilaitosTypes,
         vuosiluokat: [],
         sijainti: makeDefaultSearchFilterValue(hakuParametrit.maakunnat),
@@ -66,7 +68,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             setError(false);
 
             const haeOsoitteetRequest = {
-                organisaatiotyypit: ['organisaatiotyyppi_01'], // koulutustoimija
+                organisaatiotyypit: searchParameters.organisaatiotyypit,
                 oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(
                     (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
                     []
@@ -97,6 +99,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function onOppilaitostyyppiFilterChanged(oppilaitosTypes: Record<string, boolean>, vuosiluokat: string[]) {
         setSearchParameters({ ...searchParameters, oppilaitosTypes, vuosiluokat });
     }
+    function onKohderymaFilterChanged(organisaatiotyypit: string[]): void {
+        setSearchParameters({ ...searchParameters, organisaatiotyypit });
+    }
+
     function onToggleOpenFn(filterId: string) {
         return () => {
             const openFilters = isFilterOpen(filterId)
@@ -109,15 +115,19 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         return searchParameters.openFilters.includes(filterId);
     }
 
+    function searchIsEnabled() {
+        return searchParameters.organisaatiotyypit.length > 0;
+    }
+
     return (
         <div className={styles.SearchView}>
             <div>
                 <h1 className={styles.Title}>Osoitepalvelu</h1>
             </div>
-            <KohderyhmaFilter />
+            <KohderyhmaFilter value={searchParameters.organisaatiotyypit} onChange={onKohderymaFilterChanged} />
             <div>
                 <div className={styles.SectionTitle}>
-                    <h2>Rajaa hakua</h2>
+                    <h2>{searchIsEnabled() ? 'Haun rajausmahdollisuudet' : 'Rajaa hakua'}</h2>
                 </div>
                 <div className={styles.Rajaukset}>
                     <OppilaitostyyppiFilter
@@ -127,6 +137,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onOppilaitostyyppiFilterChanged}
                         open={isFilterOpen('oppilaitostyyppi')}
                         onToggleOpen={onToggleOpenFn('oppilaitostyyppi')}
+                        disabled={!searchIsEnabled()}
                     />
                     <JarjestamislupaFilter
                         jarjestamisluvat={hakuParametrit.jarjestamisluvat}
@@ -135,6 +146,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onJarjestamisluvatFilterChanged}
                         open={isFilterOpen('jarjestamislupa')}
                         onToggleOpen={onToggleOpenFn('jarjestamislupa')}
+                        disabled={!searchIsEnabled()}
                     />
                     <SijaintiFilter
                         maakunnat={hakuParametrit.maakunnat}
@@ -143,6 +155,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onSijaintiFilterChanged}
                         open={isFilterOpen('sijainti')}
                         onToggleOpen={onToggleOpenFn('sijainti')}
+                        disabled={!searchIsEnabled()}
                     />
                     <KieliFilter
                         kielet={hakuParametrit.kielet}
@@ -150,6 +163,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onKieliFilterChanged}
                         open={isFilterOpen('kielet')}
                         onToggleOpen={onToggleOpenFn('kielet')}
+                        disabled={!searchIsEnabled()}
                     />
                 </div>
             </div>
@@ -161,8 +175,12 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 </div>
             )}
             <div className={styles.ButtonRow}>
-                <Button onClick={hae}>Hae</Button>
-                <LinklikeButton onClick={resetSearchParams}>Tyhjennä</LinklikeButton>
+                <Button onClick={hae} disabled={!searchIsEnabled()}>
+                    Hae
+                </Button>
+                <LinklikeButton onClick={resetSearchParams} disabled={!searchIsEnabled()}>
+                    Tyhjennä
+                </LinklikeButton>
             </div>
             {loading && (
                 <div className={styles.LoadingOverlay}>
