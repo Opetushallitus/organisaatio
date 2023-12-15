@@ -41,7 +41,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         sijainti: makeDefaultSearchFilterValue(hakuParametrit.maakunnat),
         anyJarjestamislupa: false,
         jarjestamisluvat: [],
-        kielet: [],
+        kielet: ['oppilaitoksenopetuskieli_1'],
         openFilters: [],
     };
 
