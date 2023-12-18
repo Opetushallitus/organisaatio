@@ -16,7 +16,13 @@ test.describe("Osoitepalvelu", () => {
     await test.step("the page has a title", async () => {
       await expect(page).toHaveTitle(/Osoitepalvelu/);
     });
-    await test.step("no Kohderyhmä is selected", async () => {});
+    await test.step("Kohderyhmä Koulutustoimijat is selected", async () => {
+      await expect(page.getByLabel("Koulutustoimijat")).toBeChecked();
+    });
+    await test.step("instructions are displayed", async () => {
+      await expect(page.getByText("Hae*")).toBeVisible();
+      await expect(page.getByText("Haun rajausmahdollisuudet")).toBeVisible();
+    });
   });
 
   test("allows searching for koulutustoimijat", async ({ page }) => {

@@ -53,8 +53,9 @@ function Kohderyhma({ title, description, selected, disabled, onChange }: Kohder
     return (
         <div className={classes.join(' ')}>
             <div className={styles.KohderyhmaOtsikko}>
-                <Checkbox checked={selected} onChange={(value) => onChange(value)} />
-                <h3>{title}</h3>
+                <Checkbox checked={selected} onChange={(value) => onChange(value)}>
+                    <h3>{title}</h3>
+                </Checkbox>
             </div>
             <p className={styles.KohderyhmaKuvaus}>{description}</p>
         </div>
