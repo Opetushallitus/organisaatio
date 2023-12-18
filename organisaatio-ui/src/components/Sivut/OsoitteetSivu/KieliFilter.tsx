@@ -12,6 +12,11 @@ type KieliFilterProps = {
     onChange: (value: string[]) => void;
     disabled: boolean;
 };
+
+export function makeDefaultValue() {
+    return ['oppilaitoksenopetuskieli_1'];
+}
+
 export function Element({ value, kielet, onChange, open, onToggleOpen, disabled }: KieliFilterProps) {
     function buildSelectionDescription() {
         const isKieliChecked = (_: KoodistoKoodi): boolean => value.includes(_.koodiUri);
