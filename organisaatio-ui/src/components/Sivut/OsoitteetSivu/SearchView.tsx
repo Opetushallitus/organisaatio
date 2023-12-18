@@ -6,12 +6,12 @@ import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LinklikeButton } from './LinklikeButton';
 import { useHistory } from 'react-router-dom';
-import { makeDefaultSearchFilterValue, SijaintiFilter, SijaintiFilterValue } from './SijaintiFilter';
+import * as sijaintiFilter from './SijaintiFilter';
 import { KoodiUri } from '../../../types/types';
-import { JarjestamislupaFilter } from './JarjestamislupaFilter';
-import { KieliFilter } from './KieliFilter';
+import * as jarjestamislupaFilter from './JarjestamislupaFilter';
+import * as kieliFilter from './KieliFilter';
 import { KohderyhmaFilter } from './KohderyhmaFilter';
-import { OppilaitostyyppiFilter } from './OppilaitostyyppiFilter';
+import * as oppilaitostyyppiFilter from './OppilaitostyyppiFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
@@ -22,7 +22,7 @@ type SearchState = {
     organisaatiotyypit: string[];
     oppilaitosTypes: Record<string, boolean>;
     vuosiluokat: string[];
-    sijainti: SijaintiFilterValue;
+    sijainti: sijaintiFilter.Value;
     anyJarjestamislupa: boolean;
     jarjestamisluvat: string[];
     kielet: string[];
@@ -40,7 +40,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         organisaatiotyypit: ['organisaatiotyyppi_01'],
         oppilaitosTypes: defaultOppilaitosTypes,
         vuosiluokat: [],
-        sijainti: makeDefaultSearchFilterValue(hakuParametrit.maakunnat),
+        sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat),
         anyJarjestamislupa: false,
         jarjestamisluvat: [],
         kielet: ['oppilaitoksenopetuskieli_1'],
@@ -87,7 +87,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setLoading(false);
     }
 
-    function onSijaintiFilterChanged(sijainti: SijaintiFilterValue) {
+    function onSijaintiFilterChanged(sijainti: sijaintiFilter.Value) {
         setSearchParameters({ ...searchParameters, sijainti });
     }
     function onJarjestamisluvatFilterChanged(jarjestamisluvat: string[], anyJarjestamislupa: boolean): void {
@@ -130,7 +130,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     <h2>{searchIsEnabled() ? 'Haun rajausmahdollisuudet' : 'Rajaa hakua'}</h2>
                 </div>
                 <div className={styles.Rajaukset}>
-                    <OppilaitostyyppiFilter
+                    <oppilaitostyyppiFilter.Element
                         hakuParametrit={hakuParametrit}
                         oppilaitosTypes={searchParameters.oppilaitosTypes}
                         vuosiluokat={searchParameters.vuosiluokat}
@@ -139,7 +139,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onToggleOpen={onToggleOpenFn('oppilaitostyyppi')}
                         disabled={!searchIsEnabled()}
                     />
-                    <JarjestamislupaFilter
+                    <jarjestamislupaFilter.Element
                         jarjestamisluvat={hakuParametrit.jarjestamisluvat}
                         anyJarjestamislupa={searchParameters.anyJarjestamislupa}
                         value={searchParameters.jarjestamisluvat}
@@ -148,7 +148,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onToggleOpen={onToggleOpenFn('jarjestamislupa')}
                         disabled={!searchIsEnabled()}
                     />
-                    <SijaintiFilter
+                    <sijaintiFilter.Element
                         maakunnat={hakuParametrit.maakunnat}
                         kunnat={hakuParametrit.kunnat}
                         value={searchParameters.sijainti}
@@ -157,7 +157,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onToggleOpen={onToggleOpenFn('sijainti')}
                         disabled={!searchIsEnabled()}
                     />
-                    <KieliFilter
+                    <kieliFilter.Element
                         kielet={hakuParametrit.kielet}
                         value={searchParameters.kielet}
                         onChange={onKieliFilterChanged}
@@ -212,7 +212,7 @@ function stringifyHashState(state: Record<string, object>) {
     return encodeURIComponent(JSON.stringify(state));
 }
 
-function mapSijaintiFilterToKunnat(hakuParametrit: HakuParametrit, sijainti: SijaintiFilterValue): KoodiUri[] {
+function mapSijaintiFilterToKunnat(hakuParametrit: HakuParametrit, sijainti: sijaintiFilter.Value): KoodiUri[] {
     const KUNTA_ULKOMAA = 'kunta_200';
     const maakuntaLookup: Map<KoodiUri, KoodiUri[]> = new Map(
         hakuParametrit.maakunnat.map((maakuntaKoodi) => [maakuntaKoodi.koodiUri, maakuntaKoodi.kunnat])

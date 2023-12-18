@@ -12,13 +12,13 @@ type MaakuntaAlue = { id: AlueId; label: string; maakunnat: KoodiUri[] };
 
 const MAAKUNTA_AHVENANMAA: KoodiUri = 'maakunta_21';
 
-export type SijaintiFilterValue = {
+export type Value = {
     maakunnat: KoodiUri[];
     ulkomaa: boolean;
     kunnat: KoodiUri[];
 };
 
-export function makeDefaultSearchFilterValue(maakunnat: MaakuntaKoodi[]): SijaintiFilterValue {
+export function makeDefaultValue(maakunnat: MaakuntaKoodi[]): Value {
     return {
         maakunnat: maakunnat.filter((_) => _.koodiUri !== MAAKUNTA_AHVENANMAA).map((_) => _.koodiUri),
         ulkomaa: false,
@@ -29,22 +29,14 @@ export function makeDefaultSearchFilterValue(maakunnat: MaakuntaKoodi[]): Sijain
 type SijaintiFilterProps = {
     maakunnat: MaakuntaKoodi[];
     kunnat: KoodistoKoodi[];
-    value: SijaintiFilterValue;
+    value: Value;
     open: boolean;
     onToggleOpen: () => void;
-    onChange: (value: SijaintiFilterValue) => void;
+    onChange: (value: Value) => void;
     disabled: boolean;
 };
 
-export function SijaintiFilter({
-    maakunnat,
-    kunnat,
-    value,
-    onChange,
-    open,
-    onToggleOpen,
-    disabled,
-}: SijaintiFilterProps) {
+export function Element({ maakunnat, kunnat, value, onChange, open, onToggleOpen, disabled }: SijaintiFilterProps) {
     const alueMannerSuomi: MaakuntaAlue = {
         id: 'alue_mannersuomi',
         label: 'Manner-Suomi (ei Ahvenanmaa)',

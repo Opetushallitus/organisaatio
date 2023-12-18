@@ -16,7 +16,7 @@ type OppilaitostyyppiFilterProps = {
     disabled: boolean;
 };
 
-export function OppilaitostyyppiFilter({
+export function Element({
     hakuParametrit,
     oppilaitosTypes,
     vuosiluokat,

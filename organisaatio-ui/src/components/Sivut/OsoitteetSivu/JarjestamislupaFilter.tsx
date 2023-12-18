@@ -17,7 +17,7 @@ type JarjestamislupaFilterProps = {
     disabled: boolean;
 };
 
-export function JarjestamislupaFilter({
+export function Element({
     jarjestamisluvat,
     value,
     anyJarjestamislupa,

@@ -12,7 +12,7 @@ type KieliFilterProps = {
     onChange: (value: string[]) => void;
     disabled: boolean;
 };
-export function KieliFilter({ value, kielet, onChange, open, onToggleOpen, disabled }: KieliFilterProps) {
+export function Element({ value, kielet, onChange, open, onToggleOpen, disabled }: KieliFilterProps) {
     function buildSelectionDescription() {
         const isKieliChecked = (_: KoodistoKoodi): boolean => value.includes(_.koodiUri);
         return kielet
