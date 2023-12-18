@@ -40,10 +40,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         organisaatiotyypit: ['organisaatiotyyppi_01'],
         oppilaitosTypes: defaultOppilaitosTypes,
         vuosiluokat: [],
-        sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat),
+        sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, ['organisaatiotyyppi_01']),
         anyJarjestamislupa: false,
         jarjestamisluvat: [],
-        kielet: kieliFilter.makeDefaultValue(),
+        kielet: kieliFilter.makeDefaultValue(['organisaatiotyyppi_01']),
         openFilters: [],
     };
 
@@ -100,7 +100,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setSearchParameters({ ...searchParameters, oppilaitosTypes, vuosiluokat });
     }
     function onKohderymaFilterChanged(organisaatiotyypit: string[]): void {
-        setSearchParameters({ ...searchParameters, organisaatiotyypit });
+        const sijainti = sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, organisaatiotyypit);
+        const kielet = kieliFilter.makeDefaultValue(organisaatiotyypit);
+        setSearchParameters({ ...searchParameters, organisaatiotyypit, sijainti, kielet });
     }
 
     function onToggleOpenFn(filterId: string) {

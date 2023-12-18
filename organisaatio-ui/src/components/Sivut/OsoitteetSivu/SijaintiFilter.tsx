@@ -18,12 +18,20 @@ export type Value = {
     kunnat: KoodiUri[];
 };
 
-export function makeDefaultValue(maakunnat: MaakuntaKoodi[]): Value {
-    return {
-        maakunnat: maakunnat.filter((_) => _.koodiUri !== MAAKUNTA_AHVENANMAA).map((_) => _.koodiUri),
-        ulkomaa: false,
-        kunnat: [],
-    };
+export function makeDefaultValue(maakunnat: MaakuntaKoodi[], organisaatiotyypit: string[]): Value {
+    if (organisaatiotyypit.includes('organisaatiotyyppi_01')) {
+        return {
+            maakunnat: maakunnat.filter((_) => _.koodiUri !== MAAKUNTA_AHVENANMAA).map((_) => _.koodiUri),
+            ulkomaa: false,
+            kunnat: [],
+        };
+    } else {
+        return {
+            maakunnat: [],
+            ulkomaa: false,
+            kunnat: [],
+        };
+    }
 }
 
 type SijaintiFilterProps = {

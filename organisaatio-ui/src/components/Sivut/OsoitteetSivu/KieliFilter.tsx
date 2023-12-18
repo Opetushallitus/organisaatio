@@ -13,8 +13,8 @@ type KieliFilterProps = {
     disabled: boolean;
 };
 
-export function makeDefaultValue() {
-    return ['oppilaitoksenopetuskieli_1'];
+export function makeDefaultValue(organisaatiotyyppit: string[]) {
+    return organisaatiotyyppit.includes('organisaatiotyyppi_01') ? ['oppilaitoksenopetuskieli_1'] : [];
 }
 
 export function Element({ value, kielet, onChange, open, onToggleOpen, disabled }: KieliFilterProps) {
