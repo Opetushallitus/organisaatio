@@ -398,10 +398,6 @@ function getCheckedItems(page: Page) {
   return getItemsByCheckState(page, true);
 }
 
-function getUncheckedItems(page: Page) {
-  return getItemsByCheckState(page, false);
-}
-
 function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
     has: page.getByRole("checkbox", { checked }),
