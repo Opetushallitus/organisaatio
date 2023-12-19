@@ -17,6 +17,8 @@ type JarjestamislupaFilterProps = {
     disabled: boolean;
 };
 
+export const id = 'jarjestamislupa';
+
 export function Element({
     jarjestamisluvat,
     value,

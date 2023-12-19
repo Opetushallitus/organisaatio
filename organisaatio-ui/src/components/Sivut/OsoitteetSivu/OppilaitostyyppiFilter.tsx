@@ -16,6 +16,8 @@ type OppilaitostyyppiFilterProps = {
     disabled: boolean;
 };
 
+export const id = 'oppilaitostyyppi';
+
 export function Element({
     hakuParametrit,
     oppilaitosTypes,

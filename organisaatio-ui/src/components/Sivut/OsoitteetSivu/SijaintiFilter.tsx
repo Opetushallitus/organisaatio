@@ -44,6 +44,8 @@ type SijaintiFilterProps = {
     disabled: boolean;
 };
 
+export const id = 'sijainti';
+
 export function Element({ maakunnat, kunnat, value, onChange, open, onToggleOpen, disabled }: SijaintiFilterProps) {
     const alueMannerSuomi: MaakuntaAlue = {
         id: 'alue_mannersuomi',

@@ -17,6 +17,8 @@ export function makeDefaultValue(organisaatiotyyppit: string[]) {
     return organisaatiotyyppit.includes('organisaatiotyyppi_01') ? ['oppilaitoksenopetuskieli_1'] : [];
 }
 
+export const id = 'kielet';
+
 export function Element({ value, kielet, onChange, open, onToggleOpen, disabled }: KieliFilterProps) {
     function buildSelectionDescription() {
         const isKieliChecked = (_: KoodistoKoodi): boolean => value.includes(_.koodiUri);

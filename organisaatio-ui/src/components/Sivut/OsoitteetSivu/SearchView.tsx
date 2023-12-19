@@ -137,8 +137,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         oppilaitosTypes={searchParameters.oppilaitosTypes}
                         vuosiluokat={searchParameters.vuosiluokat}
                         onChange={onOppilaitostyyppiFilterChanged}
-                        open={isFilterOpen('oppilaitostyyppi')}
-                        onToggleOpen={onToggleOpenFn('oppilaitostyyppi')}
+                        open={isFilterOpen(oppilaitostyyppiFilter.id)}
+                        onToggleOpen={onToggleOpenFn(oppilaitostyyppiFilter.id)}
                         disabled={!searchIsEnabled()}
                     />
                     <jarjestamislupaFilter.Element
@@ -146,8 +146,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         anyJarjestamislupa={searchParameters.anyJarjestamislupa}
                         value={searchParameters.jarjestamisluvat}
                         onChange={onJarjestamisluvatFilterChanged}
-                        open={isFilterOpen('jarjestamislupa')}
-                        onToggleOpen={onToggleOpenFn('jarjestamislupa')}
+                        open={isFilterOpen(jarjestamislupaFilter.id)}
+                        onToggleOpen={onToggleOpenFn(jarjestamislupaFilter.id)}
                         disabled={!searchIsEnabled()}
                     />
                     <sijaintiFilter.Element
@@ -155,16 +155,16 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         kunnat={hakuParametrit.kunnat}
                         value={searchParameters.sijainti}
                         onChange={onSijaintiFilterChanged}
-                        open={isFilterOpen('sijainti')}
-                        onToggleOpen={onToggleOpenFn('sijainti')}
+                        open={isFilterOpen(sijaintiFilter.id)}
+                        onToggleOpen={onToggleOpenFn(sijaintiFilter.id)}
                         disabled={!searchIsEnabled()}
                     />
                     <kieliFilter.Element
                         kielet={hakuParametrit.kielet}
                         value={searchParameters.kielet}
                         onChange={onKieliFilterChanged}
-                        open={isFilterOpen('kielet')}
-                        onToggleOpen={onToggleOpenFn('kielet')}
+                        open={isFilterOpen(kieliFilter.id)}
+                        onToggleOpen={onToggleOpenFn(kieliFilter.id)}
                         disabled={!searchIsEnabled()}
                     />
                 </div>
