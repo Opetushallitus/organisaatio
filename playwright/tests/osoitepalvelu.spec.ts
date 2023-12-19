@@ -1,4 +1,5 @@
 import { expect, Locator, Page, test } from "@playwright/test";
+import { OsoitepalveluPage } from "./OsoitepalveluPage";
 
 test.describe("Osoitepalvelu", () => {
   test.beforeAll(async ({ request }, testInfo) => {
@@ -9,8 +10,9 @@ test.describe("Osoitepalvelu", () => {
     });
   });
   test.beforeEach(async ({ page }, testInfo) => {
-    await page.goto("http://localhost:3003/osoitteet");
-    await clearKieliFilter(page);
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    await osoitepalveluPage.goto();
+    await osoitepalveluPage.kieliFilter.clear();
   });
 
   test("is in the initial state when openened", async ({ page }) => {
@@ -434,53 +436,4 @@ async function pressTabUntilFocusOn(page: Page, locator: Locator) {
       await page.keyboard.press("Tab");
     }
   }
-}
-
-async function clearKieliFilter(page: Page) {
-  const isOpen = await kieliFilterIsOpen(page);
-  if (!isOpen) {
-    await openKieliFilter(page);
-  }
-  const contents = page.getByRole("heading", {
-    name: "Valitse organisaatiot, joiden kieli on:",
-  });
-  await expect(contents).toBeVisible();
-
-  const kieliFilter = await page.getByRole("group").filter({
-    has: page.getByRole("heading", { name: "Organisaation kieli" }),
-  });
-  for (const checkbox of await kieliFilter
-    .locator("label", {
-      has: page.getByRole("checkbox", {
-        checked: true,
-        includeHidden: true,
-      }),
-    })
-    .all()) {
-    await checkbox.click();
-  }
-  if (!isOpen) {
-    await closeKieliFilter(page);
-  }
-}
-
-async function kieliFilterIsOpen(page: Page) {
-  const isVisible = await page
-    .getByRole("heading", {
-      name: "Valitse organisaatiot, joiden kieli on:",
-    })
-    .isVisible();
-  return isVisible;
-}
-
-async function openKieliFilter(page: Page) {
-  const button = page.getByRole("button", { name: "Organisaation kieli" });
-  await pressTabUntilFocusOn(page, button);
-  await page.keyboard.press("Space");
-}
-
-async function closeKieliFilter(page: Page) {
-  const button = page.getByRole("button", { name: "Organisaation kieli" });
-  await pressTabUntilFocusOn(page, button);
-  await page.keyboard.press("Space");
 }
