@@ -42,7 +42,7 @@ export function RajausAccordion({
     }
 
     return (
-        <section className={classes.join(' ')}>
+        <div role="group" className={classes.join(' ')}>
             <div
                 tabIndex={0}
                 role="button"
@@ -66,7 +66,7 @@ export function RajausAccordion({
                     <div className={styles.AccordionContent}>{children}</div>
                 </div>
             )}
-        </section>
+        </div>
     );
 }
 function isContentOverflowing(element: HTMLElement) {
