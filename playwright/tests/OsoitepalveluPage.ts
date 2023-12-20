@@ -5,12 +5,17 @@ export class OsoitepalveluPage {
   readonly kieliFilter: Filter;
   readonly oppilaitostyyppiFilter: Filter;
   readonly sijaintiFilter: Filter;
+  readonly jarjestamislupaFilter: Filter;
 
   constructor(page: Page) {
     this.page = page;
     this.kieliFilter = new Filter(page, "Organisaation kieli");
     this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");
     this.sijaintiFilter = new Filter(page, "Sijainti");
+    this.jarjestamislupaFilter = new Filter(
+      page,
+      "Ammatillisen koulutuksen järjestämislupa"
+    );
   }
 
   async goto() {

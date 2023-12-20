@@ -296,20 +296,19 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Järjestämislupa filter", async ({ page }) => {
-    const button = page.getByRole("button", {
-      name: "Ammatillisen koulutuksen järjestämislupa",
-    });
-    const assertSelectionText = async (text) =>
-      expect(button.locator("[aria-live=off]")).toHaveText(text);
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const jarjestamislupaFilter = osoitepalveluPage.jarjestamislupaFilter;
 
-    await button.click();
+    await jarjestamislupaFilter.open();
 
     await test.step("Specific koulutuslupa", async () => {
       await selectFromJärjestämislupaDropdown(
         page,
         "Hieronnan ammattitutkinto"
       );
-      await assertSelectionText("Hieronnan ammattitutkinto");
+      await expect(jarjestamislupaFilter.selectionIndicator).toHaveText(
+        "Hieronnan ammattitutkinto"
+      );
 
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
@@ -320,11 +319,10 @@ test.describe("Osoitepalvelu", () => {
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
     await test.step("Any koulutuslupa", async () => {
-      await toggleCheckboxByText(
-        page,
+      await jarjestamislupaFilter.toggleCheckboxByLabel(
         "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
       );
-      await assertSelectionText(
+      await expect(jarjestamislupaFilter.selectionIndicator).toHaveText(
         "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
       );
 
