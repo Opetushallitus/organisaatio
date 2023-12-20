@@ -43,10 +43,13 @@ test.describe("Osoitepalvelu", () => {
   test("retains search parameters when going back from search results", async ({
     page,
   }) => {
-    const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
-    await toggleCheckboxByText(page, "Peruskoulut");
-    await toggleCheckboxByText(page, "Ammattikorkeakoulut");
-    await expect(button.locator("[aria-live=off]")).toHaveText(
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+
+    await oppilaitostyyppiFilter.open();
+    await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
+    await oppilaitostyyppiFilter.toggleCheckboxByLabel("Ammattikorkeakoulut");
+    await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
       "Ammattikorkeakoulut, Peruskoulut"
     );
     await page.getByRole("button", { name: "Hae" }).click();
@@ -54,51 +57,63 @@ test.describe("Osoitepalvelu", () => {
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
-    await expect(button.locator("[aria-live=off]")).toHaveText(
+    await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
       "Ammattikorkeakoulut, Peruskoulut"
     );
   });
 
-  test.describe("Search by oppilaitostyyppi box", () => {
+  test.describe("Oppilaitostyyppi filter", () => {
     test("opens and closes", async ({ page }) => {
-      const button = page.getByRole("button", { name: "Oppilaitostyyppi" });
-      await pressTabUntilFocusOn(page, button);
-      await expect(page.getByRole("list")).toBeHidden();
-      await page.keyboard.press("Space");
-      await expect(page.getByRole("list")).toBeVisible();
-      await page.keyboard.press("Space");
-      await expect(page.getByRole("list")).toBeHidden();
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+
+      await expect(oppilaitostyyppiFilter.contents).toBeHidden();
+      await oppilaitostyyppiFilter.open();
+      await expect(oppilaitostyyppiFilter.contents).toBeVisible();
+      await oppilaitostyyppiFilter.close();
+      await expect(oppilaitostyyppiFilter.contents).toBeHidden();
     });
 
     test("updates selection text", async ({ page }) => {
-      const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
-      await expect(page.getByRole("list")).toBeVisible();
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+      await oppilaitostyyppiFilter.open();
 
-      const assertSelectionText = async (text) =>
-        expect(button.locator("[aria-live=off]")).toHaveText(text);
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Kesäyliopistot");
+      await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+        "Kesäyliopistot"
+      );
 
-      await toggleCheckboxByText(page, "Kesäyliopistot");
-      await assertSelectionText("Kesäyliopistot");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Lukiot");
+      await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+        "Kesäyliopistot, Lukiot"
+      );
 
-      await toggleCheckboxByText(page, "Lukiot");
-      await assertSelectionText("Kesäyliopistot, Lukiot");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel(
+        "Perus- ja lukioasteen koulut"
+      );
+      await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+        "Lukiokoulutus, Kesäyliopistot"
+      );
 
-      await toggleCheckboxByText(page, "Perus- ja lukioasteen koulut");
-      await assertSelectionText("Lukiokoulutus, Kesäyliopistot");
-
-      await toggleCheckboxByText(page, "Lukiokoulutus");
-      await assertSelectionText("Kesäyliopistot");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Lukiokoulutus");
+      await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+        "Kesäyliopistot"
+      );
     });
 
     test("Tyhjennä valinnat unchecks all selections", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
       const clearButton = page.getByRole("button", {
         name: "Tyhjennä valinnat",
       });
-      await openOppilatostyyppiBox(page);
+
+      await oppilaitostyyppiFilter.open();
       await expect(getCheckedItems(page)).toHaveCount(0);
       await expect(clearButton).toBeDisabled();
-      await toggleCheckboxByText(page, "Ammattikorkeakoulut");
-      await toggleCheckboxByText(page, "Peruskoulut");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Ammattikorkeakoulut");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
       await expect(getCheckedItems(page)).toHaveCount(2);
       await expect(clearButton).toBeEnabled();
       await page.getByRole("button", { name: "Tyhjennä valinnat" }).click();
@@ -107,18 +122,24 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("checks and unchecks all selections", async ({ page }) => {
-      await openOppilatostyyppiBox(page);
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+
+      await oppilaitostyyppiFilter.open();
       await expect(getCheckedItems(page)).toHaveCount(0);
-      await toggleCheckboxByText(page, "Valitse kaikki");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Valitse kaikki");
       await expect(getCheckedItems(page)).toHaveCount(
         await page.getByRole("listitem").count()
       );
-      await toggleCheckboxByText(page, "Valitse kaikki");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Valitse kaikki");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
     test("finds peruskoulut", async ({ page }) => {
-      await openOppilatostyyppiBox(page);
-      await toggleCheckboxByText(page, "Peruskoulut");
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+
+      await oppilaitostyyppiFilter.open();
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
       const searchButton = await page.getByRole("button", { name: "Hae" });
       await pressTabUntilFocusOn(page, searchButton);
       await page.keyboard.press("Space");
@@ -127,7 +148,9 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("finds peruskoulut and filters by vuosiluokka", async ({ page }) => {
-      await openOppilatostyyppiBox(page);
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+      await oppilaitostyyppiFilter.open();
 
       const vuosiluokatInput = await page.getByLabel(
         "Hae perusopetuksen vuosiluokkatiedolla"
@@ -138,7 +161,7 @@ test.describe("Osoitepalvelu", () => {
           await expect(vuosiluokatInput).toBeDisabled();
         }
       );
-      await toggleCheckboxByText(page, "Peruskoulut");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
       await test.step(
         "vuosiluokka selection is enabled after selecting peruskoulut",
         async () => {
@@ -155,9 +178,12 @@ test.describe("Osoitepalvelu", () => {
     test("checks and unchecks all oppilaitostyyppi that are part of a group", async ({
       page,
     }) => {
-      const button = await openOppilatostyyppiBoxAndReturnOpeningButton(page);
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+
+      await oppilaitostyyppiFilter.open();
       await expect(getCheckedItems(page)).toHaveCount(0);
-      await toggleCheckboxByText(page, "Korkeakoulutus");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveText([
         "Ammattikorkeakoulut",
         "Sotilaskorkeakoulut",
@@ -166,25 +192,28 @@ test.describe("Osoitepalvelu", () => {
       await test.step(
         "selection description shows group name instead of individiaul types",
         async () => {
-          await expect(button.locator("[aria-live=off]")).toHaveText(
+          await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
             "Korkeakoulutus"
           );
         }
       );
-      await toggleCheckboxByText(page, "Korkeakoulutus");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
 
     test("checks and unchecks an oppilatostyyppi group", async ({ page }) => {
-      await openOppilatostyyppiBox(page);
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+
+      await oppilaitostyyppiFilter.open();
       await expect(getCheckedItems(page)).toHaveCount(0);
-      await toggleCheckboxByText(page, "Ammattikorkeakoulut");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Ammattikorkeakoulut");
       await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
-      await toggleCheckboxByText(page, "Sotilaskorkeakoulut");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Sotilaskorkeakoulut");
       await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
-      await toggleCheckboxByText(page, "Yliopistot");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Yliopistot");
       await expect(getCheckboxByText(page, "Korkeakoulutus")).toBeChecked();
-      await toggleCheckboxByText(page, "Sotilaskorkeakoulut");
+      await oppilaitostyyppiFilter.toggleCheckboxByLabel("Sotilaskorkeakoulut");
       await expect(getCheckboxByText(page, "Korkeakoulutus")).not.toBeChecked();
     });
   });

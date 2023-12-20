@@ -2,11 +2,13 @@ import { expect, Locator, Page } from "@playwright/test";
 
 export class OsoitepalveluPage {
   readonly page: Page;
-  readonly kieliFilter: KieliFilter;
+  readonly kieliFilter: Filter;
+  readonly oppilaitostyyppiFilter: Filter;
 
   constructor(page: Page) {
     this.page = page;
-    this.kieliFilter = new KieliFilter(page);
+    this.kieliFilter = new Filter(page, "Organisaation kieli");
+    this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");
   }
 
   async goto() {
@@ -14,19 +16,19 @@ export class OsoitepalveluPage {
   }
 }
 
-class KieliFilter {
+class Filter {
   readonly page: Page;
   readonly scope: Locator;
   readonly button: Locator;
   readonly contents: Locator;
   readonly selectionIndicator: Locator;
 
-  constructor(page: Page) {
+  constructor(page: Page, title: string) {
     this.page = page;
     this.scope = this.page.getByRole("group").filter({
-      has: this.page.getByRole("heading", { name: "Organisaation kieli" }),
+      has: this.page.getByRole("heading", { name: title }),
     });
-    this.button = this.scope.getByRole("button");
+    this.button = this.scope.getByRole("button").first();
     this.selectionIndicator = this.button.locator("[aria-live=off]");
     this.contents = this.scope.getByRole("group");
   }
