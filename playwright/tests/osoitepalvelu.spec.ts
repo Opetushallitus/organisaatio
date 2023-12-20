@@ -42,9 +42,10 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("allows searching for koulutustoimijat", async ({ page }) => {
-    await new OsoitepalveluPage(page).kieliFilter.clear();
-    await expect(page.getByRole("button", { name: "Hae" })).toBeVisible();
-    await page.getByRole("button", { name: "Hae" }).click();
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+
+    await osoitepalveluPage.kieliFilter.clear();
+    await osoitepalveluPage.haeButton.click();
 
     await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
@@ -67,7 +68,7 @@ test.describe("Osoitepalvelu", () => {
     await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
       "Ammattikorkeakoulut, Peruskoulut"
     );
-    await page.getByRole("button", { name: "Hae" }).click();
+    await osoitepalveluPage.haeButton.click();
     await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
@@ -155,9 +156,7 @@ test.describe("Osoitepalvelu", () => {
 
       await oppilaitostyyppiFilter.open();
       await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
-      const searchButton = await page.getByRole("button", { name: "Hae" });
-      await pressTabUntilFocusOn(page, searchButton);
-      await page.keyboard.press("Space");
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     });
@@ -186,7 +185,7 @@ test.describe("Osoitepalvelu", () => {
 
       await openDropdown(page, "Hae perusopetuksen vuosiluokkatiedolla");
       await selectFromDropdown(page, "Lisäopetuksessa");
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });
 
@@ -295,13 +294,13 @@ test.describe("Osoitepalvelu", () => {
       await expect(sijaintiFilter.selectionIndicator).toHaveText(
         "Ulkomaa, Uusimaa"
       );
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
       await selectFromAlueDropdown(page, "Uusimaa");
       await selectFromAlueDropdown(page, "Etelä-Karjala"); // Sisältää Imatran
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
       const firstResult = await page.getByRole("row").nth(1);
       await expect(firstResult).toBeVisible();
@@ -328,7 +327,7 @@ test.describe("Osoitepalvelu", () => {
         "Hieronnan ammattitutkinto"
       );
 
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       const firstResult = await page.getByRole("row").nth(1);
       await expect(firstResult.getByText("Helsingin kaupunki")).toBeVisible();
@@ -344,7 +343,7 @@ test.describe("Osoitepalvelu", () => {
         "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
       );
 
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
 
       const firstResult = await page.getByRole("row").nth(1);
@@ -361,7 +360,7 @@ test.describe("Osoitepalvelu", () => {
 
     await test.step("No filter searches all", async () => {
       await expect(kieliFilter.selectionIndicator).toHaveText("");
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Helsingin kaupunki")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
@@ -378,7 +377,7 @@ test.describe("Osoitepalvelu", () => {
       await kieliFilter.toggleCheckboxByLabel("ruotsi");
       await expect(kieliFilter.selectionIndicator).toHaveText("suomi, ruotsi");
 
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
       await expect(page.getByText("Mustikkalan testi yhdistys")).toBeVisible();
@@ -392,7 +391,7 @@ test.describe("Osoitepalvelu", () => {
     await test.step("ruotsi finds none", async () => {
       await kieliFilter.toggleCheckboxByLabel("suomi");
       await expect(kieliFilter.selectionIndicator).toHaveText("ruotsi");
-      await page.getByRole("button", { name: "Hae" }).click();
+      await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });
   });
@@ -401,7 +400,7 @@ test.describe("Osoitepalvelu", () => {
     await test.step(
       "downloads search results as an excel document",
       async () => {
-        await page.getByRole("button", { name: "Hae" }).click();
+        await new OsoitepalveluPage(page).haeButton.click();
         const [download] = await Promise.all([
           page.waitForEvent("download"),
           page.getByRole("button", { name: "Lataa Excel" }).click(),
