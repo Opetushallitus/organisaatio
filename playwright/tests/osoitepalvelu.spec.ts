@@ -298,7 +298,7 @@ test.describe("Osoitepalvelu", () => {
     await kieliFilter.open();
 
     await test.step("No filter searches all", async () => {
-      await assertSelectionText("");
+      await expect(kieliFilter.selectionIndicator).toHaveText("");
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Helsingin kaupunki")).toBeVisible();
@@ -314,7 +314,7 @@ test.describe("Osoitepalvelu", () => {
     await test.step("suomi and ruotsi finds testiorganisaatiot", async () => {
       await toggleCheckboxByText(page, "suomi");
       await toggleCheckboxByText(page, "ruotsi");
-      await assertSelectionText("suomi, ruotsi");
+      await expect(kieliFilter.selectionIndicator).toHaveText("suomi, ruotsi");
 
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("3 hakutulosta valittu")).toBeVisible();
@@ -329,7 +329,7 @@ test.describe("Osoitepalvelu", () => {
 
     await test.step("ruotsi finds none", async () => {
       await toggleCheckboxByText(page, "suomi");
-      await assertSelectionText("ruotsi");
+      await expect(kieliFilter.selectionIndicator).toHaveText("ruotsi");
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });

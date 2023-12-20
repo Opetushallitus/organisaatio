@@ -17,12 +17,14 @@ export class OsoitepalveluPage {
 class KieliFilter {
   readonly page: Page;
   readonly button: Locator;
+  readonly selectionIndicator: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.button = this.page.getByRole("button", {
       name: "Organisaation kieli",
     });
+    this.selectionIndicator = this.button.locator("[aria-live=off]");
   }
 
   async clear() {
