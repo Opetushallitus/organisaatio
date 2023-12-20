@@ -16,14 +16,16 @@ export class OsoitepalveluPage {
 
 class KieliFilter {
   readonly page: Page;
+  readonly scope: Locator;
   readonly button: Locator;
   readonly selectionIndicator: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.button = this.page.getByRole("button", {
-      name: "Organisaation kieli",
+    this.scope = this.page.getByRole("group").filter({
+      has: this.page.getByRole("heading", { name: "Organisaation kieli" }),
     });
+    this.button = this.scope.getByRole("button");
     this.selectionIndicator = this.button.locator("[aria-live=off]");
   }
 
@@ -37,10 +39,7 @@ class KieliFilter {
     });
     await expect(contents).toBeVisible();
 
-    const kieliFilter = await this.page.getByRole("group").filter({
-      has: this.page.getByRole("heading", { name: "Organisaation kieli" }),
-    });
-    for (const checkbox of await kieliFilter
+    for (const checkbox of await this.scope
       .locator("label", {
         has: this.page.getByRole("checkbox", {
           checked: true,
