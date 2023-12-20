@@ -18,6 +18,7 @@ class KieliFilter {
   readonly page: Page;
   readonly scope: Locator;
   readonly button: Locator;
+  readonly contents: Locator;
   readonly selectionIndicator: Locator;
 
   constructor(page: Page) {
@@ -27,6 +28,11 @@ class KieliFilter {
     });
     this.button = this.scope.getByRole("button");
     this.selectionIndicator = this.button.locator("[aria-live=off]");
+    this.contents = this.scope.getByRole("group").filter({
+      has: this.page.getByRole("heading", {
+        name: "Valitse organisaatiot, joiden kieli on:",
+      }),
+    });
   }
 
   async clear() {
@@ -34,12 +40,9 @@ class KieliFilter {
     if (!isOpen) {
       await this.open();
     }
-    const contents = this.page.getByRole("heading", {
-      name: "Valitse organisaatiot, joiden kieli on:",
-    });
-    await expect(contents).toBeVisible();
+    await expect(this.contents).toBeVisible();
 
-    for (const checkbox of await this.scope
+    for (const checkbox of await this.contents
       .locator("label", {
         has: this.page.getByRole("checkbox", {
           checked: true,
@@ -55,12 +58,7 @@ class KieliFilter {
   }
 
   async isOpen() {
-    const isVisible = await this.page
-      .getByRole("heading", {
-        name: "Valitse organisaatiot, joiden kieli on:",
-      })
-      .isVisible();
-    return isVisible;
+    return await this.contents.isVisible();
   }
 
   async open() {

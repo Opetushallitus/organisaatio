@@ -62,7 +62,7 @@ export function RajausAccordion({
                 <AccordionButton open={open} disabled={disabled} />
             </div>
             {open && (
-                <div className={styles.AccordionContentContainer}>
+                <div role="group" className={styles.AccordionContentContainer}>
                     <div className={styles.AccordionContent}>{children}</div>
                 </div>
             )}
