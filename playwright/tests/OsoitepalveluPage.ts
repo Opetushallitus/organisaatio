@@ -37,6 +37,7 @@ class Filter {
   readonly button: Locator;
   readonly contents: Locator;
   readonly selectionIndicator: Locator;
+  readonly checkedCheckboxLabels: Locator;
 
   constructor(page: Page, title: string) {
     this.page = page;
@@ -46,6 +47,9 @@ class Filter {
     this.button = this.scope.getByRole("button").first();
     this.selectionIndicator = this.button.locator("[aria-live=off]");
     this.contents = this.scope.getByRole("group");
+    this.checkedCheckboxLabels = this.contents
+      .locator("label")
+      .filter({ has: page.getByRole("checkbox", { checked: true }) });
   }
 
   async clear() {

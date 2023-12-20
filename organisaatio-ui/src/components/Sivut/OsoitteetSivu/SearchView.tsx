@@ -59,7 +59,16 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
 
     function resetSearchParams() {
-        setSearchParameters(defaultSearchState);
+        setSearchParameters({
+            organisaatiotyypit: [],
+            oppilaitosTypes: defaultOppilaitosTypes,
+            vuosiluokat: [],
+            sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, []),
+            anyJarjestamislupa: false,
+            jarjestamisluvat: [],
+            kielet: [],
+            openFilters: [],
+        });
     }
 
     async function hae() {

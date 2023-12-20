@@ -43,6 +43,66 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
+  test("tyhjennä button", async ({ page }) => {
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+
+    await osoitepalveluPage.tyhjennaButton.click();
+
+    await test.step("updates instructions", async () => {
+      await expect(osoitepalveluPage.kohderyhmaInstructions).toHaveText(
+        "Valitse ensin haun kohderyhmä (pakollinen)"
+      );
+      await expect(osoitepalveluPage.filterInstructions).toHaveText(
+        "Rajaa hakua"
+      );
+    });
+
+    await test.step("clears Kohderyhmä selection", async () => {
+      await expect(page.getByLabel("Koulutustoimijat")).not.toBeChecked();
+    });
+
+    await test.step("clears all filters", async () => {
+      await expect(
+        osoitepalveluPage.oppilaitostyyppiFilter.checkedCheckboxLabels
+      ).toHaveCount(0);
+      await expect(
+        osoitepalveluPage.oppilaitostyyppiFilter.selectionIndicator
+      ).toHaveText("");
+
+      await expect(
+        osoitepalveluPage.jarjestamislupaFilter.checkedCheckboxLabels
+      ).toHaveCount(0);
+      await expect(
+        osoitepalveluPage.jarjestamislupaFilter.selectionIndicator
+      ).toHaveText("");
+
+      await expect(
+        osoitepalveluPage.sijaintiFilter.checkedCheckboxLabels
+      ).toHaveCount(0);
+      await expect(
+        osoitepalveluPage.sijaintiFilter.selectionIndicator
+      ).toHaveText("");
+
+      await expect(
+        osoitepalveluPage.kieliFilter.checkedCheckboxLabels
+      ).toHaveCount(0);
+      await expect(osoitepalveluPage.kieliFilter.selectionIndicator).toHaveText(
+        ""
+      );
+    });
+
+    await test.step("disables all filters", async () => {
+      await expect(
+        osoitepalveluPage.oppilaitostyyppiFilter.scope
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.jarjestamislupaFilter.scope
+      ).toBeDisabled();
+      await expect(osoitepalveluPage.sijaintiFilter.scope).toBeDisabled();
+      await expect(osoitepalveluPage.kieliFilter.scope).toBeDisabled();
+    });
+  });
+
   test("allows searching for koulutustoimijat", async ({ page }) => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
 
