@@ -293,11 +293,9 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Oppilaitoksen kieli filter", async ({ page }) => {
-    const button = page.getByRole("button", { name: "Organisaation kieli" });
-    const assertSelectionText = async (text) =>
-      expect(button.locator("[aria-live=off]")).toHaveText(text);
-
-    await button.click();
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const kieliFilter = osoitepalveluPage.kieliFilter;
+    await kieliFilter.open();
 
     await test.step("No filter searches all", async () => {
       await assertSelectionText("");
