@@ -41,7 +41,6 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
         oid: a[key].oid,
         nimiHref: <OrganisaatioLink oid={a[key].oid} nimi={a[key].nimi} status={a[key].status} />,
         alkuPvm: a.alkuPvm,
-        loppuPvm: a.loppuPvm,
         status: a[key].status,
     };
 };
