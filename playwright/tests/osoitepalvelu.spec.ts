@@ -312,8 +312,8 @@ test.describe("Osoitepalvelu", () => {
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
     await test.step("suomi and ruotsi finds testiorganisaatiot", async () => {
-      await toggleCheckboxByText(page, "suomi");
-      await toggleCheckboxByText(page, "ruotsi");
+      await kieliFilter.toggleCheckboxByLabel("suomi");
+      await kieliFilter.toggleCheckboxByLabel("ruotsi");
       await expect(kieliFilter.selectionIndicator).toHaveText("suomi, ruotsi");
 
       await page.getByRole("button", { name: "Hae" }).click();
@@ -328,7 +328,7 @@ test.describe("Osoitepalvelu", () => {
     await page.getByRole("button", { name: "Muokkaa hakua" }).click();
 
     await test.step("ruotsi finds none", async () => {
-      await toggleCheckboxByText(page, "suomi");
+      await kieliFilter.toggleCheckboxByLabel("suomi");
       await expect(kieliFilter.selectionIndicator).toHaveText("ruotsi");
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();

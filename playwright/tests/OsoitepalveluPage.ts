@@ -82,4 +82,10 @@ class KieliFilter {
       }
     }
   }
+
+  async toggleCheckboxByLabel(label: string) {
+    const checkbox = await this.contents.getByLabel(label, { exact: true });
+    await this.pressTabUntilFocusOn(checkbox);
+    await this.page.keyboard.press("Space");
+  }
 }
