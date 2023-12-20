@@ -426,12 +426,6 @@ async function selectFromDropdown(page: Page, label: string) {
   await page.getByLabel(label, { exact: true }).click();
 }
 
-async function toggleCheckboxByText(page: Page, name: string) {
-  const checkbox = await getCheckboxByText(page, name);
-  await pressTabUntilFocusOn(page, checkbox);
-  await page.keyboard.press("Space");
-}
-
 function getCheckboxByText(page: Page, name: string) {
   return page.getByLabel(name, { exact: true });
 }
@@ -444,26 +438,6 @@ function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
     has: page.getByRole("checkbox", { checked }),
   });
-}
-
-async function openSijaintiBox(page: Page) {
-  const button = page.getByRole("button", { name: "Sijainti" });
-  await pressTabUntilFocusOn(page, button);
-  await page.keyboard.press("Space");
-
-  return button;
-}
-
-async function openOppilatostyyppiBox(page: Page) {
-  await openOppilatostyyppiBoxAndReturnOpeningButton(page);
-}
-
-async function openOppilatostyyppiBoxAndReturnOpeningButton(page: Page) {
-  const button = page.getByRole("button", { name: "Oppilaitostyyppi" });
-  await pressTabUntilFocusOn(page, button);
-  await page.keyboard.press("Space");
-
-  return button;
 }
 
 async function pressTabUntilFocusOn(page: Page, locator: Locator) {
