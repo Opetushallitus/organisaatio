@@ -24,8 +24,10 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByLabel("Koulutustoimijat")).toBeChecked();
     });
     await test.step("instructions are displayed", async () => {
-      await expect(page.getByText("Hae*")).toBeVisible();
-      await expect(page.getByText("Haun rajausmahdollisuudet")).toBeVisible();
+      await expect(osoitepalveluPage.kohderyhmaInstructions).toHaveText("Hae*");
+      await expect(osoitepalveluPage.filterInstructions).toHaveText(
+        "Haun rajausmahdollisuudet"
+      );
     });
     await test.step("advanced search filters are enabled", async () => {
       await expect(

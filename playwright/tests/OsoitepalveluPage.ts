@@ -2,6 +2,8 @@ import { expect, Locator, Page } from "@playwright/test";
 
 export class OsoitepalveluPage {
   readonly page: Page;
+  readonly kohderyhmaInstructions: Locator;
+  readonly filterInstructions: Locator;
   readonly kieliFilter: Filter;
   readonly oppilaitostyyppiFilter: Filter;
   readonly sijaintiFilter: Filter;
@@ -11,6 +13,8 @@ export class OsoitepalveluPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.kohderyhmaInstructions = page.locator("h2").nth(0);
+    this.filterInstructions = page.locator("h2").nth(1);
     this.kieliFilter = new Filter(page, "Organisaation kieli");
     this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");
     this.sijaintiFilter = new Filter(page, "Sijainti");
