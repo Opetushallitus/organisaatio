@@ -64,18 +64,12 @@ class KieliFilter {
   }
 
   async open() {
-    const button = this.page.getByRole("button", {
-      name: "Organisaation kieli",
-    });
-    await this.pressTabUntilFocusOn(button);
+    await this.pressTabUntilFocusOn(this.button);
     await this.page.keyboard.press("Space");
   }
 
   async close() {
-    const button = this.page.getByRole("button", {
-      name: "Organisaation kieli",
-    });
-    await this.pressTabUntilFocusOn(button);
+    await this.pressTabUntilFocusOn(this.button);
     await this.page.keyboard.press("Space");
   }
 
