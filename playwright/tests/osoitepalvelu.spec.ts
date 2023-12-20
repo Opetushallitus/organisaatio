@@ -12,7 +12,6 @@ test.describe("Osoitepalvelu", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     await osoitepalveluPage.goto();
-    await osoitepalveluPage.kieliFilter.clear();
   });
 
   test("is in the initial state when openened", async ({ page }) => {
@@ -29,6 +28,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("allows searching for koulutustoimijat", async ({ page }) => {
+    await new OsoitepalveluPage(page).kieliFilter.clear();
     await expect(page.getByRole("button", { name: "Hae" })).toBeVisible();
     await page.getByRole("button", { name: "Hae" }).click();
 
@@ -46,6 +46,7 @@ test.describe("Osoitepalvelu", () => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
+    await osoitepalveluPage.kieliFilter.clear();
     await oppilaitostyyppiFilter.open();
     await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
     await oppilaitostyyppiFilter.toggleCheckboxByLabel("Ammattikorkeakoulut");
@@ -222,6 +223,8 @@ test.describe("Osoitepalvelu", () => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const sijaintiFilter = osoitepalveluPage.sijaintiFilter;
 
+    await osoitepalveluPage.kieliFilter.clear();
+
     await test.step("Defaults to Manner-Suomi", async () => {
       await expect(sijaintiFilter.selectionIndicator).toHaveText(
         "Manner-Suomi (ei Ahvenanmaa)"
@@ -299,6 +302,7 @@ test.describe("Osoitepalvelu", () => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const jarjestamislupaFilter = osoitepalveluPage.jarjestamislupaFilter;
 
+    await osoitepalveluPage.kieliFilter.clear();
     await jarjestamislupaFilter.open();
 
     await test.step("Specific koulutuslupa", async () => {
@@ -337,6 +341,8 @@ test.describe("Osoitepalvelu", () => {
   test("Oppilaitoksen kieli filter", async ({ page }) => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const kieliFilter = osoitepalveluPage.kieliFilter;
+
+    await osoitepalveluPage.kieliFilter.clear();
     await kieliFilter.open();
 
     await test.step("No filter searches all", async () => {
