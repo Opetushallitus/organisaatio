@@ -28,11 +28,7 @@ class KieliFilter {
     });
     this.button = this.scope.getByRole("button");
     this.selectionIndicator = this.button.locator("[aria-live=off]");
-    this.contents = this.scope.getByRole("group").filter({
-      has: this.page.getByRole("heading", {
-        name: "Valitse organisaatiot, joiden kieli on:",
-      }),
-    });
+    this.contents = this.scope.getByRole("group");
   }
 
   async clear() {
