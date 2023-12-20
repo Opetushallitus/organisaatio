@@ -15,6 +15,8 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("is in the initial state when openened", async ({ page }) => {
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+
     await test.step("the page has a title", async () => {
       await expect(page).toHaveTitle(/Osoitepalvelu/);
     });
@@ -24,6 +26,18 @@ test.describe("Osoitepalvelu", () => {
     await test.step("instructions are displayed", async () => {
       await expect(page.getByText("Hae*")).toBeVisible();
       await expect(page.getByText("Haun rajausmahdollisuudet")).toBeVisible();
+    });
+    await test.step("advanced search filters are enabled", async () => {
+      await expect(
+        osoitepalveluPage.oppilaitostyyppiFilter.scope
+      ).toBeEnabled();
+      await expect(osoitepalveluPage.sijaintiFilter.scope).toBeEnabled();
+      await expect(osoitepalveluPage.jarjestamislupaFilter.scope).toBeEnabled();
+      await expect(osoitepalveluPage.kieliFilter.scope).toBeEnabled();
+    });
+    await test.step("Buttons are enabled", async () => {
+      await expect(osoitepalveluPage.haeButton).toBeEnabled();
+      await expect(osoitepalveluPage.tyhjennaButton).toBeEnabled();
     });
   });
 

@@ -6,6 +6,8 @@ export class OsoitepalveluPage {
   readonly oppilaitostyyppiFilter: Filter;
   readonly sijaintiFilter: Filter;
   readonly jarjestamislupaFilter: Filter;
+  readonly haeButton: Locator;
+  readonly tyhjennaButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -16,6 +18,8 @@ export class OsoitepalveluPage {
       page,
       "Ammatillisen koulutuksen järjestämislupa"
     );
+    this.haeButton = page.getByRole("button", { name: "Hae" });
+    this.tyhjennaButton = page.getByRole("button", { name: "Tyhjennä" });
   }
 
   async goto() {

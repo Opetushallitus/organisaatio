@@ -42,7 +42,7 @@ export function RajausAccordion({
     }
 
     return (
-        <div role="group" className={classes.join(' ')}>
+        <div role="group" className={classes.join(' ')} aria-disabled={disabled}>
             <div
                 tabIndex={0}
                 role="button"
