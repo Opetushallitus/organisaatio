@@ -219,15 +219,16 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Sijainti filter", async ({ page }) => {
-    const button = page.getByRole("button", { name: "Sijainti" });
-    const assertSelectionText = async (text) =>
-      expect(button.locator("[aria-live=off]")).toHaveText(text);
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const sijaintiFilter = osoitepalveluPage.sijaintiFilter;
 
     await test.step("Defaults to Manner-Suomi", async () => {
-      await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Manner-Suomi (ei Ahvenanmaa)"
+      );
     });
 
-    await button.click();
+    await sijaintiFilter.open();
 
     await test.step(
       "Changes filter description on selection change",
@@ -235,34 +236,48 @@ test.describe("Osoitepalvelu", () => {
         await openDropdown(page, "Hae alueen tai maakunnan nimellä");
 
         await selectFromDropdown(page, "Koko Suomi");
-        await assertSelectionText("Koko Suomi");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Koko Suomi"
+        );
 
         await selectFromAlueDropdown(page, "Ahvenanmaa");
-        await assertSelectionText("Manner-Suomi (ei Ahvenanmaa)");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Manner-Suomi (ei Ahvenanmaa)"
+        );
 
         await selectFromAlueDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
-        await assertSelectionText("");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText("");
 
         await selectFromAlueDropdown(page, "Ulkomaa");
-        await assertSelectionText("Ulkomaa");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText("Ulkomaa");
 
         await selectFromAlueDropdown(page, "Uusimaa");
-        await assertSelectionText("Ulkomaa, Uusimaa");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Ulkomaa, Uusimaa"
+        );
 
         await selectFromKuntaDropdown(page, "Imatra");
-        await assertSelectionText("Ulkomaa, Uusimaa, Imatra");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Ulkomaa, Uusimaa, Imatra"
+        );
 
         await selectFromKuntaDropdown(page, "Helsinki");
-        await assertSelectionText("Ulkomaa, Uusimaa, Helsinki, Imatra");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Ulkomaa, Uusimaa, Helsinki, Imatra"
+        );
 
         await selectFromKuntaDropdown(page, "Helsinki");
         await selectFromKuntaDropdown(page, "Imatra");
-        await assertSelectionText("Ulkomaa, Uusimaa");
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Ulkomaa, Uusimaa"
+        );
       }
     );
 
     await test.step("Filters results by alue", async () => {
-      await assertSelectionText("Ulkomaa, Uusimaa");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Ulkomaa, Uusimaa"
+      );
       await page.getByRole("button", { name: "Hae" }).click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await page.getByRole("button", { name: "Muokkaa hakua" }).click();
