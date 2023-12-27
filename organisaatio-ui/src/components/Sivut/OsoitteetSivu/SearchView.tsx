@@ -116,18 +116,19 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             openFilters,
         };
     }
+
+    function enabledFiltersByOrganisaatiotyyppi(o: string) {
+        if (o == 'organisaatiotyyppi_01') {
+            return [oppilaitostyyppiFilter.id, jarjestamislupaFilter.id, sijaintiFilter.id, kieliFilter.id];
+        } else if (o == 'organisaatiotyyppi_02' || o == 'organisaatiotyyppi_03') {
+            return [oppilaitostyyppiFilter.id, sijaintiFilter.id, kieliFilter.id];
+        } else {
+            return [];
+        }
+    }
+
     function deriveEnabledFilters(organisaatiotyypit: string[]) {
-        return organisaatiotyypit
-            .map((o) => {
-                if (o == 'organisaatiotyyppi_01') {
-                    return [oppilaitostyyppiFilter.id, jarjestamislupaFilter.id, sijaintiFilter.id, kieliFilter.id];
-                } else if (o == 'organisaatiotyyppi_02') {
-                    return [oppilaitostyyppiFilter.id, sijaintiFilter.id, kieliFilter.id];
-                } else {
-                    return [];
-                }
-            })
-            .flat();
+        return organisaatiotyypit.map(enabledFiltersByOrganisaatiotyyppi).flat();
     }
 
     function onToggleOpenFn(filterId: string) {
