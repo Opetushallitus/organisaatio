@@ -21,7 +21,7 @@ test.describe("Osoitepalvelu", () => {
       await expect(page).toHaveTitle(/Osoitepalvelu/);
     });
     await test.step("Kohderyhmä Koulutustoimijat is selected", async () => {
-      await expect(page.getByLabel("Koulutustoimijat")).toBeChecked();
+      await expect(osoitepalveluPage.koulutustoimijatCheckbox).toBeChecked();
     });
     await test.step("instructions are displayed", async () => {
       await expect(osoitepalveluPage.kohderyhmaInstructions).toHaveText("Hae*");
@@ -58,7 +58,9 @@ test.describe("Osoitepalvelu", () => {
     });
 
     await test.step("clears Kohderyhmä selection", async () => {
-      await expect(page.getByLabel("Koulutustoimijat")).not.toBeChecked();
+      await expect(
+        osoitepalveluPage.koulutustoimijatCheckbox
+      ).not.toBeChecked();
     });
 
     await test.step("clears all filters", async () => {

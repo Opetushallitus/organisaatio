@@ -10,11 +10,15 @@ export class OsoitepalveluPage {
   readonly jarjestamislupaFilter: Filter;
   readonly haeButton: Locator;
   readonly tyhjennaButton: Locator;
+  readonly koulutustoimijatCheckbox: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.kohderyhmaInstructions = page.locator("h2").nth(0);
     this.filterInstructions = page.locator("h2").nth(1);
+    this.koulutustoimijatCheckbox = page.getByLabel("Koulutustoimijat", {
+      exact: true,
+    });
     this.kieliFilter = new Filter(page, "Organisaation kieli");
     this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");
     this.sijaintiFilter = new Filter(page, "Sijainti");
