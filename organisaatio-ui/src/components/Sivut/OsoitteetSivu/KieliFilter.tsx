@@ -14,7 +14,10 @@ type KieliFilterProps = {
 };
 
 export function makeDefaultValue(organisaatiotyyppit: string[]) {
-    return organisaatiotyyppit.includes('organisaatiotyyppi_01') ? ['oppilaitoksenopetuskieli_1'] : [];
+    return organisaatiotyyppit.includes('organisaatiotyyppi_01') ||
+        organisaatiotyyppit.includes('organisaatiotyyppi_02')
+        ? ['oppilaitoksenopetuskieli_1']
+        : [];
 }
 
 export const id = 'kielet';

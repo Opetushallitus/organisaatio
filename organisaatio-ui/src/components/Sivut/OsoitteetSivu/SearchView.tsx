@@ -27,6 +27,7 @@ type SearchState = {
     jarjestamisluvat: string[];
     kielet: string[];
     openFilters: string[];
+    enabledFilters: string[];
 };
 
 export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
@@ -93,19 +94,36 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setSearchStateAsDervivedFromKohderyhmat(organisaatiotyypit);
     }
     function setSearchStateAsDervivedFromKohderyhmat(organisaatiotyypit: string[]) {
-        setSearchParameters(deriveStateFromKohderyhmat(organisaatiotyypit));
+        setSearchParameters(deriveStateFromKohderyhmat(organisaatiotyypit, searchParameters));
     }
-    function deriveStateFromKohderyhmat(organisaatiotyypit: string[]) {
+    function deriveStateFromKohderyhmat(organisaatiotyypit: string[], currentState?: SearchState) {
+        const enabledFilters = deriveEnabledFilters(organisaatiotyypit);
+        const openFilters = currentState?.openFilters.filter((f) => enabledFilters.includes(f)) ?? [];
+
         return {
-            organisaatiotyypit: organisaatiotyypit,
+            organisaatiotyypit,
             oppilaitosTypes: defaultOppilaitosTypes,
             vuosiluokat: [],
             sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, organisaatiotyypit),
             anyJarjestamislupa: false,
             jarjestamisluvat: [],
             kielet: kieliFilter.makeDefaultValue(organisaatiotyypit),
-            openFilters: [],
+            enabledFilters,
+            openFilters,
         };
+    }
+    function deriveEnabledFilters(organisaatiotyypit: string[]) {
+        return organisaatiotyypit
+            .map((o) => {
+                if (o == 'organisaatiotyyppi_01') {
+                    return [oppilaitostyyppiFilter.id, jarjestamislupaFilter.id, sijaintiFilter.id, kieliFilter.id];
+                } else if (o == 'organisaatiotyyppi_02') {
+                    return [oppilaitostyyppiFilter.id, sijaintiFilter.id, kieliFilter.id];
+                } else {
+                    return [];
+                }
+            })
+            .flat();
     }
 
     function onToggleOpenFn(filterId: string) {
@@ -118,6 +136,10 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
     function isFilterOpen(filterId: string) {
         return searchParameters.openFilters.includes(filterId);
+    }
+
+    function isFilterEnabled(filterId: string) {
+        return searchParameters.enabledFilters.includes(filterId);
     }
 
     function searchIsEnabled() {
@@ -142,7 +164,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onOppilaitostyyppiFilterChanged}
                         open={isFilterOpen(oppilaitostyyppiFilter.id)}
                         onToggleOpen={onToggleOpenFn(oppilaitostyyppiFilter.id)}
-                        disabled={!searchIsEnabled()}
+                        disabled={!isFilterEnabled(oppilaitostyyppiFilter.id)}
                     />
                     <jarjestamislupaFilter.Element
                         jarjestamisluvat={hakuParametrit.jarjestamisluvat}
@@ -151,7 +173,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onJarjestamisluvatFilterChanged}
                         open={isFilterOpen(jarjestamislupaFilter.id)}
                         onToggleOpen={onToggleOpenFn(jarjestamislupaFilter.id)}
-                        disabled={!searchIsEnabled()}
+                        disabled={!isFilterEnabled(jarjestamislupaFilter.id)}
                     />
                     <sijaintiFilter.Element
                         maakunnat={hakuParametrit.maakunnat}
@@ -160,7 +182,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onSijaintiFilterChanged}
                         open={isFilterOpen(sijaintiFilter.id)}
                         onToggleOpen={onToggleOpenFn(sijaintiFilter.id)}
-                        disabled={!searchIsEnabled()}
+                        disabled={!isFilterEnabled(sijaintiFilter.id)}
                     />
                     <kieliFilter.Element
                         kielet={hakuParametrit.kielet}
@@ -168,7 +190,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                         onChange={onKieliFilterChanged}
                         open={isFilterOpen(kieliFilter.id)}
                         onToggleOpen={onToggleOpenFn(kieliFilter.id)}
-                        disabled={!searchIsEnabled()}
+                        disabled={!isFilterEnabled(kieliFilter.id)}
                     />
                 </div>
             </div>

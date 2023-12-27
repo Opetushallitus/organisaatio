@@ -51,21 +51,24 @@ public class OsoitteetResource {
     private List<Hakutulos> getHakutulos(HaeRequest request) {
         List<String> vuosiluokat = request.getVuosiluokat();
         List<String> oppilaitostyypit = request.getOppilaitostyypit();
+        List<String> organisaatiotyypit = request.getOrganisaatiotyypit();
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";
-        String organisaatiotyyppi = OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue();
         List<Long> organisaatioIds = new ArrayList<>();
 
-        if (OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue().equals(organisaatiotyyppi)) {
+        if (organisaatiotyypit.contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())) {
             if (!vuosiluokat.isEmpty() && oppilaitostyypit.stream().noneMatch(perusopetusOppilaitostyypit::contains)) {
                 throw new RuntimeException("Vuosiluokkia voi hakea vain perusopetuksen oppilaitostyypeille");
             }
 
             if (oppilaitostyypit.isEmpty()) {
-                organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, organisaatiotyyppi));
+                organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
             } else {
                 organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat(), request.getKielet()));
             }
+        }
+        if (organisaatiotyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())) {
+            organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.OPPILAITOS.koodiValue()));
         }
 
         return makeSearchResult(organisaatioIds, kieli, kieliKoodi);

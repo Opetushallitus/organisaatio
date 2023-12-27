@@ -19,7 +19,7 @@ export type Value = {
 };
 
 export function makeDefaultValue(maakunnat: MaakuntaKoodi[], organisaatiotyypit: string[]): Value {
-    if (organisaatiotyypit.includes('organisaatiotyyppi_01')) {
+    if (organisaatiotyypit.includes('organisaatiotyyppi_01') || organisaatiotyypit.includes('organisaatiotyyppi_02')) {
         return {
             maakunnat: maakunnat.filter((_) => _.koodiUri !== MAAKUNTA_AHVENANMAA).map((_) => _.koodiUri),
             ulkomaa: false,

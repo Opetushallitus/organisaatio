@@ -8,6 +8,12 @@ type KohderyhmaFilterProps = {
 };
 
 export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
+    const isChecked = (id: string) => value.includes(id);
+    const onChecked = (id: string) => (checked: boolean) => {
+        const without = value.filter((_) => _ !== id);
+        onChange(checked ? without.concat(id) : without);
+    };
+
     return (
         <div>
             <div className={styles.SectionTitle}>
@@ -19,14 +25,17 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                     <Kohderyhma
                         title="Koulutustoimijat"
                         description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
-                        selected={value.includes('organisaatiotyyppi_01')}
-                        onChange={(checked) => {
-                            if (checked) {
-                                onChange(['organisaatiotyyppi_01']);
-                            } else {
-                                onChange([]);
-                            }
-                        }}
+                        selected={isChecked('organisaatiotyyppi_01')}
+                        onChange={onChecked('organisaatiotyyppi_01')}
+                        disabled={false}
+                    />
+                </div>
+                <div className={styles.KohderyhmaColumn}>
+                    <Kohderyhma
+                        title="Oppilaitokset"
+                        description="Viralliset yhteystiedot (mm. peruskouluihin, lukioihin, ammatillisiin oppilaitoksiin)"
+                        selected={isChecked('organisaatiotyyppi_02')}
+                        onChange={onChecked('organisaatiotyyppi_02')}
                         disabled={false}
                     />
                 </div>
