@@ -46,6 +46,19 @@ test.describe("Osoitepalvelu", () => {
   test("tyhjennä button", async ({ page }) => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
 
+    await osoitepalveluPage.oppilaitostyyppiFilter.button.click();
+    await osoitepalveluPage.jarjestamislupaFilter.button.click();
+    await osoitepalveluPage.sijaintiFilter.button.click();
+    await osoitepalveluPage.kieliFilter.button.click();
+    await expect(
+      osoitepalveluPage.oppilaitostyyppiFilter.contents
+    ).toBeVisible();
+    await expect(
+      osoitepalveluPage.jarjestamislupaFilter.contents
+    ).toBeVisible();
+    await expect(osoitepalveluPage.sijaintiFilter.contents).toBeVisible();
+    await expect(osoitepalveluPage.kieliFilter.contents).toBeVisible();
+
     await osoitepalveluPage.tyhjennaButton.click();
 
     await test.step("updates instructions", async () => {
@@ -102,6 +115,17 @@ test.describe("Osoitepalvelu", () => {
       ).toBeDisabled();
       await expect(osoitepalveluPage.sijaintiFilter.scope).toBeDisabled();
       await expect(osoitepalveluPage.kieliFilter.scope).toBeDisabled();
+    });
+
+    await test.step("closes all filters", async () => {
+      await expect(
+        osoitepalveluPage.oppilaitostyyppiFilter.contents
+      ).toBeHidden();
+      await expect(
+        osoitepalveluPage.jarjestamislupaFilter.contents
+      ).toBeHidden();
+      await expect(osoitepalveluPage.sijaintiFilter.contents).toBeHidden();
+      await expect(osoitepalveluPage.kieliFilter.contents).toBeHidden();
     });
   });
 

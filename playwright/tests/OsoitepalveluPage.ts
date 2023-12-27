@@ -27,7 +27,10 @@ export class OsoitepalveluPage {
       "Ammatillisen koulutuksen järjestämislupa"
     );
     this.haeButton = page.getByRole("button", { name: "Hae" });
-    this.tyhjennaButton = page.getByRole("button", { name: "Tyhjennä" });
+    this.tyhjennaButton = page.getByRole("button", {
+      name: "Tyhjennä",
+      exact: true,
+    });
   }
 
   async goto() {
