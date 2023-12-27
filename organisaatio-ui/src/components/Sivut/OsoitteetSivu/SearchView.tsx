@@ -99,15 +99,19 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function deriveStateFromKohderyhmat(organisaatiotyypit: string[], currentState?: SearchState) {
         const enabledFilters = deriveEnabledFilters(organisaatiotyypit);
         const openFilters = currentState?.openFilters.filter((f) => enabledFilters.includes(f)) ?? [];
+        const sijainti = enabledFilters.includes(sijaintiFilter.id)
+            ? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
+            : sijaintiFilter.makeEmptyValue();
+        const kielet = enabledFilters.includes(kieliFilter.id) ? kieliFilter.makeDefaultValue() : [];
 
         return {
             organisaatiotyypit,
             oppilaitosTypes: defaultOppilaitosTypes,
             vuosiluokat: [],
-            sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, organisaatiotyypit),
+            sijainti,
             anyJarjestamislupa: false,
             jarjestamisluvat: [],
-            kielet: kieliFilter.makeDefaultValue(organisaatiotyypit),
+            kielet,
             enabledFilters,
             openFilters,
         };
