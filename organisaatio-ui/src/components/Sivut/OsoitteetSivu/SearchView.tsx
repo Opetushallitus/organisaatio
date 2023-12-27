@@ -36,17 +36,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         return accu;
     }, {});
 
-    const defaultSearchState: SearchState = {
-        organisaatiotyypit: ['organisaatiotyyppi_01'],
-        oppilaitosTypes: defaultOppilaitosTypes,
-        vuosiluokat: [],
-        sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, ['organisaatiotyyppi_01']),
-        anyJarjestamislupa: false,
-        jarjestamisluvat: [],
-        kielet: kieliFilter.makeDefaultValue(['organisaatiotyyppi_01']),
-        openFilters: [],
-    };
-
+    const defaultSearchState = deriveStateFromKohderyhmat(['organisaatiotyyppi_01']);
     const [searchParameters, setSearchParameters] = useUrlHashBackedState<SearchState>(defaultSearchState);
     const { oppilaitosTypes } = searchParameters;
     const [error, setError] = useState<boolean>(false);
@@ -59,16 +49,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
 
     function resetSearchParams() {
-        setSearchParameters({
-            organisaatiotyypit: [],
-            oppilaitosTypes: defaultOppilaitosTypes,
-            vuosiluokat: [],
-            sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, []),
-            anyJarjestamislupa: false,
-            jarjestamisluvat: [],
-            kielet: [],
-            openFilters: [],
-        });
+        setSearchStateAsDervivedFromKohderyhmat([]);
     }
 
     async function hae() {
@@ -109,9 +90,22 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
         setSearchParameters({ ...searchParameters, oppilaitosTypes, vuosiluokat });
     }
     function onKohderymaFilterChanged(organisaatiotyypit: string[]): void {
-        const sijainti = sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, organisaatiotyypit);
-        const kielet = kieliFilter.makeDefaultValue(organisaatiotyypit);
-        setSearchParameters({ ...searchParameters, organisaatiotyypit, sijainti, kielet });
+        setSearchStateAsDervivedFromKohderyhmat(organisaatiotyypit);
+    }
+    function setSearchStateAsDervivedFromKohderyhmat(organisaatiotyypit: string[]) {
+        setSearchParameters(deriveStateFromKohderyhmat(organisaatiotyypit));
+    }
+    function deriveStateFromKohderyhmat(organisaatiotyypit: string[]) {
+        return {
+            organisaatiotyypit: organisaatiotyypit,
+            oppilaitosTypes: defaultOppilaitosTypes,
+            vuosiluokat: [],
+            sijainti: sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat, organisaatiotyypit),
+            anyJarjestamislupa: false,
+            jarjestamisluvat: [],
+            kielet: kieliFilter.makeDefaultValue(organisaatiotyypit),
+            openFilters: [],
+        };
     }
 
     function onToggleOpenFn(filterId: string) {
