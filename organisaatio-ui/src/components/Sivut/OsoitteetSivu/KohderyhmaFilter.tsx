@@ -60,7 +60,7 @@ function Kohderyhma({ title, description, selected, disabled, onChange }: Kohder
         classes.push(styles.Selected);
     }
     return (
-        <div className={classes.join(' ')}>
+        <div className={classes.join(' ')} onClick={() => onChange(!selected)}>
             <div className={styles.KohderyhmaOtsikko}>
                 <Checkbox checked={selected} onChange={(value) => onChange(value)}>
                     <h3>{title}</h3>
