@@ -66,6 +66,10 @@
     border: 2px solid var(--color-neutral-white);
 }
 
+.Kohderyhma label {
+    gap: 16px;
+}
+
 .Kohderyhma p {
     margin: 0;
 }
