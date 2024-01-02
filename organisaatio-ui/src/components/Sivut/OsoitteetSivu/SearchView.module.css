@@ -64,7 +64,6 @@
     background: #fff;
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
     border: 2px solid var(--color-neutral-white);
-    cursor: pointer;
 }
 
 .Kohderyhma label {
