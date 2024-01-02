@@ -110,7 +110,7 @@
 .KohderyhmaKuvaus {
     /* Layout */
     display: flex;
-    padding-left: 36px;
+    padding-left: 28px;
     align-items: center;
     gap: 8px;
     align-self: stretch;
