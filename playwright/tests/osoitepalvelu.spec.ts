@@ -61,12 +61,10 @@ test.describe("Osoitepalvelu", () => {
 
     await osoitepalveluPage.tyhjennaButton.click();
 
-    await test.step("updates instructions", async () => {
-      await expect(osoitepalveluPage.kohderyhmaInstructions).toHaveText(
-        "Valitse ensin haun kohderyhmä (pakollinen)"
-      );
+    await test.step("does not change the instructions", async () => {
+      await expect(osoitepalveluPage.kohderyhmaInstructions).toHaveText("Hae*");
       await expect(osoitepalveluPage.filterInstructions).toHaveText(
-        "Rajaa hakua"
+        "Haun rajausmahdollisuudet"
       );
     });
 

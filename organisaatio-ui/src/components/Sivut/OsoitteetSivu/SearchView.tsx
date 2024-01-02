@@ -159,7 +159,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             <KohderyhmaFilter value={searchParameters.organisaatiotyypit} onChange={onKohderymaFilterChanged} />
             <div>
                 <div className={styles.SectionTitle}>
-                    <h2>{searchIsEnabled() ? 'Haun rajausmahdollisuudet' : 'Rajaa hakua'}</h2>
+                    <h2>Haun rajausmahdollisuudet</h2>
                 </div>
                 <div className={styles.Rajaukset}>
                     <oppilaitostyyppiFilter.Element

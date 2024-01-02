@@ -17,7 +17,7 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
     return (
         <div>
             <div className={styles.SectionTitle}>
-                <h2>{value.length > 0 ? 'Hae*' : 'Valitse ensin haun kohderyhmä (pakollinen)'}</h2>
+                <h2>Hae*</h2>
                 {/*<Button variant={'text'}>Tyhjennä valinnat</Button>*/}
             </div>
             <div className={styles.KohderyhmaSelections}>
