@@ -118,7 +118,7 @@ class Kohderyhma {
 
   constructor(page: Page, label: string) {
     this.page = page;
-    this.checkbox = page.getByLabel(label);
+    this.checkbox = page.getByLabel(label, { exact: true });
   }
 
   async toggle() {

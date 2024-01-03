@@ -99,19 +99,33 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function deriveStateFromKohderyhmat(organisaatiotyypit: string[], currentState?: SearchState) {
         const enabledFilters = deriveEnabledFilters(organisaatiotyypit);
         const openFilters = currentState?.openFilters.filter((f) => enabledFilters.includes(f)) ?? [];
+        const oppilaitosTypes = enabledFilters.includes(oppilaitostyyppiFilter.id)
+            ? currentState?.oppilaitosTypes ?? defaultOppilaitosTypes
+            : defaultOppilaitosTypes;
+        const vuosiluokat = enabledFilters.includes(oppilaitostyyppiFilter.id) ? currentState?.vuosiluokat ?? [] : [];
         const sijainti = enabledFilters.includes(sijaintiFilter.id)
-            ? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
+            ? currentState?.sijainti ?? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
             : sijaintiFilter.makeEmptyValue();
-        const kielet = enabledFilters.includes(kieliFilter.id) ? kieliFilter.makeDefaultValue() : [];
+        const anyJarjestamislupa = enabledFilters.includes(jarjestamislupaFilter.id)
+            ? currentState?.anyJarjestamislupa ?? false
+            : false;
+        const jarjestamisluvat = enabledFilters.includes(jarjestamislupaFilter.id)
+            ? currentState?.jarjestamisluvat ?? []
+            : [];
+        const kielet = enabledFilters.includes(kieliFilter.id)
+            ? currentState?.kielet ?? kieliFilter.makeDefaultValue()
+            : [];
 
         return {
             organisaatiotyypit,
-            oppilaitosTypes: defaultOppilaitosTypes,
-            vuosiluokat: [],
-            sijainti,
-            anyJarjestamislupa: false,
-            jarjestamisluvat: [],
-            kielet,
+            oppilaitosTypes,
+            vuosiluokat,
+            sijainti: currentState?.enabledFilters.includes(sijaintiFilter.id)
+                ? sijainti
+                : sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat),
+            anyJarjestamislupa,
+            jarjestamisluvat,
+            kielet: currentState?.enabledFilters.includes(kieliFilter.id) ? kielet : kieliFilter.makeDefaultValue(),
             enabledFilters,
             openFilters,
         };

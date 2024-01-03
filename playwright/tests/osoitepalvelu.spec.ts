@@ -322,14 +322,24 @@ test.describe("Osoitepalvelu", () => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const sijaintiFilter = osoitepalveluPage.sijaintiFilter;
 
-    await osoitepalveluPage.kieliFilter.clear();
-
     await test.step("Defaults to Manner-Suomi", async () => {
       await expect(sijaintiFilter.selectionIndicator).toHaveText(
         "Manner-Suomi (ei Ahvenanmaa)"
       );
     });
 
+    await test.step(
+      "reverts to default value after being re-enabled",
+      async () => {
+        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+        await expect(sijaintiFilter.selectionIndicator).toHaveText(
+          "Manner-Suomi (ei Ahvenanmaa)"
+        );
+      }
+    );
+
+    await osoitepalveluPage.kieliFilter.clear();
     await sijaintiFilter.open();
 
     await test.step(
@@ -441,6 +451,19 @@ test.describe("Osoitepalvelu", () => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const kieliFilter = osoitepalveluPage.kieliFilter;
 
+    await test.step("defaults to suomi", async () => {
+      await expect(kieliFilter.selectionIndicator).toHaveText("suomi");
+    });
+
+    await test.step(
+      "reverts to default value after being re-enabled",
+      async () => {
+        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+        await expect(kieliFilter.selectionIndicator).toHaveText("suomi");
+      }
+    );
+
     await osoitepalveluPage.kieliFilter.clear();
     await kieliFilter.open();
 
@@ -535,6 +558,57 @@ test.describe("Osoitepalvelu", () => {
       await expect(
         page.getByText("Ammattiopisto Puolukka, testi toimipiste")
       ).toBeVisible();
+    });
+  });
+
+  test.describe("Selecting multiple kohderyhmä", async () => {
+    test("keeps filter configurations", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
+      const jarjestamislupaFilter = osoitepalveluPage.jarjestamislupaFilter;
+      const kieliFilter = osoitepalveluPage.kieliFilter;
+
+      await test.step("change oppilaitostyyppi filter", async () => {
+        await oppilaitostyyppiFilter.open();
+        await oppilaitostyyppiFilter.toggleCheckboxByLabel("Perusopetus");
+        await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+          "Perusopetus"
+        );
+      });
+
+      await test.step("change järjestämislupa filter", async () => {
+        await jarjestamislupaFilter.open();
+        await jarjestamislupaFilter.toggleCheckboxByLabel(
+          "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
+        );
+        await jarjestamislupaFilter.close();
+        await expect(jarjestamislupaFilter.selectionIndicator).toHaveText(
+          "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
+        );
+      });
+
+      await test.step("change kieli filter", async () => {
+        await kieliFilter.open();
+        await kieliFilter.toggleCheckboxByLabel("saame");
+        await kieliFilter.close();
+        await expect(kieliFilter.selectionIndicator).toHaveText("suomi, saame");
+      });
+
+      await test.step("toggle kohderyhmä selections", async () => {
+        await osoitepalveluPage.oppilaitoksetKohderyhma.toggle();
+        await osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.toggle();
+        await osoitepalveluPage.oppilaitoksetKohderyhma.toggle();
+      });
+
+      await test.step("assertions", async () => {
+        await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+          "Perusopetus"
+        );
+        await expect(jarjestamislupaFilter.selectionIndicator).toHaveText(
+          "Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa"
+        );
+        await expect(kieliFilter.selectionIndicator).toHaveText("suomi, saame");
+      });
     });
   });
 });
