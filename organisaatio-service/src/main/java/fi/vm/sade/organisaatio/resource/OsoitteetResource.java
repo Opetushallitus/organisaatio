@@ -70,6 +70,9 @@ public class OsoitteetResource {
         if (organisaatiotyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())) {
             organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.OPPILAITOS.koodiValue()));
         }
+        if (organisaatiotyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
+        }
 
         return makeSearchResult(organisaatioIds, kieli, kieliKoodi);
     }

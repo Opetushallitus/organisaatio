@@ -39,6 +39,15 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         disabled={false}
                     />
                 </div>
+                <div className={styles.KohderyhmaColumn}>
+                    <Kohderyhma
+                        title="Oppilaitosten toimipisteet"
+                        description="Sivutoimipisteet tai viipalekoulut (osoite eri kuin hallinnollisella oppilaitoksella)."
+                        selected={isChecked('organisaatiotyyppi_03')}
+                        onChange={onChecked('organisaatiotyyppi_03')}
+                        disabled={false}
+                    />
+                </div>
             </div>
         </div>
     );

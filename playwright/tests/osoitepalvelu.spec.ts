@@ -518,6 +518,25 @@ test.describe("Osoitepalvelu", () => {
       ).toBeVisible();
     });
   });
+
+  test.describe("Oppilaitosten toimipisteet kohderyhmä", async () => {
+    test.beforeEach(async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.toggle();
+    });
+
+    test("shows only oppilaitosten toimipisteet", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      await expect(
+        page.getByText("Ammattiopisto Puolukka, testi toimipiste")
+      ).toBeVisible();
+    });
+  });
 });
 
 async function selectFromJärjestämislupaDropdown(page: Page, label: string) {

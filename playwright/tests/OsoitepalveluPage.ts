@@ -13,6 +13,7 @@ export class OsoitepalveluPage {
   readonly koulutustoimijatCheckbox: Locator;
   readonly koulutusotimijatKohderyhma: Kohderyhma;
   readonly oppilaitoksetKohderyhma: Kohderyhma;
+  readonly oppilaitostentoimipisteetKohderyhma: Kohderyhma;
 
   constructor(page: Page) {
     this.page = page;
@@ -23,6 +24,10 @@ export class OsoitepalveluPage {
     });
     this.koulutusotimijatKohderyhma = new Kohderyhma(page, "Koulutustoimijat");
     this.oppilaitoksetKohderyhma = new Kohderyhma(page, "Oppilaitokset");
+    this.oppilaitostentoimipisteetKohderyhma = new Kohderyhma(
+      page,
+      "Oppilaitosten toimipisteet"
+    );
     this.kieliFilter = new Filter(page, "Organisaation kieli");
     this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");
     this.sijaintiFilter = new Filter(page, "Sijainti");
