@@ -544,15 +544,3 @@ function getItemsByCheckState(page: Page, checked: boolean) {
     has: page.getByRole("checkbox", { checked }),
   });
 }
-
-async function pressTabUntilFocusOn(page: Page, locator: Locator) {
-  let correctLocatorHasFocus = false;
-  while (!correctLocatorHasFocus) {
-    correctLocatorHasFocus = await locator.evaluate(
-      (node) => document.activeElement == node
-    );
-    if (!correctLocatorHasFocus) {
-      await page.keyboard.press("Tab");
-    }
-  }
-}
