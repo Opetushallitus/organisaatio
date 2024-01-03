@@ -86,30 +86,36 @@ class Filter {
   }
 
   async open() {
-    await this.pressTabUntilFocusOn(this.button);
-    await this.page.keyboard.press("Space");
+    await this.pressSpaceOnLocator(this.button);
   }
 
   async close() {
-    await this.pressTabUntilFocusOn(this.button);
-    await this.page.keyboard.press("Space");
-  }
-
-  async pressTabUntilFocusOn(locator: Locator) {
-    let correctLocatorHasFocus = false;
-    while (!correctLocatorHasFocus) {
-      correctLocatorHasFocus = await locator.evaluate(
-        (node) => document.activeElement == node
-      );
-      if (!correctLocatorHasFocus) {
-        await this.page.keyboard.press("Tab");
-      }
-    }
+    await this.pressSpaceOnLocator(this.button);
   }
 
   async toggleCheckboxByLabel(label: string) {
     const checkbox = await this.contents.getByLabel(label, { exact: true });
-    await this.pressTabUntilFocusOn(checkbox);
-    await this.page.keyboard.press("Space");
+    await this.pressSpaceOnLocator(checkbox);
+  }
+
+  async pressSpaceOnLocator(locator: Locator) {
+    return pressSpaceOnLocator(this.page, locator);
+  }
+}
+
+async function pressSpaceOnLocator(page: Page, locator: Locator) {
+  await pressTabUntilFocusOn(page, locator);
+  return page.keyboard.press("Space");
+}
+
+async function pressTabUntilFocusOn(page: Page, locator: Locator) {
+  let correctLocatorHasFocus = false;
+  while (!correctLocatorHasFocus) {
+    correctLocatorHasFocus = await locator.evaluate(
+      (node) => document.activeElement == node
+    );
+    if (!correctLocatorHasFocus) {
+      await page.keyboard.press("Tab");
+    }
   }
 }
