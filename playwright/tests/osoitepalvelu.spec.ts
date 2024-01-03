@@ -495,6 +495,29 @@ test.describe("Osoitepalvelu", () => {
       }
     );
   });
+
+  test.describe("Oppilaitokset kohderyhmä", async () => {
+    test.beforeEach(async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.oppilaitoksetKohderyhma.toggle();
+    });
+
+    test("filters results by oppilaitostyyppi", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.oppilaitostyyppiFilter.open();
+      await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
+        "Perusopetus"
+      );
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      await expect(
+        page.getByText("Mansikkalan testi peruskoulu")
+      ).toBeVisible();
+    });
+  });
 });
 
 async function selectFromJärjestämislupaDropdown(page: Page, label: string) {

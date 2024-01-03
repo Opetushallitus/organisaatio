@@ -11,6 +11,8 @@ export class OsoitepalveluPage {
   readonly haeButton: Locator;
   readonly tyhjennaButton: Locator;
   readonly koulutustoimijatCheckbox: Locator;
+  readonly koulutusotimijatKohderyhma: Kohderyhma;
+  readonly oppilaitoksetKohderyhma: Kohderyhma;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,6 +21,8 @@ export class OsoitepalveluPage {
     this.koulutustoimijatCheckbox = page.getByLabel("Koulutustoimijat", {
       exact: true,
     });
+    this.koulutusotimijatKohderyhma = new Kohderyhma(page, "Koulutustoimijat");
+    this.oppilaitoksetKohderyhma = new Kohderyhma(page, "Oppilaitokset");
     this.kieliFilter = new Filter(page, "Organisaation kieli");
     this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");
     this.sijaintiFilter = new Filter(page, "Sijainti");
@@ -100,6 +104,20 @@ class Filter {
 
   async pressSpaceOnLocator(locator: Locator) {
     return pressSpaceOnLocator(this.page, locator);
+  }
+}
+
+class Kohderyhma {
+  readonly page: Page;
+  readonly checkbox: Locator;
+
+  constructor(page: Page, label: string) {
+    this.page = page;
+    this.checkbox = page.getByLabel(label);
+  }
+
+  async toggle() {
+    await pressSpaceOnLocator(this.page, this.checkbox);
   }
 }
 

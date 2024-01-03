@@ -294,6 +294,11 @@ public class OsoitteetResource {
             sql.add("AND EXISTS (SELECT 1 FROM organisaatio_koulutuslupa WHERE organisaatio_koulutuslupa.organisaatio_id = o.id)");
         }
 
+        if (!req.getOppilaitostyypit().isEmpty()) {
+            sql.add("AND o.oppilaitostyyppi IN (:oppilaitostyypit)");
+            params.put("oppilaitostyypit", req.getOppilaitostyypit());
+        }
+
         if (!req.getKunnat().isEmpty()) {
             sql.add("AND o.kotipaikka IN (:kunnat)");
             params.put("kunnat", req.getKunnat());
