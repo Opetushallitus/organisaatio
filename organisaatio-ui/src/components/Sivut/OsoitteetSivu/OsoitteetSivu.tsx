@@ -7,7 +7,11 @@ import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import Loading from '../../Loading/Loading';
 
-const OsoitteetSivu = () => {
+type OsoitteetSivuProps = {
+    muotoilematonViestiEnabled: boolean;
+};
+
+const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     useTitle('Osoitepalvelu');
 
     type State = {
@@ -47,7 +51,11 @@ const OsoitteetSivu = () => {
             <Route exact path={'/osoitteet/hakutulos'}>
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
-                        <HakutulosView request={state.request} results={state.hakutulos} />
+                        <HakutulosView
+                            muotoilematonViestiEnabled={muotoilematonViestiEnabled}
+                            request={state.request}
+                            results={state.hakutulos}
+                        />
                     </div>
                 </div>
             </Route>

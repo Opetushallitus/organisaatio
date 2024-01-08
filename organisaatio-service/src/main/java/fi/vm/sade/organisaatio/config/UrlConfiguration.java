@@ -28,5 +28,6 @@ public class UrlConfiguration extends OphProperties {
         this.addDefault("port.organisaatio-service", environment.getRequiredProperty("port.organisaatio-service"));
         this.frontProperties.setProperty("urlVirkailija", this.require("url-virkailija"));
         this.frontProperties.setProperty("uusiOsoitepalveluEnabled", environment.getRequiredProperty("feature.ostj-182-uusi-osoitepalvelu"));
+        this.frontProperties.setProperty("uusiOsoitepalveluMuotoilematonViestiEnabled", environment.getRequiredProperty("feature.ostj-201-muotoilematon-viesti"));
     }
 }

@@ -34,7 +34,17 @@ const OrganisaatioApp: React.FC = () => {
                         <Switch>
                             <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
                             {frontProperties.uusiOsoitepalveluEnabled === 'true' && (
-                                <Route path={'/osoitteet'} component={OsoitteetSivu} />
+                                <Route
+                                    path={'/osoitteet'}
+                                    component={(props: RouteComponentProps) => (
+                                        <OsoitteetSivu
+                                            {...props}
+                                            muotoilematonViestiEnabled={
+                                                frontProperties.uusiOsoitepalveluMuotoilematonViestiEnabled === 'true'
+                                            }
+                                        />
+                                    )}
+                                ></Route>
                             )}
                             <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
                             <Route path={'/lomake/:oid'} component={LomakeSivu} />

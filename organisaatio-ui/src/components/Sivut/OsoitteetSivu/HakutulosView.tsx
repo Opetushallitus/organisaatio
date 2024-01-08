@@ -8,11 +8,12 @@ import { API_CONTEXT } from '../../../contexts/constants';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 type HakutulosViewProps = {
+    muotoilematonViestiEnabled: boolean;
     request?: HaeRequest;
     results?: Hakutulos[];
 };
 
-export function HakutulosView({ request, results }: HakutulosViewProps) {
+export function HakutulosView({ muotoilematonViestiEnabled, request, results }: HakutulosViewProps) {
     const history = useHistory();
 
     function navigateBackToSearch() {
@@ -37,6 +38,7 @@ export function HakutulosView({ request, results }: HakutulosViewProps) {
             </div>
             <div className={styles.SininenPalkki}>{results.length} hakutulosta valittu</div>
             <HakutulosTable results={results} />
+            {muotoilematonViestiEnabled && <Button>Kirjoita sähköpostiviesti</Button>}
             <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
                 <input type={'hidden'} name={'request'} value={JSON.stringify(request)} />
                 <Button type={'submit'}>Lataa Excel</Button>
