@@ -63,3 +63,13 @@
     font-weight: 500;
     line-height: normal;
 }
+
+.ButtonRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+}
+.ButtonRow button[variant='outlined'] {
+    background-color: white;
+}

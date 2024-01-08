@@ -38,11 +38,15 @@ export function HakutulosView({ muotoilematonViestiEnabled, request, results }: 
             </div>
             <div className={styles.SininenPalkki}>{results.length} hakutulosta valittu</div>
             <HakutulosTable results={results} />
-            {muotoilematonViestiEnabled && <Button>Kirjoita sähköpostiviesti</Button>}
-            <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
-                <input type={'hidden'} name={'request'} value={JSON.stringify(request)} />
-                <Button type={'submit'}>Lataa Excel</Button>
-            </form>
+            <div className={styles.ButtonRow}>
+                {muotoilematonViestiEnabled && <Button>Kirjoita sähköpostiviesti</Button>}
+                <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
+                    <input type={'hidden'} name={'request'} value={JSON.stringify(request)} />
+                    <Button variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'} type={'submit'}>
+                        Lataa Excel
+                    </Button>
+                </form>
+            </div>
         </div>
     );
 }
