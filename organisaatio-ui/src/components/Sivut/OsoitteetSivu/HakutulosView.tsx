@@ -11,9 +11,10 @@ type HakutulosViewProps = {
     muotoilematonViestiEnabled: boolean;
     request?: HaeRequest;
     results?: Hakutulos[];
+    onWriteMail: () => void;
 };
 
-export function HakutulosView({ muotoilematonViestiEnabled, request, results }: HakutulosViewProps) {
+export function HakutulosView({ muotoilematonViestiEnabled, request, results, onWriteMail }: HakutulosViewProps) {
     const history = useHistory();
 
     function navigateBackToSearch() {
@@ -39,7 +40,7 @@ export function HakutulosView({ muotoilematonViestiEnabled, request, results }: 
             <div className={styles.SininenPalkki}>{results.length} hakutulosta valittu</div>
             <HakutulosTable results={results} />
             <div className={styles.ButtonRow}>
-                {muotoilematonViestiEnabled && <Button>Kirjoita sähköpostiviesti</Button>}
+                {muotoilematonViestiEnabled && <Button onClick={onWriteMail}>Kirjoita sähköpostiviesti</Button>}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
                     <input type={'hidden'} name={'request'} value={JSON.stringify(request)} />
                     <Button variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'} type={'submit'}>

@@ -5,6 +5,7 @@ import { Route, useHistory } from 'react-router-dom';
 import { haeHakuParametrit, HaeRequest, HakuParametrit, Hakutulos } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
+import { ViestiView } from './ViestiView';
 import Loading from '../../Loading/Loading';
 
 type OsoitteetSivuProps = {
@@ -25,6 +26,10 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     function onSearchResult(request: HaeRequest, hakutulos: Hakutulos[]) {
         setState({ request, hakutulos });
         history.push('/osoitteet/hakutulos');
+    }
+
+    function onWriteMail() {
+        history.push('/osoitteet/viesti');
     }
 
     useEffect(() => {
@@ -55,7 +60,15 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                             muotoilematonViestiEnabled={muotoilematonViestiEnabled}
                             request={state.request}
                             results={state.hakutulos}
+                            onWriteMail={onWriteMail}
                         />
+                    </div>
+                </div>
+            </Route>
+            <Route exact path={'/osoitteet/viesti'}>
+                <div className={styles.MainContent}>
+                    <div className={styles.ContentContainer}>
+                        <ViestiView></ViestiView>
                     </div>
                 </div>
             </Route>

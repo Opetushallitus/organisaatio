@@ -1,0 +1,71 @@
+.ViestiView {
+    width: 848px;
+    padding: 32px 32px 32px 32px;
+    color: var(--color-neutral-black);
+    background: var(--color-neutral-white);
+    border-radius: 3px;
+    box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
+}
+
+.Header{
+    display: flex;
+    align-items: center;
+    height: 72px;
+    border-bottom: 1px solid;
+    border-bottom-color: var(--color-gray-gray-lighten-6);
+    margin-bottom: 16px;
+}
+
+.Header h2 {
+    font-family: Roboto;
+    font-size: 20px;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.Content label {
+    font-size: 16px;
+}
+
+.Content input {
+    width: 100%;
+}
+
+.Content textarea {
+    height: 120px;
+    resize: none;
+}
+
+.Row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 30px;
+}
+
+.Column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
+.Box {
+    padding: 16px;
+    background: var(--color-gray-gray-lighten-6);
+    color: var(--text-text-paragraph);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0.03px;
+}
+
+.Box strong {
+    font-weight: 700;
+}
