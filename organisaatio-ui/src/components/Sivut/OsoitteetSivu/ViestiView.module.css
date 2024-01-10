@@ -1,4 +1,7 @@
 .ViestiView {
+    --border-color: var(--color-gray-gray-lighten-3);
+    --border-radius: 4px; /* 3px Figmassa, mutta 4px muissa lomakkeen tyyleissä */
+
     width: 848px;
     padding: 32px 32px 32px 32px;
     color: var(--color-neutral-black);
@@ -56,7 +59,32 @@
     flex: 1;
 }
 
-.Box {
+.Viesti {
+    transition: border-color 0.25s, box-shadow 0.25s;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.Viesti > .ViestiTextarea {
+    border: none;
+    box-shadow: none;
+}
+
+.Viesti > .ViestiTextarea:hover, .Viesti > .ViestiTextarea:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.Viesti:has(.ViestiTextarea:hover) {
+    border-color: var(--color-primary-blue);
+}
+
+.Viesti:has(.ViestiTextarea:focus) {
+    box-shadow: 0 0 0 var(--border-radius) rgba(10,120,156,0.2);
+    border-color: var(--color-primary-blue);
+}
+
+.ViestiFooter {
     padding: 16px;
     background: var(--color-gray-gray-lighten-6);
     color: var(--text-text-paragraph);
@@ -64,8 +92,9 @@
     font-weight: 400;
     line-height: 18px;
     letter-spacing: 0.03px;
+    border-radius: 0px 0px var(--border-radius) var(--border-radius);
 }
 
-.Box strong {
+.ViestiFooter strong {
     font-weight: 700;
 }

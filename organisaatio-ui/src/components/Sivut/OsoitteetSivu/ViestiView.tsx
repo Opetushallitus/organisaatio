@@ -40,14 +40,16 @@ export const ViestiView = () => {
                 <div className={styles.Row}>
                     <div className={styles.Column}>
                         <FormLabel>Viesti*</FormLabel>
-                        <Textarea></Textarea>
-                        <div className={styles.Box}>
-                            <strong>Osoitelähde:</strong> OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään
-                            Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
-                            <br />
-                            <strong>Adresskälla:</strong> Utbildningsstyrelsen Studieinfo (Organisationstjänst).
-                            Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin
-                            kommunikation till skolorna och skolornas administratörer.
+                        <div className={styles.Viesti}>
+                            <Textarea className={styles.ViestiTextarea}></Textarea>
+                            <div className={styles.ViestiFooter}>
+                                <strong>Osoitelähde:</strong> OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään
+                                Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
+                                <br />
+                                <strong>Adresskälla:</strong> Utbildningsstyrelsen Studieinfo (Organisationstjänst).
+                                Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin
+                                kommunikation till skolorna och skolornas administratörer.
+                            </div>
                         </div>
                     </div>
                 </div>
