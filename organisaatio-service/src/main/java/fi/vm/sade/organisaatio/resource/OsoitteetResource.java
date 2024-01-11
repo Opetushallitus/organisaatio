@@ -3,6 +3,8 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.email.EmailService;
+import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.Osoite;
@@ -24,9 +26,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,6 +47,7 @@ import static org.apache.poi.ss.util.CellUtil.createCell;
 @RequiredArgsConstructor
 @Slf4j
 public class OsoitteetResource {
+    private final EmailService emailService;
     private final EntityManager em;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -91,26 +97,26 @@ public class OsoitteetResource {
                 "organisaatio_ids", createSqlBigintArray(organisaatioIds)));
 
         var query = """
-                INSERT INTO osoitteet_haku_and_hakutulos (
-                    organisaatiotyypit,
-                    oppilaitostyypit,
-                    vuosiluokat,
-                    kunnat,
-                    anyJarjestamislupa,
-                    jarjestamisluvat,
-                    kielet,
-                    organisaatio_ids
-                ) VALUES (
-                    :organisaatiotyypit,
-                    :oppilaitostyypit,
-                    :vuosiluokat,
-                    :kunnat,
-                    :anyJarjestamislupa,
-                    :jarjestamisluvat,
-                    :kielet,
-                    :organisaatio_ids
-                ) RETURNING id;
-               """;
+                 INSERT INTO osoitteet_haku_and_hakutulos (
+                     organisaatiotyypit,
+                     oppilaitostyypit,
+                     vuosiluokat,
+                     kunnat,
+                     anyjarjestamislupa,
+                     jarjestamisluvat,
+                     kielet,
+                     organisaatio_ids
+                 ) VALUES (
+                     :organisaatiotyypit,
+                     :oppilaitostyypit,
+                     :vuosiluokat,
+                     :kunnat,
+                     :anyJarjestamislupa,
+                     :jarjestamisluvat,
+                     :kielet,
+                     :organisaatio_ids
+                 ) RETURNING id;
+                """;
         return jdbcTemplate.queryForObject(query, params, (rs, rowNum) -> rs.getString("id"));
     }
 
@@ -126,16 +132,46 @@ public class OsoitteetResource {
         return jdbcTemplate
                 .getJdbcOperations()
                 .execute(new ConnectionCallback<java.sql.Array>() {
-                @Override
-                public java.sql.Array doInConnection(Connection con) throws SQLException, DataAccessException {
-                    return con.createArrayOf(arrayType, list.toArray());
-                }
-            });
+                    @Override
+                    public java.sql.Array doInConnection(Connection con) throws SQLException, DataAccessException {
+                        return con.createArrayOf(arrayType, list.toArray());
+                    }
+                });
     }
 
+
+    @PostMapping(
+            value = "/hakutulos/{hakutulosId}/email",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
+    public SendEmailResponse sendEmail(@PathVariable String hakutulosId, @Validated @RequestBody SendEmailRequest request) {
+        // TODO: Hae hakutulos tietokannasta
+        // TODO: Validoi onko käyttäjän oma hakutulos
+
+        var hakutulokset = getHakutulos(request.getHaku());
+        var recipients = hakutulokset.stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList();
+        var emailId = emailService.queueEmail(QueuedEmail.builder()
+                .replyTo(request.getReplyTo())
+                .recipients(recipients)
+                .subject(request.getSubject())
+                .body(request.getBody())
+                .build());
+
+        try {
+            emailService.attemptSendingEmail(emailId);
+            return new SendEmailResponse(emailId, "SENT");
+        } catch (Exception e) {
+            log.info("Failed to send email on first attempt", e);
+            return new SendEmailResponse(emailId, "QUEUED");
+        }
+    }
+
+
     @PostMapping(value = "/hae/xls",
-    consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
-    produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+            produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
         var resultId = request.getFirst("resultId");
@@ -577,4 +613,24 @@ class HaeRequest {
     private boolean anyJarjestamislupa;
     private List<String> jarjestamisluvat;
     private List<String> kielet;
+}
+
+@Data
+class SendEmailRequest {
+    @Deprecated
+    private HaeRequest haku;
+    @NotBlank
+    private String replyTo;
+    @NotBlank
+    private String cc;
+    @Size(min = 1, max = 255)
+    private String subject;
+    @Size(min = 1, max = 6291456)
+    private String body;
+}
+
+@Data
+class SendEmailResponse {
+    private final String emailId;
+    private final String status;
 }

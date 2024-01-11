@@ -1,31 +1,33 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import lombok.Builder;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.util.List;
 
 @Slf4j
 public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
-    private final ObjectMapper mapper = JsonMapper.builder()
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .build();
+    private final ObjectMapper mapper;
 
-    public ViestinvalitysClient(HttpClient httpClient, CasClient casClient, String baseUrl) {
+    public ViestinvalitysClient(HttpClient httpClient, CasClient casClient, String baseUrl, ObjectMapper objectMapper) {
         super(httpClient, casClient, baseUrl);
-        log.info("Creating OppijanumerorekisteriClient");
+        this.mapper = objectMapper;
     }
 
-    public ApiResponse luoLahetys(LuoLahetysRequest requestBody) throws IOException, InterruptedException {
-        return post("/lahetys/v1/lahetykset", mapper.writeValueAsString(requestBody));
+    public LuoViestiSuccessResponse luoViesti(Viesti viesti) {
+        try {
+            var response = post("/lahetys/v1/viestit", mapper.writeValueAsString(viesti));
+            if (response.getStatus() == 200) {
+                return mapper.readValue(response.getBody(), LuoViestiSuccessResponse.class);
+            } else {
+                throw new UnexpectedResponseException(response);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ApiResponse post(String path, String requestBody) throws IOException, InterruptedException {
@@ -33,31 +35,9 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serviceUrl + path))
                 .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
-                .header("Content-Type", "application/json");
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json");
         var response = sendRequest(request);
         return new ApiResponse(response.statusCode(), response.body());
-    }
-
-    @Builder
-    @Data
-    public static class LuoLahetysRequest {
-        public String otsikko;
-        public List<String> kayttooikeusRajoitukset;
-    }
-
-    @Data
-    public static class LuoLahetysSuccessResponse {
-        private String lahetysTunniste;
-    }
-
-    @Data
-    public static class LuoLahetysFailureResponse {
-        private List<String> validointiVirheet;
-    }
-
-    @Data
-    public static class ApiResponse {
-        private final Integer status;
-        private final String body;
     }
 }
