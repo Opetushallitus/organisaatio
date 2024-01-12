@@ -10,35 +10,37 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 type HakutulosViewProps = {
     muotoilematonViestiEnabled: boolean;
     request?: HaeRequest;
-    results?: Hakutulos[];
+    result?: Hakutulos;
     onWriteMail: () => void;
 };
 
-export function HakutulosView({ muotoilematonViestiEnabled, request, results, onWriteMail }: HakutulosViewProps) {
+export function HakutulosView({ muotoilematonViestiEnabled, request, result, onWriteMail }: HakutulosViewProps) {
     const history = useHistory();
 
     function navigateBackToSearch() {
         history.goBack();
     }
 
-    if (typeof results === 'undefined') {
+    if (typeof result === 'undefined') {
         navigateBackToSearch();
         return null;
     }
+
+    const rows = result.rows;
 
     return (
         <div className={styles.HakutulosView}>
             <div className={styles.TitleRow}>
                 <div className={styles.Title}>
                     <h1 className={styles.TitleText}>Hakutulokset</h1>
-                    <span className={styles.TitleAlt}>( {results.length} )</span>
+                    <span className={styles.TitleAlt}>( {rows.length} )</span>
                 </div>
                 <LinklikeButton onClick={navigateBackToSearch}>
                     <IconArrowBack /> Muokkaa hakua
                 </LinklikeButton>
             </div>
-            <div className={styles.SininenPalkki}>{results.length} hakutulosta valittu</div>
-            <HakutulosTable results={results} />
+            <div className={styles.SininenPalkki}>{rows.length} hakutulosta valittu</div>
+            <HakutulosTable rows={rows} />
             <div className={styles.ButtonRow}>
                 {muotoilematonViestiEnabled && <Button onClick={onWriteMail}>Kirjoita sähköpostiviesti</Button>}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>

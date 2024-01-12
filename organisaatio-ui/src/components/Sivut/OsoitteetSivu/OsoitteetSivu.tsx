@@ -17,13 +17,13 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
 
     type State = {
         request?: HaeRequest;
-        hakutulos?: Hakutulos[];
+        hakutulos?: Hakutulos;
     };
     const [hakuParametrit, setHakuParametrit] = useState<HakuParametrit | undefined>(undefined);
     const [state, setState] = useState<State>({});
     const history = useHistory();
 
-    function onSearchResult(request: HaeRequest, hakutulos: Hakutulos[]) {
+    function onSearchResult(request: HaeRequest, hakutulos: Hakutulos) {
         setState({ request, hakutulos });
         history.push('/osoitteet/hakutulos');
     }
@@ -53,13 +53,13 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                     </div>
                 </div>
             </Route>
-            <Route exact path={'/osoitteet/hakutulos'}>
+            <Route path={'/osoitteet/hakutulos'}>
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
                         <HakutulosView
                             muotoilematonViestiEnabled={muotoilematonViestiEnabled}
                             request={state.request}
-                            results={state.hakutulos}
+                            result={state.hakutulos}
                             onWriteMail={onWriteMail}
                         />
                     </div>

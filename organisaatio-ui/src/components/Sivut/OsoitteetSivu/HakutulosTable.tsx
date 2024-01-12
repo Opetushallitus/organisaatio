@@ -1,12 +1,12 @@
 import React from 'react';
-import { Hakutulos } from './OsoitteetApi';
+import { HakutulosRow } from './OsoitteetApi';
 import styles from './HakutulosTable.module.css';
 import { Checkbox } from './Checkbox';
 
 type HakutulosTableProps = {
-    results: Hakutulos[];
+    rows: HakutulosRow[];
 };
-export function HakutulosTable({ results }: HakutulosTableProps) {
+export function HakutulosTable({ rows }: HakutulosTableProps) {
     return (
         <div className={styles.HakutulosTable}>
             <table className={styles.Table}>
@@ -33,7 +33,7 @@ export function HakutulosTable({ results }: HakutulosTableProps) {
                     </tr>
                 </thead>
                 <tbody className={styles.Body}>
-                    {results.map((_) => (
+                    {rows.map((_) => (
                         <tr key={_.id}>
                             <td className={styles.ColumnCheckbox + ' ' + styles.Fade}>
                                 <span className={styles.Checkbox}>

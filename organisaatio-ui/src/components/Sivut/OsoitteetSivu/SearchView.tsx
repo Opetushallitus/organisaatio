@@ -15,7 +15,7 @@ import * as oppilaitostyyppiFilter from './OppilaitostyyppiFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
-    onResult(request: HaeRequest, result: Hakutulos[]): void;
+    onResult(request: HaeRequest, result: Hakutulos): void;
 };
 
 type SearchState = {
@@ -70,8 +70,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 jarjestamisluvat: searchParameters.jarjestamisluvat,
                 kielet: searchParameters.kielet,
             };
-            const osoitteet = await haeOsoitteet(haeOsoitteetRequest);
-            onResult(haeOsoitteetRequest, osoitteet);
+            const hakutulos = await haeOsoitteet(haeOsoitteetRequest);
+            onResult(haeOsoitteetRequest, hakutulos);
         } catch (e) {
             setError(true);
         }

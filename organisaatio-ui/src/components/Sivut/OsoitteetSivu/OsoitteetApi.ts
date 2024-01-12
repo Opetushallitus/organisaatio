@@ -3,6 +3,11 @@ import { API_CONTEXT } from '../../../contexts/constants';
 import { KoodiUri } from '../../../types/types';
 
 export type Hakutulos = {
+    id: string;
+    rows: HakutulosRow[];
+};
+
+export type HakutulosRow = {
     id: number;
     oid: string;
     nimi: string;
@@ -54,8 +59,8 @@ export type HakuParametrit = {
     kielet: KoodistoKoodi[];
 };
 
-export async function haeOsoitteet(request: HaeRequest): Promise<Hakutulos[]> {
-    const response = await axios.post<Hakutulos[]>(`${API_CONTEXT}/osoitteet/hae`, request);
+export async function haeOsoitteet(request: HaeRequest): Promise<Hakutulos> {
+    const response = await axios.post<Hakutulos>(`${API_CONTEXT}/osoitteet/hae`, request);
     return response.data;
 }
 
