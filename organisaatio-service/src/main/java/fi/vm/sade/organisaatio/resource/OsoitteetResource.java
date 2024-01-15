@@ -2,7 +2,6 @@ package fi.vm.sade.organisaatio.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Email;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -56,8 +55,6 @@ public class OsoitteetResource {
         List<String> vuosiluokat = request.getVuosiluokat();
         List<String> oppilaitostyypit = request.getOppilaitostyypit();
         List<String> organisaatiotyypit = request.getOrganisaatiotyypit();
-        String kieli = "fi";
-        String kieliKoodi = "kieli_fi#1";
         List<Long> organisaatioIds = new ArrayList<>();
 
         if (organisaatiotyypit.contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())) {
@@ -79,7 +76,7 @@ public class OsoitteetResource {
         }
 
         var id = persistHakuAndHakutulos(request, organisaatioIds);
-        return makeSearchResult(id, organisaatioIds, kieli, kieliKoodi);
+        return makeSearchResult(id, organisaatioIds);
     }
 
     private String persistHakuAndHakutulos(HaeRequest request, List<Long> organisaatioIds) {
@@ -141,10 +138,14 @@ public class OsoitteetResource {
     produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
+        var resultId = request.getFirst("resultId");
+        if (resultId == null) {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            HaeRequest haeRequest = objectMapper.readValue(request.getFirst("request"), HaeRequest.class);
-            List<HakutulosRow> tulos = getHakutulos(haeRequest).rows;
+            var organisaatioIds = getOrganisaatioIdsByResultId(resultId);
+            List<HakutulosRow> tulos = makeSearchResultRows(Arrays.asList(organisaatioIds));
             Integer columnCount = 12;
 
             String fileName = "osoitteet.xls";
@@ -202,11 +203,32 @@ public class OsoitteetResource {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                     .body(new ByteArrayResource(out.toByteArray()));
         } catch (Exception e) {
+            log.error("Failed to generate excel document for search with id [" + resultId + "]" , e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private Hakutulos makeSearchResult(String id, List<Long> organisaatioIds, String kieli, String kieliKoodi) {
+    private Long[] getOrganisaatioIdsByResultId(String resultId) {
+        var params = Map.of("id", resultId);
+        var query = """
+                SELECT organisaatio_ids
+                FROM osoitteet_haku_and_hakutulos
+                WHERE id = :id::uuid
+                """;
+        return jdbcTemplate
+                .query(query, params, (rs, rowNum) ->
+                    (Long[]) rs.getArray("organisaatio_ids").getArray())
+                .getFirst();
+    }
+
+    private Hakutulos makeSearchResult(String id, List<Long> organisaatioIds) {
+        var rows = makeSearchResultRows(organisaatioIds);
+        return new Hakutulos(id, rows);
+    }
+
+    private List<HakutulosRow> makeSearchResultRows(List<Long> organisaatioIds) {
+        String kieli = "fi";
+        String kieliKoodi = "kieli_fi#1";
         List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
         Map<Long, String> orgNimet = fetchNimet(organisaatioIds, kieli);
         Map<Long, String> koskiOsoitteet = fetchKoskiOsoitteet(organisaatioIds, kieliKoodi);
@@ -240,7 +262,7 @@ public class OsoitteetResource {
 
         log.info("Hakutuloksia: {}", rows.size());
         rows.sort(Comparator.comparing(HakutulosRow::getNimi));
-        return new Hakutulos(id, rows);
+        return rows;
     }
 
     private Map<String, String> fetchKuntaKoodisto(String kieli) {

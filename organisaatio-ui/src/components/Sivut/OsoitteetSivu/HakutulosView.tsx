@@ -1,4 +1,4 @@
-import { HaeRequest, Hakutulos } from './OsoitteetApi';
+import { Hakutulos } from './OsoitteetApi';
 import styles from './HakutulosView.module.css';
 import { useHistory } from 'react-router-dom';
 import { HakutulosTable } from './HakutulosTable';
@@ -9,12 +9,11 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 
 type HakutulosViewProps = {
     muotoilematonViestiEnabled: boolean;
-    request?: HaeRequest;
     result?: Hakutulos;
     onWriteMail: () => void;
 };
 
-export function HakutulosView({ muotoilematonViestiEnabled, request, result, onWriteMail }: HakutulosViewProps) {
+export function HakutulosView({ muotoilematonViestiEnabled, result, onWriteMail }: HakutulosViewProps) {
     const history = useHistory();
 
     function navigateBackToSearch() {
@@ -44,7 +43,7 @@ export function HakutulosView({ muotoilematonViestiEnabled, request, result, onW
             <div className={styles.ButtonRow}>
                 {muotoilematonViestiEnabled && <Button onClick={onWriteMail}>Kirjoita sähköpostiviesti</Button>}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
-                    <input type={'hidden'} name={'request'} value={JSON.stringify(request)} />
+                    <input type={'hidden'} name={'resultId'} value={result.id} />
                     <Button variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'} type={'submit'}>
                         Lataa Excel
                     </Button>

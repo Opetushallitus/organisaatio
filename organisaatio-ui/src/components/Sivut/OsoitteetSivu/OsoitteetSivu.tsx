@@ -58,7 +58,6 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                     <div className={styles.WideContentContainer}>
                         <HakutulosView
                             muotoilematonViestiEnabled={muotoilematonViestiEnabled}
-                            request={state.request}
                             result={state.hakutulos}
                             onWriteMail={onWriteMail}
                         />
