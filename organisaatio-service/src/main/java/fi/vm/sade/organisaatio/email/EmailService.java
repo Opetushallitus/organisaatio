@@ -28,18 +28,20 @@ public class EmailService {
         var emailId = UUID.randomUUID().toString();
         log.info("Queueing email with subject and id: {}, {}", email.getSubject(), emailId);
         var sql = """
-                INSERT INTO queuedemail (id, queuedemailstatus_id, recipients, replyto, subject, body)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, replyto, subject, body)
+                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?)
                 """;
 
         jdbcTemplate.update(con -> {
             var ps = con.prepareStatement(sql);
-            ps.setString(1, emailId);
-            ps.setString(2, "QUEUED");
-            ps.setArray(3, con.createArrayOf("text", email.getRecipients().toArray()));
-            ps.setString(4, email.getReplyTo());
-            ps.setString(5, email.getSubject());
-            ps.setString(6, email.getBody());
+            var col = 1;
+            ps.setString(col++, emailId);
+            ps.setString(col++, email.getHakutulosId());
+            ps.setString(col++, "QUEUED");
+            ps.setArray(col++, con.createArrayOf("text", email.getRecipients().toArray()));
+            ps.setString(col++, email.getReplyTo());
+            ps.setString(col++, email.getSubject());
+            ps.setString(col++, email.getBody());
             return ps;
         });
 
@@ -72,7 +74,7 @@ public class EmailService {
     }
 
     private Optional<QueuedEmail> getQueuedEmailForSending(String emailId) {
-        var sql = "SELECT * FROM queuedemail WHERE id = ? AND queuedemailstatus_id = 'QUEUED' FOR UPDATE";
+        var sql = "SELECT * FROM queuedemail WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE";
         var results = jdbcTemplate.query(sql, (rs, rowNum) -> QueuedEmail.builder()
                         .id(rs.getString("id"))
                         .status(rs.getString("queuedemailstatus_id"))
@@ -88,7 +90,7 @@ public class EmailService {
     }
 
     private void markEmailAsSent(String emailId, String lahetystunniste) {
-        var sql = "UPDATE queuedemail SET lahetystunniste = ?, modified = current_timestamp WHERE id = ?";
+        var sql = "UPDATE queuedemail SET lahetystunniste = ?, modified = current_timestamp WHERE id = ?::uuid";
         jdbcTemplate.update(sql, lahetystunniste, emailId);
     }
 }

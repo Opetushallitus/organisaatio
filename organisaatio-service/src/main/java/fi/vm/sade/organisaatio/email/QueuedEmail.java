@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class QueuedEmail {
+    private String hakutulosId;
     private String id;
     private String status;
     private List<String> recipients;

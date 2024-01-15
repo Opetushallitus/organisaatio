@@ -1,3 +1,6 @@
+ALTER TABLE osoitteet_haku_and_hakutulos
+ADD PRIMARY KEY (id);
+
 CREATE TABLE queuedemailstatus (
     id text PRIMARY KEY,
     description text NOT NULL
@@ -8,7 +11,8 @@ INSERT INTO queuedemailstatus (id, description) VALUES
 ('SENT', 'Sähköposti on lähetetty viestinvälityspalveluun');
 
 CREATE TABLE queuedemail (
-    id text PRIMARY KEY,
+    id uuid PRIMARY KEY,
+    osoitteet_haku_and_hakutulos_id uuid NOT NULL REFERENCES osoitteet_haku_and_hakutulos (id),
     queuedemailstatus_id text NOT NULL REFERENCES queuedemailstatus (id),
     recipients text[] NOT NULL CONSTRAINT recipients_required CHECK (recipients != '{}'),
     replyto text NOT NULL,

@@ -147,12 +147,11 @@ public class OsoitteetResource {
     )
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public SendEmailResponse sendEmail(@PathVariable String hakutulosId, @Validated @RequestBody SendEmailRequest request) {
-        // TODO: Hae hakutulos tietokannasta
         // TODO: Validoi onko käyttäjän oma hakutulos
-
-        var hakutulokset = getHakutulos(request.getHaku());
+        var hakutulokset = makeSearchResultRows(Arrays.asList(getOrganisaatioIdsByResultId(hakutulosId)));
         var recipients = hakutulokset.stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList();
         var emailId = emailService.queueEmail(QueuedEmail.builder()
+                .hakutulosId(hakutulosId)
                 .replyTo(request.getReplyTo())
                 .recipients(recipients)
                 .subject(request.getSubject())
@@ -617,8 +616,6 @@ class HaeRequest {
 
 @Data
 class SendEmailRequest {
-    @Deprecated
-    private HaeRequest haku;
     @NotBlank
     private String replyTo;
     @NotBlank
