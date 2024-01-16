@@ -30,7 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
@@ -621,12 +621,14 @@ class HaeRequest {
 
 @Data
 class SendEmailRequest {
-    @NotBlank
+    @Size(min = 1)
     private String replyTo;
-    @NotBlank
+    @Size(min = 1)
     private String cc;
+    @NotNull
     @Size(min = 1, max = 255)
     private String subject;
+    @NotNull
     @Size(min = 1, max = 6291456)
     private String body;
 }
