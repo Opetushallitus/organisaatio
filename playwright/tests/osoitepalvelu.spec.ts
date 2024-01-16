@@ -611,6 +611,60 @@ test.describe("Osoitepalvelu", () => {
       });
     });
   });
+
+  test.describe("Kirjoita viesti form", async () => {
+    test.beforeEach(async ({ page }, testInfo) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.haeButton.click();
+      await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+    });
+
+    test("aihe and viesti fields are required", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
+
+      await kirjoitaViestiForm.aiheField.fill("Aihe");
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
+
+      await kirjoitaViestiForm.viestiField.fill("Viesti");
+      await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
+
+      await kirjoitaViestiForm.aiheField.fill("");
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
+    });
+
+    test("aihe field", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const field = kirjoitaViestiForm.aiheField;
+      const errorIndicator = kirjoitaViestiForm.aiheFieldErrorIndicator;
+
+      await test.step("gives feedback when value is cleared", async () => {
+        await assertClearedFieldShowsErrorIndicator(
+          page,
+          field,
+          errorIndicator
+        );
+      });
+    });
+
+    test("viesti field", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const field = kirjoitaViestiForm.viestiField;
+      const errorIndicator = kirjoitaViestiForm.viestiFieldErrorIndicator;
+
+      await test.step("gives feedback when value is cleared", async () => {
+        await assertClearedFieldShowsErrorIndicator(
+          page,
+          field,
+          errorIndicator
+        );
+      });
+    });
+  });
 });
 
 async function selectFromJärjestämislupaDropdown(page: Page, label: string) {
@@ -659,4 +713,18 @@ function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
     has: page.getByRole("checkbox", { checked }),
   });
+}
+
+async function assertClearedFieldShowsErrorIndicator(
+  page: Page,
+  field: Locator,
+  errorIndicator: Locator
+) {
+  await expect(errorIndicator).not.toBeVisible();
+  await field.fill("Text a");
+  await expect(errorIndicator).not.toBeVisible();
+  await field.fill("");
+  await expect(errorIndicator).toBeVisible();
+  await field.fill("Text b");
+  await expect(errorIndicator).not.toBeVisible();
 }

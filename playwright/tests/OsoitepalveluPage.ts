@@ -14,6 +14,8 @@ export class OsoitepalveluPage {
   readonly koulutusotimijatKohderyhma: Kohderyhma;
   readonly oppilaitoksetKohderyhma: Kohderyhma;
   readonly oppilaitostentoimipisteetKohderyhma: Kohderyhma;
+  readonly kirjoitaSahkopostiButton: Locator;
+  readonly kirjoitaViestiForm: KirjoitaViestiForm;
 
   constructor(page: Page) {
     this.page = page;
@@ -40,6 +42,10 @@ export class OsoitepalveluPage {
       name: "Tyhjennä",
       exact: true,
     });
+    this.kirjoitaSahkopostiButton = page.getByRole("button", {
+      name: "Kirjoita sähköpostiviesti",
+    });
+    this.kirjoitaViestiForm = new KirjoitaViestiForm(page);
   }
 
   async goto() {
@@ -140,5 +146,20 @@ async function pressTabUntilFocusOn(page: Page, locator: Locator) {
     if (!correctLocatorHasFocus) {
       await page.keyboard.press("Tab");
     }
+  }
+}
+
+class KirjoitaViestiForm {
+  readonly lahetaButton: Locator;
+  readonly aiheField: Locator;
+  readonly aiheFieldErrorIndicator: Locator;
+  readonly viestiField: Locator;
+  readonly viestiFieldErrorIndicator: Locator;
+  constructor(page: Page) {
+    this.lahetaButton = page.getByRole("button", { name: "Lähetä" });
+    this.aiheField = page.getByLabel("Aihe*");
+    this.aiheFieldErrorIndicator = page.getByText("Aihe on pakollinen");
+    this.viestiField = page.locator("textarea");
+    this.viestiFieldErrorIndicator = page.getByText("Viesti on pakollinen");
   }
 }
