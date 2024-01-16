@@ -1,5 +1,5 @@
 CREATE table osoitteet_haku_and_hakutulos (
-    id uuid NOT NULL,
+    id uuid PRIMARY KEY,
     organisaatiotyypit text[] NOT NULL,
     oppilaitostyypit text[] NOT NULL,
     vuosiluokat text[] NOT NULL,

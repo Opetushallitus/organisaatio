@@ -1,6 +1,3 @@
-ALTER TABLE osoitteet_haku_and_hakutulos
-ADD PRIMARY KEY (id);
-
 CREATE TABLE queuedemailstatus (
     id text PRIMARY KEY,
     description text NOT NULL
