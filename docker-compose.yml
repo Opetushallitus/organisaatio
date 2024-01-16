@@ -2,7 +2,7 @@ version: "3"
 services:
   database:
     container_name: oph-organisaatio-db
-    image: postgres:13.4
+    image: postgres:12.14
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=organisaatio
@@ -13,7 +13,7 @@ services:
     command: ["postgres", "-c", "log_statement=all"]
   database-test:
     container_name: oph-organisaatio-test-db
-    image: postgres:13.4
+    image: postgres:12.14
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=organisaatio
