@@ -9,11 +9,14 @@ import { sendEmail, SendEmailRequest } from './OsoitteetApi';
 import { useHistory, useParams } from 'react-router-dom';
 import { ErrorBanner } from './ErrorBanner';
 
+// TODO
+// - Peruuta
+// - Lomakkeen validointi
+
 function useTextInput(initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
     return [value, (event: React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value)] as const;
 }
-
 export const ViestiView = () => {
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
     const history = useHistory();
@@ -22,12 +25,19 @@ export const ViestiView = () => {
     const [cc, onCcChange] = useTextInput('');
     const [subject, onSubjectChange] = useTextInput('');
     const [body, onBodyChange] = useTextInput('');
-    const sendDisabled = !(subject.length >= 1 && body.length >= 1);
+    const subjectValid = subject.length >= 1;
+    const bodyValid = body.length >= 1;
+    const sendDisabled = !subjectValid || !bodyValid;
 
     async function onSendMail() {
         setSendError(false);
         try {
-            const request: SendEmailRequest = { replyTo, cc, subject, body };
+            const request: SendEmailRequest = {
+                replyTo: replyTo !== '' ? replyTo : undefined,
+                cc: cc !== '' ? cc : undefined,
+                subject,
+                body,
+            };
             const response = await sendEmail(hakutulosId, request);
             history.push(`/osoitteet/viesti/${response.emailId}`);
         } catch (e) {
