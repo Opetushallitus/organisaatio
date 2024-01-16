@@ -1,5 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE table osoitteet_haku_and_hakutulos (
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
     organisaatiotyypit text[] NOT NULL,
     oppilaitostyypit text[] NOT NULL,
     vuosiluokat text[] NOT NULL,
