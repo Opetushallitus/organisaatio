@@ -167,6 +167,11 @@ public class OsoitteetResource {
         }
     }
 
+    @GetMapping(value = "/viesti/{emailId}")
+    public QueuedEmail getEmail(@PathVariable String emailId) {
+        return emailService.getQueuedEmail(emailId).orElseThrow();
+    }
+
 
     @PostMapping(value = "/hae/xls",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
