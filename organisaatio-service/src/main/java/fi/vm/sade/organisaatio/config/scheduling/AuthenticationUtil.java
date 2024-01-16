@@ -26,4 +26,8 @@ public final class AuthenticationUtil {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
+    public String getCurrentUserOid() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

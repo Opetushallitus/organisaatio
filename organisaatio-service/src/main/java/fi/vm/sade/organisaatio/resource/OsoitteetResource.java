@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.config.scheduling.AuthenticationUtil;
 import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Email;
@@ -50,6 +51,7 @@ public class OsoitteetResource {
     private final EmailService emailService;
     private final EntityManager em;
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final AuthenticationUtil authenticationUtil;
 
     @PostMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
@@ -87,6 +89,7 @@ public class OsoitteetResource {
 
     private String persistHakuAndHakutulos(HaeRequest request, List<Long> organisaatioIds) {
         var params = new HashMap<String, Object>(Map.of(
+                "virkailija_oid", authenticationUtil.getCurrentUserOid(),
                 "organisaatiotyypit", createSqlStringArray(request.getOrganisaatiotyypit()),
                 "oppilaitostyypit", createSqlStringArray(request.getOppilaitostyypit()),
                 "vuosiluokat", createSqlStringArray(request.getVuosiluokat()),
@@ -98,6 +101,7 @@ public class OsoitteetResource {
 
         var query = """
                  INSERT INTO osoitteet_haku_and_hakutulos (
+                     virkailija_oid,
                      organisaatiotyypit,
                      oppilaitostyypit,
                      vuosiluokat,
@@ -107,6 +111,7 @@ public class OsoitteetResource {
                      kielet,
                      organisaatio_ids
                  ) VALUES (
+                     :virkailija_oid,
                      :organisaatiotyypit,
                      :oppilaitostyypit,
                      :vuosiluokat,
