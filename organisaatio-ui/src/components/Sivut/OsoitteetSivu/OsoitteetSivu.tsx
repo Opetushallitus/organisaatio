@@ -7,6 +7,7 @@ import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import { ViestiView } from './ViestiView';
 import Loading from '../../Loading/Loading';
+import { ViestiStatusView } from './ViestiStatusView';
 
 type OsoitteetSivuProps = {
     muotoilematonViestiEnabled: boolean;
@@ -68,6 +69,13 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                 <div className={styles.MainContent}>
                     <div className={styles.ContentContainer}>
                         <ViestiView></ViestiView>
+                    </div>
+                </div>
+            </Route>
+            <Route exact path={'/osoitteet/viesti/:emailId'}>
+                <div className={styles.MainContent}>
+                    <div className={styles.ContentContainer}>
+                        <ViestiStatusView />
                     </div>
                 </div>
             </Route>

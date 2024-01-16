@@ -53,7 +53,7 @@ public class EmailService {
     public void attemptSendingEmail(String emailId) {
         log.info("Attempting to send email {}", emailId);
         transactionTemplate.execute(status -> {
-            getQueuedEmailForSending(emailId).ifPresent(email -> {
+            getQueuedEmail(emailId, true).ifPresent(email -> {
                 // TODO: Yli 2048 vastaanottajan mailit
                 var response = viestinvalitysClient.luoViesti(Viesti.builder()
                         .lahettaja(OSOITEPALVELU_LAHETTAJA)
@@ -73,8 +73,13 @@ public class EmailService {
         });
     }
 
-    private Optional<QueuedEmail> getQueuedEmailForSending(String emailId) {
-        var sql = "SELECT * FROM queuedemail WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE";
+    public Optional<QueuedEmail> getQueuedEmail(String emailId) {
+        return getQueuedEmail(emailId, false);
+    }
+
+    private Optional<QueuedEmail> getQueuedEmail(String emailId, boolean forUpdate) {
+        var sql = "SELECT * FROM queuedemail WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED'";
+        if (forUpdate) sql += " FOR UPDATE";
         var results = jdbcTemplate.query(sql, (rs, rowNum) -> QueuedEmail.builder()
                         .id(rs.getString("id"))
                         .status(rs.getString("queuedemailstatus_id"))
