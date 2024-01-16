@@ -89,6 +89,7 @@ public class OsoitteetResource {
 
     private String persistHakuAndHakutulos(HaeRequest request, List<Long> organisaatioIds) {
         var params = new HashMap<String, Object>(Map.of(
+                "id", UUID.randomUUID().toString(),
                 "virkailija_oid", authenticationUtil.getCurrentUserOid(),
                 "organisaatiotyypit", createSqlStringArray(request.getOrganisaatiotyypit()),
                 "oppilaitostyypit", createSqlStringArray(request.getOppilaitostyypit()),
@@ -101,6 +102,7 @@ public class OsoitteetResource {
 
         var query = """
                  INSERT INTO osoitteet_haku_and_hakutulos (
+                     id,
                      virkailija_oid,
                      organisaatiotyypit,
                      oppilaitostyypit,
@@ -111,6 +113,7 @@ public class OsoitteetResource {
                      kielet,
                      organisaatio_ids
                  ) VALUES (
+                     :id::uuid,
                      :virkailija_oid,
                      :organisaatiotyypit,
                      :oppilaitostyypit,
