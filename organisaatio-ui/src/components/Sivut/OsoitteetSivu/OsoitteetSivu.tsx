@@ -30,7 +30,12 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     }
 
     function onWriteMail() {
-        history.push('/osoitteet/viesti');
+        const hakutulosId = state.hakutulos?.id;
+        if (typeof hakutulosId !== 'undefined') {
+            history.push(`/osoitteet/hakutulos/${hakutulosId}/viesti`);
+        } else {
+            throw new Error('Expected to have hakutulosId in state');
+        }
     }
 
     useEffect(() => {
@@ -54,7 +59,7 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                     </div>
                 </div>
             </Route>
-            <Route path={'/osoitteet/hakutulos'}>
+            <Route exact path={'/osoitteet/hakutulos'}>
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
                         <HakutulosView
@@ -65,7 +70,7 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                     </div>
                 </div>
             </Route>
-            <Route exact path={'/osoitteet/viesti'}>
+            <Route exact path={'/osoitteet/hakutulos/:hakutulosId/viesti'}>
                 <div className={styles.MainContent}>
                     <div className={styles.ContentContainer}>
                         <ViestiView></ViestiView>
