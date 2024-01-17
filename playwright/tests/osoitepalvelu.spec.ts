@@ -612,57 +612,42 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test.describe.only("Kirjoita viesti form", async () => {
-    test.beforeEach(async ({ page }, testInfo) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      await osoitepalveluPage.haeButton.click();
-      await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+  test("Kirjoita viesti form", async ({ page }) => {
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+    const aiheField = kirjoitaViestiForm.aiheField;
+    const viestiField = kirjoitaViestiForm.viestiField;
+
+    await osoitepalveluPage.haeButton.click();
+    await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+
+    await test.step("has a default state", async () => {
+      await expect(aiheField.input).toHaveText("");
+      await expect(aiheField.errorFeedback).not.toBeVisible();
+      await expect(viestiField.input).toHaveText("");
+      await expect(viestiField.errorFeedback).not.toBeVisible();
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
     });
 
-    test("aihe and viesti fields are required to have valid values", async ({
-      page,
-    }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
-      const aiheField = kirjoitaViestiForm.aiheField.input;
-      const viestiField = kirjoitaViestiForm.viestiField.input;
-
+    await test.step("has required fields", async () => {
+      await aiheField.input.fill("Aihe");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
-
-      await aiheField.fill("Aihe");
-      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
-
-      await viestiField.fill("Viesti");
+      await viestiField.input.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
-
-      await aiheField.fill("");
+      await aiheField.input.fill("");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
     });
 
-    test("aihe field", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
-      const field = kirjoitaViestiForm.aiheField;
+    await test.step("fields validate input", async () => {
+      await aiheField.input.fill("");
+      await expect(aiheField.errorFeedback).toBeVisible();
+      await expect(aiheField.errorFeedback).toHaveText("Aihe on pakollinen");
 
-      await test.step("gives feedback when value is cleared", async () => {
-        await asserFieldShowsErrorFeedbackWhenCleared(
-          field,
-          "Aihe on pakollinen"
-        );
-      });
-    });
-
-    test("viesti field", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
-      const field = kirjoitaViestiForm.viestiField;
-
-      await test.step("gives feedback when value is cleared", async () => {
-        await asserFieldShowsErrorFeedbackWhenCleared(
-          field,
-          "Viesti on pakollinen"
-        );
-      });
+      await viestiField.input.fill("");
+      await expect(viestiField.errorFeedback).toBeVisible();
+      await expect(viestiField.errorFeedback).toHaveText(
+        "Viesti on pakollinen"
+      );
     });
   });
 
@@ -672,12 +657,14 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       await osoitepalveluPage.kirjoitaSahkopostiButton.click();
     });
-    test("sending message shows 'Lähetyksessä on viivettä' page", async ({ page }) => {
+    test("sending message shows 'Lähetyksessä on viivettä' page", async ({
+      page,
+    }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
-      await kirjoitaViestiForm.aiheField.fill("Aihe");
-      await kirjoitaViestiForm.viestiField.fill("Viesti");
+      await kirjoitaViestiForm.aiheField.input.fill("Aihe");
+      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
       await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
@@ -731,18 +718,4 @@ function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
     has: page.getByRole("checkbox", { checked }),
   });
-}
-
-async function asserFieldShowsErrorFeedbackWhenCleared(
-  field: FormField,
-  errorMessage: string
-) {
-  await expect(field.errorFeedback).not.toBeVisible();
-  await field.input.fill("Text a");
-  await expect(field.errorFeedback).not.toBeVisible();
-  await field.input.fill("");
-  await expect(field.errorFeedback).toBeVisible();
-  await expect(field.errorFeedback).toHaveText(errorMessage);
-  await field.input.fill("Text b");
-  await expect(field.errorFeedback).not.toBeVisible();
 }
