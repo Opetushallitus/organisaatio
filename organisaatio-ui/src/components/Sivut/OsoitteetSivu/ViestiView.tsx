@@ -18,18 +18,23 @@ function useTextInput(initialValue: string) {
     return [value, (event: React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value)] as const;
 }
 
-function useRequiredTextInput(aihe: string, initialValue: string) {
+function useRequiredTextInput(name: string, maxLength: number, initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
-    const [error, setError] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
     return [
         { value, error },
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            if (value.length > 0 && event.target.value.length == 0) {
-                setError(true);
+            const newValue = event.target.value;
+
+            if (newValue.length == 0 && value.length > 0) {
+                setError(`${name} on pakollinen`);
+            } else if (newValue.length > maxLength) {
+                setError(`${name} on liian pitkä (${newValue.length} merkkiä)`);
             } else {
-                setError(false);
+                setError(null);
             }
-            setValue(event.target.value);
+            setValue(newValue);
         },
     ] as const;
 }
@@ -40,8 +45,8 @@ export const ViestiView = () => {
     const [sendError, setSendError] = useState<boolean>(false);
     const [replyTo, onReplyToChange] = useTextInput('');
     const [copy, onCopyChange] = useTextInput('');
-    const [subject, onSubjectChange] = useRequiredTextInput('Aihe', '');
-    const [body, onBodyChange] = useRequiredTextInput('Viesti', '');
+    const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
+    const [body, onBodyChange] = useRequiredTextInput('Viesti', 6291456, '');
     const subjectValid = subject.value.length >= 1;
     const bodyValid = body.value.length >= 1;
     const sendDisabled = !subjectValid || !bodyValid;
@@ -96,7 +101,7 @@ export const ViestiView = () => {
                                 Aihe*
                                 <Input type={'text'} value={subject.value} onChange={onSubjectChange}></Input>
                             </FormLabel>
-                            {subject.error && <p>Aihe on pakollinen</p>}
+                            {subject.error && <p>{subject.error}</p>}
                         </div>
                     </div>
                 </div>
@@ -120,7 +125,7 @@ export const ViestiView = () => {
                                     sin kommunikation till skolorna och skolornas administratörer.
                                 </div>
                             </div>
-                            {body.error && <p>Viesti on pakollinen</p>}
+                            {body.error && <p>{body.error}</p>}
                         </div>
                     </div>
                 </div>

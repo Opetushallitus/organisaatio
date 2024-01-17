@@ -643,10 +643,26 @@ test.describe("Osoitepalvelu", () => {
       await expect(aiheField.errorFeedback).toBeVisible();
       await expect(aiheField.errorFeedback).toHaveText("Aihe on pakollinen");
 
+      const aiheFieldMaxLength = 255;
+      await aiheField.input.fill(stringOfLength(aiheFieldMaxLength));
+      await expect(aiheField.errorFeedback).not.toBeVisible();
+      await aiheField.input.fill(stringOfLength(aiheFieldMaxLength + 1));
+      await expect(aiheField.errorFeedback).toHaveText(
+        `Aihe on liian pitkä (${aiheFieldMaxLength + 1} merkkiä)`
+      );
+
       await viestiField.input.fill("");
       await expect(viestiField.errorFeedback).toBeVisible();
       await expect(viestiField.errorFeedback).toHaveText(
         "Viesti on pakollinen"
+      );
+
+      const viestiFieldMaxLength = 6291456;
+      await viestiField.input.fill(stringOfLength(viestiFieldMaxLength));
+      await expect(viestiField.errorFeedback).not.toBeVisible();
+      await viestiField.input.fill(stringOfLength(viestiFieldMaxLength + 1));
+      await expect(viestiField.errorFeedback).toHaveText(
+        `Viesti on liian pitkä (${viestiFieldMaxLength + 1} merkkiä)`
       );
     });
   });
@@ -718,4 +734,8 @@ function getItemsByCheckState(page: Page, checked: boolean) {
   return page.getByRole("listitem").filter({
     has: page.getByRole("checkbox", { checked }),
   });
+}
+
+function stringOfLength(n: number) {
+  return "x".repeat(n);
 }
