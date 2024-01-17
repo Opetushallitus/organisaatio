@@ -13,6 +13,7 @@ public class QueuedEmail {
     private String id;
     private String status;
     private List<String> recipients;
+    private String copy;
     private String replyTo;
     private String subject;
     private String body;

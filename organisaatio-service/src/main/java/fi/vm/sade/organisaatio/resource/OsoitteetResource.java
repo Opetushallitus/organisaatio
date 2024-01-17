@@ -161,6 +161,7 @@ public class OsoitteetResource {
         var emailId = emailService.queueEmail(QueuedEmail.builder()
                 .hakutulosId(hakutulosId)
                 .replyTo(request.getReplyTo())
+                .copy(request.getCopy())
                 .recipients(recipients)
                 .subject(request.getSubject())
                 .body(request.getBody())
@@ -632,7 +633,7 @@ class SendEmailRequest {
     @Size(min = 1)
     private String replyTo;
     @Size(min = 1)
-    private String cc;
+    private String copy;
     @NotNull
     @Size(min = 1, max = 255)
     private String subject;

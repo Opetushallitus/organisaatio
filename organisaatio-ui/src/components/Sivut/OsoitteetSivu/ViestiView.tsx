@@ -33,7 +33,7 @@ export const ViestiView = () => {
     const history = useHistory();
     const [sendError, setSendError] = useState<boolean>(false);
     const [replyTo, onReplyToChange] = useTextInput('');
-    const [cc, onCcChange] = useTextInput('');
+    const [copy, onCopyChange] = useTextInput('');
     const [subject, onSubjectChange] = useTextInput('');
     const [body, onBodyChange] = useTextInput('');
     const subjectValid = subject.value.length >= 1;
@@ -45,7 +45,7 @@ export const ViestiView = () => {
         try {
             const request: SendEmailRequest = {
                 replyTo: replyTo.value !== '' ? replyTo.value : undefined,
-                cc: cc.value !== '' ? cc.value : undefined,
+                copy: copy.value !== '' ? copy.value : undefined,
                 subject: subject.value,
                 body: body.value,
             };
@@ -80,7 +80,7 @@ export const ViestiView = () => {
                     </div>
                     <div className={styles.Column}>
                         <FormLabel>Kopio-osoite</FormLabel>
-                        <Input type={'text'} value={cc.value} onChange={onCcChange}></Input>
+                        <Input type={'text'} value={copy.value} onChange={onCopyChange}></Input>
                     </div>
                 </div>
                 <div className={styles.Row}>

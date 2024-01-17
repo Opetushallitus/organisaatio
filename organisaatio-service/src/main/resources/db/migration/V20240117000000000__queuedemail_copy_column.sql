@@ -1,0 +1,1 @@
+ALTER TABLE queuedemail ADD COLUMN copy text;

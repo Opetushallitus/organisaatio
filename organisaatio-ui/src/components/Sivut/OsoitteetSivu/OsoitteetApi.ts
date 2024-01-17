@@ -71,7 +71,7 @@ export async function haeHakuParametrit() {
 
 export type SendEmailRequest = {
     replyTo?: string;
-    cc?: string;
+    copy?: string;
     subject: string;
     body: string;
 };

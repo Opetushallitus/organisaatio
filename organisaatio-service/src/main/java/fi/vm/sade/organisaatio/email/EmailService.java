@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,8 +29,8 @@ public class EmailService {
         var emailId = UUID.randomUUID().toString();
         log.info("Queueing email with subject and id: {}, {}", email.getSubject(), emailId);
         var sql = """
-                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, replyto, subject, body)
-                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?)
+                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, copy, replyto, subject, body)
+                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?, ?)
                 """;
 
         jdbcTemplate.update(con -> {
@@ -39,6 +40,7 @@ public class EmailService {
             ps.setString(col++, email.getHakutulosId());
             ps.setString(col++, "QUEUED");
             ps.setArray(col++, con.createArrayOf("text", email.getRecipients().toArray()));
+            ps.setString(col++, email.getCopy());
             ps.setString(col++, email.getReplyTo());
             ps.setString(col++, email.getSubject());
             ps.setString(col++, email.getBody());
@@ -54,11 +56,13 @@ public class EmailService {
         log.info("Attempting to send email {}", emailId);
         transactionTemplate.execute(status -> {
             getQueuedEmail(emailId, true).ifPresent(email -> {
+                var recipients = new ArrayList<>(email.getRecipients());
+                if (email.getCopy() != null) recipients.add(email.getCopy());
                 // TODO: Yli 2048 vastaanottajan mailit
                 var response = viestinvalitysClient.luoViesti(Viesti.builder()
                         .lahettaja(OSOITEPALVELU_LAHETTAJA)
                         .replyTo(email.getReplyTo())
-                        .vastaanottajat(email.getRecipients().stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
+                        .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
                         .otsikko(email.getSubject())
                         .sisalto(email.getBody())
                         .sisallonTyyppi(SisallonTyyppi.html)
@@ -82,6 +86,7 @@ public class EmailService {
         if (forUpdate) sql += " FOR UPDATE";
         var results = jdbcTemplate.query(sql, (rs, rowNum) -> QueuedEmail.builder()
                         .id(rs.getString("id"))
+                        .copy(rs.getString("copy"))
                         .status(rs.getString("queuedemailstatus_id"))
                         .recipients(Arrays.asList((String[]) rs.getArray("recipients").getArray()))
                         .replyTo(rs.getString("replyto"))
