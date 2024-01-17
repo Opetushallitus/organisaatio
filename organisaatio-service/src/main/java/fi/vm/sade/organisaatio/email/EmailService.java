@@ -55,7 +55,7 @@ public class EmailService {
     public void attemptSendingEmail(String emailId) {
         log.info("Attempting to send email {}", emailId);
         transactionTemplate.execute(status -> {
-            getQueuedEmail(emailId, true).ifPresent(email -> {
+            queryEmail("SELECT * FROM queuedemail WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).ifPresent(email -> {
                 var recipients = new ArrayList<>(email.getRecipients());
                 if (email.getCopy() != null) recipients.add(email.getCopy());
                 // TODO: Yli 2048 vastaanottajan mailit
@@ -77,13 +77,11 @@ public class EmailService {
         });
     }
 
-    public Optional<QueuedEmail> getQueuedEmail(String emailId) {
-        return getQueuedEmail(emailId, false);
+    public Optional<QueuedEmail> getEmail(String emailId) {
+        return queryEmail("SELECT * FROM queuedemail WHERE id = ?::uuid", emailId);
     }
 
-    private Optional<QueuedEmail> getQueuedEmail(String emailId, boolean forUpdate) {
-        var sql = "SELECT * FROM queuedemail WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED'";
-        if (forUpdate) sql += " FOR UPDATE";
+    private Optional<QueuedEmail> queryEmail(String sql, String emailId) {
         var results = jdbcTemplate.query(sql, (rs, rowNum) -> QueuedEmail.builder()
                         .id(rs.getString("id"))
                         .copy(rs.getString("copy"))

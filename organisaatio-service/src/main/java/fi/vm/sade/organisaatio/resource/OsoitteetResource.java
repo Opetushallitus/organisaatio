@@ -178,7 +178,7 @@ public class OsoitteetResource {
 
     @GetMapping(value = "/viesti/{emailId}")
     public QueuedEmail getEmail(@PathVariable String emailId) {
-        return emailService.getQueuedEmail(emailId).orElseThrow();
+        return emailService.getEmail(emailId).orElseThrow();
     }
 
 
