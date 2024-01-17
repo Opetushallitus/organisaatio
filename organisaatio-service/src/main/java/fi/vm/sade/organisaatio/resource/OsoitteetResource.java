@@ -158,13 +158,17 @@ public class OsoitteetResource {
         // TODO: Validoi onko käyttäjän oma hakutulos
         var hakutulokset = makeSearchResultRows(Arrays.asList(getOrganisaatioIdsByResultId(hakutulosId)));
         var recipients = hakutulokset.stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList();
+        var osoitelahde = """
+                Osoitelähde: OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
+                Adresskälla: Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
+                """;
         var emailId = emailService.queueEmail(QueuedEmail.builder()
                 .hakutulosId(hakutulosId)
                 .replyTo(request.getReplyTo())
                 .copy(request.getCopy())
                 .recipients(recipients)
                 .subject(request.getSubject())
-                .body(request.getBody())
+                .body(request.getBody() + "\n\n" + osoitelahde)
                 .build());
 
         try {

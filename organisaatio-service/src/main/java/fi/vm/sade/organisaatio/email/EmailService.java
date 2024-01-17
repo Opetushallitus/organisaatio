@@ -24,6 +24,7 @@ public class EmailService {
 
     private final ViestinvalitysClient viestinvalitysClient;
     private final JdbcTemplate jdbcTemplate;
+    private final TransactionTemplate transactionTemplate;
 
     public String queueEmail(QueuedEmail email) {
         var emailId = UUID.randomUUID().toString();
@@ -50,8 +51,6 @@ public class EmailService {
         return emailId;
     }
 
-    private final TransactionTemplate transactionTemplate;
-
     public void attemptSendingEmail(String emailId) {
         log.info("Attempting to send email {}", emailId);
         transactionTemplate.execute(status -> {
@@ -65,7 +64,7 @@ public class EmailService {
                         .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
                         .otsikko(email.getSubject())
                         .sisalto(email.getBody())
-                        .sisallonTyyppi(SisallonTyyppi.html)
+                        .sisallonTyyppi(SisallonTyyppi.text)
                         .lahettavaPalvelu("osoitepalvelu")
                         .prioriteetti(Prioriteetti.normaali)
                         .sailytysaika(SAILYTYSAIKA)
