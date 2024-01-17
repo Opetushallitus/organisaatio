@@ -23,8 +23,8 @@ function main {
   info "./aws/deploy.py \"$ENV\" \"$SERVICE\" image"
   ./aws/deploy.py "$ENV" "$SERVICE" image
 
-  info "./aws/cloudformation.py \"$ENV\" services update -s \"$SERVICE\""
-  ./aws/cloudformation.py "$ENV" services update -s "$SERVICE"
+  info "./aws/cloudformation.py \"$ENV\" services update -s \"$SERVICE\" --force"
+  ./aws/cloudformation.py "$ENV" services update -s "$SERVICE" --force
 
   info "Deploying version $VERSION to $ENV"
   info "./aws/deploy.py \"$ENV\" \"$SERVICE\" deploy --version \"$VERSION\" --force"
