@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,8 +9,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+@Slf4j
 public abstract class CasAuthenticatedServiceClient {
-    private final Logger log = LogManager.getLogger(this.getClass());
     protected final HttpClient httpClient;
     private final CasClient casClient;
     protected final String serviceUrl;

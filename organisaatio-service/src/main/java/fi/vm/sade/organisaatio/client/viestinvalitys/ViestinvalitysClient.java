@@ -19,7 +19,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
 
     public LuoViestiSuccessResponse luoViesti(Viesti viesti) {
         try {
-            var response = post("/lahetys/v1/viestit", mapper.writeValueAsString(viesti));
+            var response = post("/v1/viestit", mapper.writeValueAsString(viesti));
             if (response.getStatus() == 200) {
                 return mapper.readValue(response.getBody(), LuoViestiSuccessResponse.class);
             } else {
