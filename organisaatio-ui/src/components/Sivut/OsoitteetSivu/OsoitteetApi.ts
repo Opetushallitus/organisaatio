@@ -76,9 +76,11 @@ export type SendEmailRequest = {
     body: string;
 };
 
+type EmailStatus = 'QUEUED' | 'SENT';
+
 export type SendEmailResponse = {
     emailId: string;
-    status: 'QUEUED' | 'SENT';
+    status: EmailStatus;
 };
 
 export async function sendEmail(hakutulosId: string, request: SendEmailRequest): Promise<SendEmailResponse> {
@@ -89,20 +91,12 @@ export async function sendEmail(hakutulosId: string, request: SendEmailRequest):
     return response.data;
 }
 
-export type QueuedEmail = {
-    hakutulosId: string;
-    id: string;
-    status: string;
-    recipients: string[];
-    replyTo: string;
-    subject: string;
-    body: string;
-    lahetysTunniste: string;
-    created: string;
-    modified: string;
+export type GetEmailResponse = {
+    emailId: string;
+    status: EmailStatus;
 };
 
-export async function getEmail(emailId: string): Promise<QueuedEmail> {
-    const response = await axios.get<QueuedEmail>(`${API_CONTEXT}/osoitteet/viesti/${emailId}`);
+export async function getEmail(emailId: string): Promise<GetEmailResponse> {
+    const response = await axios.get<GetEmailResponse>(`${API_CONTEXT}/osoitteet/viesti/${emailId}`);
     return response.data;
 }

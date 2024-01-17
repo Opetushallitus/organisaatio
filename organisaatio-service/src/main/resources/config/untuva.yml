@@ -4,3 +4,4 @@ feature.ostj-201-muotoilematon-viesti: true
 
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.untuvaopintopolku.fi/lahetys"
+viestinvalitys.uiurl: "https://viestinvalitys.untuvaopintopolku.fi/"

@@ -181,8 +181,9 @@ public class OsoitteetResource {
     }
 
     @GetMapping(value = "/viesti/{emailId}")
-    public QueuedEmail getEmail(@PathVariable String emailId) {
-        return emailService.getEmail(emailId).orElseThrow();
+    public GetEmailResponse getEmail(@PathVariable String emailId) {
+        var email = emailService.getEmail(emailId).orElseThrow();
+        return new GetEmailResponse(email.getId(), email.getStatus());
     }
 
 
@@ -644,6 +645,12 @@ class SendEmailRequest {
     @NotNull
     @Size(min = 1, max = 6291456)
     private String body;
+}
+
+@Data
+class GetEmailResponse {
+    private final String emailId;
+    private final String status;
 }
 
 @Data
