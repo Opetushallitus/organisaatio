@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class LuoViestiSuccessResponse {
-    private final String lahetysTunniste;
-    private final String viestiTunniste;
+    private String lahetysTunniste;
+    private String viestiTunniste;
 }
