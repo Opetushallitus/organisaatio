@@ -15,6 +15,11 @@ import { ErrorBanner } from './ErrorBanner';
 
 function useTextInput(initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
+    return [value, (event: React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value)] as const;
+}
+
+function useRequiredTextInput(aihe: string, initialValue: string) {
+    const [value, setValue] = useState<string>(initialValue);
     const [error, setError] = useState<boolean>(false);
     return [
         { value, error },
@@ -28,14 +33,15 @@ function useTextInput(initialValue: string) {
         },
     ] as const;
 }
+
 export const ViestiView = () => {
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
     const history = useHistory();
     const [sendError, setSendError] = useState<boolean>(false);
     const [replyTo, onReplyToChange] = useTextInput('');
     const [copy, onCopyChange] = useTextInput('');
-    const [subject, onSubjectChange] = useTextInput('');
-    const [body, onBodyChange] = useTextInput('');
+    const [subject, onSubjectChange] = useRequiredTextInput('Aihe', '');
+    const [body, onBodyChange] = useRequiredTextInput('Viesti', '');
     const subjectValid = subject.value.length >= 1;
     const bodyValid = body.value.length >= 1;
     const sendDisabled = !subjectValid || !bodyValid;
@@ -44,8 +50,8 @@ export const ViestiView = () => {
         setSendError(false);
         try {
             const request: SendEmailRequest = {
-                replyTo: replyTo.value !== '' ? replyTo.value : undefined,
-                copy: copy.value !== '' ? copy.value : undefined,
+                replyTo: replyTo !== '' ? replyTo : undefined,
+                copy: copy !== '' ? copy : undefined,
                 subject: subject.value,
                 body: body.value,
             };
@@ -76,11 +82,11 @@ export const ViestiView = () => {
                 <div className={styles.Row}>
                     <div className={styles.Column}>
                         <FormLabel>Vastausosoite (reply-to)</FormLabel>
-                        <Input type={'text'} value={replyTo.value} onChange={onReplyToChange}></Input>
+                        <Input type={'text'} value={replyTo} onChange={onReplyToChange}></Input>
                     </div>
                     <div className={styles.Column}>
                         <FormLabel>Kopio-osoite</FormLabel>
-                        <Input type={'text'} value={copy.value} onChange={onCopyChange}></Input>
+                        <Input type={'text'} value={copy} onChange={onCopyChange}></Input>
                     </div>
                 </div>
                 <div className={styles.Row}>
