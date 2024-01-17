@@ -85,7 +85,7 @@ export const ViestiView = () => {
                 </div>
                 <div className={styles.Row}>
                     <div className={styles.Column}>
-                        <div className={subject.error ? styles.Error : ''}>
+                        <div role={'group'} className={subject.error ? styles.Error : ''}>
                             <FormLabel>
                                 Aihe*
                                 <Input type={'text'} value={subject.value} onChange={onSubjectChange}></Input>
@@ -96,7 +96,7 @@ export const ViestiView = () => {
                 </div>
                 <div className={styles.Row}>
                     <div className={styles.Column}>
-                        <div className={body.error ? styles.Error : ''}>
+                        <div role={'group'} className={body.error ? styles.Error : ''}>
                             <FormLabel>Viesti*</FormLabel>
                             <div className={styles.Viesti}>
                                 <Textarea

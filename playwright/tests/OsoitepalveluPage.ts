@@ -151,15 +151,36 @@ async function pressTabUntilFocusOn(page: Page, locator: Locator) {
 
 class KirjoitaViestiForm {
   readonly lahetaButton: Locator;
-  readonly aiheField: Locator;
-  readonly aiheFieldErrorIndicator: Locator;
-  readonly viestiField: Locator;
-  readonly viestiFieldErrorIndicator: Locator;
+  readonly aiheField: FormField;
+  readonly viestiField: FormField;
   constructor(page: Page) {
     this.lahetaButton = page.getByRole("button", { name: "Lähetä" });
-    this.aiheField = page.getByLabel("Aihe*");
-    this.aiheFieldErrorIndicator = page.getByText("Aihe on pakollinen");
-    this.viestiField = page.locator("textarea");
-    this.viestiFieldErrorIndicator = page.getByText("Viesti on pakollinen");
+    this.aiheField = new AiheField(page);
+    this.viestiField = new ViestiField(page);
+  }
+}
+
+export class FormField {
+  readonly context: Locator;
+  readonly input: Locator;
+  readonly errorFeedback: Locator;
+  constructor(page: Page, input: Locator) {
+    this.input = input;
+    this.context = page.getByRole("group").filter({ has: input });
+    this.errorFeedback = this.context.locator("p");
+  }
+}
+
+class AiheField extends FormField {
+  constructor(page: Page) {
+    const input = page.getByLabel("Aihe*");
+    super(page, input);
+  }
+}
+
+class ViestiField extends FormField {
+  constructor(page: Page) {
+    const input = page.locator("textarea");
+    super(page, input);
   }
 }

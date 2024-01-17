@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from "@playwright/test";
-import { OsoitepalveluPage } from "./OsoitepalveluPage";
+import { FormField, OsoitepalveluPage } from "./OsoitepalveluPage";
 
 test.describe("Osoitepalvelu", () => {
   test.beforeAll(async ({ request }, testInfo) => {
@@ -612,26 +612,30 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test.describe("Kirjoita viesti form", async () => {
+  test.describe.only("Kirjoita viesti form", async () => {
     test.beforeEach(async ({ page }, testInfo) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       await osoitepalveluPage.haeButton.click();
       await osoitepalveluPage.kirjoitaSahkopostiButton.click();
     });
 
-    test("aihe and viesti fields are required", async ({ page }) => {
+    test("aihe and viesti fields are required to have valid values", async ({
+      page,
+    }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const aiheField = kirjoitaViestiForm.aiheField.input;
+      const viestiField = kirjoitaViestiForm.viestiField.input;
 
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
 
-      await kirjoitaViestiForm.aiheField.fill("Aihe");
+      await aiheField.fill("Aihe");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
 
-      await kirjoitaViestiForm.viestiField.fill("Viesti");
+      await viestiField.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
 
-      await kirjoitaViestiForm.aiheField.fill("");
+      await aiheField.fill("");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
     });
 
@@ -639,13 +643,11 @@ test.describe("Osoitepalvelu", () => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
       const field = kirjoitaViestiForm.aiheField;
-      const errorIndicator = kirjoitaViestiForm.aiheFieldErrorIndicator;
 
       await test.step("gives feedback when value is cleared", async () => {
-        await assertClearedFieldShowsErrorIndicator(
-          page,
+        await asserFieldShowsErrorFeedbackWhenCleared(
           field,
-          errorIndicator
+          "Aihe on pakollinen"
         );
       });
     });
@@ -654,13 +656,11 @@ test.describe("Osoitepalvelu", () => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
       const field = kirjoitaViestiForm.viestiField;
-      const errorIndicator = kirjoitaViestiForm.viestiFieldErrorIndicator;
 
       await test.step("gives feedback when value is cleared", async () => {
-        await assertClearedFieldShowsErrorIndicator(
-          page,
+        await asserFieldShowsErrorFeedbackWhenCleared(
           field,
-          errorIndicator
+          "Viesti on pakollinen"
         );
       });
     });
@@ -733,16 +733,16 @@ function getItemsByCheckState(page: Page, checked: boolean) {
   });
 }
 
-async function assertClearedFieldShowsErrorIndicator(
-  page: Page,
-  field: Locator,
-  errorIndicator: Locator
+async function asserFieldShowsErrorFeedbackWhenCleared(
+  field: FormField,
+  errorMessage: string
 ) {
-  await expect(errorIndicator).not.toBeVisible();
-  await field.fill("Text a");
-  await expect(errorIndicator).not.toBeVisible();
-  await field.fill("");
-  await expect(errorIndicator).toBeVisible();
-  await field.fill("Text b");
-  await expect(errorIndicator).not.toBeVisible();
+  await expect(field.errorFeedback).not.toBeVisible();
+  await field.input.fill("Text a");
+  await expect(field.errorFeedback).not.toBeVisible();
+  await field.input.fill("");
+  await expect(field.errorFeedback).toBeVisible();
+  await expect(field.errorFeedback).toHaveText(errorMessage);
+  await field.input.fill("Text b");
+  await expect(field.errorFeedback).not.toBeVisible();
 }
