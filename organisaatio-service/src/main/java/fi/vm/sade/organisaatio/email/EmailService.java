@@ -95,7 +95,7 @@ public class EmailService {
     }
 
     private void markEmailAsSent(String emailId, String lahetystunniste) {
-        var sql = "UPDATE queuedemail SET lahetystunniste = ?, modified = current_timestamp WHERE id = ?::uuid";
+        var sql = "UPDATE queuedemail SET queuedemailstatus_id = 'SENT', lahetystunniste = ?, modified = current_timestamp WHERE id = ?::uuid";
         jdbcTemplate.update(sql, lahetystunniste, emailId);
     }
 }
