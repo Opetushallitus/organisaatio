@@ -83,6 +83,7 @@ public class EmailService {
     private Optional<QueuedEmail> queryEmail(String sql, String emailId) {
         var results = jdbcTemplate.query(sql, (rs, rowNum) -> QueuedEmail.builder()
                         .id(rs.getString("id"))
+                        .lahetysTunniste(rs.getString("lahetystunniste"))
                         .copy(rs.getString("copy"))
                         .status(rs.getString("queuedemailstatus_id"))
                         .recipients(Arrays.asList((String[]) rs.getArray("recipients").getArray()))
