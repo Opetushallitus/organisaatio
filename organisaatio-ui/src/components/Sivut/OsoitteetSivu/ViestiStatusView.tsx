@@ -28,6 +28,9 @@ export const ViestiStatusView = () => {
     function toViestinvalityspalvelu() {
         window.open(viestinvalityspalveluUrl);
     }
+    function toLahetysraportti(lahetysTunniste: string) {
+        window.open(`${viestinvalityspalveluUrl}/lahetysraportti/${lahetysTunniste}`);
+    }
     function backToOsoitepalvelu() {
         history.push('/osoitteet');
     }
@@ -42,11 +45,9 @@ export const ViestiStatusView = () => {
                 <Spin />
             </div>
         );
-    }
-
-    if (email.status === 'QUEUED') {
+    } else if (email.status === 'QUEUED') {
         return (
-            <ModalishBox status="warning">
+            <ModalishBox className={styles.Queued}>
                 <h1>Lähetyksessä on viivettä</h1>
                 <p>
                     Viestiä ei vielä välitetty, mutta sinun ei tarvitse tehdä lisätoimia.
@@ -59,21 +60,32 @@ export const ViestiStatusView = () => {
                 </div>
             </ModalishBox>
         );
-    } else {
+    } else if (email.status === 'SENT') {
         return (
-            <div>
-                <pre>{JSON.stringify(email, null, 2)}</pre>
-            </div>
+            <ModalishBox className={styles.Sent}>
+                <h1>Lähetys onnistui!</h1>
+                <p>
+                    Voit tarkastella lähetetyn viestisi lähetysraporttia
+                    <br />
+                    tai palata takaisin Osoitepalveluun.
+                </p>
+                <div className={styles.ButtonRow}>
+                    <Button onClick={() => toLahetysraportti(email.lahetysTunniste)}>Lähetysraportti</Button>
+                    <LinklikeButton onClick={backToOsoitepalvelu}>Palaa Osoitepalveluun</LinklikeButton>
+                </div>
+            </ModalishBox>
         );
     }
+    return <div></div>;
 };
 
 type ModalishBoxProps = React.PropsWithChildren<{
-    status: 'warning' | 'success';
+    className: string;
 }>;
-function ModalishBox({ children }: ModalishBoxProps) {
+function ModalishBox({ children, className }: ModalishBoxProps) {
+    const classList = [styles.ModalishBox, className];
     return (
-        <div className={styles.ModalishBox}>
+        <div className={classList.join(' ')}>
             <div className={styles.Content}>{children}</div>
         </div>
     );

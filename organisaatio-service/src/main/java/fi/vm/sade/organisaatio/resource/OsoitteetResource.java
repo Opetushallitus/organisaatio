@@ -183,7 +183,7 @@ public class OsoitteetResource {
     @GetMapping(value = "/viesti/{emailId}")
     public GetEmailResponse getEmail(@PathVariable String emailId) {
         var email = emailService.getEmail(emailId).orElseThrow();
-        return new GetEmailResponse(email.getId(), email.getStatus());
+        return new GetEmailResponse(email.getId(), email.getStatus(), Optional.ofNullable(email.getLahetysTunniste()));
     }
 
 
@@ -651,6 +651,7 @@ class SendEmailRequest {
 class GetEmailResponse {
     private final String emailId;
     private final String status;
+    private final Optional<String> lahetysTunniste;
 }
 
 @Data

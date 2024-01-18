@@ -91,10 +91,16 @@ export async function sendEmail(hakutulosId: string, request: SendEmailRequest):
     return response.data;
 }
 
-export type GetEmailResponse = {
-    emailId: string;
-    status: EmailStatus;
-};
+export type GetEmailResponse =
+    | {
+          status: 'QUEUED';
+          emailId: string;
+      }
+    | {
+          status: 'SENT';
+          emailId: string;
+          lahetysTunniste: string;
+      };
 
 export async function getEmail(emailId: string): Promise<GetEmailResponse> {
     const response = await axios.get<GetEmailResponse>(`${API_CONTEXT}/osoitteet/viesti/${emailId}`);
