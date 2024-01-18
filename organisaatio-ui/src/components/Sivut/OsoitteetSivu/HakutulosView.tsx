@@ -1,28 +1,50 @@
-import { Hakutulos } from './OsoitteetApi';
+import { getHakutulos, Hakutulos } from './OsoitteetApi';
+import searchStyles from './SearchView.module.css';
 import styles from './HakutulosView.module.css';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { HakutulosTable } from './HakutulosTable';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LinklikeButton } from './LinklikeButton';
 import { API_CONTEXT } from '../../../contexts/constants';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 type HakutulosViewProps = {
     muotoilematonViestiEnabled: boolean;
     result?: Hakutulos;
-    onWriteMail: () => void;
 };
 
-export function HakutulosView({ muotoilematonViestiEnabled, result, onWriteMail }: HakutulosViewProps) {
+export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps) {
     const history = useHistory();
+    const { hakutulosId } = useParams<{ hakutulosId: string }>();
+    const [error, setError] = useState(false);
+    const [result, setResult] = useState<Hakutulos | undefined>(undefined);
+    useEffect(() => {
+        getHakutulos(hakutulosId)
+            .then((result) => setResult(result))
+            .catch((error) => {
+                console.error(error);
+                setError(true);
+            });
+    }, [hakutulosId]);
 
     function navigateBackToSearch() {
         history.goBack();
     }
+    function onWriteMail() {
+        history.push(`/osoitteet/hakutulos/${hakutulosId}/viesti`);
+    }
+
+    if (error) {
+        return <div>Tapahtui virhe</div>;
+    }
 
     if (typeof result === 'undefined') {
-        navigateBackToSearch();
-        return null;
+        return (
+            <div className={searchStyles.LoadingOverlay}>
+                <Spin />
+            </div>
+        );
     }
 
     const rows = result.rows;

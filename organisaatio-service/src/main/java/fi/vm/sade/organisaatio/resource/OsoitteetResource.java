@@ -59,6 +59,12 @@ public class OsoitteetResource {
         return getHakutulos(request);
     }
 
+    @GetMapping(value = "/hakutulos/{hakutulosId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Hakutulos getHakutulos(@PathVariable String hakutulosId) {
+        var organisaatioIds = getOrganisaatioIdsByResultId(hakutulosId);
+        return makeSearchResult(hakutulosId, Arrays.asList(organisaatioIds));
+    }
+
     private Hakutulos getHakutulos(HaeRequest request) {
         List<String> vuosiluokat = request.getVuosiluokat();
         List<String> oppilaitostyypit = request.getOppilaitostyypit();

@@ -15,27 +15,11 @@ type OsoitteetSivuProps = {
 
 const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     useTitle('Osoitepalvelu');
-
-    type State = {
-        request?: HaeRequest;
-        hakutulos?: Hakutulos;
-    };
     const [hakuParametrit, setHakuParametrit] = useState<HakuParametrit | undefined>(undefined);
-    const [state, setState] = useState<State>({});
     const history = useHistory();
 
     function onSearchResult(request: HaeRequest, hakutulos: Hakutulos) {
-        setState({ request, hakutulos });
-        history.push('/osoitteet/hakutulos');
-    }
-
-    function onWriteMail() {
-        const hakutulosId = state.hakutulos?.id;
-        if (typeof hakutulosId !== 'undefined') {
-            history.push(`/osoitteet/hakutulos/${hakutulosId}/viesti`);
-        } else {
-            throw new Error('Expected to have hakutulosId in state');
-        }
+        history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
     }
 
     useEffect(() => {
@@ -59,14 +43,10 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                     </div>
                 </div>
             </Route>
-            <Route exact path={'/osoitteet/hakutulos'}>
+            <Route exact path={'/osoitteet/hakutulos/:hakutulosId'}>
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
-                        <HakutulosView
-                            muotoilematonViestiEnabled={muotoilematonViestiEnabled}
-                            result={state.hakutulos}
-                            onWriteMail={onWriteMail}
-                        />
+                        <HakutulosView muotoilematonViestiEnabled={muotoilematonViestiEnabled} />
                     </div>
                 </div>
             </Route>

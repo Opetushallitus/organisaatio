@@ -64,6 +64,11 @@ export async function haeOsoitteet(request: HaeRequest): Promise<Hakutulos> {
     return response.data;
 }
 
+export async function getHakutulos(hakutulosId: string): Promise<Hakutulos> {
+    const response = await axios.get<Hakutulos>(`${API_CONTEXT}/osoitteet/hakutulos/${hakutulosId}`);
+    return response.data;
+}
+
 export async function haeHakuParametrit() {
     const response = await axios.get<HakuParametrit>(`${API_CONTEXT}/osoitteet/parametrit`);
     return response.data;
