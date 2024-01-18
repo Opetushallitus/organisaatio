@@ -26,10 +26,10 @@ export const ViestiStatusView = () => {
     }, [emailId]);
 
     function toViestinvalityspalvelu() {
-        window.open(viestinvalityspalveluUrl);
+        window.open(`${viestinvalityspalveluUrl}/viestinvalitys-raportointi`);
     }
     function toLahetysraportti(lahetysTunniste: string) {
-        window.open(`${viestinvalityspalveluUrl}/lahetysraportti/${lahetysTunniste}`);
+        window.open(`${viestinvalityspalveluUrl}/viestinvalitys-raportointi/lahetys/${lahetysTunniste}`);
     }
     function backToOsoitepalvelu() {
         history.push('/osoitteet');
