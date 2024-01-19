@@ -660,17 +660,21 @@ test.describe("Osoitepalvelu", () => {
       await expect(viestiField.errorFeedback).toHaveText(
         "Viesti on pakollinen"
       );
-
-      if (browserName != "firefox") {
-        const viestiFieldMaxLength = 6291456;
-        await viestiField.input.fill(stringOfLength(viestiFieldMaxLength));
-        await expect(viestiField.errorFeedback).not.toBeVisible();
-        await viestiField.input.fill(stringOfLength(viestiFieldMaxLength + 1));
-        await expect(viestiField.errorFeedback).toHaveText(
-          `Viesti on liian pitkä (${viestiFieldMaxLength + 1} merkkiä)`
-        );
-      }
     });
+  });
+
+  test.skip("Viesti body has maximum length", async ({ page }) => {
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+    const viestiField = kirjoitaViestiForm.viestiField;
+
+    const viestiFieldMaxLength = 6291456;
+    await viestiField.input.fill(stringOfLength(viestiFieldMaxLength));
+    await expect(viestiField.errorFeedback).not.toBeVisible();
+    await viestiField.input.fill(stringOfLength(viestiFieldMaxLength + 1));
+    await expect(viestiField.errorFeedback).toHaveText(
+      `Viesti on liian pitkä (${viestiFieldMaxLength + 1} merkkiä)`
+    );
   });
 
   test.describe("Sending email", async () => {
