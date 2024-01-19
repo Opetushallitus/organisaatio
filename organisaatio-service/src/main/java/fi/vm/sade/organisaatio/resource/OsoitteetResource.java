@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.config.scheduling.AuthenticationUtil;
 import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
@@ -62,6 +63,9 @@ public class OsoitteetResource {
     @GetMapping(value = "/hakutulos/{hakutulosId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public Hakutulos getHakutulos(@PathVariable String hakutulosId) {
+        if (!hasPermissionToHakutulos(hakutulosId)) {
+            throw new NotAuthorizedException("no.permission");
+        }
         var organisaatioIds = getOrganisaatioIdsByResultId(hakutulosId);
         return makeSearchResult(hakutulosId, Arrays.asList(organisaatioIds));
     }
@@ -162,7 +166,9 @@ public class OsoitteetResource {
     )
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public SendEmailResponse sendEmail(@PathVariable String hakutulosId, @Validated @RequestBody SendEmailRequest request) {
-        // TODO: Validoi onko käyttäjän oma hakutulos
+        if (!hasPermissionToHakutulos(hakutulosId)) {
+            throw new NotAuthorizedException("no.permission");
+        }
         var hakutulokset = makeSearchResultRows(Arrays.asList(getOrganisaatioIdsByResultId(hakutulosId)));
         var recipients = hakutulokset.stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList();
         var osoitelahde = """
@@ -190,6 +196,9 @@ public class OsoitteetResource {
     @GetMapping(value = "/viesti/{emailId}")
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public GetEmailResponse getEmail(@PathVariable String emailId) {
+        if (!hasPermissionToEmail(emailId)) {
+            throw new NotAuthorizedException("no.permission");
+        }
         var email = emailService.getEmail(emailId).orElseThrow();
         return new GetEmailResponse(email.getId(), email.getStatus(), Optional.ofNullable(email.getLahetysTunniste()));
     }
@@ -202,7 +211,10 @@ public class OsoitteetResource {
     public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
         var resultId = request.getFirst("resultId");
         if (resultId == null) {
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (!hasPermissionToHakutulos(resultId)) {
+            throw new NotAuthorizedException("no.permission");
         }
 
         try {
@@ -593,6 +605,32 @@ public class OsoitteetResource {
                 opetuskielet
         );
     }
+
+    private boolean hasPermissionToEmail(String emailId) {
+        var sql = """
+                SELECT virkailija_oid = :virkailijaOid FROM queuedemail
+                JOIN osoitteet_haku_and_hakutulos ON (osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id)
+                WHERE queuedemail.id = :emailId::uuid
+                """;
+        var params = Map.of(
+                "emailId", emailId,
+                "virkailijaOid", authenticationUtil.getCurrentUserOid()
+        );
+        return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getBoolean(1));
+    }
+
+    private boolean hasPermissionToHakutulos(String hakutulosId) {
+        var sql = """
+                SELECT virkailija_oid = :virkailijaOid FROM osoitteet_haku_and_hakutulos
+                WHERE id = :hakutulosId::uuid
+                """;
+        var params = Map.of(
+                "hakutulosId", hakutulosId,
+                "virkailijaOid", authenticationUtil.getCurrentUserOid()
+        );
+        return jdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> rs.getBoolean(1));
+    }
+
 }
 
 @Data
