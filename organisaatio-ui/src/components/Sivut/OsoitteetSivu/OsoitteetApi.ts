@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_CONTEXT } from '../../../contexts/constants';
 import { KoodiUri } from '../../../types/types';
+import { useEffect, useState } from 'react';
 
 export type Hakutulos = {
     id: string;
@@ -64,9 +65,21 @@ export async function haeOsoitteet(request: HaeRequest): Promise<Hakutulos> {
     return response.data;
 }
 
-export async function getHakutulos(hakutulosId: string): Promise<Hakutulos> {
-    const response = await axios.get<Hakutulos>(`${API_CONTEXT}/osoitteet/hakutulos/${hakutulosId}`);
-    return response.data;
+type ApiResult<T> =
+    | {
+          state: 'LOADING';
+      }
+    | {
+          state: 'ERROR';
+          error: unknown;
+      }
+    | {
+          state: 'OK';
+          value: T;
+      };
+
+export function useHakutulos(hakutulosId: string): ApiResult<Hakutulos> {
+    return useGET<Hakutulos>(`/osoitteet/hakutulos/${hakutulosId}`);
 }
 
 export async function haeHakuParametrit() {
@@ -110,4 +123,18 @@ export type GetEmailResponse =
 export async function getEmail(emailId: string): Promise<GetEmailResponse> {
     const response = await axios.get<GetEmailResponse>(`${API_CONTEXT}/osoitteet/viesti/${emailId}`);
     return response.data;
+}
+
+function useGET<T>(path: string): ApiResult<T> {
+    const [state, setState] = useState<ApiResult<T>>({ state: 'LOADING' });
+    useEffect(() => {
+        axios
+            .get<T>(`${API_CONTEXT}${path}`)
+            .then((response) => setState({ state: 'OK', value: response.data }))
+            .catch((error) => {
+                console.error(error);
+                setState({ state: 'ERROR', error });
+            });
+    }, []);
+    return state;
 }

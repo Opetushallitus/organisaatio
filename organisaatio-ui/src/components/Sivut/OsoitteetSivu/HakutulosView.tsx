@@ -1,9 +1,9 @@
-import { getHakutulos, Hakutulos } from './OsoitteetApi';
+import { Hakutulos, useHakutulos } from './OsoitteetApi';
 import searchStyles from './SearchView.module.css';
 import styles from './HakutulosView.module.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { HakutulosTable } from './HakutulosTable';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { LinklikeButton } from './LinklikeButton';
 import { API_CONTEXT } from '../../../contexts/constants';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -17,16 +17,7 @@ type HakutulosViewProps = {
 export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps) {
     const history = useHistory();
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
-    const [error, setError] = useState(false);
-    const [result, setResult] = useState<Hakutulos | undefined>(undefined);
-    useEffect(() => {
-        getHakutulos(hakutulosId)
-            .then((result) => setResult(result))
-            .catch((error) => {
-                console.error(error);
-                setError(true);
-            });
-    }, [hakutulosId]);
+    const hakutulos = useHakutulos(hakutulosId);
 
     function navigateBackToSearch() {
         history.goBack();
@@ -35,11 +26,11 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
         history.push(`/osoitteet/hakutulos/${hakutulosId}/viesti`);
     }
 
-    if (error) {
+    if (hakutulos.state === 'ERROR') {
         return <div>Tapahtui virhe</div>;
     }
 
-    if (typeof result === 'undefined') {
+    if (hakutulos.state === 'LOADING') {
         return (
             <div className={searchStyles.LoadingOverlay}>
                 <Spin />
@@ -47,7 +38,7 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
         );
     }
 
-    const rows = result.rows;
+    const rows = hakutulos.value.rows;
 
     return (
         <div className={styles.HakutulosView}>
@@ -65,7 +56,7 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
             <div className={styles.ButtonRow}>
                 {muotoilematonViestiEnabled && <Button onClick={onWriteMail}>Kirjoita sähköpostiviesti</Button>}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
-                    <input type={'hidden'} name={'resultId'} value={result.id} />
+                    <input type={'hidden'} name={'resultId'} value={hakutulos.value.id} />
                     <Button variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'} type={'submit'}>
                         Lataa Excel
                     </Button>

@@ -621,6 +621,10 @@ test.describe("Osoitepalvelu", () => {
     await osoitepalveluPage.haeButton.click();
     await osoitepalveluPage.kirjoitaSahkopostiButton.click();
 
+    await test.step("number of recipients is shown", async () => {
+      await expect(page.getByText("3 vastaanottajaa")).toBeVisible();
+    });
+
     await test.step("has a default state", async () => {
       await expect(aiheField.input).toHaveText("");
       await expect(aiheField.errorFeedback).not.toBeVisible();

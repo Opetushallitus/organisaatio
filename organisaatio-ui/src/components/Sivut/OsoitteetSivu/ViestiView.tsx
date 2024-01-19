@@ -5,13 +5,10 @@ import React, { useState } from 'react';
 import osoitteetStyles from './SearchView.module.css';
 import styles from './ViestiView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { sendEmail, SendEmailRequest } from './OsoitteetApi';
+import { sendEmail, SendEmailRequest, useHakutulos } from './OsoitteetApi';
 import { useHistory, useParams } from 'react-router-dom';
 import { ErrorBanner } from './ErrorBanner';
-
-// TODO
-// - Peruuta
-// - Lomakkeen validointi
+import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
 function useTextInput(initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
@@ -50,6 +47,7 @@ export const ViestiView = () => {
     const subjectValid = subject.value.length >= 1;
     const bodyValid = body.value.length >= 1;
     const sendDisabled = !subjectValid || !bodyValid;
+    const hakutulos = useHakutulos(hakutulosId);
 
     async function onSendMail() {
         setSendError(false);
@@ -68,12 +66,29 @@ export const ViestiView = () => {
         }
     }
 
+    if (hakutulos.state === 'ERROR') {
+        return <div>Tapahtui virhe</div>;
+    }
+
+    if (hakutulos.state === 'LOADING') {
+        return (
+            <div className={osoitteetStyles.LoadingOverlay}>
+                <Spin />
+            </div>
+        );
+    }
+
     return (
         <div className={styles.ViestiView}>
             <div className={styles.Header}>
                 <h2>Kirjoita Viesti</h2>
             </div>
             <div className={styles.Content}>
+                <BlueBanner>
+                    {hakutulos.value.rows.length === 1
+                        ? `${hakutulos.value.rows.length} vastaanottaja`
+                        : `${hakutulos.value.rows.length} vastaanottajaa`}
+                </BlueBanner>
                 <div className={styles.Row}>
                     <div className={styles.Column}>
                         <FormLabel>Lähettäjä*</FormLabel>
@@ -145,3 +160,23 @@ export const ViestiView = () => {
         </div>
     );
 };
+
+function BlueBanner({ children }: { children: React.ReactNode }) {
+    return (
+        <div className={[styles.Row, styles.BlueBanner].join(' ')}>
+            <LetterIcon />
+            <div>{children}</div>{' '}
+        </div>
+    );
+}
+
+function LetterIcon() {
+    return (
+        <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M2 16C1.45 16 0.979167 15.8042 0.5875 15.4125C0.195833 15.0208 0 14.55 0 14V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H18C18.55 0 19.0208 0.195833 19.4125 0.5875C19.8042 0.979167 20 1.45 20 2V14C20 14.55 19.8042 15.0208 19.4125 15.4125C19.0208 15.8042 18.55 16 18 16H2ZM10 9L2 4V14H18V4L10 9ZM10 7L18 2H2L10 7ZM2 4V2V14V4Z"
+                fill="white"
+            />
+        </svg>
+    );
+}

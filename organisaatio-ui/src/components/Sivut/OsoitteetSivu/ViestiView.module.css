@@ -114,3 +114,17 @@
     font-size: 14px;
     margin: 8px 0 0 0;
 }
+
+.BlueBanner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 16px;
+    gap: 8px;
+    height: 50px;
+    box-sizing: border-box;
+
+    background: var(--color-primary-blue);
+    color: var(--color-neutral-white);
+    border-radius: 4px;
+}
