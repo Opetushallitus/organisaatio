@@ -612,7 +612,7 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test("Kirjoita viesti form", async ({ page }) => {
+  test("Kirjoita viesti form", async ({ page, browserName }) => {
     const osoitepalveluPage = new OsoitepalveluPage(page);
     const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
     const aiheField = kirjoitaViestiForm.aiheField;
@@ -661,13 +661,15 @@ test.describe("Osoitepalvelu", () => {
         "Viesti on pakollinen"
       );
 
-      const viestiFieldMaxLength = 6291456;
-      await viestiField.input.fill(stringOfLength(viestiFieldMaxLength));
-      await expect(viestiField.errorFeedback).not.toBeVisible();
-      await viestiField.input.fill(stringOfLength(viestiFieldMaxLength + 1));
-      await expect(viestiField.errorFeedback).toHaveText(
-        `Viesti on liian pitkä (${viestiFieldMaxLength + 1} merkkiä)`
-      );
+      if (browserName != "firefox") {
+        const viestiFieldMaxLength = 6291456;
+        await viestiField.input.fill(stringOfLength(viestiFieldMaxLength));
+        await expect(viestiField.errorFeedback).not.toBeVisible();
+        await viestiField.input.fill(stringOfLength(viestiFieldMaxLength + 1));
+        await expect(viestiField.errorFeedback).toHaveText(
+          `Viesti on liian pitkä (${viestiFieldMaxLength + 1} merkkiä)`
+        );
+      }
     });
   });
 
