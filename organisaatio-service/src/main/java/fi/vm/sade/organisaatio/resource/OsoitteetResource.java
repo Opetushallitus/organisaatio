@@ -60,6 +60,7 @@ public class OsoitteetResource {
     }
 
     @GetMapping(value = "/hakutulos/{hakutulosId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public Hakutulos getHakutulos(@PathVariable String hakutulosId) {
         var organisaatioIds = getOrganisaatioIdsByResultId(hakutulosId);
         return makeSearchResult(hakutulosId, Arrays.asList(organisaatioIds));
@@ -187,6 +188,7 @@ public class OsoitteetResource {
     }
 
     @GetMapping(value = "/viesti/{emailId}")
+    @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public GetEmailResponse getEmail(@PathVariable String emailId) {
         var email = emailService.getEmail(emailId).orElseThrow();
         return new GetEmailResponse(email.getId(), email.getStatus(), Optional.ofNullable(email.getLahetysTunniste()));
