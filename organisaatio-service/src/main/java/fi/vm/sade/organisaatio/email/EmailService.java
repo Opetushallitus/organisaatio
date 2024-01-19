@@ -7,10 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,13 +51,14 @@ public class EmailService {
     public void attemptSendingEmail(String emailId) {
         log.info("Attempting to send email {}", emailId);
         transactionTemplate.execute(status -> {
-            queryEmail("SELECT * FROM queuedemail WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).ifPresent(email -> {
+            queryEmail("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).ifPresent(email -> {
                 var recipients = new ArrayList<>(email.getRecipients());
                 if (email.getCopy() != null) recipients.add(email.getCopy());
                 // TODO: Yli 2048 vastaanottajan mailit
                 var response = viestinvalitysClient.luoViesti(Viesti.builder()
                         .lahettaja(OSOITEPALVELU_LAHETTAJA)
                         .replyTo(email.getReplyTo())
+                        .lahettavanVirkailijanOid(email.getVirkailijaOid())
                         .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
                         .otsikko(email.getSubject())
                         .sisalto(email.getBody())
@@ -77,10 +75,15 @@ public class EmailService {
     }
 
     public Optional<QueuedEmail> getEmail(String emailId) {
-        return queryEmail("SELECT * FROM queuedemail WHERE id = ?::uuid", emailId);
+        return queryEmail("WHERE queuedemail.id = ?::uuid", emailId);
     }
 
-    private Optional<QueuedEmail> queryEmail(String sql, String emailId) {
+    private Optional<QueuedEmail> queryEmail(String where, String emailId) {
+        var select = """
+                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, created, modified, virkailija_oid
+                FROM queuedemail JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
+                """;
+        var sql = String.join("\n", List.of(select, where));
         var results = jdbcTemplate.query(sql, (rs, rowNum) -> QueuedEmail.builder()
                         .id(rs.getString("id"))
                         .lahetysTunniste(rs.getString("lahetystunniste"))
@@ -90,6 +93,7 @@ public class EmailService {
                         .replyTo(rs.getString("replyto"))
                         .subject(rs.getString("subject"))
                         .body(rs.getString("body"))
+                        .virkailijaOid(rs.getString("virkailija_oid"))
                         .created(rs.getTimestamp("created"))
                         .modified(rs.getTimestamp("modified"))
                         .build(),

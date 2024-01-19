@@ -18,6 +18,7 @@ public class QueuedEmail {
     private String subject;
     private String body;
     private String lahetysTunniste;
+    private String virkailijaOid;
     private Timestamp created;
     private Timestamp modified;
 }
