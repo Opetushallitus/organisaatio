@@ -17,6 +17,9 @@
 .ModalishBox.Sent {
     border-top: 4px solid var(--color-primary-blue);
 }
+.ModalishBox.Error{
+    border-top: 4px solid var(--color-semantics-error);
+}
 
 .ModalishBox .Content {
     width: 478px;

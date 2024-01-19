@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
-import { haeHakuParametrit, HaeRequest, HakuParametrit, Hakutulos } from './OsoitteetApi';
+import { HaeRequest, Hakutulos, useHakuParametrit } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import { ViestiView } from './ViestiView';
 import Loading from '../../Loading/Loading';
 import { ViestiStatusView } from './ViestiStatusView';
+import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 
 type OsoitteetSivuProps = {
     muotoilematonViestiEnabled: boolean;
@@ -15,18 +16,30 @@ type OsoitteetSivuProps = {
 
 const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     useTitle('Osoitepalvelu');
-    const [hakuParametrit, setHakuParametrit] = useState<HakuParametrit | undefined>(undefined);
     const history = useHistory();
+    const hakuParametrit = useHakuParametrit();
 
     function onSearchResult(request: HaeRequest, hakutulos: Hakutulos) {
         history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
     }
 
-    useEffect(() => {
-        haeHakuParametrit().then(setHakuParametrit);
-    }, []);
+    if (hakuParametrit.state === 'ERROR') {
+        return (
+            <div className={styles.OsoitteetSivu}>
+                <div className={styles.MainContent}>
+                    <div className={styles.ContentContainer}>
+                        <GenericOsoitepalveluError />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
-    return hakuParametrit ? (
+    if (hakuParametrit.state === 'LOADING') {
+        return <Loading />;
+    }
+
+    return (
         <div className={styles.OsoitteetSivu}>
             <Route exact path={'/osoitteet'}>
                 <div className={styles.Header}>
@@ -39,7 +52,7 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                 </div>
                 <div className={styles.MainContent}>
                     <div className={styles.ContentContainer}>
-                        <SearchView hakuParametrit={hakuParametrit} onResult={onSearchResult} />
+                        <SearchView hakuParametrit={hakuParametrit.value} onResult={onSearchResult} />
                     </div>
                 </div>
             </Route>
@@ -65,8 +78,6 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                 </div>
             </Route>
         </div>
-    ) : (
-        <Loading />
     );
 };
 

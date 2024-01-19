@@ -82,9 +82,8 @@ export function useHakutulos(hakutulosId: string): ApiResult<Hakutulos> {
     return useGET<Hakutulos>(`/osoitteet/hakutulos/${hakutulosId}`);
 }
 
-export async function haeHakuParametrit() {
-    const response = await axios.get<HakuParametrit>(`${API_CONTEXT}/osoitteet/parametrit`);
-    return response.data;
+export function useHakuParametrit(): ApiResult<HakuParametrit> {
+    return useGET<HakuParametrit>(`/osoitteet/parametrit`);
 }
 
 export type SendEmailRequest = {

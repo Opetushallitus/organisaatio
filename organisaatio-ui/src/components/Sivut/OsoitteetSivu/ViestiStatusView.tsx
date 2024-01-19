@@ -8,6 +8,8 @@ import { LinklikeButton } from './LinklikeButton';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { useAtom } from 'jotai';
 import { frontPropertiesAtom } from '../../../api/config';
+import { ModalishBox } from './ModalishBox';
+import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 
 export const ViestiStatusView = () => {
     const [{ viestinvalityspalveluUrl }] = useAtom(frontPropertiesAtom);
@@ -36,7 +38,7 @@ export const ViestiStatusView = () => {
     }
 
     if (error) {
-        return <div>Tapahtui virhe</div>;
+        return <GenericOsoitepalveluError />;
     }
 
     if (!email) {
@@ -78,15 +80,3 @@ export const ViestiStatusView = () => {
     }
     return <div></div>;
 };
-
-type ModalishBoxProps = React.PropsWithChildren<{
-    className: string;
-}>;
-function ModalishBox({ children, className }: ModalishBoxProps) {
-    const classList = [styles.ModalishBox, className];
-    return (
-        <div className={classList.join(' ')}>
-            <div className={styles.Content}>{children}</div>
-        </div>
-    );
-}

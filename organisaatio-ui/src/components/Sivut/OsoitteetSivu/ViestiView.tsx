@@ -9,6 +9,7 @@ import { sendEmail, SendEmailRequest, useHakutulos } from './OsoitteetApi';
 import { useHistory, useParams } from 'react-router-dom';
 import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 
 function useTextInput(initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
@@ -67,7 +68,7 @@ export const ViestiView = () => {
     }
 
     if (hakutulos.state === 'ERROR') {
-        return <div>Tapahtui virhe</div>;
+        return <GenericOsoitepalveluError />;
     }
 
     if (hakutulos.state === 'LOADING') {

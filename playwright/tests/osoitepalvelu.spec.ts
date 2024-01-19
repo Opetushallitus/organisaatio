@@ -698,6 +698,17 @@ test.describe("Osoitepalvelu", () => {
   });
 });
 
+test.describe("Osoitepalvelu generic error page", () => {
+  test("shows generic error page when required request to backend fails", async ({ page }) => {
+    await blockRequestOnce(page, "**/osoitteet/parametrit");
+    const osoitepalveluPage = new OsoitepalveluPage(page);
+    await osoitepalveluPage.goto();
+    await expect(page.getByText("Osoitepalvelu ei vastaa")).toBeVisible();
+    await page.getByText("Yritä uudelleen").click();
+    await expect(page.getByText("Haun rajausmahdollisuudet")).toBeVisible();
+  });
+});
+
 async function selectFromJärjestämislupaDropdown(page: Page, label: string) {
   // This is required on webkit tests as the dropdown closes after selection
   if (!(await page.isVisible(".jarjesetamislupa-react-select__menu"))) {
@@ -748,4 +759,16 @@ function getItemsByCheckState(page: Page, checked: boolean) {
 
 function stringOfLength(n: number) {
   return "x".repeat(n);
+}
+
+async function blockRequestOnce(page: Page, url: string) {
+    let requestBlockedOnce = false;
+    await page.route(url, route => {
+      if (!requestBlockedOnce) {
+        route.abort();
+        requestBlockedOnce = true;
+      } else {
+        route.continue();
+      }
+    });
 }

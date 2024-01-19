@@ -8,6 +8,7 @@ import { LinklikeButton } from './LinklikeButton';
 import { API_CONTEXT } from '../../../contexts/constants';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 
 type HakutulosViewProps = {
     muotoilematonViestiEnabled: boolean;
@@ -27,7 +28,7 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
     }
 
     if (hakutulos.state === 'ERROR') {
-        return <div>Tapahtui virhe</div>;
+        return <GenericOsoitepalveluError />;
     }
 
     if (hakutulos.state === 'LOADING') {
