@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
+import fi.vm.sade.organisaatio.email.OsoitepalveluEmailRetryTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -23,9 +24,10 @@ public class SchedulingConfiguration {
                         KoodistoUpdateTask koodistoUpdateTask,
                         FetchKoodistotTask fetchKoodistotTask,
                         FetchKoulutusluvatTask fetchKoulutusluvatTask,
+                        OsoitepalveluEmailRetryTask osoitepalveluEmailRetryTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
-                .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask)
+                .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask, osoitepalveluEmailRetryTask)
                 .threads(1)
                 .build();
         scheduler.start();
