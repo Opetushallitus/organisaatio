@@ -53,26 +53,31 @@ public class EmailService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void attemptSendingEmail(String emailId) {
-        log.info("Attempting to send email {}", emailId);
-        queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).stream().findFirst().ifPresent(email -> {
-            var recipients = new ArrayList<>(email.getRecipients());
-            if (email.getCopy() != null) recipients.add(email.getCopy());
-            // TODO: Yli 2048 vastaanottajan mailit
-            var response = viestinvalitysClient.luoViesti(Viesti.builder()
-                    .lahettaja(OSOITEPALVELU_LAHETTAJA)
-                    .replyTo(email.getReplyTo())
-                    .lahettavanVirkailijanOid(email.getVirkailijaOid())
-                    .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
-                    .otsikko(email.getSubject())
-                    .sisalto(email.getBody())
-                    .sisallonTyyppi(SisallonTyyppi.text)
-                    .lahettavaPalvelu("osoitepalvelu")
-                    .prioriteetti(Prioriteetti.normaali)
-                    .sailytysaika(SAILYTYSAIKA)
-                    .build());
-            log.info("Sent email with lähetystunniste: {}", response.getLahetysTunniste());
-            markEmailAsSent(emailId, response.getLahetysTunniste());
-        });
+        try {
+            log.info("Attempting to send email {}", emailId);
+            queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).stream().findFirst().ifPresent(email -> {
+                var recipients = new ArrayList<>(email.getRecipients());
+                if (email.getCopy() != null) recipients.add(email.getCopy());
+                // TODO: Yli 2048 vastaanottajan mailit
+                var response = viestinvalitysClient.luoViesti(Viesti.builder()
+                        .lahettaja(OSOITEPALVELU_LAHETTAJA)
+                        .replyTo(email.getReplyTo())
+                        .lahettavanVirkailijanOid(email.getVirkailijaOid())
+                        .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
+                        .otsikko(email.getSubject())
+                        .sisalto(email.getBody())
+                        .sisallonTyyppi(SisallonTyyppi.text)
+                        .lahettavaPalvelu("osoitepalvelu")
+                        .prioriteetti(Prioriteetti.normaali)
+                        .sailytysaika(SAILYTYSAIKA)
+                        .build());
+                log.info("Sent email {} and received lähetystunniste {}", emailId, response.getLahetysTunniste());
+                markEmailAsSent(emailId, response.getLahetysTunniste());
+            });
+        } catch (Exception e) {
+            log.info("Failed to send email {}", emailId, e);
+            updateLastAttempt(emailId);
+        }
     }
 
     public Optional<QueuedEmail> getEmail(String emailId) {

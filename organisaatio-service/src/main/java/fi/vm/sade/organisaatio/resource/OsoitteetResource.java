@@ -184,13 +184,9 @@ public class OsoitteetResource {
                 .body(request.getBody() + "\n\n" + osoitelahde)
                 .build());
 
-        try {
-            emailService.attemptSendingEmail(emailId);
-            return new SendEmailResponse(emailId, "SENT");
-        } catch (Exception e) {
-            log.info("Failed to send email on first attempt", e);
-            return new SendEmailResponse(emailId, "QUEUED");
-        }
+        emailService.attemptSendingEmail(emailId);
+        var email = emailService.getEmail(emailId).orElseThrow();
+        return new SendEmailResponse(emailId, email.getStatus());
     }
 
     @GetMapping(value = "/viesti/{emailId}")
