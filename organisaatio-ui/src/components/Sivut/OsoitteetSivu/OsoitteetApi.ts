@@ -93,11 +93,8 @@ export type SendEmailRequest = {
     body: string;
 };
 
-type EmailStatus = 'QUEUED' | 'SENT';
-
 export type SendEmailResponse = {
     emailId: string;
-    status: EmailStatus;
 };
 
 export async function sendEmail(hakutulosId: string, request: SendEmailRequest): Promise<SendEmailResponse> {

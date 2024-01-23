@@ -185,8 +185,7 @@ public class OsoitteetResource {
                 .build());
 
         emailService.attemptSendingEmail(emailId);
-        var email = emailService.getEmail(emailId).orElseThrow();
-        return new SendEmailResponse(emailId, email.getStatus());
+        return new SendEmailResponse(emailId);
     }
 
     @GetMapping(value = "/viesti/{emailId}")
@@ -699,5 +698,4 @@ class GetEmailResponse {
 @Data
 class SendEmailResponse {
     private final String emailId;
-    private final String status;
 }
