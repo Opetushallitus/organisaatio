@@ -31,7 +31,7 @@ Below is non-exhaustive list of the key technologies & frameworks used in the pr
 
 Required tools for building the project:
 
-* Java 11 ([SDKMan!](https://sdkman.io/) or similar recommended to manage JDKs)
+* Java 21 ([SDKMan!](https://sdkman.io/) or similar recommended to manage JDKs)
 * Docker
 
 Project includes maven wrapper so it doesn't have to be installed. Just use `./mvnw` (unix) and `mvnw.cmd` (win).
