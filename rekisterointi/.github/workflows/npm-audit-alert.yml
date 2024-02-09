@@ -14,7 +14,7 @@ on:
     - cron: "0 12 * * *"
 
 jobs:
-  create-alert:
+  npm-audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
