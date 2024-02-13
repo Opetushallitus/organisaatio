@@ -72,6 +72,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
         updateMaakuntaKuntaRelaatiot();
     }
 
+    @SuppressWarnings("java:S2077") // koodisto is not user input and is safe to use in SQL
     private void updateKoodisto(String koodisto) {
         List<KoodistoRow> rows = fetchKoodisto(koodisto, true)
                 .map(this::mapToRow)
@@ -151,6 +152,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
         );
     }
 
+    @SuppressWarnings("java:S2077") // tableName is not user input and is safe to use in SQL
     private void insertKoodistoRows(String tableName, List<KoodistoRow> rows) {
         String sql = "INSERT INTO " + tableName + "(koodiuri, koodiarvo, versio, nimi_fi, nimi_sv) VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING";
         jdbc.batchUpdate(sql, rows, 100, (ps, row) -> {
