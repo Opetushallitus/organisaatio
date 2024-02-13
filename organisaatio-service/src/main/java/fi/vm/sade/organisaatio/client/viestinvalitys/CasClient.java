@@ -62,7 +62,7 @@ public class CasClient {
                 .build();
         var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() == 201) {
-            var location = response.headers().firstValue("Location").get();
+            var location = response.headers().firstValue("Location").orElseThrow(() -> new RuntimeException("Location header missing"));
             var tgt = location.substring(location.lastIndexOf("/") + 1);
             log.info("Successfully fetched TGT (Ticket Granting Ticket): {}", tgt);
             return tgt;
