@@ -39,6 +39,7 @@ public class DevWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    @SuppressWarnings("java:S4502")
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/buildversion.txt").permitAll()

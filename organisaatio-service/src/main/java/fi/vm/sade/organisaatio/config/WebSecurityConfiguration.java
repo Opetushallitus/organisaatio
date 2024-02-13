@@ -103,6 +103,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    @SuppressWarnings("java:S4502")
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .headers().disable()
