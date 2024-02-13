@@ -54,7 +54,7 @@ public abstract class CasAuthenticatedServiceClient {
         log.info("Auth reset response: {}", authResponse);
     }
 
-    private String fetchCasServiceTicket() {
+    private String fetchCasServiceTicket() throws IOException, InterruptedException {
         log.info("Refreshing CAS ticket");
         return casClient.getTicket(serviceUrl);
     }

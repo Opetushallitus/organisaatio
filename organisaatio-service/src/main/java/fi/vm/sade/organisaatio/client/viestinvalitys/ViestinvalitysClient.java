@@ -25,7 +25,10 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
             } else {
                 throw new UnexpectedResponseException(response);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }

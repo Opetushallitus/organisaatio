@@ -29,13 +29,8 @@ public class CasClient {
         this.password = password;
     }
 
-    public String getTicket(String service) {
-        try {
-            return getServiceTicket(service);
-        } catch (IOException | InterruptedException e) {
-            log.error("Failed to get service ticket", e);
-            throw new RuntimeException(e);
-        }
+    public String getTicket(String service) throws IOException, InterruptedException {
+        return getServiceTicket(service);
     }
 
     private String getServiceTicket(String service) throws IOException, InterruptedException {
