@@ -13,7 +13,7 @@ export function HakutulosTable({ rows }: HakutulosTableProps) {
         const _ = rows[index];
         const rowStyle = index % 2 ? styles.Odd : styles.Even;
         return (
-            <div className={styles.Body + ' ' + rowStyle} style={style}>
+            <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
                 <div className={styles.ColumnCheckbox + ' ' + styles.Fade}>
                     <span className={styles.Checkbox}>
                         <Checkbox checked={true} disabled={true}>
@@ -37,7 +37,7 @@ export function HakutulosTable({ rows }: HakutulosTableProps) {
     };
 
     return (
-        <div className={styles.HakutulosTable}>
+        <div role="table" className={styles.HakutulosTable}>
             <div className={styles.Header}>
                 <div className={styles.ColumnCheckbox}>
                     <span className={styles.Checkbox}>
@@ -58,7 +58,7 @@ export function HakutulosTable({ rows }: HakutulosTableProps) {
                 <div className={styles.ColumnOsoite}>Postiosoite</div>
                 <div className={styles.ColumnOsoite}>Käyntiosoite</div>
             </div>
-            <div className={styles.Results}>
+            <div role="rowgroup" className={styles.Results}>
                 <List itemSize={50} height={490} width={3200} itemCount={rows.length}>
                     {Row}
                 </List>
