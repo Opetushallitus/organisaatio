@@ -38,25 +38,27 @@ export function HakutulosTable({ rows }: HakutulosTableProps) {
 
     return (
         <div role="table" className={styles.HakutulosTable}>
-            <div className={styles.Header}>
-                <div className={styles.ColumnCheckbox}>
-                    <span className={styles.Checkbox}>
-                        <Checkbox checked={true} disabled={true}>
-                            Organisaation nimi
-                        </Checkbox>
-                    </span>
+            <div role="rowgroup">
+                <div role="row" className={styles.Header}>
+                    <div className={styles.ColumnCheckbox}>
+                        <span className={styles.Checkbox}>
+                            <Checkbox checked={true} disabled={true}>
+                                Organisaation nimi
+                            </Checkbox>
+                        </span>
+                    </div>
+                    <div className={styles.ColumnEmail}>Sähköpostiosoite</div>
+                    <div className={styles.ColumnShortInfo}>Puhelinnumero</div>
+                    <div className={styles.ColumnShortInfo}>Sijaintikunta</div>
+                    <div className={styles.ColumnShortInfo}>Yritysmuoto</div>
+                    <div className={styles.ColumnShortInfo}>Opetuskieli</div>
+                    <div className={styles.ColumnEmail}>KOSKI-virheilmoituksen osoite</div>
+                    <div className={styles.ColumnOid}>Organisaation OID</div>
+                    <div className={styles.ColumnShortInfo}>Oppilaitostunnus</div>
+                    <div className={styles.ColumnShortInfo}>Y-tunnus</div>
+                    <div className={styles.ColumnOsoite}>Postiosoite</div>
+                    <div className={styles.ColumnOsoite}>Käyntiosoite</div>
                 </div>
-                <div className={styles.ColumnEmail}>Sähköpostiosoite</div>
-                <div className={styles.ColumnShortInfo}>Puhelinnumero</div>
-                <div className={styles.ColumnShortInfo}>Sijaintikunta</div>
-                <div className={styles.ColumnShortInfo}>Yritysmuoto</div>
-                <div className={styles.ColumnShortInfo}>Opetuskieli</div>
-                <div className={styles.ColumnEmail}>KOSKI-virheilmoituksen osoite</div>
-                <div className={styles.ColumnOid}>Organisaation OID</div>
-                <div className={styles.ColumnShortInfo}>Oppilaitostunnus</div>
-                <div className={styles.ColumnShortInfo}>Y-tunnus</div>
-                <div className={styles.ColumnOsoite}>Postiosoite</div>
-                <div className={styles.ColumnOsoite}>Käyntiosoite</div>
             </div>
             <div role="rowgroup" className={styles.Results}>
                 <List itemSize={50} height={490} width={3200} itemCount={rows.length}>
