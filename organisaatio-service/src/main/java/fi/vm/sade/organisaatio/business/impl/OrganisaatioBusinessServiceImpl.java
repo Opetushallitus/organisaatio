@@ -221,12 +221,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Asetetaan parent path
         setParentPath(entity, parentOid);
 
-        boolean parentChanged = false;
-        Organisaatio oldParent = null;
-        oldParent = validateHierarchy(parentOid, entity, oldOrg);
-        if (oldParent != null) {
-            parentChanged = true;
-        }
+        Organisaatio oldParent = validateHierarchy(parentOid, entity, oldOrg);
 
         mergeAuxData(entity, oldOrg);
 
@@ -272,9 +267,11 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity = saveParentSuhteet(entity, parentOrg, opJarjNro);
 
         // Parent changed update children and reindex old parent.
-        if (parentChanged) {
-            updateChildrenRecursive(entity);
+        if (oldParent != null) {
+            updateParentForChildrenRecursive(entity);
         }
+
+        setLakkautusPvmForOppilaitosToimipistesRecursive(entity, entity.getLakkautusPvm());
 
         // Päivitä tiedot koodistoon.
         // organisaation päivittäminen koodistoon tehdään taustalla
@@ -635,7 +632,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
 
-    private void updateChildrenRecursive(Organisaatio parent) {
+    private void updateParentForChildrenRecursive(Organisaatio parent) {
         List<Organisaatio> children = organisaatioRepository.findChildren(parent.getId());
         if (children == null || children.isEmpty()) {
             return;
@@ -645,11 +642,25 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             // Create new parent id / oid paths for child.
             setParentPath(child, parent.getOid());
             Organisaatio updated = organisaatioRepository.saveAndFlush(child);
-            updateChildrenRecursive(updated);
+            updateParentForChildrenRecursive(updated);
 
         }
     }
 
+    private void setLakkautusPvmForOppilaitosToimipistesRecursive(Organisaatio entity, Date lakkautusPvm) {
+        if (!OrganisaatioUtil.isOppilaitos(entity) || lakkautusPvm == null) {
+            return;
+        }
+        List<Organisaatio> children = organisaatioRepository.findChildren(entity.getId());
+        for (Organisaatio child : children) {
+            if (OrganisaatioUtil.isToimipiste(child)
+                    && (child.getLakkautusPvm() == null || child.getLakkautusPvm().after(lakkautusPvm))) {
+                child.setLakkautusPvm(lakkautusPvm);
+                Organisaatio updated = organisaatioRepository.saveAndFlush(child);
+                setLakkautusPvmForOppilaitosToimipistesRecursive(updated, lakkautusPvm);
+            }
+        }
+    }
 
     @Override
     public List<OrganisaatioNimi> getOrganisaatioNimet(String oid) {
@@ -822,7 +833,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 organisaatioRepository.save(child); // TODO works?
             }
 
-            updateChildrenRecursive(child);
+            updateParentForChildrenRecursive(child);
 
             results.add(child);
         }
@@ -951,7 +962,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             setParentPath(organisaatio, newParent.getOid());
             organisaatioRepository.save(organisaatio); // TODO worrks?
 
-            updateChildrenRecursive(organisaatio);
+            updateParentForChildrenRecursive(organisaatio);
         }
     }
 

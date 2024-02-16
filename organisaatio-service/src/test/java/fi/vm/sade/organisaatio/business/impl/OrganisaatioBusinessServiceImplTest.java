@@ -6,12 +6,10 @@ import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenKielipainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToiminnallinepainotusDto;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
-import fi.vm.sade.organisaatio.dto.mapping.SearchCriteriaModelMapper;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -25,6 +23,7 @@ import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,10 +35,12 @@ import org.springframework.test.context.jdbc.Sql;
 import javax.validation.ValidationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
@@ -49,7 +50,9 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link OrganisaatioBusinessServiceImpl} class.
@@ -87,6 +90,13 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
             return new OIDServiceMock();
         }
 
+        @Bean
+        @Primary
+        public OrganisaatioTarjonta organisaatioTarjonta() {
+            OrganisaatioTarjonta mocked = mock(OrganisaatioTarjonta.class);
+            when(mocked.alkaviaKoulutuksia(any())).thenReturn(false);
+            return mocked;
+        }
     }
 
     private final String rootOid = "1.2.246.562.24.00000000001";
@@ -95,14 +105,9 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     @Autowired
     private OrganisaatioBusinessService service;
     @Autowired
-    private SearchCriteriaModelMapper searchCriteriaModelMapper;
-    @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Autowired
     private OrganisaatioBusinessServiceImpl organisaatioBusinessServiceImpl;
-    @Autowired
-    private OrganisaatioKoodisto organisaatioKoodisto;
-
     @Autowired
     private OrganisaatioToOrganisaatioRDTOConverter organisaatioToOrganisaatioRDTOConverter;
 
@@ -183,6 +188,49 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertThat(organisaatioRepository.findFirstByOid(toimipiste.getOid()))
                 .returns(oppilaitos.getParentOidPath() + oppilaitos.getOid() + "|", Organisaatio::getParentOidPath)
                 .returns(oppilaitos.getParentIdPath() + oppilaitos.getId() + "|", Organisaatio::getParentIdPath);
+    }
+
+    private ZonedDateTime toDay(Date d) {
+        return d.toInstant().atZone(ZoneId.systemDefault()).truncatedTo(ChronoUnit.DAYS);
+    }
+
+    @Test
+    public void settingOppilaitosLakkautusPvmAlsoSetsChildToimipisteLakkautusPvm() {
+        Organisaatio oppilaitos = createOrganisaatio("oppilaitosLakkautusPvm", OrganisaatioTyyppi.OPPILAITOS, "oppilaitosLakkautusPvm", rootOid);
+        Organisaatio toimipiste1 = createOrganisaatio("toimipiste1LakkautusPvm", OrganisaatioTyyppi.TOIMIPISTE, "toimipiste1LakkautusPvm", oppilaitos.getOid());
+        Organisaatio toimipiste2 = createOrganisaatio("toimipiste2LakkautusPvm", OrganisaatioTyyppi.TOIMIPISTE, "toimipiste2LakkautusPvm", oppilaitos.getOid());
+
+        Date lakkautusPvm = new Date();
+        OrganisaatioRDTO update = organisaatioToOrganisaatioRDTOConverter.convert(oppilaitos);
+        update.setYhteystiedot(Set.of());
+        update.setLakkautusPvm(lakkautusPvm);
+        service.saveOrUpdate(update);
+
+        Organisaatio toimipiste1Updated = organisaatioRepository.findFirstByOid(toimipiste1.getOid());
+        assertEquals(toDay(lakkautusPvm), toDay(toimipiste1Updated.getLakkautusPvm()));
+        Organisaatio toimipiste2Updated = organisaatioRepository.findFirstByOid(toimipiste2.getOid());
+        assertEquals(toDay(lakkautusPvm), toDay(toimipiste2Updated.getLakkautusPvm()));
+    }
+
+    @Test
+    public void settingOppilaitosLakkautusPvmDoesNotChangeChildToimipisteLakkautusPvm() {
+        Organisaatio oppilaitos = createOrganisaatio("oppilaitosLakkautusPvm2", OrganisaatioTyyppi.OPPILAITOS, "oppilaitosLakkautusPvm2", rootOid);
+        Organisaatio toimipiste1 = createOrganisaatio("toimipiste1LakkautusPvm2", OrganisaatioTyyppi.TOIMIPISTE, "toimipiste1LakkautusPvm2", oppilaitos.getOid());
+
+        Date toimipisteLakkautusPvm = new Date();
+        OrganisaatioRDTO toimipisteUpdate = organisaatioToOrganisaatioRDTOConverter.convert(oppilaitos);
+        toimipisteUpdate.setYhteystiedot(Set.of());
+        toimipisteUpdate.setLakkautusPvm(toimipisteLakkautusPvm);
+        service.saveOrUpdate(toimipisteUpdate);
+
+        Date oppilaitosLakkautusPvm = Date.from(Instant.now().minusSeconds(100000));
+        OrganisaatioRDTO oppilaitosUpdate = organisaatioToOrganisaatioRDTOConverter.convert(oppilaitos);
+        oppilaitosUpdate.setYhteystiedot(Set.of());
+        oppilaitosUpdate.setLakkautusPvm(oppilaitosLakkautusPvm);
+        service.saveOrUpdate(oppilaitosUpdate);
+
+        Organisaatio toimipiste1Updated = organisaatioRepository.findFirstByOid(toimipiste1.getOid());
+        assertNotEquals(toDay(toimipisteLakkautusPvm), toDay(toimipiste1Updated.getLakkautusPvm()));
     }
 
     @Test
