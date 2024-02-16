@@ -6,8 +6,8 @@ function main {
   export NVM_DIR="${NVM_DIR:-$HOME/.cache/nvm}"
   source "$repo/scripts/lib/nvm.sh"
 
-  nvm install -b 16.17.0
-  nvm use 16.17.0
+  nvm install -b 20
+  nvm use 20
 
   cd "$repo/playwright"
   npm ci

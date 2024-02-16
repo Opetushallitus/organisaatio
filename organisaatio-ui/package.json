@@ -134,7 +134,7 @@
         "report-dir": "cypress-coverage"
     },
     "engines": {
-        "npm": "^8",
-        "node": "^16"
+        "npm": "^10",
+        "node": "^20"
     }
 }

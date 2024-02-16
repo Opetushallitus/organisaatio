@@ -28,7 +28,7 @@ jobs:
       - name: Use node
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -78,7 +78,7 @@ jobs:
       - name: Use node
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -125,7 +125,7 @@ jobs:
       - name: Use node
         uses: actions/setup-node@v3
         with:
-          node-version: "16.17.0"
+          node-version: "20"
           cache: "npm"
       - name: Set up JDK 21
         uses: actions/setup-java@v3

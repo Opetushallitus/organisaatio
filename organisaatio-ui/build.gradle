@@ -11,7 +11,7 @@ sonarqube {
     }
 }
 node {
-    version = '16.20.2'
+    version = '20'
     download = true
 }
 task lint(type: NpmTask, dependsOn: npmInstall) {
