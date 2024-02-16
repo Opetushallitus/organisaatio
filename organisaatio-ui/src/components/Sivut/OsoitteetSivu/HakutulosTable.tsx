@@ -1,4 +1,6 @@
 import React from 'react';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+
 import { HakutulosRow } from './OsoitteetApi';
 import styles from './HakutulosTable.module.css';
 import { Checkbox } from './Checkbox';
@@ -7,56 +9,60 @@ type HakutulosTableProps = {
     rows: HakutulosRow[];
 };
 export function HakutulosTable({ rows }: HakutulosTableProps) {
+    const Row = ({ index, style }: ListChildComponentProps) => {
+        const _ = rows[index];
+        const rowStyle = index % 2 ? styles.Odd : styles.Even;
+        return (
+            <div className={styles.Body + ' ' + rowStyle} style={style}>
+                <div className={styles.ColumnCheckbox + ' ' + styles.Fade}>
+                    <span className={styles.Checkbox}>
+                        <Checkbox checked={true} disabled={true}>
+                            {_.nimi}
+                        </Checkbox>
+                    </span>
+                </div>
+                <div className={styles.ColumnEmail + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</div>
+                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.puhelinnumero ?? '-'}</div>
+                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.kunta}</div>
+                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.yritysmuoto}</div>
+                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.opetuskieli ?? '-'}</div>
+                <div className={styles.ColumnEmail + ' ' + styles.Fade}>{_.koskiVirheilmoituksenOsoite ?? '-'}</div>
+                <div className={styles.ColumnOid + ' ' + styles.Fade}>{_.oid}</div>
+                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.oppilaitostunnus ?? '-'}</div>
+                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.ytunnus}</div>
+                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{_.postiosoite ?? '-'}</div>
+                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{_.kayntiosoite ?? '-'}</div>
+            </div>
+        );
+    };
+
     return (
         <div className={styles.HakutulosTable}>
-            <table className={styles.Table}>
-                <thead className={styles.Header}>
-                    <tr>
-                        <td className={styles.ColumnCheckbox}>
-                            <span className={styles.Checkbox}>
-                                <Checkbox checked={true} disabled={true}>
-                                    Organisaation nimi
-                                </Checkbox>
-                            </span>
-                        </td>
-                        <td className={styles.ColumnEmail}>Sähköpostiosoite</td>
-                        <td>Puhelinnumero</td>
-                        <td>Sijaintikunta</td>
-                        <td className={styles.ColumnYritysmuoto}>Yritysmuoto</td>
-                        <td>Opetuskieli</td>
-                        <td>KOSKI-virheilmoituksen osoite</td>
-                        <td className={styles.ColumnOid}>Organisaation OID</td>
-                        <td>Oppilaitostunnus</td>
-                        <td>Y-tunnus</td>
-                        <td className={styles.ColumnOsoite}>Postiosoite</td>
-                        <td className={styles.ColumnOsoite}>Käyntiosoite</td>
-                    </tr>
-                </thead>
-                <tbody className={styles.Body}>
-                    {rows.map((_) => (
-                        <tr key={_.id}>
-                            <td className={styles.ColumnCheckbox + ' ' + styles.Fade}>
-                                <span className={styles.Checkbox}>
-                                    <Checkbox checked={true} disabled={true}>
-                                        {_.nimi}
-                                    </Checkbox>
-                                </span>
-                            </td>
-                            <td className={styles.ColumnEmail + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</td>
-                            <td>{_.puhelinnumero ?? '-'}</td>
-                            <td>{_.kunta}</td>
-                            <td className={styles.ColumnYritysmuoto + ' ' + styles.Fade}>{_.yritysmuoto}</td>
-                            <td>{_.opetuskieli ?? '-'}</td>
-                            <td>{_.koskiVirheilmoituksenOsoite ?? '-'}</td>
-                            <td className={styles.ColumnOid + ' ' + styles.Fade}>{_.oid}</td>
-                            <td>{_.oppilaitostunnus ?? '-'}</td>
-                            <td>{_.ytunnus}</td>
-                            <td className={styles.ColumnOsoite + ' ' + styles.Fade}>{_.postiosoite ?? '-'}</td>
-                            <td className={styles.ColumnOsoite + ' ' + styles.Fade}>{_.kayntiosoite ?? '-'}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className={styles.Header}>
+                <div className={styles.ColumnCheckbox}>
+                    <span className={styles.Checkbox}>
+                        <Checkbox checked={true} disabled={true}>
+                            Organisaation nimi
+                        </Checkbox>
+                    </span>
+                </div>
+                <div className={styles.ColumnEmail}>Sähköpostiosoite</div>
+                <div className={styles.ColumnShortInfo}>Puhelinnumero</div>
+                <div className={styles.ColumnShortInfo}>Sijaintikunta</div>
+                <div className={styles.ColumnShortInfo}>Yritysmuoto</div>
+                <div className={styles.ColumnShortInfo}>Opetuskieli</div>
+                <div className={styles.ColumnEmail}>KOSKI-virheilmoituksen osoite</div>
+                <div className={styles.ColumnOid}>Organisaation OID</div>
+                <div className={styles.ColumnShortInfo}>Oppilaitostunnus</div>
+                <div className={styles.ColumnShortInfo}>Y-tunnus</div>
+                <div className={styles.ColumnOsoite}>Postiosoite</div>
+                <div className={styles.ColumnOsoite}>Käyntiosoite</div>
+            </div>
+            <div className={styles.Results}>
+                <List itemSize={50} height={490} width={3200} itemCount={rows.length}>
+                    {Row}
+                </List>
+            </div>
         </div>
     );
 }

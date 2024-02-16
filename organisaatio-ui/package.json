@@ -24,6 +24,7 @@
         "react-router-dom": "5.2.0",
         "react-scripts": "^5.0.1",
         "react-table": "7.2.0",
+        "react-window": "^1.8.10",
         "reactjs-popup": "^2.0.5",
         "styled-components": "5.1.1",
         "universal-cookie": "4.0.4"
@@ -42,6 +43,7 @@
         "@types/react-router-dom": "5.1.5",
         "@types/react-select": "^3.0.14",
         "@types/react-table": "^7.0.19",
+        "@types/react-window": "^1.8.8",
         "@types/styled-components": "4.4.0",
         "@typescript-eslint/eslint-plugin": "^6.4.1",
         "@typescript-eslint/parser": "^6.4.1",

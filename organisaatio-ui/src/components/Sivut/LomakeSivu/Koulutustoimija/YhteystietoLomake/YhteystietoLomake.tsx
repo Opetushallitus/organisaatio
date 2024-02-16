@@ -97,7 +97,7 @@ const YhteystietoLomake = ({
                         validationErrors={
                             isSubmitted && hasValidationErrors
                                 ? validationSchemas[kieli].validate(yhteystiedotValues)
-                                : { value: yhteystiedotValues }
+                                : { value: yhteystiedotValues, error: undefined }
                         }
                         formControl={formControl}
                     />
@@ -116,7 +116,7 @@ const YhteystietoLomake = ({
                                 validationErrors={
                                     isSubmitted && hasValidationErrors
                                         ? validationSchemas[kieli].validate(yhteystiedotValues)
-                                        : { value: yhteystiedotValues }
+                                        : { value: yhteystiedotValues, error: undefined }
                                 }
                                 formControl={formControl}
                                 isYtj={false}
