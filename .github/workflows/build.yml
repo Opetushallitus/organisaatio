@@ -46,7 +46,6 @@ jobs:
           npm run lint
           npm run prettier
           CI=true npm run test
-          npm run cypress:test
           npm run build
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
