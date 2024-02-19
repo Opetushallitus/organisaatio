@@ -98,7 +98,7 @@ jobs:
       - name: Build backend with no tests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew clean build -x test -x uiTest -x lint -x checkFormatting
+        run: ./gradlew clean build -x test
       - name: Run Cypress
         run: |
           cd mock-api && npm run mock-api &
@@ -144,7 +144,7 @@ jobs:
       - name: Build backend with no tests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew clean build -x test -x uiTest -x lint -x checkFormatting
+        run: ./gradlew clean build -x test
       - name:
         run: |
           cd mock-api && npm run mock-api &
