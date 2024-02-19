@@ -147,7 +147,7 @@ public class OsoitteetResource {
         return createSqlStringArray("text", list);
     }
 
-    private java.sql.Array createSqlStringArray(String arrayType, List list) {
+    private java.sql.Array createSqlStringArray(String arrayType, List<? extends Object> list) {
         return jdbcTemplate
                 .getJdbcOperations()
                 .execute(new ConnectionCallback<java.sql.Array>() {
@@ -438,6 +438,12 @@ public class OsoitteetResource {
         if (!req.getKielet().isEmpty()) {
             sql.add("JOIN organisaatio_kielet ON (organisaatio_kielet.organisaatio_id = o.id)");
         }
+        if (!req.getOppilaitostyypit().isEmpty() && organisaatiotyyppi.equals(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+            sql.add("""
+                    LEFT JOIN organisaatiosuhde os ON (o.id = os.child_id)
+                    LEFT JOIN organisaatio parent ON (os.parent_id = parent.id)
+                    """);
+        }
 
         sql.add("WHERE organisaatio_is_active(o)");
         if (!req.getJarjestamisluvat().isEmpty()) {
@@ -448,8 +454,13 @@ public class OsoitteetResource {
         }
 
         if (!req.getOppilaitostyypit().isEmpty()) {
-            sql.add("AND o.oppilaitostyyppi IN (:oppilaitostyypit)");
-            params.put("oppilaitostyypit", req.getOppilaitostyypit());
+            if (organisaatiotyyppi.equals(OrganisaatioTyyppi.OPPILAITOS.koodiValue())) {
+                sql.add("AND o.oppilaitostyyppi IN (:oppilaitostyypit)");
+                params.put("oppilaitostyypit", req.getOppilaitostyypit());
+            } else if (organisaatiotyyppi.equals(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
+                sql.add("AND parent.oppilaitostyyppi IN (:oppilaitostyypit)");
+                params.put("oppilaitostyypit", req.getOppilaitostyypit());
+            }
         }
 
         if (!req.getKunnat().isEmpty()) {

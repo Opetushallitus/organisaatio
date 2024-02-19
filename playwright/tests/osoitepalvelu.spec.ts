@@ -559,6 +559,32 @@ test.describe("Osoitepalvelu", () => {
         page.getByText("Ammattiopisto Puolukka, testi toimipiste")
       ).toBeVisible();
     });
+
+    test("filters by parent oppilaitostyyppi", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.oppilaitostyyppiFilter.open();
+      await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
+        "Ammatillinen koulutus"
+      );
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      await expect(
+        page.getByText("Ammattiopisto Puolukka, testi toimipiste")
+      ).toBeVisible();
+
+      await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+      await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
+        "Ammatillinen koulutus"
+      );
+      await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
+        "Perusopetus"
+      );
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
+    });
   });
 
   test.describe("Selecting multiple kohderyhmä", async () => {
@@ -699,7 +725,9 @@ test.describe("Osoitepalvelu", () => {
 });
 
 test.describe("Osoitepalvelu generic error page", () => {
-  test("shows generic error page when required request to backend fails", async ({ page }) => {
+  test("shows generic error page when required request to backend fails", async ({
+    page,
+  }) => {
     await blockRequestOnce(page, "**/osoitteet/parametrit");
     const osoitepalveluPage = new OsoitepalveluPage(page);
     await osoitepalveluPage.goto();
@@ -762,13 +790,13 @@ function stringOfLength(n: number) {
 }
 
 async function blockRequestOnce(page: Page, url: string) {
-    let requestBlockedOnce = false;
-    await page.route(url, route => {
-      if (!requestBlockedOnce) {
-        route.abort();
-        requestBlockedOnce = true;
-      } else {
-        route.continue();
-      }
-    });
+  let requestBlockedOnce = false;
+  await page.route(url, (route) => {
+    if (!requestBlockedOnce) {
+      route.abort();
+      requestBlockedOnce = true;
+    } else {
+      route.continue();
+    }
+  });
 }
