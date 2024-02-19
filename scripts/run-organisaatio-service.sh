@@ -5,7 +5,7 @@ readonly repo="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd .. && pwd)"
 function main {
   wait_for_local_db_to_be_healthy
   select_java_version "21"
-  "$repo"/gradlew :organisaatio-service:run --exclude-task :organisaatio-ui:jar
+  "$repo"/gradlew :organisaatio-service:run
 }
 
 function select_java_version {
