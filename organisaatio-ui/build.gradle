@@ -1,5 +1,4 @@
 plugins {
-    id "com.github.node-gradle.node" version "2.2.4"
     id 'java'
 }
 sonarqube {
@@ -9,45 +8,6 @@ sonarqube {
         property "sonar.exclusions", "**/*.test.ts, **/*.test.tsx, cypress/**"
         property "sonar.javascript.lcov.reportPaths", "coverage/lcov.info,cypress-coverage/lcov.info"
     }
-}
-node {
-    version = '20.11.1'
-    download = true
-    npmInstall.args = ['--force']
-}
-npmInstall.args = ['--force']
-task lint(type: NpmTask, dependsOn: npmInstall) {
-    inputs.files(files('src'))
-    outputs.dir('src')
-    args = ['run', 'lint']
-}
-task checkFormatting(type: NpmTask, dependsOn: lint) {
-    inputs.files(files('src'))
-    outputs.dir('src')
-    args = ['run', 'prettier']
-}
-task uiTest(type: NpmTask, dependsOn: checkFormatting) {
-    inputs.files(files('src'))
-    outputs.dir('src')
-    environment = ['CI': 'true']
-    args = ['run', 'test']
-}
-
-task igTest(type: NpmTask) {
-    inputs.files(files('src'))
-    outputs.dir('src')
-    environment = ['CI': 'true']
-    args = ['run', 'cypress:test']
-}
-
-task bundle(type: NpmTask, dependsOn: uiTest) {
-    inputs.files(files('src', 'public'))
-    outputs.dir("${buildDir}")
-    args = ['run', 'build']
-}
-
-task run(type: NpmTask) {
-    args = ['start']
 }
 
 task webjar(type: Jar, dependsOn: 'jar') {
@@ -59,6 +19,4 @@ task webjar(type: Jar, dependsOn: 'jar') {
     }
 }
 
-check.dependsOn(test)
-jar.dependsOn(bundle)
 jar.finalizedBy('webjar')

@@ -36,6 +36,15 @@ jobs:
       - uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: "Europe/Helsinki"
+      - name: Build frontend
+        working-directory: organisaatio-ui
+        run: |
+          npm ci
+          npm run lint
+          npm run prettier
+          CI=true npm run test
+          npm run cypress:test
+          npm run build
       - uses: gradle/actions/wrapper-validation@v3
       - uses: gradle/actions/setup-gradle@v3
       - name: Build
