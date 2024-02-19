@@ -104,7 +104,7 @@ jobs:
       - name: Build backend with no tests
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
-          arguments: clean build -x test -x uiTest -x lint -x checkFormatting
+          arguments: clean build -x test
       - name: Run Cypress
         run: |
           cd mock-api && npm run mock-api &
@@ -152,7 +152,7 @@ jobs:
       - name: Build backend with no tests
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
-          arguments: clean build -x test -x uiTest -x lint -x checkFormatting
+          arguments: clean build -x test
       - name:
         run: |
           cd mock-api && npm run mock-api &
