@@ -147,7 +147,7 @@ public class OsoitteetResource {
         return createSqlStringArray("text", list);
     }
 
-    private java.sql.Array createSqlStringArray(String arrayType, List list) {
+    private java.sql.Array createSqlStringArray(String arrayType, List<? extends Object> list) {
         return jdbcTemplate
                 .getJdbcOperations()
                 .execute(new ConnectionCallback<java.sql.Array>() {
