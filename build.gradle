@@ -1,6 +1,11 @@
 plugins {
+	id 'java'
 	id 'groovy'
 	id "org.sonarqube" version "4.4.1.3373"
+}
+java {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 }
 compileJava.options.encoding = 'UTF-8'
 def getDate() {
