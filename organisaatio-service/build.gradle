@@ -27,7 +27,6 @@ compileJava {
 mainClassName = 'fi.vm.sade.organisaatio.OrganisaatioApplication'
 
 dependencies {
-    implementation project(':organisaatio-ui')
     implementation project(':organisaatio-api')
     implementation project(':ytj-client:ytj-api')
     implementation(project(':ytj-client:ytj-webservice')) {
@@ -154,7 +153,8 @@ jacocoTestReport {
     }
 }
 
-bootJar.dependsOn(':organisaatio-ui:webjar')
-run.dependsOn(':organisaatio-ui:webjar')
-startScripts.dependsOn(':organisaatio-ui:webjar')
-compileTestJava.dependsOn(':organisaatio-ui:webjar')
+bootJar {
+    from ('../organisaatio-ui/build') {
+        into 'META-INF/resources'
+    }
+}
