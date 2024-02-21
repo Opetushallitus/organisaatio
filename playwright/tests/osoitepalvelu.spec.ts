@@ -505,18 +505,31 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test("Lataa Excel button", async ({ page }) => {
-    await test.step(
-      "downloads search results as an excel document",
-      async () => {
-        await new OsoitepalveluPage(page).haeButton.click();
-        const [download] = await Promise.all([
-          page.waitForEvent("download"),
-          page.getByRole("button", { name: "Lataa Excel" }).click(),
-        ]);
-        expect(download.suggestedFilename()).toBe("osoitteet.xls");
-      }
-    );
+  test.describe("Lataa Excel button", () => {
+    test("downloads organisation search results as an excel document", async ({
+      page,
+    }) => {
+      await new OsoitepalveluPage(page).haeButton.click();
+      const [download] = await Promise.all([
+        page.waitForEvent("download"),
+        page.getByRole("button", { name: "Lataa Excel" }).click(),
+      ]);
+      expect(download.suggestedFilename()).toBe("osoitteet.xls");
+    });
+
+    test("downloads kayttaja search results as an excel document", async ({
+      page,
+    }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
+      await osoitepalveluPage.haeButton.click();
+      const [download] = await Promise.all([
+        page.waitForEvent("download"),
+        page.getByRole("button", { name: "Lataa Excel" }).click(),
+      ]);
+      expect(download.suggestedFilename()).toBe("kayttajat.xls");
+    });
   });
 
   test.describe("Oppilaitokset kohderyhmä", async () => {

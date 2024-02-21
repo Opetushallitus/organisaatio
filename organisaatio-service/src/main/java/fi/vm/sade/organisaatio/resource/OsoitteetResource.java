@@ -256,53 +256,16 @@ public class OsoitteetResource {
         }
 
         try {
-            var hakutulos = getSearchResultsById(resultId);
-            List<OrganisaatioHakutulosRow> tulos = makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds));
-            Integer columnCount = 12;
-
-            String fileName = "osoitteet.xls";
-            Workbook wb = new HSSFWorkbook();
-            Sheet sheet = wb.createSheet("Osoitteet");
-
-            Row header = sheet.createRow(0);
-            CellStyle style = wb.createCellStyle();
-            Font font = wb.createFont();
-            font.setBold(true);
-            style.setFont(font);
-            Integer col = 0;
-            createCell(header, col++, "Organisaation nimi", style);
-            createCell(header, col++, "Sähköpostiosoite", style);
-            createCell(header, col++, "Puhelinnumero", style);
-            createCell(header, col++, "Sijaintikunta", style);
-            createCell(header, col++, "Yritysmuoto", style);
-            createCell(header, col++, "Opetuskieli", style);
-            createCell(header, col++, "KOSKI-virheilmoituksen osoite", style);
-            createCell(header, col++, "Organisaation OID", style);
-            createCell(header, col++, "Oppilaitostunnus", style);
-            createCell(header, col++, "Y-tunnus", style);
-            createCell(header, col++, "Postiosoite", style);
-            createCell(header, col++, "Käyntiosoite", style);
-
-            for (Integer row = 1; row <= tulos.size(); row++) {
-                OrganisaatioHakutulosRow h = tulos.get(row - 1);
-                Row r = sheet.createRow(row);
-                col = 0;
-                r.createCell(col++).setCellValue(h.nimi);
-                r.createCell(col++).setCellValue(h.sahkoposti.orElse(""));
-                r.createCell(col++).setCellValue(h.puhelinnumero.orElse(""));
-                r.createCell(col++).setCellValue(h.kunta);
-                r.createCell(col++).setCellValue(h.yritysmuoto);
-                r.createCell(col++).setCellValue(h.opetuskieli.orElse(""));
-                r.createCell(col++).setCellValue(h.koskiVirheilmoituksenOsoite.orElse(""));
-                r.createCell(col++).setCellValue(h.oid);
-                r.createCell(col++).setCellValue(h.oppilaitostunnus.orElse(""));
-                r.createCell(col++).setCellValue(h.ytunnus);
-                r.createCell(col++).setCellValue(h.postiosoite.orElse(""));
-                r.createCell(col++).setCellValue(h.kayntiosoite.orElse(""));
-            }
-
-            for (Integer i = 0; i < columnCount; i++) {
-                sheet.autoSizeColumn(i);
+            SavedSearchResult hakutulos = getSearchResultsById(resultId);
+            Workbook wb;
+            String fileName;
+            if (hakutulos.organisaatioIds != null) {
+                List<OrganisaatioHakutulosRow> tulos = makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds));
+                wb = createOrganisaatioXls(tulos);
+                fileName = "osoitteet.xls";
+            } else {
+                wb = createKayttajaXls(hakutulos.kayttajat);
+                fileName = "kayttajat.xls";
             }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -318,6 +281,84 @@ public class OsoitteetResource {
             log.error("Failed to generate excel document for search with id [" + resultId + "]" , e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private Workbook createOrganisaatioXls(List<OrganisaatioHakutulosRow> tulos) {
+        Workbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet("Osoitteet");
+
+        Row header = sheet.createRow(0);
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setBold(true);
+        style.setFont(font);
+        Integer col = 0;
+        createCell(header, col++, "Organisaation nimi", style);
+        createCell(header, col++, "Sähköpostiosoite", style);
+        createCell(header, col++, "Puhelinnumero", style);
+        createCell(header, col++, "Sijaintikunta", style);
+        createCell(header, col++, "Yritysmuoto", style);
+        createCell(header, col++, "Opetuskieli", style);
+        createCell(header, col++, "KOSKI-virheilmoituksen osoite", style);
+        createCell(header, col++, "Organisaation OID", style);
+        createCell(header, col++, "Oppilaitostunnus", style);
+        createCell(header, col++, "Y-tunnus", style);
+        createCell(header, col++, "Postiosoite", style);
+        createCell(header, col++, "Käyntiosoite", style);
+
+        for (Integer row = 1; row <= tulos.size(); row++) {
+            OrganisaatioHakutulosRow h = tulos.get(row - 1);
+            Row r = sheet.createRow(row);
+            col = 0;
+            r.createCell(col++).setCellValue(h.nimi);
+            r.createCell(col++).setCellValue(h.sahkoposti.orElse(""));
+            r.createCell(col++).setCellValue(h.puhelinnumero.orElse(""));
+            r.createCell(col++).setCellValue(h.kunta);
+            r.createCell(col++).setCellValue(h.yritysmuoto);
+            r.createCell(col++).setCellValue(h.opetuskieli.orElse(""));
+            r.createCell(col++).setCellValue(h.koskiVirheilmoituksenOsoite.orElse(""));
+            r.createCell(col++).setCellValue(h.oid);
+            r.createCell(col++).setCellValue(h.oppilaitostunnus.orElse(""));
+            r.createCell(col++).setCellValue(h.ytunnus);
+            r.createCell(col++).setCellValue(h.postiosoite.orElse(""));
+            r.createCell(col++).setCellValue(h.kayntiosoite.orElse(""));
+        }
+
+        Integer columnCount = 12;
+        for (Integer i = 0; i < columnCount; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        return wb;
+    }
+
+    private Workbook createKayttajaXls(List<VirkailijaDto> kayttajat) {
+        Workbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet("Käyttäjät");
+
+        Row header = sheet.createRow(0);
+        CellStyle style = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setBold(true);
+        style.setFont(font);
+        Integer col = 0;
+        createCell(header, col++, "Nimi", style);
+        createCell(header, col++, "Sähköpostiosoite", style);
+
+        for (Integer row = 1; row <= kayttajat.size(); row++) {
+            VirkailijaDto h = kayttajat.get(row - 1);
+            Row r = sheet.createRow(row);
+            col = 0;
+            r.createCell(col++).setCellValue(h.getEtunimet() + " " + h.getSukunimi());
+            r.createCell(col++).setCellValue(h.getSahkoposti() != null ? h.getSahkoposti() : "");
+        }
+
+        Integer columnCount = 2;
+        for (Integer i = 0; i < columnCount; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        return wb;
     }
 
     private List<VirkailijaDto> parseKayttajat(String kayttajatString) {
