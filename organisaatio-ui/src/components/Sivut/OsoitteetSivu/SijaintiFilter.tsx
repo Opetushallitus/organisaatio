@@ -34,6 +34,10 @@ export function makeEmptyValue(): Value {
     };
 }
 
+export function isEmptyValue(value?: Value) {
+    return !value || (!value.maakunnat.length && !value.ulkomaa && !value.kunnat.length);
+}
+
 type SijaintiFilterProps = {
     maakunnat: MaakuntaKoodi[];
     kunnat: KoodistoKoodi[];

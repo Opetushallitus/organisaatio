@@ -50,7 +50,17 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
 
     function resetSearchParams() {
-        setSearchStateAsDervivedFromKohderyhmat([]);
+        setSearchParameters({
+            kohderyhmat: [],
+            oppilaitosTypes: defaultOppilaitosTypes,
+            vuosiluokat: [],
+            sijainti: sijaintiFilter.makeEmptyValue(),
+            anyJarjestamislupa: false,
+            jarjestamisluvat: [],
+            kielet: [],
+            enabledFilters: [],
+            openFilters: [],
+        });
     }
 
     async function hae() {
@@ -105,7 +115,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             : defaultOppilaitosTypes;
         const vuosiluokat = enabledFilters.includes(oppilaitostyyppiFilter.id) ? currentState?.vuosiluokat ?? [] : [];
         const sijainti = enabledFilters.includes(sijaintiFilter.id)
-            ? currentState?.sijainti ?? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
+            ? sijaintiFilter.isEmptyValue(currentState?.sijainti)
+                ? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
+                : currentState?.sijainti ?? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
             : sijaintiFilter.makeEmptyValue();
         const anyJarjestamislupa = enabledFilters.includes(jarjestamislupaFilter.id)
             ? currentState?.anyJarjestamislupa ?? false
@@ -114,7 +126,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             ? currentState?.jarjestamisluvat ?? []
             : [];
         const kielet = enabledFilters.includes(kieliFilter.id)
-            ? currentState?.kielet ?? kieliFilter.makeDefaultValue()
+            ? !currentState?.kielet.length
+                ? kieliFilter.makeDefaultValue()
+                : currentState?.kielet ?? kieliFilter.makeDefaultValue()
             : [];
 
         return {
