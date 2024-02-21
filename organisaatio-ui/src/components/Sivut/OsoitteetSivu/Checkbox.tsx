@@ -3,28 +3,26 @@ import styles from './Checkbox.module.css';
 
 export type CustomCheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
     checked: boolean;
-    onChange?: (checked: boolean) => void;
-    disabled?: boolean;
+    onChange: (checked: boolean) => void;
+    disabled: boolean;
 };
 
 export function Checkbox({ children, checked, onChange, disabled }: CustomCheckboxProps) {
-    function onChangeHandler(e) {
-        if (onChange) onChange(e.target.checked);
-    }
     return (
         <label className={styles.Checkbox}>
             <input
                 className={styles.VisuallyHiddenInput}
                 type="checkbox"
                 checked={checked}
-                disabled={disabled ?? false}
-                onChange={onChangeHandler}
+                disabled={disabled}
+                onChange={(e) => !disabled && onChange(e.target.checked)}
             />
             {checked ? <CheckedIcon /> : <UncheckedIcon />}
             {children}
         </label>
     );
 }
+
 export function CheckedIcon() {
     return (
         <svg width="20" height="20" viewBox="2 2 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

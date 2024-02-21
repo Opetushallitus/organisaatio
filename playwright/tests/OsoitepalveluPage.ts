@@ -14,6 +14,7 @@ export class OsoitepalveluPage {
   readonly koulutusotimijatKohderyhma: Kohderyhma;
   readonly oppilaitoksetKohderyhma: Kohderyhma;
   readonly oppilaitostentoimipisteetKohderyhma: Kohderyhma;
+  readonly palveluidenKayttajatKohderyhma: Kohderyhma;
   readonly kirjoitaSahkopostiButton: Locator;
   readonly kirjoitaViestiForm: KirjoitaViestiForm;
 
@@ -29,6 +30,10 @@ export class OsoitepalveluPage {
     this.oppilaitostentoimipisteetKohderyhma = new Kohderyhma(
       page,
       "Oppilaitosten toimipisteet"
+    );
+    this.palveluidenKayttajatKohderyhma = new Kohderyhma(
+      page,
+      "Palveluiden käyttäjät"
     );
     this.kieliFilter = new Filter(page, "Organisaation kieli");
     this.oppilaitostyyppiFilter = new Filter(page, "Oppilaitostyyppi");

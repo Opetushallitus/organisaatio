@@ -1,4 +1,4 @@
-import { haeOsoitteet, HaeRequest, HakuParametrit, Hakutulos } from './OsoitteetApi';
+import { haeHakutulos, HakuParametrit, Hakutulos } from './OsoitteetApi';
 import React, { useCallback, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -15,11 +15,11 @@ import * as oppilaitostyyppiFilter from './OppilaitostyyppiFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
-    onResult(request: HaeRequest, result: Hakutulos): void;
+    onResult(result: Hakutulos): void;
 };
 
 type SearchState = {
-    organisaatiotyypit: string[];
+    kohderyhmat: string[];
     oppilaitosTypes: Record<string, boolean>;
     vuosiluokat: string[];
     sijainti: sijaintiFilter.Value;
@@ -58,8 +58,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             setLoading(true);
             setError(false);
 
-            const haeOsoitteetRequest = {
-                organisaatiotyypit: searchParameters.organisaatiotyypit,
+            const request = {
+                organisaatiotyypit: searchParameters.kohderyhmat,
                 oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(
                     (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
                     []
@@ -70,8 +70,9 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 jarjestamisluvat: searchParameters.jarjestamisluvat,
                 kielet: searchParameters.kielet,
             };
-            const hakutulos = await haeOsoitteet(haeOsoitteetRequest);
-            onResult(haeOsoitteetRequest, hakutulos);
+
+            const hakutulos = await haeHakutulos(request);
+            onResult(hakutulos);
         } catch (e) {
             setError(true);
         }
@@ -90,14 +91,14 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     function onOppilaitostyyppiFilterChanged(oppilaitosTypes: Record<string, boolean>, vuosiluokat: string[]) {
         setSearchParameters({ ...searchParameters, oppilaitosTypes, vuosiluokat });
     }
-    function onKohderymaFilterChanged(organisaatiotyypit: string[]): void {
-        setSearchStateAsDervivedFromKohderyhmat(organisaatiotyypit);
+    function onKohderymaFilterChanged(kohderyhmat: string[]): void {
+        setSearchStateAsDervivedFromKohderyhmat(kohderyhmat);
     }
-    function setSearchStateAsDervivedFromKohderyhmat(organisaatiotyypit: string[]) {
-        setSearchParameters(deriveStateFromKohderyhmat(organisaatiotyypit, searchParameters));
+    function setSearchStateAsDervivedFromKohderyhmat(kohderyhmat: string[]) {
+        setSearchParameters(deriveStateFromKohderyhmat(kohderyhmat, searchParameters));
     }
-    function deriveStateFromKohderyhmat(organisaatiotyypit: string[], currentState?: SearchState) {
-        const enabledFilters = deriveEnabledFilters(organisaatiotyypit);
+    function deriveStateFromKohderyhmat(kohderyhmat: string[], currentState?: SearchState): SearchState {
+        const enabledFilters = deriveEnabledFilters(kohderyhmat);
         const openFilters = currentState?.openFilters.filter((f) => enabledFilters.includes(f)) ?? [];
         const oppilaitosTypes = enabledFilters.includes(oppilaitostyyppiFilter.id)
             ? currentState?.oppilaitosTypes ?? defaultOppilaitosTypes
@@ -117,32 +118,32 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             : [];
 
         return {
-            organisaatiotyypit,
+            kohderyhmat,
             oppilaitosTypes,
             vuosiluokat,
-            sijainti: currentState?.enabledFilters.includes(sijaintiFilter.id)
-                ? sijainti
-                : sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat),
+            sijainti: enabledFilters.length ? sijainti : sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat),
             anyJarjestamislupa,
             jarjestamisluvat,
-            kielet: currentState?.enabledFilters.includes(kieliFilter.id) ? kielet : kieliFilter.makeDefaultValue(),
+            kielet: enabledFilters.length ? kielet : kieliFilter.makeDefaultValue(),
             enabledFilters,
             openFilters,
         };
     }
 
-    function enabledFiltersByOrganisaatiotyyppi(o: string) {
+    function enabledFiltersByKohderyhma(o: string) {
         if (o == 'organisaatiotyyppi_01') {
             return [oppilaitostyyppiFilter.id, jarjestamislupaFilter.id, sijaintiFilter.id, kieliFilter.id];
         } else if (o == 'organisaatiotyyppi_02' || o == 'organisaatiotyyppi_03') {
             return [oppilaitostyyppiFilter.id, sijaintiFilter.id, kieliFilter.id];
+        } else if (o === 'palveluiden_kayttajat') {
+            return [oppilaitostyyppiFilter.id];
         } else {
             return [];
         }
     }
 
-    function deriveEnabledFilters(organisaatiotyypit: string[]) {
-        return organisaatiotyypit.map(enabledFiltersByOrganisaatiotyyppi).flat();
+    function deriveEnabledFilters(kohderyhmat: string[]) {
+        return kohderyhmat.map(enabledFiltersByKohderyhma).flat();
     }
 
     function onToggleOpenFn(filterId: string) {
@@ -162,7 +163,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
     }
 
     function searchIsEnabled() {
-        return searchParameters.organisaatiotyypit.length > 0;
+        return searchParameters.kohderyhmat.length > 0;
     }
 
     return (
@@ -170,7 +171,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
             <div>
                 <h1 className={styles.Title}>Osoitepalvelu</h1>
             </div>
-            <KohderyhmaFilter value={searchParameters.organisaatiotyypit} onChange={onKohderymaFilterChanged} />
+            <KohderyhmaFilter value={searchParameters.kohderyhmat} onChange={onKohderymaFilterChanged} />
             <div>
                 <div className={styles.SectionTitle}>
                     <h2>Haun rajausmahdollisuudet</h2>

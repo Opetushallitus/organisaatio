@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
-import { HaeRequest, Hakutulos, useHakuParametrit } from './OsoitteetApi';
+import { Hakutulos, useHakuParametrit } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import { ViestiView } from './ViestiView';
@@ -19,7 +19,7 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     const history = useHistory();
     const hakuParametrit = useHakuParametrit();
 
-    function onSearchResult(request: HaeRequest, hakutulos: Hakutulos) {
+    function onSearchResult(hakutulos: Hakutulos) {
         history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
     }
 

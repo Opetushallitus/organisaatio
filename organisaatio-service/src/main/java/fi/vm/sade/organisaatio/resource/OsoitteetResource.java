@@ -2,9 +2,15 @@ package fi.vm.sade.organisaatio.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
+import fi.vm.sade.organisaatio.client.KayttooikeusClient;
 import fi.vm.sade.organisaatio.config.scheduling.AuthenticationUtil;
+import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
+import fi.vm.sade.organisaatio.dto.VirkailijaDto;
 import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Email;
@@ -35,13 +41,16 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.apache.poi.ss.util.CellUtil.createCell;
+
 
 @Hidden
 @RestController
@@ -53,11 +62,17 @@ public class OsoitteetResource {
     private final EntityManager em;
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final AuthenticationUtil authenticationUtil;
+    private final KayttooikeusClient kayttooikeusClient;
+    private final ObjectMapper objectMapper;
 
     @PostMapping(value = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public Hakutulos hae(@RequestBody HaeRequest request) {
-        return getHakutulos(request);
+        if (request.getOrganisaatiotyypit().contains("palveluiden_kayttajat")) {
+            return getKayttajaHakutulos(request);
+        } else {
+            return getOrganisaatioHakutulos(request);
+        }
     }
 
     @GetMapping(value = "/hakutulos/{hakutulosId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,11 +81,29 @@ public class OsoitteetResource {
         if (!hasPermissionToHakutulos(hakutulosId)) {
             throw new NotAuthorizedException("no.permission");
         }
-        var organisaatioIds = getOrganisaatioIdsByResultId(hakutulosId);
-        return makeSearchResult(hakutulosId, Arrays.asList(organisaatioIds));
+        var hakutulos = getSearchResultsById(hakutulosId);
+        if (hakutulos.organisaatioIds != null) {
+            return makeSearchResult(hakutulosId, Arrays.asList(hakutulos.organisaatioIds));
+        } else {
+            return new KayttajaHakutulos(hakutulosId, hakutulos.kayttajat);
+        }
     }
 
-    private Hakutulos getHakutulos(HaeRequest request) {
+    public KayttajaHakutulos getKayttajaHakutulos(HaeRequest request) {
+        VirkailijaCriteria criteria = new VirkailijaCriteria();
+        criteria.setDuplikaatti(false);
+        criteria.setPassivoitu(false);
+        if (!request.getOppilaitostyypit().isEmpty()) {
+            List<String> organisaatioOids = searchOrganisationOidsForOppilaitostyyppis(request);
+            criteria.setOrganisaatioOids(new HashSet<>(organisaatioOids));
+        }
+
+        Collection<VirkailijaDto> rows = kayttooikeusClient.listVirkailija(criteria);
+        String id = persistHakuAndHakutulos(request, null, rows);
+        return new KayttajaHakutulos(id, rows);
+    }
+
+    private OrganisaatioHakutulos getOrganisaatioHakutulos(HaeRequest request) {
         List<String> vuosiluokat = request.getVuosiluokat();
         List<String> oppilaitostyypit = request.getOppilaitostyypit();
         List<String> organisaatiotyypit = request.getOrganisaatiotyypit();
@@ -94,11 +127,11 @@ public class OsoitteetResource {
             organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
         }
 
-        var id = persistHakuAndHakutulos(request, organisaatioIds);
+        var id = persistHakuAndHakutulos(request, organisaatioIds, null);
         return makeSearchResult(id, organisaatioIds);
     }
 
-    private String persistHakuAndHakutulos(HaeRequest request, List<Long> organisaatioIds) {
+    private String persistHakuAndHakutulos(HaeRequest request, List<Long> organisaatioIds, Collection<VirkailijaDto> virkailijaDtos) {
         var params = new HashMap<String, Object>(Map.of(
                 "id", UUID.randomUUID().toString(),
                 "virkailija_oid", authenticationUtil.getCurrentUserOid(),
@@ -108,8 +141,13 @@ public class OsoitteetResource {
                 "kunnat", createSqlStringArray(request.getKunnat()),
                 "anyJarjestamislupa", request.isAnyJarjestamislupa(),
                 "jarjestamisluvat", createSqlStringArray(request.getJarjestamisluvat()),
-                "kielet", createSqlStringArray(request.getKielet()),
-                "organisaatio_ids", createSqlBigintArray(organisaatioIds)));
+                "kielet", createSqlStringArray(request.getKielet())));
+        params.put("organisaatio_ids", createSqlBigintArray(organisaatioIds));
+        try {
+            params.put("kayttajat", objectMapper.writeValueAsString(virkailijaDtos));
+        } catch (Exception e) {
+            log.error("failed to serialize json", e);
+        }
 
         var query = """
                  INSERT INTO osoitteet_haku_and_hakutulos (
@@ -122,7 +160,8 @@ public class OsoitteetResource {
                      anyjarjestamislupa,
                      jarjestamisluvat,
                      kielet,
-                     organisaatio_ids
+                     organisaatio_ids,
+                     kayttajat
                  ) VALUES (
                      :id::uuid,
                      :virkailija_oid,
@@ -133,7 +172,8 @@ public class OsoitteetResource {
                      :anyJarjestamislupa,
                      :jarjestamisluvat,
                      :kielet,
-                     :organisaatio_ids
+                     :organisaatio_ids,
+                     :kayttajat
                  ) RETURNING id;
                 """;
         return jdbcTemplate.queryForObject(query, params, (rs, rowNum) -> rs.getString("id"));
@@ -148,6 +188,9 @@ public class OsoitteetResource {
     }
 
     private java.sql.Array createSqlStringArray(String arrayType, List<? extends Object> list) {
+        if (list == null) {
+            return null;
+        }
         return jdbcTemplate
                 .getJdbcOperations()
                 .execute(new ConnectionCallback<java.sql.Array>() {
@@ -169,7 +212,7 @@ public class OsoitteetResource {
         if (!hasPermissionToHakutulos(hakutulosId)) {
             throw new NotAuthorizedException("no.permission");
         }
-        var hakutulokset = makeSearchResultRows(Arrays.asList(getOrganisaatioIdsByResultId(hakutulosId)));
+        var hakutulokset = makeSearchResultRows(Arrays.asList(getSearchResultsById(hakutulosId).organisaatioIds));
         var recipients = hakutulokset.stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList();
         var osoitelahde = """
                 Osoitelähde: OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
@@ -213,8 +256,8 @@ public class OsoitteetResource {
         }
 
         try {
-            var organisaatioIds = getOrganisaatioIdsByResultId(resultId);
-            List<HakutulosRow> tulos = makeSearchResultRows(Arrays.asList(organisaatioIds));
+            var hakutulos = getSearchResultsById(resultId);
+            List<OrganisaatioHakutulosRow> tulos = makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds));
             Integer columnCount = 12;
 
             String fileName = "osoitteet.xls";
@@ -241,7 +284,7 @@ public class OsoitteetResource {
             createCell(header, col++, "Käyntiosoite", style);
 
             for (Integer row = 1; row <= tulos.size(); row++) {
-                HakutulosRow h = tulos.get(row - 1);
+                OrganisaatioHakutulosRow h = tulos.get(row - 1);
                 Row r = sheet.createRow(row);
                 col = 0;
                 r.createCell(col++).setCellValue(h.nimi);
@@ -277,25 +320,46 @@ public class OsoitteetResource {
         }
     }
 
-    private Long[] getOrganisaatioIdsByResultId(String resultId) {
+    private List<VirkailijaDto> parseKayttajat(String kayttajatString) {
+        if (kayttajatString == null) {
+            return null;
+        }
+        try {
+            return objectMapper.readValue(kayttajatString, new TypeReference<List<VirkailijaDto>>() {
+            });
+        } catch (IOException ioe) {
+            throw new CompletionException(ioe);
+        }
+    }
+
+    private SavedSearchResult getSearchResultsById(String resultId) {
         var params = Map.of("id", resultId);
         var query = """
-                SELECT organisaatio_ids
+                SELECT organisaatio_ids, kayttajat
                 FROM osoitteet_haku_and_hakutulos
                 WHERE id = :id::uuid
                 """;
         return jdbcTemplate
-                .query(query, params, (rs, rowNum) ->
-                    (Long[]) rs.getArray("organisaatio_ids").getArray())
+                .query(query, params, (rs, rowNum) -> {
+                    Long[] organisaatioIds = null;
+                    List<VirkailijaDto> kayttajat = null;
+                    if (rs.getObject("organisaatio_ids") != null) {
+                        organisaatioIds = (Long[]) rs.getArray("organisaatio_ids").getArray();
+                    }
+                    if (rs.getObject("kayttajat") != null) {
+                        kayttajat = parseKayttajat(rs.getString("kayttajat"));
+                    }
+                    return new SavedSearchResult(organisaatioIds, kayttajat);
+                })
                 .getFirst();
     }
 
-    private Hakutulos makeSearchResult(String id, List<Long> organisaatioIds) {
+    private OrganisaatioHakutulos makeSearchResult(String id, List<Long> organisaatioIds) {
         var rows = makeSearchResultRows(organisaatioIds);
-        return new Hakutulos(id, rows);
+        return new OrganisaatioHakutulos(id, rows);
     }
 
-    private List<HakutulosRow> makeSearchResultRows(List<Long> organisaatioIds) {
+    private List<OrganisaatioHakutulosRow> makeSearchResultRows(List<Long> organisaatioIds) {
         String kieli = "fi";
         String kieliKoodi = "kieli_fi#1";
         List<Organisaatio> orgs = fetchOrganisaatiosWithYhteystiedot(organisaatioIds);
@@ -306,11 +370,11 @@ public class OsoitteetResource {
         Map<String, String> postinumeroMap = fetchPostikoodis(kieli);
 
 
-        List<HakutulosRow> rows = orgs.stream().map(o -> {
+        List<OrganisaatioHakutulosRow> rows = orgs.stream().map(o -> {
                     Optional<String> sahkoposti = Optional.ofNullable(o.getEmail(kieliKoodi)).map(Email::getEmail);
                     Optional<String> puhelinnumero = Optional.ofNullable(o.getPuhelin(Puhelinnumero.TYYPPI_PUHELIN, kieliKoodi)).map(Puhelinnumero::getPuhelinnumero);
                     Set<String> opetuskielet = o.getKielet().stream().map(k -> parseOpetuskieliKoodi(opetuskieletMap, k)).collect(Collectors.toSet());
-                    return new HakutulosRow(
+                    return new OrganisaatioHakutulosRow(
                             o.getId(),
                             o.getOid(),
                             orgNimet.get(o.getId()),
@@ -330,7 +394,7 @@ public class OsoitteetResource {
 
 
         log.info("Hakutuloksia: {}", rows.size());
-        rows.sort(Comparator.comparing(HakutulosRow::getNimi));
+        rows.sort(Comparator.comparing(OrganisaatioHakutulosRow::getNimi));
         return rows;
     }
 
@@ -417,6 +481,20 @@ public class OsoitteetResource {
         )) {
             return stream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
         }
+    }
+
+    private List<String> searchOrganisationOidsForOppilaitostyyppis(HaeRequest req) {
+        return jdbcTemplate.query(
+                """
+                    SELECT DISTINCT o.oid FROM organisaatio o
+                    LEFT JOIN organisaatiosuhde os ON (o.id = os.child_id)
+                    LEFT JOIN organisaatio parent ON (os.parent_id = parent.id)
+                    WHERE organisaatio_is_active(o)
+                    AND (o.oppilaitostyyppi IN (:oppilaitostyypit) OR parent.oppilaitostyyppi IN (:oppilaitostyypit))
+                """,
+                Map.of("oppilaitostyypit", req.getOppilaitostyypit()),
+                (rs, rowNum) -> rs.getString("oid")
+        );
     }
 
     private List<Long> searchByOrganisaatioTyyppi(HaeRequest req, String organisaatiotyyppi) {
@@ -535,15 +613,32 @@ public class OsoitteetResource {
     }
 
     @Data
+    static class SavedSearchResult {
+        final Long[] organisaatioIds;
+        final List<VirkailijaDto> kayttajat;
+    }
+
+    static interface Hakutulos {}
+
+    @Data
     @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    static class Hakutulos {
+    static class KayttajaHakutulos implements Hakutulos {
         final String id;
-        final List<HakutulosRow> rows;
+        final String type = "kayttaja";
+        final Collection<VirkailijaDto> rows;
     }
 
     @Data
     @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    static class HakutulosRow {
+    static class OrganisaatioHakutulos implements Hakutulos {
+        final String id;
+        final String type = "organisaatio";
+        final List<OrganisaatioHakutulosRow> rows;
+    }
+
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    static class OrganisaatioHakutulosRow {
         final Long id;
         final String oid;
         final String nimi;

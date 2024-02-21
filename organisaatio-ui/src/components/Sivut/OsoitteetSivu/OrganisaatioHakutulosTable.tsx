@@ -8,7 +8,7 @@ import { Checkbox } from './Checkbox';
 type HakutulosTableProps = {
     rows: HakutulosRow[];
 };
-export function HakutulosTable({ rows }: HakutulosTableProps) {
+export function OrganisaatioHakutulosTable({ rows }: HakutulosTableProps) {
     const Row = ({ index, style }: ListChildComponentProps) => {
         const _ = rows[index];
         const rowStyle = index % 2 ? styles.Odd : styles.Even;
@@ -16,7 +16,7 @@ export function HakutulosTable({ rows }: HakutulosTableProps) {
             <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
                 <div className={styles.ColumnCheckbox + ' ' + styles.Fade}>
                     <span className={styles.Checkbox}>
-                        <Checkbox checked={true} disabled={true}>
+                        <Checkbox checked={true} onChange={() => {}} disabled={true}>
                             {_.nimi}
                         </Checkbox>
                     </span>
@@ -42,7 +42,7 @@ export function HakutulosTable({ rows }: HakutulosTableProps) {
                 <div role="row" className={styles.Header}>
                     <div className={styles.ColumnCheckbox}>
                         <span className={styles.Checkbox}>
-                            <Checkbox checked={true} disabled={true}>
+                            <Checkbox checked={true} onChange={() => {}} disabled={true}>
                                 Organisaation nimi
                             </Checkbox>
                         </span>

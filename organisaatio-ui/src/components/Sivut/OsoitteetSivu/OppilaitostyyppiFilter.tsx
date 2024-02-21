@@ -130,14 +130,14 @@ export function Element({
                     };
 
                     return (
-                        <Checkbox key={nimi} checked={checked} onChange={toggleGroup}>
+                        <Checkbox key={nimi} checked={checked} onChange={toggleGroup} disabled={disabled}>
                             {nimi}
                         </Checkbox>
                     );
                 })}
             </div>
             <div className={styles.SelectAll}>
-                <Checkbox checked={allIsChecked()} onChange={toggleAllIsChecked}>
+                <Checkbox checked={allIsChecked()} onChange={toggleAllIsChecked} disabled={disabled}>
                     Valitse kaikki
                 </Checkbox>
             </div>
@@ -149,6 +149,7 @@ export function Element({
                                 key={koodisto.koodiUri}
                                 checked={isChecked(koodisto.koodiUri)}
                                 onChange={() => toggleIsChecked(koodisto.koodiUri)}
+                                disabled={disabled}
                             >
                                 {koodisto.nimi}
                             </Checkbox>

@@ -587,6 +587,37 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
+  test.describe("Palveluiden käyttäjät kohderyhmä", async () => {
+    test.beforeEach(async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
+    });
+
+    test("searches without filters", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("2 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Faija Mehiläinen")).toBeVisible();
+      await expect(page.getByText("Ville Valtionavustus")).toBeVisible();
+    });
+
+    test("filters by oppilaitostyyppi", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.oppilaitostyyppiFilter.open();
+      await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
+        "Perusopetus"
+      );
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Faija Mehiläinen")).toBeVisible();
+    });
+  });
+
   test.describe("Selecting multiple kohderyhmä", async () => {
     test("keeps filter configurations", async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);

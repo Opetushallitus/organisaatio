@@ -2,7 +2,8 @@ import { Hakutulos, useHakutulos } from './OsoitteetApi';
 import searchStyles from './SearchView.module.css';
 import styles from './HakutulosView.module.css';
 import { useHistory, useParams } from 'react-router-dom';
-import { HakutulosTable } from './HakutulosTable';
+import { OrganisaatioHakutulosTable } from './OrganisaatioHakutulosTable';
+import { KayttajaHakutulosTable } from './KayttajaHakutulosTable';
 import React from 'react';
 import { LinklikeButton } from './LinklikeButton';
 import { API_CONTEXT } from '../../../contexts/constants';
@@ -53,7 +54,11 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
                 </LinklikeButton>
             </div>
             <div className={styles.SininenPalkki}>{rows.length} hakutulosta valittu</div>
-            <HakutulosTable rows={rows} />
+            {hakutulos.value.type === 'organisaatio' ? (
+                <OrganisaatioHakutulosTable rows={hakutulos.value.rows} />
+            ) : (
+                <KayttajaHakutulosTable rows={hakutulos.value.rows} />
+            )}
             <div className={styles.ButtonRow}>
                 {muotoilematonViestiEnabled && <Button onClick={onWriteMail}>Kirjoita sähköpostiviesti</Button>}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>

@@ -14,6 +14,9 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
         onChange(checked ? without.concat(id) : without);
     };
 
+    const isOrganisationSearch = !!value.find((v) => v.startsWith('organisaatiotyyppi'));
+    const isPalvelukayttajaSearch = !!value.find((v) => v === 'palveluiden_kayttajat');
+
     return (
         <div>
             <div className={styles.SectionTitle}>
@@ -27,7 +30,7 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
                         selected={isChecked('organisaatiotyyppi_01')}
                         onChange={onChecked('organisaatiotyyppi_01')}
-                        disabled={false}
+                        disabled={isPalvelukayttajaSearch}
                     />
                 </div>
                 <div className={styles.KohderyhmaColumn}>
@@ -36,7 +39,7 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         description="Viralliset yhteystiedot (mm. peruskouluihin, lukioihin, ammatillisiin oppilaitoksiin)"
                         selected={isChecked('organisaatiotyyppi_02')}
                         onChange={onChecked('organisaatiotyyppi_02')}
-                        disabled={false}
+                        disabled={isPalvelukayttajaSearch}
                     />
                 </div>
                 <div className={styles.KohderyhmaColumn}>
@@ -45,7 +48,16 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         description="Sivutoimipisteet tai viipalekoulut (osoite eri kuin hallinnollisella oppilaitoksella)."
                         selected={isChecked('organisaatiotyyppi_03')}
                         onChange={onChecked('organisaatiotyyppi_03')}
-                        disabled={false}
+                        disabled={isPalvelukayttajaSearch}
+                    />
+                </div>
+                <div className={styles.KohderyhmaColumn}>
+                    <Kohderyhma
+                        title="Palveluiden käyttäjät"
+                        description="Virkailijat, joilla on yksi tai useampi käyttöoikeus Opintopolun palveluihin"
+                        selected={isChecked('palveluiden_kayttajat')}
+                        onChange={onChecked('palveluiden_kayttajat')}
+                        disabled={isOrganisationSearch}
                     />
                 </div>
             </div>
@@ -71,7 +83,7 @@ function Kohderyhma({ title, description, selected, disabled, onChange }: Kohder
     return (
         <div className={classes.join(' ')}>
             <div className={styles.KohderyhmaOtsikko}>
-                <Checkbox checked={selected} onChange={(value) => onChange(value)}>
+                <Checkbox checked={selected} onChange={(e) => onChange(e)} disabled={disabled}>
                     <h3>{title}</h3>
                 </Checkbox>
             </div>

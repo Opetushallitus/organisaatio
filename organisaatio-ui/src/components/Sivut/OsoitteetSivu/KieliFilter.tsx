@@ -51,6 +51,7 @@ export function Element({ value, kielet, onChange, open, onToggleOpen, disabled 
                                 key={koodisto.koodiUri}
                                 checked={isChecked(koodisto.koodiUri)}
                                 onChange={(checked) => onChecked(koodisto.koodiUri, checked)}
+                                disabled={disabled}
                             >
                                 {koodisto.nimi}
                             </Checkbox>

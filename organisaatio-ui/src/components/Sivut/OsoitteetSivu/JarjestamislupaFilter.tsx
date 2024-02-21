@@ -61,7 +61,11 @@ export function Element({
             disabled={disabled}
         >
             <div>
-                <Checkbox checked={anyJarjestamislupa} onChange={(checked) => onChange(checked ? [] : value, checked)}>
+                <Checkbox
+                    checked={anyJarjestamislupa}
+                    onChange={(checked) => onChange(checked ? [] : value, checked)}
+                    disabled={disabled}
+                >
                     Kaikki koulutustoimijat, joilla voimassa oleva järjestämislupa
                 </Checkbox>
             </div>
