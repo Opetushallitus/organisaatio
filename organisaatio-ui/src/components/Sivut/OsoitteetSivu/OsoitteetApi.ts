@@ -50,6 +50,7 @@ export type HaeRequest = {
     anyJarjestamislupa: boolean;
     jarjestamisluvat: KoodiUri[];
     kielet: KoodiUri[];
+    organisaatioOids: string[];
 };
 
 export type KoodistoKoodi = {
@@ -66,6 +67,11 @@ export type OppilaitosRyhma = {
     koodit: string[];
 };
 
+export type Koulutustoimija = {
+    oid: string;
+    nimi: string;
+};
+
 export type HakuParametrit = {
     oppilaitostyypit: {
         koodit: KoodistoKoodi[];
@@ -76,6 +82,7 @@ export type HakuParametrit = {
     kunnat: KoodistoKoodi[];
     jarjestamisluvat: KoodistoKoodi[];
     kielet: KoodistoKoodi[];
+    koulutustoimijat: Koulutustoimija[];
 };
 
 export type HaeKayttajatRequest = {

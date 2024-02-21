@@ -523,6 +523,11 @@ test.describe("Osoitepalvelu", () => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
+      await osoitepalveluPage.kayttajaFilter.open();
+      await selectFromKoulutustoimijaDropdown(
+        page,
+        "Testi Koulutuskuntayhtymä Puolukka"
+      );
       await osoitepalveluPage.haeButton.click();
       const [download] = await Promise.all([
         page.waitForEvent("download"),
@@ -603,18 +608,13 @@ test.describe("Osoitepalvelu", () => {
   test.describe("Palveluiden käyttäjät kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
-
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
     });
 
-    test("searches without filters", async ({ page }) => {
+    test("is disabled without filters", async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
-
-      await osoitepalveluPage.haeButton.click();
-      await expect(page.getByText("2 hakutulosta valittu")).toBeVisible();
-      await expect(page.getByText("Faija Mehiläinen")).toBeVisible();
-      await expect(page.getByText("Ville Valtionavustus")).toBeVisible();
+      await expect(osoitepalveluPage.haeButton).toBeDisabled();
     });
 
     test("filters by oppilaitostyyppi", async ({ page }) => {
@@ -628,6 +628,21 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Faija Mehiläinen")).toBeVisible();
+    });
+
+    test("filters by koulutustoimija", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.kayttajaFilter.open();
+      await selectFromKoulutustoimijaDropdown(
+        page,
+        "Testi Koulutuskuntayhtymä Puolukka"
+      );
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("2 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Ville Valtionavustus")).toBeVisible();
+      await expect(page.getByText("Matti Meikäläinen")).toBeVisible();
     });
   });
 
@@ -772,6 +787,11 @@ test.describe("Osoitepalvelu", () => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
+      await osoitepalveluPage.kayttajaFilter.open();
+      await selectFromKoulutustoimijaDropdown(
+        page,
+        "Testi Koulutuskuntayhtymä Puolukka"
+      );
       await osoitepalveluPage.haeButton.click();
       await osoitepalveluPage.kirjoitaSahkopostiButton.click();
     });
@@ -829,6 +849,15 @@ async function selectFromKuntaDropdown(page: Page, label: string) {
   }
   await page.getByLabel(label, { exact: true }).click();
 }
+
+async function selectFromKoulutustoimijaDropdown(page: Page, label: string) {
+  // This is required on webkit tests as the dropdown closes after selection
+  if (!(await page.isVisible(".koulutustoimija-react-select__menu"))) {
+    await openDropdown(page, "Hae käyttäjiä koulutustoimijan nimellä");
+  }
+  await page.getByLabel(label, { exact: true }).click();
+}
+
 async function openDropdown(page: Page, label: string) {
   await page.getByText(label, { exact: true }).click();
 }

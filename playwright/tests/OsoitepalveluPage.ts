@@ -8,6 +8,7 @@ export class OsoitepalveluPage {
   readonly oppilaitostyyppiFilter: Filter;
   readonly sijaintiFilter: Filter;
   readonly jarjestamislupaFilter: Filter;
+  readonly kayttajaFilter: Filter;
   readonly haeButton: Locator;
   readonly tyhjennaButton: Locator;
   readonly koulutustoimijatCheckbox: Locator;
@@ -42,6 +43,7 @@ export class OsoitepalveluPage {
       page,
       "Ammatillisen koulutuksen järjestämislupa"
     );
+    this.kayttajaFilter = new Filter(page, "Palveluiden käyttäjien rajaukset");
     this.haeButton = page.getByRole("button", { name: "Hae" });
     this.tyhjennaButton = page.getByRole("button", {
       name: "Tyhjennä",

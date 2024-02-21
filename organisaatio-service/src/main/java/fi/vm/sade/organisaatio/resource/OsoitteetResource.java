@@ -93,10 +93,11 @@ public class OsoitteetResource {
         VirkailijaCriteria criteria = new VirkailijaCriteria();
         criteria.setDuplikaatti(false);
         criteria.setPassivoitu(false);
+        var organisaatioOids = new HashSet<String>(request.getOrganisaatioOids());
         if (!request.getOppilaitostyypit().isEmpty()) {
-            List<String> organisaatioOids = searchOrganisationOidsForOppilaitostyyppis(request);
-            criteria.setOrganisaatioOids(new HashSet<>(organisaatioOids));
+            organisaatioOids.addAll(searchOrganisationOidsForOppilaitostyyppis(request));
         }
+        criteria.setOrganisaatioOids(organisaatioOids);
 
         Collection<VirkailijaDto> rows = kayttooikeusClient.listVirkailija(criteria);
         String id = persistHakuAndHakutulos(request, null, rows);
@@ -739,6 +740,16 @@ public class OsoitteetResource {
                 ORDER BY nimi_fi COLLATE "fi-FI-x-icu", koodiarvo
                 """, koodiMapper);
         var opetuskielet = jdbcTemplate.query("SELECT koodiuri AS koodi, nimi_fi AS nimi FROM koodisto_oppilaitoksenopetuskieli ORDER BY lpad(koodiarvo, 3, '0')", koodiMapper);
+        var koulutustoimijaParams = new HashMap<String, Object>(Map.of(
+                "organisaatiotyyppi", OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue(),
+                "kieli", "fi"
+        ));
+        List<Koulutustoimija> koulutustoimijat = jdbcTemplate.query("""
+                SELECT o.oid, mkt.value as nimi
+                FROM organisaatio o
+                JOIN organisaatio_tyypit ON (organisaatio_tyypit.organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)
+                JOIN monikielinenteksti_values mkt ON (mkt.id = o.nimi_mkt AND mkt.key = :kieli)
+                """, koulutustoimijaParams, (rs, rowNum) -> new Koulutustoimija(rs.getString("oid"), rs.getString("nimi")));
 
         return new Parametrit(
                 new OppilaitostyyppiParametrit(oppilaitostyyppiKoodis, ryhmat),
@@ -746,7 +757,8 @@ public class OsoitteetResource {
                 maakunnat,
                 kunnat,
                 jarjestamisluvat,
-                opetuskielet
+                opetuskielet,
+                koulutustoimijat
         );
     }
 
@@ -785,6 +797,13 @@ class Parametrit {
     private final List<KoodistoKoodi> kunnat;
     private final List<KoodistoKoodi> jarjestamisluvat;
     private final List<KoodistoKoodi> kielet;
+    private final List<Koulutustoimija> koulutustoimijat;
+}
+
+@Data
+class Koulutustoimija {
+    private final String oid;
+    private final String nimi;
 }
 
 @Data
@@ -821,6 +840,7 @@ class HaeRequest {
     private boolean anyJarjestamislupa;
     private List<String> jarjestamisluvat;
     private List<String> kielet;
+    private List<String> organisaatioOids;
 }
 
 @Data

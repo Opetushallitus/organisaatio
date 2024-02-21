@@ -1,10 +1,11 @@
 import { CustomOption, DropdownOption, SelectDropdown, SelectionItem, SelectionList } from './SelectDropdown';
 import { RajausAccordion } from './RajausAccordion';
-import styles from './SijaintiFilter.module.css';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 import { KoodistoKoodi, MaakuntaKoodi } from './OsoitteetApi';
 import { KoodiUri } from '../../../types/types';
 import Select, { ActionMeta, ValueType } from 'react-select';
+
+import styles from './Filter.module.css';
 
 type AlueId = 'alue_mannersuomi' | 'alue_kokosuomi' | 'alue_ulkomaa';
 type UlkomaaAlue = { id: 'alue_ulkomaa'; label: string };
@@ -96,7 +97,9 @@ export function Element({ maakunnat, kunnat, value, onChange, open, onToggleOpen
         return [...alueNimet, ...ulkomaatNames, ...maakuntaNimet];
     }
 
-    const kuntaOptions: DropdownOption[] = kunnat.map((_) => ({ value: _.koodiUri, label: _.nimi }));
+    const kuntaOptions: DropdownOption[] = useMemo(() => kunnat.map((_) => ({ value: _.koodiUri, label: _.nimi })), [
+        kunnat,
+    ]);
 
     function kuntaOnChange(selection: string[]) {
         const updatedKunnat = kunnat.filter((_) => selection.includes(_.koodiUri)).map((_) => _.koodiUri);
