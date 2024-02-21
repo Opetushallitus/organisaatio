@@ -747,9 +747,31 @@ test.describe("Osoitepalvelu", () => {
     );
   });
 
-  test.describe("Sending email", async () => {
+  test.describe("Sending email to organisations", async () => {
     test.beforeEach(async ({ page }, testInfo) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.haeButton.click();
+      await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+    });
+    test("sending message shows 'Lähetyksessä on viivettä' page", async ({
+      page,
+    }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
+      await kirjoitaViestiForm.aiheField.input.fill("Aihe");
+      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
+      await kirjoitaViestiForm.lahetaButton.click();
+      await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
+    });
+  });
+
+  test.describe("Sending email to users", async () => {
+    test.beforeEach(async ({ page }, testInfo) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
       await osoitepalveluPage.haeButton.click();
       await osoitepalveluPage.kirjoitaSahkopostiButton.click();
     });

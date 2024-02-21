@@ -212,8 +212,10 @@ public class OsoitteetResource {
         if (!hasPermissionToHakutulos(hakutulosId)) {
             throw new NotAuthorizedException("no.permission");
         }
-        var hakutulokset = makeSearchResultRows(Arrays.asList(getSearchResultsById(hakutulosId).organisaatioIds));
-        var recipients = hakutulokset.stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList();
+        var hakutulos = getSearchResultsById(hakutulosId);
+        List<String> recipients = hakutulos.organisaatioIds != null
+                ? makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds)).stream().flatMap(h -> h.getSahkoposti().stream()).distinct().toList()
+                : hakutulos.kayttajat.stream().map((k) -> k.getSahkoposti()).distinct().toList();
         var osoitelahde = """
                 Osoitelähde: OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
                 Adresskälla: Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
