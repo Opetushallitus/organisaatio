@@ -41,7 +41,7 @@ export function Element({
         if (kayttooikeusryhmat.state === 'OK') {
             return kayttooikeusryhmat.value
                 .map((k) => ({
-                    value: k.nimi.texts.find((n) => n.lang === 'FI')?.text,
+                    value: k.tunniste,
                     label: k.nimi.texts.find((n) => n.lang === 'FI')?.text,
                 }))
                 .filter((o) => o.label && o.value) as DropdownOption[];

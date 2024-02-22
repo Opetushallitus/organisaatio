@@ -1,5 +1,5 @@
 const kayttooikeusryhmaVirkailijas = {
-    'Mansikkalan tietäjä': [
+    'Mansikkalan tietäjä_234': [
         {
             oid: '1.2.246.562.99.00000054321',
             etunimet: 'Mauritz',
@@ -9,7 +9,7 @@ const kayttooikeusryhmaVirkailijas = {
             sahkoposti: 'mauritz.mansikka@mauri.fi',
         },
     ],
-    'Puolakan kiertäjä': [
+    'Puolakan kiertäjä_123': [
         {
             oid: '1.2.246.562.99.00000000005',
             etunimet: 'Ville',

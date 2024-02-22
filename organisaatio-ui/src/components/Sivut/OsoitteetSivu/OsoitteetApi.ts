@@ -92,6 +92,7 @@ type KayttooikeusryhmaLocalizedText = {
 };
 
 export type Kayttooikeusryhma = {
+    tunniste: string;
     nimi: {
         texts: KayttooikeusryhmaLocalizedText[];
     };
