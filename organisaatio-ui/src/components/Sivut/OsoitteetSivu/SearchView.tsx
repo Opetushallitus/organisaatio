@@ -1,4 +1,4 @@
-import { haeHakutulos, HaeRequest, HakuParametrit, Hakutulos } from './OsoitteetApi';
+import { ApiResult, haeHakutulos, HaeRequest, HakuParametrit, Hakutulos, Kayttooikeusryhma } from './OsoitteetApi';
 import React, { useCallback, useMemo, useState } from 'react';
 import styles from './SearchView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -16,6 +16,7 @@ import * as oppilaitostyyppiFilter from './OppilaitostyyppiFilter';
 
 type SearchViewProps = {
     hakuParametrit: HakuParametrit;
+    kayttooikeusryhmat: ApiResult<Kayttooikeusryhma[]>;
     onResult(result: Hakutulos): void;
 };
 
@@ -32,7 +33,7 @@ export type SearchState = {
     enabledFilters: string[];
 };
 
-export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
+export function SearchView({ hakuParametrit, kayttooikeusryhmat, onResult }: SearchViewProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const defaultOppilaitosTypes = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
@@ -58,7 +59,8 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 (accu, key) => (oppilaitosTypes[key] ? accu.concat([key]) : accu),
                 []
             ).length &&
-            !searchParameters.kayttajat.koulutustoimijat.length
+            !searchParameters.kayttajat.koulutustoimijat.length &&
+            !searchParameters.kayttajat.kayttooikeusryhmat.length
         );
     }, [searchParameters.kayttajat, searchParameters.oppilaitosTypes, searchParameters.kohderyhmat]);
 
@@ -94,6 +96,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 jarjestamisluvat: searchParameters.jarjestamisluvat,
                 kielet: searchParameters.kielet,
                 organisaatioOids: searchParameters.kayttajat.koulutustoimijat,
+                kayttooikeusryhmat: searchParameters.kayttajat.kayttooikeusryhmat,
             };
 
             const hakutulos = await haeHakutulos(request);
@@ -247,6 +250,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                     />
                     <kayttajaFilter.Element
                         koulutustoimijat={hakuParametrit.koulutustoimijat}
+                        kayttooikeusryhmat={kayttooikeusryhmat}
                         value={searchParameters.kayttajat}
                         onChange={onFilterChange}
                         open={isFilterOpen(kayttajaFilter.id)}
@@ -266,9 +270,7 @@ export function SearchView({ hakuParametrit, onResult }: SearchViewProps) {
                 <Button onClick={hae} disabled={!searchIsEnabled()}>
                     Hae
                 </Button>
-                <LinklikeButton onClick={resetSearchParams} disabled={!searchIsEnabled()}>
-                    Tyhjennä
-                </LinklikeButton>
+                <LinklikeButton onClick={resetSearchParams}>Tyhjennä</LinklikeButton>
             </div>
             {loading && (
                 <div className={styles.LoadingOverlay}>

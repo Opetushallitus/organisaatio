@@ -1,0 +1,142 @@
+[
+    {
+        "id": 69101599,
+        "tunniste": "Mansikkalan tietäjä",
+        "rooliRajoite": null,
+        "organisaatioViite": [
+            {
+                "id": 69176670,
+                "organisaatioTyyppi": "organisaatiotyyppi_07"
+            },
+            {
+                "id": 69176671,
+                "organisaatioTyyppi": "organisaatiotyyppi_08"
+            }
+        ],
+        "nimi": {
+            "id": 69228199,
+            "texts": [
+                {
+                    "text": "Master of Mansikkala",
+                    "lang": "EN"
+                },
+                {
+                    "text": "Mansikkalan tietäjä",
+                    "lang": "FI"
+                },
+                {
+                    "text": "Jordgubbskännare",
+                    "lang": "SV"
+                }
+            ]
+        },
+        "kuvaus": {
+            "id": 69101600,
+            "texts": [
+                {
+                    "text": "Tällä käyttöoikeudella voi tietää Mansikkalasta",
+                    "lang": "EN"
+                },
+                {
+                    "text": "Tällä käyttöoikeudella voi tietää Mansikkalasta",
+                    "lang": "FI"
+                },
+                {
+                    "text": "Med denna nyttjanderätt kan du känna till Mansikkala",
+                    "lang": "SV"
+                }
+            ]
+        },
+        "passivoitu": false,
+        "ryhmaRestriction": false,
+        "sallittuKayttajatyyppi": null,
+        "muokattu": null,
+        "muokkaaja": null,
+        "description": {
+            "id": 69228199,
+            "texts": [
+                {
+                    "text": "Mansikkalan hoitaja",
+                    "lang": "EN"
+                },
+                {
+                    "text": "Mansikkalan hoitaja",
+                    "lang": "FI"
+                },
+                {
+                    "text": "Jordgubbsgårdens sköterska",
+                    "lang": "SV"
+                }
+            ]
+        },
+        "name": "Mansikkalan tieteilijä"
+    },
+    {
+        "id": 69101599,
+        "tunniste": "Puolakan kiertäjä",
+        "rooliRajoite": null,
+        "organisaatioViite": [
+            {
+                "id": 69176671,
+                "organisaatioTyyppi": "organisaatiotyyppi_08"
+            }
+        ],
+        "nimi": {
+            "id": 69228199,
+            "texts": [
+                {
+                    "text": "Puolaka tourer",
+                    "lang": "EN"
+                },
+                {
+                    "text": "Puolakan kiertäjä",
+                    "lang": "FI"
+                },
+                {
+                    "text": "Lingon tourer",
+                    "lang": "SV"
+                }
+            ]
+        },
+        "kuvaus": {
+            "id": 69101600,
+            "texts": [
+                {
+                    "text": "Tällä käyttöoikeudella voi kiertää Puolakan",
+                    "lang": "EN"
+                },
+                {
+                    "text": "Tällä käyttöoikeudella voi kiertää Puolakan",
+                    "lang": "FI"
+                },
+                {
+                    "text": "Med denna nyttjanderätt kan du komma runt lingonen",
+                    "lang": "SV"
+                }
+            ]
+        },
+        "passivoitu": false,
+        "ryhmaRestriction": false,
+        "sallittuKayttajatyyppi": null,
+        "muokattu": null,
+        "muokkaaja": null,
+        "description": {
+            "id": 69228199,
+            "texts": [
+                {
+                    "text": "Puolakkaa hoitava ryhmä",
+                    "lang": "EN"
+                },
+                {
+                    "text": "Puolakkaa hoitava ryhmä",
+                    "lang": "FI"
+                },
+                {
+                    "text": "Gruppen som tar hand om lingonen",
+                    "lang": "SV"
+                }
+            ]
+        },
+        "name": "Puolakan kiertäjä"
+    }
+]

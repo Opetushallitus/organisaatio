@@ -39,6 +39,7 @@ const OrganisaatioApp: React.FC = () => {
                                     component={(props: RouteComponentProps) => (
                                         <OsoitteetSivu
                                             {...props}
+                                            frontProperties={frontProperties}
                                             muotoilematonViestiEnabled={
                                                 frontProperties.uusiOsoitepalveluMuotoilematonViestiEnabled === 'true'
                                             }

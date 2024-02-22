@@ -94,10 +94,15 @@ public class OsoitteetResource {
         criteria.setDuplikaatti(false);
         criteria.setPassivoitu(false);
         var organisaatioOids = new HashSet<String>(request.getOrganisaatioOids());
-        if (!request.getOppilaitostyypit().isEmpty()) {
+        if (request.getOppilaitostyypit() != null && !request.getOppilaitostyypit().isEmpty()) {
             organisaatioOids.addAll(searchOrganisationOidsForOppilaitostyyppis(request));
         }
-        criteria.setOrganisaatioOids(organisaatioOids);
+        if (organisaatioOids.size() > 0) {
+            criteria.setOrganisaatioOids(organisaatioOids);
+        }
+        if (request.getKayttooikeusryhmat() != null && !request.getKayttooikeusryhmat().isEmpty()) {
+            criteria.setKayttoOikeusRyhmaNimet(new HashSet<String>(request.getKayttooikeusryhmat()));
+        }
 
         Collection<VirkailijaDto> rows = kayttooikeusClient.listVirkailija(criteria);
         String id = persistHakuAndHakutulos(request, null, rows);
@@ -841,6 +846,7 @@ class HaeRequest {
     private List<String> jarjestamisluvat;
     private List<String> kielet;
     private List<String> organisaatioOids;
+    private List<String> kayttooikeusryhmat;
 }
 
 @Data

@@ -2,22 +2,25 @@ import React, { useEffect } from 'react';
 
 import styles from './OsoitteetSivu.module.css';
 import { Route, useHistory } from 'react-router-dom';
-import { Hakutulos, useHakuParametrit } from './OsoitteetApi';
+import { Hakutulos, useHakuParametrit, useKayttooikeusryhmat } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import { ViestiView } from './ViestiView';
 import Loading from '../../Loading/Loading';
 import { ViestiStatusView } from './ViestiStatusView';
 import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
+import { FrontProperties } from '../../../types/types';
 
 type OsoitteetSivuProps = {
+    frontProperties: FrontProperties;
     muotoilematonViestiEnabled: boolean;
 };
 
-const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
+const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
     useTitle('Osoitepalvelu');
     const history = useHistory();
     const hakuParametrit = useHakuParametrit();
+    const kayttooikeusryhmat = useKayttooikeusryhmat(frontProperties);
 
     function onSearchResult(hakutulos: Hakutulos) {
         history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
@@ -52,7 +55,11 @@ const OsoitteetSivu = ({ muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
                 </div>
                 <div className={styles.MainContent}>
                     <div className={styles.ContentContainer}>
-                        <SearchView hakuParametrit={hakuParametrit.value} onResult={onSearchResult} />
+                        <SearchView
+                            hakuParametrit={hakuParametrit.value}
+                            kayttooikeusryhmat={kayttooikeusryhmat}
+                            onResult={onSearchResult}
+                        />
                     </div>
                 </div>
             </Route>

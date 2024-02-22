@@ -644,6 +644,35 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByText("Ville Valtionavustus")).toBeVisible();
       await expect(page.getByText("Matti Meikäläinen")).toBeVisible();
     });
+
+    test("filters by käyttöoikeusryhmä", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.kayttajaFilter.open();
+      await selectFromKayttooikeusryhmaDropdown(page, "Puolakan kiertäjä");
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("2 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Ville Valtionavustus")).toBeVisible();
+      await expect(page.getByText("Paula Puolukka")).toBeVisible();
+    });
+
+    test("filters by käyttöoikeusryhmä and koulutustoimija", async ({
+      page,
+    }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+
+      await osoitepalveluPage.kayttajaFilter.open();
+      await selectFromKayttooikeusryhmaDropdown(page, "Puolakan kiertäjä");
+      await selectFromKoulutustoimijaDropdown(
+        page,
+        "Testi Koulutuskuntayhtymä Puolukka"
+      );
+
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Ville Valtionavustus")).toBeVisible();
+    });
   });
 
   test.describe("Selecting multiple kohderyhmä", async () => {
@@ -854,6 +883,14 @@ async function selectFromKoulutustoimijaDropdown(page: Page, label: string) {
   // This is required on webkit tests as the dropdown closes after selection
   if (!(await page.isVisible(".koulutustoimija-react-select__menu"))) {
     await openDropdown(page, "Hae käyttäjiä koulutustoimijan nimellä");
+  }
+  await page.getByLabel(label, { exact: true }).click();
+}
+
+async function selectFromKayttooikeusryhmaDropdown(page: Page, label: string) {
+  // This is required on webkit tests as the dropdown closes after selection
+  if (!(await page.isVisible(".kayttooikeusryhma-react-select__menu"))) {
+    await openDropdown(page, "Hae käyttäjiä käyttöoikeusryhmillä");
   }
   await page.getByLabel(label, { exact: true }).click();
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_CONTEXT } from '../../../contexts/constants';
-import { KoodiUri } from '../../../types/types';
+import { FrontProperties, KoodiUri } from '../../../types/types';
 import { useEffect, useState } from 'react';
 
 interface KayttajaHakutulos {
@@ -51,6 +51,7 @@ export type HaeRequest = {
     jarjestamisluvat: KoodiUri[];
     kielet: KoodiUri[];
     organisaatioOids: string[];
+    kayttooikeusryhmat: string[];
 };
 
 export type KoodistoKoodi = {
@@ -85,6 +86,17 @@ export type HakuParametrit = {
     koulutustoimijat: Koulutustoimija[];
 };
 
+type KayttooikeusryhmaLocalizedText = {
+    text: string;
+    lang: 'FI' | 'SV' | 'EN';
+};
+
+export type Kayttooikeusryhma = {
+    nimi: {
+        texts: KayttooikeusryhmaLocalizedText[];
+    };
+};
+
 export type HaeKayttajatRequest = {
     oppilaitostyypit: KoodiUri[];
 };
@@ -94,7 +106,7 @@ export async function haeHakutulos(request: HaeRequest): Promise<Hakutulos> {
     return response.data;
 }
 
-type ApiResult<T> =
+export type ApiResult<T> =
     | {
           state: 'LOADING';
       }
@@ -108,11 +120,15 @@ type ApiResult<T> =
       };
 
 export function useHakutulos(hakutulosId: string): ApiResult<Hakutulos> {
-    return useGET<Hakutulos>(`/osoitteet/hakutulos/${hakutulosId}`);
+    return useGET<Hakutulos>(`${API_CONTEXT}/osoitteet/hakutulos/${hakutulosId}`);
 }
 
 export function useHakuParametrit(): ApiResult<HakuParametrit> {
-    return useGET<HakuParametrit>(`/osoitteet/parametrit`);
+    return useGET<HakuParametrit>(`${API_CONTEXT}/osoitteet/parametrit`);
+}
+
+export function useKayttooikeusryhmat(frontProperties: FrontProperties): ApiResult<Kayttooikeusryhma[]> {
+    return useGET<Kayttooikeusryhma[]>(`${frontProperties.urlVirkailija}/kayttooikeus-service/kayttooikeusryhma`);
 }
 
 export type SendEmailRequest = {
@@ -154,7 +170,7 @@ function useGET<T>(path: string): ApiResult<T> {
     const [state, setState] = useState<ApiResult<T>>({ state: 'LOADING' });
     useEffect(() => {
         axios
-            .get<T>(`${API_CONTEXT}${path}`)
+            .get<T>(path)
             .then((response) => setState({ state: 'OK', value: response.data }))
             .catch((error) => {
                 console.error(error);
