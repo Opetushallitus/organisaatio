@@ -2,6 +2,12 @@
 set -o errexit -o nounset -o pipefail -o xtrace
 readonly repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+function stop() {
+  cd "$repo"
+  docker-compose down
+}
+trap stop EXIT
+
 function main {
   cd "$repo"
   local -r session="organisaatio"
