@@ -77,6 +77,7 @@ public class EmailService {
                     .lahettavaPalvelu("osoitepalvelu")
                     .prioriteetti(Prioriteetti.normaali)
                     .sailytysaika(SAILYTYSAIKA)
+                    .liitteidenTunnisteet(email.getAttachmentIds())
                     .build());
             log.info("Sent email {} and received lähetystunniste {}", emailId, response.getLahetysTunniste());
             markEmailAsSent(emailId, response.getLahetysTunniste());
@@ -92,7 +93,7 @@ public class EmailService {
 
     public List<QueuedEmail> getQueuedEmailsToRetry() {
         var sql = """
-                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid
+                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids
                 FROM queuedemail JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
                 WHERE queuedemailstatus_id = 'QUEUED'
                 AND last_attempt < current_timestamp - INTERVAL '10 minutes'
@@ -103,7 +104,7 @@ public class EmailService {
 
     private List<QueuedEmail> queryEmails(String where, String emailId) {
         var select = """
-                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid
+                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids
                 FROM queuedemail JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
                 """;
         var sql = String.join("\n", List.of(select, where));
@@ -124,6 +125,7 @@ public class EmailService {
             .sentAt(rs.getTimestamp("sent_at"))
             .created(rs.getTimestamp("created"))
             .modified(rs.getTimestamp("modified"))
+            .attachmentIds(Arrays.asList((String[]) rs.getArray("attachment_ids").getArray()))
             .build();
 
     private void updateLastAttempt(String emailId) {

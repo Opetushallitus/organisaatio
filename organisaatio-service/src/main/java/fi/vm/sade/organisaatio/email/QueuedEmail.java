@@ -23,4 +23,5 @@ public class QueuedEmail {
     private Timestamp lastAttempt;
     private Timestamp created;
     private Timestamp modified;
+    private List<String> attachmentIds;
 }

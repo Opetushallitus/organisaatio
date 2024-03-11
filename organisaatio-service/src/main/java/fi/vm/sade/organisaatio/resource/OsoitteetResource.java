@@ -872,6 +872,7 @@ class SendEmailRequest {
     @NotNull
     @Size(min = 1, max = 6291456)
     private String body;
+    private List<String> attachmentIds;
 }
 
 @Data

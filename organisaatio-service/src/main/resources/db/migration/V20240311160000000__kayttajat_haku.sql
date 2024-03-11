@@ -1,0 +1,1 @@
+ALTER TABLE queuedemail ADD COLUMN attachment_ids text[];
