@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -25,6 +26,12 @@ public class EmailService {
     private final ViestinvalitysClient viestinvalitysClient;
     private final JdbcTemplate jdbcTemplate;
     private final TransactionTemplate transactionTemplate;
+
+    public String saveAttachment(String hakutulosId, MultipartFile file) {
+        String liiteTunniste = viestinvalitysClient.postAttachment(file).getLiiteTunniste();
+        log.info("Email attachment {} saved with hakutulos {}", liiteTunniste, hakutulosId);
+        return liiteTunniste;
+    }
 
     public String queueEmail(QueuedEmail email) {
         var emailId = UUID.randomUUID().toString();

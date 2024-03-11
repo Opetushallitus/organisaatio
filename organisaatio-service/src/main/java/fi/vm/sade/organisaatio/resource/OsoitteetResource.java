@@ -36,6 +36,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
@@ -207,7 +208,6 @@ public class OsoitteetResource {
                 });
     }
 
-
     @PostMapping(
             value = "/hakutulos/{hakutulosId}/email",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -237,6 +237,17 @@ public class OsoitteetResource {
 
         emailService.attemptSendingEmail(emailId);
         return new SendEmailResponse(emailId);
+    }
+
+    @PostMapping(
+        value = "/hakutulos/{hakutulosId}/email/liite",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
+    public String saveAttachment(@PathVariable String hakutulosId, @RequestParam("file") MultipartFile file) {
+        String attachmentId = emailService.saveAttachment(hakutulosId, file);
+        return attachmentId;
     }
 
     @GetMapping(value = "/viesti/{emailId}")
