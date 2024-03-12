@@ -7,9 +7,11 @@ import styles from './ViestiView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { sendEmail, SendEmailRequest, uploadAttachment, useHakutulos } from './OsoitteetApi';
 import { useHistory, useParams } from 'react-router-dom';
-import { ErrorBanner } from './ErrorBanner';
+import { ErrorBanner, InfoBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
+import PohjaModaali from '../../Modaalit/PohjaModaali/PohjaModaali';
+import { AxiosError } from 'axios';
 
 function useTextInput(initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
@@ -52,7 +54,9 @@ export const ViestiView = () => {
     const [body, onBodyChange] = useRequiredTextInput('Viesti', 6291456, '');
     const [files, setFiles] = useState<UploadedFile[]>([]);
     const [fileUploading, setFileUploading] = useState(false);
-    const [fileUploadError, setFileUploadError] = useState(false);
+    const [fileUploadError, setFileUploadError] = useState<string | undefined>();
+    const [fileUploadProgress, setFileUploadProgress] = useState(0);
+    const [abortController, setAbortController] = useState<AbortController>();
     const uploadRef = useRef<HTMLInputElement>(null);
     const subjectValid = subject.value.length >= 1;
     const bodyValid = body.value.length >= 1;
@@ -67,7 +71,7 @@ export const ViestiView = () => {
                 copy: copy !== '' ? copy : undefined,
                 subject: subject.value,
                 body: body.value,
-                attachmentIds: files.map((f) => f.id).filter(Boolean),
+                attachmentIds: files.map((f) => f.id!).filter(Boolean),
             };
             const response = await sendEmail(hakutulosId, request);
             history.push(`/osoitteet/viesti/${response.emailId}`);
@@ -89,20 +93,34 @@ export const ViestiView = () => {
         );
     }
 
+    function abortFileUpload() {
+        abortController?.abort();
+        if (uploadRef.current) {
+            uploadRef.current.value = '';
+        }
+        setFileUploading(false);
+    }
+
     async function onFileUpload() {
         const file = uploadRef.current?.files?.[0];
-        if (!file || fileUploading) {
+        if (!file || fileUploading || files.some((f) => f.name === file.name)) {
             return;
         }
 
         try {
             setFileUploading(true);
-            const id = await uploadAttachment(hakutulosId, file);
+            const controller = new AbortController();
+            setAbortController(controller);
+            const id = await uploadAttachment(hakutulosId, file, setFileUploadProgress, controller.signal);
             setFiles([...files, { name: file.name, id }]);
         } catch (e) {
             console.error(e);
-            setFileUploadError(true);
+            const errorName = e instanceof AxiosError ? e.name : 'generic';
+            setFileUploadError(errorName);
         } finally {
+            if (uploadRef.current) {
+                uploadRef.current.value = '';
+            }
             setFileUploading(false);
         }
     }
@@ -172,6 +190,7 @@ export const ViestiView = () => {
                                             ref={uploadRef}
                                             onChange={onFileUpload}
                                             style={{ display: 'none' }}
+                                            disabled={fileUploading}
                                         />
                                     </label>
                                 </div>
@@ -194,36 +213,42 @@ export const ViestiView = () => {
                         </div>
                     </div>
                 </div>
-                <div>
-                    {fileUploadError && (
-                        <ErrorBanner onClose={() => setFileUploadError(false)}>
+                {fileUploadError === 'CanceledError' ? (
+                    <InfoBanner onClose={() => setFileUploadError(undefined)}>
+                        Liitteen lataaminen keskeytettiin.
+                    </InfoBanner>
+                ) : (
+                    !!fileUploadError && (
+                        <ErrorBanner onClose={() => setFileUploadError(undefined)}>
                             Liitteen latauksessa tapahtui virhe. Yritä uudelleen.
                         </ErrorBanner>
-                    )}
-                    <div className={styles.Attachments}>
-                        {files.map((file) => (
-                            <div key={file.id} className={styles.Attachment}>
-                                <span>{file.name}</span>
-                                <button
-                                    className={styles.RemoveFileButton}
-                                    onClick={() => setFiles(files.filter((f) => f.id !== file.id))}
+                    )
+                )}
+                <div className={styles.Attachments}>
+                    {files.map((file, idx) => (
+                        <div key={file.name + idx} className={styles.Attachment}>
+                            <span>{file.name}</span>
+                            <button
+                                className={styles.RemoveFileButton}
+                                onClick={() => !fileUploading && setFiles(files.filter((f) => f.name !== file.name))}
+                                disabled={fileUploading}
+                            >
+                                <svg
+                                    width="13"
+                                    height="14"
+                                    viewBox="0 0 13 14"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <svg
-                                        width="13"
-                                        height="14"
-                                        viewBox="0 0 13 14"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M1.79865 12.0834L1.0166 11.3013L5.31788 7.00002L1.0166 2.69874L1.79865 1.91669L6.09993 6.21797L10.4012 1.91669L11.1833 2.69874L6.88199 7.00002L11.1833 11.3013L10.4012 12.0834L6.09993 7.78207L1.79865 12.0834Z"
-                                            fill="#666666"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                                    <path
+                                        d="M1.79865 12.0834L1.0166 11.3013L5.31788 7.00002L1.0166 2.69874L1.79865 1.91669L6.09993 6.21797L10.4012 1.91669L11.1833 2.69874L6.88199 7.00002L11.1833 11.3013L10.4012 12.0834L6.09993 7.78207L1.79865 12.0834Z"
+                                        fill="#666666"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    ))}
+                    {fileUploading && <Spin size="small" />}
                 </div>
                 <div className={styles.Row}>
                     <Button onClick={onSendMail} disabled={sendDisabled}>
@@ -238,6 +263,22 @@ export const ViestiView = () => {
                     </div>
                 )}
             </div>
+            {fileUploading && (
+                <PohjaModaali
+                    suljeCallback={abortFileUpload}
+                    header={<div>Tiedostoa ladataan</div>}
+                    body={
+                        <div>
+                            <div className={styles.ProgressBar}>
+                                <div style={{ width: `${fileUploadProgress}%` }}>{fileUploadProgress}%</div>
+                            </div>
+                            <div className={styles.ModalButtons}>
+                                <Button onClick={() => abortFileUpload()}>Peruuta</Button>
+                            </div>
+                        </div>
+                    }
+                />
+            )}
         </div>
     );
 };

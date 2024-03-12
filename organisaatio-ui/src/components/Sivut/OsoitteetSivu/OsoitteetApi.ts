@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosProgressEvent, GenericAbortSignal } from 'axios';
 import { API_CONTEXT } from '../../../contexts/constants';
 import { FrontProperties, KoodiUri } from '../../../types/types';
 import { useEffect, useState } from 'react';
@@ -154,7 +154,12 @@ export async function sendEmail(hakutulosId: string, request: SendEmailRequest):
 
 type UploadAttachmentResponse = string;
 
-export async function uploadAttachment(hakutulosId: string, file: File): Promise<UploadAttachmentResponse> {
+export async function uploadAttachment(
+    hakutulosId: string,
+    file: File,
+    onUploadProgress: (percent: number) => void,
+    signal: GenericAbortSignal
+): Promise<UploadAttachmentResponse> {
     const formData = new FormData();
     formData.append('file', file);
     const response = await axios.post<UploadAttachmentResponse>(
@@ -164,6 +169,9 @@ export async function uploadAttachment(hakutulosId: string, file: File): Promise
             headers: {
                 'content-type': 'multipart/form-data',
             },
+            onUploadProgress: (progressEvent: AxiosProgressEvent) =>
+                onUploadProgress(Math.round((progressEvent.progress ?? 0) * 100)),
+            signal,
         }
     );
     return response.data;
