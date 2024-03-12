@@ -10,7 +10,51 @@
     box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.17);
 }
 
-.Header{
+.ViestiButtons {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+.ViestiButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    border: 1px solid var(--color-neutral-white);
+    border-radius: var(--border-radius);
+    background: none;
+}
+
+.ViestiButton:hover,
+.ViestiButton:focus {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.17);
+}
+
+.ViestiButton:hover,
+.ViestiButton:focus {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.17);
+}
+
+.ViestiButtonDisabled {
+    border: 1px solid var(--color-gray-gray-lighten-6);
+    background: var(--color-gray-gray-lighten-6);
+    cursor: default;
+}
+
+.ViestiButtonDisabled:hover,
+.ViestiButtonDisabled:focus {
+    border: 1px solid var(--color-gray-gray-lighten-6);
+    box-shadow: none;
+}
+
+.Header {
     display: flex;
     align-items: center;
     height: 72px;
@@ -68,7 +112,8 @@
     box-shadow: none;
 }
 
-.Viesti > .ViestiTextarea:hover, .Viesti > .ViestiTextarea:focus {
+.Viesti > .ViestiTextarea:hover,
+.Viesti > .ViestiTextarea:focus {
     border: none;
     box-shadow: none;
 }
@@ -78,7 +123,7 @@
 }
 
 .Viesti:has(.ViestiTextarea:focus) {
-    box-shadow: 0 0 0 var(--border-radius) rgba(10,120,156,0.2);
+    box-shadow: 0 0 0 var(--border-radius) rgba(10, 120, 156, 0.2);
     border-color: var(--color-primary-blue);
 }
 
@@ -125,4 +170,36 @@
     background: var(--color-primary-blue);
     color: var(--color-neutral-white);
     border-radius: 4px;
+}
+
+.Attachments {
+    display: flex;
+    gap: 8px;
+}
+
+.Attachment {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+    border: none;
+    font-family: Roboto, Arial Unicode MS, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 21px;
+    color: var(--text-text-paragraph);
+    border-radius: 3px;
+    background-color: var(--color-gray-gray-lighten-6);
+}
+
+.RemoveFileButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    outline: inherit;
+    cursor: pointer;
 }

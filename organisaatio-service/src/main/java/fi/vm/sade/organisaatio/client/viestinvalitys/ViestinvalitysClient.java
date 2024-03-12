@@ -63,12 +63,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
 
     private HttpRequest.Builder getMultipartFileRequestBuilder(MultipartFile file) throws IOException {
         HttpEntity httpEntity = MultipartEntityBuilder.create()
-            .addBinaryBody(
-                "liite",
-                file.getInputStream(),
-                ContentType.getByMimeType(file.getContentType()),
-                file.getOriginalFilename()
-            )
+            .addBinaryBody("liite", file.getInputStream(), ContentType.create(file.getContentType()), file.getOriginalFilename())
             .build();
         Pipe pipe = Pipe.open();
         new Thread(() -> {
@@ -97,7 +92,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
     }
 
     @Data
-    public class PostAttachmentResponse {
+    public static class PostAttachmentResponse {
         private String liiteTunniste;
     }
 }

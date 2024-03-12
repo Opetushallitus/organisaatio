@@ -42,18 +42,13 @@ function ErrorIcon() {
 
 function CloseIcon({ onClick }: { onClick(): void }) {
     return (
-        <svg
-            onClick={onClick}
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M2.35865 14.6666L1.33301 13.641L6.97403 7.99998L1.33301 2.35895L2.35865 1.33331L7.99967 6.97434L13.6407 1.33331L14.6663 2.35895L9.02532 7.99998L14.6663 13.641L13.6407 14.6666L7.99967 9.02562L2.35865 14.6666Z"
-                fill="#2A2A2A"
-            />
-        </svg>
+        <button onClick={onClick} className={styles.CloseButton} aria-label="Sulje banneri">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M2.35865 14.6666L1.33301 13.641L6.97403 7.99998L1.33301 2.35895L2.35865 1.33331L7.99967 6.97434L13.6407 1.33331L14.6663 2.35895L9.02532 7.99998L14.6663 13.641L13.6407 14.6666L7.99967 9.02562L2.35865 14.6666Z"
+                    fill="#2A2A2A"
+                />
+            </svg>
+        </button>
     );
 }

@@ -151,6 +151,23 @@ export async function sendEmail(hakutulosId: string, request: SendEmailRequest):
     return response.data;
 }
 
+type UploadAttachmentResponse = string;
+
+export async function uploadAttachment(hakutulosId: string, file: File): Promise<UploadAttachmentResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await axios.post<UploadAttachmentResponse>(
+        `${API_CONTEXT}/osoitteet/hakutulos/${hakutulosId}/email/liite`,
+        formData,
+        {
+            headers: {
+                'content-type': 'multipart/form-data',
+            },
+        }
+    );
+    return response.data;
+}
+
 export type GetEmailResponse =
     | {
           status: 'QUEUED';
