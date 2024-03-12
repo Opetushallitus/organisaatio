@@ -67,6 +67,7 @@ export const ViestiView = () => {
                 copy: copy !== '' ? copy : undefined,
                 subject: subject.value,
                 body: body.value,
+                attachmentIds: files.map((f) => f.id).filter(Boolean),
             };
             const response = await sendEmail(hakutulosId, request);
             history.push(`/osoitteet/viesti/${response.emailId}`);

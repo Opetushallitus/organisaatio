@@ -137,6 +137,7 @@ export type SendEmailRequest = {
     copy?: string;
     subject: string;
     body: string;
+    attachmentIds?: string[];
 };
 
 export type SendEmailResponse = {
