@@ -8,7 +8,8 @@
         "@iconify/react": "3.1.0",
         "@joi/date": "^2.1.0",
         "@opetushallitus/virkailija-ui-components": "^0.4.6",
-        "axios-hooks": "^3.1.5",
+        "axios": "^1.6.7",
+        "axios-hooks": "^5.0.2",
         "joi": "^17.4.0",
         "joi-phone-number": "^5.1.1",
         "jotai": "^1.5.3",
@@ -58,7 +59,7 @@
         "prettier": "2.2.1",
         "pretty-quick": "^3.1.2",
         "typescript": "^4.9.5",
-        "wait-on": "^6.0.0"
+        "wait-on": "^7.2.0"
     },
     "scripts": {
         "prepare": "cd .. && husky install organisaatio-ui/.husky",
