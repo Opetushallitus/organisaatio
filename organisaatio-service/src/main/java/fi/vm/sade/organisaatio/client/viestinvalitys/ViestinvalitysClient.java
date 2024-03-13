@@ -5,14 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
@@ -63,21 +61,16 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
 
     private HttpRequest.Builder getMultipartFileRequestBuilder(MultipartFile file) throws IOException {
         HttpEntity httpEntity = MultipartEntityBuilder.create()
-            .addBinaryBody("liite", file.getInputStream(), ContentType.create(file.getContentType()), file.getOriginalFilename())
-            .build();
-        Pipe pipe = Pipe.open();
-        new Thread(() -> {
-            try (OutputStream outputStream = Channels.newOutputStream(pipe.sink())) {
-                httpEntity.writeTo(outputStream);
-            } catch (IOException e) {
-                log.error("Error while writing attachment to stream", e);
-            }
-        }).start();
+                .addBinaryBody("liite", file.getInputStream(), ContentType.create(file.getContentType()), file.getOriginalFilename())
+                .build();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        httpEntity.writeTo(os);
+        os.flush();
         return HttpRequest.newBuilder()
                 .uri(URI.create(serviceUrl + "/v1/liitteet"))
                 .header("Content-Type", httpEntity.getContentType().getValue())
                 .header("Accept", "application/json")
-                .POST(BodyPublishers.ofInputStream(() -> Channels.newInputStream(pipe.source())));
+                .POST(BodyPublishers.ofByteArray(os.toByteArray()));
     }
 
     public ApiResponse post(String path, String requestBody) throws IOException, InterruptedException {
