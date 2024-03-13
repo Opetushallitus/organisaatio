@@ -125,7 +125,9 @@ public class EmailService {
             .sentAt(rs.getTimestamp("sent_at"))
             .created(rs.getTimestamp("created"))
             .modified(rs.getTimestamp("modified"))
-            .attachmentIds(Arrays.asList((String[]) rs.getArray("attachment_ids").getArray()))
+            .attachmentIds(rs.getArray("attachment_ids") != null
+                ? Arrays.asList((String[]) rs.getArray("attachment_ids").getArray())
+                : null)
             .build();
 
     private void updateLastAttempt(String emailId) {
