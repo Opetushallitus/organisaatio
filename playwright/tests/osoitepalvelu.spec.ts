@@ -1,3 +1,4 @@
+import path from "path";
 import { expect, Locator, Page, test } from "@playwright/test";
 import { FormField, OsoitepalveluPage } from "./OsoitepalveluPage";
 
@@ -809,6 +810,23 @@ test.describe("Osoitepalvelu", () => {
       await kirjoitaViestiForm.lahetaButton.click();
       await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
     });
+
+    test("allows adding and removing attachments", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "dummy.pdf");
+      await expect(page.getByLabel("Poista liite dummy.pdf")).toBeVisible();
+      await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "dummy2.pdf");
+      await expect(page.getByLabel("Poista liite dummy2.pdf")).toBeVisible();
+      await page.getByLabel("Poista liite dummy.pdf").click();
+      await expect(page.getByLabel("Poista liite dummy.pdf")).not.toBeVisible();
+      await expect(page.getByLabel("Poista liite dummy2.pdf")).toBeVisible();
+      await page.getByLabel("Poista liite dummy2.pdf").click();
+      await expect(page.getByLabel("Poista liite dummy.pdf")).not.toBeVisible();
+      await expect(
+        page.getByLabel("Poista liite dummy2.pdf")
+      ).not.toBeVisible();
+    });
   });
 
   test.describe("Sending email to users", async () => {
@@ -931,4 +949,11 @@ async function blockRequestOnce(page: Page, url: string) {
       route.continue();
     }
   });
+}
+
+async function uploadFile(page: Page, locator: Locator, fileName: string) {
+  const fileChooserPromise = page.waitForEvent("filechooser");
+  await locator.click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(path.join(__dirname, "..", "resources", fileName));
 }

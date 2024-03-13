@@ -160,10 +160,12 @@ class KirjoitaViestiForm {
   readonly lahetaButton: Locator;
   readonly aiheField: FormField;
   readonly viestiField: FormField;
+  readonly fileUploadButton: Locator;
   constructor(page: Page) {
     this.lahetaButton = page.getByRole("button", { name: "Lähetä" });
     this.aiheField = new AiheField(page);
     this.viestiField = new ViestiField(page);
+    this.fileUploadButton = page.getByLabel("Lataa liitetiedosto");
   }
 }
 

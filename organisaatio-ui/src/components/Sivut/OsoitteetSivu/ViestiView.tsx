@@ -180,6 +180,7 @@ export const ViestiView = () => {
                                     <label
                                         htmlFor="file-upload"
                                         className={attachmentButtonClassName}
+                                        aria-label="Lataa liitetiedosto"
                                         aria-disabled={fileUploading}
                                     >
                                         <AttachmentIcon />
@@ -232,6 +233,7 @@ export const ViestiView = () => {
                                 className={styles.RemoveFileButton}
                                 onClick={() => !fileUploading && setFiles(files.filter((f) => f.name !== file.name))}
                                 disabled={fileUploading}
+                                aria-label={`Poista liite ${file.name}`}
                             >
                                 <svg
                                     width="13"
