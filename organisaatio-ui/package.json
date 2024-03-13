@@ -68,7 +68,7 @@
         "start": "BROWSER=none PORT=3003 react-scripts -r @cypress/instrument-cra start organisaatioApp ",
         "stop": "killall -SIGINT organisaatioApp",
         "build": "CI='' react-scripts build",
-        "test": "react-scripts test --coverage --watchAll=false",
+        "test": "react-scripts test --coverage --watchAll=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
         "eject": "react-scripts eject",
         "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
         "lint:fix": "eslint --ext .ts,.tsx src --fix",
