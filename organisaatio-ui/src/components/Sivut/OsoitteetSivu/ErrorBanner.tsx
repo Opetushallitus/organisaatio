@@ -2,26 +2,27 @@ import React from 'react';
 import styles from './ErrorBanner.module.css';
 
 type BannerProps = React.PropsWithChildren<{
+    id?: string;
     onClose?(): void;
 }>;
-export function ErrorBanner({ children, onClose }: BannerProps) {
+export function ErrorBanner({ id, children, onClose }: BannerProps) {
     return (
-        <Banner onClose={onClose} variant={styles.Error}>
+        <Banner id={id} onClose={onClose} variant={styles.Error}>
             {children}
         </Banner>
     );
 }
-export function InfoBanner({ children, onClose }: BannerProps) {
+export function InfoBanner({ id, children, onClose }: BannerProps) {
     return (
-        <Banner onClose={onClose} variant={styles.Partial}>
+        <Banner id={id} onClose={onClose} variant={styles.Partial}>
             {children}
         </Banner>
     );
 }
 
-function Banner({ children, onClose, variant }: BannerProps & { variant: string }) {
+function Banner({ id, children, onClose, variant }: BannerProps & { variant: string }) {
     return (
-        <div className={styles.Banner + ' ' + variant}>
+        <div id={id} className={styles.Banner + ' ' + variant}>
             <ErrorIcon />
             <div>{children}</div>
             {onClose && <CloseIcon onClick={onClose} />}

@@ -107,6 +107,14 @@ export const ViestiView = () => {
             return;
         }
 
+        if (file.size > 4500000) {
+            if (uploadRef.current) {
+                uploadRef.current.value = '';
+            }
+            setFileUploadError('maxsize');
+            return;
+        }
+
         try {
             setFileUploading(true);
             const controller = new AbortController();
@@ -123,6 +131,24 @@ export const ViestiView = () => {
             }
             setFileUploading(false);
         }
+    }
+
+    function renderFileUploadError() {
+        return fileUploadError === 'CanceledError' ? (
+            <InfoBanner id="fileuploaderror" onClose={() => setFileUploadError(undefined)}>
+                Liitteen lataaminen keskeytettiin.
+            </InfoBanner>
+        ) : fileUploadError === 'maxsize' ? (
+            <ErrorBanner id="fileuploaderror" onClose={() => setFileUploadError(undefined)}>
+                Liitetiedoston suurin sallittu koko on 4,5MB.
+            </ErrorBanner>
+        ) : (
+            !!fileUploadError && (
+                <ErrorBanner id="fileuploaderror" onClose={() => setFileUploadError(undefined)}>
+                    Liitteen latauksessa tapahtui virhe. Yritä uudelleen.
+                </ErrorBanner>
+            )
+        );
     }
 
     const attachmentButtonClassName = fileUploading
@@ -192,6 +218,8 @@ export const ViestiView = () => {
                                             onChange={onFileUpload}
                                             style={{ display: 'none' }}
                                             disabled={fileUploading}
+                                            aria-invalid={!!fileUploadError}
+                                            aria-errormessage="fileuploaderror"
                                         />
                                     </label>
                                 </div>
@@ -214,17 +242,7 @@ export const ViestiView = () => {
                         </div>
                     </div>
                 </div>
-                {fileUploadError === 'CanceledError' ? (
-                    <InfoBanner onClose={() => setFileUploadError(undefined)}>
-                        Liitteen lataaminen keskeytettiin.
-                    </InfoBanner>
-                ) : (
-                    !!fileUploadError && (
-                        <ErrorBanner onClose={() => setFileUploadError(undefined)}>
-                            Liitteen latauksessa tapahtui virhe. Yritä uudelleen.
-                        </ErrorBanner>
-                    )
-                )}
+                {renderFileUploadError()}
                 <div className={styles.Attachments}>
                     {files.map((file, idx) => (
                         <div key={file.name + idx} className={styles.Attachment}>

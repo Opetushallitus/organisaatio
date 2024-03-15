@@ -827,6 +827,20 @@ test.describe("Osoitepalvelu", () => {
         page.getByLabel("Poista liite dummy2.pdf")
       ).not.toBeVisible();
     });
+
+    test("prevents adding too large files", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      await uploadFile(
+        page,
+        kirjoitaViestiForm.fileUploadButton,
+        "nonsenselarge.file"
+      );
+      await expect(
+        page.getByText("Liitetiedoston suurin sallittu koko on 4,5MB.")
+      ).toBeVisible();
+      await expect(page.getByLabel("Poista liite dummy.pdf")).not.toBeVisible();
+    });
   });
 
   test.describe("Sending email to users", async () => {
