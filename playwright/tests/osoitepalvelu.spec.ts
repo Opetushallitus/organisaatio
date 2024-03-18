@@ -1,5 +1,11 @@
 import path from "path";
-import { expect, Locator, Page, test } from "@playwright/test";
+import {
+  APIRequestContext,
+  expect,
+  Locator,
+  Page,
+  test,
+} from "@playwright/test";
 import { FormField, OsoitepalveluPage } from "./OsoitepalveluPage";
 
 test.describe("Osoitepalvelu", () => {
@@ -798,7 +804,7 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       await osoitepalveluPage.kirjoitaSahkopostiButton.click();
     });
-    test("sending message shows 'Lähetyksessä on viivettä' page", async ({
+    test("succesfully sending message shows 'Lähetys onnistui!' page", async ({
       page,
     }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
@@ -808,9 +814,23 @@ test.describe("Osoitepalvelu", () => {
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
-      await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
+      await expect(page.getByText("Lähetys onnistui!")).toBeVisible();
     });
-
+    test("failing to send message shows 'Lähetyksessä on viivettä' page", async ({
+      request,
+      page,
+    }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
+      await kirjoitaViestiForm.aiheField.input.fill("Aihe");
+      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
+      await kirjoitaViestiForm.lahetaButton.click();
+      await disableViestinvalitysIntegration(request);
+      await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
+      await enableViestinvalitysIntegration(request);
+    });
     test("allows adding and removing attachments", async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
@@ -856,9 +876,7 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       await osoitepalveluPage.kirjoitaSahkopostiButton.click();
     });
-    test("sending message shows 'Lähetyksessä on viivettä' page", async ({
-      page,
-    }) => {
+    test("sending message shows 'Lähetys onnistui!' page", async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
@@ -866,7 +884,7 @@ test.describe("Osoitepalvelu", () => {
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
-      await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
+      await expect(page.getByText("Lähetys onnistui!")).toBeVisible();
     });
   });
 });
@@ -970,4 +988,16 @@ async function uploadFile(page: Page, locator: Locator, fileName: string) {
   await locator.click();
   const fileChooser = await fileChooserPromise;
   await fileChooser.setFiles(path.join(__dirname, "..", "resources", fileName));
+}
+
+async function enableViestinvalitysIntegration(request: APIRequestContext) {
+  return request.post(
+    "http://localhost:3003/organisaatio-service/mock/viestinvalitys/enableIntegration"
+  );
+}
+
+async function disableViestinvalitysIntegration(request: APIRequestContext) {
+  return request.post(
+    "http://localhost:3003/organisaatio-service/mock/viestinvalitys/disableIntegration"
+  );
 }

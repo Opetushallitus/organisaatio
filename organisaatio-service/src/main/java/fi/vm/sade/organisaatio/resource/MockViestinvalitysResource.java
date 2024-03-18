@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fi.vm.sade.organisaatio.client.viestinvalitys.LuoViestiSuccessResponse;
 import fi.vm.sade.organisaatio.client.viestinvalitys.ViestinvalitysClient.PostAttachmentResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,36 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MockViestinvalitysResource {
     private final ObjectMapper objectMapper;
+    private Boolean enabled = true;
 
     @PostMapping(path = "/v1/liitteet", produces = MediaType.APPLICATION_JSON_VALUE)
     public PostAttachmentResponse uploadAttachment(@NonNull @RequestParam("liite") MultipartFile liite) throws IOException {
         PostAttachmentResponse response = new PostAttachmentResponse();
         response.setLiiteTunniste(UUID.randomUUID().toString());
         return response;
+    }
+
+    @PostMapping(path = "/v1/viestit", produces = MediaType.APPLICATION_JSON_VALUE)
+    public LuoViestiSuccessResponse luoViesti() throws IOException {
+        if (enabled) {
+            var response = new LuoViestiSuccessResponse();
+            response.setLahetysTunniste(UUID.randomUUID().toString());
+            response.setViestiTunniste(UUID.randomUUID().toString());
+            return response;
+        } else {
+            throw new IOException("Ingration disabled");
+        }
+    }
+
+    @PostMapping(path = "/disableIntegration")
+    public void disableIntegration() {
+        log.info("Disabling integration");
+        enabled = false;
+    }
+
+    @PostMapping(path = "/enableIntegration")
+    public void enableIntegration() {
+        log.info("Enabling integration");
+        enabled = true;
     }
 }
