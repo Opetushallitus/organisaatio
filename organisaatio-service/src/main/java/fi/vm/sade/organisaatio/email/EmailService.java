@@ -37,8 +37,8 @@ public class EmailService {
         var emailId = UUID.randomUUID().toString();
         log.info("Queueing email with subject and id: {}, {}", email.getSubject(), emailId);
         var sql = """
-                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, copy, replyto, subject, body)
-                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?, ?)
+                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, copy, replyto, subject, body, attachment_ids)
+                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         jdbcTemplate.update(con -> {
@@ -52,6 +52,11 @@ public class EmailService {
             ps.setString(col++, email.getReplyTo());
             ps.setString(col++, email.getSubject());
             ps.setString(col++, email.getBody());
+            if (email.getAttachmentIds() != null && !email.getAttachmentIds().isEmpty()) {
+                ps.setArray(col++, con.createArrayOf("text", email.getAttachmentIds().toArray()));
+            } else {
+                ps.setArray(col++, null);
+            }
             return ps;
         });
 

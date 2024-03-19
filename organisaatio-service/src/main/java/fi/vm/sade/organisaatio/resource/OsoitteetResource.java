@@ -233,6 +233,7 @@ public class OsoitteetResource {
                 .recipients(recipients)
                 .subject(request.getSubject())
                 .body(request.getBody() + "\n\n" + osoitelahde)
+                .attachmentIds(request.getAttachmentIds())
                 .build());
 
         emailService.attemptSendingEmail(emailId);
