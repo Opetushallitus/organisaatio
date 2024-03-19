@@ -20,10 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
     private final ObjectMapper mapper;
+    private final String baseUrl;
 
     public ViestinvalitysClient(HttpClient httpClient, CasClient casClient, String baseUrl, ObjectMapper objectMapper) {
-        super(httpClient, casClient, baseUrl);
+        super(httpClient, casClient, baseUrl + "/login");
         this.mapper = objectMapper;
+        this.baseUrl = baseUrl;
     }
 
     public LuoViestiSuccessResponse luoViesti(Viesti viesti) {
@@ -44,7 +46,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
 
     public PostAttachmentResponse postAttachment(MultipartFile file) {
         try {
-            var request = getMultipartFileRequestBuilder(file);
+            var request = getAttachmentRequestBuilder(file);
             var response = sendRequest(request);
             if (response.statusCode() == 200) {
                 return mapper.readValue(response.body(), PostAttachmentResponse.class);
@@ -59,7 +61,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
         }
     }
 
-    private HttpRequest.Builder getMultipartFileRequestBuilder(MultipartFile file) throws IOException {
+    private HttpRequest.Builder getAttachmentRequestBuilder(MultipartFile file) throws IOException {
         HttpEntity httpEntity = MultipartEntityBuilder.create()
                 .addBinaryBody("liite", file.getInputStream(), ContentType.create(file.getContentType()), file.getOriginalFilename())
                 .build();
@@ -67,7 +69,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
         httpEntity.writeTo(os);
         os.flush();
         return HttpRequest.newBuilder()
-                .uri(URI.create(serviceUrl + "/v1/liitteet"))
+                .uri(URI.create(baseUrl + "/v1/liitteet"))
                 .header("Content-Type", httpEntity.getContentType().getValue())
                 .header("Accept", "application/json")
                 .POST(BodyPublishers.ofByteArray(os.toByteArray()));
@@ -76,7 +78,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
     public ApiResponse post(String path, String requestBody) throws IOException, InterruptedException {
         log.info("Doing request to {} with body {}", path, requestBody);
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(serviceUrl + path))
+                .uri(URI.create(baseUrl + path))
                 .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json");
