@@ -53,13 +53,11 @@ public class MockViestinvalitysResource {
 
     @PostMapping(path = "/disableIntegration")
     public void disableIntegration() {
-        log.info("Disabling integration");
         enabled = false;
     }
 
     @PostMapping(path = "/enableIntegration")
     public void enableIntegration() {
-        log.info("Enabling integration");
         enabled = true;
     }
 }
