@@ -69,14 +69,10 @@ dependencies {
     }
 
     implementation(group: 'fi.vm.sade.viestintapalvelu', name: 'ryhmasahkoposti-api', version: '16.0-SNAPSHOT') {
-        exclude group: 'dom4j', module: 'dom4j'
-        exclude group: 'org.scala-lang', module: 'scala-compiler'
-        exclude group: 'fi.vm.sade.generic', module: 'generic-common'
-        exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_3.0_spec'
+        exclude group: '*', module: '*'
     }
     implementation(group: 'fi.vm.sade.tarjonta', name: 'tarjonta-api', version: '9.7-SNAPSHOT') {
-        exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_2.5_spec'
-        exclude group: 'org.apache.cxf', module: 'cxf-bundle'
+        exclude group: '*', module: '*'
     }
     implementation(group: 'fi.vm.sade.oid', name: 'oid-api', version: '8.0') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
@@ -101,6 +97,8 @@ dependencies {
     implementation group: 'com.querydsl', name: 'querydsl-jpa', version: queryDslVersion
     compileOnly group: 'com.querydsl', name: 'querydsl-jpa', version: queryDslVersion
     annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: queryDslVersion, classifier: 'jpa'
+
+    implementation group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
 
     // Excel
     implementation group: 'org.apache.poi', name: 'poi', version: '5.2.5'
