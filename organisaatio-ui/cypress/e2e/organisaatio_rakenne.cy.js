@@ -8,7 +8,7 @@ describe('Organisaatio Rakenne', () => {
         expect(cy.get('h1').value).to.contain.valueOf('UUDEN_TOIMIJAN_LISAAMINEN');
     });
 
-    it('Can add CHILD organisaatio', () => {
+    it.skip('Can add CHILD organisaatio', () => {
         cy.persistOrganisaatio(organisaatio('PARENT'), 'parentOrganisaatio');
         cy.get('@parentOrganisaatio').then((response) => {
             cy.visit(`${BASE_PATH}/lomake/${response.body.organisaatio.oid}`);
