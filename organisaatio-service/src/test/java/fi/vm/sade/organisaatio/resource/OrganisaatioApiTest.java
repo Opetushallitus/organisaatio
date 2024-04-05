@@ -1,12 +1,12 @@
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.mock.OIDServiceMock;
+import fi.vm.sade.organisaatio.OIDServiceMock;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.service.oid.OidService;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
@@ -63,7 +63,7 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
 
         @Bean
         @Primary
-        public OIDService oidService() {
+        OidService oidService() {
             return new OIDServiceMock();
         }
     }

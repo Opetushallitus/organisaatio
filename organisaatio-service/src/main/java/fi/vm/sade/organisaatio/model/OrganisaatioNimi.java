@@ -16,7 +16,7 @@
 package fi.vm.sade.organisaatio.model;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 /**
@@ -42,7 +42,7 @@ public class OrganisaatioNimi extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Organisaatio organisaatio;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     @Column(name="alkupvm")
     private Date alkuPvm;
 

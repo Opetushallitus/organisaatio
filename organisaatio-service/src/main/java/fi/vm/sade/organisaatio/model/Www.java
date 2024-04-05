@@ -17,9 +17,9 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * @author Antti Salonen
@@ -29,7 +29,6 @@ public class Www extends Yhteystieto {
 
     private static final long serialVersionUID = 1L;
 
-    // Huom. Alunperin www pattern tuli tuolta: fi.vm.sade.generic.common.validation.ValidationConstants.WWW_PATTERN;
     @NotNull
     @Pattern(regexp = "^((https?)(:\\/\\/))?([-a-zA-Z0-9+&@#\\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%ÅåÄäÖö=~_|])", message = "{validation.invalid.www}")
     private String wwwOsoite;  // TODO XSS filtteri

@@ -15,10 +15,9 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.generic.common.ValidationException;
-import fi.vm.sade.generic.common.validation.ValidationConstants;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.types.NodeClassCode;
+import fi.vm.sade.oid.NodeClassCode;
+import fi.vm.sade.organisaatio.ValidationException;
+import fi.vm.sade.organisaatio.ValidationConstants;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
@@ -34,6 +33,7 @@ import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.YTJResource;
+import fi.vm.sade.organisaatio.service.oid.OidService;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.service.YtjDtoMapperHelper;
@@ -43,8 +43,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.OptimisticLockException;
-import javax.validation.*;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -65,7 +65,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     protected YtjPaivitysLokiRepository ytjPaivitysLokiRepository;
 
     @Autowired
-    private OIDService oidService;
+    private OidService oidService;
 
     @Autowired
     private YTJResource ytjResource;

@@ -18,13 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fi.vm.sade.koodisto.service.types.common.KoodiMetadataType;
-import fi.vm.sade.koodisto.service.types.common.KoodiType;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoClient;
 import fi.vm.sade.organisaatio.dto.Koodi;
+import fi.vm.sade.organisaatio.model.KoodiType;
 import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.model.KoodiType.KoodiMetadataType;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.properties.OphProperties;
 import org.slf4j.Logger;
@@ -36,6 +36,8 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -574,6 +576,13 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     private static class KoodiTypeToKoodiMapper implements Function<KoodiType, Koodi> {
+        private Date parseDate(String date) {
+            if (date != null) {
+                LocalDateTime d = LocalDateTime.parse(date);
+                return Date.from(d.toInstant(ZoneOffset.UTC));
+            }
+            return null;
+        }
 
         @Override
         public Koodi apply(KoodiType koodiType) {
@@ -583,8 +592,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodi.setVersio(koodiType.getVersio());
             koodi.setNimi(metadataTo(koodiType.getMetadata(), metadata -> metadata.getNimi()));
             koodi.setTila(koodiType.getTila());
-            koodi.setVoimassaAlkuPvm(Optional.ofNullable(koodiType.getVoimassaAlkuPvm()).map(a->a.toGregorianCalendar().getTime()).orElse(null));
-            koodi.setVoimassaLoppuPvm(Optional.ofNullable(koodiType.getVoimassaLoppuPvm()).map(a->a.toGregorianCalendar().getTime()).orElse(null));
+            koodi.setVoimassaAlkuPvm(parseDate(koodiType.getVoimassaAlkuPvm()));
+            koodi.setVoimassaLoppuPvm(parseDate(koodiType.getVoimassaLoppuPvm()));
             return koodi;
         }
 

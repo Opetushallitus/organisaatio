@@ -17,12 +17,12 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
+import static fi.vm.sade.organisaatio.ValidationConstants.GENERIC_MAX;
+import static fi.vm.sade.organisaatio.ValidationConstants.GENERIC_MIN;
 
 /**
  * @author Antti Salonen

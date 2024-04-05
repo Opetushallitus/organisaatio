@@ -1,12 +1,13 @@
 package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.collect.Lists;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.mock.OIDServiceMock;
+
+import fi.vm.sade.organisaatio.OIDServiceMock;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
+import fi.vm.sade.organisaatio.service.oid.OidService;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.mock.YTJServiceMock;
 import fi.vm.sade.security.OidProvider;
@@ -63,7 +64,7 @@ public class OrganisaatioPermissionServiceTest {
 
         @Bean
         @Primary
-        public OIDService oidService() {
+        OidService oidService() {
             return new OIDServiceMock();
         }
 

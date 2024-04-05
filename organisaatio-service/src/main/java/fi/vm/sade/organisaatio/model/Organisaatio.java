@@ -12,8 +12,8 @@ import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toSet;
 
 @EntityListeners(ProtectedDataListener.class)
 @Entity
-@javax.persistence.Table(
+@jakarta.persistence.Table(
         name = "organisaatio",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"oid"}),
@@ -158,10 +158,10 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private String yritysmuoto;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date alkuPvm;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date lakkautusPvm;
 
     private String kotipaikka;

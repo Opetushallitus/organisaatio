@@ -32,13 +32,12 @@ public class DevUserDetailsServiceConfiguration {
 
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-
+    UserDetailsService userDetailsService() {
         return new DevUserDetailsService(passwordEncoder());
     }
 

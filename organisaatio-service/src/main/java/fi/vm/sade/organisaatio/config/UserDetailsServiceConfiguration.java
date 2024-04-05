@@ -18,7 +18,7 @@ public class UserDetailsServiceConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    UserDetailsService userDetailsService() {
         String host = ophProperties.url("host.alb");
         return new OphUserDetailsServiceImpl(host, "1.2.246.562.10.00000000001.organisaatio-service");
     }

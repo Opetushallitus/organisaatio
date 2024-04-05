@@ -2,7 +2,7 @@ package fi.vm.sade.organisaatio.model;
 
 import org.hibernate.annotations.BatchSize;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

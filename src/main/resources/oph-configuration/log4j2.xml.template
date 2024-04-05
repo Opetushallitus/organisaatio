@@ -34,8 +34,6 @@
         <Logger name="org.vaadin" level="error"/>
         <Logger name="org.hibernate" level="warn"/>
         <Logger name="javax.sql" level="error"/>
-        <Logger name="org.apache.activemq" level="info"/>
-        <Logger name="org.apache.activemq.spring" level="${logLevel}"/>
         <Logger name="org.jasig.cas.client.session" level="info"/>
     </Loggers>
 </Configuration>

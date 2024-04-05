@@ -15,9 +15,9 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Maps;
-import fi.vm.sade.oid.service.ExceptionMessage;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.types.NodeClassCode;
+
+import fi.vm.sade.oid.ExceptionMessage;
+import fi.vm.sade.oid.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
@@ -35,6 +35,7 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.KoodistoService;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
+import fi.vm.sade.organisaatio.service.oid.OidService;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +52,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.OptimisticLockException;
-import javax.validation.ValidationException;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.ValidationException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -91,7 +92,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private OrganisaatioBusinessChecker checker;
 
     @Autowired
-    private OIDService oidService;
+    private OidService oidService;
 
     @Autowired
     private ConversionService conversionService;

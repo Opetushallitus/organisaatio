@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.dto;
 
-import fi.vm.sade.koodisto.service.types.common.TilaType;
-
 import java.util.Date;
 import java.util.Map;
+
+import fi.vm.sade.organisaatio.model.KoodiType.TilaType;
 
 public class Koodi {
 

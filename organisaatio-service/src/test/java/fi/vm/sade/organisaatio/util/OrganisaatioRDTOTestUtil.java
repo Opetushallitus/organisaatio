@@ -15,7 +15,9 @@
 
 package fi.vm.sade.organisaatio.util;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.oid.ExceptionMessage;
+import fi.vm.sade.oid.NodeClassCode;
+import fi.vm.sade.organisaatio.OIDServiceMock;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
@@ -111,7 +113,11 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTO createOrganisaatio(String nimi,
                                                       String organisaatioTyyppi,
                                                       String parentOid, boolean nullifyOid) {
-        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
+        try {
+            return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
@@ -121,7 +127,11 @@ public final class OrganisaatioRDTOTestUtil {
         if (parent != null) {
             parentOid = parent.getOid();
         }
-        return createOrganisaatioV4(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
+        try {
+            return createOrganisaatioV4(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -138,9 +148,10 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTO createOrganisaatio(String nimi,
                                                       String organisaatioTyyppi,
                                                       String oid,
-                                                      String parentOid, boolean nullifyOid) {
+                                                      String parentOid, boolean nullifyOid) throws ExceptionMessage {
         OrganisaatioRDTO organisaatio = new OrganisaatioRDTO();
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
+        OIDServiceMock oidService = new OIDServiceMock();
 
         organisaatio.setNimi(nimiRDTO.getNimi());
         List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
@@ -151,7 +162,7 @@ public final class OrganisaatioRDTOTestUtil {
             organisaatio.setOid(null);
         }
         else if (isNullOrEmpty(oid)) {
-            organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
+            organisaatio.setOid(oidService.newOid(NodeClassCode.TEKN_5));
         }
         else {
             organisaatio.setOid(oid);
@@ -179,9 +190,10 @@ public final class OrganisaatioRDTOTestUtil {
     public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
                                                       String organisaatioTyyppi,
                                                       String oid,
-                                                      String parentOid, boolean nullifyOid) {
+                                                      String parentOid, boolean nullifyOid) throws ExceptionMessage {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
+        OIDServiceMock oidService = new OIDServiceMock();
 
         organisaatio.setNimi(nimiRDTO.getNimi());
         List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
@@ -192,7 +204,7 @@ public final class OrganisaatioRDTOTestUtil {
             organisaatio.setOid(null);
         }
         else if (isNullOrEmpty(oid)) {
-            organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
+            organisaatio.setOid(oidService.newOid(NodeClassCode.TEKN_5));
         }
         else {
             organisaatio.setOid(oid);

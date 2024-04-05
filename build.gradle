@@ -31,6 +31,9 @@ allprojects {
 				releasesOnly()
 			}
 		}
+		maven {
+			url "https://maven.pkg.github.com/Opetushallitus/java-utils"
+		}
 	}
 	publishing {
 		repositories {

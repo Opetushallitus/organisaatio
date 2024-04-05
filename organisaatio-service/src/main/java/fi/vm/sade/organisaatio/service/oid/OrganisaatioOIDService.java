@@ -15,16 +15,16 @@
 
 package fi.vm.sade.organisaatio.service.oid;
 
-import fi.vm.sade.oid.service.ExceptionMessage;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.types.NodeClassCode;
-import fi.vm.sade.oid.service.types.NodeClassData;
+import fi.vm.sade.oid.ExceptionMessage;
+import fi.vm.sade.oid.NodeClassCode;
+import fi.vm.sade.oid.NodeClassData;
 import fi.vm.sade.oidgenerator.OIDGenerator;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,8 @@ import java.util.List;
  *
  * @author simok
  */
-public class OrganisaatioOIDServiceImpl implements OIDService {
+@Service
+public class OrganisaatioOIDService implements OidService {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -61,9 +62,6 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     @Autowired
     private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
-
-
-    private final String root = "1.2.246.562.";
     private final String[] values = new String[]{"5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
         "22", "24", "27"};
     private final NodeClassCode[] codes = new NodeClassCode[] {
@@ -84,12 +82,10 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
                                         NodeClassCode.ROOLI
                                         };
 
-    @Override
     public String newOidByClassValue(String nodeClassValue) throws ExceptionMessage {
         return generateOid(nodeClassValue);
     }
 
-    @Override
     public List<NodeClassData> getNodeClasses() throws ExceptionMessage {
         List<NodeClassData> list = new ArrayList<>();
 
@@ -104,7 +100,6 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         return list;
     }
 
-    @Override
     public String newOid(NodeClassCode nodeClass) throws ExceptionMessage {
 
         int valueIndex = -1;

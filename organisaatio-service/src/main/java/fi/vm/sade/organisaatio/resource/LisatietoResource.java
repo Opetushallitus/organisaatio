@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.Path;
 import java.util.Set;
 
 @Hidden
@@ -38,7 +37,6 @@ public class LisatietoResource {
     }
 
     @DeleteMapping(path = "/lisatietotyyppi/{nimi}")
-    @Path("/lisatietotyyppi/{nimi}")
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public void poistaLisatietotyyppi(@PathVariable String nimi) {
         this.lisatietoService.delete(nimi);

@@ -23,7 +23,7 @@ import com.google.common.base.Predicates;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Date;
 import java.util.Map.Entry;
 

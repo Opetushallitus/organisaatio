@@ -19,14 +19,14 @@ package fi.vm.sade.organisaatio.model;
 
 import org.hibernate.annotations.Table;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
-@javax.persistence.Table(name="yhteystieto")
+@jakarta.persistence.Table(name="yhteystieto")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(appliesTo = "yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
 public class Yhteystieto extends OrganisaatioBaseEntity {

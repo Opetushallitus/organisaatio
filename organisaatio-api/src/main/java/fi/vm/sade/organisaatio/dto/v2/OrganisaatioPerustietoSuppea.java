@@ -3,7 +3,7 @@ package fi.vm.sade.organisaatio.dto.v2;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 

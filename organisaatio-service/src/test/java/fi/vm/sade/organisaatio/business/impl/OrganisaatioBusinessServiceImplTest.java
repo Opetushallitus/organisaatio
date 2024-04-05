@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.mock.OIDServiceMock;
+import fi.vm.sade.organisaatio.OIDServiceMock;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
@@ -19,6 +18,7 @@ import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.converter.OrganisaatioToOrganisaatioRDTOConverter;
+import fi.vm.sade.organisaatio.service.oid.OidService;
 import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.jdbc.Sql;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -86,7 +86,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
         @Bean
         @Primary
-        public OIDService oidService() {
+        public OidService oidService() {
             return new OIDServiceMock();
         }
 
@@ -162,7 +162,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void processNewOrganisaatioSuhdeChangesWithHistoria() {
+    public void processNewOrganisaatioSuhdeChangesWithHistoria() throws Exception {
         Organisaatio koulutustoimija1 = createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA, "koulutustoimija1", rootOid);
         assertThat(koulutustoimija1).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
         Organisaatio koulutustoimija2 = createOrganisaatio("koulutustoimija2", OrganisaatioTyyppi.KOULUTUSTOIMIJA, "koulutustoimija2", rootOid);
@@ -195,7 +195,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void settingOppilaitosLakkautusPvmAlsoSetsChildToimipisteLakkautusPvm() {
+    public void settingOppilaitosLakkautusPvmAlsoSetsChildToimipisteLakkautusPvm() throws Exception {
         Organisaatio oppilaitos = createOrganisaatio("oppilaitosLakkautusPvm", OrganisaatioTyyppi.OPPILAITOS, "oppilaitosLakkautusPvm", rootOid);
         Organisaatio toimipiste1 = createOrganisaatio("toimipiste1LakkautusPvm", OrganisaatioTyyppi.TOIMIPISTE, "toimipiste1LakkautusPvm", oppilaitos.getOid());
         Organisaatio toimipiste2 = createOrganisaatio("toimipiste2LakkautusPvm", OrganisaatioTyyppi.TOIMIPISTE, "toimipiste2LakkautusPvm", oppilaitos.getOid());
@@ -213,7 +213,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void settingOppilaitosLakkautusPvmDoesNotChangeChildToimipisteLakkautusPvm() {
+    public void settingOppilaitosLakkautusPvmDoesNotChangeChildToimipisteLakkautusPvm() throws Exception {
         Organisaatio oppilaitos = createOrganisaatio("oppilaitosLakkautusPvm2", OrganisaatioTyyppi.OPPILAITOS, "oppilaitosLakkautusPvm2", rootOid);
         Organisaatio toimipiste1 = createOrganisaatio("toimipiste1LakkautusPvm2", OrganisaatioTyyppi.TOIMIPISTE, "toimipiste1LakkautusPvm2", oppilaitos.getOid());
 
@@ -234,7 +234,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void processNewOrganisaatioSuhdeChangesWithLiitos() {
+    public void processNewOrganisaatioSuhdeChangesWithLiitos() throws Exception {
         Organisaatio koulutustoimija = createOrganisaatio("koulutustoimija", OrganisaatioTyyppi.KOULUTUSTOIMIJA, "koulutustoimija", rootOid);
         assertThat(koulutustoimija).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
 
@@ -269,7 +269,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void processNewOrganisaatioSuhdeChangesWithLiitosToAnotherTree() {
+    public void processNewOrganisaatioSuhdeChangesWithLiitosToAnotherTree() throws Exception {
         Organisaatio koulutustoimija1 = createOrganisaatio("koulutustoimija1", OrganisaatioTyyppi.KOULUTUSTOIMIJA, "koulutustoimija1", rootOid);
         assertThat(koulutustoimija1).returns("|" + rootOid + "|", Organisaatio::getParentOidPath);
         Organisaatio oppilaitos1 = createOrganisaatio("oppilaitos1", OrganisaatioTyyppi.OPPILAITOS, "oppilaitos1", koulutustoimija1.getOid());
@@ -345,7 +345,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void saveNewAndUpdateOrganisation() {
+    public void saveNewAndUpdateOrganisation() throws Exception {
         OrganisaatioRDTO model = OrganisaatioRDTOTestUtil.createOrganisaatio("orgrandomnimijsdflsfsf", OrganisaatioTyyppi.MUU_ORGANISAATIO.value(), "65432.1", rootOid, true);
         model.setKayntiosoite(null);
         model.setYhteystiedot(null);
@@ -585,7 +585,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         assertNotEquals(koulutustoimijaResult1.getOrganisaatio().getPaivitysPvm(), epoch);
     }
 
-    private Organisaatio createOrganisaatio(String nimi, OrganisaatioTyyppi organisaatioTyyppi, String oid, String rootOid) {
+    private Organisaatio createOrganisaatio(String nimi, OrganisaatioTyyppi organisaatioTyyppi, String oid, String rootOid) throws Exception {
         Organisaatio organisaatio = service
                 .saveOrUpdate(OrganisaatioRDTOTestUtil.createOrganisaatio(nimi, organisaatioTyyppi.value(), oid, rootOid, true))
                 .getOrganisaatio();
