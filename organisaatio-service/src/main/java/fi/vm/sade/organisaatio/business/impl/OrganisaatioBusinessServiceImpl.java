@@ -15,9 +15,9 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Maps;
-import fi.vm.sade.oid.service.ExceptionMessage;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.types.NodeClassCode;
+import fi.vm.sade.oid.ExceptionMessage;
+import fi.vm.sade.oid.OIDService;
+import fi.vm.sade.oid.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;

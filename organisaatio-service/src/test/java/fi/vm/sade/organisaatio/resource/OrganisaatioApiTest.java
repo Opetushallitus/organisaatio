@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.mock.OIDServiceMock;
+import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;

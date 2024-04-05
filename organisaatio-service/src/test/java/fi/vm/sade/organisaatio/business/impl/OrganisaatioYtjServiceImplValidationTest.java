@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.simple.OIDServiceSimpleImpl;
+import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.model.*;
+import fi.vm.sade.organisaatio.resource.OIDServiceMock;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJOsoiteDTO;
 import fi.ytj.YTunnusDTO;
@@ -21,7 +21,7 @@ public class OrganisaatioYtjServiceImplValidationTest {
     private final OrganisaatioYtjServiceImpl organisaatioYtjService = new OrganisaatioYtjServiceImpl();
     private final OrganisaatioBusinessChecker checker = new OrganisaatioBusinessChecker();
     private final OrganisaatioBusinessService organisaatioBusinessService = new OrganisaatioBusinessServiceImpl();
-    private final OIDService oidService = new OIDServiceSimpleImpl();
+    private final OIDService oidService = new OIDServiceMock();
     private YTJDTO ytjdto;
     private final Organisaatio org = new Organisaatio();
 

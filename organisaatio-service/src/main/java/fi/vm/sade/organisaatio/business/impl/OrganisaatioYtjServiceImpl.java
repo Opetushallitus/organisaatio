@@ -17,8 +17,8 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.generic.common.validation.ValidationConstants;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.types.NodeClassCode;
+import fi.vm.sade.oid.OIDService;
+import fi.vm.sade.oid.NodeClassCode;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
@@ -77,7 +77,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     private OrganisaatioKoodisto organisaatioKoodisto;
 
     private static Validator validator;
-    
+
     @Autowired
     private OrganisaatioBusinessService businessService;
 

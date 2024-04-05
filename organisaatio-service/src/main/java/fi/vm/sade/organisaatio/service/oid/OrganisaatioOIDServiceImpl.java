@@ -15,10 +15,10 @@
 
 package fi.vm.sade.organisaatio.service.oid;
 
-import fi.vm.sade.oid.service.ExceptionMessage;
-import fi.vm.sade.oid.service.OIDService;
-import fi.vm.sade.oid.service.types.NodeClassCode;
-import fi.vm.sade.oid.service.types.NodeClassData;
+import fi.vm.sade.oid.ExceptionMessage;
+import fi.vm.sade.oid.OIDService;
+import fi.vm.sade.oid.NodeClassCode;
+import fi.vm.sade.oid.NodeClassData;
 import fi.vm.sade.oidgenerator.OIDGenerator;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.*;

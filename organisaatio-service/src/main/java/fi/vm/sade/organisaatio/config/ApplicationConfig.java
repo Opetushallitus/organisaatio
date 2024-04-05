@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.config;
 
-import fi.vm.sade.oid.service.OIDService;
+import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.service.oid.OrganisaatioOIDServiceImpl;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.service.YTJServiceImpl;
