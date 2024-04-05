@@ -35,6 +35,7 @@ import org.springframework.web.client.RestClientException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -576,8 +577,8 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     private static class KoodiTypeToKoodiMapper implements Function<KoodiType, Koodi> {
         private Date parseDate(String date) {
             if (date != null) {
-                LocalDateTime d = LocalDateTime.parse(date);
-                return Date.from(d.toInstant(ZoneOffset.UTC));
+                LocalDate d = LocalDate.parse(date);
+                return Date.from(d.atStartOfDay().toInstant(ZoneOffset.UTC));
             }
             return null;
         }
