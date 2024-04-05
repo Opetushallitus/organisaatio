@@ -26,9 +26,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-
 /**
  * @author Antti
  */
@@ -42,16 +39,16 @@ public class Osoite extends Yhteystieto {
     public static final String TYYPPI_ULKOMAINEN_KAYNTIOSOITE = "ulkomainen_kaynti";
     public static final String TYYPPI_ULKOMAINEN_POSTIOSOITE = "ulkomainen_posti";
     public static final String TYYPPI_MUU = "muu";
-    
+
     @NotNull
-    @Pattern(regexp = TYYPPI_POSTIOSOITE + "|" + TYYPPI_KAYNTIOSOITE + "|" + 
+    @Pattern(regexp = TYYPPI_POSTIOSOITE + "|" + TYYPPI_KAYNTIOSOITE + "|" +
             TYYPPI_ULKOMAINEN_KAYNTIOSOITE  + "|" + TYYPPI_ULKOMAINEN_POSTIOSOITE  + "|" + TYYPPI_MUU)
     private String osoiteTyyppi;
-    
+
     @NotNull
-    @Size(min = GENERIC_MIN, max = GENERIC_MAX)
+    @Size(min = 3, max = 100)
     private String osoite; // TODO XSS filtteri
-    
+
     //@NotNull
     //Postinumero can be null because of the foreign addresses
     //Postinumero is stored as koodistouri so no validation can be done
@@ -71,7 +68,7 @@ public class Osoite extends Yhteystieto {
     private Double lng;
 
     private String coordinateType;
-    
+
     @Temporal(TemporalType.DATE)
     private Date ytjPaivitysPvm;
 
@@ -85,7 +82,7 @@ public class Osoite extends Yhteystieto {
         this.postinumero = postinumero;
         this.postitoimipaikka = postitoimipaikka;
     }
- 
+
     public String getOsoiteTyyppi() {
         return osoiteTyyppi;
     }

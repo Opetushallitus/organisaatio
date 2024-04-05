@@ -17,8 +17,9 @@
 package fi.vm.sade.organisaatio.auth;
 
 import com.google.common.base.Preconditions;
-import fi.vm.sade.generic.service.AbstractPermissionService;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.security.AbstractPermissionService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;

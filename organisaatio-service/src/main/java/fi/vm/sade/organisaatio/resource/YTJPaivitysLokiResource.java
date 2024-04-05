@@ -19,13 +19,13 @@ import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +39,7 @@ public class YTJPaivitysLokiResource {
     private YtjPaivitysLokiRepository ytjPaivitysLokiRepository;
 
 
-    @GetMapping(path = "/aikavali", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/aikavali", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YtjPaivitysLoki> findByDateRange(@RequestParam("alkupvm") long alkupvm,
                                                  @RequestParam("loppupvm") long loppupvm) {
@@ -52,7 +52,7 @@ public class YTJPaivitysLokiResource {
         return ytjLoki;
     }
 
-    @GetMapping(path = "/uusimmat", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/uusimmat", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YtjPaivitysLoki> findByDateRange(@RequestParam("limit") int limit) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();

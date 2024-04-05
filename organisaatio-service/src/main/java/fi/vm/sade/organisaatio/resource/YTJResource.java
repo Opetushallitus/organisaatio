@@ -26,10 +26,10 @@ import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class YTJResource {
      * @param ytunnus
      * @return
      */
-    @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/{ytunnus}", produces = MediaType.APPLICATION_JSON_VALUE)
     public YTJDTO findByYTunnus(@PathVariable String ytunnus) {
         try {
             return ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
@@ -59,7 +59,7 @@ public class YTJResource {
         }
     }
 
-    @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/{ytunnus}/v4", produces = MediaType.APPLICATION_JSON_VALUE)
     public OrganisaatioRDTOV4 findByYTunnusV4(@PathVariable String ytunnus) {
         return conversionService.convert(getOrganisaatioByYTunnus(ytunnus), OrganisaatioRDTOV4.class);
     }
@@ -72,7 +72,7 @@ public class YTJResource {
         return conversionService.convert(ytjdto, Organisaatio.class);
     }
 
-    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<YTJDTO> findByYNimi(@RequestParam String nimi) {
         List<YTJDTO> ytjList = new ArrayList<>();
         if (nimi != null && nimi.length() > 0) {
@@ -91,7 +91,7 @@ public class YTJResource {
 
     // Api for batch searches by y-tunnuses
 
-    @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON)
+    @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
     public List<YTJDTO> findByYTunnusBatch(@PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);

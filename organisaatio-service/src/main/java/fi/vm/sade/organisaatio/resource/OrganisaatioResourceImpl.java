@@ -3,7 +3,6 @@ package fi.vm.sade.organisaatio.resource;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
-import fi.vm.sade.generic.common.I18N;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioHakutulos;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
@@ -93,7 +92,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural()
                 .nullsFirst()
-                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(I18N.getLocale(), input));
+                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(new Locale("fi"), input));
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 

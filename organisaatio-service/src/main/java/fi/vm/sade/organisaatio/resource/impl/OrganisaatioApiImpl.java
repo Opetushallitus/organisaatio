@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.resource.impl;
 
 import com.google.common.base.Preconditions;
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.organisaatio.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.*;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioNimiMasking;

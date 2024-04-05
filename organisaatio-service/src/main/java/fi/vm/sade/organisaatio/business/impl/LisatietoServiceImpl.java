@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.sun.jersey.api.NotFoundException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.LisatietoService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
@@ -98,7 +97,7 @@ public class LisatietoServiceImpl implements LisatietoService {
     @Transactional
     public void delete(String nimi) {
         Lisatietotyyppi lisatietotyyppi = this.lisatietoTyyppiRepository.findByNimi(nimi)
-                .orElseThrow(() -> new NotFoundException(String.format("Can't find lisatietotyyppi with nimi %s", nimi)));
+                .orElseThrow(() -> new RuntimeException(String.format("Can't find lisatietotyyppi with nimi %s", nimi)));
         this.lisatietoTyyppiRepository.delete(lisatietotyyppi);
     }
 
@@ -106,7 +105,7 @@ public class LisatietoServiceImpl implements LisatietoService {
     @Override
     public LisatietotyyppiDto findByName(String nimi) {
         Lisatietotyyppi lisatietotyyppi = this.lisatietoTyyppiRepository.findByNimi(nimi)
-                .orElseThrow(() -> new NotFoundException(String.format("Can't find lisatietotyyppi with nimi %s", nimi)));
+                .orElseThrow(() -> new RuntimeException(String.format("Can't find lisatietotyyppi with nimi %s", nimi)));
         return this.conversionService.convert(lisatietotyyppi, LisatietotyyppiDto.class);
     }
 

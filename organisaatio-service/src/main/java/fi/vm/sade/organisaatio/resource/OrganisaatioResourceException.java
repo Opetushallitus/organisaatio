@@ -16,7 +16,7 @@
 
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.organisaatio.SadeBusinessException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

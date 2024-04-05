@@ -24,9 +24,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-
 /**
  * @author Antti Salonen
  * @see fi.vm.sade.organisaatio.api.model.types.YhteystietoArvoDTO
@@ -44,10 +41,10 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
     private Organisaatio organisaatio;
     @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true)
     private Yhteystieto arvoYhteystieto;
-    @Size(min = GENERIC_MIN, max = GENERIC_MAX)
+    @Size(min = 3, max = 100)
     private String arvoText; // TODO XSS filtteri
     private String kieli;  // TODO XSS filtteri
- 
+
     @NotNull
     private String yhteystietoArvoOid;
 

@@ -16,7 +16,7 @@
 
 package fi.vm.sade.organisaatio.business.exception;
 
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.organisaatio.SadeBusinessException;
 
 /**
  *

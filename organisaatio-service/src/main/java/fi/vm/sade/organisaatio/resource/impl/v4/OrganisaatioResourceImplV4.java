@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl.v4;
 
-import fi.vm.sade.generic.service.exception.SadeBusinessException;
+import fi.vm.sade.organisaatio.SadeBusinessException;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
 import fi.vm.sade.organisaatio.business.HakutoimistoService;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;

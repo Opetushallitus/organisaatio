@@ -15,10 +15,9 @@
 
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.generic.common.ValidationException;
-import fi.vm.sade.generic.common.validation.ValidationConstants;
 import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.oid.NodeClassCode;
+import fi.vm.sade.organisaatio.ValidationException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
@@ -341,7 +340,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             if (ytjOrg.getSvNimi() == null) {
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.svpuuttuu");
                 return null;
-            } else if (ytjOrg.getSvNimi().length() > ValidationConstants.GENERIC_MAX) {
+            } else if (ytjOrg.getSvNimi().length() > 100) {
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.svpitka");
                 return null;
             }
@@ -349,7 +348,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             if (ytjOrg.getNimi() == null) {
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.puuttuu.ytj");
                 return null;
-            } else if (ytjOrg.getNimi().length() > ValidationConstants.GENERIC_MAX) {
+            } else if (ytjOrg.getNimi().length() > 100) {
                 logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.NIMI, "ilmoitukset.log.virhe.nimi.pitka");
                 return null;
             }
@@ -516,11 +515,11 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
             return false;
         }
         else if((ytjOrg.getPostiOsoite().getKatu() != null
-                && ytjOrg.getPostiOsoite().getKatu().length() > ValidationConstants.GENERIC_MAX) ||
+                && ytjOrg.getPostiOsoite().getKatu().length() > 100) ||
                 (ytjOrg.getPostiOsoite().getToimipaikka() != null
-                && ytjOrg.getPostiOsoite().getToimipaikka().length() > ValidationConstants.GENERIC_MAX) ||
+                && ytjOrg.getPostiOsoite().getToimipaikka().length() > 100) ||
                 (ytjOrg.getPostiOsoite().getPostinumero() != null
-                && ytjOrg.getPostiOsoite().getPostinumero().length() > ValidationConstants.GENERIC_MAX)) {
+                && ytjOrg.getPostiOsoite().getPostinumero().length() > 100)) {
             logYtjError(organisaatio, YtjVirhe.YTJVirheKohde.OSOITE, "ilmoitukset.log.virhe.osoite.pitka");
             LOG.error("YTJ:ssä liian pitkä osoite organisaatiolle " + organisaatio.getOid());
             return false;
@@ -541,7 +540,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     private boolean validateYtjPuhelin(YTJDTO ytjOrg) {
         String puhelin = ytjOrg.getPuhelin();
-        if (puhelin == null || puhelin.length() > ValidationConstants.GENERIC_MAX) {
+        if (puhelin == null || puhelin.length() > 100) {
             return false;
         } else {
             ytjOrg.setPuhelin(puhelin.split(",|; *")[0]); // huh? mitä/miksi?!
@@ -554,7 +553,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(ytjOrg.getWww() == null) {
             return false;
         }
-        else if(ytjOrg.getWww().length() > ValidationConstants.GENERIC_MAX) {
+        else if(ytjOrg.getWww().length() > 100) {
             return false;
         }
         else {

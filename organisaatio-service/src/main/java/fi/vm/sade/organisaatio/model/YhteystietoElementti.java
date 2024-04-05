@@ -21,9 +21,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MAX;
-import static fi.vm.sade.generic.common.validation.ValidationConstants.GENERIC_MIN;
-
 /**
  * @author Antti Salonen
  */
@@ -40,7 +37,7 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
     private boolean pakollinen;
 
     @NotNull
-    @Size(min = GENERIC_MIN, max = GENERIC_MAX)
+    @Size(min = 3, max = 100)
     private String nimi;  // TODO XSS filtteri
     private String nimiSv;  // TODO XSS filtteri
     private String nimiEn; // TODO XSS filtteri
