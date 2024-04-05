@@ -24,8 +24,6 @@ compileJava {
     options.annotationProcessorPath = configurations.annotationProcessor
 }
 
-mainClassName = 'fi.vm.sade.organisaatio.OrganisaatioApplication'
-
 dependencies {
     implementation project(':organisaatio-ui')
     implementation project(':organisaatio-api')
@@ -80,12 +78,6 @@ dependencies {
         exclude group: 'org.apache.geronimo.specs', module: 'geronimo-servlet_2.5_spec'
         exclude group: 'org.apache.cxf', module: 'cxf-bundle'
     }
-    implementation(group: 'fi.vm.sade.koodisto', name: 'koodisto-api', version: '9.0-SNAPSHOT') {
-        exclude group: 'org.slf4j', module: 'slf4j-api'
-        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-        exclude group: 'org.slf4j', module: 'log4j'
-        exclude group: 'fi.vm.sade.generic', module: 'generic-common'
-    }
     implementation(group: 'fi.vm.sade.oid', name: 'oid-api', version: '8.0') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-log4j12'
@@ -124,6 +116,7 @@ dependencies {
 }
 
 application {
+    mainClass.set('fi.vm.sade.organisaatio.OrganisaatioApplication')
     applicationDefaultJvmArgs = ['-Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties',
                                  '-Dspring.profiles.active=dev',
                                  '-Dspring.flyway.enabled=true',
