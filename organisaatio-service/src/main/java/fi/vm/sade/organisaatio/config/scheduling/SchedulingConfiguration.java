@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
+
 import fi.vm.sade.organisaatio.email.OsoitepalveluEmailRetryTask;
 import fi.vm.sade.organisaatio.export.ExportTask;
 import org.springframework.context.annotation.Bean;

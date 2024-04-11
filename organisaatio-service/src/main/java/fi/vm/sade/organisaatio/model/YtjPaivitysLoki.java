@@ -15,16 +15,17 @@
 
 package fi.vm.sade.organisaatio.model;
 
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 
 // TODO XSS filtteri
 @Entity
 @Table(name = "ytjpaivitysloki")
-@org.hibernate.annotations.Table(appliesTo = "ytjpaivitysloki", comment = "Sisältää YTJ-massapäivityksen statuksen ja listan virheistä.")
+@Comment("Sisältää YTJ-massapäivityksen statuksen ja listan virheistä.")
 public class YtjPaivitysLoki extends BaseEntity {
 
     public enum YTJPaivitysStatus {

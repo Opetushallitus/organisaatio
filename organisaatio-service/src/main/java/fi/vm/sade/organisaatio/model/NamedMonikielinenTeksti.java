@@ -2,10 +2,10 @@ package fi.vm.sade.organisaatio.model;
 
 import org.hibernate.annotations.BatchSize;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 
 /**
  * This class represents a "keyed" translatable text with name and koodiValue - both translatable.

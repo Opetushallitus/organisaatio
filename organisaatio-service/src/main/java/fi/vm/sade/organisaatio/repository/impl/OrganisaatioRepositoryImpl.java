@@ -25,6 +25,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
+
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
@@ -44,12 +45,12 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,7 +71,7 @@ import static java.util.stream.Collectors.toSet;
  * @author mlyly
  */
 @Repository
-public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom {
+public class OrganisaatioRepositoryImpl extends AbstractRepository implements OrganisaatioRepositoryCustom {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -100,7 +101,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         StringPath qKieli = Expressions.stringPath("kieli");
         StringPath qParentOid = Expressions.stringPath("parentOid");
 
-        JPAQuery<Organisaatio> query = new JPAQuery<>(em)
+        JPAQuery<Organisaatio> query = jpa()
                 .from(qOrganisaatio)
                 .join(qOrganisaatio.tyypit, qOrganisaatiotyyppi).fetchJoin()
                 .leftJoin(qOrganisaatio.nimi, qNimi).fetchJoin()
@@ -220,7 +221,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         QOrganisaatioSuhde qOrganisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
         QOrganisaatio qChild = new QOrganisaatio("child");
 
-        JPAQuery<Object> query = new JPAQuery<>(em)
+        JPAQuery<?> query = jpa()
                 .from(qParent)
                 .join(qParent.childSuhteet, qOrganisaatioSuhde)
                 .join(qOrganisaatioSuhde.child, qChild)
@@ -246,7 +247,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
 
         BooleanExpression whereExpression = qOrganisaatio.parentIdPath.endsWith("|" + parentId + "|");
 
-        return new JPAQuery<>(em)
+        return jpa()
                 .from(qOrganisaatio)
                 .select(qOrganisaatio)
                 .where(whereExpression)
@@ -333,7 +334,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
                     qOrganisaatio.lakkautusPvm.isNull().or(qOrganisaatio.lakkautusPvm.after(now)));
         }
 
-        return new JPAQuery<>(em)
+        return jpa()
                 .from(qOrganisaatio)
                 .where(whereExpression)
                 .distinct()
@@ -351,7 +352,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
                 .from(qOrganisaatioSahkoposti)
                 .where(qOrganisaatioSahkoposti.tyyppi.eq(OrganisaatioSahkoposti.Tyyppi.VANHENTUNEET_TIEDOT))
                 .where(qOrganisaatioSahkoposti.aikaleima.after(tarkastusPvm));
-        return new JPAQuery<>(em)
+        return jpa()
                 .from(qOrganisaatio)
                 .where(qOrganisaatio.organisaatioPoistettu.isFalse())
                 .where(anyOf(qOrganisaatio.alkuPvm.loe(voimassaPvm), qOrganisaatio.alkuPvm.isNull()))
@@ -390,7 +391,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         logger.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
 
-        return new JPAQuery<>(em)
+        return jpa()
                 .from(org)
                 .where(org.oid.in(oids)
                         .and(org.organisaatioPoistettu.isFalse()))
@@ -417,7 +418,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         QMonikielinenTeksti hakutoimistoEctsPuhelinmkt = new QMonikielinenTeksti("hakutoimistoEctsPuhelinmkt");
         QMonikielinenTeksti hakutoimistoNimi = new QMonikielinenTeksti("hakutoimistoNimi");
 
-        JPAQuery<Organisaatio> jpaQuery = new JPAQuery<Organisaatio>(em)
+        JPAQuery<Organisaatio> jpaQuery = jpa()
                 .select(org)
                 .distinct()
                 .from(org)
@@ -567,13 +568,10 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
             whereExpr.and(org.ytunnus.isNotNull());
         }
 
-        JPAQuery<String> q = new JPAQuery<>(em);
-        q = q.from(org);
-
-        q = q.where(whereExpr);
+        JPAQuery<?> q = jpa().from(org).where(whereExpr);
 
         if (count > 0) {
-            q = q.limit(count);
+            q.limit(count);
         }
 
         if (startIndex > 0) {
@@ -595,7 +593,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     public Organisaatio findByYTunnus(String oid) {
         logger.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery<>(em).from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
+        return jpa().from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     /**
@@ -608,7 +606,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     public Organisaatio findByVirastoTunnus(String oid) {
         logger.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery<>(em).from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
+        return jpa().from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     /**
@@ -621,7 +619,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     public Organisaatio findByOppilaitoskoodi(String oid) {
         logger.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery<>(em).from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
+        return jpa().from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     /**
@@ -634,7 +632,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
     public Organisaatio findByToimipistekoodi(String oid) {
         logger.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
-        return new JPAQuery<>(em).from(org).where(org.toimipisteKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
+        return jpa().from(org).where(org.toimipisteKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
 
     @Override
@@ -687,7 +685,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
 
         long qstarted = System.currentTimeMillis();
 
-        List<Organisaatio> organisaatiot = new JPAQuery<>(em)
+        List<Organisaatio> organisaatiot = jpa()
                 .from(org)
                 .select(org)
                 .limit(limit + 1)
@@ -833,7 +831,7 @@ public class OrganisaatioRepositoryImpl implements OrganisaatioRepositoryCustom 
         JPQLQuery<Organisaatio> organisaatiotyyppiQuery = JPAExpressions.selectFrom(qOrganisaatiotyyppiSub)
                 .join(qOrganisaatiotyyppiSub.tyypit, qTyyppi).where(qTyyppi.eq("Ryhma"));
 
-        JPAQuery<Organisaatio> query = new JPAQuery<>(em).from(qOrganisaatio).select(qOrganisaatio)
+        JPAQuery<Organisaatio> query = jpa().from(qOrganisaatio).select(qOrganisaatio)
                 .join(qOrganisaatio.nimi, qNimi).fetchJoin()
                 .join(qOrganisaatio.kuvaus2, qKuvaus).fetchJoin()
                 .where(qOrganisaatio.in(organisaatiotyyppiQuery));

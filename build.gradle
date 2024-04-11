@@ -14,6 +14,10 @@ def getDate() {
 	return formattedDate
 }
 
+ext['jakarta-xml-bind.version'] = '3.0.1';
+ext['jakarta-xml-ws.version']   = '3.0.1';
+ext['jakarta-servlet.version']  = '5.0.0';
+
 allprojects {
 	apply plugin: 'maven-publish'
 	repositories {
@@ -29,6 +33,14 @@ allprojects {
 			url "https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local"
 			mavenContent {
 				releasesOnly()
+			}
+		}
+		maven {
+			name "github"
+			url "https://maven.pkg.github.com/Opetushallitus/java-utils"
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+				password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
 			}
 		}
 	}

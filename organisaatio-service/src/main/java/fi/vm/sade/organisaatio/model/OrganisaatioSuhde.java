@@ -17,8 +17,10 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
+
+import org.hibernate.annotations.Comment;
 
 
 /**
@@ -28,8 +30,8 @@ import java.util.Date;
  * @author mlyly
  */
 @Entity
-@javax.persistence.Table(name = "organisaatiosuhde")
-@org.hibernate.annotations.Table(appliesTo = "organisaatiosuhde", comment = "Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
+@Table(name = "organisaatiosuhde")
+@Comment("Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
 public class OrganisaatioSuhde extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;

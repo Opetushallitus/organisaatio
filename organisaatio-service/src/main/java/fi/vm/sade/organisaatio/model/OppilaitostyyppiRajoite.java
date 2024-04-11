@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 import static fi.vm.sade.organisaatio.dto.Rajoitetyyppi.CONSTANTS.OPPILAITOSTYYPPI_CONSTANT;
 

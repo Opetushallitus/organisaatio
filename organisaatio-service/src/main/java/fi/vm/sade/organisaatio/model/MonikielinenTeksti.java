@@ -3,7 +3,7 @@ package fi.vm.sade.organisaatio.model;
 import com.google.common.base.Objects;
 import org.hibernate.annotations.BatchSize;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 

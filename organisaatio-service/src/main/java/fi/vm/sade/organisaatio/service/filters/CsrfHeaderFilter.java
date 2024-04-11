@@ -1,8 +1,8 @@
 package fi.vm.sade.organisaatio.service.filters;
 
-import javax.servlet.*;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 

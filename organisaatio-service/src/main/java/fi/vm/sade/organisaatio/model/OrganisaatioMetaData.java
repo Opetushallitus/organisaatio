@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.model;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Table;
+import org.hibernate.annotations.Comment;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 
 /**
@@ -12,8 +12,8 @@ import java.util.*;
  * @author mlyly
  */
 @Entity
-@javax.persistence.Table(name="organisaatiometadata")
-@Table(appliesTo = "organisaatiometadata", comment = "Sisältää organisaation metatiedot, kuten nimi ja kuva.")
+@Table(name="organisaatiometadata")
+@Comment("Sisältää organisaation metatiedot, kuten nimi ja kuva.")
 public class OrganisaatioMetaData extends BaseEntity {
 
     /**

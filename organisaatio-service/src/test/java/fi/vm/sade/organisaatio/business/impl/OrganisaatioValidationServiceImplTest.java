@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import java.util.Date;
 import java.util.HashSet;
 

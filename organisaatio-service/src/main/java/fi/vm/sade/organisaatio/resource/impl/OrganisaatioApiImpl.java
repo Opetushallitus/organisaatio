@@ -40,7 +40,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.time.LocalDate;

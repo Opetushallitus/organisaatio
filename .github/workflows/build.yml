@@ -42,6 +42,8 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: clean build
@@ -93,6 +95,8 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build backend with no tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: clean build -x test -x uiTest -x lint -x checkFormatting
@@ -141,6 +145,8 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build backend with no tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
           arguments: clean build -x test -x uiTest -x lint -x checkFormatting
@@ -216,7 +222,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build sonarqube
   deploy-container:
@@ -260,6 +266,7 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORG_GRADLE_PROJECT_sadeRepositoryUsername: ${{ secrets.ARTIFACTORY_USERNAME }}
           ORG_GRADLE_PROJECT_sadeRepositoryPassword: ${{ secrets.ARTIFACTORY_PASSWORD }}
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
@@ -281,6 +288,7 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORG_GRADLE_PROJECT_sadeRepositoryUsername: ${{ secrets.ARTIFACTORY_USERNAME }}
           ORG_GRADLE_PROJECT_sadeRepositoryPassword: ${{ secrets.ARTIFACTORY_PASSWORD }}
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7

@@ -6,8 +6,6 @@
 #
 
 # Aseta vähintään nämä ympäristökohtaiset arvot
-activemq.brokerurl={{activemq_brokerurl}}
-activemq.jmxurl={{activemq_jmxurl}}
 auth.mode={{auth_mode}}
 env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
@@ -45,17 +43,6 @@ aws.sns.lakkautusTopicArn={{organisaatio_lakkautus_arn}}
 aws.sns.enabled={{organisaatio_sns_enabled}}
 
 # Oletusarvoja
-activemq.queue.name.log.error=Sade.Log_Error
-activemq.queue.name.log=Sade.Log
-activemq.queue.name.mail=Sade.Email
-activeMq.queueName.organisaatio=fi.vm.sade.organisaatio.service
-activeMq.queueNameHaku=fi.vm.sade.tarjonta.haku.service
-activeMq.queueNameTarjontaAdmin=fi.vm.sade.tarjonta.admin.service
-activeMq.queueNameTarjontaPublic=fi.vm.sade.tarjonta.public.service
-activeMq.targetDestination.learningopportunityprovider.public=fi.vm.sade.learningopportunityprovider.public.service
-activeMq.targetDestination.organisaatio=fi.vm.sade.organisaatio.service
-activeMq.targetDestinationAdmin.tarjonta=fi.vm.sade.tarjonta.admin.service
-activeMq.targetDestinationPublic.tarjonta=fi.vm.sade.tarjonta.public.service
 cas.callback.organisaatio-app=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
 cas.callback.organisaatio-service=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio
 cas.callback.organisaatio-ui=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio

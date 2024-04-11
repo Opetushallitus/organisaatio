@@ -12,7 +12,6 @@ import fi.vm.sade.organisaatio.service.converter.util.YhteystietoConverterUtils;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 public class OrganisaatioRDTOV4ToOrganisaatioConverter implements Converter<OrganisaatioRDTOV4, Organisaatio> {
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
-    @Autowired
     public OrganisaatioRDTOV4ToOrganisaatioConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }

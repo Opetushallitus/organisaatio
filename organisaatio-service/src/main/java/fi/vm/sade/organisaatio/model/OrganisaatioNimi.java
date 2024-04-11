@@ -16,8 +16,10 @@
 package fi.vm.sade.organisaatio.model;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
+
+import org.hibernate.annotations.Comment;
 
 /**
  * Entity luokka organisaation nimelle ja nimihistorialle.
@@ -26,7 +28,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "organisaatio_nimi")
-@org.hibernate.annotations.Table(appliesTo = "organisaatio_nimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
+@Comment("Sisältää organisaation nimen ja nimihistorian.")
 @NamedQuery(
         name = "OrganisaatioNimiDAO.findNimet",
         query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"
@@ -35,6 +37,10 @@ import java.util.Date;
         name = "OrganisaatioNimiDAO.findNimi",
         query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"
 )
+@NamedQuery(
+        name = "OrganisaatioNimiDAO.findNimiByAlkupvmDate",
+        query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.id = :id AND n.alkuPvm = :date"
+)
 public class OrganisaatioNimi extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +48,7 @@ public class OrganisaatioNimi extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Organisaatio organisaatio;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     @Column(name="alkupvm")
     private Date alkuPvm;
 

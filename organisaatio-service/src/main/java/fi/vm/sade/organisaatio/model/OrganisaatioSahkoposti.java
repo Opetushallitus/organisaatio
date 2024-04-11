@@ -1,13 +1,13 @@
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 /**
  * Organisaatiolle (tai sen virkailijoille) lähetetty sähköposti.
  */
 @Entity
-@Table(name = "organisaatiosahkoposti")
+@Table(name = "organisaatio_sahkoposti")
 public class OrganisaatioSahkoposti extends BaseEntity {
 
     public enum Tyyppi {

@@ -8,7 +8,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -145,7 +145,7 @@ public interface OrganisaatioRepositoryCustom {
     /**
      * Useiden organisaatioiden tietojen hakeminen yhdellä kyselyllä. <b>Huom!</b> oikeus nähdä piilotetut
      * organisaatiot tarkistettava, jos piilotetut sisällytetään tuloksiin - tämä on <i>kutsujan vastuulla</i>.
-     * 
+     *
      * @param oids organisatioiden OID:t
      * @param excludePoistettu jätetäänkö poistetut pois tuloksista
      * @param excludePiilotettu jätetäänkö piilotetut pois tuloksista

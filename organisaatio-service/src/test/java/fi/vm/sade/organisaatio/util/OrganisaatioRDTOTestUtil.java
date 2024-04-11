@@ -15,7 +15,6 @@
 
 package fi.vm.sade.organisaatio.util;
 
-import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;

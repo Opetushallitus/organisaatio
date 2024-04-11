@@ -6,7 +6,7 @@ import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
 import fi.vm.sade.organisaatio.resource.dto.HakuTulos;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
