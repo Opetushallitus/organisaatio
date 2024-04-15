@@ -171,7 +171,7 @@ export function SearchView({ hakuParametrit, kayttooikeusryhmat, onResult }: Sea
             return [oppilaitostyyppiFilter.id, jarjestamislupaFilter.id, sijaintiFilter.id, kieliFilter.id];
         } else if (o == 'organisaatiotyyppi_02' || o == 'organisaatiotyyppi_03') {
             return [oppilaitostyyppiFilter.id, sijaintiFilter.id, kieliFilter.id];
-        } else if (o == 'organisaatiotyyppi_07') {
+        } else if (o == 'organisaatiotyyppi_07' || o == 'organisaatiotyyppi_08') {
             return [sijaintiFilter.id, kieliFilter.id];
         } else if (o === 'palveluiden_kayttajat') {
             return [oppilaitostyyppiFilter.id, kayttajaFilter.id];

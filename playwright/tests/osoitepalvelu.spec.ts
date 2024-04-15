@@ -674,6 +674,52 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
+  test.describe("Varhaiskasvatuksen toimipaikat kohderyhmä", async () => {
+    test.beforeEach(async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.varjaiskasvatuksenToimipaikatKohderyhma.toggle();
+    });
+
+    test("disables other kohderyhmas", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await expect(
+        osoitepalveluPage.koulutusotimijatKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.oppilaitoksetKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
+      ).toBeDisabled();
+    });
+
+    test("filters results by varhaiskasvatuksen toimipaikka", async ({
+      page,
+    }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("7 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Ahomansikan päiväkoti")).toBeVisible();
+    });
+
+    test("filters results by varhaiskasvatuksen toimipaikka and varhaiskasvatustoimijat", async ({
+      page,
+    }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.toggle();
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("9 hakutulosta valittu")).toBeVisible();
+      await expect(page.getByText("Ahomansikan päiväkoti")).toBeVisible();
+      await expect(
+        page.getByText("Varhaiskasvatuksen järjestäjä kunta testi")
+      ).toBeVisible();
+    });
+  });
+
   test.describe("Palveluiden käyttäjät kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);

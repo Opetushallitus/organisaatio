@@ -65,6 +65,15 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                 </div>
                 <div className={styles.KohderyhmaColumn}>
                     <Kohderyhma
+                        title="Varhaiskasvatuksen toimipaikat"
+                        description="Ryhmäperhepäiväkodit ja perhepäivähoitajat eivät ole haettavissa Osoitepalvelussa"
+                        selected={isChecked('organisaatiotyyppi_08')}
+                        onChange={onChecked('organisaatiotyyppi_08')}
+                        disabled={isPalvelukayttajaSearch || isOrganisationSearch}
+                    />
+                </div>
+                <div className={styles.KohderyhmaColumn}>
+                    <Kohderyhma
                         title="Palveluiden käyttäjät"
                         description="Virkailijat, joilla on yksi tai useampi käyttöoikeus Opintopolun palveluihin"
                         selected={isChecked('palveluiden_kayttajat')}

@@ -16,6 +16,7 @@ export class OsoitepalveluPage {
   readonly oppilaitoksetKohderyhma: Kohderyhma;
   readonly oppilaitostentoimipisteetKohderyhma: Kohderyhma;
   readonly varhaiskasvatustoimijatKohderyhma: Kohderyhma;
+  readonly varjaiskasvatuksenToimipaikatKohderyhma: Kohderyhma;
   readonly palveluidenKayttajatKohderyhma: Kohderyhma;
   readonly kirjoitaSahkopostiButton: Locator;
   readonly kirjoitaViestiForm: KirjoitaViestiForm;
@@ -36,6 +37,10 @@ export class OsoitepalveluPage {
     this.varhaiskasvatustoimijatKohderyhma = new Kohderyhma(
       page,
       "Varhaiskasvatustoimijat"
+    );
+    this.varjaiskasvatuksenToimipaikatKohderyhma = new Kohderyhma(
+      page,
+      "Varhaiskasvatuksen toimipaikat"
     );
     this.palveluidenKayttajatKohderyhma = new Kohderyhma(
       page,
