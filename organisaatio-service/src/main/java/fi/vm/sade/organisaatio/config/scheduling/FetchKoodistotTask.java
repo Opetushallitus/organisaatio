@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.config.scheduling;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.kagkarlsson.scheduler.task.ExecutionContext;
+import com.github.kagkarlsson.scheduler.task.FailureHandler;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import com.github.kagkarlsson.scheduler.task.schedule.FixedDelay;
@@ -45,7 +46,7 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     private JdbcTemplate jdbc;
 
     public FetchKoodistotTask() {
-        super("FetchKoodistotTask", FixedDelay.of(Duration.ofHours(1)), Void.class, null);
+        super("FetchKoodistotTask", FixedDelay.of(Duration.ofHours(1)), Void.class, (FailureHandler<Void>) null);
     }
 
     @Override

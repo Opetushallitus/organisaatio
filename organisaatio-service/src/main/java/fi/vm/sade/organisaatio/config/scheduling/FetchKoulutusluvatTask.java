@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
 import com.github.kagkarlsson.scheduler.task.ExecutionContext;
+import com.github.kagkarlsson.scheduler.task.FailureHandler;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import com.github.kagkarlsson.scheduler.task.schedule.FixedDelay;
@@ -40,7 +41,7 @@ public class FetchKoulutusluvatTask extends RecurringTask<Void> {
     private NamedParameterJdbcTemplate jdbc2;
 
     public FetchKoulutusluvatTask() {
-        super("FetchKoulutusluvatTask", FixedDelay.of(Duration.ofHours(1)), Void.class, null);
+        super("FetchKoulutusluvatTask", FixedDelay.of(Duration.ofHours(1)), Void.class, (FailureHandler<Void>) null);
     }
 
     @Override

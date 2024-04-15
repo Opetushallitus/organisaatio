@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.email;
 
 import com.github.kagkarlsson.scheduler.task.ExecutionContext;
+import com.github.kagkarlsson.scheduler.task.FailureHandler;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import com.github.kagkarlsson.scheduler.task.schedule.FixedDelay;
@@ -24,7 +25,7 @@ public class OsoitepalveluEmailRetryTask extends RecurringTask<Void> {
     private AuthenticationUtil authenticationUtil;
 
     public OsoitepalveluEmailRetryTask() {
-        super("OsoitepalveluEmailRetryTask", FixedDelay.of(Duration.ofMinutes(5)), Void.class, null);
+        super("OsoitepalveluEmailRetryTask", FixedDelay.of(Duration.ofMinutes(5)), Void.class, (FailureHandler<Void>) null);
     }
 
     @Override

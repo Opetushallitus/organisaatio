@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
 import com.github.kagkarlsson.scheduler.task.ExecutionContext;
+import com.github.kagkarlsson.scheduler.task.FailureHandler;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.RecurringTask;
 import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
@@ -22,7 +23,7 @@ public class VanhentuneetTiedotSahkopostiTask extends RecurringTask<Void> {
 
     public VanhentuneetTiedotSahkopostiTask(VanhentuneetTiedotSahkopostiService service,
                                             AuthenticationUtil authenticationUtil) {
-        super("vanhentuneet tiedot sähköposti", new Weekdays(LocalTime.of(8, 0)), Void.class, null);
+        super("vanhentuneet tiedot sähköposti", new Weekdays(LocalTime.of(8, 0)), Void.class, (FailureHandler<Void>) null);
         this.service = service;
         this.authenticationUtil = authenticationUtil;
     }
