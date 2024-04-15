@@ -116,22 +116,20 @@ public class OsoitteetResource {
         List<String> organisaatiotyypit = request.getOrganisaatiotyypit();
         List<Long> organisaatioIds = new ArrayList<>();
 
-        if (organisaatiotyypit.contains(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())) {
-            if (!vuosiluokat.isEmpty() && oppilaitostyypit.stream().noneMatch(perusopetusOppilaitostyypit::contains)) {
-                throw new RuntimeException("Vuosiluokkia voi hakea vain perusopetuksen oppilaitostyypeille");
-            }
+        for (String tyyppi : organisaatiotyypit) {
+            if (tyyppi.equals(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue())) {
+                if (!vuosiluokat.isEmpty() && oppilaitostyypit.stream().noneMatch(perusopetusOppilaitostyypit::contains)) {
+                    throw new RuntimeException("Vuosiluokkia voi hakea vain perusopetuksen oppilaitostyypeille");
+                }
 
-            if (oppilaitostyypit.isEmpty()) {
-                organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
+                if (oppilaitostyypit.isEmpty()) {
+                    organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
+                } else {
+                    organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat(), request.getKielet()));
+                }
             } else {
-                organisaatioIds.addAll(findKoulutustoimijatHavingOppilaitosUnderThemWithOppilaitostyyppi(oppilaitostyypit, vuosiluokat, request.getKunnat(), request.getKielet()));
+                organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, tyyppi));
             }
-        }
-        if (organisaatiotyypit.contains(OrganisaatioTyyppi.OPPILAITOS.koodiValue())) {
-            organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.OPPILAITOS.koodiValue()));
-        }
-        if (organisaatiotyypit.contains(OrganisaatioTyyppi.TOIMIPISTE.koodiValue())) {
-            organisaatioIds.addAll(searchByOrganisaatioTyyppi(request, OrganisaatioTyyppi.TOIMIPISTE.koodiValue()));
         }
 
         var id = persistHakuAndHakutulos(request, organisaatioIds, null);

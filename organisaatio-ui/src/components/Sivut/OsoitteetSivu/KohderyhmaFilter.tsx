@@ -14,7 +14,10 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
         onChange(checked ? without.concat(id) : without);
     };
 
-    const isOrganisationSearch = !!value.find((v) => v.startsWith('organisaatiotyyppi'));
+    const isOrganisationSearch = !!value.find(
+        (v) => v === 'organisaatiotyyppi_01' || v === 'organisaatiotyyppi_02' || v === 'organisaatiotyyppi_03'
+    );
+    const isVarhaiskasvatusSearch = !!value.find((v) => v === 'organisaatiotyyppi_07' || v === 'organisaatiotyyppi_08');
     const isPalvelukayttajaSearch = !!value.find((v) => v === 'palveluiden_kayttajat');
 
     return (
@@ -30,7 +33,7 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         description="Valtion, kunnat, kuntayhtymät, korkeakoulut, yksityiset yhteisöt tai säätiöt"
                         selected={isChecked('organisaatiotyyppi_01')}
                         onChange={onChecked('organisaatiotyyppi_01')}
-                        disabled={isPalvelukayttajaSearch}
+                        disabled={isPalvelukayttajaSearch || isVarhaiskasvatusSearch}
                     />
                 </div>
                 <div className={styles.KohderyhmaColumn}>
@@ -39,16 +42,25 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         description="Viralliset yhteystiedot (mm. peruskouluihin, lukioihin, ammatillisiin oppilaitoksiin)"
                         selected={isChecked('organisaatiotyyppi_02')}
                         onChange={onChecked('organisaatiotyyppi_02')}
-                        disabled={isPalvelukayttajaSearch}
+                        disabled={isPalvelukayttajaSearch || isVarhaiskasvatusSearch}
                     />
                 </div>
                 <div className={styles.KohderyhmaColumn}>
                     <Kohderyhma
                         title="Oppilaitosten toimipisteet"
-                        description="Sivutoimipisteet tai viipalekoulut (osoite eri kuin hallinnollisella oppilaitoksella)."
+                        description="Sivutoimipisteet tai viipalekoulut (osoite eri kuin hallinnollisella oppilaitoksella)"
                         selected={isChecked('organisaatiotyyppi_03')}
                         onChange={onChecked('organisaatiotyyppi_03')}
-                        disabled={isPalvelukayttajaSearch}
+                        disabled={isPalvelukayttajaSearch || isVarhaiskasvatusSearch}
+                    />
+                </div>
+                <div className={styles.KohderyhmaColumn}>
+                    <Kohderyhma
+                        title="Varhaiskasvatustoimijat"
+                        description="Kunnat, kuntayhtymät tai yksityiset palveluntuottajat"
+                        selected={isChecked('organisaatiotyyppi_07')}
+                        onChange={onChecked('organisaatiotyyppi_07')}
+                        disabled={isPalvelukayttajaSearch || isOrganisationSearch}
                     />
                 </div>
                 <div className={styles.KohderyhmaColumn}>
@@ -57,7 +69,7 @@ export function KohderyhmaFilter({ value, onChange }: KohderyhmaFilterProps) {
                         description="Virkailijat, joilla on yksi tai useampi käyttöoikeus Opintopolun palveluihin"
                         selected={isChecked('palveluiden_kayttajat')}
                         onChange={onChecked('palveluiden_kayttajat')}
-                        disabled={isOrganisationSearch}
+                        disabled={isOrganisationSearch || isVarhaiskasvatusSearch}
                     />
                 </div>
             </div>

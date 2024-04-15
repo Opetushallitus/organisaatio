@@ -29,6 +29,12 @@ test.describe("Osoitepalvelu", () => {
     });
     await test.step("Kohderyhmä Koulutustoimijat is selected", async () => {
       await expect(osoitepalveluPage.koulutustoimijatCheckbox).toBeChecked();
+      await expect(
+        osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.checkbox
+      ).toBeDisabled();
     });
     await test.step("instructions are displayed", async () => {
       await expect(osoitepalveluPage.kohderyhmaInstructions).toHaveText("Hae*");
@@ -552,6 +558,16 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.oppilaitoksetKohderyhma.toggle();
     });
 
+    test("disables other kohderyhmas", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await expect(
+        osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.checkbox
+      ).toBeDisabled();
+    });
+
     test("filters results by oppilaitostyyppi", async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
 
@@ -573,6 +589,16 @@ test.describe("Osoitepalvelu", () => {
 
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.toggle();
+    });
+
+    test("disables other kohderyhmas", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await expect(
+        osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.checkbox
+      ).toBeDisabled();
     });
 
     test("shows only oppilaitosten toimipisteet", async ({ page }) => {
@@ -612,11 +638,63 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
+  test.describe("Varhaiskasvatustoimijat kohderyhmä", async () => {
+    test.beforeEach(async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.toggle();
+    });
+
+    test("disables other kohderyhmas", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await expect(
+        osoitepalveluPage.koulutusotimijatKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.oppilaitoksetKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
+      ).toBeDisabled();
+    });
+
+    test("filters results by varhaiskasvatustoimija", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("2 hakutulosta valittu")).toBeVisible();
+      await expect(
+        page.getByText("Varhaiskasvatuksen järjestäjä kunta testi")
+      ).toBeVisible();
+      await expect(
+        page.getByText("Varhaiskasvatuksen järjestäjä yksityinen")
+      ).toBeVisible();
+    });
+  });
+
   test.describe("Palveluiden käyttäjät kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
       const osoitepalveluPage = new OsoitepalveluPage(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
+    });
+
+    test("disables other kohderyhmas", async ({ page }) => {
+      const osoitepalveluPage = new OsoitepalveluPage(page);
+      await expect(
+        osoitepalveluPage.koulutusotimijatKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.oppilaitoksetKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.checkbox
+      ).toBeDisabled();
+      await expect(
+        osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.checkbox
+      ).toBeDisabled();
     });
 
     test("is disabled without filters", async ({ page }) => {
