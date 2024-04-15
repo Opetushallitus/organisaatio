@@ -5,3 +5,10 @@ feature.ostj-201-muotoilematon-viesti: true
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.untuvaopintopolku.fi/lahetys"
 viestinvalitys.uiurl: "https://viestinvalitys.untuvaopintopolku.fi/"
+
+organisaatio.tasks.export.enabled: true
+organisaatio.tasks.export.bucket-name: oph-yleiskayttoiset-export-untuva
+organisaatio.tasks.export.copy-to-lampi: true
+organisaatio.tasks.export.lampi-bucket-name: oph-lampi-dev
+organisaatio.tasks.export.lampi-role-arn: ${ssm_lampi_role_arn}
+organisaatio.tasks.export.lampi-external-id: ${ssm_lampi_external_id}
