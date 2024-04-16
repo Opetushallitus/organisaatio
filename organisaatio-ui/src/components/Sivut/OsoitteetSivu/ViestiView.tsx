@@ -1,17 +1,34 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { AxiosError } from 'axios';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import FormLabel from '@opetushallitus/virkailija-ui-components/FormLabel';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
-import React, { useState, useRef } from 'react';
-import osoitteetStyles from './SearchView.module.css';
-import styles from './ViestiView.module.css';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
-import { sendEmail, SendEmailRequest, uploadAttachment, useHakutulos } from './OsoitteetApi';
-import { useHistory, useParams } from 'react-router-dom';
-import { ErrorBanner, InfoBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
+
+import {
+    HakutulosRow,
+    KayttajaHakutulosRow,
+    sendEmail,
+    SendEmailRequest,
+    uploadAttachment,
+    useHakutulos,
+} from './OsoitteetApi';
+import { ErrorBanner, InfoBanner } from './ErrorBanner';
 import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 import PohjaModaali from '../../Modaalit/PohjaModaali/PohjaModaali';
-import { AxiosError } from 'axios';
+import { LinklikeButton } from './LinklikeButton';
+import { IconArrowBack } from './HakutulosView';
+
+import osoitteetStyles from './SearchView.module.css';
+import styles from './ViestiView.module.css';
+import hakutulosStyles from './HakutulosView.module.css';
+
+type ViestiViewProps = {
+    selection: Set<string>;
+    setSelection: (s: Set<string>) => void;
+};
 
 function useTextInput(initialValue: string) {
     const [value, setValue] = useState<string>(initialValue);
@@ -44,9 +61,10 @@ type UploadedFile = {
     id: string;
 };
 
-export const ViestiView = () => {
+export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
     const history = useHistory();
+    const location = useLocation();
     const [sendError, setSendError] = useState<boolean>(false);
     const [replyTo, onReplyToChange] = useTextInput('');
     const [copy, onCopyChange] = useTextInput('');
@@ -62,6 +80,20 @@ export const ViestiView = () => {
     const bodyValid = body.value.length >= 1;
     const sendDisabled = !subjectValid || !bodyValid;
     const hakutulos = useHakutulos(hakutulosId);
+
+    useEffect(() => {
+        if (hakutulos.state === 'OK') {
+            const newSelection = hakutulos.value.rows.flatMap((r: HakutulosRow | KayttajaHakutulosRow) =>
+                selection.has(r.oid) ? r.oid : []
+            );
+            if (newSelection.length === 0) {
+                // probably navigated to the viesti view directly with link so we set the whole hakutulos as selected
+                setSelection(new Set(hakutulos.value.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid)));
+            } else {
+                setSelection(new Set(newSelection));
+            }
+        }
+    }, [hakutulos]);
 
     async function onSendMail() {
         setSendError(false);
@@ -151,20 +183,31 @@ export const ViestiView = () => {
         );
     }
 
+    function navigateBackToSearch() {
+        if (location.key) {
+            history.goBack();
+        } else {
+            history.push(`/osoitteet/hakutulos/${hakutulosId}`);
+        }
+    }
+
     const attachmentButtonClassName = fileUploading
         ? `${styles.ViestiButton} ${styles.ViestiButtonDisabled}`
         : styles.ViestiButton;
 
     return (
         <div className={styles.ViestiView}>
-            <div className={styles.Header}>
-                <h2>Kirjoita Viesti</h2>
+            <div className={hakutulosStyles.TitleRow}>
+                <div className={hakutulosStyles.Title}>
+                    <h1 className={hakutulosStyles.TitleText}>Kirjoita viesti</h1>
+                </div>
+                <LinklikeButton onClick={navigateBackToSearch}>
+                    <IconArrowBack /> Palaa
+                </LinklikeButton>
             </div>
             <div className={styles.Content}>
                 <BlueBanner>
-                    {hakutulos.value.rows.length === 1
-                        ? `${hakutulos.value.rows.length} vastaanottaja`
-                        : `${hakutulos.value.rows.length} vastaanottajaa`}
+                    {selection.size === 1 ? `${selection.size} vastaanottaja` : `${selection.size} vastaanottajaa`}
                 </BlueBanner>
                 <div className={styles.Row}>
                     <div className={styles.Column}>

@@ -18,6 +18,7 @@ type SearchViewProps = {
     hakuParametrit: HakuParametrit;
     kayttooikeusryhmat: ApiResult<Kayttooikeusryhma[]>;
     onResult(result: Hakutulos): void;
+    setSelection: (s: Set<string>) => void;
 };
 
 export type SearchState = {
@@ -33,7 +34,7 @@ export type SearchState = {
     enabledFilters: string[];
 };
 
-export function SearchView({ hakuParametrit, kayttooikeusryhmat, onResult }: SearchViewProps) {
+export function SearchView({ hakuParametrit, kayttooikeusryhmat, onResult, setSelection }: SearchViewProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const defaultOppilaitosTypes = hakuParametrit.oppilaitostyypit.koodit.reduce<Record<string, boolean>>((accu, k) => {
         accu[k.koodiUri] = false;
@@ -84,6 +85,7 @@ export function SearchView({ hakuParametrit, kayttooikeusryhmat, onResult }: Sea
             setLoading(true);
             setError(false);
 
+            setSelection(new Set());
             const request: HaeRequest = {
                 organisaatiotyypit: searchParameters.kohderyhmat,
                 oppilaitostyypit: Object.keys(oppilaitosTypes).reduce<Array<string>>(

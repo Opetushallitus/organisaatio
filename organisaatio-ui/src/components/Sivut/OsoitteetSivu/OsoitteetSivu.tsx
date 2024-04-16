@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-
-import styles from './OsoitteetSivu.module.css';
+import React, { useEffect, useState } from 'react';
 import { Route, useHistory } from 'react-router-dom';
+
 import { Hakutulos, useHakuParametrit, useKayttooikeusryhmat } from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
@@ -10,6 +9,8 @@ import Loading from '../../Loading/Loading';
 import { ViestiStatusView } from './ViestiStatusView';
 import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 import { FrontProperties } from '../../../types/types';
+
+import styles from './OsoitteetSivu.module.css';
 
 type OsoitteetSivuProps = {
     frontProperties: FrontProperties;
@@ -21,6 +22,7 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
     const history = useHistory();
     const hakuParametrit = useHakuParametrit();
     const kayttooikeusryhmat = useKayttooikeusryhmat(frontProperties);
+    const [selection, setSelection] = useState(new Set<string>());
 
     function onSearchResult(hakutulos: Hakutulos) {
         history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
@@ -59,6 +61,7 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
                             hakuParametrit={hakuParametrit.value}
                             kayttooikeusryhmat={kayttooikeusryhmat}
                             onResult={onSearchResult}
+                            setSelection={setSelection}
                         />
                     </div>
                 </div>
@@ -66,14 +69,18 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
             <Route exact path={'/osoitteet/hakutulos/:hakutulosId'}>
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
-                        <HakutulosView muotoilematonViestiEnabled={muotoilematonViestiEnabled} />
+                        <HakutulosView
+                            muotoilematonViestiEnabled={muotoilematonViestiEnabled}
+                            selection={selection}
+                            setSelection={setSelection}
+                        />
                     </div>
                 </div>
             </Route>
             <Route exact path={'/osoitteet/hakutulos/:hakutulosId/viesti'}>
                 <div className={styles.MainContent}>
                     <div className={styles.ContentContainer}>
-                        <ViestiView></ViestiView>
+                        <ViestiView selection={selection} setSelection={setSelection} />
                     </div>
                 </div>
             </Route>
