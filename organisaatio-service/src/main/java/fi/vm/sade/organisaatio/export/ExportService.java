@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.export;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class ExportService {
+    private static final String S3_PREFIX = "fulldump/organisaatio/v2";
+
+    @Value("${organisaatio.tasks.export.bucket-name}")
+    private String bucketName;
+
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional
@@ -53,5 +59,20 @@ public class ExportService {
                 """);
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA exportnew RENAME TO export");
+    }
+
+    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, nimi_fi, nimi_sv, organisaatiotyypit, oppilaitostyyppi, oppilaitosnumero, kotipaikka, y_tunnus, tuontipvm, paivityspvm FROM export.organisaatio";
+    private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
+
+    public void generateCsvExports() {
+        exportQueryToS3(S3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
+        exportQueryToS3(S3_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
+    }
+
+    private void exportQueryToS3(String objectKey, String query) {
+        log.info("Exporting table to S3: {}/{}", bucketName, objectKey);
+        var sql = "SELECT rows_uploaded FROM aws_s3.query_export_to_s3(?, aws_commons.create_s3_uri(?, ?, ?), options := 'FORMAT CSV, HEADER TRUE')";
+        var rowsUploaded = jdbcTemplate.queryForObject(sql, Long.class, query, bucketName, objectKey, OpintopolkuAwsClients.REGION.id());
+        log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
     }
 }

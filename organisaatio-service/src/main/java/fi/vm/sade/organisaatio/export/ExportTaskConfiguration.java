@@ -24,6 +24,7 @@ public class ExportTaskConfiguration {
                 .execute((taskInstance, executionContext) -> {
                     log.info("Running organisaatio export task");
                     exportService.createSchema();
+                    exportService.generateCsvExports();
                     log.info("Organisaatio export task completed");
                 });
     }
