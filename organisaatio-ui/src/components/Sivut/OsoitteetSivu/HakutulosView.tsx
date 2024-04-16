@@ -87,6 +87,9 @@ export function HakutulosView({ muotoilematonViestiEnabled, selection, setSelect
                 )}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method={'POST'}>
                     <input type={'hidden'} name={'resultId'} value={hakutulos.value.id} />
+                    {Array.from(selection).map((s) => (
+                        <input key={s} type="hidden" name="selectedOids" value={s} />
+                    ))}
                     <Button
                         variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'}
                         type={'submit'}
