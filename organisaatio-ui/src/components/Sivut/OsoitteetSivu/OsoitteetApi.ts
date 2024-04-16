@@ -138,6 +138,7 @@ export type SendEmailRequest = {
     subject: string;
     body: string;
     attachmentIds?: string[];
+    selectedOids?: string[];
 };
 
 export type SendEmailResponse = {

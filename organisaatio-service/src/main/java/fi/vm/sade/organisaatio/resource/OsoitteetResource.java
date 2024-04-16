@@ -216,10 +216,18 @@ public class OsoitteetResource {
         if (!hasPermissionToHakutulos(hakutulosId)) {
             throw new NotAuthorizedException("no.permission");
         }
-        var hakutulos = getSearchResultsById(hakutulosId);
+        SavedSearchResult hakutulos = getSearchResultsById(hakutulosId);
         List<String> recipients = hakutulos.organisaatioIds != null
-                ? makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds)).stream().flatMap(h -> h.getSahkoposti().stream()).filter((sp) -> sp != null).distinct().toList()
-                : hakutulos.kayttajat.stream().map((k) -> k.getSahkoposti()).filter((sp) -> sp != null).distinct().toList();
+                ? makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds)).stream()
+                        .filter(h -> request.getSelectedOids() == null || request.getSelectedOids().contains(h.getOid()))
+                        .flatMap(h -> h.getSahkoposti().stream())
+                        .filter((sp) -> sp != null)
+                        .distinct().toList()
+                : hakutulos.kayttajat.stream()
+                        .filter(k -> request.getSelectedOids() == null || request.getSelectedOids().contains(k.getOid()))
+                        .map((k) -> k.getSahkoposti())
+                        .filter((sp) -> sp != null)
+                        .distinct().toList();
         var osoitelahde = """
                 Osoitelähde: OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
                 Adresskälla: Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
@@ -265,7 +273,8 @@ public class OsoitteetResource {
             produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
-        var resultId = request.getFirst("resultId");
+        String resultId = request.getFirst("resultId");
+        List<String> selectedOids = request.get("selectedOids");
         if (resultId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -278,11 +287,16 @@ public class OsoitteetResource {
             Workbook wb;
             String fileName;
             if (hakutulos.organisaatioIds != null) {
-                List<OrganisaatioHakutulosRow> tulos = makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds));
+                List<OrganisaatioHakutulosRow> tulos = makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds)).stream()
+                        .filter(h -> selectedOids == null || selectedOids.contains(h.getOid()))
+                        .toList();
                 wb = createOrganisaatioXls(tulos);
                 fileName = "osoitteet.xls";
             } else {
-                wb = createKayttajaXls(hakutulos.kayttajat);
+                List<VirkailijaDto> tulos = hakutulos.kayttajat.stream()
+                        .filter(h -> selectedOids == null || selectedOids.contains(h.getOid()))
+                        .toList();
+                wb = createKayttajaXls(tulos);
                 fileName = "kayttajat.xls";
             }
 
@@ -872,6 +886,7 @@ class SendEmailRequest {
     @Size(min = 1, max = 6291456)
     private String body;
     private List<String> attachmentIds;
+    private List<String> selectedOids;
 }
 
 @Data

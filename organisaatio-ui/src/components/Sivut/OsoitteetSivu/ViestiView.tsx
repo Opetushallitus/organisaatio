@@ -97,6 +97,12 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
 
     async function onSendMail() {
         setSendError(false);
+
+        const selectedOids =
+            hakutulos.state === 'OK' && selection.size !== hakutulos.value.rows.length
+                ? Array.from(selection)
+                : undefined;
+
         try {
             const request: SendEmailRequest = {
                 replyTo: replyTo !== '' ? replyTo : undefined,
@@ -104,6 +110,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                 subject: subject.value,
                 body: body.value,
                 attachmentIds: files.map((f) => f.id!).filter(Boolean),
+                selectedOids,
             };
             const response = await sendEmail(hakutulosId, request);
             history.push(`/osoitteet/viesti/${response.emailId}`);
