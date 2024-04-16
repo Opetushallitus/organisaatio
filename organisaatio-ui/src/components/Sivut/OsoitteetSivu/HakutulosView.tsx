@@ -1,10 +1,10 @@
-import { Hakutulos, useHakutulos } from './OsoitteetApi';
+import { Hakutulos, HakutulosRow, KayttajaHakutulosRow, useHakutulos } from './OsoitteetApi';
 import searchStyles from './SearchView.module.css';
 import styles from './HakutulosView.module.css';
 import { useHistory, useParams } from 'react-router-dom';
 import { OrganisaatioHakutulosTable } from './OrganisaatioHakutulosTable';
 import { KayttajaHakutulosTable } from './KayttajaHakutulosTable';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LinklikeButton } from './LinklikeButton';
 import { API_CONTEXT } from '../../../contexts/constants';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -20,6 +20,14 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
     const history = useHistory();
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
     const hakutulos = useHakutulos(hakutulosId);
+    const [selection, setSelection] = useState<Set<string>>(new Set());
+    console.log(selection);
+
+    useEffect(() => {
+        if (hakutulos.state === 'OK' && selection.size === 0) {
+            setSelection(new Set(hakutulos.value.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid)));
+        }
+    }, [hakutulos]);
 
     function navigateBackToSearch() {
         history.goBack();
@@ -55,9 +63,13 @@ export function HakutulosView({ muotoilematonViestiEnabled }: HakutulosViewProps
             </div>
             <div className={styles.SininenPalkki}>{rows.length} hakutulosta valittu</div>
             {hakutulos.value.type === 'organisaatio' ? (
-                <OrganisaatioHakutulosTable rows={hakutulos.value.rows} />
+                <OrganisaatioHakutulosTable
+                    rows={hakutulos.value.rows}
+                    selection={selection}
+                    setSelection={setSelection}
+                />
             ) : (
-                <KayttajaHakutulosTable rows={hakutulos.value.rows} />
+                <KayttajaHakutulosTable rows={hakutulos.value.rows} selection={selection} setSelection={setSelection} />
             )}
             <div className={styles.ButtonRow}>
                 {muotoilematonViestiEnabled && <Button onClick={onWriteMail}>Kirjoita sähköpostiviesti</Button>}

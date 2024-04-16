@@ -7,8 +7,29 @@ import { Checkbox } from './Checkbox';
 
 type HakutulosTableProps = {
     rows: KayttajaHakutulosRow[];
+    selection: Set<string>;
+    setSelection: (selection: Set<string>) => void;
 };
-export function KayttajaHakutulosTable({ rows }: HakutulosTableProps) {
+export function KayttajaHakutulosTable({ rows, selection, setSelection }: HakutulosTableProps) {
+    const toggle = (oid: string) => {
+        const newSelection = new Set(selection);
+        if (selection.has(oid)) {
+            newSelection.delete(oid);
+            setSelection(newSelection);
+        } else {
+            newSelection.add(oid);
+            setSelection(newSelection);
+        }
+    };
+
+    const toggleAll = () => {
+        if (selection.size === rows.length) {
+            setSelection(new Set());
+        } else {
+            setSelection(new Set(rows.map((r) => r.oid)));
+        }
+    };
+
     const Row = ({ index, style }: ListChildComponentProps) => {
         const _ = rows[index];
         const rowStyle = index % 2 ? styles.Odd : styles.Even;
@@ -16,7 +37,7 @@ export function KayttajaHakutulosTable({ rows }: HakutulosTableProps) {
             <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
                 <div className={styles.ColumnHalf + ' ' + styles.Fade}>
                     <span className={styles.Checkbox}>
-                        <Checkbox checked={true} onChange={() => {}} disabled={true}>
+                        <Checkbox checked={selection.has(_.oid)} onChange={() => toggle(_.oid)} disabled={false}>
                             {_.etunimet + ' ' + _.sukunimi}
                         </Checkbox>
                     </span>
@@ -32,7 +53,12 @@ export function KayttajaHakutulosTable({ rows }: HakutulosTableProps) {
                 <div role="row" className={styles.Header}>
                     <div className={styles.ColumnHalf}>
                         <span className={styles.Checkbox}>
-                            <Checkbox checked={true} onChange={() => {}} disabled={true}>
+                            <Checkbox
+                                checked={selection.size === rows.length}
+                                onChange={toggleAll}
+                                disabled={false}
+                                indeterminate={selection.size !== 0 && selection.size !== rows.length}
+                            >
                                 Nimi
                             </Checkbox>
                         </span>
