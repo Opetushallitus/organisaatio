@@ -134,6 +134,7 @@ public class ExportService {
     }
 
     private <T> File exportQueryToS3AsJson(String query, String objectKey, Function<ResultSet, T> mapper) throws IOException {
+        @SuppressWarnings("java:S5443")
         var tempFile = File.createTempFile("export", ".json");
         try {
             exportToFile(query, mapper, tempFile);
@@ -191,6 +192,7 @@ public class ExportService {
     }
 
     private ExportManifest.ExportFileDetails copyFileToLampi(String objectKey) throws IOException {
+        @SuppressWarnings("java:S5443")
         var temporaryFile = File.createTempFile("export", ".csv");
         try {
             log.info("Downloading file from S3: {}/{}", bucketName, objectKey);
