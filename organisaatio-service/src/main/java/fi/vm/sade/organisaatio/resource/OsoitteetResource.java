@@ -217,14 +217,17 @@ public class OsoitteetResource {
             throw new NotAuthorizedException("no.permission");
         }
         SavedSearchResult hakutulos = getSearchResultsById(hakutulosId);
+        Set<String> selectedOids =  request.getSelectedOids() != null
+            ? new HashSet<String>(request.getSelectedOids())
+            : null;
         List<String> recipients = hakutulos.organisaatioIds != null
                 ? makeSearchResultRows(Arrays.asList(hakutulos.organisaatioIds)).stream()
-                        .filter(h -> request.getSelectedOids() == null || request.getSelectedOids().contains(h.getOid()))
+                        .filter(h -> selectedOids == null || selectedOids.contains(h.getOid()))
                         .flatMap(h -> h.getSahkoposti().stream())
                         .filter((sp) -> sp != null)
                         .distinct().toList()
                 : hakutulos.kayttajat.stream()
-                        .filter(k -> request.getSelectedOids() == null || request.getSelectedOids().contains(k.getOid()))
+                        .filter(k -> selectedOids == null || selectedOids.contains(k.getOid()))
                         .map((k) -> k.getSahkoposti())
                         .filter((sp) -> sp != null)
                         .distinct().toList();
@@ -281,8 +284,8 @@ public class OsoitteetResource {
             throw new NotAuthorizedException("no.permission");
         }
 
-        List<String> selectedOids = request.getFirst("selectedOids") != null
-            ? List.of(request.getFirst("selectedOids").split(","))
+        Set<String> selectedOids = request.getFirst("selectedOids") != null
+            ? new HashSet<String>(Arrays.asList(request.getFirst("selectedOids").split(",")))
             : null;
 
         try {
