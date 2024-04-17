@@ -30,7 +30,7 @@ export function HakutulosView({
     const history = useHistory();
     const location = useLocation();
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
-    const fetchedHakutulos = hakutulosCache?.id !== hakutulosId ? useHakutulos(hakutulosId) : undefined;
+    const fetchedHakutulos = useHakutulos(hakutulosId);
     const [hakutulos, setHakutulos] = useState(hakutulosCache?.id === hakutulosId ? hakutulosCache : undefined);
     const [allOids, setAllOids] = useState(
         hakutulosCache?.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid).join(',')
@@ -38,7 +38,7 @@ export function HakutulosView({
     const selectionString = hakutulos?.rows.length === selection.size ? allOids : Array.from(selection).join(',');
 
     useEffect(() => {
-        if (fetchedHakutulos?.state === 'OK') {
+        if (hakutulosCache?.id !== hakutulosId && fetchedHakutulos?.state === 'OK') {
             setHakutulos(fetchedHakutulos.value);
             const oids = fetchedHakutulos?.value.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid);
             setSelection(new Set(oids));
