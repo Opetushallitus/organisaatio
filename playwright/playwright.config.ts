@@ -7,11 +7,11 @@ export default defineConfig({
   workers: 1,
   reporter: "html",
   use: {
-    trace: "on-first-retry",
+    trace: "retain-on-first-failure",
     httpCredentials: {
       username: "devaaja",
       password: "devaaja",
-    }
+    },
   },
 
   projects: [

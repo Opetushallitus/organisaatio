@@ -5,10 +5,11 @@ export type CustomCheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & 
     checked: boolean;
     onChange: (checked: boolean) => void;
     disabled: boolean;
+    dataTestid?: string;
     indeterminate?: boolean;
 };
 
-export function Checkbox({ children, checked, onChange, disabled, indeterminate }: CustomCheckboxProps) {
+export function Checkbox({ children, checked, onChange, disabled, indeterminate, dataTestid }: CustomCheckboxProps) {
     return (
         <label className={styles.Label}>
             <input
@@ -17,6 +18,7 @@ export function Checkbox({ children, checked, onChange, disabled, indeterminate 
                 checked={checked}
                 disabled={disabled}
                 onChange={() => onChange(!checked)}
+                data-testid={dataTestid}
                 ref={(el) => el && (el.indeterminate = !!indeterminate)}
             />
             {children}

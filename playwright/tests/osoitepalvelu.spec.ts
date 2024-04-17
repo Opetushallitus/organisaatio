@@ -6,7 +6,12 @@ import {
   Page,
   test,
 } from "@playwright/test";
-import { FormField, OsoitepalveluPage } from "./OsoitepalveluPage";
+
+import { SearchView } from "./SearchView";
+import { ViestiView } from "./ViestiView";
+import { HakutulosView } from "./HakutulosView";
+
+const XLSX = require("xlsx");
 
 test.describe("Osoitepalvelu", () => {
   test.beforeAll(async ({ request }, testInfo) => {
@@ -17,12 +22,12 @@ test.describe("Osoitepalvelu", () => {
     });
   });
   test.beforeEach(async ({ page }, testInfo) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
     await osoitepalveluPage.goto();
   });
 
   test("is in the initial state when openened", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
 
     await test.step("the page has a title", async () => {
       await expect(page).toHaveTitle(/Osoitepalvelu/);
@@ -57,7 +62,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("tyhjennä button", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
 
     await osoitepalveluPage.oppilaitostyyppiFilter.button.click();
     await osoitepalveluPage.jarjestamislupaFilter.button.click();
@@ -141,7 +146,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("allows searching for koulutustoimijat", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
 
     await osoitepalveluPage.kieliFilter.clear();
     await osoitepalveluPage.haeButton.click();
@@ -157,7 +162,7 @@ test.describe("Osoitepalvelu", () => {
   test("retains search parameters when going back from search results", async ({
     page,
   }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
     const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
     await osoitepalveluPage.kieliFilter.clear();
@@ -179,7 +184,7 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Oppilaitostyyppi filter", () => {
     test("opens and closes", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
       await expect(oppilaitostyyppiFilter.contents).toBeHidden();
@@ -190,7 +195,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("updates selection text", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
       await oppilaitostyyppiFilter.open();
 
@@ -218,7 +223,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("Tyhjennä valinnat unchecks all selections", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
       const clearButton = page.getByRole("button", {
         name: "Tyhjennä valinnat",
@@ -237,7 +242,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("checks and unchecks all selections", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
       await oppilaitostyyppiFilter.open();
@@ -250,7 +255,7 @@ test.describe("Osoitepalvelu", () => {
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
     test("finds peruskoulut", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
       await oppilaitostyyppiFilter.open();
@@ -261,7 +266,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("finds peruskoulut and filters by vuosiluokka", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
       await oppilaitostyyppiFilter.open();
 
@@ -291,7 +296,7 @@ test.describe("Osoitepalvelu", () => {
     test("checks and unchecks all oppilaitostyyppi that are part of a group", async ({
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
       await oppilaitostyyppiFilter.open();
@@ -315,7 +320,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("checks and unchecks an oppilatostyyppi group", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
 
       await oppilaitostyyppiFilter.open();
@@ -332,7 +337,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Sijainti filter", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
     const sijaintiFilter = osoitepalveluPage.sijaintiFilter;
 
     await test.step("Defaults to Manner-Suomi", async () => {
@@ -421,7 +426,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Järjestämislupa filter", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
     const jarjestamislupaFilter = osoitepalveluPage.jarjestamislupaFilter;
 
     await osoitepalveluPage.kieliFilter.clear();
@@ -461,7 +466,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Oppilaitoksen kieli filter", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
     const kieliFilter = osoitepalveluPage.kieliFilter;
 
     await test.step("defaults to suomi", async () => {
@@ -519,21 +524,73 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test.describe("Lataa Excel button", () => {
+    test("is disabled when no results are selected", async ({ page }) => {
+      await new SearchView(page).haeButton.click();
+      const hakutulosView = new HakutulosView(page);
+      await hakutulosView.selectAllCheckbox.click();
+      await expect(hakutulosView.lataaExcelButton).toBeDisabled();
+    });
+
     test("downloads organisation search results as an excel document", async ({
       page,
     }) => {
-      await new OsoitepalveluPage(page).haeButton.click();
+      await new SearchView(page).haeButton.click();
+      const hakutulosView = new HakutulosView(page);
       const [download] = await Promise.all([
         page.waitForEvent("download"),
-        page.getByRole("button", { name: "Lataa Excel" }).click(),
+        hakutulosView.lataaExcelButton.click(),
       ]);
-      expect(download.suggestedFilename()).toBe("osoitteet.xls");
+      expect(download.suggestedFilename()).toBe("osoitteet.xlsx");
+      await download.saveAs("./" + download.suggestedFilename());
+      const workbook = XLSX.readFile("./" + download.suggestedFilename());
+      const osoitteet = XLSX.utils.sheet_to_json(workbook.Sheets.Osoitteet);
+      expect(osoitteet).toStrictEqual([
+        {
+          "Organisaation nimi": "Mansikkalan testi kunta",
+          Sähköpostiosoite: "testiposti@opetushallitus.fi",
+          Puhelinnumero: "",
+          Sijaintikunta: "Imatra",
+          Yritysmuoto: "Kunta",
+          Opetuskieli: "suomi",
+          "KOSKI-virheilmoituksen osoite": "",
+          "Organisaation OID": "1.2.246.562.99.00000000001",
+          Oppilaitostunnus: "",
+          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+        },
+        {
+          "Organisaation nimi": "Mustikkalan testi yhdistys",
+          Sähköpostiosoite: "testiposti@opetushallitus.fi",
+          Puhelinnumero: "",
+          Sijaintikunta: "Imatra",
+          Yritysmuoto: "Säätiö",
+          Opetuskieli: "suomi",
+          "KOSKI-virheilmoituksen osoite": "",
+          "Organisaation OID": "1.2.246.562.99.00000000008",
+          Oppilaitostunnus: "",
+          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+        },
+        {
+          "Organisaation nimi": "Testi Koulutuskuntayhtymä Puolukka",
+          Sähköpostiosoite: "testiposti@opetushallitus.fi",
+          Puhelinnumero: "",
+          Sijaintikunta: "Imatra",
+          Yritysmuoto: "Kuntayhtymä",
+          Opetuskieli: "suomi",
+          "KOSKI-virheilmoituksen osoite": "",
+          "Organisaation OID": "1.2.246.562.99.00000000005",
+          Oppilaitostunnus: "",
+          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+        },
+      ]);
     });
 
     test("downloads kayttaja search results as an excel document", async ({
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
       await osoitepalveluPage.kayttajaFilter.open();
@@ -544,22 +601,65 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       const [download] = await Promise.all([
         page.waitForEvent("download"),
-        page.getByRole("button", { name: "Lataa Excel" }).click(),
+        new HakutulosView(page).lataaExcelButton.click(),
       ]);
-      expect(download.suggestedFilename()).toBe("kayttajat.xls");
+      expect(download.suggestedFilename()).toBe("kayttajat.xlsx");
+      await download.saveAs("./" + download.suggestedFilename());
+      const workbook = XLSX.readFile("./" + download.suggestedFilename());
+      const kayttajat = XLSX.utils.sheet_to_json(workbook.Sheets["Käyttäjät"]);
+      expect(kayttajat).toStrictEqual([
+        {
+          Nimi: "Ville Valtionavustus",
+          Sähköpostiosoite: "ville.valtionavustus@oph.fi",
+        },
+        {
+          Nimi: "Matti Meikäläinen",
+          Sähköpostiosoite: "matti.meikäläinen@koulu.fi",
+        },
+      ]);
+    });
+
+    test("downloads an excel with filtered results", async ({ page }) => {
+      await new SearchView(page).haeButton.click();
+      const hakutulosView = new HakutulosView(page);
+      await hakutulosView.select("1.2.246.562.99.00000000001");
+      await hakutulosView.select("1.2.246.562.99.00000000005");
+      const [download] = await Promise.all([
+        page.waitForEvent("download"),
+        hakutulosView.lataaExcelButton.click(),
+      ]);
+      expect(download.suggestedFilename()).toBe("osoitteet.xlsx");
+      await download.saveAs("./" + download.suggestedFilename());
+      const workbook = XLSX.readFile("./" + download.suggestedFilename());
+      const osoitteet = XLSX.utils.sheet_to_json(workbook.Sheets.Osoitteet);
+      expect(osoitteet).toStrictEqual([
+        {
+          "Organisaation nimi": "Mustikkalan testi yhdistys",
+          Sähköpostiosoite: "testiposti@opetushallitus.fi",
+          Puhelinnumero: "",
+          Sijaintikunta: "Imatra",
+          Yritysmuoto: "Säätiö",
+          Opetuskieli: "suomi",
+          "KOSKI-virheilmoituksen osoite": "",
+          "Organisaation OID": "1.2.246.562.99.00000000008",
+          Oppilaitostunnus: "",
+          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+        },
+      ]);
     });
   });
 
   test.describe("Oppilaitokset kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.oppilaitoksetKohderyhma.toggle();
     });
 
     test("disables other kohderyhmas", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await expect(
         osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
       ).toBeDisabled();
@@ -569,7 +669,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("filters results by oppilaitostyyppi", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.oppilaitostyyppiFilter.open();
       await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
@@ -585,14 +685,14 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Oppilaitosten toimipisteet kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.oppilaitostentoimipisteetKohderyhma.toggle();
     });
 
     test("disables other kohderyhmas", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await expect(
         osoitepalveluPage.palveluidenKayttajatKohderyhma.checkbox
       ).toBeDisabled();
@@ -602,7 +702,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("shows only oppilaitosten toimipisteet", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
@@ -612,7 +712,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("filters by parent oppilaitostyyppi", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.oppilaitostyyppiFilter.open();
       await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
@@ -640,13 +740,13 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Varhaiskasvatustoimijat kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.toggle();
     });
 
     test("disables other kohderyhmas", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await expect(
         osoitepalveluPage.koulutusotimijatKohderyhma.checkbox
       ).toBeDisabled();
@@ -662,7 +762,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("filters results by varhaiskasvatustoimija", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("2 hakutulosta valittu")).toBeVisible();
       await expect(
@@ -676,13 +776,13 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Varhaiskasvatuksen toimipaikat kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.varjaiskasvatuksenToimipaikatKohderyhma.toggle();
     });
 
     test("disables other kohderyhmas", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await expect(
         osoitepalveluPage.koulutusotimijatKohderyhma.checkbox
       ).toBeDisabled();
@@ -700,7 +800,7 @@ test.describe("Osoitepalvelu", () => {
     test("filters results by varhaiskasvatuksen toimipaikka", async ({
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("7 hakutulosta valittu")).toBeVisible();
       await expect(page.getByText("Ahomansikan päiväkoti")).toBeVisible();
@@ -709,7 +809,7 @@ test.describe("Osoitepalvelu", () => {
     test("filters results by varhaiskasvatuksen toimipaikka and varhaiskasvatustoimijat", async ({
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.varhaiskasvatustoimijatKohderyhma.toggle();
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("9 hakutulosta valittu")).toBeVisible();
@@ -722,13 +822,13 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Palveluiden käyttäjät kohderyhmä", async () => {
     test.beforeEach(async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
     });
 
     test("disables other kohderyhmas", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await expect(
         osoitepalveluPage.koulutusotimijatKohderyhma.checkbox
       ).toBeDisabled();
@@ -744,12 +844,12 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("is disabled without filters", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       await expect(osoitepalveluPage.haeButton).toBeDisabled();
     });
 
     test("filters by oppilaitostyyppi", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.oppilaitostyyppiFilter.open();
       await osoitepalveluPage.oppilaitostyyppiFilter.toggleCheckboxByLabel(
@@ -762,7 +862,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("filters by koulutustoimija", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.kayttajaFilter.open();
       await selectFromKoulutustoimijaDropdown(
@@ -777,7 +877,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("filters by käyttöoikeusryhmä", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.kayttajaFilter.open();
       await selectFromKayttooikeusryhmaDropdown(page, "Puolakan kiertäjä");
@@ -791,7 +891,7 @@ test.describe("Osoitepalvelu", () => {
     test("filters by käyttöoikeusryhmä and koulutustoimija", async ({
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
 
       await osoitepalveluPage.kayttajaFilter.open();
       await selectFromKayttooikeusryhmaDropdown(page, "Puolakan kiertäjä");
@@ -808,7 +908,7 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Selecting multiple kohderyhmä", async () => {
     test("keeps filter configurations", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
       const oppilaitostyyppiFilter = osoitepalveluPage.oppilaitostyyppiFilter;
       const jarjestamislupaFilter = osoitepalveluPage.jarjestamislupaFilter;
       const kieliFilter = osoitepalveluPage.kieliFilter;
@@ -858,13 +958,14 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test("Kirjoita viesti form", async ({ page, browserName }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
-    const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+    const osoitepalveluPage = new SearchView(page);
+    const hakutulosView = new HakutulosView(page);
+    const kirjoitaViestiForm = new ViestiView(page);
     const aiheField = kirjoitaViestiForm.aiheField;
     const viestiField = kirjoitaViestiForm.viestiField;
 
     await osoitepalveluPage.haeButton.click();
-    await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+    await hakutulosView.kirjoitaSahkopostiButton.click();
 
     await test.step("number of recipients is shown", async () => {
       await expect(page.getByText("3 vastaanottajaa")).toBeVisible();
@@ -909,8 +1010,8 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test.skip("Viesti body has maximum length", async ({ page }) => {
-    const osoitepalveluPage = new OsoitepalveluPage(page);
-    const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+    const osoitepalveluPage = new SearchView(page);
+    const kirjoitaViestiForm = new ViestiView(page);
     const viestiField = kirjoitaViestiForm.viestiField;
 
     const viestiFieldMaxLength = 6291456;
@@ -924,15 +1025,15 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Sending email to organisations", async () => {
     test.beforeEach(async ({ page }, testInfo) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      await osoitepalveluPage.haeButton.click();
-      await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+      await new SearchView(page).haeButton.click();
+      await new HakutulosView(page).kirjoitaSahkopostiButton.click();
     });
+
     test("succesfully sending message shows 'Lähetys onnistui!' page", async ({
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const osoitepalveluPage = new SearchView(page);
+      const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
@@ -940,12 +1041,13 @@ test.describe("Osoitepalvelu", () => {
       await kirjoitaViestiForm.lahetaButton.click();
       await expect(page.getByText("Lähetys onnistui!")).toBeVisible();
     });
+
     test("failing to send message shows 'Lähetyksessä on viivettä' page", async ({
       request,
       page,
     }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const osoitepalveluPage = new SearchView(page);
+      const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
@@ -955,9 +1057,10 @@ test.describe("Osoitepalvelu", () => {
       await expect(page.getByText("Lähetyksessä on viivettä")).toBeVisible();
       await enableViestinvalitysIntegration(request);
     });
+
     test("allows adding and removing attachments", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const osoitepalveluPage = new SearchView(page);
+      const kirjoitaViestiForm = new ViestiView(page);
       await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "dummy.pdf");
       await expect(page.getByLabel("Poista liite dummy.pdf")).toBeVisible();
       await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "dummy2.pdf");
@@ -973,8 +1076,7 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("prevents adding too large files", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const kirjoitaViestiForm = new ViestiView(page);
       await uploadFile(
         page,
         kirjoitaViestiForm.fileUploadButton,
@@ -989,7 +1091,8 @@ test.describe("Osoitepalvelu", () => {
 
   test.describe("Sending email to users", async () => {
     test.beforeEach(async ({ page }, testInfo) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
+      const osoitepalveluPage = new SearchView(page);
+      const hakutulosView = new HakutulosView(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
       await osoitepalveluPage.palveluidenKayttajatKohderyhma.toggle();
       await osoitepalveluPage.kayttajaFilter.open();
@@ -998,11 +1101,11 @@ test.describe("Osoitepalvelu", () => {
         "Testi Koulutuskuntayhtymä Puolukka"
       );
       await osoitepalveluPage.haeButton.click();
-      await osoitepalveluPage.kirjoitaSahkopostiButton.click();
+      await hakutulosView.kirjoitaSahkopostiButton.click();
     });
     test("sending message shows 'Lähetys onnistui!' page", async ({ page }) => {
-      const osoitepalveluPage = new OsoitepalveluPage(page);
-      const kirjoitaViestiForm = osoitepalveluPage.kirjoitaViestiForm;
+      const osoitepalveluPage = new SearchView(page);
+      const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
@@ -1018,7 +1121,7 @@ test.describe("Osoitepalvelu generic error page", () => {
     page,
   }) => {
     await blockRequestOnce(page, "**/osoitteet/parametrit");
-    const osoitepalveluPage = new OsoitepalveluPage(page);
+    const osoitepalveluPage = new SearchView(page);
     await osoitepalveluPage.goto();
     await expect(page.getByText("Osoitepalvelu ei vastaa")).toBeVisible();
     await page.getByText("Yritä uudelleen").click();

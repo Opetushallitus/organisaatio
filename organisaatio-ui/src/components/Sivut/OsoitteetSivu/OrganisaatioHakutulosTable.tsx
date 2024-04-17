@@ -37,7 +37,12 @@ export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: Ha
             <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
                 <div className={styles.ColumnCheckbox + ' ' + styles.Fade}>
                     <span className={styles.Checkbox}>
-                        <Checkbox checked={selection.has(_.oid)} onChange={() => toggle(_.oid)} disabled={false}>
+                        <Checkbox
+                            checked={selection.has(_.oid)}
+                            onChange={() => toggle(_.oid)}
+                            disabled={false}
+                            dataTestid={`select-${_.oid}`}
+                        >
                             {_.nimi}
                         </Checkbox>
                     </span>
@@ -67,6 +72,7 @@ export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: Ha
                                 checked={selection.size === rows.length}
                                 onChange={toggleAll}
                                 disabled={false}
+                                dataTestid="select-all"
                                 indeterminate={selection.size !== 0 && selection.size !== rows.length}
                             >
                                 Organisaation nimi

@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-export class OsoitepalveluPage {
+export class SearchView {
   readonly page: Page;
   readonly kohderyhmaInstructions: Locator;
   readonly filterInstructions: Locator;
@@ -18,8 +18,6 @@ export class OsoitepalveluPage {
   readonly varhaiskasvatustoimijatKohderyhma: Kohderyhma;
   readonly varjaiskasvatuksenToimipaikatKohderyhma: Kohderyhma;
   readonly palveluidenKayttajatKohderyhma: Kohderyhma;
-  readonly kirjoitaSahkopostiButton: Locator;
-  readonly kirjoitaViestiForm: KirjoitaViestiForm;
 
   constructor(page: Page) {
     this.page = page;
@@ -59,10 +57,6 @@ export class OsoitepalveluPage {
       name: "Tyhjennä",
       exact: true,
     });
-    this.kirjoitaSahkopostiButton = page.getByRole("button", {
-      name: "Kirjoita sähköpostiviesti",
-    });
-    this.kirjoitaViestiForm = new KirjoitaViestiForm(page);
   }
 
   async goto() {
@@ -163,43 +157,5 @@ async function pressTabUntilFocusOn(page: Page, locator: Locator) {
     if (!correctLocatorHasFocus) {
       await page.keyboard.press("Tab");
     }
-  }
-}
-
-class KirjoitaViestiForm {
-  readonly lahetaButton: Locator;
-  readonly aiheField: FormField;
-  readonly viestiField: FormField;
-  readonly fileUploadButton: Locator;
-  constructor(page: Page) {
-    this.lahetaButton = page.getByRole("button", { name: "Lähetä" });
-    this.aiheField = new AiheField(page);
-    this.viestiField = new ViestiField(page);
-    this.fileUploadButton = page.getByLabel("Lataa liitetiedosto");
-  }
-}
-
-export class FormField {
-  readonly context: Locator;
-  readonly input: Locator;
-  readonly errorFeedback: Locator;
-  constructor(page: Page, input: Locator) {
-    this.input = input;
-    this.context = page.getByRole("group").filter({ has: input });
-    this.errorFeedback = this.context.locator("p");
-  }
-}
-
-class AiheField extends FormField {
-  constructor(page: Page) {
-    const input = page.getByLabel("Aihe*");
-    super(page, input);
-  }
-}
-
-class ViestiField extends FormField {
-  constructor(page: Page) {
-    const input = page.locator("textarea");
-    super(page, input);
   }
 }
