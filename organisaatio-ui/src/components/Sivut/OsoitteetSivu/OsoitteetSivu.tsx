@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 
-import { Hakutulos, useHakuParametrit, useKayttooikeusryhmat } from './OsoitteetApi';
+import {
+    Hakutulos,
+    HakutulosRow,
+    KayttajaHakutulosRow,
+    useHakuParametrit,
+    useKayttooikeusryhmat,
+} from './OsoitteetApi';
 import { HakutulosView } from './HakutulosView';
 import { SearchView } from './SearchView';
 import { ViestiView } from './ViestiView';
@@ -22,7 +28,14 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
     const history = useHistory();
     const hakuParametrit = useHakuParametrit();
     const kayttooikeusryhmat = useKayttooikeusryhmat(frontProperties);
+    const [hakutulosCache, setHakutulosCache] = useState<Hakutulos>();
     const [selection, setSelection] = useState(new Set<string>());
+
+    useEffect(() => {
+        if (hakutulosCache) {
+            setSelection(new Set(hakutulosCache?.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid)));
+        }
+    }, [hakutulosCache]);
 
     function onSearchResult(hakutulos: Hakutulos) {
         history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
@@ -62,6 +75,7 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
                             kayttooikeusryhmat={kayttooikeusryhmat}
                             onResult={onSearchResult}
                             setSelection={setSelection}
+                            setHakutulosCache={setHakutulosCache}
                         />
                     </div>
                 </div>
@@ -73,6 +87,7 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
                             muotoilematonViestiEnabled={muotoilematonViestiEnabled}
                             selection={selection}
                             setSelection={setSelection}
+                            hakutulosCache={hakutulosCache}
                         />
                     </div>
                 </div>
