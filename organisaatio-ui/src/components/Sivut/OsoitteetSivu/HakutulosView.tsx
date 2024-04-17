@@ -32,11 +32,17 @@ export function HakutulosView({
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
     const fetchedHakutulos = hakutulosCache?.id !== hakutulosId ? useHakutulos(hakutulosId) : undefined;
     const [hakutulos, setHakutulos] = useState(hakutulosCache?.id === hakutulosId ? hakutulosCache : undefined);
+    const [allOids, setAllOids] = useState(
+        hakutulosCache?.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid).join(',')
+    );
+    const selectionString = hakutulos?.rows.length === selection.size ? allOids : Array.from(selection).join(',');
 
     useEffect(() => {
         if (fetchedHakutulos?.state === 'OK') {
             setHakutulos(fetchedHakutulos.value);
-            setSelection(new Set(fetchedHakutulos?.value.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid)));
+            const oids = fetchedHakutulos?.value.rows.map((r: HakutulosRow | KayttajaHakutulosRow) => r.oid);
+            setSelection(new Set(oids));
+            setAllOids(oids.join(','));
         }
     }, [fetchedHakutulos]);
 
@@ -89,9 +95,7 @@ export function HakutulosView({
                 )}
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method="POST">
                     <input type="hidden" name="resultId" value={hakutulos.id} />
-                    {Array.from(selection).map((s) => (
-                        <input key={s} type="hidden" name="selectedOids" value={s} />
-                    ))}
+                    {selectionString && <input type="hidden" name="selectedOids" value={selectionString} />}
                     <Button
                         variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'}
                         type="submit"

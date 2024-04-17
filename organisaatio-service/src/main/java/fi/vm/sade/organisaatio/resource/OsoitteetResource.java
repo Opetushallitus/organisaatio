@@ -274,13 +274,16 @@ public class OsoitteetResource {
     @PreAuthorize("hasAnyRole('ROLE_APP_OSOITE_CRUD')")
     public ResponseEntity<ByteArrayResource> haeXls(@RequestBody MultiValueMap<String, String> request) {
         String resultId = request.getFirst("resultId");
-        List<String> selectedOids = request.get("selectedOids");
         if (resultId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (!hasPermissionToHakutulos(resultId)) {
             throw new NotAuthorizedException("no.permission");
         }
+
+        List<String> selectedOids = request.getFirst("selectedOids") != null
+            ? List.of(request.getFirst("selectedOids").split(","))
+            : null;
 
         try {
             SavedSearchResult hakutulos = getSearchResultsById(resultId);
