@@ -21,8 +21,8 @@ import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
@@ -297,13 +297,13 @@ public class OsoitteetResource {
                         .filter(h -> selectedOids == null || selectedOids.contains(h.getOid()))
                         .toList();
                 wb = createOrganisaatioXls(tulos);
-                fileName = "osoitteet.xls";
+                fileName = "osoitteet.xlsx";
             } else {
                 List<VirkailijaDto> tulos = hakutulos.kayttajat.stream()
                         .filter(h -> selectedOids == null || selectedOids.contains(h.getOid()))
                         .toList();
                 wb = createKayttajaXls(tulos);
-                fileName = "kayttajat.xls";
+                fileName = "kayttajat.xlsx";
             }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -322,7 +322,7 @@ public class OsoitteetResource {
     }
 
     private Workbook createOrganisaatioXls(List<OrganisaatioHakutulosRow> tulos) {
-        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet("Osoitteet");
 
         Row header = sheet.createRow(0);
@@ -371,7 +371,7 @@ public class OsoitteetResource {
     }
 
     private Workbook createKayttajaXls(List<VirkailijaDto> kayttajat) {
-        Workbook wb = new HSSFWorkbook();
+        Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet("Käyttäjät");
 
         Row header = sheet.createRow(0);
