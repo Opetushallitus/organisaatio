@@ -18,8 +18,13 @@ import software.amazon.awssdk.transfer.s3.model.UploadFileRequest;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -83,6 +88,11 @@ public class ExportService {
         jdbcTemplate.execute("ALTER SCHEMA exportnew RENAME TO export");
     }
 
+    public void generateExportFiles() throws IOException {
+        generateCsvExports();
+        generateJsonExports();
+    }
+
     private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, nimi_fi, nimi_sv, organisaatiotyypit, oppilaitostyyppi, oppilaitosnumero, kotipaikka, y_tunnus, tuontipvm, paivityspvm FROM export.organisaatio";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
 
@@ -96,6 +106,81 @@ public class ExportService {
         var sql = "SELECT rows_uploaded FROM aws_s3.query_export_to_s3(?, aws_commons.create_s3_uri(?, ?, ?), options := 'FORMAT CSV, HEADER TRUE')";
         var rowsUploaded = jdbcTemplate.queryForObject(sql, Long.class, query, bucketName, objectKey, OpintopolkuAwsClients.REGION.id());
         log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
+    }
+
+    List<File> generateJsonExports() throws IOException {
+        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, S3_PREFIX + "/json/organisaatio.json", unchecked(rs ->
+                new ExportedOrganisaatio(
+                        rs.getString("organisaatio_oid"),
+                        rs.getString("nimi_fi"),
+                        rs.getString("nimi_sv"),
+                        rs.getString("organisaatiotyypit"),
+                        rs.getString("oppilaitostyyppi"),
+                        rs.getString("oppilaitosnumero"),
+                        rs.getString("kotipaikka"),
+                        rs.getString("y_tunnus"),
+                        rs.getString("tuontipvm"),
+                        rs.getString("paivityspvm")
+                )
+        ));
+        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, S3_PREFIX + "/json/organisaatiosuhteet.json", unchecked(rs ->
+                new ExportedOrganisaatioSuhde(
+                        rs.getString("suhdetyyppi"),
+                        rs.getString("parent_oid"),
+                        rs.getString("child_oid")
+                )
+        ));
+        return List.of(organisaatioFile, organisaatioSuhdeFile);
+    }
+
+    private <T> File exportQueryToS3AsJson(String query, String objectKey, Function<ResultSet, T> mapper) throws IOException {
+        var tempFile = File.createTempFile("export", ".json");
+        try {
+            exportToFile(query, mapper, tempFile);
+            uploadFile(opintopolkuS3Client, bucketName, objectKey, tempFile);
+        } finally {
+            if (uploadToS3) {
+                Files.deleteIfExists(tempFile.toPath());
+            } else {
+                log.info("Not uploading file to S3, keeping it at {}", tempFile.getAbsolutePath());
+            }
+        }
+        return tempFile;
+    }
+
+    private <T> void exportToFile(String query, Function<ResultSet, T> mapper, File file) throws IOException {
+        log.info("Writing JSON export to {}", file.getAbsolutePath());
+        try (var writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+            writer.write("[\n");
+            var firstElement = true;
+            try (Stream<T> stream = jdbcTemplate.queryForStream(query, (rs, n) -> mapper.apply(rs))) {
+                Iterable<T> iterable = stream::iterator;
+                for (T jsonObject : iterable) {
+                    if (firstElement) {
+                        firstElement = false;
+                    } else {
+                        writer.write(",\n");
+                    }
+                    writer.write(objectMapper.writeValueAsString(jsonObject));
+                }
+            }
+            writer.write("\n");
+            writer.write("]\n");
+        }
+    }
+
+    private <T, R, E extends Throwable> Function<T, R> unchecked(ThrowingFunction<T, R, E> f) {
+        return t -> {
+            try {
+                return f.apply(t);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    private interface ThrowingFunction<T, R, E extends Throwable> {
+        R apply(T rs) throws E;
     }
 
     public void copyExportFilesToLampi() throws IOException {
@@ -148,4 +233,12 @@ public class ExportService {
         ).join();
         log.info("Wrote manifest to S3: {}", response);
     }
+}
+
+record ExportedOrganisaatio(String organisaatio_oid, String nimi_fi, String nimi_sv, String organisaatiotyypit,
+                            String oppilaitostyyppi, String oppilaitosnumero, String kotipaikka, String y_tunnus,
+                            String tuontipvm, String paivityspvm) {
+}
+
+record ExportedOrganisaatioSuhde(String suhdetyyppi, String parent_oid, String child_oid) {
 }

@@ -32,7 +32,7 @@ public class ExportTask extends RecurringTask<Void> {
         try {
             log.info("Running organisaatio export task");
             exportService.createSchema();
-            exportService.generateCsvExports();
+            exportService.generateExportFiles();
             if (copyToLampi) {
                 exportService.copyExportFilesToLampi();
             } else {
