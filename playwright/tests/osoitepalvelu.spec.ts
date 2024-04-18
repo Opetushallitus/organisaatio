@@ -14,14 +14,14 @@ import { HakutulosView } from "./HakutulosView";
 const XLSX = require("xlsx");
 
 test.describe("Osoitepalvelu", () => {
-  test.beforeAll(async ({ request }, testInfo) => {
+  test.beforeAll(async ({ request }) => {
     await test.step("Load initial mock data", async () => {
       await request.post(
         "http://localhost:3003/organisaatio-service/mock/init"
       );
     });
   });
-  test.beforeEach(async ({ page }, testInfo) => {
+  test.beforeEach(async ({ page }) => {
     const osoitepalveluPage = new SearchView(page);
     await osoitepalveluPage.goto();
   });
@@ -957,7 +957,7 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
-  test("Kirjoita viesti form", async ({ page, browserName }) => {
+  test("Kirjoita viesti form", async ({ page }) => {
     const osoitepalveluPage = new SearchView(page);
     const hakutulosView = new HakutulosView(page);
     const kirjoitaViestiForm = new ViestiView(page);
@@ -1024,7 +1024,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test.describe("Sending email to organisations", async () => {
-    test.beforeEach(async ({ page }, testInfo) => {
+    test.beforeEach(async ({ page }) => {
       await new SearchView(page).haeButton.click();
       await new HakutulosView(page).kirjoitaSahkopostiButton.click();
     });
@@ -1090,7 +1090,7 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test.describe("Sending email to users", async () => {
-    test.beforeEach(async ({ page }, testInfo) => {
+    test.beforeEach(async ({ page }) => {
       const osoitepalveluPage = new SearchView(page);
       const hakutulosView = new HakutulosView(page);
       await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
