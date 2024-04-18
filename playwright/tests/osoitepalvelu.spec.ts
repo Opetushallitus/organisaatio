@@ -1009,6 +1009,22 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
+  test("Email recipients can be filtered", async ({ page }) => {
+    const osoitepalveluPage = new SearchView(page);
+    const hakutulosView = new HakutulosView(page);
+
+    await osoitepalveluPage.haeButton.click();
+
+    await hakutulosView.selectAllCheckbox.click();
+    await expect(hakutulosView.kirjoitaSahkopostiButton).toBeDisabled();
+
+    await hakutulosView.selectAllCheckbox.click();
+    await hakutulosView.select("1.2.246.562.99.00000000001");
+    await hakutulosView.select("1.2.246.562.99.00000000005");
+    await hakutulosView.kirjoitaSahkopostiButton.click();
+    await expect(page.getByText("1 vastaanottaja")).toBeVisible();
+  });
+
   test.skip("Viesti body has maximum length", async ({ page }) => {
     const osoitepalveluPage = new SearchView(page);
     const kirjoitaViestiForm = new ViestiView(page);
