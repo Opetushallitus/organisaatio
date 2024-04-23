@@ -188,7 +188,6 @@ public class YhteystietoConverterUtils {
                     Email v = convertEmail(s.get("email"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(s.get("id") != null ? Long.parseLong(s.get("id")) : null);
-                        v.setVersion(s.get("version") != null ? Long.parseLong(s.get("version")) : 0);
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     if (s.containsKey("kieli")) {
@@ -199,7 +198,6 @@ public class YhteystietoConverterUtils {
                     Www v = convertWww(s.get("www"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(s.get("id") != null ? Long.parseLong(s.get("id")) : null);
-                        v.setVersion(s.get("version") != null ? Long.parseLong(s.get("version")) : 0);
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     if (s.containsKey("kieli")) {
@@ -210,7 +208,6 @@ public class YhteystietoConverterUtils {
                     Puhelinnumero v = convertPuhelinnumero(s.get("numero"), s.get("tyyppi"));
                     if (s.containsKey("yhteystietoOid")) {
                         v.setId(s.get("id") != null ? Long.parseLong(s.get("id")) : null);
-                        v.setVersion(s.get("version") != null ? Long.parseLong(s.get("version")) : 0);
                         v.setYhteystietoOid(s.get("yhteystietoOid"));
                     }
                     if (s.containsKey("kieli")) {
@@ -221,7 +218,6 @@ public class YhteystietoConverterUtils {
                     Osoite v = convertMapToOsoite(s, null);
                     if (s.containsKey("yhteystietoOid")) {
                         Long id = s.get("id") != null ? Long.parseLong(s.remove("id")) : null;
-                        v.setVersion(s.get("version") != null ? Long.parseLong(s.get("version")) : 0);
                         v.setId(id);
                     }
                     if (s.containsKey("kieli")) {

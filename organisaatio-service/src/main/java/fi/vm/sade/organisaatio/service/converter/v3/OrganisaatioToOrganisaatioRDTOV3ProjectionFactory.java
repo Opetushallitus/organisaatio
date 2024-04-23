@@ -241,7 +241,6 @@ public class OrganisaatioToOrganisaatioRDTOV3ProjectionFactory extends MappingPr
 
         if (s != null) {
             result.put("id", s.getId() != null ? String.valueOf(s.getId()) : null);
-            result.put("version", s.getVersion() != null ? String.valueOf(s.getVersion()) : null);
             result.put("yhteystietoOid", s.getYhteystietoOid());
             result.put("kieli", s.getKieli());
 
