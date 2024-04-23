@@ -42,7 +42,10 @@ const koodistoAtom = atomFamily(
 export const kuntaKoodistoAtom = koodistoAtom({
     koodi: 'KUNTA',
     disableOption: (koodi: Koodi) => {
-        return koodi.tila === 'PASSIIVINEN' || moment(koodi.voimassaLoppuPvm, 'yyyy-MM-DD').isBefore(moment());
+        return (
+            koodi.tila === 'PASSIIVINEN' ||
+            (koodi.voimassaLoppuPvm !== '1990-01-01' && moment(koodi.voimassaLoppuPvm, 'yyyy-MM-DD').isBefore(moment()))
+        );
     },
 });
 export const kayttoRyhmatKoodistoAtom = koodistoAtom({ koodi: 'KAYTTORYHMAT' });
