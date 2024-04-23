@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -14,6 +19,20 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = false, prePostEnabled = false, securedEnabled = true)
 public class DevWebSecurityConfiguration {
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    UserDetailsService userDetailsService() {
+        UserDetails user = User.withUsername("devaaja")
+                .password(passwordEncoder().encode("devaaja"))
+                .roles("APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001", "APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD")
+                .build();
+        return new InMemoryUserDetailsManager(user);
+    }
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -28,7 +47,6 @@ public class DevWebSecurityConfiguration {
                 .requestMatchers("/swagger-resources/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/rest/**").permitAll()
                 .requestMatchers("/mock/**").permitAll()
                 .anyRequest().authenticated())
