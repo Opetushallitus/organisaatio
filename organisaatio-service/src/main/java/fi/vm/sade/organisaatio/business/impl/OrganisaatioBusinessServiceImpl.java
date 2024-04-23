@@ -224,6 +224,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Organisaatio oldParent = validateHierarchy(parentOid, entity, oldOrg);
 
         mergeAuxData(entity, oldOrg);
+        updateExistingYhteystiedot(entity, oldOrg);
 
         entity.setId(oldOrg.getId());
         entity.setOpetuspisteenJarjNro(oldOrg.getOpetuspisteenJarjNro());
@@ -279,6 +280,16 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         String info = null;
         koodistoService.addKoodistoSyncByOid(entity.getOid());
         return new OrganisaatioResult(entity, info);
+    }
+
+    private void updateExistingYhteystiedot(Organisaatio entity, Organisaatio oldOrg) {
+        for (var y : entity.getYhteystiedot()) {
+            for (var old : oldOrg.getYhteystiedot()) {
+                if (y.getId() == old.getId()) {
+                    y.setVersion(old.getVersion());
+                }
+            }
+        }
     }
 
     private OrganisaatioResult save(Organisaatio entity, String parentOid) {
