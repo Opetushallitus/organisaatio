@@ -23,7 +23,7 @@ import com.google.common.base.Predicates;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.Date;
 import java.util.Map.Entry;
 
@@ -121,7 +121,7 @@ public class OrganisationDateValidator implements Predicate<Entry<Organisaatio, 
     public OrganisationDateValidator(boolean skipParentDateValidation) {
         this.isSkipParentDateValidation = skipParentDateValidation;
     }
-    
+
     @Override
     public boolean apply(@Nullable Entry<Organisaatio, Organisaatio> parentChild) {
         if(isSkipParentDateValidation) {

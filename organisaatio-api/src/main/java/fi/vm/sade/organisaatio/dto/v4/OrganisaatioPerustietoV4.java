@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 
@@ -132,9 +132,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the oid property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getOid() {
         return oid;
@@ -142,10 +142,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the oid property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOid(String value) {
         this.oid = value;
@@ -153,9 +153,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the alkuPvm property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public Date getAlkuPvm() {
         return alkuPvm;
@@ -163,10 +163,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the alkuPvm property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setAlkuPvm(Date value) {
         this.alkuPvm = value;
@@ -174,9 +174,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the lakkautusPvm property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public Date getLakkautusPvm() {
         return lakkautusPvm;
@@ -184,10 +184,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the lakkautusPvm property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setLakkautusPvm(Date value) {
         this.lakkautusPvm = value;
@@ -195,9 +195,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the parentOid property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getParentOid() {
         return parentOid;
@@ -205,10 +205,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the parentOid property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setParentOid(String value) {
         this.parentOid = value;
@@ -216,9 +216,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the parentOidPath property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getParentOidPath() {
         return parentOidPath;
@@ -226,10 +226,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the parentOidPath property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setParentOidPath(String value) {
         this.parentOidPath = value;
@@ -237,9 +237,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the ytunnus property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getYtunnus() {
         return ytunnus;
@@ -247,10 +247,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the ytunnus property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setYtunnus(String value) {
         this.ytunnus = value;
@@ -258,9 +258,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the virastoTunnus property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     @Schema(description = "Virastotunnus", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getVirastoTunnus() {
@@ -269,10 +269,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the virastoTunnus property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setVirastoTunnus(String value) {
         this.virastotunnus = value;
@@ -280,7 +280,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the aliOrganisaatioMaara property.
-     * 
+     *
      */
     @Schema(description = "Aliorganisaatioiden määrä", requiredMode = Schema.RequiredMode.REQUIRED)
     public int getAliOrganisaatioMaara() {
@@ -289,7 +289,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the aliOrganisaatioMaara property.
-     * 
+     *
      */
     public void setAliOrganisaatioMaara(int value) {
         this.aliorganisaatioMaara = value;
@@ -297,9 +297,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the oppilaitosKoodi property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getOppilaitosKoodi() {
         return oppilaitosKoodi;
@@ -307,10 +307,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the oppilaitosKoodi property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOppilaitosKoodi(String value) {
         this.oppilaitosKoodi = value;
@@ -318,9 +318,9 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Gets the koodiValue of the oppilaitostyyppi property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getOppilaitostyyppi() {
         return oppilaitostyyppi;
@@ -328,10 +328,10 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Sets the koodiValue of the oppilaitostyyppi property.
-     * 
+     *
      * @param value
      *            allowed object is {@link String }
-     * 
+     *
      */
     public void setOppilaitostyyppi(String value) {
         this.oppilaitostyyppi = value;
@@ -377,7 +377,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     public void setKieletUris(Set<String> kieletUris) {
         this.kieletUris = kieletUris;
     }
-    
+
     @Schema(description = "Kotipaikan URI", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getKotipaikkaUri() {
         return kotipaikkaUri;
@@ -389,7 +389,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Aseta organisaation nimi
-     * 
+     *
      * @param targetLanguage
      *            "fi","en" tai "sv"
      * @param nimi
@@ -400,7 +400,7 @@ public class OrganisaatioPerustietoV4 implements Serializable {
 
     /**
      * Palauta organisaation nimi, tai null jos ko kielellä ei löydy.
-     * 
+     *
      * @param language
      *            "fi","en" tai "sv"
      * @return

@@ -34,7 +34,7 @@ describe('Save organisaatio through UI', () => {
                         const expected = {
                             ...actualHelsinki,
                             tyypit: ['organisaatiotyyppi_01', 'organisaatiotyyppi_07', 'organisaatiotyyppi_09'],
-                            version: 3,
+                            version: 2,
                         };
                         expect(Object.keys(actual)).to.have.members(Object.keys(expected));
                         expect(removeUnwanted(actual)).to.deep.equal(removeUnwanted(expected));

@@ -51,8 +51,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.OptimisticLockException;
-import javax.validation.ValidationException;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.ValidationException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;

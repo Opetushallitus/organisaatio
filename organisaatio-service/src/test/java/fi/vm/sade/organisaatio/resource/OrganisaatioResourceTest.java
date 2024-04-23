@@ -156,7 +156,7 @@ public class OrganisaatioResourceTest {
         ResponseStatusException thrown = assertThrows(
                 ResponseStatusException.class,
                 () -> res2.hakutoimisto("non.existing.oid"));
-        assertEquals(404, thrown.getStatus().value());
+        assertEquals(404, thrown.getStatusCode().value());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class OrganisaatioResourceTest {
         ResponseStatusException thrown = assertThrows(
                 ResponseStatusException.class,
                 () -> res2.hakutoimisto("1.2.2004.6"));
-        assertEquals(404, thrown.getStatus().value());
+        assertEquals(404, thrown.getStatusCode().value());
     }
 
     private OrganisaatioSearchCriteria createOrgSearchCriteria(String organisaatioTyyppi, String oppilaitosTyyppi, String searchStr,

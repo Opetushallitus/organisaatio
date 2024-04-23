@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -32,13 +33,19 @@ public class WebConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean<CacheFilter> filterRegistrationBean() {
+    FilterRegistrationBean<CacheFilter> filterRegistrationBean() {
         FilterRegistrationBean<CacheFilter> registrationBean = new FilterRegistrationBean<>();
         CacheFilter filter = new CacheFilter();
         registrationBean.setFilter(filter);
         registrationBean.addUrlPatterns("/internal/koodisto/*");
         registrationBean.addUrlPatterns("/internal/lokalisointi/*");
         registrationBean.addUrlPatterns("/internal/config/*");
+        registrationBean.setOrder(2);
         return registrationBean;
+    }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+      configurer.setUseTrailingSlashMatch(true);
     }
 }

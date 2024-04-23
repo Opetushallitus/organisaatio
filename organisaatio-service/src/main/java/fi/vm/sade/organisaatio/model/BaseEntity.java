@@ -16,10 +16,13 @@
  */
 package fi.vm.sade.organisaatio.model;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.io.Serializable;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.domain.Persistable;
+
+import jakarta.persistence.*;
+import lombok.Data;
 
 /**
  * Base class for entities in the system.
@@ -28,37 +31,19 @@ import java.io.Serializable;
  *
  * @author tommiha
  */
+@Data
 @MappedSuperclass
-public class BaseEntity implements Serializable {
-
-    private static final long serialVersionUID = -1482830143396044915L;
-
-    public static final String ID_COLUMN_NAME = "id";
-    public static final String VERSION_COLUMN_NAME = "version";
+public class BaseEntity implements Persistable<Long>, Serializable {
 
     @Id
+    @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment" )
     private Long id;
 
     @Version
+    @Column(nullable = false)
     private Long version;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -84,5 +69,10 @@ public class BaseEntity implements Serializable {
         sb.append("]");
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean isNew() {
+        return null == this.getId();
     }
 }

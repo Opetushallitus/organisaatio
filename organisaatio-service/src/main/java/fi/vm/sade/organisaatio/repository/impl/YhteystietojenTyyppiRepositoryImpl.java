@@ -21,8 +21,8 @@ import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,15 +35,15 @@ public class YhteystietojenTyyppiRepositoryImpl implements YhteystietojenTyyppiR
 
 
     private static final String QUERY1 =
-            "SELECT distinct ol FROM YhteystietojenTyyppi ol " + 
+            "SELECT distinct ol FROM YhteystietojenTyyppi ol " +
             "join fetch ol.sovellettavatOrganisaatioTyyppis as so WHERE so in (:organisaatioTyyppis)";
     private static final String QUERY2 =
-            "SELECT distinct ol FROM YhteystietojenTyyppi ol " + 
+            "SELECT distinct ol FROM YhteystietojenTyyppi ol " +
             "join fetch ol.sovellettavatOppilaitostyyppis as so WHERE so in (:organisaatioTyyppis)";
-    
+
     @Override
     public List<YhteystietojenTyyppi> findLisatietoMetadataForOrganisaatio(Collection<String> organisaatioTyyppis) {
-        
+
         Query query = em.createQuery(QUERY1);
         query.setParameter("organisaatioTyyppis", organisaatioTyyppis);
         List<YhteystietojenTyyppi> matches = query.getResultList();
@@ -52,7 +52,7 @@ public class YhteystietojenTyyppiRepositoryImpl implements YhteystietojenTyyppiR
         matches.addAll(union(matches, query.getResultList()));
         return matches;//query.getResultList();
     }
-    
+
     private List<YhteystietojenTyyppi> union(List<YhteystietojenTyyppi> list1, List<YhteystietojenTyyppi> list2) {
         List<YhteystietojenTyyppi> additions = new ArrayList<YhteystietojenTyyppi>();
         for (YhteystietojenTyyppi curYt : list2) {
@@ -62,7 +62,7 @@ public class YhteystietojenTyyppiRepositoryImpl implements YhteystietojenTyyppiR
         }
         return additions;
     }
-    
+
     private boolean contained(YhteystietojenTyyppi yt, List<YhteystietojenTyyppi> ytlist) {
         for (YhteystietojenTyyppi curYt : ytlist) {
             if (curYt.getOid().equals(yt.getOid())) {

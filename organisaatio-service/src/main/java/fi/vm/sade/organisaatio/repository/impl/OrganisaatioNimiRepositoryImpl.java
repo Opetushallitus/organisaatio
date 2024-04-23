@@ -19,16 +19,14 @@ import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.repository.OrganisaatioNimiRepositoryCustom;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 
-@Slf4j
 @Repository
 public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositoryCustom {
 
@@ -50,32 +48,17 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        log.debug("findNimi({}, {})", organisaatio.getId(), nimi.getAlkuPvm());
-
-        // Kyselyä kokeilty myös QueryDsl:llä
-        // Ongelmana oli se, että päivämäärän perusteella haku ei onnistunut jos
-        // organisaation id:llä rivejä oli enemmän kuin 1
-
-
-        String s = "SELECT n FROM OrganisaatioNimi n "
-                + "WHERE "
-                + "organisaatio_id = :id "
-                + " and "
-                + "alkupvm = :date ";
-
-        TypedQuery q = em.createQuery(s, OrganisaatioNimi.class);
-
-        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", nimi.getAlkuPvm()).getResultList();
-
-        log.debug("findNimi() result size: {} ", organisaatioNimet.size());
+        TypedQuery<OrganisaatioNimi> query = em.createNamedQuery(
+                "OrganisaatioNimiDAO.findNimiByAlkupvmDate", OrganisaatioNimi.class);
+        query.setParameter("id", organisaatio.getId());
+        query.setParameter("date", nimi.getAlkuPvm());
+        List<OrganisaatioNimi> organisaatioNimet = query.getResultList();
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
         } else if (organisaatioNimet.size() > 1) {
             return organisaatioNimet.stream().filter(foundNimi -> foundNimi.getNimi().getValues().equals(nimi.getNimi())).findFirst().orElse(null);
         }
-
-        log.debug("findNimi({}, {}) --> OrganisaatioNimi not found", organisaatio.getId(), nimi.getAlkuPvm());
 
         return null;
     }
@@ -86,30 +69,21 @@ public class OrganisaatioNimiRepositoryImpl implements OrganisaatioNimiRepositor
             throw new IllegalArgumentException("organisaatio cannot be null");
         }
 
-        log.info("findCurrentNimi({})", organisaatio.getId());
-
         String s = "SELECT n FROM OrganisaatioNimi n "
-                + "WHERE "
-                + "organisaatio_id = :id "
-                + " AND "
-                + "alkupvm = (SELECT MAX (o.alkuPvm) "
-                + "FROM OrganisaatioNimi o "
-                + "WHERE "
-                + "organisaatio_id = :id "
-                + " AND "
-                + "alkupvm <= :date)";
+                + "WHERE n.organisaatio.id = :id AND n.alkuPvm = ("
+                + "     SELECT MAX (o.alkuPvm)"
+                + "     FROM OrganisaatioNimi o"
+                + "     WHERE o.organisaatio.id = :id AND o.alkuPvm <= :date)";
 
         TypedQuery<OrganisaatioNimi> q = em.createQuery(s, OrganisaatioNimi.class);
-
-        List<OrganisaatioNimi> organisaatioNimet = q.setParameter("id", organisaatio.getId()).setParameter("date", new Date()).getResultList();
-
-        log.info("findCurrentNimi() result size: {}", organisaatioNimet.size());
+        List<OrganisaatioNimi> organisaatioNimet = q
+                .setParameter("id", organisaatio.getId())
+                .setParameter("date", new Date())
+                .getResultList();
 
         if (organisaatioNimet.size() == 1) {
             return organisaatioNimet.get(0);
         }
-
-        log.info("findNimi({}) --> OrganisaatioNimi not found", organisaatio.getId());
 
         return null;
     }

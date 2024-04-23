@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class ValidationException extends LocalizedBusinessException {
         super(message, key);
     }
 
-    public ValidationException(Set<javax.validation.ConstraintViolation<Object>> violations) {
+    public ValidationException(Set<jakarta.validation.ConstraintViolation<Object>> violations) {
         super(KEY);
         this.violations = violations;
     }

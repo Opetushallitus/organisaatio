@@ -17,9 +17,9 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * @author Antti
@@ -35,7 +35,7 @@ public class Puhelinnumero extends Yhteystieto {
     @NotNull
     @Pattern(regexp = VALIDATION_REGEXP, message = "{validation.invalid.phone}")
     private String puhelinnumero; // TODO XSS filtteri
-    
+
     @NotNull
     @Pattern(regexp = TYYPPI_PUHELIN)
     private String tyyppi;

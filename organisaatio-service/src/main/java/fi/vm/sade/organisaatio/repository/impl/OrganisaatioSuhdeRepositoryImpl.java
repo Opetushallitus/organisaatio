@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Repository
-public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeRepositoryCustom {
+public class OrganisaatioSuhdeRepositoryImpl extends AbstractRepository implements OrganisaatioSuhdeRepositoryCustom {
 
     @Autowired
     EntityManager em;
@@ -99,7 +99,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.child.id.eq(childId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
-        List<OrganisaatioSuhde> suhteet = new JPAQuery<>(em).from(qSuhde)
+        List<OrganisaatioSuhde> suhteet = jpa().from(qSuhde)
                 .join(qSuhde.parent, qOrganisaatio).fetchJoin()
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
@@ -140,7 +140,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
         BooleanExpression loppuExpression = qSuhde.loppuPvm.isNull().or(qSuhde.loppuPvm.after(atTime));
         BooleanExpression expression = qSuhde.parent.id.eq(parentId).and(historiaExpression).and(alkuExpression).and(loppuExpression);
 
-        List<OrganisaatioSuhde> suhteet = new JPAQuery<>(em).from(qSuhde)
+        List<OrganisaatioSuhde> suhteet = jpa().from(qSuhde)
                 .join(qSuhde.child, qOrganisaatio).fetchJoin()
                 .where(expression.and(qOrganisaatio.organisaatioPoistettu.isFalse()))
                 .orderBy(qSuhde.alkuPvm.desc())
@@ -168,7 +168,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
         }
 
         QOrganisaatioSuhde organisaatioSuhde = QOrganisaatioSuhde.organisaatioSuhde;
-        JPAQuery<OrganisaatioSuhde> query = new JPAQuery<>(em)
+        JPAQuery<OrganisaatioSuhde> query = jpa()
                 .from(organisaatioSuhde)
                 .where(organisaatioSuhde.alkuPvm.eq(day))
                 .orderBy(organisaatioSuhde.alkuPvm.asc())
@@ -190,7 +190,7 @@ public class OrganisaatioSuhdeRepositoryImpl implements OrganisaatioSuhdeReposit
             expression = expression.and(qSuhde.parent.piilotettu.eq(piilotettu).or(qSuhde.child.piilotettu.eq(piilotettu)));
         }
 
-        return new JPAQuery<>(em).from(qSuhde)
+        return jpa().from(qSuhde)
                 .where(expression)
                 .orderBy(qSuhde.alkuPvm.desc())
                 .select(qSuhde).fetch();

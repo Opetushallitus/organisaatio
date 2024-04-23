@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "rajoite")
