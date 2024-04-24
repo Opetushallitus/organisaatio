@@ -284,8 +284,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
     private void updateExistingYhteystiedot(Organisaatio entity, Organisaatio oldOrg) {
         for (var y : entity.getYhteystiedot()) {
+            y.setOrganisaatio(entity);
             for (var old : oldOrg.getYhteystiedot()) {
-                if (y.getId() == old.getId()) {
+                if (y.getId() != null && y.getId().equals(old.getId())) {
                     y.setVersion(old.getVersion());
                 }
             }
@@ -1079,10 +1080,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private void setYhteystietoArvot(Organisaatio entity, boolean updating) {
         // Asetetaan yhteystietoarvot
         entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));
-        // Kirjoitetaan yhteystiedot uusiksi (ei päivitetä vanhoja)
-        for (Yhteystieto yhtTieto : entity.getYhteystiedot()) {
-            yhtTieto.setOrganisaatio(entity);
-        }
         for (OrganisaatioNimi nimi : entity.getNimet()) {
             nimi.setOrganisaatio(entity);
         }
