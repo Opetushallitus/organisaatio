@@ -243,6 +243,12 @@ public class ExportService {
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/osoite.csv"));
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatiosuhde.csv"));
         writeManifest(S3_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
+
+        var jsonManifest = new ArrayList<ExportManifest.ExportFileDetails>();
+        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/organisaatio.json"));
+        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/osoite.json"));
+        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/organisaatiosuhde.json"));
+        writeManifest(S3_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
     }
 
     private ExportManifest.ExportFileDetails copyFileToLampi(String objectKey) throws IOException {
