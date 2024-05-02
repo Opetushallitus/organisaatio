@@ -88,6 +88,19 @@ public class ExportService {
               FROM organisaatio AS o;
             """;
 
+    private final String CREATE_EXPORT_OSOITE_SQL = """
+              CREATE TABLE exportnew.osoite AS
+              SELECT o.oid AS organisaatio_oid,
+                     y.osoitetyyppi,
+                     y.osoite,
+                     y.postinumero,
+                     y.postitoimipaikka,
+                     y.kieli
+              FROM yhteystieto y
+              LEFT JOIN organisaatio o ON o.id = y.organisaatio_id
+              WHERE y.osoitetyyppi in ('posti', 'kaynti')
+            """;
+
     @Transactional
     public void createSchema() {
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS exportnew CASCADE");
@@ -104,6 +117,7 @@ public class ExportService {
                           WHERE id = child_id) AS child_oid
                        FROM organisaatiosuhde;
                 """);
+        jdbcTemplate.execute(CREATE_EXPORT_OSOITE_SQL);
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA exportnew RENAME TO export");
     }
@@ -114,10 +128,12 @@ public class ExportService {
     }
 
     private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, kielet, koulutustoimia_oid, oppilaitos_oid, tila FROM export.organisaatio";
+    private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
 
     public void generateCsvExports() {
         exportQueryToS3(S3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
+        exportQueryToS3(S3_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
         exportQueryToS3(S3_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
     }
 
@@ -150,6 +166,16 @@ public class ExportService {
                         rs.getString("tila")
                 )
         ));
+        var osoiteFile = exportQueryToS3AsJson(OSOITE_QUERY, S3_PREFIX + "/json/osoite.json", unchecked(rs ->
+                new ExportedOsoite(
+                        rs.getString("organisaatio_oid"),
+                        rs.getString("osoitetyyppi"),
+                        rs.getString("osoite"),
+                        rs.getString("postinumero"),
+                        rs.getString("postitoimipaikka"),
+                        rs.getString("kieli")
+                )
+        ));
         var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, S3_PREFIX + "/json/organisaatiosuhteet.json", unchecked(rs ->
                 new ExportedOrganisaatioSuhde(
                         rs.getString("suhdetyyppi"),
@@ -157,7 +183,7 @@ public class ExportService {
                         rs.getString("child_oid")
                 )
         ));
-        return List.of(organisaatioFile, organisaatioSuhdeFile);
+        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile);
     }
 
     private <T> File exportQueryToS3AsJson(String query, String objectKey, Function<ResultSet, T> mapper) throws IOException {
@@ -214,6 +240,7 @@ public class ExportService {
     public void copyExportFilesToLampi() throws IOException {
         var csvManifest = new ArrayList<ExportManifest.ExportFileDetails>();
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatio.csv"));
+        csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/osoite.csv"));
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatiosuhde.csv"));
         writeManifest(S3_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
     }
@@ -281,6 +308,14 @@ record ExportedOrganisaatio(String organisaatio_oid,
                             String koulutustoimia_oid,
                             String oppilaitos_oid,
                             String tila) {
+}
+
+record ExportedOsoite(String organisaatio_oid,
+                      String osoitetyyppi,
+                      String osoite,
+                      String postinumero,
+                      String postitoimipaikka,
+                      String kieli) {
 }
 
 record ExportedOrganisaatioSuhde(String suhdetyyppi, String parent_oid, String child_oid) {
