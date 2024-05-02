@@ -44,35 +44,55 @@ public class ExportService {
     private final S3AsyncClient opintopolkuS3Client;
     private final S3AsyncClient lampiS3Client;
     private final JdbcTemplate jdbcTemplate;
+    private final String CREATE_EXPORT_ORGANISAATIO_SQL = """
+            CREATE TABLE exportnew.organisaatio AS
+            SELECT
+              o.oid,
+              o.oppilaitostyyppi,
+              o.oppilaitoskoodi as oppilaitosnumero,
+              o.kotipaikka,
+              o.yritysmuoto,
+              o.ytunnus as y_tunnus,
+              o.alkupvm,
+              o.lakkautuspvm,
+              o.tuontipvm,
+              o.paivityspvm,
+              (SELECT v.value
+               FROM monikielinenteksti_values v
+               WHERE v.id = o.nimi_mkt
+               AND v.key = 'fi') as nimi_fi,
+              (SELECT v.value
+               FROM monikielinenteksti_values v
+               WHERE v.id = o.nimi_mkt
+               AND v.key = 'sv') as nimi_sv,
+              (SELECT string_agg(tyypit, ',')
+               FROM organisaatio_tyypit
+               WHERE organisaatio_id = o.id) as organisaatiotyypit,
+              (SELECT string_agg(kielet, ',')
+               FROM organisaatio_kielet
+               WHERE organisaatio_id = o.id) as opetuskielet,
+              (SELECT parent_oid
+               FROM organisaatio_parent_oids
+               WHERE organisaatio_id = o.id
+               AND parent_position = 1) AS koulutustoimia_oid,
+              (SELECT parent_oid
+               FROM organisaatio_parent_oids
+               WHERE organisaatio_id = o.id
+               AND parent_position = 0) AS oppilaitos_oid,
+              CASE
+                WHEN o.organisaatiopoistettu = true THEN 'POISTETTU'
+                WHEN current_date < o.alkupvm THEN 'SUUNNITELTU'
+                WHEN current_date BETWEEN o.alkupvm AND COALESCE(o.lakkautuspvm, current_date) THEN 'AKTIIVINEN'
+                ELSE 'LAKKAUTETTU'
+              END AS tila
+              FROM organisaatio AS o;
+            """;
 
     @Transactional
     public void createSchema() {
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS exportnew CASCADE");
         jdbcTemplate.execute("CREATE SCHEMA exportnew");
-        jdbcTemplate.execute("""
-                CREATE TABLE exportnew.organisaatio AS
-                SELECT
-                     o.oid as organisaatio_oid,
-                     (SELECT v.value
-                        FROM monikielinenteksti_values v
-                        WHERE v.id = o.nimi_mkt
-                        AND v.key = 'fi') as nimi_fi,
-                     (SELECT v.value
-                        FROM monikielinenteksti_values v
-                        WHERE v.id = o.nimi_mkt
-                        AND v.key = 'sv') as nimi_sv,
-                     (SELECT string_agg(tyypit, ',')
-                        FROM organisaatio_tyypit
-                        WHERE organisaatio_id = o.id) as organisaatiotyypit,
-                     o.oppilaitostyyppi,
-                     o.oppilaitoskoodi as oppilaitosnumero,
-                     o.kotipaikka,
-                     o.ytunnus as y_tunnus,
-                     o.tuontipvm,
-                     o.paivityspvm
-                FROM organisaatio AS o
-                WHERE organisaatio_is_active(o)
-                """);
+        jdbcTemplate.execute(CREATE_EXPORT_ORGANISAATIO_SQL);
         jdbcTemplate.execute("""
                 CREATE TABLE exportnew.organisaatiosuhde AS
                 SELECT suhdetyyppi,
@@ -93,7 +113,7 @@ public class ExportService {
         generateJsonExports();
     }
 
-    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, nimi_fi, nimi_sv, organisaatiotyypit, oppilaitostyyppi, oppilaitosnumero, kotipaikka, y_tunnus, tuontipvm, paivityspvm FROM export.organisaatio";
+    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, kielet, koulutustoimia_oid, oppilaitos_oid, tila FROM export.organisaatio";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
 
     public void generateCsvExports() {
@@ -112,15 +132,22 @@ public class ExportService {
         var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, S3_PREFIX + "/json/organisaatio.json", unchecked(rs ->
                 new ExportedOrganisaatio(
                         rs.getString("organisaatio_oid"),
-                        rs.getString("nimi_fi"),
-                        rs.getString("nimi_sv"),
                         rs.getString("organisaatiotyypit"),
-                        rs.getString("oppilaitostyyppi"),
                         rs.getString("oppilaitosnumero"),
                         rs.getString("kotipaikka"),
+                        rs.getString("yritysmuoto"),
                         rs.getString("y_tunnus"),
+                        rs.getString("alkupvm"),
+                        rs.getString("lakkautuspvm"),
                         rs.getString("tuontipvm"),
-                        rs.getString("paivityspvm")
+                        rs.getString("paivityspvm"),
+                        rs.getString("nimi_fi"),
+                        rs.getString("nimi_sv"),
+                        rs.getString("oppilaitostyyppi"),
+                        rs.getString("opetuskielet"),
+                        rs.getString("koulutustoimia_oid"),
+                        rs.getString("oppilaitos_oid"),
+                        rs.getString("tila")
                 )
         ));
         var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, S3_PREFIX + "/json/organisaatiosuhteet.json", unchecked(rs ->
@@ -237,9 +264,23 @@ public class ExportService {
     }
 }
 
-record ExportedOrganisaatio(String organisaatio_oid, String nimi_fi, String nimi_sv, String organisaatiotyypit,
-                            String oppilaitostyyppi, String oppilaitosnumero, String kotipaikka, String y_tunnus,
-                            String tuontipvm, String paivityspvm) {
+record ExportedOrganisaatio(String organisaatio_oid,
+                            String organisaatiotyypit,
+                            String oppilaitosnumero,
+                            String kotipaikka,
+                            String yritysmuoto,
+                            String y_tunnus,
+                            String alkupvm,
+                            String lakkautuspvm,
+                            String tuontipvm,
+                            String paivityspvm,
+                            String nimi_fi,
+                            String nimi_sv,
+                            String oppilaitostyyppi,
+                            String opetuskielet,
+                            String koulutustoimia_oid,
+                            String oppilaitos_oid,
+                            String tila) {
 }
 
 record ExportedOrganisaatioSuhde(String suhdetyyppi, String parent_oid, String child_oid) {
