@@ -101,22 +101,24 @@ public class ExportService {
               WHERE y.osoitetyyppi in ('posti', 'kaynti')
             """;
 
+    private final String CREATE_EXPORT_ORGANISAATIOSUHDE_SQL = """
+            CREATE TABLE exportnew.organisaatiosuhde AS
+            SELECT suhdetyyppi,
+                   (SELECT o.oid
+                      FROM organisaatio o
+                      WHERE o.id = parent_id) AS parent_oid,
+                   (SELECT o.oid
+                      FROM organisaatio o
+                      WHERE id = child_id) AS child_oid
+                   FROM organisaatiosuhde;
+            """;
+
     @Transactional
     public void createSchema() {
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS exportnew CASCADE");
         jdbcTemplate.execute("CREATE SCHEMA exportnew");
         jdbcTemplate.execute(CREATE_EXPORT_ORGANISAATIO_SQL);
-        jdbcTemplate.execute("""
-                CREATE TABLE exportnew.organisaatiosuhde AS
-                SELECT suhdetyyppi,
-                       (SELECT o.oid
-                          FROM organisaatio o
-                          WHERE o.id = parent_id) AS parent_oid,
-                       (SELECT o.oid
-                          FROM organisaatio o
-                          WHERE id = child_id) AS child_oid
-                       FROM organisaatiosuhde;
-                """);
+        jdbcTemplate.execute(CREATE_EXPORT_ORGANISAATIOSUHDE_SQL);
         jdbcTemplate.execute(CREATE_EXPORT_OSOITE_SQL);
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA exportnew RENAME TO export");
