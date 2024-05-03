@@ -12,7 +12,7 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-
+    text-wrap: nowrap;
     cursor: pointer;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -30,7 +30,8 @@
 
 .OptionText {
     color: var(--color-gray-gray);
-
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -51,9 +52,8 @@
     justify-items: center;
     gap: 6px;
 
-    padding: 8px;
+    padding: 4px 8px;
     border-radius: 3px;
-    height: 14px;
 
     background: var(--color-primary-blue);
     color: var(--color-neutral-white);

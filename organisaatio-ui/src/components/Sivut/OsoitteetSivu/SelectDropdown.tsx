@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './SelectDropdown.module.css';
-import Select, { components, MultiValue, OptionProps } from 'react-select';
+import Select, { components, createFilter, MenuListProps, MultiValue, OptionProps } from 'react-select';
+import { FixedSizeList as List } from 'react-window';
 import { CheckedIcon, UncheckedIcon } from './Checkbox';
 
 export type DropdownProps = {
@@ -37,7 +38,8 @@ export function SelectDropdown({ onChange, label, options, disabled, selections,
                 className={styles.Select}
                 escapeClearsValue={false}
                 hideSelectedOptions={false}
-                components={{ Option: CustomOption }}
+                captureMenuScroll={false}
+                components={{ MenuList: CustomMenuList, Option: CustomOption }}
                 placeholder={label}
                 isMulti
                 isDisabled={disabled}
@@ -58,6 +60,7 @@ export function SelectDropdown({ onChange, label, options, disabled, selections,
                 backspaceRemovesValue={false}
                 controlShouldRenderValue={false}
                 classNamePrefix={classNamePrefix}
+                filterOption={createFilter({ ignoreAccents: false })}
             />
             <SelectionList>
                 {selection.map((v) => (
@@ -91,13 +94,29 @@ export function SelectionItem({ value, label, onRemove }: SelectionItemProps) {
     );
 }
 
+const CustomMenuList = (props: MenuListProps<DropdownOption, true>) => {
+    const { children, maxHeight } = props;
+    const childrenOptions = React.Children.toArray(children);
+    return (
+        <List itemSize={36} height={maxHeight} width="100%" itemCount={childrenOptions.length}>
+            {({ index, style }) => (
+                <div style={style} key={index}>
+                    {childrenOptions[index]}
+                </div>
+            )}
+        </List>
+    );
+};
+
 export function CustomOption(props: OptionProps<DropdownOption, true>) {
     const { isSelected, children } = props;
     return (
         <components.Option {...props}>
             <div className={styles.Option} aria-label={props.data.label} aria-selected={isSelected}>
                 <div className={styles.OptionCheckbox}>{isSelected ? <CheckedIcon /> : <UncheckedIcon />}</div>
-                <div className={styles.OptionText}>{children}</div>
+                <div className={styles.OptionText} title={children?.toString()}>
+                    {children}
+                </div>
             </div>
         </components.Option>
     );
