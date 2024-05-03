@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useReducer, useState } from 'react';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
+import Select from 'react-select';
 import {
     KoodistoSelectOption,
     OrganisaatioNimiJaOid,
@@ -222,7 +222,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 id={'PERUSTIETO_PAASIJAINTIKUNTA_SELECT'}
                                 {...field}
                                 ref={undefined}
-                                error={!!validationErrors['kotipaikka']}
                                 options={kunnatOptions}
                             />
                         )}
@@ -237,7 +236,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 isDisabled={readOnly}
                                 id={'PERUSTIETO_MUUT_KUNNAT_SELECT'}
                                 {...rest}
-                                error={!!validationErrors['muutKotipaikat']}
                                 isMulti
                                 options={kunnatOptions}
                             />
@@ -255,7 +253,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 isDisabled={readOnly}
                                 id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
-                                error={!!validationErrors['maa']}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
                             />
                         )}
@@ -273,7 +270,6 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 isMulti
                                 id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
-                                error={!!validationErrors['kielet']}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                             />
                         )}

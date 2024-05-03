@@ -12,14 +12,13 @@ import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
+import Select, { SingleValue } from 'react-select';
 import {
     oppilaitostyyppiKoodistoAtom,
     ORGANIAATIOTYYPPI_OPPILAITOS,
     organisaatioTyypitKoodistoAtom,
 } from '../../../api/koodisto';
 import { SelectOptionType } from '../../../types/types';
-import { ValueType } from 'react-select';
 import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import useDebounce from '../../../tools/useDebounce';
 import axios, { CancelTokenSource } from 'axios';
@@ -33,7 +32,7 @@ type HakufiltteritProps = {
 
 type HakufiltteritSelectProps = {
     label: string;
-    handleSelectChange: (value: ValueType<SelectOptionType>) => void;
+    handleSelectChange: (value: SingleValue<SelectOptionType>) => void;
     selectOptions: SelectOptionType[];
     disabled?: boolean;
     value: string;

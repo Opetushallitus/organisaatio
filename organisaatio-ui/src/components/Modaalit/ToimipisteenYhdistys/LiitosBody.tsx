@@ -1,6 +1,6 @@
 import React from 'react';
 import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
+import Select from 'react-select';
 import { LiitaOrganisaatioon, Option, UiOrganisaatioBase } from '../../../types/types';
 import { useOrganisaatioHaku } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';

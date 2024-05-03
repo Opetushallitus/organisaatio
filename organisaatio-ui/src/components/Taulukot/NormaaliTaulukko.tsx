@@ -17,11 +17,10 @@ import {
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import searchIcon from '@iconify/icons-fa-solid/search';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
+import Select, { MultiValue } from 'react-select';
 import chevronLeft from '@iconify/icons-fa-solid/chevron-left';
 import chevronRight from '@iconify/icons-fa-solid/chevron-right';
 import { Ryhma, SelectOptionType } from '../../types/types';
-import { ValueType } from 'react-select';
 import IconWrapper from '../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../api/lokalisaatio';
@@ -59,11 +58,9 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
     const [ryhmaTyypitKoodisto] = useAtom(ryhmaTyypitKoodistoAtom);
     const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
     const [ryhmanTilaKoodisto] = useAtom(ryhmanTilaKoodistoAtom);
-    const [tyyppiFiltteri, setTyyppiFiltteri] = useState<
-        ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
-    >();
-    const [kayttoRyhmatFiltteri, setKayttoRyhmatFiltteri] = useState<ValueType<SelectOptionType>[] | undefined>();
-    const [tilaFiltteri, setTilaFiltteri] = useState<ValueType<SelectOptionType>[] | undefined>();
+    const [tyyppiFiltteri, setTyyppiFiltteri] = useState<MultiValue<SelectOptionType>>([]);
+    const [kayttoRyhmatFiltteri, setKayttoRyhmatFiltteri] = useState<MultiValue<SelectOptionType>>([]);
+    const [tilaFiltteri, setTilaFiltteri] = useState<MultiValue<SelectOptionType>>([]);
 
     const ryhmatyypitOptions = ryhmaTyypitKoodisto.selectOptions();
     const kayttoRyhmatOptions = kayttoRyhmatKoodisto.selectOptions();
@@ -89,20 +86,16 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                         <label>{i18n.translate('RYHMAT_RYHMAN_TYYPPI')}</label>
                         <Select
                             id={'RYHMAN_TYYPPI_SELECT'}
-                            onChange={(
-                                values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
-                            ) => {
-                                setTyyppiFiltteri(values as ValueType<SelectOptionType>[] | undefined);
+                            onChange={(values: MultiValue<SelectOptionType>) => {
+                                setTyyppiFiltteri(values);
                                 let tyyppi: string | undefined = undefined;
-                                if (values && (values as ValueType<SelectOptionType>[]).length > 0) {
-                                    tyyppi = (values as ValueType<SelectOptionType>[])
-                                        .map((val) => val && (val as SelectOptionType).label)
-                                        .join(', ');
+                                if (values?.length > 0) {
+                                    tyyppi = values.map((val) => val?.label).join(', ');
                                 }
                                 setFilter('Tyyppi', tyyppi || undefined);
                             }}
                             isMulti
-                            value={tyyppiFiltteri as ValueType<SelectOptionType>}
+                            value={tyyppiFiltteri}
                             options={ryhmatyypitOptions}
                         />
                     </div>
@@ -110,20 +103,16 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                         <label>{i18n.translate('RYHMAT_RYHMAN_KAYTTOTARKOITUS')}</label>
                         <Select
                             id={'RYHMAN_KAYTTOTARKOITUS_SELECT'}
-                            onChange={(
-                                values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
-                            ) => {
-                                setKayttoRyhmatFiltteri(values as ValueType<SelectOptionType>[] | undefined);
+                            onChange={(values: MultiValue<SelectOptionType>) => {
+                                setKayttoRyhmatFiltteri(values);
                                 let kayttoryhmat: string | undefined = undefined;
-                                if (values && (values as ValueType<SelectOptionType>[]).length > 0) {
-                                    kayttoryhmat = (values as ValueType<SelectOptionType>[])
-                                        .map((val) => val && (val as SelectOptionType).label)
-                                        .join(', ');
+                                if (values?.length > 0) {
+                                    kayttoryhmat = values.map((val) => val?.label).join(', ');
                                 }
                                 setFilter('Kayttotarkoitus', kayttoryhmat || undefined);
                             }}
                             isMulti
-                            value={kayttoRyhmatFiltteri as ValueType<SelectOptionType>}
+                            value={kayttoRyhmatFiltteri}
                             options={kayttoRyhmatOptions}
                         />
                     </div>
@@ -131,21 +120,12 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                         <label>{i18n.translate('RYHMAT_RYHMAT_TILA')}</label>
                         <Select
                             id={'RYHMAN_TILA_SELECT'}
-                            onChange={(
-                                values: ValueType<SelectOptionType>[] | ValueType<SelectOptionType> | undefined
-                            ) => {
-                                setTilaFiltteri(values as ValueType<SelectOptionType>[] | undefined);
-                                setFilter(
-                                    'status',
-                                    (values &&
-                                        (values as ValueType<SelectOptionType>[]).map(
-                                            (val) => val && (val as SelectOptionType).label
-                                        )) ||
-                                        undefined
-                                );
+                            onChange={(values: MultiValue<SelectOptionType>) => {
+                                setTilaFiltteri(values);
+                                setFilter('status', (values && values.map((val) => val?.label)) || undefined);
                             }}
                             isMulti
-                            value={tilaFiltteri as ValueType<SelectOptionType>}
+                            value={tilaFiltteri}
                             options={ryhmanTilaOptions}
                         />
                     </div>

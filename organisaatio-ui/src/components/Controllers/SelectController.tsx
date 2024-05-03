@@ -1,13 +1,11 @@
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import * as React from 'react';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
-import { ValueType } from 'react-select';
-import { Koodisto } from '../../types/types';
+import Select from 'react-select';
+import { Koodisto, KoodistoSelectOption } from '../../types/types';
 
 export default function SelectController<T extends FieldValues>({
     name,
     form,
-    validationErrors,
     koodisto,
     disabled,
 }: {
@@ -23,12 +21,11 @@ export default function SelectController<T extends FieldValues>({
             name={name}
             render={({ field: { ref, value, ...rest } }) => {
                 return (
-                    <Select
+                    <Select<KoodistoSelectOption>
                         isDisabled={disabled}
-                        value={value as ValueType<{ label: string; value: string }>}
+                        value={value}
                         id={name}
                         {...rest}
-                        error={!!validationErrors[name]}
                         options={koodisto?.selectOptions()}
                     />
                 );

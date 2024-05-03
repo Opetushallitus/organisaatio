@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SelectDropdown.module.css';
-import Select, { components, OptionProps, ValueType } from 'react-select';
+import Select, { components, MultiValue, OptionProps } from 'react-select';
 import { CheckedIcon, UncheckedIcon } from './Checkbox';
 
 export type DropdownProps = {
@@ -19,7 +19,7 @@ export type DropdownOption = {
 
 export function SelectDropdown({ onChange, label, options, disabled, selections, classNamePrefix }: DropdownProps) {
     const selection = options.filter((v) => selections.includes(v.value));
-    function selectOnChange(selection: ValueType<DropdownOption>) {
+    function selectOnChange(selection: MultiValue<DropdownOption>) {
         if (Array.isArray(selection)) {
             onChange(selection.map((_) => _.value));
         } else {
@@ -32,7 +32,7 @@ export function SelectDropdown({ onChange, label, options, disabled, selections,
 
     return (
         <div className={styles.SelectDropdown} role="listbox" aria-multiselectable={true}>
-            <Select<DropdownOption>
+            <Select<DropdownOption, true>
                 aria-label={label}
                 className={styles.Select}
                 escapeClearsValue={false}
@@ -91,7 +91,7 @@ export function SelectionItem({ value, label, onRemove }: SelectionItemProps) {
     );
 }
 
-export function CustomOption(props: OptionProps<DropdownOption>) {
+export function CustomOption(props: OptionProps<DropdownOption, true>) {
     const { isSelected, children } = props;
     return (
         <components.Option {...props}>

@@ -1,8 +1,8 @@
 import * as React from 'react';
+import Select from 'react-select';
 import styles from './MuokkausLomake.module.css';
 import homeIcon from '@iconify/icons-fa-solid/home';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-import Select from '@opetushallitus/virkailija-ui-components/Select';
 import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
@@ -168,7 +168,6 @@ const MuokkausLomake = ({
                                     <Select
                                         id={'RYHMALOMAKE_RYHMAN_TYYPPI_SELECT'}
                                         {...field}
-                                        error={!!validationErrors['ryhmatyypit']}
                                         isMulti
                                         options={ryhmaTyypitOptions}
                                         isDisabled={isDisabled}
@@ -188,7 +187,6 @@ const MuokkausLomake = ({
                                     <Select
                                         id={'RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT'}
                                         {...field}
-                                        error={!!validationErrors['kayttoryhmat']}
                                         isMulti
                                         options={kayttoRyhmatOptions}
                                         isDisabled={isDisabled}

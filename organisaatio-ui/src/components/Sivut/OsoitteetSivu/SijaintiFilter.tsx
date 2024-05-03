@@ -1,11 +1,12 @@
 import { CustomOption, DropdownOption, SelectDropdown, SelectionItem, SelectionList } from './SelectDropdown';
 import { RajausAccordion } from './RajausAccordion';
-import React, { CSSProperties, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { KoodistoKoodi, MaakuntaKoodi } from './OsoitteetApi';
 import { KoodiUri } from '../../../types/types';
-import Select, { ActionMeta, ValueType } from 'react-select';
+import Select, { ActionMeta, CSSObjectWithLabel, GroupBase, GroupHeadingProps, MultiValue } from 'react-select';
 
 import styles from './Filter.module.css';
+import { OptionProps } from 'react-select';
 
 type AlueId = 'alue_mannersuomi' | 'alue_kokosuomi' | 'alue_ulkomaa';
 type UlkomaaAlue = { id: 'alue_ulkomaa'; label: string };
@@ -236,7 +237,7 @@ function AlueTaiMaakuntaFilter({
     return (
         <div className={styles.Column}>
             <h4>Alue tai maakunta:</h4>
-            <Select<DropdownOption>
+            <Select<DropdownOption, true>
                 aria-label={label}
                 className={styles.Select}
                 escapeClearsValue={false}
@@ -248,8 +249,12 @@ function AlueTaiMaakuntaFilter({
                 options={groupedOptions}
                 classNamePrefix="alue-react-select"
                 classNames={{
-                    option: styles.ReactSelectOption,
-                    groupHeading: styles.ReactSelectGroupHeading,
+                    option: (styles.ReactSelectOption as unknown) as (
+                        props: OptionProps<DropdownOption, true, GroupBase<DropdownOption>>
+                    ) => string,
+                    groupHeading: (styles.ReactSelectGroupHeading as unknown) as (
+                        props: GroupHeadingProps<DropdownOption, true, GroupBase<DropdownOption>>
+                    ) => string,
                 }}
                 styles={{
                     option: (_, state) => ({
@@ -259,7 +264,7 @@ function AlueTaiMaakuntaFilter({
                             ? 'var(--color-primary-blue-lighten-4)'
                             : 'var(--color-neutral-white)',
                     }),
-                    groupHeading: (css: CSSProperties) => ({
+                    groupHeading: (css: CSSObjectWithLabel) => ({
                         ...css,
                         borderBottom: '1px solid rgba(153, 153, 153, 0.5018)',
                         marginLeft: '16px',
@@ -284,7 +289,7 @@ function AlueTaiMaakuntaFilter({
     );
 }
 function mapReactSelectOnChangeToChecked(onChecked: (value: string, checked: boolean) => void) {
-    return function (_selection: ValueType<DropdownOption>, action: ActionMeta<DropdownOption>) {
+    return function (_selection: MultiValue<DropdownOption>, action: ActionMeta<DropdownOption>) {
         switch (action.action) {
             case 'select-option':
                 onChecked(action.option!.value, true);
