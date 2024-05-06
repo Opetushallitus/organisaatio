@@ -70,14 +70,14 @@ Cypress.Commands.add('clickAccordion', (contains) => {
         });
 });
 
-Cypress.Commands.add('selectFromList', (list, contains, input) => {
+Cypress.Commands.add('selectFromList', (list, contains, input, waitForAnimations = true) => {
     if (input) {
         cy.contains(list).parent().find('input').type(input);
     } else cy.contains(list).parent().find('svg').last().scrollIntoView().click();
     return cy
         .contains(contains, { timeout: 10000 })
         .scrollIntoView()
-        .click()
+        .click({ waitForAnimations })
         .then(() => {
             cy.log(`${list}, ${contains} select clicked`);
         });
