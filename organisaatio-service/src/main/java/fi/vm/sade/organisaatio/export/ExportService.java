@@ -129,7 +129,7 @@ public class ExportService {
         generateJsonExports();
     }
 
-    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, kielet, koulutustoimia_oid, oppilaitos_oid, tila FROM export.organisaatio";
+    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, koulutustoimia_oid, oppilaitos_oid, tila FROM export.organisaatio";
     private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli FROM export.osoite";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
 
