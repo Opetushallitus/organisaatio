@@ -273,6 +273,7 @@ function AlueTaiMaakuntaFilter({
                         paddingLeft: '0px',
                         paddingBottom: '6px',
                     }),
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 }}
                 closeMenuOnSelect={false}
                 value={reactSelectSelection}

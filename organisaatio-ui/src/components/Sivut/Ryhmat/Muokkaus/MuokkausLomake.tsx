@@ -171,6 +171,7 @@ const MuokkausLomake = ({
                                         isMulti
                                         options={ryhmaTyypitOptions}
                                         isDisabled={isDisabled}
+                                        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                     />
                                 )}
                             />
@@ -190,6 +191,7 @@ const MuokkausLomake = ({
                                         isMulti
                                         options={kayttoRyhmatOptions}
                                         isDisabled={isDisabled}
+                                        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                     />
                                 )}
                             />

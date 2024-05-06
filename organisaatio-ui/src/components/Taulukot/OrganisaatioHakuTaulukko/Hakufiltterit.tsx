@@ -91,6 +91,7 @@ const HakuFilterSelect = (props: HakufiltteritSelectProps) => {
                 isDisabled={disabled}
                 value={selectedOption || null}
                 options={selectOptions}
+                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
         </div>
     );

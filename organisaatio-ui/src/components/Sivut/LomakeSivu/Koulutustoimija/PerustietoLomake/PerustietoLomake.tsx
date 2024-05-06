@@ -223,6 +223,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 {...field}
                                 ref={undefined}
                                 options={kunnatOptions}
+                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             />
                         )}
                     />
@@ -238,6 +239,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 {...rest}
                                 isMulti
                                 options={kunnatOptions}
+                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             />
                         )}
                     />
@@ -254,6 +256,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
+                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             />
                         )}
                     />
@@ -271,6 +274,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                                 id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
+                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             />
                         )}
                     />

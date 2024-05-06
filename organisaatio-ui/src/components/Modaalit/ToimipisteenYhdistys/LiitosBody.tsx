@@ -51,6 +51,7 @@ export default function LiitosBody({ liitaOrganisaatio, handleChange, organisaat
                                         }),
                                     });
                             }}
+                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                         />
                     </BodyKentta>
                 </BodyRivi>

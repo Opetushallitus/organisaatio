@@ -53,6 +53,7 @@ export function SelectDropdown({ onChange, label, options, disabled, selections,
                             ? 'var(--color-primary-blue-lighten-4)'
                             : 'var(--color-neutral-white)',
                     }),
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                 }}
                 closeMenuOnSelect={false}
                 value={selection}

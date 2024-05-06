@@ -28,6 +28,7 @@ export default function MultiSelectController<T extends FieldValues>({
                         id={name}
                         {...rest}
                         options={koodisto?.selectOptions()}
+                        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                     />
                 );
             }}

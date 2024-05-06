@@ -97,6 +97,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                             isMulti
                             value={tyyppiFiltteri}
                             options={ryhmatyypitOptions}
+                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                         />
                     </div>
                     <div className={styles.Kentta}>
@@ -114,6 +115,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                             isMulti
                             value={kayttoRyhmatFiltteri}
                             options={kayttoRyhmatOptions}
+                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                         />
                     </div>
                     <div className={styles.Kentta}>
@@ -127,6 +129,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                             isMulti
                             value={tilaFiltteri}
                             options={ryhmanTilaOptions}
+                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                         />
                     </div>
                 </div>
