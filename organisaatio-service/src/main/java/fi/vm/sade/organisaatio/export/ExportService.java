@@ -47,7 +47,7 @@ public class ExportService {
     private final String CREATE_EXPORT_ORGANISAATIO_SQL = """
             CREATE TABLE exportnew.organisaatio AS
             SELECT
-              o.oid,
+              o.oid as organisaatio_oid,
               o.oppilaitostyyppi,
               o.oppilaitoskoodi as oppilaitosnumero,
               o.kotipaikka,
