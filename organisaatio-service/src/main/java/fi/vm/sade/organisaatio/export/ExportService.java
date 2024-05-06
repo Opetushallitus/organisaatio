@@ -178,7 +178,7 @@ public class ExportService {
                         rs.getString("kieli")
                 )
         ));
-        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, S3_PREFIX + "/json/organisaatiosuhteet.json", unchecked(rs ->
+        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, S3_PREFIX + "/json/organisaatiosuhde.json", unchecked(rs ->
                 new ExportedOrganisaatioSuhde(
                         rs.getString("suhdetyyppi"),
                         rs.getString("parent_oid"),
