@@ -287,8 +287,11 @@ test.describe("Osoitepalvelu", () => {
         }
       );
 
-      await openDropdown(page, "Hae perusopetuksen vuosiluokkatiedolla");
-      await selectFromDropdown(page, "Lisäopetuksessa");
+      await selectFromDropdown(
+        page,
+        "Hae perusopetuksen vuosiluokkatiedolla",
+        "Lisäopetuksessa"
+      );
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
     });
@@ -363,9 +366,11 @@ test.describe("Osoitepalvelu", () => {
     await test.step(
       "Changes filter description on selection change",
       async () => {
-        await openDropdown(page, "Hae alueen tai maakunnan nimellä");
-
-        await selectFromDropdown(page, "Koko Suomi");
+        await selectFromDropdown(
+          page,
+          "Hae alueen tai maakunnan nimellä",
+          "Koko Suomi"
+        );
         await expect(sijaintiFilter.selectionIndicator).toHaveText(
           "Koko Suomi"
         );
@@ -1153,6 +1158,10 @@ async function selectFromJärjestämislupaDropdown(page: Page, label: string) {
       "Hae yksittäisten tutkintojen ja koulutusten nimillä"
     );
   }
+  await page.fill(
+    `[aria-label="Hae yksittäisten tutkintojen ja koulutusten nimillä"]`,
+    label
+  );
   await page.getByLabel(label, { exact: true }).click();
 }
 
@@ -1161,6 +1170,7 @@ async function selectFromAlueDropdown(page: Page, label: string) {
   if (!(await page.isVisible(".alue-react-select__menu"))) {
     await openDropdown(page, "Hae alueen tai maakunnan nimellä");
   }
+  await page.fill(`[aria-label="Hae alueen tai maakunnan nimellä"]`, label);
   await page.getByLabel(label, { exact: true }).click();
 }
 
@@ -1169,6 +1179,7 @@ async function selectFromKuntaDropdown(page: Page, label: string) {
   if (!(await page.isVisible(".kunta-react-select__menu"))) {
     await openDropdown(page, "Hae kunnan nimellä");
   }
+  await page.fill(`[aria-label="Hae kunnan nimellä"]`, label);
   await page.getByLabel(label, { exact: true }).click();
 }
 
@@ -1177,6 +1188,10 @@ async function selectFromKoulutustoimijaDropdown(page: Page, label: string) {
   if (!(await page.isVisible(".koulutustoimija-react-select__menu"))) {
     await openDropdown(page, "Hae käyttäjiä koulutustoimijan nimellä");
   }
+  await page.fill(
+    `[aria-label="Hae käyttäjiä koulutustoimijan nimellä"]`,
+    label
+  );
   await page.getByLabel(label, { exact: true }).click();
 }
 
@@ -1185,14 +1200,23 @@ async function selectFromKayttooikeusryhmaDropdown(page: Page, label: string) {
   if (!(await page.isVisible(".kayttooikeusryhma-react-select__menu"))) {
     await openDropdown(page, "Hae käyttäjiä käyttöoikeusryhmillä");
   }
+  await page.fill(`[aria-label="Hae käyttäjiä käyttöoikeusryhmillä"]`, label);
   await page.getByLabel(label, { exact: true }).click();
 }
 
 async function openDropdown(page: Page, label: string) {
-  await page.getByText(label, { exact: true }).click();
+  await page.locator(`div:has(> [aria-label="${label}"])`).click();
 }
 
-async function selectFromDropdown(page: Page, label: string) {
+async function selectFromDropdown(
+  page: Page,
+  dropdownPlaceholder: string,
+  label: string
+) {
+  await page
+    .locator(`div:has(> [aria-label="${dropdownPlaceholder}"])`)
+    .click();
+  await page.fill(`[aria-label="${dropdownPlaceholder}"]`, label);
   await page.getByLabel(label, { exact: true }).click();
 }
 
