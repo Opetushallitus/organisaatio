@@ -24,5 +24,13 @@ class ExportServiceTest {
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatio", Long.class)).isEqualTo(13L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(24L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatiosuhde", Long.class)).isEqualTo(11L);
+
+        assertThat(getParentOid("1.2.2004.2")).isEqualTo("1.2.2004.1");
+        assertThat(getParentOid("1.2.2004.1")).isEqualTo("1.2.246.562.24.00000000001");
+        assertThat(getParentOid("1.2.246.562.24.00000000001")).isNull();
+    }
+
+    private String getParentOid(String oid) {
+        return jdbcTemplate.queryForObject("SELECT parent_oid FROM export.organisaatio WHERE organisaatio_oid = ?", String.class, oid);
     }
 }

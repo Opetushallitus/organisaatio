@@ -74,11 +74,11 @@ public class ExportService {
               (SELECT parent_oid
                FROM organisaatio_parent_oids
                WHERE organisaatio_id = o.id
-               AND parent_position = 1) AS koulutustoimia_oid,
+               AND parent_position = 1) AS grandparent_oid,
               (SELECT parent_oid
                FROM organisaatio_parent_oids
                WHERE organisaatio_id = o.id
-               AND parent_position = 0) AS oppilaitos_oid,
+               AND parent_position = 0) AS parent_oid,
               CASE
                 WHEN o.organisaatiopoistettu = true THEN 'POISTETTU'
                 WHEN current_date < o.alkupvm THEN 'SUUNNITELTU'
@@ -130,7 +130,7 @@ public class ExportService {
         generateJsonExports();
     }
 
-    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, koulutustoimia_oid, oppilaitos_oid, tila FROM export.organisaatio";
+    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila FROM export.organisaatio";
     private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli FROM export.osoite";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
 
@@ -164,8 +164,8 @@ public class ExportService {
                         rs.getString("nimi_sv"),
                         rs.getString("oppilaitostyyppi"),
                         rs.getString("opetuskielet"),
-                        rs.getString("koulutustoimia_oid"),
-                        rs.getString("oppilaitos_oid"),
+                        rs.getString("grandparent_oid"),
+                        rs.getString("parent_oid"),
                         rs.getString("tila")
                 )
         ));
@@ -314,8 +314,8 @@ record ExportedOrganisaatio(String organisaatio_oid,
                             String nimi_sv,
                             String oppilaitostyyppi,
                             String opetuskielet,
-                            String koulutustoimia_oid,
-                            String oppilaitos_oid,
+                            String grandparent_oid,
+                            String parent_oid,
                             String tila) {
 }
 
