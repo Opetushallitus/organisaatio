@@ -103,14 +103,11 @@ public class ExportService {
 
     private final String CREATE_EXPORT_ORGANISAATIOSUHDE_SQL = """
             CREATE TABLE exportnew.organisaatiosuhde AS
-            SELECT suhdetyyppi,
-                   (SELECT o.oid
-                      FROM organisaatio o
-                      WHERE o.id = parent_id) AS parent_oid,
-                   (SELECT o.oid
-                      FROM organisaatio o
-                      WHERE id = child_id) AS child_oid
-                   FROM organisaatiosuhde;
+            SELECT organisaatiosuhde.suhdetyyppi, parent.oid AS parent_oid, child.oid AS child_oid,
+                   organisaatiosuhde.alkupvm, organisaatiosuhde.loppupvm
+            FROM organisaatiosuhde
+            JOIN organisaatio parent ON parent.id = parent_id
+            JOIN organisaatio child ON child.id = child_id
             """;
 
     @Transactional
