@@ -124,7 +124,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers("/swagger-ui/").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/swagger-resources/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/api/**").permitAll()
                     .requestMatchers("/rest/**").permitAll()

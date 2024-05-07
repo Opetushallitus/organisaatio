@@ -45,7 +45,7 @@ public class DevWebSecurityConfiguration {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/swagger-resources/**").permitAll()
-                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/rest/**").permitAll()
                 .requestMatchers("/mock/**").permitAll()
