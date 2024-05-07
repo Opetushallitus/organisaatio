@@ -120,16 +120,10 @@ public class EmailService {
     public Viesti getViesti(QueuedEmail email, List<String> recipients, String lahetystunniste) {
         return Viesti.builder()
             .lahetysTunniste(lahetystunniste)
-            .lahettaja(OSOITEPALVELU_LAHETTAJA)
-            .replyTo(email.getReplyTo())
-            .lahettavanVirkailijanOid(email.getVirkailijaOid())
             .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
             .otsikko(email.getSubject())
             .sisalto(email.getBody())
             .sisallonTyyppi(SisallonTyyppi.text)
-            .lahettavaPalvelu("osoitepalvelu")
-            .prioriteetti(Prioriteetti.normaali)
-            .sailytysaika(SAILYTYSAIKA)
             .liitteidenTunnisteet(email.getAttachmentIds())
             .build();
     }
