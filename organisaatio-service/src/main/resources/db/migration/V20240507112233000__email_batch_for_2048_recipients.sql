@@ -1,0 +1,1 @@
+ALTER TABLE queuedemail ADD COLUMN batch_sent int not null default 0;

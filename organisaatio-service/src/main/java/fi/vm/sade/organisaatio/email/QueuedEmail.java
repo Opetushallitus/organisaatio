@@ -24,4 +24,5 @@ public class QueuedEmail {
     private Timestamp created;
     private Timestamp modified;
     private List<String> attachmentIds;
+    private int batchSent;
 }
