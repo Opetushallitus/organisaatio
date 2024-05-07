@@ -132,7 +132,7 @@ public class ExportService {
 
     private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila FROM export.organisaatio";
     private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli FROM export.osoite";
-    private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid FROM export.organisaatiosuhde";
+    private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid, alkupvm, loppupvm FROM export.organisaatiosuhde";
 
     public void generateCsvExports() {
         exportQueryToS3(S3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
@@ -183,7 +183,9 @@ public class ExportService {
                 new ExportedOrganisaatioSuhde(
                         rs.getString("suhdetyyppi"),
                         rs.getString("parent_oid"),
-                        rs.getString("child_oid")
+                        rs.getString("child_oid"),
+                        rs.getString("alkupvm"),
+                        rs.getString("loppupvm")
                 )
         ));
         return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile);
@@ -327,5 +329,5 @@ record ExportedOsoite(String organisaatio_oid,
                       String kieli) {
 }
 
-record ExportedOrganisaatioSuhde(String suhdetyyppi, String parent_oid, String child_oid) {
+record ExportedOrganisaatioSuhde(String suhdetyyppi, String parent_oid, String child_oid, String alkupvm, String loppupvm) {
 }
