@@ -185,7 +185,7 @@ public class EmailService {
                 UPDATE queuedemail SET
                     last_attempt = current_timestamp,
                     modified = current_timestamp
-                    WHERE id = ?::uuid
+                WHERE id = ?::uuid
                 """;
         jdbcTemplate.update(sql, emailId);
     }
@@ -193,9 +193,9 @@ public class EmailService {
     private void updateLahetysTunniste(String emailId, String lahetystunniste) {
         var sql = """
                 UPDATE queuedemail SET
-                    lahetystunniste = ?
-                    modified = current_timestamp,
-                    WHERE id = ?::uuid
+                    lahetystunniste = ?,
+                    modified = current_timestamp
+                WHERE id = ?::uuid
                 """;
         jdbcTemplate.update(sql, lahetystunniste, emailId);
     }
@@ -206,7 +206,7 @@ public class EmailService {
                     last_attempt = current_timestamp,
                     modified = current_timestamp,
                     batch_sent = ?
-                    WHERE id = ?::uuid
+                WHERE id = ?::uuid
                 """;
         jdbcTemplate.update(sql, batchSize, emailId);
     }
@@ -218,7 +218,7 @@ public class EmailService {
                     last_attempt = current_timestamp,
                     sent_at = current_timestamp,
                     modified = current_timestamp
-                    WHERE id = ?::uuid
+                WHERE id = ?::uuid
                 """;
         jdbcTemplate.update(sql, emailId);
     }

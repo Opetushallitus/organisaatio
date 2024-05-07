@@ -32,7 +32,7 @@ public class MockViestinvalitysResource {
         return response;
     }
 
-    @PostMapping(path = "/v1/lahetys", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/v1/lahetykset", produces = MediaType.APPLICATION_JSON_VALUE)
     public LuoLahetysSuccessResponse luoLahetys() throws IOException {
         if (enabled) {
             var response = new LuoLahetysSuccessResponse();
