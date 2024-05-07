@@ -120,6 +120,10 @@ public class ExportService {
         jdbcTemplate.execute(CREATE_EXPORT_ORGANISAATIO_SQL);
         jdbcTemplate.execute(CREATE_EXPORT_ORGANISAATIOSUHDE_SQL);
         jdbcTemplate.execute(CREATE_EXPORT_OSOITE_SQL);
+        jdbcTemplate.execute("ALTER TABLE exportnew.organisaatio ADD CONSTRAINT organisaatio_pk PRIMARY KEY (organisaatio_oid)");
+        jdbcTemplate.execute("ALTER TABLE exportnew.osoite ADD CONSTRAINT organisaatio_fk FOREIGN KEY (organisaatio_oid) REFERENCES exportnew.organisaatio (organisaatio_oid)");
+        jdbcTemplate.execute("ALTER TABLE exportnew.organisaatiosuhde ADD CONSTRAINT parent_fk FOREIGN KEY (parent_oid) REFERENCES exportnew.organisaatio (organisaatio_oid)");
+        jdbcTemplate.execute("ALTER TABLE exportnew.organisaatiosuhde ADD CONSTRAINT child_fk FOREIGN KEY (child_oid) REFERENCES exportnew.organisaatio (organisaatio_oid)");
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA exportnew RENAME TO export");
     }
