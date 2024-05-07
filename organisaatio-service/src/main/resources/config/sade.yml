@@ -6,7 +6,7 @@ koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.opintopolku.fi/lahetys"
 viestinvalitys.uiurl: "https://viestinvalitys.opintopolku.fi/"
 
-organisaatio.tasks.export.enabled: false
+organisaatio.tasks.export.enabled: true
 organisaatio.tasks.export.bucket-name: oph-yleiskayttoiset-export-sade
 organisaatio.tasks.export.copy-to-lampi: true
 organisaatio.tasks.export.lampi-bucket-name: oph-lampi-prod
