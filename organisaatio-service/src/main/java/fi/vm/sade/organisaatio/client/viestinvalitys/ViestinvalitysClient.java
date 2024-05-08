@@ -28,6 +28,22 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
         this.baseUrl = baseUrl;
     }
 
+    public LuoLahetysSuccessResponse luoLahetys(Lahetys lahetys) {
+        try {
+            var response = post("/v1/lahetykset", mapper.writeValueAsString(lahetys));
+            if (response.getStatus() == 200) {
+                return mapper.readValue(response.getBody(), LuoLahetysSuccessResponse.class);
+            } else {
+                throw new UnexpectedResponseException(response);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+
     public LuoViestiSuccessResponse luoViesti(Viesti viesti) {
         try {
             var response = post("/v1/viestit", mapper.writeValueAsString(viesti));
