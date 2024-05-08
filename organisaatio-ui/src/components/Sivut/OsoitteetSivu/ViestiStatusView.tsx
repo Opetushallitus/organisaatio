@@ -19,7 +19,7 @@ export const ViestiStatusView = () => {
     const [email, setEmail] = useState<GetEmailResponse | undefined>(undefined);
 
     useEffect(() => {
-        const getEmailWithRetry = async (retryCount: number) => {
+        const getEmailFn = async () => {
             try {
                 const newEmail = await getEmail(emailId);
                 setEmail(newEmail);
@@ -27,20 +27,21 @@ export const ViestiStatusView = () => {
                 console.error(error);
                 setError(true);
             }
-
-            if (!email || email.status === 'QUEUED') {
-                setTimeout(() => getEmailWithRetry(retryCount + 1), 1000);
-            }
         };
 
-        getEmailWithRetry(0);
+        const handler = setInterval(() => getEmailFn(), 5000);
+        return () => {
+            if (handler) {
+                clearInterval(handler);
+            }
+        };
     }, [emailId]);
 
     function toViestinvalityspalvelu() {
-        window.open(`${viestinvalityspalveluUrl}/viestinvalitys-raportointi`);
+        window.open(viestinvalityspalveluUrl);
     }
     function toLahetysraportti(lahetysTunniste: string) {
-        window.open(`${viestinvalityspalveluUrl}/viestinvalitys-raportointi/lahetys/${lahetysTunniste}`);
+        window.open(`${viestinvalityspalveluUrl}/lahetys/${lahetysTunniste}`);
     }
     function backToOsoitepalvelu() {
         history.push('/osoitteet');
