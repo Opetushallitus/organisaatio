@@ -1060,7 +1060,9 @@ test.describe("Osoitepalvelu", () => {
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
-      await expect(page.getByText("Lähetys onnistui!")).toBeVisible();
+      await expect(page.getByText("Lähetys onnistui!")).toBeVisible({
+        timeout: 10000,
+      });
     });
 
     test("failing to send message shows 'Lähetyksessä on viivettä' page", async ({
@@ -1132,7 +1134,9 @@ test.describe("Osoitepalvelu", () => {
       await kirjoitaViestiForm.viestiField.input.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
-      await expect(page.getByText("Lähetys onnistui!")).toBeVisible();
+      await expect(page.getByText("Lähetys onnistui!")).toBeVisible({
+        timeout: 10000,
+      });
     });
   });
 });

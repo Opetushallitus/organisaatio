@@ -17,14 +17,23 @@ export const ViestiStatusView = () => {
     const { emailId } = useParams<{ emailId: string }>();
     const [error, setError] = useState(false);
     const [email, setEmail] = useState<GetEmailResponse | undefined>(undefined);
+
     useEffect(() => {
-        setError(false);
-        getEmail(emailId)
-            .then((email) => setEmail(email))
-            .catch((error) => {
+        const getEmailWithRetry = async (retryCount: number) => {
+            try {
+                const newEmail = await getEmail(emailId);
+                setEmail(newEmail);
+            } catch (_) {
                 console.error(error);
                 setError(true);
-            });
+            }
+
+            if (!email || email.status === 'QUEUED') {
+                setTimeout(() => getEmailWithRetry(retryCount + 1), 1000);
+            }
+        };
+
+        getEmailWithRetry(0);
     }, [emailId]);
 
     function toViestinvalityspalvelu() {
