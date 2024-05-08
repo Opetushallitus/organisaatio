@@ -4,7 +4,7 @@ feature.ostj-201-muotoilematon-viesti: true
 
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.testiopintopolku.fi/lahetys"
-viestinvalitys.uiurl: "https://viestinvalitys.testiopintopolku.fi/"
+viestinvalitys.uiurl: "https://viestinvalitys.testiopintopolku.fi/raportointi"
 
 organisaatio.tasks.export.enabled: true
 organisaatio.tasks.export.bucket-name: oph-yleiskayttoiset-export-pallero

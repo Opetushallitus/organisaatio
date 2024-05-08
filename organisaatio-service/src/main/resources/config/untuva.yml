@@ -4,7 +4,7 @@ feature.ostj-201-muotoilematon-viesti: true
 
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.untuvaopintopolku.fi/lahetys"
-viestinvalitys.uiurl: "https://viestinvalitys.untuvaopintopolku.fi/"
+viestinvalitys.uiurl: "https://viestinvalitys.untuvaopintopolku.fi/raportointi"
 
 organisaatio.tasks.export.enabled: true
 organisaatio.tasks.export.bucket-name: oph-yleiskayttoiset-export-untuva
