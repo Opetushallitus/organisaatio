@@ -85,7 +85,13 @@ public class ExportService {
                 WHEN current_date BETWEEN o.alkupvm AND COALESCE(o.lakkautuspvm, current_date) THEN 'AKTIIVINEN'
                 ELSE 'LAKKAUTETTU'
               END AS tila
-              FROM organisaatio AS o;
+              FROM organisaatio AS o
+              WHERE NOT EXISTS(
+                SELECT 1
+                FROM organisaatio_tyypit
+                WHERE organisaatio_id = o.id
+                AND tyypit = 'Ryhma'
+              )
             """;
 
     private final String CREATE_EXPORT_OSOITE_SQL = """
