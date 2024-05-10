@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { AxiosError } from 'axios';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import FormLabel from '@opetushallitus/virkailija-ui-components/FormLabel';
@@ -82,6 +82,15 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const bodyValid = body.value.length >= 1;
     const sendDisabled = !subjectValid || !bodyValid || isSending;
     const hakutulos = useHakutulos(hakutulosId);
+    const selectedUniqueEmails = useMemo(() => {
+        if (hakutulos.state === 'OK') {
+            const emails = hakutulos.value.rows.flatMap((r: HakutulosRow | KayttajaHakutulosRow) =>
+                r.sahkoposti && selection.has(r.oid) ? r.sahkoposti : []
+            );
+            return new Set(emails).size;
+        }
+        return 0;
+    }, [hakutulos, selection]);
 
     useEffect(() => {
         if (hakutulos.state === 'OK') {
@@ -222,7 +231,9 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
             </div>
             <div className={styles.Content}>
                 <BlueBanner>
-                    {selection.size === 1 ? `${selection.size} vastaanottaja` : `${selection.size} vastaanottajaa`}
+                    {selectedUniqueEmails}
+                    {selectedUniqueEmails === 1 ? ` vastaanottaja` : ` vastaanottajaa`}
+                    {selection.size - selectedUniqueEmails > 0 && ` (${selection.size} valitusta hakutuloksesta)`}
                 </BlueBanner>
                 <div className={styles.Row}>
                     <div className={styles.Column}>

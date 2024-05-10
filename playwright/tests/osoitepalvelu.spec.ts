@@ -973,7 +973,9 @@ test.describe("Osoitepalvelu", () => {
     await hakutulosView.kirjoitaSahkopostiButton.click();
 
     await test.step("number of recipients is shown", async () => {
-      await expect(page.getByText("3 vastaanottajaa")).toBeVisible();
+      await expect(
+        page.getByText("1 vastaanottaja (3 valitusta hakutuloksesta)")
+      ).toBeVisible();
     });
 
     await test.step("has a default state", async () => {
