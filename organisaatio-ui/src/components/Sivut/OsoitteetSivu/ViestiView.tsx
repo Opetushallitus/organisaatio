@@ -71,6 +71,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
     const [body, onBodyChange] = useRequiredTextInput('Viesti', 6291456, '');
     const [files, setFiles] = useState<UploadedFile[]>([]);
+    const [isSending, setIsSending] = useState(false);
     const [fileUploading, setFileUploading] = useState(false);
     const [fileUploadError, setFileUploadError] = useState<string | undefined>();
     const [fileUploadProgress, setFileUploadProgress] = useState(0);
@@ -78,7 +79,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const uploadRef = useRef<HTMLInputElement>(null);
     const subjectValid = subject.value.length >= 1;
     const bodyValid = body.value.length >= 1;
-    const sendDisabled = !subjectValid || !bodyValid;
+    const sendDisabled = !subjectValid || !bodyValid || isSending;
     const hakutulos = useHakutulos(hakutulosId);
 
     useEffect(() => {
@@ -112,10 +113,12 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                 attachmentIds: files.map((f) => f.id!).filter(Boolean),
                 selectedOids,
             };
+            setIsSending(true);
             const response = await sendEmail(hakutulosId, request);
             history.push(`/osoitteet/viesti/${response.emailId}`);
         } catch (e) {
             console.error(e);
+            setIsSending(false);
             setSendError(true);
         }
     }
@@ -324,6 +327,11 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                     <Button onClick={onSendMail} disabled={sendDisabled}>
                         Lähetä
                     </Button>
+                    {isSending && (
+                        <div className={styles.SendSpinner}>
+                            <Spin size="small" />
+                        </div>
+                    )}
                 </div>
                 {sendError && (
                     <div className={osoitteetStyles.ErrorRow}>

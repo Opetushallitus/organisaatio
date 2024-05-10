@@ -19,22 +19,13 @@ export const ViestiStatusView = () => {
     const [email, setEmail] = useState<GetEmailResponse | undefined>(undefined);
 
     useEffect(() => {
-        const getEmailFn = async () => {
-            try {
-                const newEmail = await getEmail(emailId);
-                setEmail(newEmail);
-            } catch (_) {
-                console.error(error);
+        setError(false);
+        getEmail(emailId)
+            .then((email) => setEmail(email))
+            .catch((error) => {
+                console.log(error);
                 setError(true);
-            }
-        };
-
-        const handler = setInterval(() => getEmailFn(), 5000);
-        return () => {
-            if (handler) {
-                clearInterval(handler);
-            }
-        };
+            });
     }, [emailId]);
 
     function toViestinvalityspalvelu() {

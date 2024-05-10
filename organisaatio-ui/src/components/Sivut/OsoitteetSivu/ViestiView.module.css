@@ -224,3 +224,9 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.SendSpinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
