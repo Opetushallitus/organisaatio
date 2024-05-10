@@ -60,7 +60,9 @@ export class SearchView {
   }
 
   async goto() {
-    await this.page.goto("http://localhost:3003/osoitteet");
+    await this.page.goto(
+      "http://localhost:3003/organisaatio-service/osoitteet"
+    );
   }
 }
 

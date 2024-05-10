@@ -46,7 +46,7 @@ async function main() {
                 <ErrorBoundary>
                     <React.Suspense fallback={<Loading />}>
                         <InitializeApp>
-                            <OrganisaatioApp />{' '}
+                            <OrganisaatioApp />
                         </InitializeApp>
                     </React.Suspense>
                 </ErrorBoundary>

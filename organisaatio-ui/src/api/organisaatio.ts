@@ -160,6 +160,7 @@ async function setTarkastusPvm(oid: string) {
         const { data: newTarkistusPvm } = await Axios.put<number>(`${baseUrl}${oid}/tarkasta`);
         success({ message: 'MESSAGE_TARKASTUS_AIKA_TALLENNETTU' });
         if (newTarkistusPvm) return newTarkistusPvm;
+        else return null;
     });
 }
 
@@ -198,6 +199,7 @@ async function mergeOrganisaatio({
             return response;
         } else {
             warning({ message: 'MESSAGE_LIITOS_UUSI_VANHEMPI_PUUTTUU' });
+            return null;
         }
     });
 }

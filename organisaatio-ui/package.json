@@ -23,7 +23,6 @@
         "react-hook-form": "^7.8.4",
         "react-notifications-component": "^2.4.1",
         "react-router-dom": "5.2.0",
-        "react-scripts": "^5.0.1",
         "react-select": "^5.8.0",
         "react-table": "7.2.0",
         "react-window": "^1.8.10",
@@ -32,7 +31,6 @@
         "universal-cookie": "4.0.4"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@cypress/code-coverage": "^3.12.1",
         "@cypress/instrument-cra": "^1.4.0",
         "@types/jest": "^27",
@@ -49,27 +47,33 @@
         "@typescript-eslint/eslint-plugin": "^6.4.1",
         "@typescript-eslint/parser": "^6.4.1",
         "concurrently": "^6.0.2",
+        "copy-webpack-plugin": "^12.0.2",
+        "css-loader": "^6.11.0",
         "cypress": "^10.11.0",
-        "eslint": "^8.47.0",
-        "eslint-plugin-cypress": "^2.12.1",
-        "eslint-plugin-jest": "^27",
-        "eslint-plugin-react": "^7",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^8.10.0",
+        "eslint-plugin-jsx-a11y": "^6.8.0",
+        "eslint-plugin-react": "^7.34.1",
+        "file-loader": "^6.2.0",
+        "fork-ts-checker-webpack-plugin": "^9.0.2",
+        "html-webpack-plugin": "^5.6.0",
+        "mini-css-extract-plugin": "^2.9.0",
         "finnish-business-ids": "^3.1.1",
-        "husky": "^7.0.4",
         "prettier": "2.2.1",
         "pretty-quick": "^3.1.2",
+        "source-map-loader": "^5.0.0",
+        "style-loader": "^4.0.0",
+        "ts-loader": "^9.4.2",
         "typescript": "^4.9.5",
-        "wait-on": "^7.2.0"
+        "wait-on": "^7.2.0",
+        "webpack": "^5.91.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.4",
+        "webpack-manifest-plugin": "^5.0.0"
     },
     "scripts": {
-        "prepare": "cd .. && husky install organisaatio-ui/.husky",
-        "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
-        "nginx": "docker-compose -f nginx/docker-compose.yml up",
-        "start": "BROWSER=none PORT=3003 react-scripts -r @cypress/instrument-cra start organisaatioApp ",
-        "stop": "killall -SIGINT organisaatioApp",
-        "build": "CI='' react-scripts build",
-        "test": "react-scripts test --coverage --watchAll=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
-        "eject": "react-scripts eject",
+        "start": "NODE_ENV=development npx webpack serve",
+        "build": "GENERATE_SOURCEMAP=false NODE_ENV=production npx webpack --mode production",
         "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
         "lint:fix": "eslint --ext .ts,.tsx src --fix",
         "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
@@ -127,6 +131,53 @@
         "enabled": false
     },
     "jest": {
+        "roots": [
+            "<rootDir>/src"
+        ],
+        "collectCoverageFrom": [
+            "src/**/*.{js,jsx,ts,tsx}",
+            "!src/**/*.d.ts"
+        ],
+        "setupFiles": [
+            "react-app-polyfill/jsdom"
+        ],
+        "setupFilesAfterEnv": [],
+        "testMatch": [
+            "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+            "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+        ],
+        "testEnvironment": "jsdom",
+        "transform": {
+            "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
+            "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+            "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+        },
+        "transformIgnorePatterns": [
+            "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
+            "^.+\\.module\\.(css|sass|scss)$"
+        ],
+        "modulePaths": [],
+        "moduleNameMapper": {
+            "^react-native$": "react-native-web",
+            "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+        },
+        "moduleFileExtensions": [
+            "web.js",
+            "js",
+            "web.ts",
+            "ts",
+            "web.tsx",
+            "tsx",
+            "json",
+            "web.jsx",
+            "jsx",
+            "node"
+        ],
+        "watchPlugins": [
+            "jest-watch-typeahead/filename",
+            "jest-watch-typeahead/testname"
+        ],
+        "resetMocks": true,
         "coverageReporters": [
             "lcov"
         ]
@@ -137,5 +188,10 @@
     "engines": {
         "npm": "^10",
         "node": "^20"
+    },
+    "babel": {
+        "presets": [
+            "react-app"
+        ]
     }
 }

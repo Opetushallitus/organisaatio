@@ -50,7 +50,7 @@ export const containingSomeValueFilter = (
 
 export const includeVakaToimijatFilter = (
     rows: Row<OrganisaatioHakuOrganisaatio>[],
-    id: string,
+    _id: string,
     filterValue: boolean
 ): Row<OrganisaatioHakuOrganisaatio>[] =>
     rows.filter((row) => {
