@@ -1,7 +1,9 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.Map;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Viesti {
     private String lahetysTunniste;
     private Lahettaja lahettaja;

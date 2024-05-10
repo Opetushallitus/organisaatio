@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.resource.advice;
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
+import fi.vm.sade.organisaatio.client.viestinvalitys.BadRequestException;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.dto.ApiErrorDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrganisaatioResourceException.class)
     public ResponseEntity<Object> handleOrganisaatioResourceException(OrganisaatioResourceException e) {
         return ResponseEntity.status(e.getStatus()).body(ApiErrorDTO.builder().errorKey(e.getErrorKey()).errorMessage(e.getErrorMessage()).build());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Object> handleViestinvalitysBadRequestException(BadRequestException bre) {
+        return ResponseEntity.status(400).body(bre.getApiResponse().getBody());
     }
 
     @ExceptionHandler(Exception.class)

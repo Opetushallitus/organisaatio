@@ -70,8 +70,12 @@ public class EmailService {
             do {
                 allSent = transactionTemplate.execute(status -> sendViestiInBatches(emailId, lahetystunniste));
             } while (!allSent);
+        } catch (BadRequestException bre) {
+            log.info("Malformed email request sent " + emailId, bre);
+            markEmailInvalid(emailId);
+            throw bre;
         } catch (Exception e) {
-            log.info("Failed to send email {}", emailId, e);
+            log.warn("Failed to send email " + emailId, e);
             updateLastAttempt(emailId);
         }
     }
@@ -173,6 +177,17 @@ public class EmailService {
                 : null)
             .batchSent(rs.getInt("batch_sent"))
             .build();
+
+    private void markEmailInvalid(String emailId) {
+        var sql = """
+                UPDATE queuedemail SET
+                    queuedemailstatus_id = 'ERROR',
+                    last_attempt = current_timestamp,
+                    modified = current_timestamp
+                WHERE id = ?::uuid
+                """;
+        jdbcTemplate.update(sql, emailId);
+    }
 
     private void updateLastAttempt(String emailId) {
         var sql = """

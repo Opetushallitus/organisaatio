@@ -5,12 +5,14 @@ export class ViestiView {
   readonly lahetaButton: Locator;
   readonly aiheField: FormField;
   readonly viestiField: FormField;
+  readonly replyToField: FormField;
   readonly fileUploadButton: Locator;
 
   constructor(page: Page) {
     this.lahetaButton = page.getByRole("button", { name: "Lähetä" });
     this.aiheField = new AiheField(page);
     this.viestiField = new ViestiField(page);
+    this.replyToField = new ReplyToField(page);
     this.fileUploadButton = page.getByLabel("Lataa liitetiedosto");
   }
 }
@@ -36,6 +38,13 @@ class AiheField extends FormField {
 class ViestiField extends FormField {
   constructor(page: Page) {
     const input = page.locator("textarea");
+    super(page, input);
+  }
+}
+
+class ReplyToField extends FormField {
+  constructor(page: Page) {
+    const input = page.getByLabel("Vastausosoite (reply-to)");
     super(page, input);
   }
 }

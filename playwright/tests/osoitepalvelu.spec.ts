@@ -1031,7 +1031,6 @@ test.describe("Osoitepalvelu", () => {
   });
 
   test.skip("Viesti body has maximum length", async ({ page }) => {
-    const osoitepalveluPage = new SearchView(page);
     const kirjoitaViestiForm = new ViestiView(page);
     const viestiField = kirjoitaViestiForm.viestiField;
 
@@ -1053,7 +1052,6 @@ test.describe("Osoitepalvelu", () => {
     test("succesfully sending message shows 'Lähetys onnistui!' page", async ({
       page,
     }) => {
-      const osoitepalveluPage = new SearchView(page);
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
@@ -1069,7 +1067,6 @@ test.describe("Osoitepalvelu", () => {
       request,
       page,
     }) => {
-      const osoitepalveluPage = new SearchView(page);
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
@@ -1082,7 +1079,6 @@ test.describe("Osoitepalvelu", () => {
     });
 
     test("allows adding and removing attachments", async ({ page }) => {
-      const osoitepalveluPage = new SearchView(page);
       const kirjoitaViestiForm = new ViestiView(page);
       await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "dummy.pdf");
       await expect(page.getByLabel("Poista liite dummy.pdf")).toBeVisible();
@@ -1110,6 +1106,24 @@ test.describe("Osoitepalvelu", () => {
       ).toBeVisible();
       await expect(page.getByLabel("Poista liite dummy.pdf")).not.toBeVisible();
     });
+
+    test("shows errors from viestinvalitys if email is invalid", async ({
+      page,
+    }) => {
+      const kirjoitaViestiForm = new ViestiView(page);
+      await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
+      await kirjoitaViestiForm.aiheField.input.fill("Aihe");
+      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await kirjoitaViestiForm.replyToField.input.fill("invalid@invalid");
+      await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
+      await kirjoitaViestiForm.lahetaButton.click();
+      await expect(
+        page.getByText("Viestinvälityspalvelu palautti virheitä viestistä:")
+      ).toBeVisible();
+      await expect(
+        page.getByText("replyTo: arvo ei ole validi sähköpostiosoite")
+      ).toBeVisible();
+    });
   });
 
   test.describe("Sending email to users", async () => {
@@ -1127,7 +1141,6 @@ test.describe("Osoitepalvelu", () => {
       await hakutulosView.kirjoitaSahkopostiButton.click();
     });
     test("sending message shows 'Lähetys onnistui!' page", async ({ page }) => {
-      const osoitepalveluPage = new SearchView(page);
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");

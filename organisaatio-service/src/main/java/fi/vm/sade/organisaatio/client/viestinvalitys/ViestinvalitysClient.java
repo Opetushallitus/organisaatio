@@ -31,11 +31,11 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
     public LuoLahetysSuccessResponse luoLahetys(Lahetys lahetys) {
         try {
             var response = post("/v1/lahetykset", mapper.writeValueAsString(lahetys));
-            if (response.getStatus() == 200) {
-                return mapper.readValue(response.getBody(), LuoLahetysSuccessResponse.class);
-            } else {
-                throw new UnexpectedResponseException(response);
-            }
+            return switch (response.getStatus()) {
+                case 200 -> mapper.readValue(response.getBody(), LuoLahetysSuccessResponse.class);
+                case 400 -> throw new BadRequestException(response);
+                default -> throw new UnexpectedResponseException(response);
+            };
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -47,11 +47,11 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
     public LuoViestiSuccessResponse luoViesti(Viesti viesti) {
         try {
             var response = post("/v1/viestit", mapper.writeValueAsString(viesti));
-            if (response.getStatus() == 200) {
-                return mapper.readValue(response.getBody(), LuoViestiSuccessResponse.class);
-            } else {
-                throw new UnexpectedResponseException(response);
-            }
+            return switch (response.getStatus()) {
+                case 200 -> mapper.readValue(response.getBody(), LuoViestiSuccessResponse.class);
+                case 400 -> throw new BadRequestException(response);
+                default -> throw new UnexpectedResponseException(response);
+            };
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -64,11 +64,11 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
         try {
             var request = getAttachmentRequestBuilder(file);
             var response = sendRequest(request);
-            if (response.statusCode() == 200) {
-                return mapper.readValue(response.body(), PostAttachmentResponse.class);
-            } else {
-                throw new UnexpectedResponseException(new ApiResponse(response.statusCode(), response.body()));
-            }
+            return switch (response.statusCode()) {
+                case 200 -> mapper.readValue(response.body(), PostAttachmentResponse.class);
+                case 400 -> throw new BadRequestException(new ApiResponse(response.statusCode(), response.body()));
+                default -> throw new UnexpectedResponseException(new ApiResponse(response.statusCode(), response.body()));
+            };
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

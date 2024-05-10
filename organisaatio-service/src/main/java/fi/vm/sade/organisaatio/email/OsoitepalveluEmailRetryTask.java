@@ -45,7 +45,11 @@ public class OsoitepalveluEmailRetryTask extends RecurringTask<Void> {
 
     private void execute() {
         emailService.getQueuedEmailsToRetry().forEach(email -> {
-            emailService.attemptSendingEmail(email.getId());
+            try {
+                emailService.attemptSendingEmail(email.getId());
+            } catch (Exception e) {
+                log.info("Failed to send email " + email.getId(), e);
+            }
         });
     }
 }

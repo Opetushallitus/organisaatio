@@ -66,6 +66,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const history = useHistory();
     const location = useLocation();
     const [sendError, setSendError] = useState<boolean>(false);
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [replyTo, onReplyToChange] = useTextInput('');
     const [copy, onCopyChange] = useTextInput('');
     const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
@@ -98,6 +99,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
 
     async function onSendMail() {
         setSendError(false);
+        setValidationErrors([]);
 
         const selectedOids =
             hakutulos.state === 'OK' && selection.size !== hakutulos.value.rows.length
@@ -120,6 +122,9 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
             console.error(e);
             setIsSending(false);
             setSendError(true);
+            if (e instanceof AxiosError && e.response?.data?.validointiVirheet) {
+                setValidationErrors(e.response?.data?.validointiVirheet);
+            }
         }
     }
 
@@ -221,22 +226,29 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                 </BlueBanner>
                 <div className={styles.Row}>
                     <div className={styles.Column}>
-                        <FormLabel>Lähettäjä*</FormLabel>
-                        <Input defaultValue={'Opetushallitus'} type={'text'} disabled></Input>
+                        <FormLabel>
+                            Lähettäjä*
+                            <Input defaultValue={'Opetushallitus'} type={'text'} disabled></Input>
+                        </FormLabel>
                     </div>
                     <div className={styles.Column}>
-                        <FormLabel>Lähetysosoite*</FormLabel>
-                        <Input defaultValue={'noreply@opintopolku.fi'} type={'text'} disabled></Input>
+                        <FormLabel>
+                            Lähetysosoite*
+                            <Input defaultValue={'noreply@opintopolku.fi'} type={'text'} disabled></Input>
+                        </FormLabel>
                     </div>
                 </div>
                 <div className={styles.Row}>
                     <div className={styles.Column}>
-                        <FormLabel>Vastausosoite (reply-to)</FormLabel>
-                        <Input type={'text'} value={replyTo} onChange={onReplyToChange}></Input>
+                        <FormLabel>
+                            Vastausosoite (reply-to)
+                            <Input type={'text'} value={replyTo} onChange={onReplyToChange}></Input>
+                        </FormLabel>
                     </div>
                     <div className={styles.Column}>
-                        <FormLabel>Kopio-osoite</FormLabel>
-                        <Input type={'text'} value={copy} onChange={onCopyChange}></Input>
+                        <FormLabel>
+                            Kopio-osoite<Input type={'text'} value={copy} onChange={onCopyChange}></Input>
+                        </FormLabel>
                     </div>
                 </div>
                 <div className={styles.Row}>
@@ -335,8 +347,24 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                 </div>
                 {sendError && (
                     <div className={osoitteetStyles.ErrorRow}>
-                        <ErrorBanner onClose={() => setSendError(false)}>
-                            Viestin lähetyksessä tapahtui virhe. Yritä uudelleen.
+                        <ErrorBanner
+                            onClose={() => {
+                                setSendError(false);
+                                setValidationErrors([]);
+                            }}
+                        >
+                            {validationErrors.length ? (
+                                <div>
+                                    <span>Viestinvälityspalvelu palautti virheitä viestistä:</span>
+                                    <ul>
+                                        {validationErrors.map((v) => (
+                                            <li key={v}>{v}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ) : (
+                                'Viestin lähetyksessä tapahtui virhe. Yritä uudelleen.'
+                            )}
                         </ErrorBanner>
                     </div>
                 )}

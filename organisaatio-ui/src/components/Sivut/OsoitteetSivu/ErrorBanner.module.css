@@ -1,8 +1,7 @@
 .Banner {
     display: flex;
-    height: 24px;
     padding: 16px;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
 
     border-radius: 3px;
@@ -19,6 +18,11 @@
 }
 .Banner.Error svg path {
     fill: var(--text-text-heading);
+}
+
+.Banner ul {
+    margin-block-start: 0.5em;
+    padding-inline-start: 1em;
 }
 
 .Banner.Error {
