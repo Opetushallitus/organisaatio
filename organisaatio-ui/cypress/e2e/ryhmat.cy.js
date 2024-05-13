@@ -10,6 +10,7 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table filters', () => {
+        cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table').then(() => {
             cy.get('#RYHMAN_TYYPPI_SELECT input').type('yleinen{enter}{enter}', { force: true });
             expect(cy.get('a').first().value).to.have.valueOf('Vielä kerran suomi');
@@ -37,6 +38,8 @@ describe('Ryhmat Page', () => {
     });
 
     it('Can use table näyta sivulla', () => {
+        cy.intercept('GET', `${PUBLIC_API_CONTEXT}/ryhmat*`, { fixture: 'ryhmatArr.json' }); // tarvitaan mockattuja tuloksia.
+        cy.visit(`${BASE_PATH}/ryhmat`);
         cy.get('table', { timeout: 30000 }).then(() => {
             cy.get('tbody').children().should('have.length', 10);
             cy.get('select').last().select('30');

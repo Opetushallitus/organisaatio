@@ -31,8 +31,6 @@
         "universal-cookie": "4.0.4"
     },
     "devDependencies": {
-        "@cypress/code-coverage": "^3.12.1",
-        "@cypress/instrument-cra": "^1.4.0",
         "@types/joi-phone-number": "^5.0.6",
         "@types/node": "^20.12.11",
         "@types/react": "^16.14.47",
@@ -48,7 +46,7 @@
         "concurrently": "^6.0.2",
         "copy-webpack-plugin": "^12.0.2",
         "css-loader": "^6.11.0",
-        "cypress": "^10.11.0",
+        "cypress": "^13.9.0",
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^8.10.0",
         "eslint-plugin-cypress": "^3.2.0",
