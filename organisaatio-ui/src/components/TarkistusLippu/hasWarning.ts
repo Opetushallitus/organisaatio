@@ -12,7 +12,7 @@ export const hasWarning = ({
     const now = moment();
     const lastYear = moment();
     lastYear.subtract(1, 'years');
-    const tarkastusOk = tarkastusDate && tarkastusDate.isAfter(lastYear);
+    const tarkastusOk = tarkastusDate?.isAfter(lastYear);
     const activeNow = alkuDate && alkuDate.isBefore(now) && (!lakkautusDate || lakkautusDate.isAfter(now));
     return !tarkastusOk && !!activeNow;
 };

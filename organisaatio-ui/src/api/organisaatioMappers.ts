@@ -291,7 +291,7 @@ const yhteysTietoReducer = (
     p: { fi?: string; sv?: string; en?: string },
     c: { 'YhteystietoArvo.kieli': string; 'YhteystietoArvo.arvoText'?: string }
 ) => {
-    switch (c['YhteystietoArvo.kieli'].substr(0, 8)) {
+    switch (c['YhteystietoArvo.kieli'].substring(0, 8)) {
         case 'kieli_fi':
             return { ...p, fi: c['YhteystietoArvo.arvoText'] };
         case 'kieli_sv':
@@ -373,7 +373,7 @@ export function mapUiYhteystiedotToApi({
                 [postiosoite, kayntiosoite, puhelinnumero, email, www].filter(Boolean) as ApiYhteystiedot[]
             );
         })
-        .reduce((a, b) => a.concat(b));
+        .reduce((a, b) => a.concat(b), []);
 }
 
 export const checkAndMapValuesToYhteystiedot = (yhteystiedotObjectsArray: ApiYhteystiedot[]): ApiYhteystiedot[] => {
