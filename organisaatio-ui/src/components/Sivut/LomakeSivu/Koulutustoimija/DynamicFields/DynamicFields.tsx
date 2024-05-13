@@ -6,6 +6,7 @@ import { Kentta, LabelLink, Rivi } from '../../LomakeFields/LomakeFields';
 import InputController from '../../../../Controllers/InputController';
 import SelectController from '../../../../Controllers/SelectController';
 import MultiSelectController from '../../../../Controllers/MultiSelectController';
+import { DynamicFieldMethods } from './DynamicFieldMethods';
 
 type DynamicFieldsProps = {
     dynamicFields: DynamicField[];
@@ -14,20 +15,6 @@ type DynamicFieldsProps = {
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
     koodistot: Koodistot;
     readOnly?: boolean;
-};
-
-export const DynamicFieldMethods = () => {
-    const filterDynamicFields = (getPerustiedotValues: UseFormGetValues<Perustiedot>) => {
-        return (showField: DynamicField) => {
-            if (showField.when?.length > 0) {
-                return showField.when.reduce((p, c) => {
-                    return p || getPerustiedotValues()[c.field]?.value.match(/([^#]*).*/)[1] === c.is;
-                }, false);
-            }
-            return true;
-        };
-    };
-    return { filterDynamicFields };
 };
 export default function DynamicFields({
     dynamicFields,

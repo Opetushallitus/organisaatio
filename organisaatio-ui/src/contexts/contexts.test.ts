@@ -1,3 +1,6 @@
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
 import { KoodistoImpl } from './KoodistoContext';
 import { Koodi, Lokalisointi } from '../types/types';
 import { I18nImpl } from './LanguageContext';
@@ -21,34 +24,34 @@ describe('KoodistoImpl', () => {
 
     it('Finds name using a uri', () => {
         const nimi = impl.uri2Nimi(koodit[0].uri);
-        expect(nimi).toEqual(koodit[0].nimi.fi);
+        assert.strictEqual(nimi, koodit[0].nimi.fi);
     });
 
     it('Finds uri using a arvo', () => {
         const uri = impl.arvo2Uri(koodit[0].arvo);
-        expect(uri).toEqual(koodit[0].uri);
+        assert.strictEqual(uri, koodit[0].uri);
     });
 
     it('Returns empty string if uri is not found by arvo', () => {
         const uri = impl.arvo2Uri('2');
-        expect(uri).toEqual('');
+        assert.strictEqual(uri, '');
     });
 
     it('Returns empty nimi when uri doesnt exist', () => {
         const nimi = impl.uri2Nimi('eioo_1#1');
-        expect(nimi).toEqual('');
+        assert.strictEqual(nimi, '');
     });
 
     it('Returns all koodis', () => {
         const koodit = impl.koodit();
-        expect(koodit.length).toEqual(1);
-        expect(koodit[0].uri).toEqual('koodi_1#1');
+        assert.strictEqual(koodit.length, 1);
+        assert.strictEqual(koodit[0].uri, 'koodi_1#1');
     });
 
     it('Returns all selectOptions', () => {
         const options = impl.selectOptions();
-        expect(options.length).toEqual(1);
-        expect(options[0].label).toEqual('Koodi');
+        assert.strictEqual(options.length, 1);
+        assert.strictEqual(options[0].label, 'Koodi');
     });
 });
 describe('KoodistoImpl no version', () => {
@@ -79,9 +82,9 @@ describe('KoodistoImpl no version', () => {
     const impl = new KoodistoImpl({ koodisto: koodit, kieli: 'fi' });
     it('Returns all selectOptions', () => {
         const options = impl.selectOptions();
-        expect(options.length).toEqual(2);
-        expect(options[0].label).toEqual('Koodi');
-        expect(options[1].label).toEqual('Koodi10');
+        assert.strictEqual(options.length, 2);
+        assert.strictEqual(options[0].label, 'Koodi');
+        assert.strictEqual(options[1].label, 'Koodi10');
     });
 });
 describe('I18nImpl', () => {
@@ -103,19 +106,19 @@ describe('I18nImpl', () => {
 
     it('translates when key found', () => {
         const i18n = new I18nImpl(lokalisointi, 'fi');
-        expect(i18n.translate('BUTTON_JATKA')).toEqual('BUTTON_JATKA_FI');
-        expect(i18n.translateWithLang('BUTTON_JATKA', 'sv')).toEqual('BUTTON_JATKA_SV');
-        expect(i18n.translateWithLang('BUTTON_JATKA', 'en')).toEqual('BUTTON_JATKA_EN');
+        assert.strictEqual(i18n.translate('BUTTON_JATKA'), 'BUTTON_JATKA_FI');
+        assert.strictEqual(i18n.translateWithLang('BUTTON_JATKA', 'sv'), 'BUTTON_JATKA_SV');
+        assert.strictEqual(i18n.translateWithLang('BUTTON_JATKA', 'en'), 'BUTTON_JATKA_EN');
     });
     it('translateNimi translates undefined to empty string', () => {
         const i18n = new I18nImpl(lokalisointi, 'fi');
-        expect(i18n.translateNimi(undefined)).toEqual('');
+        assert.strictEqual(i18n.translateNimi(undefined), '');
     });
 
     it('defaults to key', () => {
         const i18n = new I18nImpl(lokalisointi, 'fi');
         const trans = i18n.translate('NOT_FOUND');
-        expect(trans).toEqual('NOT_FOUND');
+        assert.strictEqual(trans, 'NOT_FOUND');
     });
     it('enriches message', () => {
         const i18n = new I18nImpl(lokalisointi, 'fi');
@@ -124,26 +127,26 @@ describe('I18nImpl', () => {
             { key: 'key2', value: 'val2' },
             { key: 'key3', value: 'val3' },
         ]);
-        expect(trans).toEqual('val3 val1 val2');
+        assert.strictEqual(trans, 'val3 val1 val2');
     });
 
     it('defaults to key when lokalisointi undefined', () => {
         const i18n = new I18nImpl({} as Lokalisointi, 'fi');
         const trans = i18n.translate('NOT_FOUND');
-        expect(trans).toEqual('NOT_FOUND');
+        assert.strictEqual(trans, 'NOT_FOUND');
     });
 });
 
 describe('CASMeImpl', () => {
     it('cheks roles and organisation for button when organisations present', () => {
         const roles = ['APP_ORGANISAATIOHALLINTA_CRUD_111', 'APP_ORGANISAATIOHALLINTA_CRUD_666'];
-        expect(organisationCrudAllowedInRoles('333', [{ oid: '111', nimi: { fi: '111' } }], roles)).toBeTruthy();
-        expect(organisationCrudAllowedInRoles('333', [{ oid: '666', nimi: { fi: '666' } }], roles)).toBeTruthy();
-        expect(organisationCrudAllowedInRoles('666', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeTruthy();
-        expect(organisationCrudAllowedInRoles('333', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+        assert.strictEqual(organisationCrudAllowedInRoles('333', [{ oid: '111', nimi: { fi: '111' } }], roles), true);
+        assert.strictEqual(organisationCrudAllowedInRoles('333', [{ oid: '666', nimi: { fi: '666' } }], roles), true);
+        assert.strictEqual(organisationCrudAllowedInRoles('666', [{ oid: '999', nimi: { fi: '999' } }], roles), true);
+        assert.strictEqual(organisationCrudAllowedInRoles('333', [{ oid: '999', nimi: { fi: '999' } }], roles), false);
     });
     it('cheks roles and organisation for button when no organisation', () => {
         const roles = ['FOO', 'APP_ORGANISAATIOHALLINTA_CRUD'];
-        expect(organisationCrudAllowedInRoles('111', [{ oid: '999', nimi: { fi: '999' } }], roles)).toBeFalsy();
+        assert.strictEqual(organisationCrudAllowedInRoles('111', [{ oid: '999', nimi: { fi: '999' } }], roles), false);
     });
 });

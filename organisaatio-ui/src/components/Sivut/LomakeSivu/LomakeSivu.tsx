@@ -26,11 +26,13 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
-    deleteOrganisaatio,
     mapApiVakaToUi,
     mapApiYhteystiedotToUi,
     mapApiYhteysTietoArvotToUi,
     mapUiOrganisaatioToApiToUpdate,
+} from '../../../api/organisaatioMappers';
+import {
+    deleteOrganisaatio,
     mergeOrganisaatio,
     readOrganisaatio,
     setTarkastusPvm,

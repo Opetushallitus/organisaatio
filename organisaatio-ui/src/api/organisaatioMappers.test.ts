@@ -1,12 +1,17 @@
 import moment from 'moment';
-import { Koodisto, LocalDate, Perustiedot, UiOrganisaatioBase, Yhteystiedot } from '../types/types';
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
 
+import { Koodisto, LocalDate, Perustiedot, Yhteystiedot } from '../types/types';
 import {
     APIEndpontDate,
     ApiOrganisaatio,
     ApiYhteystiedot,
     NewApiOrganisaatio,
     YhteystiedotOsoite,
+    YhteystiedotEmail,
+    YhteystiedotPhone,
+    YhteystiedotWww,
 } from '../types/apiTypes';
 import {
     checkAndMapValuesToYhteystiedot,
@@ -17,7 +22,7 @@ import {
     mapUiOrganisaatioToApiToSave,
     mapUiOrganisaatioToApiToUpdate,
     mapUiYhteystiedotToApi,
-} from './organisaatio';
+} from './organisaatioMappers';
 import { KOSKIPOSTI_BASE, ROOT_OID } from '../contexts/constants';
 import { ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA } from './koodisto';
 
@@ -162,7 +167,7 @@ const kayntiosoite: ApiYhteystiedot = {
     postitoimipaikka: 'HELSINKI',
 };
 
-const uiBaseTiedot: UiOrganisaatioBase = {
+const uiBaseTiedot = {
     apiOrganisaatio: {} as ApiOrganisaatio,
     oid: '1.2.1',
     parentOid: '123.321',
@@ -198,7 +203,7 @@ const uiPerustiedot: Perustiedot = {
 describe('mapApiYhteysTietoArvotToUi', () => {
     it('Maps api yhteystietoarvot to Api format', () => {
         const expected = { koskiposti: { fi: 'fi', sv: 'sv', en: 'en' } };
-        expect(
+        assert.deepStrictEqual(
             mapApiYhteysTietoArvotToUi([
                 {
                     //KOSKI sahkoposti
@@ -226,14 +231,39 @@ describe('mapApiYhteysTietoArvotToUi', () => {
                     'YhteystietojenTyyppi.oid': '1.2.246.562.5.shouldignore',
                     'YhteystietoElementti.oid': '1.2.246.562.5.57850489428',
                 },
-            ])
-        ).toEqual(expected);
+            ]),
+            expected
+        );
     });
 });
+
+function isEmail(a: ApiYhteystiedot): a is YhteystiedotEmail {
+    return !!(a as YhteystiedotEmail).email;
+}
+
+function isPhone(a: ApiYhteystiedot): a is YhteystiedotPhone {
+    return (a as YhteystiedotPhone).tyyppi === 'puhelin';
+}
+
+function isWww(a: ApiYhteystiedot): a is YhteystiedotWww {
+    return !!(a as YhteystiedotWww).www;
+}
+
+function isOsoite(a: ApiYhteystiedot): a is YhteystiedotOsoite {
+    return !!(a as YhteystiedotOsoite).osoite;
+}
+
+const assertDeepStrictEquals = (actual: ApiYhteystiedot[], expected: ApiYhteystiedot[]) => {
+    assert.deepStrictEqual(actual.find(isEmail), expected.find(isEmail));
+    assert.deepStrictEqual(actual.find(isPhone), expected.find(isPhone));
+    assert.deepStrictEqual(actual.find(isWww), expected.find(isWww));
+    assert.deepStrictEqual(actual.find(isOsoite), expected.find(isOsoite));
+};
+
 describe('mapUiYhteystiedotToApi', () => {
     it('Maps api yhteystiedot to Api array format ([yhteystieto, ...]) and removes empty attributes', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot];
-        expect(
+        assertDeepStrictEquals(
             mapUiYhteystiedotToApi({
                 postinumerotKoodisto: postinumerotKoodisto as Koodisto,
                 apiYhteystiedot: [...oldApiyhteystiedot],
@@ -242,19 +272,21 @@ describe('mapUiYhteystiedotToApi', () => {
                     fi: { ...uiYhteystiedot.fi, www: 'www.opetushallitus.fi' },
                     osoitteetOnEri: true,
                 },
-            })
-        ).toEqual(expect.arrayContaining(expected));
+            }),
+            expected
+        );
     });
 
     it('creates kayntiOsoite from postiOsoite when osoitteetOnEri is false', () => {
         const expected = [...apiYhteystiedot, ...oldApiyhteystiedot, kayntiosoite];
-        expect(
+        assertDeepStrictEquals(
             mapUiYhteystiedotToApi({
                 postinumerotKoodisto: postinumerotKoodisto as Koodisto,
                 apiYhteystiedot: [...oldApiyhteystiedot],
                 uiYhteystiedot: { ...uiYhteystiedot, fi: { ...uiYhteystiedot.fi, www: 'www.opetushallitus.fi' } },
-            })
-        ).toEqual(expect.arrayContaining(expected));
+            }),
+            expected
+        );
     });
 
     it('does not create kayntiosoite if osoitteetOnEri is true and osoite or postinumero is missing for kayntiosoita for a language', () => {
@@ -265,19 +297,20 @@ describe('mapUiYhteystiedotToApi', () => {
             sv: { ...uiYhteystiedot.sv, kayntiOsoite: '', kayntiOsoitePostiNro: '' },
             osoitteetOnEri: true,
         };
-        expect(
+        assertDeepStrictEquals(
             mapUiYhteystiedotToApi({
                 postinumerotKoodisto: postinumerotKoodisto as Koodisto,
                 apiYhteystiedot: [...oldApiyhteystiedot],
                 uiYhteystiedot: yhteystiedot,
-            })
-        ).toEqual(expect.arrayContaining(expected));
+            }),
+            expected
+        );
     });
 });
 
 describe('mapApiYhteystiedotToUi', () => {
     it('Maps api yhteystiedot to ui object format ({ lang: { ...values },...}) and generates empty attributes', () => {
-        expect(mapApiYhteystiedotToUi(postinumerotKoodisto as Koodisto, [...apiYhteystiedot])).toEqual({
+        assert.deepStrictEqual(mapApiYhteystiedotToUi(postinumerotKoodisto as Koodisto, [...apiYhteystiedot]), {
             ...uiYhteystiedot,
             osoitteetOnEri: true,
         });
@@ -310,8 +343,9 @@ describe('mapUiOrganisaatioToApiToUpdate', () => {
             {}
         );
         mappedApiOrganisaatio.yhteystiedot = mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
-        expect(mappedApiOrganisaatio).toEqual({
+        assert.deepStrictEqual(mappedApiOrganisaatio, {
             ...apiOrganisaatio,
+            virastoTunnus: undefined,
             yhteystiedot: expectedYhteystiedot,
         });
     });
@@ -340,8 +374,10 @@ describe('mapUiOrganisaatioToApiToSave', () => {
             '123.321'
         );
         mappedApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb);
-        expect(mappedApiOrganisaatio).toEqual({
+        assert.deepStrictEqual(mappedApiOrganisaatio, {
             ...newApiOrganisaatio,
+            virastoTunnus: undefined,
+            ytunnus: undefined,
             yhteystiedot: newApiOrganisaatio.yhteystiedot.sort(YhteystiedotsortCb),
         });
     });
@@ -351,7 +387,7 @@ describe('mapUiOrganisaatioToApiToSave', () => {
             uiYhteystiedot,
             uiPerustiedot
         );
-        expect(mappedApiOrganisaatio.parentOid).toEqual(ROOT_OID);
+        assert.strictEqual(mappedApiOrganisaatio.parentOid, ROOT_OID);
     });
 });
 
@@ -366,10 +402,10 @@ describe('checkAndMapValuesToYhteystiedot', () => {
     const yhteystiedotWithFaulty = yhteystiedot.concat(faultyYhteystiedot as ApiYhteystiedot[]);
     const mappedYhteystiedot = checkAndMapValuesToYhteystiedot(yhteystiedotWithFaulty);
     it('Removes yhteystiedot with empty properties when new', () => {
-        expect(mappedYhteystiedot.length).toEqual(yhteystiedot.length);
+        assert.strictEqual(mappedYhteystiedot.length, yhteystiedot.length);
     });
     it('Assigns new objects without isNew Property', () => {
-        expect(mappedYhteystiedot[0]).not.toHaveProperty('isNew');
+        assert.strictEqual(mappedYhteystiedot[0].isNew, undefined);
     });
 });
 
@@ -377,11 +413,11 @@ describe('getYhteystieto', () => {
     const yhteystieto = { kieli, www: 'foo' };
 
     it('Finds correct element', () => {
-        expect(getApiYhteystieto([yhteystieto], kieli, 'www')).toEqual({ ...yhteystieto });
+        assert.deepStrictEqual(getApiYhteystieto([yhteystieto], kieli, 'www'), { ...yhteystieto });
     });
 
     it('Creates correct element on demand', () => {
-        expect(getApiYhteystieto([], kieli, 'www')).toEqual({ ...yhteystieto, www: '', isNew: true });
+        assert.deepStrictEqual(getApiYhteystieto([], kieli, 'www'), { ...yhteystieto, www: '', isNew: true });
     });
 });
 
@@ -395,11 +431,11 @@ describe('getOsoite', () => {
     } as YhteystiedotOsoite;
 
     it('Finds correct element', () => {
-        expect(getApiOsoite([yhteystieto], kieli, osoiteTyyppi)).toEqual(yhteystieto);
+        assert.deepStrictEqual(getApiOsoite([yhteystieto], kieli, osoiteTyyppi), yhteystieto);
     });
 
     it('Creates correct element on demand', () => {
-        expect(getApiOsoite([], kieli, osoiteTyyppi)).toEqual({
+        assert.deepStrictEqual(getApiOsoite([], kieli, osoiteTyyppi), {
             isNew: true,
             ...yhteystieto,
             osoite: '',

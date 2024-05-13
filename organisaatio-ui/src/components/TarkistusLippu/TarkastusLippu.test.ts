@@ -1,4 +1,7 @@
-import { hasWarning } from './TarkastusLippu';
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
+import { hasWarning } from './hasWarning';
 import moment from 'moment';
 
 describe('TarkastusLippu', () => {
@@ -45,9 +48,9 @@ describe('TarkastusLippu', () => {
             },
         ];
         tests.forEach(({ message, tarkastusDate, alkuDate, lakkautusDate, shouldWarn }) =>
-            test(`${message} message`, () => {
+            it(`${message} message`, () => {
                 const result = hasWarning({ tarkastusDate, alkuDate, lakkautusDate });
-                expect(result).toEqual(shouldWarn);
+                assert.strictEqual(result, shouldWarn);
             })
         );
     });
