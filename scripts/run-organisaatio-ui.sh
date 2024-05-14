@@ -11,7 +11,7 @@ function main {
 
   cd "$repo/organisaatio-ui"
   npm ci
-  npm run start
+  npm start
 }
 
 main "$@"

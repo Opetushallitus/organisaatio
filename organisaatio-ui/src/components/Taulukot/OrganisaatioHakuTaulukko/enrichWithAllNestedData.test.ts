@@ -1,4 +1,7 @@
-import { enrichWithAllNestedData } from './Hakufiltterit';
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
+import { enrichWithAllNestedData } from './enrichWithAllNestedData';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 
 describe('Hakufiltterit', () => {
@@ -16,15 +19,15 @@ describe('Hakufiltterit', () => {
                             organisaatiotyypit: ['2'],
                             oppilaitostyyppi: '5',
                             subRows: [],
-                        } as Partial<OrganisaatioHakuOrganisaatio>,
+                        },
                     ],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                },
                 {
                     parentOidPath: '3',
                     oid: '3',
                     organisaatiotyypit: ['2'],
                     subRows: [],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                },
                 {
                     parentOidPath: '4',
                     organisaatiotyypit: ['3'],
@@ -42,11 +45,11 @@ describe('Hakufiltterit', () => {
                                     organisaatiotyypit: ['2'],
                                     subRows: [],
                                     oppilaitostyyppi: '2',
-                                } as Partial<OrganisaatioHakuOrganisaatio>,
+                                },
                             ],
-                        } as Partial<OrganisaatioHakuOrganisaatio>,
+                        },
                     ],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                },
             ] as OrganisaatioHakuOrganisaatio[];
             const expected = [
                 {
@@ -66,9 +69,9 @@ describe('Hakufiltterit', () => {
                             allOppilaitosTyypit: ['5'],
                             allOids: ['2', '1'],
                             subRows: [],
-                        } as Partial<OrganisaatioHakuOrganisaatio>,
+                        },
                     ],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                },
                 {
                     oid: '3',
                     parentOidPath: '3',
@@ -77,7 +80,7 @@ describe('Hakufiltterit', () => {
                     allOrganisaatioTyypit: ['2'],
                     allOppilaitosTyypit: [],
                     subRows: [],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                },
                 {
                     oid: '4',
                     parentOidPath: '4',
@@ -104,13 +107,13 @@ describe('Hakufiltterit', () => {
                                     allOppilaitosTyypit: ['2', '7'],
                                     oppilaitostyyppi: '2',
                                     subRows: [],
-                                } as Partial<OrganisaatioHakuOrganisaatio>,
+                                },
                             ],
                         },
                     ],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
-            ] as OrganisaatioHakuOrganisaatio[];
-            expect(enrichWithAllNestedData(data1)).toEqual(expected);
+                },
+            ];
+            assert.deepStrictEqual(enrichWithAllNestedData(data1), expected);
         });
     });
 });

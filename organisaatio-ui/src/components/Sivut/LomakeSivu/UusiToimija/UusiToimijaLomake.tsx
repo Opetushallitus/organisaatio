@@ -11,12 +11,8 @@ import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoL
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import {
-    createOrganisaatio,
-    mapApiYhteystiedotToUi,
-    mapUiOrganisaatioToApiToSave,
-    readOrganisaatio,
-} from '../../../../api/organisaatio';
+import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
+import { mapApiYhteystiedotToUi, mapUiOrganisaatioToApiToSave } from '../../../../api/organisaatioMappers';
 import {
     resolveOrganisaatio,
     resolveOrganisaatioTyypit,

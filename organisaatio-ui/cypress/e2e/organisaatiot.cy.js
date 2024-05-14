@@ -7,10 +7,11 @@ describe('Organisaatiot Page', () => {
     });
 
     it('Finds opetushallitus from table', () => {
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.intercept('GET', `${PUBLIC_API_CONTEXT}/hierarkia/hae*`, {
             fixture: 'opetushallitusOrgInArray.json',
         });
-        cy.get('table').then(($table) => {
+        cy.get('table').then(() => {
             cy.get('input').first().type('Opetushallitus{enter}');
             expect(cy.get('a').value).to.have.valueOf('Opetushallitus');
         });

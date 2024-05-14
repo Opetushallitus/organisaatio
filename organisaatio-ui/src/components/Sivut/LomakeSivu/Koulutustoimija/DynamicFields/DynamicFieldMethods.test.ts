@@ -1,6 +1,9 @@
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
 import { UseFormGetValues } from 'react-hook-form';
 import { DynamicField, Perustiedot } from '../../../../../types/types';
-import { DynamicFieldMethods } from './DynamicFields';
+import { DynamicFieldMethods } from './DynamicFieldMethods';
 
 describe('DynamicField', () => {
     const dynamicFields: DynamicField[] = [
@@ -24,7 +27,7 @@ describe('DynamicField', () => {
                 oppilaitosTyyppiUri: { value: 'foo' },
             })) as UseFormGetValues<Perustiedot>)
         );
-        expect(filtered.length).toEqual(0);
+        assert.strictEqual(filtered.length, 0);
     });
     it('filters in if value is matching without version', () => {
         const filtered = dynamicFields.filter(
@@ -32,7 +35,7 @@ describe('DynamicField', () => {
                 oppilaitosTyyppiUri: { value: 'oppilaitostyyppi_11' },
             })) as UseFormGetValues<Perustiedot>)
         );
-        expect(filtered.length).toEqual(1);
+        assert.strictEqual(filtered.length, 1);
     });
     it('filters in if value is matching with version', () => {
         const filtered = dynamicFields.filter(
@@ -40,6 +43,6 @@ describe('DynamicField', () => {
                 oppilaitosTyyppiUri: { value: 'oppilaitostyyppi_11#15' },
             })) as UseFormGetValues<Perustiedot>)
         );
-        expect(filtered.length).toEqual(1);
+        assert.strictEqual(filtered.length, 1);
     });
 });

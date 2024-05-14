@@ -8,27 +8,13 @@ import { useAtom } from 'jotai';
 import { LomakeButton } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 import { languageAtom } from '../../api/lokalisaatio';
 import { ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA } from '../../api/koodisto';
+import { hasWarning } from './hasWarning';
 
 const inputToDate = (input?: number | LocalDate): Moment | undefined => {
     if (!input) return undefined;
     return isNumber(input) ? moment.unix(input / 1000) : moment(input, 'DD.MM.yyyy');
 };
-export const hasWarning = ({
-    tarkastusDate,
-    alkuDate,
-    lakkautusDate,
-}: {
-    tarkastusDate?: Moment;
-    alkuDate?: Moment;
-    lakkautusDate?: Moment;
-}): boolean => {
-    const now = moment();
-    const lastYear = moment();
-    lastYear.subtract(1, 'years');
-    const tarkastusOk = tarkastusDate && tarkastusDate.isAfter(lastYear);
-    const activeNow = alkuDate && alkuDate.isBefore(now) && (!lakkautusDate || lakkautusDate.isAfter(now));
-    return !tarkastusOk && !!activeNow;
-};
+
 type TarkastusLippuProps = {
     tarkastusPvm?: number;
     alkuPvm: number | LocalDate;

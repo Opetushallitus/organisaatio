@@ -31,6 +31,7 @@ describe('Organisaatiotarkastus', () => {
         cy.get('input').first().type(`${prefix}{enter}`);
     });
     it('Shows flags correctly when tarkastus missing ', () => {
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('td')
             .contains('TARKASTUS IS NOT CHECKED')
             .parents('tr')
@@ -39,6 +40,7 @@ describe('Organisaatiotarkastus', () => {
             .should('have.attr', 'title', 'TARKASTUS_PUUTTUU');
     });
     it('Shows flags correctly when tarkastus missing', () => {
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('td')
             .contains('TARKASTUS IS CHECKED LATELY')
             .parents('tr')
@@ -47,6 +49,7 @@ describe('Organisaatiotarkastus', () => {
             .should('have.attr', 'title', `VIIMEINEN_TARKASTUS_${recent.format(ui_date_format)}`);
     });
     it('Shows flags correctly when tarkastus old', () => {
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('td')
             .contains('TARKASTUS IS CHECKED LONG AGO')
             .parents('tr')
@@ -55,6 +58,7 @@ describe('Organisaatiotarkastus', () => {
             .should('have.attr', 'title', `VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`);
     });
     it('Opens organisaatio with outdated tarkstus', () => {
+        cy.visit(`${BASE_PATH}/organisaatiot`);
         cy.get('td').contains('TARKASTUS IS CHECKED LONG AGO').click();
         cy.get('h1').contains(`LONG AGO`, { timeout: 20000 }).should('exist');
         cy.get('button')

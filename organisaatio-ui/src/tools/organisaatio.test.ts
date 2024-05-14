@@ -1,3 +1,6 @@
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
 import { showCreateChildButton, resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/constants';
 import { Koodi, Koodisto, OrganisaatioType } from '../types/types';
@@ -40,123 +43,128 @@ const koodisto: Partial<Koodisto> = {
 
 describe('resolveOrganisaatioTyypit', () => {
     it('Works for empty list', () => {
-        expect(
+        assert.deepStrictEqual(
             resolveOrganisaatioTyypit(rakenne, koodisto as Koodisto, {
                 organisaatioTyypit: [],
                 oid: '123',
-            })
-        ).toStrictEqual([]);
+            }),
+            []
+        );
     });
     it('Works for combining two', () => {
-        expect(
+        assert.deepStrictEqual(
             resolveOrganisaatioTyypit(rakenne, koodisto as Koodisto, {
                 organisaatioTyypit: ['organisaatiotyyppi_01', 'organisaatiotyyppi_07'],
                 oid: '123',
-            })
-        ).toStrictEqual([
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_02',
-                label: 'organisaatiotyyppi_02',
-            },
-            {
-                ...defaultValues,
-                label: 'organisaatiotyyppi_04',
-                value: 'organisaatiotyyppi_04',
-            },
-            {
-                ...defaultValues,
-                label: 'organisaatiotyyppi_08',
-                value: 'organisaatiotyyppi_08',
-            },
-        ]);
+            }),
+            [
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_02',
+                    label: 'organisaatiotyyppi_02',
+                },
+                {
+                    ...defaultValues,
+                    label: 'organisaatiotyyppi_04',
+                    value: 'organisaatiotyyppi_04',
+                },
+                {
+                    ...defaultValues,
+                    label: 'organisaatiotyyppi_08',
+                    value: 'organisaatiotyyppi_08',
+                },
+            ]
+        );
     });
     it('Works when second has no children', () => {
-        expect(
+        assert.deepStrictEqual(
             resolveOrganisaatioTyypit(rakenne, koodisto as Koodisto, {
                 organisaatioTyypit: ['organisaatiotyyppi_01', 'organisaatiotyyppi_09'],
                 oid: '123',
-            })
-        ).toStrictEqual([
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_02',
-                label: 'organisaatiotyyppi_02',
-            },
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_04',
-                label: 'organisaatiotyyppi_04',
-            },
-        ]);
+            }),
+            [
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_02',
+                    label: 'organisaatiotyyppi_02',
+                },
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_04',
+                    label: 'organisaatiotyyppi_04',
+                },
+            ]
+        );
     });
     it('Works for combining three', () => {
-        expect(
+        assert.deepStrictEqual(
             resolveOrganisaatioTyypit(rakenne, koodisto as Koodisto, {
                 organisaatioTyypit: ['organisaatiotyyppi_01', 'organisaatiotyyppi_07', 'organisaatiotyyppi_09'],
                 oid: '123',
-            })
-        ).toStrictEqual([
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_02',
-                label: 'organisaatiotyyppi_02',
-            },
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_04',
-                label: 'organisaatiotyyppi_04',
-            },
-            {
-                ...defaultValues,
-                label: 'organisaatiotyyppi_08',
-                value: 'organisaatiotyyppi_08',
-            },
-        ]);
+            }),
+            [
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_02',
+                    label: 'organisaatiotyyppi_02',
+                },
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_04',
+                    label: 'organisaatiotyyppi_04',
+                },
+                {
+                    ...defaultValues,
+                    label: 'organisaatiotyyppi_08',
+                    value: 'organisaatiotyyppi_08',
+                },
+            ]
+        );
     });
     it('Works when parent is ROOT', () => {
-        expect(
+        assert.deepStrictEqual(
             resolveOrganisaatioTyypit(rakenne, koodisto as Koodisto, {
                 organisaatioTyypit: ['organisaatiotyyppi_01', 'organisaatiotyyppi_09'],
                 oid: ROOT_OID,
-            })
-        ).toStrictEqual([
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_01',
-                label: 'organisaatiotyyppi_01',
-            },
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_05',
-                label: 'organisaatiotyyppi_05',
-            },
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_06',
-                label: 'organisaatiotyyppi_06',
-            },
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_07',
-                label: 'organisaatiotyyppi_07',
-            },
-            {
-                ...defaultValues,
-                value: 'organisaatiotyyppi_09',
-                label: 'organisaatiotyyppi_09',
-            },
-        ]);
+            }),
+            [
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_01',
+                    label: 'organisaatiotyyppi_01',
+                },
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_05',
+                    label: 'organisaatiotyyppi_05',
+                },
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_06',
+                    label: 'organisaatiotyyppi_06',
+                },
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_07',
+                    label: 'organisaatiotyyppi_07',
+                },
+                {
+                    ...defaultValues,
+                    value: 'organisaatiotyyppi_09',
+                    label: 'organisaatiotyyppi_09',
+                },
+            ]
+        );
     });
 });
 
 describe('resolveParentOidByQuery', () => {
     it('Maps root oid to parent if there is no parentOid', () => {
-        expect(resolveParentOidByQuery('testiQueryString=testi')).toBe(ROOT_OID);
+        assert.strictEqual(resolveParentOidByQuery('testiQueryString=testi'), ROOT_OID);
     });
     it('Gets parentOid from query string if it exists', () => {
         const parentOid = '1.23.1.21111000';
-        expect(resolveParentOidByQuery(`parentOid=${parentOid}`)).toBe(parentOid);
+        assert.strictEqual(resolveParentOidByQuery(`parentOid=${parentOid}`), parentOid);
     });
 });
 
@@ -252,14 +260,22 @@ describe('showCreateChildButton', () => {
         showYtj: false,
         dynamicFields: [],
     };
-    test.each([
-        ['Returns false if organisaatiotyyppi childtypes includes only disabled', onlyDisabledRakene, false],
-        ['Returns true if only koulutustoimija is selected', onlyKoulutustoimijaRakenne, true],
-        ['Returns true if organisaatiotyyppi childtypes one valid', oneDisabledRakenne, true],
-        ['Returns true if all organisaatiotyyppi childtypes are valid', allValidRakenne, true],
-        ['Returns false organisaatiotyypit is empty', emptyTypeRakenne, false],
-        ['Returns false when organisaatiotyyppi childtypes is empty', emptyChildrenRakenne, false],
-    ])('%s', (_, input, expected) => {
-        expect(showCreateChildButton(input)).toStrictEqual(expected);
+    it('Returns false if organisaatiotyyppi childtypes includes only disabled', () => {
+        assert.strictEqual(showCreateChildButton(onlyDisabledRakene), false);
+    });
+    it('Returns true if only koulutustoimija is selected', () => {
+        assert.strictEqual(showCreateChildButton(onlyKoulutustoimijaRakenne), true);
+    });
+    it('Returns true if organisaatiotyyppi childtypes one valid', () => {
+        assert.strictEqual(showCreateChildButton(oneDisabledRakenne), true);
+    });
+    it('Returns true if all organisaatiotyyppi childtypes are valid', () => {
+        assert.strictEqual(showCreateChildButton(allValidRakenne), true);
+    });
+    it('Returns false organisaatiotyypit is empty', () => {
+        assert.strictEqual(showCreateChildButton(emptyTypeRakenne), false);
+    });
+    it('Returns false when organisaatiotyyppi childtypes is empty', () => {
+        assert.strictEqual(showCreateChildButton(emptyChildrenRakenne), false);
     });
 });

@@ -1,3 +1,6 @@
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
 import { mapApiToUI } from './kayttooikeus';
 import { CASMeImpl } from '../contexts/CasMeContext';
 import { Language } from '../types/types';
@@ -5,7 +8,7 @@ import { Language } from '../types/types';
 describe('kayttooikeus', () => {
     describe('mapApiToUI', () => {
         it('can handle empty input', () => {
-            expect(
+            assert.strictEqual(
                 JSON.stringify(
                     mapApiToUI({
                         uid: '',
@@ -16,8 +19,7 @@ describe('kayttooikeus', () => {
                         roles: '',
                         lang: 'fi',
                     })
-                )
-            ).toEqual(
+                ),
                 JSON.stringify(
                     new CASMeImpl({
                         uid: '',
@@ -32,7 +34,7 @@ describe('kayttooikeus', () => {
             );
         });
         it('can handle roles array', () => {
-            expect(
+            assert.strictEqual(
                 JSON.stringify(
                     mapApiToUI({
                         uid: '',
@@ -43,8 +45,7 @@ describe('kayttooikeus', () => {
                         roles: '["one","two"]',
                         lang: 'fi',
                     })
-                )
-            ).toEqual(
+                ),
                 JSON.stringify(
                     new CASMeImpl({
                         uid: '',

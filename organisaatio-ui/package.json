@@ -13,7 +13,7 @@
         "joi": "^17.4.0",
         "joi-phone-number": "^5.1.1",
         "jotai": "^1.5.3",
-        "moment": "^2.29.4",
+        "moment": "^2.30.1",
         "oph-urls-js": "github:Opetushallitus/oph-urls-js#master",
         "query-string": "^7.0.1",
         "react": "^16.14.0",
@@ -23,7 +23,6 @@
         "react-hook-form": "^7.8.4",
         "react-notifications-component": "^2.4.1",
         "react-router-dom": "5.2.0",
-        "react-scripts": "^5.0.1",
         "react-select": "^5.8.0",
         "react-table": "7.2.0",
         "react-window": "^1.8.10",
@@ -32,12 +31,8 @@
         "universal-cookie": "4.0.4"
     },
     "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-        "@cypress/code-coverage": "^3.12.1",
-        "@cypress/instrument-cra": "^1.4.0",
-        "@types/jest": "^27",
         "@types/joi-phone-number": "^5.0.6",
-        "@types/node": "^16.18.54",
+        "@types/node": "^20.12.11",
         "@types/react": "^16.14.47",
         "@types/react-datepicker": "2.11.1",
         "@types/react-dom": "^16.9.20",
@@ -45,31 +40,40 @@
         "@types/react-router-dom": "5.1.5",
         "@types/react-table": "^7.0.19",
         "@types/react-window": "^1.8.8",
-        "@types/styled-components": "4.4.0",
-        "@typescript-eslint/eslint-plugin": "^6.4.1",
-        "@typescript-eslint/parser": "^6.4.1",
+        "@types/styled-components": "^5",
+        "@typescript-eslint/eslint-plugin": "^7.8.0",
+        "@typescript-eslint/parser": "^7.8.0",
         "concurrently": "^6.0.2",
-        "cypress": "^10.11.0",
-        "eslint": "^8.47.0",
-        "eslint-plugin-cypress": "^2.12.1",
-        "eslint-plugin-jest": "^27",
-        "eslint-plugin-react": "^7",
+        "copy-webpack-plugin": "^12.0.2",
+        "css-loader": "^6.11.0",
+        "cypress": "^13.9.0",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^8.10.0",
+        "eslint-plugin-cypress": "^3.2.0",
+        "eslint-plugin-jsx-a11y": "^6.8.0",
+        "eslint-plugin-react": "^7.34.1",
+        "file-loader": "^6.2.0",
         "finnish-business-ids": "^3.1.1",
-        "husky": "^7.0.4",
+        "fork-ts-checker-webpack-plugin": "^9.0.2",
+        "html-webpack-plugin": "^5.6.0",
+        "mini-css-extract-plugin": "^2.9.0",
         "prettier": "2.2.1",
         "pretty-quick": "^3.1.2",
-        "typescript": "^4.9.5",
-        "wait-on": "^7.2.0"
+        "source-map-loader": "^5.0.0",
+        "style-loader": "^4.0.0",
+        "ts-loader": "^9.4.2",
+        "tsx": "^4.10.1",
+        "typescript": "5.3.*",
+        "wait-on": "^7.2.0",
+        "webpack": "^5.91.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.4",
+        "webpack-manifest-plugin": "^5.0.0"
     },
     "scripts": {
-        "prepare": "cd .. && husky install organisaatio-ui/.husky",
-        "dev": "concurrently --kill-others 'npm start' 'npm run nginx'",
-        "nginx": "docker-compose -f nginx/docker-compose.yml up",
-        "start": "BROWSER=none PORT=3003 react-scripts -r @cypress/instrument-cra start organisaatioApp ",
-        "stop": "killall -SIGINT organisaatioApp",
-        "build": "CI='' react-scripts build",
-        "test": "react-scripts test --coverage --watchAll=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
-        "eject": "react-scripts eject",
+        "start": "NODE_ENV=development npx webpack serve",
+        "build": "GENERATE_SOURCEMAP=false NODE_ENV=production npx webpack --mode production",
+        "test": "node --import tsx --test ./src/**/*.test.ts",
         "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
         "lint:fix": "eslint --ext .ts,.tsx src --fix",
         "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
@@ -85,7 +89,6 @@
         "plugins": [
             "@typescript-eslint",
             "cypress",
-            "jest",
             "react"
         ],
         "extends": [
@@ -93,8 +96,7 @@
             "plugin:@typescript-eslint/eslint-recommended",
             "plugin:@typescript-eslint/recommended",
             "plugin:react/recommended",
-            "plugin:cypress/recommended",
-            "plugin:jest/recommended"
+            "plugin:cypress/recommended"
         ],
         "settings": {
             "react": {
@@ -125,14 +127,6 @@
     },
     "scarfSettings": {
         "enabled": false
-    },
-    "jest": {
-        "coverageReporters": [
-            "lcov"
-        ]
-    },
-    "nyc": {
-        "report-dir": "cypress-coverage"
     },
     "engines": {
         "npm": "^10",
