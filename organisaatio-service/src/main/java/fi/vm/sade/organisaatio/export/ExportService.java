@@ -114,6 +114,8 @@ public class ExportService {
             FROM organisaatiosuhde
             JOIN organisaatio parent ON parent.id = parent_id
             JOIN organisaatio child ON child.id = child_id
+            WHERE NOT EXISTS (SELECT * FROM organisaatio_tyypit WHERE organisaatio_id = parent.id AND tyypit = 'Ryhma')
+            AND NOT EXISTS (SELECT * FROM organisaatio_tyypit WHERE organisaatio_id = child.id AND tyypit = 'Ryhma')
             """;
 
     @Transactional
