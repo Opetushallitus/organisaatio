@@ -58,7 +58,7 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, FixedCasAuthenticationFilter casAuthenticationFilter,
+  public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter,
       AuthenticationEntryPoint authenticationEntryPoint, SecurityContextRepository securityContextRepository)
       throws Exception {
     http.headers().disable().csrf().disable()
@@ -98,11 +98,11 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public FixedCasAuthenticationFilter casAuthenticationFilter(
+  public CasAuthenticationFilter casAuthenticationFilter(
       AuthenticationConfiguration authenticationConfiguration,
       ServiceProperties serviceProperties,
       SecurityContextRepository securityContextRepository) throws Exception {
-    FixedCasAuthenticationFilter casAuthenticationFilter = new FixedCasAuthenticationFilter();
+    CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
     casAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
     casAuthenticationFilter.setServiceProperties(serviceProperties);
     casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
