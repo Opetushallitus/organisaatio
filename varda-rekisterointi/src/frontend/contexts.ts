@@ -32,7 +32,7 @@ type LanguageContextType = {
 
 export const LanguageContext = React.createContext<LanguageContextType>({
     language: 'fi',
-    setLanguage: (language: Language) => {},
+    setLanguage: () => {},
     i18n: new I18nImpl({ fi: {}, sv: {}, en: {} }, 'fi'),
 });
 
@@ -110,16 +110,16 @@ export const MaatJaValtiotKoodistoContext = React.createContext<MaatKoodistoCont
 });
 
 type ModalContextType = {
-    modal?: ReactNode
-    setModal: (r: ReactNode) => void
-    closeModal: () => void
-}
+    modal?: ReactNode;
+    setModal: (r: ReactNode) => void;
+    closeModal: () => void;
+};
 
 const defaultModalContext = {
     modal: undefined,
     setModal: () => {},
     closeModal: () => {},
-}
+};
 
 export const ModalContext = React.createContext<ModalContextType>(defaultModalContext);
 

@@ -9,7 +9,7 @@ type Osoitetyyppi = Extract<YhteystiedotKentta, 'postiosoite' | 'kayntiosoite'>;
 
 export function validoiYhteystiedot(yhteystiedot: Yhteystiedot) {
     const virheet: Virheet = {};
-    for (let kentta of ['sahkoposti', 'puhelinnumero']) {
+    for (const kentta of ['sahkoposti', 'puhelinnumero']) {
         const arvo = yhteystiedot[kentta as YhteystiedotKentta];
         if (!isNonEmpty(arvo as string)) {
             virheet[kentta] = 'PAKOLLINEN_TIETO';
@@ -22,10 +22,10 @@ export function validoiYhteystiedot(yhteystiedot: Yhteystiedot) {
             }
         }
     }
-    for (let osoitetyyppi of ['postiosoite', 'kayntiosoite']) {
+    for (const osoitetyyppi of ['postiosoite', 'kayntiosoite']) {
         const osoitevirheet = validoiOsoite(yhteystiedot[osoitetyyppi as Osoitetyyppi]);
-        for (let virhekentta in osoitevirheet) {
-            virheet[`${osoitetyyppi}.${virhekentta}`] = osoitevirheet[virhekentta];
+        for (const virhekentta in osoitevirheet) {
+            virheet[`${osoitetyyppi}.${virhekentta}`] = osoitevirheet[virhekentta] ?? '';
         }
     }
     return virheet;

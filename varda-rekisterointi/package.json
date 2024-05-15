@@ -1,63 +1,109 @@
 {
-  "name": "varda-rekisterointi",
-  "version": "0.1.0",
-  "private": true,
-  "homepage": "/varda-rekisterointi",
-  "dependencies": {
-    "@material-ui/core": "^4.7.2",
-    "@material-ui/icons": "^4.5.1",
-    "@opetushallitus/virkailija-ui-components": "^0.4.7",
-    "@tanstack/react-table": "^8.5.13",
-    "axios": "^0.27.2",
-    "axios-hooks": "^4.0.0",
-    "classnames": "^2.2.6",
-    "date-fns": "^2.7.0",
-    "email-validator": "^2.0.4",
-    "http-proxy-middleware": "^0.20.0",
-    "normalize.css": "^8.0.1",
-    "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
-    "react-datepicker": "^2.9.6",
-    "react-router": "^5.3.3",
-    "react-router-dom": "^5.3.3",
-    "react-scripts": "^5.0.1",
-    "react-select": "^3.0.8",
-    "react-toastify": "^9.0.8",
-    "styled-components": "^5.3.6",
-    "universal-cookie": "^4.0.2",
-    "use-debounce": "^3.1.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.5.2",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^16",
-    "@types/react-beforeunload": "^2.1.0",
-    "@types/react-datepicker": "2.9.5",
-    "@types/react-router": "^5.1.19",
-    "@types/react-router-dom": "^5.3.3",
-    "@types/react-select": "3.0.8",
-    "@types/styled-components": "5.1.26",
-    "prettier": "^2.7.1",
-    "typescript": "^4.8.3"
-  },
-  "scripts": {
-    "start": "HTTPS=true PORT=8080 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "varda-rekisterointi",
+    "version": "0.1.0",
+    "private": true,
+    "homepage": "/varda-rekisterointi",
+    "dependencies": {
+        "@material-ui/core": "^4.7.2",
+        "@material-ui/icons": "^4.5.1",
+        "@opetushallitus/virkailija-ui-components": "^0.4.7",
+        "@tanstack/react-table": "^8.5.13",
+        "axios": "^0.27.2",
+        "axios-hooks": "^4.0.0",
+        "classnames": "^2.2.6",
+        "date-fns": "^2.7.0",
+        "email-validator": "^2.0.4",
+        "normalize.css": "^8.0.1",
+        "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
+        "react-datepicker": "^2.9.6",
+        "react-router": "^5.3.3",
+        "react-router-dom": "^5.3.3",
+        "react-select": "^3.0.8",
+        "react-toastify": "^9.0.8",
+        "styled-components": "^5.3.6",
+        "universal-cookie": "^4.0.2",
+        "use-debounce": "^3.1.0"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.149",
+        "@types/node": "^20.12.11",
+        "@types/react-beforeunload": "^2.1.0",
+        "@types/react-datepicker": "2.9.5",
+        "@types/react-router": "^5.1.19",
+        "@types/react-router-dom": "^5.3.3",
+        "@types/react-select": "3.0.8",
+        "@types/styled-components": "5.1.26",
+        "@typescript-eslint/eslint-plugin": "^7.8.0",
+        "@typescript-eslint/parser": "^7.8.0",
+        "copy-webpack-plugin": "^12.0.2",
+        "css-loader": "^6.11.0",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^8.10.0",
+        "eslint-plugin-cypress": "^3.2.0",
+        "eslint-plugin-jsx-a11y": "^6.8.0",
+        "eslint-plugin-react": "^7.34.1",
+        "file-loader": "^6.2.0",
+        "fork-ts-checker-webpack-plugin": "^9.0.2",
+        "html-webpack-plugin": "^5.6.0",
+        "mini-css-extract-plugin": "^2.9.0",
+        "prettier": "^2.7.1",
+        "source-map-loader": "^5.0.0",
+        "style-loader": "^4.0.0",
+        "ts-loader": "^9.4.2",
+        "tsx": "^4.10.2",
+        "typescript": "^4.9.5",
+        "webpack": "^5.91.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.4",
+        "webpack-manifest-plugin": "^5.0.0"
+    },
+    "scripts": {
+        "start": "NODE_ENV=development npx webpack serve",
+        "build": "GENERATE_SOURCEMAP=false NODE_ENV=production npx webpack --mode production",
+        "test": "node --import tsx --test ./src/**/*.test.ts",
+        "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
+        "lint:fix": "eslint --ext .ts,.tsx src --fix",
+        "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
+        "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'"
+    },
+    "eslintConfig": {
+        "parser": "@typescript-eslint/parser",
+        "plugins": [
+            "@typescript-eslint",
+            "cypress",
+            "react"
+        ],
+        "extends": [
+            "eslint:recommended",
+            "plugin:@typescript-eslint/eslint-recommended",
+            "plugin:@typescript-eslint/recommended",
+            "plugin:react/recommended",
+            "plugin:cypress/recommended"
+        ],
+        "settings": {
+            "react": {
+                "version": "detect"
+            }
+        },
+        "rules": {
+            "@typescript-eslint/no-unused-vars": [
+                "error",
+                {
+                    "ignoreRestSiblings": true
+                }
+            ]
+        }
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }

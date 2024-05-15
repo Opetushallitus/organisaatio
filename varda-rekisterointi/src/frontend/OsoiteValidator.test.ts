@@ -1,11 +1,14 @@
-import {validoiOsoite} from "./OsoiteValidator";
-import {Osoite, Virheet, VirheKoodi} from "./types/types";
+import assert from 'assert/strict';
+import { describe, it } from 'node:test';
+
+import { validoiOsoite } from './OsoiteValidator';
+import { Osoite, Virheet, VirheKoodi } from './types/types';
 
 type OsoiteKentta = keyof Osoite;
 
 function tarkistaKentta(virheet: Virheet, kentta: OsoiteKentta, odotettuVirhe: VirheKoodi) {
-    expect(Object.keys(virheet)).toContain(kentta);
-    expect(virheet[kentta]).toEqual(odotettuVirhe);
+    assert.deepStrictEqual(Object.keys(virheet).includes(kentta), true);
+    assert.deepStrictEqual(virheet[kentta], odotettuVirhe);
 }
 
 describe('OsoiteValidator', () => {
@@ -13,7 +16,7 @@ describe('OsoiteValidator', () => {
         const osoite: Osoite = {
             katuosoite: '',
             postinumeroUri: 'posti_12345',
-            postitoimipaikka: 'Humppaala'
+            postitoimipaikka: 'Humppaala',
         };
         tarkistaKentta(validoiOsoite(osoite), 'katuosoite', 'VIRHEELLINEN_OSOITE');
     });
@@ -22,7 +25,7 @@ describe('OsoiteValidator', () => {
         const osoite: Osoite = {
             katuosoite: 'Jenkkakatu 1',
             postinumeroUri: '',
-            postitoimipaikka: 'Humppaala'
+            postitoimipaikka: 'Humppaala',
         };
         tarkistaKentta(validoiOsoite(osoite), 'postinumeroUri', 'VIRHEELLINEN_POSTINUMERO');
     });
@@ -31,9 +34,8 @@ describe('OsoiteValidator', () => {
         const osoite: Osoite = {
             katuosoite: 'Jenkkakatu 1',
             postinumeroUri: 'posti_huuhaa',
-            postitoimipaikka: ''
+            postitoimipaikka: '',
         };
-        const virheet: Virheet = validoiOsoite(osoite);
         // virhe merkitään postinumerolle, koska postitoimipaikka populoidaan sen pohjalta
         tarkistaKentta(validoiOsoite(osoite), 'postinumeroUri', 'VIRHEELLINEN_POSTINUMERO');
     });

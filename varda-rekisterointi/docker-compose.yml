@@ -1,9 +1,5 @@
 version: '3'
 services:
-#  varda-rekisterointi-api:
-#    build: .
-#    ports:
-#    - "8081:8081"
   varda-rekisterointi-db:
     image: postgres:10.9
     environment:

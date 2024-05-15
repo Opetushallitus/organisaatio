@@ -14,7 +14,7 @@ type PaginationProps = {
 
 export const Pagination = ({ pageIndex, setPageIndex, pageOptions, pageSize, setPageSize }: PaginationProps) => {
     const { i18n } = useContext(LanguageContext);
-    const lastPageIndex = pageOptions[pageOptions.length - 1];
+    const lastPageIndex = pageOptions[pageOptions.length - 1] ?? 1;
     return (
         <div className={styles.container}>
             <button

@@ -58,7 +58,7 @@ export default function Rekisterointi({
     const [kayttaja, setKayttaja] = useReducer(reducer, initialKayttaja);
     const [kayttajaErrors, setKayttajaErrors] = useState({});
     const [postLoading, setPostLoading] = useState(false);
-    const [postError, setPostError] = useState<any>(null);
+    const [postError, setPostError] = useState<unknown>(null);
 
     async function post() {
         try {
@@ -83,9 +83,10 @@ export default function Rekisterointi({
 
     function validate(currentStep: number): boolean {
         setPostError(null);
+        const organisaatioErrors: Record<string, string> = {};
+        const kayttajaErrors: Record<string, string> = {};
         switch (currentStep) {
             case 1:
-                const organisaatioErrors: Record<string, string> = {};
                 if (!organisaatio.oid) {
                     (['ytunnus', 'yritysmuoto', 'kotipaikkaUri', 'alkuPvm'] as const)
                         .filter((field) => !organisaatio[field])
@@ -97,8 +98,8 @@ export default function Rekisterointi({
                         organisaatioErrors['nimi'] = i18n.translate('PAKOLLINEN_TIETO');
                     }
                     const yhteystietoVirheet = validoiYhteystiedot(organisaatio.yhteystiedot);
-                    for (let avain in yhteystietoVirheet) {
-                        organisaatioErrors[`yhteystiedot.${avain}`] = i18n.translate(yhteystietoVirheet[avain]);
+                    for (const avain in yhteystietoVirheet) {
+                        organisaatioErrors[`yhteystiedot.${avain}`] = i18n.translate(`${yhteystietoVirheet[avain]}`);
                     }
                 }
                 if (kielletytYritysmuodot.includes(organisaatio.yritysmuoto)) {
@@ -116,7 +117,6 @@ export default function Rekisterointi({
                 setOrganisaatioErrors(organisaatioErrors);
                 return Object.keys(organisaatioErrors).length === 0;
             case 2:
-                const kayttajaErrors: Record<string, string> = {};
                 if (isKayttaja(kayttaja)) {
                     ['etunimi', 'sukunimi', 'sahkoposti', 'asiointikieli']
                         .filter((field) => !Reflect.get(kayttaja, field))
