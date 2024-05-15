@@ -2,12 +2,24 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    {% raw %}
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Append>true</Append>
+        <File>${user.home}/logs/app_varda-rekisterointi.log</File>
         <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} %-5p {%X{user}} [%t] %-5p %c: %replace(%m %ex{5}){'\b(\d{6}[-\+ABCDEFYXWVU])\d{3}\w(\W|\b)', '$1****$2'}%nopex%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>20</maxIndex>
+            <FileNamePattern>${user.home}/logs/app_varda-rekisterointi.log.%i</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
     </appender>
-
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${user.home}/logs/auditlog_varda-rekisterointi.log</file>
         <append>true</append>
@@ -23,9 +35,10 @@
             <pattern>%msg%n</pattern>
         </encoder>
     </appender>
+    {% endraw %}
 
     <root level="info">
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
     </root>
 
     <logger name="fi.vm.sade.varda.rekisterointi.configuration.AuditLogConfiguration" level="info" additivity="false">
