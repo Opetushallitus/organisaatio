@@ -1,9 +1,0 @@
-server:
-  ssl:
-    enabled: true
-    keyStore: classpath:dev/keystore.jks
-    keyStorePassword: changeit
-    keyPassword: changeit
-varda-rekisterointi:
-  url-oppija: https://localhost:8080
-  url-virkailija: https://localhost:8080
