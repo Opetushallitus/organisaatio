@@ -29,7 +29,10 @@ type Props = {
 };
 
 class PaatosRivi {
-    constructor(readonly hakemus: Rekisterointihakemus, readonly kotipaikka: string) {}
+    constructor(
+        readonly hakemus: Rekisterointihakemus,
+        readonly kotipaikka: string
+    ) {}
 
     get organisaatio(): string {
         return this.hakemus.organisaatio.ytjNimi.nimi;

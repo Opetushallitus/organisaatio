@@ -21,15 +21,23 @@ type RekisteroinnitTableProps = {
 const saapumisAikaFormat = 'd.M.y HH:mm';
 
 function IndeterminateCheckbox({ indeterminate, ...rest }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-    const ref = React.useRef<HTMLInputElement>(null!);
+    const ref = React.useRef<HTMLInputElement | null>(null);
 
     React.useEffect(() => {
-        if (typeof indeterminate === 'boolean') {
+        if (typeof indeterminate === 'boolean' && ref.current) {
             ref.current.indeterminate = !rest.checked && indeterminate;
         }
     }, [ref, indeterminate, rest.checked]);
 
-    return <Checkbox ref={ref as any} className="checkbox" {...rest} indeterminate={indeterminate} />;
+    return (
+        <Checkbox
+            // @ts-expect-error ref
+            ref={ref}
+            className="checkbox"
+            {...rest}
+            indeterminate={indeterminate}
+        />
+    );
 }
 
 export default function RekisteroinnitTable({

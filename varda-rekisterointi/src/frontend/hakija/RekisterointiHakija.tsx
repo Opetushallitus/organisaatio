@@ -19,7 +19,7 @@ export default function RekisterointiHakija() {
     const [initialOrganisaatio, setInitialOrganisaatio] = useState(tyhjaOrganisaatio());
     const [organisaatio, setOrganisaatio] = useReducer(reducer, tyhjaOrganisaatio());
     const [fetchLoading, setFetchLoading] = useState(true);
-    const [fetchError, setFetchError] = useState(null);
+    const [fetchError, setFetchError] = useState<unknown>(null);
     useEffect(() => {
         async function fetch() {
             try {
@@ -33,7 +33,7 @@ export default function RekisterointiHakija() {
                 }
                 setInitialOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
                 setOrganisaatio({ ...tyhjaOrganisaatio(), ...cloneDeep(data), tyypit: tyypit });
-            } catch (error: any) {
+            } catch (error: unknown) {
                 setFetchError(error);
             } finally {
                 setFetchLoading(false);

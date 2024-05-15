@@ -35,7 +35,7 @@ export default function VirkailijaLandingPage() {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
     }
 
-    permission.registrationTypes.sort()
+    permission.registrationTypes.sort();
     const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
     return (
         <PermissionContext.Provider value={permission}>

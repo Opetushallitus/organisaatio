@@ -1,4 +1,4 @@
-import { Rekisterointihakemus } from "../virkailija/rekisterointihakemus";
+import { Rekisterointihakemus } from '../virkailija/rekisterointihakemus';
 
 export type Language = 'fi' | 'sv' | 'en';
 export type LocalDate = string;
@@ -8,56 +8,56 @@ export type LocalizableText = Partial<Record<Language, string>>;
 export type KoodiUri = string;
 export type KoodiArvo = string;
 export type Koodi = {
-    uri: KoodiUri,
-    arvo: KoodiArvo,
-    nimi: LocalizableText,
+    uri: KoodiUri;
+    arvo: KoodiArvo;
+    nimi: LocalizableText;
 };
 
 export type Permission = {
-    hasCreatePermission: boolean
-    registrationTypes: Rekisterointityyppi[]
-}
+    hasCreatePermission: boolean;
+    registrationTypes: Rekisterointityyppi[];
+};
 
 // lokalisointi
 export type Lokalisointi = Record<Language, Record<string, string>>;
 
 export type KielistettyNimi = {
-    nimi: string,
-    kieli: Language, // ytj-kieli
-    alkuPvm: LocalDate | null
-}
+    nimi: string;
+    kieli: Language; // ytj-kieli
+    alkuPvm: LocalDate | null;
+};
 
 export type Osoite = {
-    katuosoite: string,
-    postinumeroUri: KoodiUri,
-    postitoimipaikka: string
-}
+    katuosoite: string;
+    postinumeroUri: KoodiUri;
+    postitoimipaikka: string;
+};
 
 export type Yhteystiedot = {
-    puhelinnumero: string,
-    sahkoposti: string,
-    postiosoite: Osoite,
-    kayntiosoite: Osoite
-}
+    puhelinnumero: string;
+    sahkoposti: string;
+    postiosoite: Osoite;
+    kayntiosoite: Osoite;
+};
 export type Organisaatio = {
-    oid?: string,
-    ytunnus: string,
-    ytjNimi: KielistettyNimi, // YTJ-kielen mukainen nimi
-    alkuPvm: LocalDate | null,
-    yritysmuoto: string,
-    tyypit: KoodiUri[],
-    kotipaikkaUri: KoodiUri,
-    maaUri: KoodiUri,
-    kieletUris: KoodiUri[],
-    yhteystiedot: Yhteystiedot
-}
+    oid?: string;
+    ytunnus: string;
+    ytjNimi: KielistettyNimi; // YTJ-kielen mukainen nimi
+    alkuPvm: LocalDate | null;
+    yritysmuoto: string;
+    tyypit: KoodiUri[];
+    kotipaikkaUri: KoodiUri;
+    maaUri: KoodiUri;
+    kieletUris: KoodiUri[];
+    yhteystiedot: Yhteystiedot;
+};
 export function tyhjaOrganisaatio(): Organisaatio {
     return {
         ytunnus: '',
         ytjNimi: {
             nimi: '',
             alkuPvm: null,
-            kieli: 'fi'
+            kieli: 'fi',
         },
         alkuPvm: null,
         yritysmuoto: '',
@@ -69,41 +69,41 @@ export function tyhjaOrganisaatio(): Organisaatio {
             kayntiosoite: {
                 katuosoite: '',
                 postinumeroUri: '',
-                postitoimipaikka: ''
+                postitoimipaikka: '',
             },
             postiosoite: {
                 katuosoite: '',
                 postinumeroUri: '',
-                postitoimipaikka: ''
+                postitoimipaikka: '',
             },
             sahkoposti: '',
-            puhelinnumero: ''
-        }
-    }
-};
+            puhelinnumero: '',
+        },
+    };
+}
 
 // kayttooikeus
 export type Kayttaja = {
-    etunimi: string,
-    sukunimi: string,
-    sahkoposti: string,
-    asiointikieli: string,
-    saateteksti: string,
-}
+    etunimi: string;
+    sukunimi: string;
+    sahkoposti: string;
+    asiointikieli: string;
+    saateteksti: string;
+};
 
-export type Rekisterointityyppi = 'varda' | 'jotpa'
+export type Rekisterointityyppi = 'varda' | 'jotpa';
 
 export type Rekisterointi = {
-    toimintamuoto?: string,
-    kunnat: string[]
-    id: number
-    tyyppi: Rekisterointityyppi
-    organisaatio: Organisaatio,
-    sahkopostit: string[],
-    kayttaja: Kayttaja
-}
+    toimintamuoto?: string;
+    kunnat: string[];
+    id: number;
+    tyyppi: Rekisterointityyppi;
+    organisaatio: Organisaatio;
+    sahkopostit: string[];
+    kayttaja: Kayttaja;
+};
 
 export type VirheKoodi = string;
-export type Virheet = Record<string, VirheKoodi>
+export type Virheet = Record<string, VirheKoodi>;
 
-export type ApprovalCallback = (r: Rekisterointihakemus[], hyvaksytty: boolean, perustelu?: string) => void
+export type ApprovalCallback = (r: Rekisterointihakemus[], hyvaksytty: boolean, perustelu?: string) => void;

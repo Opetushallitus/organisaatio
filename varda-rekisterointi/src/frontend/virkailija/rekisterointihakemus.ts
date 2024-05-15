@@ -1,12 +1,8 @@
 import { Rekisterointi } from '../types/types';
 
-export const TILAT = [
-    'KASITTELYSSA',
-    'HYVAKSYTTY',
-    'HYLATTY'
-] as const;
+export const TILAT = ['KASITTELYSSA', 'HYVAKSYTTY', 'HYLATTY'] as const;
 
-export type Tila = typeof TILAT[number];
+export type Tila = (typeof TILAT)[number];
 
 export type Paatos = {
     hyvaksytty: boolean;

@@ -52,6 +52,7 @@ export default function RekisterointiVirkailija() {
                     tyypit: tyypit,
                 });
             } catch (error) {
+                console.log(error);
             } finally {
                 setFetchLoading(false);
             }
