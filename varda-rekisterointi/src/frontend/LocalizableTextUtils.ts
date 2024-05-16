@@ -7,7 +7,8 @@ export function toLocalizedText(
     defaultValue?: string
 ): string {
     if (localizableText) {
-        let localizedText = localizableText[language] || localizableText.fi || localizableText.sv || localizableText.en;
+        const localizedText =
+            localizableText[language] || localizableText.fi || localizableText.sv || localizableText.en;
         if (localizedText) {
             return localizedText;
         }

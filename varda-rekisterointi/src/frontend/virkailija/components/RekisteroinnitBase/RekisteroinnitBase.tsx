@@ -24,7 +24,7 @@ export default function RekisteroinnitBase() {
     const [ytunnus, setYtunnus] = useState('');
     const ytunnusTrimmed = ytunnus.trim();
     const ytunnusDisabled = !YtunnusValidator.validate(ytunnusTrimmed);
-    const ytunnusClassNames = classNames(styles.nappi, { [styles.nappiDisabled]: ytunnusDisabled });
+    const ytunnusClassNames = classNames(styles.nappi, { [`${styles.nappiDisabled}`]: ytunnusDisabled });
     const [registrationType, setRegistrationType] = useState<Rekisterointityyppi>(registrationTypes[0] ?? 'varda');
     const [rekisteroinnit, setRekisteroinnit] = useState<Rekisterointihakemus[]>([]);
     const [loading, setLoading] = useState(true);

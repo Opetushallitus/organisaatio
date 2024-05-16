@@ -11,10 +11,10 @@
     <groupId>fi.vm.sade.varda.rekisterointi</groupId>
     <artifactId>varda-rekisterointi</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>21</java.version>
-        <build-number>unknown</build-number>
         <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
         <springfox.version>3.0.0</springfox.version>
         <swagger.version>1.6.6</swagger.version>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.212</version>
+            <version>2.2.220</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -182,145 +182,8 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>integration-tests</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <systemPropertyVariables>
-                        <db.port>${database.port}</db.port>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <additionalProperties>
-                        <number>${build-number}</number>
-                    </additionalProperties>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.8.0</version>
-                <configuration>
-                    <nodeVersion>v16.11.1</nodeVersion>
-                    <installDirectory>target</installDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>npm ci</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>ci</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm run test</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>test -- --coverage --watchAll=false</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm run build</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>run build</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>reserve-db-port</id>
-                        <goals>
-                            <goal>reserve-network-port</goal>
-                        </goals>
-                        <phase>pre-integration-test</phase>
-                        <configuration>
-                            <portNames>
-                                <portName>database.port</portName>
-                            </portNames>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.43.4</version>
-                <configuration>
-                    <images>
-                        <image>
-                            <alias>database</alias>
-                            <name>postgres:10-alpine</name>
-                            <run>
-                                <env>
-                                    <POSTGRES_USER>varda-rekisterointi</POSTGRES_USER>
-                                    <POSTGRES_PASSWORD>varda-rekisterointi</POSTGRES_PASSWORD>
-                                    <POSTGRES_DB>varda-rekisterointi</POSTGRES_DB>
-                                </env>
-                                <ports>
-                                    <port>${database.port}:5432</port>
-                                </ports>
-                                <wait>
-                                    <log>PostgreSQL init process complete; ready for start up.</log>
-                                </wait>
-                            </run>
-                        </image>
-                    </images>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-db</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop-db</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -402,7 +265,7 @@
                                 </systemProperty>
                                 <systemProperty>
                                     <key>varda-rekisterointi.baseUrl</key>
-                                    <value>https://localhost:8080</value>
+                                    <value>https://localhost:8081</value>
                                 </systemProperty>
                                 <systemProperty>
                                     <key>baseUrl</key>

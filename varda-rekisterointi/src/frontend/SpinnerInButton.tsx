@@ -7,5 +7,5 @@ export default function SpinnerInButton() {
             <span className="oph-bounce oph-bounce2" aria-hidden="true"></span>
             <span className="oph-bounce oph-bounce3" aria-hidden="true"></span>
         </span>
-    )
+    );
 }
