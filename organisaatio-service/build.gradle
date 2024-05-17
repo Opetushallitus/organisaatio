@@ -63,9 +63,11 @@ dependencies {
         exclude group: '*', module: '*'
     }
 
-    // Logback
+    // Logging
+    implementation 'org.slf4j:slf4j-api:2.0.12'
     implementation 'ch.qos.logback:logback-access:1.4.14'
     implementation 'ch.qos.logback:logback-classic:1.4.14'
+    implementation 'ch.qos.logback:logback-core:1.4.14'
 
     // AWS
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.12.328'
@@ -116,8 +118,9 @@ configurations {
     all {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
         exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        exclude group: 'org.apache.logging.log4j', module: '*'
+        exclude group: 'org.apache.logging.log4j2', module: '*'
+        exclude group: 'commons-logging', module: 'commons-logging'
     }
 }
 

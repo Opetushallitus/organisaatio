@@ -29,8 +29,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -38,6 +36,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.Principal;
@@ -48,12 +48,10 @@ import java.util.Optional;
  */
 @Component
 @Aspect
+@Slf4j
 public class AuditLogAspect {
-
-    protected static final Logger LOG = LoggerFactory.getLogger(AuditLogAspect.class);
-
     public static final String SERVICE_NAME = "organisaatio";
-    public static final Audit audit = new Audit(LOG::info, SERVICE_NAME, ApplicationType.VIRKAILIJA);
+    public static final Audit audit = new Audit(log::info, SERVICE_NAME, ApplicationType.VIRKAILIJA);
 
     // POST /organisaatio/<oid>
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatio(..))")
@@ -136,7 +134,7 @@ public class AuditLogAspect {
             oid = ((OrganisaatioRDTOV4) result).getOid();
         } else {
             oid = null;
-            LOG.error("UNKNOWN PARAMETER IN AuditLogAspect {} {}", type, result);
+            log.error("UNKNOWN PARAMETER IN AuditLogAspect {} {}", type, result);
         }
 
         Target target = new Target.Builder().setField("oid", oid).build();

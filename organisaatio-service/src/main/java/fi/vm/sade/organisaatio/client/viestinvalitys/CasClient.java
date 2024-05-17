@@ -1,8 +1,5 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -13,8 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CasClient {
-    private final Logger log = LogManager.getLogger(this.getClass());
     public static final String CAS_SECURITY_TICKET = "CasSecurityTicket";
     private final HttpClient httpClient;
     private final String baseUrl;
