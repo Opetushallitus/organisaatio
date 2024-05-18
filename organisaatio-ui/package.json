@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "@hookform/resolvers": "^2.5.2",
+        "@hookform/resolvers": "^2.9.11",
         "@iconify/icons-fa-solid": "1.1.1",
         "@iconify/react": "3.1.0",
         "@joi/date": "^2.1.0",
