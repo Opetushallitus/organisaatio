@@ -27,7 +27,7 @@
         "react-table": "7.2.0",
         "react-window": "^1.8.10",
         "reactjs-popup": "^2.0.5",
-        "styled-components": "5.1.1",
+        "styled-components": "5.3.11",
         "universal-cookie": "4.0.4"
     },
     "devDependencies": {
