@@ -63,7 +63,6 @@ koodisto.public.webservice.url.backend=https://${host.virkailija}/koodisto-servi
 jpa.schemaUpdate=validate
 jpa.showSql=false
 jpa.generateStats=false
-log4j.properties.file=${user.home.conf}/log4j.properties
 oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
 organisaatio.rest.url=https://${host.virkailija}/organisaatio-service/rest/organisaatio/hae
@@ -76,7 +75,6 @@ lokalisointi.url.rest=https://${host.virkailija}/lokalisointi/cxf/rest
 organisaatio-service.url.rest=https://${host.virkailija}/organisaatio-service/rest/
 organisaatio-ui.organisaatio-ui-url=https://${host.virkailija}/organisaatio-service/organisaatiot
 root.organisaatio.oid=1.2.246.562.10.00000000001
-user.home.conf=${user.home}/oph-configuration
 web.url.cas=https\://${host.cas}/cas
 
 organisaatio-service.tarjonta-service.rest.url=https://${host.virkailija}:${port.tarjonta-service}/tarjonta-service/rest

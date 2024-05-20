@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Mock&amp;SpringBoot" type="CompoundRunConfigurationType">
-    <toRun name="mock-api" type="js.build_tools.npm" />
-    <toRun name="OrganisaatioApplication" type="SpringBootApplicationConfigurationType" />
-    <method v="2" />
-  </configuration>
-</component>

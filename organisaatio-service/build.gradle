@@ -37,7 +37,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging'
     implementation group: 'org.springframework.session', name: 'spring-session-jdbc'
     implementation group: 'org.springframework.security', name: 'spring-security-cas'
 
@@ -63,9 +63,8 @@ dependencies {
         exclude group: '*', module: '*'
     }
 
-    // Logback
+    // Logging
     implementation 'ch.qos.logback:logback-access:1.4.14'
-    implementation 'ch.qos.logback:logback-classic:1.4.14'
 
     // AWS
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.12.328'
@@ -114,10 +113,7 @@ application {
 
 configurations {
     all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        exclude group: 'org.slf4j', module: 'log4j-over-slf4j'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+        exclude group: 'commons-logging', module: 'commons-logging'
     }
 }
 
