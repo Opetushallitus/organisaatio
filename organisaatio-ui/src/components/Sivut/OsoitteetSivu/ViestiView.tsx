@@ -87,16 +87,16 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
     const [body, setBody] = useState<{ value: string; error?: string }>({ value: '' });
     const onBodyChange = (text: string, html: string) => {
-        const MAX_BODY_LENGTH = 6291456;
+        const MAX_HTML_LENGTH = 6_291_456;
+        const MAX_BODY_LENGTH = MAX_HTML_LENGTH;
         if (text.length == 0 && body.value.length > 0) {
             setBody({ value: html, error: `Viesti on pakollinen` });
-        } else if (html.length > MAX_BODY_LENGTH) {
+        } else if (text.length > MAX_BODY_LENGTH || html.length > MAX_HTML_LENGTH) {
             setBody({ value: html, error: `Viesti on liian pitkä (${text.length} merkkiä)` });
         } else {
             setBody({ value: html });
         }
     };
-    console.log(body.error, body.value);
     const [files, setFiles] = useState<UploadedFile[]>([]);
     const [isSending, setIsSending] = useState(false);
     const [fileUploading, setFileUploading] = useState(false);
@@ -291,7 +291,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                 Aihe*
                                 <Input type={'text'} value={subject.value} onChange={onSubjectChange}></Input>
                             </FormLabel>
-                            {subject.error && <p>{subject.error}</p>}
+                            {subject.error && <p className="error">{subject.error}</p>}
                         </div>
                     </div>
                 </div>
@@ -346,7 +346,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                     </div>
                                 </LexicalComposer>
                             </div>
-                            {body.error && <p>{body.error}</p>}
+                            {body.error && <p className="error">{body.error}</p>}
                         </div>
                     </div>
                 </div>
