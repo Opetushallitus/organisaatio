@@ -983,13 +983,14 @@ test.describe("Osoitepalvelu", () => {
       await expect(aiheField.errorFeedback).not.toBeVisible();
       await expect(viestiField.input).toHaveText("");
       await expect(viestiField.errorFeedback).not.toBeVisible();
+
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
     });
 
     await test.step("has required fields", async () => {
       await aiheField.input.fill("Aihe");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
-      await viestiField.input.fill("Viesti");
+      await viestiField.fill("Viesti")
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await aiheField.input.fill("");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
@@ -1008,7 +1009,7 @@ test.describe("Osoitepalvelu", () => {
         `Aihe on liian pitkä (${aiheFieldMaxLength + 1} merkkiä)`
       );
 
-      await viestiField.input.fill("");
+      await viestiField.fill("");
       await expect(viestiField.errorFeedback).toBeVisible();
       await expect(viestiField.errorFeedback).toHaveText(
         "Viesti on pakollinen"
@@ -1032,19 +1033,6 @@ test.describe("Osoitepalvelu", () => {
     await expect(page.getByText("1 vastaanottaja")).toBeVisible();
   });
 
-  test.skip("Viesti body has maximum length", async ({ page }) => {
-    const kirjoitaViestiForm = new ViestiView(page);
-    const viestiField = kirjoitaViestiForm.viestiField;
-
-    const viestiFieldMaxLength = 6291456;
-    await viestiField.input.fill(stringOfLength(viestiFieldMaxLength));
-    await expect(viestiField.errorFeedback).not.toBeVisible();
-    await viestiField.input.fill(stringOfLength(viestiFieldMaxLength + 1));
-    await expect(viestiField.errorFeedback).toHaveText(
-      `Viesti on liian pitkä (${viestiFieldMaxLength + 1} merkkiä)`
-    );
-  });
-
   test.describe("Sending email to organisations", async () => {
     test.beforeEach(async ({ page }) => {
       await new SearchView(page).haeButton.click();
@@ -1057,7 +1045,7 @@ test.describe("Osoitepalvelu", () => {
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
-      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await kirjoitaViestiForm.viestiField.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
       await expect(page.getByText("Lähetys onnistui!")).toBeVisible({
@@ -1072,7 +1060,7 @@ test.describe("Osoitepalvelu", () => {
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
-      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await kirjoitaViestiForm.viestiField.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
       await disableViestinvalitysIntegration(request);
@@ -1115,7 +1103,7 @@ test.describe("Osoitepalvelu", () => {
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
-      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await kirjoitaViestiForm.viestiField.fill("Viesti");
       await kirjoitaViestiForm.replyToField.input.fill("invalid@invalid");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
@@ -1146,7 +1134,7 @@ test.describe("Osoitepalvelu", () => {
       const kirjoitaViestiForm = new ViestiView(page);
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
       await kirjoitaViestiForm.aiheField.input.fill("Aihe");
-      await kirjoitaViestiForm.viestiField.input.fill("Viesti");
+      await kirjoitaViestiForm.viestiField.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await kirjoitaViestiForm.lahetaButton.click();
       await expect(page.getByText("Lähetys onnistui!")).toBeVisible({
