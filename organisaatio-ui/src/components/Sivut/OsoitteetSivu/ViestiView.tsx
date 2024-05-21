@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import FormLabel from '@opetushallitus/virkailija-ui-components/FormLabel';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
@@ -24,6 +23,22 @@ import { IconArrowBack } from './HakutulosView';
 import osoitteetStyles from './SearchView.module.css';
 import styles from './ViestiView.module.css';
 import hakutulosStyles from './HakutulosView.module.css';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import {
+    $getSelection,
+    $isRangeSelection,
+    FORMAT_TEXT_COMMAND,
+    LexicalEditor,
+    SELECTION_CHANGE_COMMAND,
+} from 'lexical';
+import { mergeRegister } from '@lexical/utils';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
+import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { OnHtmlChangePlugin } from './OnHtmlChangePlugin';
 
 type ViestiViewProps = {
     selection: Set<string>;
@@ -70,7 +85,18 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const [replyTo, onReplyToChange] = useTextInput('');
     const [copy, onCopyChange] = useTextInput('');
     const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
-    const [body, onBodyChange] = useRequiredTextInput('Viesti', 6291456, '');
+    const [body, setBody] = useState<{ value: string; error?: string }>({ value: '' });
+    const onBodyChange = (text: string, html: string) => {
+        const MAX_BODY_LENGTH = 6291456;
+        if (text.length == 0 && body.value.length > 0) {
+            setBody({ value: html, error: `Viesti on pakollinen` });
+        } else if (html.length > MAX_BODY_LENGTH) {
+            setBody({ value: html, error: `Viesti on liian pitkä (${text.length} merkkiä)` });
+        } else {
+            setBody({ value: html });
+        }
+    };
+    console.log(body.error, body.value);
     const [files, setFiles] = useState<UploadedFile[]>([]);
     const [isSending, setIsSending] = useState(false);
     const [fileUploading, setFileUploading] = useState(false);
@@ -215,10 +241,6 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
         }
     }
 
-    const attachmentButtonClassName = fileUploading
-        ? `${styles.ViestiButton} ${styles.ViestiButtonDisabled}`
-        : styles.ViestiButton;
-
     return (
         <div className={styles.ViestiView}>
             <div className={hakutulosStyles.TitleRow}>
@@ -278,41 +300,51 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                         <div role={'group'} className={body.error ? styles.Error : ''}>
                             <FormLabel>Viesti*</FormLabel>
                             <div className={styles.Viesti}>
-                                <div className={styles.ViestiButtons}>
-                                    <label
-                                        htmlFor="file-upload"
-                                        className={attachmentButtonClassName}
-                                        aria-label="Lataa liitetiedosto"
-                                        aria-disabled={fileUploading}
-                                    >
-                                        <AttachmentIcon />
-                                        <input
-                                            id="file-upload"
-                                            type="file"
-                                            name="file"
-                                            ref={uploadRef}
-                                            onChange={onFileUpload}
-                                            style={{ display: 'none' }}
-                                            disabled={fileUploading}
-                                            aria-invalid={!!fileUploadError}
-                                            aria-errormessage="fileuploaderror"
-                                        />
-                                    </label>
-                                </div>
-                                <Textarea
-                                    className={styles.ViestiTextarea}
-                                    value={body.value}
-                                    onChange={onBodyChange}
-                                ></Textarea>
-                                <div className={styles.ViestiFooter}>
-                                    <strong>Osoitelähde:</strong> OPH Opintopolku (Organisaatiopalvelu). Osoitetta
-                                    käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen
-                                    viestintään.
-                                    <br />
-                                    <strong>Adresskälla:</strong> Utbildningsstyrelsen Studieinfo (Organisationstjänst).
-                                    Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i
-                                    sin kommunikation till skolorna och skolornas administratörer.
-                                </div>
+                                <LexicalComposer
+                                    initialConfig={{
+                                        namespace: 'Viesti',
+                                        onError: (error: Error, editor: LexicalEditor): void => {
+                                            console.error(error, editor);
+                                        },
+                                        nodes: [LinkNode, AutoLinkNode],
+                                    }}
+                                >
+                                    <div className={styles.ViestiButtons}>
+                                        <ToolbarIcon label="Lataa liitetiedosto" disabled={fileUploading}>
+                                            <AttachmentIcon />
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                name="file"
+                                                ref={uploadRef}
+                                                onChange={onFileUpload}
+                                                style={{ display: 'none' }}
+                                                disabled={fileUploading}
+                                                aria-invalid={!!fileUploadError}
+                                                aria-errormessage="fileuploaderror"
+                                            />
+                                        </ToolbarIcon>
+                                        <FormattingButtons />
+                                    </div>
+
+                                    <RichTextPlugin
+                                        contentEditable={<ContentEditable className={styles.ViestiTextarea} />}
+                                        placeholder={<div></div>}
+                                        ErrorBoundary={LexicalErrorBoundary}
+                                    />
+                                    <OnHtmlChangePlugin onChange={onBodyChange} />
+                                    <LinkPlugin />
+                                    <div className={styles.ViestiFooter}>
+                                        <strong>Osoitelähde:</strong> OPH Opintopolku (Organisaatiopalvelu). Osoitetta
+                                        käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen
+                                        viestintään.
+                                        <br />
+                                        <strong>Adresskälla:</strong> Utbildningsstyrelsen Studieinfo
+                                        (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och
+                                        kulturministeriet använder adressen i sin kommunikation till skolorna och
+                                        skolornas administratörer.
+                                    </div>
+                                </LexicalComposer>
                             </div>
                             {body.error && <p>{body.error}</p>}
                         </div>
@@ -400,6 +432,73 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     );
 };
 
+const LowPriority = 1;
+
+function FormattingButtons() {
+    const [editor] = useLexicalComposerContext();
+    const [isBold, setIsBold] = useState(false);
+
+    const $updateToolbar = useCallback(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+            setIsBold(selection.hasFormat('bold'));
+        }
+    }, [editor]);
+
+    useEffect(() => {
+        return mergeRegister(
+            editor.registerUpdateListener(({ editorState }) => {
+                editorState.read(() => {
+                    $updateToolbar();
+                });
+            }),
+            editor.registerCommand(
+                SELECTION_CHANGE_COMMAND,
+                () => {
+                    $updateToolbar();
+                    return false;
+                },
+                LowPriority
+            )
+        );
+    }, [editor, $updateToolbar]);
+
+    return (
+        <>
+            <ToolbarIcon
+                active={isBold}
+                label="Lihavoi"
+                onClick={() => {
+                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+                }}
+            >
+                <BoldIcon />
+            </ToolbarIcon>
+        </>
+    );
+}
+
+type ToolbarIconProps = React.PropsWithChildren<{
+    active?: boolean;
+    disabled?: boolean;
+    className?: string;
+    label: string;
+    onClick?: () => void;
+}>;
+
+function ToolbarIcon({ children, className, label, active = false, disabled = false, onClick }: ToolbarIconProps) {
+    const classes = [styles.ViestiButton];
+    if (disabled) classes.push(styles.ViestiButtonDisabled);
+    if (active) classes.push(styles.ViestiButtonActive);
+    if (className) classes.push(className);
+
+    return (
+        <label className={classes.join(' ')} aria-label={label} aria-disabled={disabled} onClick={onClick}>
+            {children}
+        </label>
+    );
+}
+
 function BlueBanner({ children }: { children: React.ReactNode }) {
     return (
         <div className={[styles.Row, styles.BlueBanner].join(' ')}>
@@ -427,6 +526,15 @@ function AttachmentIcon() {
                 d="M12 22C10.4667 22 9.16667 21.4667 8.1 20.4C7.03333 19.3333 6.5 18.0333 6.5 16.5V6C6.5 4.9 6.89167 3.95833 7.675 3.175C8.45833 2.39167 9.4 2 10.5 2C11.6 2 12.5417 2.39167 13.325 3.175C14.1083 3.95833 14.5 4.9 14.5 6V15.5C14.5 16.2 14.2583 16.7917 13.775 17.275C13.2917 17.7583 12.7 18 12 18C11.3 18 10.7083 17.7583 10.225 17.275C9.74167 16.7917 9.5 16.2 9.5 15.5V6H11V15.5C11 15.7833 11.0958 16.0208 11.2875 16.2125C11.4792 16.4042 11.7167 16.5 12 16.5C12.2833 16.5 12.5208 16.4042 12.7125 16.2125C12.9042 16.0208 13 15.7833 13 15.5V6C13 5.3 12.7583 4.70833 12.275 4.225C11.7917 3.74167 11.2 3.5 10.5 3.5C9.8 3.5 9.20833 3.74167 8.725 4.225C8.24167 4.70833 8 5.3 8 6V16.5C8 17.6 8.39167 18.5417 9.175 19.325C9.95833 20.1083 10.9 20.5 12 20.5C13.1 20.5 14.0417 20.1083 14.825 19.325C15.6083 18.5417 16 17.6 16 16.5V6H17.5V16.5C17.5 18.0333 16.9667 19.3333 15.9 20.4C14.8333 21.4667 13.5333 22 12 22Z"
                 fill="#666666"
             />
+        </svg>
+    );
+}
+
+function BoldIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#666666">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z" />
         </svg>
     );
 }

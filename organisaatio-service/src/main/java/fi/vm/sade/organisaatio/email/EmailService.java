@@ -127,7 +127,7 @@ public class EmailService {
             .vastaanottajat(recipients.stream().map(s -> Vastaanottaja.builder().sahkopostiOsoite(s).build()).toList())
             .otsikko(email.getSubject())
             .sisalto(email.getBody())
-            .sisallonTyyppi(SisallonTyyppi.text)
+            .sisallonTyyppi(SisallonTyyppi.html)
             .liitteidenTunnisteet(email.getAttachmentIds())
             .build();
     }

@@ -13,7 +13,9 @@ sonarqube {
 node {
     version = '20.11.1'
     download = true
+    npmInstall.args = ['--force']
 }
+npmInstall.args = ['--force']
 task lint(type: NpmTask, dependsOn: npmInstall) {
     inputs.files(files('src'))
     outputs.dir('src')
