@@ -232,8 +232,10 @@ public class OsoitteetResource {
                         .filter((sp) -> sp != null)
                         .distinct().toList();
         var osoitelahde = """
-                Osoitelähde: OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
-                Adresskälla: Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
+                <p>
+                <b>Osoitelähde:</b> OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.<br/>
+                <b>Adresskälla:</b> Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
+                </p>
                 """;
         var emailId = emailService.queueEmail(QueuedEmail.builder()
                 .hakutulosId(hakutulosId)

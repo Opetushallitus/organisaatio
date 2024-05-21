@@ -10,7 +10,7 @@ function main {
   nvm use 20 || nvm install -b 20 && nvm use 20
 
   cd "$repo/organisaatio-ui"
-  npm ci
+  npm ci --force
   npm start
 }
 

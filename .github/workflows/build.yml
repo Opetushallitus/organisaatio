@@ -83,7 +83,7 @@ jobs:
         run: |
           PGPASSWORD=postgres psql -c 'CREATE DATABASE organisaatio;' -h localhost -U postgres
           cd mock-api && npm install && cd -
-          cd organisaatio-ui && npm install && cd -
+          cd organisaatio-ui && npm ci --force && cd -
       - uses: gradle/actions/wrapper-validation@v3
       - uses: gradle/actions/setup-gradle@v3
       - name: Build backend with no tests
@@ -128,7 +128,7 @@ jobs:
         run: |
           PGPASSWORD=postgres psql -c 'CREATE DATABASE organisaatio;' -h localhost -U postgres
           cd mock-api && npm ci && cd -
-          cd organisaatio-ui && npm ci && cd -
+          cd organisaatio-ui && npm ci --force && cd -
           cd playwright && npm ci && npx playwright install --with-deps && cd -
       - uses: gradle/actions/wrapper-validation@v3
       - uses: gradle/actions/setup-gradle@v3
