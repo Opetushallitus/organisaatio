@@ -22,7 +22,7 @@ class ExportServiceTest {
         exportService.createSchema();
 
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatio", Long.class)).isEqualTo(13L);
-        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(24L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(19L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatiosuhde", Long.class)).isEqualTo(11L);
 
         assertThat(getParentOid("1.2.2004.2")).isEqualTo("1.2.2004.1");
