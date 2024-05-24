@@ -103,7 +103,7 @@ public class ExportService {
                      y.postitoimipaikka,
                      y.kieli
               FROM yhteystieto y
-              LEFT JOIN organisaatio o ON o.id = y.organisaatio_id
+              JOIN organisaatio o ON o.id = y.organisaatio_id
               WHERE y.osoitetyyppi in ('posti', 'kaynti')
             """;
 
