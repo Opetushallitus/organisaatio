@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.resource.advice;
 
 import fi.vm.sade.organisaatio.business.exception.HakutoimistoNotFoundException;
+import fi.vm.sade.organisaatio.business.exception.KayttooikeusInternalServerErrorException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioBusinessException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.client.viestinvalitys.BadRequestException;
@@ -85,6 +86,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleViestinvalitysBadRequestException(BadRequestException bre) {
         return ResponseEntity.status(400).body(bre.getApiResponse().getBody());
+    }
+
+    @ExceptionHandler(KayttooikeusInternalServerErrorException.class)
+    public ResponseEntity<Object> handleKayttooikeusInternalServerErrorException(KayttooikeusInternalServerErrorException e) {
+        return ResponseEntity.status(500).body(ApiErrorDTO.builder().errorKey(e.getErrorKey()).errorMessage(e.getMessage()).build());
     }
 
     @ExceptionHandler(Exception.class)

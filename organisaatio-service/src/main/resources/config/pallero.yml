@@ -12,3 +12,5 @@ organisaatio.tasks.export.copy-to-lampi: true
 organisaatio.tasks.export.lampi-bucket-name: oph-lampi-qa
 organisaatio.tasks.export.lampi-role-arn: ${ssm_lampi_role_arn}
 organisaatio.tasks.export.lampi-external-id: ${ssm_lampi_external_id}
+
+varda-rekisterointi.kayttooikeusryhma-id: 68995313

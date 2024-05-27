@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.properties.OphProperties;
 
@@ -21,8 +24,10 @@ public abstract class CustomClient {
         this.httpClient = httpClient;
         this.properties = properties;
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper objectMapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
         this.objectReader = objectMapper.reader();
         this.objectWriter = objectMapper.writer();
     }

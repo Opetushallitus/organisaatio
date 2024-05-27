@@ -132,7 +132,7 @@ public class YTJServiceImpl implements YTJService {
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
         if (vastaus == null) {
-            LOG.error("YTJ service returned null reply");
+            LOG.error("YTJ service returned null reply for {}", ytunnus);
             throw new YtjConnectionException(YtjExceptionType.OTHER, DEFAULT_ERROR_MESSAGE);
         }
         return mapper.mapYritysTiedotV2DTOtoYTJDTO(vastaus);

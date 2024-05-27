@@ -12,3 +12,5 @@ organisaatio.tasks.export.copy-to-lampi: false
 organisaatio.tasks.export.lampi-bucket-name: none
 organisaatio.tasks.export.lampi-role-arn: none
 organisaatio.tasks.export.lampi-external-id: none
+
+varda-rekisterointi.kayttooikeusryhma-id: 70008488

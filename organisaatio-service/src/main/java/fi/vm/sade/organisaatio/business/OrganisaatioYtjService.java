@@ -12,17 +12,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  */
-
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
+import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 
 public interface OrganisaatioYtjService {
-
     /**
     * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
     */
-
     YtjPaivitysLoki updateYTJData(final boolean forceUpdate);
 
+    Organisaatio findOrganisaatioByYtunnus(String ytunnus) throws OrganisaatioResourceException;
 }

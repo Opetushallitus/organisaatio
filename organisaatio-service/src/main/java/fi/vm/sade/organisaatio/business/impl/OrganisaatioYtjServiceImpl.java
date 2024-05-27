@@ -35,10 +35,15 @@ import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
 import fi.vm.sade.organisaatio.resource.YTJResource;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
+import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
+import fi.vm.sade.organisaatio.ytj.api.YTJService;
+import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.vm.sade.organisaatio.ytj.service.YtjDtoMapperHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +88,12 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     @Autowired
     private OrganisaatioViestinta organisaatioViestinta;
 
+    @Autowired
+    private YTJService ytjService;
+
+    @Autowired
+    private ConversionService conversionService;
+
     private YtjPaivitysLoki ytjPaivitysLoki;
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -98,6 +109,21 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     public OrganisaatioYtjServiceImpl() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+    }
+
+    @Override
+    public Organisaatio findOrganisaatioByYtunnus(String ytunnus) {
+        try {
+            YTJDTO ytjdto = ytjService.findByYTunnus(ytunnus.trim(), YTJKieli.FI);
+            if (ytjdto.getYritysTunnus().getYritysLopetettu()) {
+                LOG.warn("Organisation {} terminated in YTJ", ytunnus);
+                throw new OrganisaatioResourceException(HttpStatus.CONFLICT, "Organisation " + ytunnus + " terminated in YTJ");
+            }
+            return conversionService.convert(ytjdto, Organisaatio.class);
+        } catch (YtjConnectionException ytje) {
+            LOG.error("Failed to fetch YTJ organisation for ytunnus " + ytunnus, ytje);
+            throw new OrganisaatioResourceException(HttpStatus.SERVICE_UNAVAILABLE, "Failed to fetch YTJ organisation for ytunnus " + ytunnus);
+        }
     }
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
