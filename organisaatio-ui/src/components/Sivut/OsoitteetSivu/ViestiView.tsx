@@ -437,11 +437,13 @@ const LowPriority = 1;
 function FormattingButtons() {
     const [editor] = useLexicalComposerContext();
     const [isBold, setIsBold] = useState(false);
+    const [isItalic, setIsItalic] = useState(false);
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
             setIsBold(selection.hasFormat('bold'));
+            setIsItalic(selection.hasFormat('italic'));
         }
     }, [editor]);
 
@@ -473,6 +475,15 @@ function FormattingButtons() {
                 }}
             >
                 <BoldIcon />
+            </ToolbarIcon>
+            <ToolbarIcon
+                active={isItalic}
+                label="Kursivoi"
+                onClick={() => {
+                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
+                }}
+            >
+                <ItalicIcon />
             </ToolbarIcon>
         </>
     );
@@ -535,6 +546,15 @@ function BoldIcon() {
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#666666">
             <path d="M0 0h24v24H0V0z" fill="none" />
             <path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z" />
+        </svg>
+    );
+}
+
+function ItalicIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#666666">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4h-8z" />
         </svg>
     );
 }
