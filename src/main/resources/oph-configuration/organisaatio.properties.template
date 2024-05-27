@@ -18,7 +18,6 @@ port.tarjonta-service={{port_tarjonta_service}}
 port.postgresql={{port_postgresql}}
 rajapinnat.ytj.asiakastunnus={{rajapinnat_ytj_asiakastunnus}}
 rajapinnat.ytj.avain={{rajapinnat_ytj_avain}}
-server.name={{ansible_hostname}}
 organisaatio.service.username={{organisaatio_service_username}}
 organisaatio.service.password={{organisaatio_service_password}}
 organisaatio.service.username.to.koodisto={{organisaatio_service_username_to_koodisto}}
