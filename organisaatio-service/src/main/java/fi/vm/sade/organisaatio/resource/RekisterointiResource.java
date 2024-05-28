@@ -57,7 +57,7 @@ public class RekisterointiResource {
                             @ApiResponse(responseCode = "503", description = "Organisaation tietojen haku YTJ:stä epäonnistui.",
                                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorDTO.class))}) })
     @PostMapping(value = "/varda", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_APP_VARDA_REKISTEROINTI')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_API_VARDA')")
     public OrganisaatioRDTOV4 vardaRekisterointi(@RequestBody VardaRekisterointi request) throws OrganisaatioResourceException {
         Organisaatio existing = organisaatioRepository.findByYTunnus(request.getYtunnus());
         OrganisaatioRDTOV4 result = existing != null
