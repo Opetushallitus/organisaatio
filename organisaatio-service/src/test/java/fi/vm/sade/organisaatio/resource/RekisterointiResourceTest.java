@@ -92,7 +92,7 @@ public class RekisterointiResourceTest {
     }
 
     @Test
-    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_VARDA_REKISTEROINTI"})
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_API_VARDA"})
     public void vardaRekisterointiCreatesNewOrganisation() throws Exception {
         when(kayttooikeusClient.kutsuKayttaja(any(), any(), eq(123l), eq("testi@testi.fi")))
             .thenReturn(12345l);
@@ -146,7 +146,7 @@ public class RekisterointiResourceTest {
     }
 
     @Test
-    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_VARDA_REKISTEROINTI"})
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_API_VARDA"})
     public void vardaRekisterointiUpdatesExistingOrganisation() throws Exception {
         when(kayttooikeusClient.kutsuKayttaja(any(), eq("1.2.2004.1"), eq(123l), eq("testi@testi.fi")))
             .thenReturn(12345l);
