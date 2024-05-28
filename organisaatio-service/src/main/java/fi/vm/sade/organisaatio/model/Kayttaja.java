@@ -24,5 +24,5 @@ public class Kayttaja {
 
     @NotNull
     @Schema(description = "Pääkäyttäjän asiointikieli", required = true)
-    public String asiointikieli;
+    public Asiointikieli asiointikieli;
 }

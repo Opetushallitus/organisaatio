@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fi.vm.sade.organisaatio.client.KayttooikeusClient;
+import fi.vm.sade.organisaatio.model.Asiointikieli;
 import fi.vm.sade.organisaatio.model.Kayttaja;
 import fi.vm.sade.organisaatio.model.VardaRekisterointi;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
@@ -45,7 +46,7 @@ public class RekisterointiResourceTest {
     @MockBean
     private YTJService ytjService;
 
-    Kayttaja kayttaja = new Kayttaja("etu", "suku", "sposti@fi.fi", "FI");
+    Kayttaja kayttaja = new Kayttaja("etu", "suku", "sposti@fi.fi", Asiointikieli.fi);
 
     @Test
     @WithMockUser(value = "1.2.3.4.5", roles = {"APP_JOTAIN_MUUTA"})

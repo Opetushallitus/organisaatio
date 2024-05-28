@@ -23,7 +23,7 @@ public class KayttajaKutsu {
     @NotNull
     public final String sahkoposti;
     @NotNull
-    public final String asiointikieli;
+    public final Asiointikieli asiointikieli;
     public final String saate;
     @Valid @NotNull
     public final Set<KutsuOrganisaatio> organisaatiot;
