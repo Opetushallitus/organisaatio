@@ -7,6 +7,7 @@ import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.organisaatio.business.exception.KayttooikeusInternalServerErrorException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKayttooikeusException;
+import fi.vm.sade.organisaatio.config.scheduling.AuthenticationUtil;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
@@ -14,6 +15,7 @@ import fi.vm.sade.organisaatio.model.Kayttaja;
 import fi.vm.sade.organisaatio.model.KayttajaKutsu;
 import fi.vm.sade.properties.OphProperties;
 import org.apache.http.entity.ContentType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,8 @@ import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT
 
 @Component
 public class KayttooikeusClient extends CustomClient {
+    @Autowired
+    private AuthenticationUtil authenticationUtil;
 
     public KayttooikeusClient(@Qualifier(HTTP_CLIENT_KAYTTOOIKEUS) OphHttpClient httpClient, OphProperties properties) {
         super(httpClient, properties);
@@ -61,6 +65,7 @@ public class KayttooikeusClient extends CustomClient {
                 .asiointikieli(kayttaja.asiointikieli)
                 .sahkoposti(kayttaja.sahkoposti)
                 .kutsujaForEmail(kutsujaForEmail)
+                .kutsujaOid(authenticationUtil.getCurrentUserOid())
                 .organisaatiot(Set.of(
                         KayttajaKutsu.KutsuOrganisaatio.of(
                                 organisaatioOid,
