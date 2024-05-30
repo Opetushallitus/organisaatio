@@ -30,15 +30,14 @@ import {
     FORMAT_TEXT_COMMAND,
     LexicalEditor,
     SELECTION_CHANGE_COMMAND,
+    SerializedEditorState,
 } from 'lexical';
 import { mergeRegister } from '@lexical/utils';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
-import { OnHtmlChangePlugin } from './OnHtmlChangePlugin';
+import { SerializingOnChangePlugin } from './SerializingOnChangePlugin';
 
 type ViestiViewProps = {
     selection: Set<string>;
@@ -86,15 +85,16 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const [copy, onCopyChange] = useTextInput('');
     const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
     const [body, setBody] = useState<{ value: string; error?: string }>({ value: '' });
-    const onBodyChange = (text: string, html: string) => {
-        const MAX_HTML_LENGTH = 6_291_456;
-        const MAX_BODY_LENGTH = MAX_HTML_LENGTH;
-        if (text.length == 0 && body.value.length > 0) {
-            setBody({ value: html, error: `Viesti on pakollinen` });
-        } else if (text.length > MAX_BODY_LENGTH || html.length > MAX_HTML_LENGTH) {
-            setBody({ value: html, error: `Viesti on liian pitkä (${text.length} merkkiä)` });
+    const [serializedEditor, setSerializedEditor] = useState<SerializedEditorState>(undefined);
+    const onBodyChange = (text: string, editor: LexicalEditor) => {
+        const MAX_BODY_LENGTH = 4_000_000;
+        if (text.length == 0) {
+            setBody({ value: text, error: `Viesti on pakollinen` });
+        } else if (text.length > MAX_BODY_LENGTH) {
+            setBody({ value: text, error: `Viesti on liian pitkä (${text.length} merkkiä)` });
         } else {
-            setBody({ value: html });
+            setBody({ value: text });
+            setSerializedEditor(editor.getEditorState().toJSON());
         }
     };
     const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -146,7 +146,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                 replyTo: replyTo !== '' ? replyTo : undefined,
                 copy: copy !== '' ? copy : undefined,
                 subject: subject.value,
-                body: body.value,
+                body: serializedEditor,
                 attachmentIds: files.map((f) => f.id!).filter(Boolean),
                 selectedOids,
             };
@@ -306,7 +306,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                         onError: (error: Error, editor: LexicalEditor): void => {
                                             console.error(error, editor);
                                         },
-                                        nodes: [LinkNode, AutoLinkNode],
+                                        nodes: [],
                                     }}
                                 >
                                     <div className={styles.ViestiButtons}>
@@ -332,8 +332,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                         placeholder={<div></div>}
                                         ErrorBoundary={LexicalErrorBoundary}
                                     />
-                                    <OnHtmlChangePlugin onChange={onBodyChange} />
-                                    <LinkPlugin />
+                                    <SerializingOnChangePlugin onChange={onBodyChange} />
                                     <div className={styles.ViestiFooter}>
                                         <strong>Osoitelähde:</strong> OPH Opintopolku (Organisaatiopalvelu). Osoitetta
                                         käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen

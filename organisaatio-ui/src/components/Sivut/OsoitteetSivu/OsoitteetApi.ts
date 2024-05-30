@@ -2,6 +2,7 @@ import axios, { AxiosProgressEvent, GenericAbortSignal } from 'axios';
 import { API_CONTEXT } from '../../../contexts/constants';
 import { FrontProperties, KoodiUri } from '../../../types/types';
 import { useEffect, useState } from 'react';
+import { SerializedEditorState } from 'lexical';
 
 interface KayttajaHakutulos {
     id: string;
@@ -136,7 +137,7 @@ export type SendEmailRequest = {
     replyTo?: string;
     copy?: string;
     subject: string;
-    body: string;
+    body: SerializedEditorState;
     attachmentIds?: string[];
     selectedOids?: string[];
 };
