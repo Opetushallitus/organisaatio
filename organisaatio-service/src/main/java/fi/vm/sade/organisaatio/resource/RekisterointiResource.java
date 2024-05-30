@@ -91,6 +91,6 @@ public class RekisterointiResource {
     }
 
     private void inviteUser(VardaRekisterointi request, String organisaatioOid) {
-        kayttooikeusClient.kutsuKayttaja(request.getPaakayttaja(), organisaatioOid, vardaKayttooikeusryhmaId, "test@test.fi");
+        kayttooikeusClient.kutsuKayttaja(request.getPaakayttaja(), organisaatioOid, vardaKayttooikeusryhmaId, "varda@oph.fi");
     }
 }
