@@ -10,22 +10,27 @@ function main {
 
   init_cloud_base_virtualenv
   copy_mfa_token_to_clipboard
-  db_username="app"
-  db_password="$( get_parameter "/${ENV}/postgresqls/${SERVICE}/app-user-password" )"
 
   if [ "${ENV}" = "hahtuva" ]; then
+    export PROFILE="oph-dev"
     tunnel_port="6691"
     db_hostname="${SERVICE}.db.hahtuvaopintopolku.fi"
   elif [ "${ENV}" = "untuva" ]; then
+    export PROFILE="oph-dev"
     tunnel_port="6692"
     db_hostname="${SERVICE}.db.untuvaopintopolku.fi"
   elif [ "${ENV}" = "pallero" ]; then
+    export PROFILE="oph-dev"
     tunnel_port="6693"
     db_hostname="${SERVICE}.db.testiopintopolku.fi"
   elif [ "${ENV}" = "sade" ]; then
+    export PROFILE="oph-prod"
     tunnel_port="6694"
     db_hostname="${SERVICE}.db.opintopolku.fi"
   fi
+
+  db_username="app"
+  db_password="$( get_parameter "/${ENV}/postgresqls/${SERVICE}/app-user-password" )"
 
   start_tunnel "${tunnel_port}:${db_hostname}:5432"
   PGPASSWORD="${db_password}" psql --host localhost --port "${tunnel_port}" --username "${db_username}" --dbname "${SERVICE}" "$@"
@@ -37,7 +42,7 @@ function get_parameter {
     --name "${parameter_name}" \
     --with-decryption \
     --region eu-west-1 \
-    --profile "oph-${ENV}" \
+    --profile "${PROFILE}" \
     --query "Parameter.Value" \
     --output text
 }
