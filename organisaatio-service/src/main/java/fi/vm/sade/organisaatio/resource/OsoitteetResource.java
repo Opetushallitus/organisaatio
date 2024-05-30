@@ -3,8 +3,8 @@ package fi.vm.sade.organisaatio.resource;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.client.KayttooikeusClient;
@@ -37,6 +37,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.validation.constraints.NotNull;
@@ -231,24 +232,43 @@ public class OsoitteetResource {
                         .map((k) -> k.getSahkoposti())
                         .filter((sp) -> sp != null)
                         .distinct().toList();
-        var osoitelahde = """
-                <p>
-                <b>Osoitelähde:</b> OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.<br/>
-                <b>Adresskälla:</b> Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
-                </p>
-                """;
+
         var emailId = emailService.queueEmail(QueuedEmail.builder()
                 .hakutulosId(hakutulosId)
                 .replyTo(request.getReplyTo())
                 .copy(request.getCopy())
                 .recipients(recipients)
                 .subject(request.getSubject())
-                .body(request.getBody() + "\n\n" + osoitelahde)
+                .body(renderEmailBody(request))
                 .attachmentIds(request.getAttachmentIds())
                 .build());
 
         emailService.attemptSendingEmail(emailId);
         return new SendEmailResponse(emailId);
+    }
+
+    private String renderEmailBody(SendEmailRequest request) {
+        var renderer = new LexicalEditorStateRenderer();
+        return String.format(
+                """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                <meta charset="UTF-8">
+                <title>%s</title>
+                </head>
+                <body>
+                %s
+                <p>
+                <b>Osoitelähde:</b> OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.<br/>
+                <b>Adresskälla:</b> Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
+                </p>
+                </body>
+                </html>
+                """,
+                HtmlUtils.htmlEscape(request.getSubject(), "UTF-8"),
+                renderer.toHtml(request.getBody())
+        );
     }
 
     @PostMapping(
@@ -891,8 +911,7 @@ class SendEmailRequest {
     @Size(min = 1, max = 255)
     private String subject;
     @NotNull
-    @Size(min = 1, max = 6291456)
-    private String body;
+    private JsonNode body;
     private List<String> attachmentIds;
     private List<String> selectedOids;
 }
