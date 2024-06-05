@@ -23,7 +23,20 @@ public class LexicalEditorStateRenderer {
             renderParagraph(node);
         } else if (isText(node)) {
             renderText(node);
+        } else if (isHeadingNode(node)) {
+            renderHeading(node);
         }
+    }
+
+    private boolean isHeadingNode(JsonNode node) {
+        return "heading".equals(node.get("type").textValue());
+    }
+
+    private void renderHeading(JsonNode node) {
+        var tag = node.get("tag").textValue();
+        html("<" + tag + ">");
+        node.get("children").forEach(this::renderNode);
+        html("</" + tag + ">\n");
     }
 
     private boolean isLinebreak(JsonNode node) {

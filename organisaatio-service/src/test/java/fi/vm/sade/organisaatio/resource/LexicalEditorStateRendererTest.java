@@ -33,6 +33,18 @@ class LexicalEditorStateRendererTest {
                 """);
     }
 
+    @Test
+    void testHeadingRendering() throws IOException {
+        var body = readLexicalState("/lexical/block-test.json");
+        var render = new LexicalEditorStateRenderer();
+        assertThat(render.toHtml(body)).isEqualTo("""
+                <h1>Heading 1</h1>
+                <h2>Heading 2</h2>
+                <h3>Heading 3</h3>
+                <h4>Heading 4</h4>
+                """);
+    }
+
     private JsonNode readLexicalState(String file) throws IOException {
         try (var is = getClass().getResourceAsStream(file)) {
             return objectMapper.readTree(is);
