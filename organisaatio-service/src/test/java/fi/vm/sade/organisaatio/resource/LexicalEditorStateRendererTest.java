@@ -35,7 +35,7 @@ class LexicalEditorStateRendererTest {
 
     @Test
     void testHeadingRendering() throws IOException {
-        var body = readLexicalState("/lexical/block-test.json");
+        var body = readLexicalState("/lexical/heading-test.json");
         var render = new LexicalEditorStateRenderer();
         assertThat(render.toHtml(body)).isEqualTo("""
                 <h1>Heading 1</h1>
