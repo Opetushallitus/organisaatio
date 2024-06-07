@@ -66,10 +66,13 @@ public class LexicalEditorStateRenderer {
 
         var bold = (node.get("format").intValue() & 0x1) == 0x1;
         var italic = (node.get("format").intValue() & 0x2) == 0x2;
+        var underlined = (node.get("format").intValue() & 0x8) == 0x8;
 
         if (bold) html("<b>");
         if (italic) html("<em>");
+        if (underlined) html("<u>");
         escape(text);
+        if (underlined) html("</u>");
         if (italic) html("</em>");
         if (bold) html("</b>");
     }

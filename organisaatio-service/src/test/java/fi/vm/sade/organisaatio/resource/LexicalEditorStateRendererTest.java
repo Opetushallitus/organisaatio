@@ -17,10 +17,12 @@ class LexicalEditorStateRendererTest {
         var renderer = new LexicalEditorStateRenderer();
         assertThat(renderer.toHtml(body)).isEqualTo("""
                 <p><b>bold</b></p>
-                <p><em>italics</em></p>
-                <p><b><em>bold and italics</em></b></p>
-                <p><b>bold </b><b><em>and</em></b><br/>
-                <b><em>partly</em></b><b> italics</b></p>
+                <p><em>italic</em></p>
+                <p><u>underlined</u></p>
+                <p><b><em>italic and bold</em></b></p>
+                <p><b><u>bold and underlined</u></b></p>
+                <p><em><u>italic and underlined</u></em></p>
+                <p></p>
                 """);
     }
 

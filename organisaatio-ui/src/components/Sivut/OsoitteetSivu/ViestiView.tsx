@@ -313,6 +313,11 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                             console.error(error, editor);
                                         },
                                         nodes: [HeadingNode],
+                                        theme: {
+                                            text: {
+                                                underline: styles.LexicalThemeUnderline,
+                                            },
+                                        },
                                     }}
                                 >
                                     <div className={styles.ViestiButtons}>
@@ -432,6 +437,7 @@ function FormattingButtons() {
     const [editor] = useLexicalComposerContext();
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
+    const [isUnderline, setIsUnderline] = useState(false);
     const [headingType, setHeadingType] = useState('parapgrah');
 
     const $updateToolbar = useCallback(() => {
@@ -439,6 +445,7 @@ function FormattingButtons() {
         if ($isRangeSelection(selection)) {
             setIsBold(selection.hasFormat('bold'));
             setIsItalic(selection.hasFormat('italic'));
+            setIsUnderline(selection.hasFormat('underline'));
 
             const anchorNode = selection.anchor.getNode();
             let element =
@@ -522,6 +529,15 @@ function FormattingButtons() {
                 }}
             >
                 <ItalicIcon />
+            </ToolbarIcon>
+            <ToolbarIcon
+                active={isUnderline}
+                label="Alleviivaa"
+                onClick={() => {
+                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
+                }}
+            >
+                <UnderlineIcon />
             </ToolbarIcon>
             <div className={styles.HeadingTypeSelector}>
                 <Select<DropdownOption>
@@ -614,6 +630,15 @@ function ItalicIcon() {
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#666666">
             <path d="M0 0h24v24H0V0z" fill="none" />
             <path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4h-8z" />
+        </svg>
+    );
+}
+
+function UnderlineIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z" />
         </svg>
     );
 }

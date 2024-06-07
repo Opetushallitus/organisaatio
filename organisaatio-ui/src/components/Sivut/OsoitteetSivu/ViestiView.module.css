@@ -127,6 +127,10 @@
     box-shadow: none;
 }
 
+.LexicalThemeUnderline {
+    text-decoration: underline;
+}
+
 .Viesti:has(.ViestiTextarea:hover) {
     border-color: var(--color-primary-blue);
 }
