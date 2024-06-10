@@ -24,7 +24,7 @@ public abstract class CasAuthenticatedServiceClient {
 
     protected HttpResponse<String> sendRequest(HttpRequest.Builder requestBuilder) throws IOException, InterruptedException {
         log.info("Sending CAS authenticated request");
-        requestBuilder.timeout(Duration.ofSeconds(10))
+        requestBuilder.timeout(Duration.ofSeconds(35))
                 .header("Caller-Id", "1.2.246.562.10.00000000001.organisaatio-service")
                 .header("CSRF", "CSRF")
                 .header("Cookie", "CSRF=CSRF");
