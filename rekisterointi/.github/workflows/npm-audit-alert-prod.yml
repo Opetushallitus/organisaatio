@@ -1,20 +1,21 @@
-name: npm-audit-alert
+name: npm-audit-alert-prod
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    paths:
-      - "rekisterointi-ui/package.json"
-      - "rekisterointi-ui/package-lock.json"
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
 
 jobs:
   npm-audit:
     runs-on: ubuntu-latest
     steps:
+      - name: Get commit hash of the version installed to production
+        run: |
+          echo "COMMIT_HASH=$( curl "https://dashboard.ops.opintopolku.fi/data/services" | jq --raw-output '.services[] | select(.name == "rekisterointi") | .environments.sade.commit_hash' )" >> $GITHUB_OUTPUT
+        id: get_prod_version
       - uses: actions/checkout@v4
         with:
-          ref: "master"
+          ref: ${{ steps.get_prod_version.outputs.COMMIT_HASH }}
       - name: Install deps
         run: npm ci
         working-directory: rekisterointi-ui
