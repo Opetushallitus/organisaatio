@@ -44,6 +44,8 @@ import { $createHeadingNode, $isHeadingNode, HeadingNode, HeadingTagType } from 
 import { $setBlocksType } from '@lexical/selection';
 import Select from 'react-select';
 import { DropdownOption } from './SelectDropdown';
+import { AutoLinkPlugin, createLinkMatcherWithRegExp } from '@lexical/react/LexicalAutoLinkPlugin';
+import { AutoLinkNode } from '@lexical/link';
 
 type ViestiViewProps = {
     selection: Set<string>;
@@ -92,14 +94,19 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const [subject, onSubjectChange] = useRequiredTextInput('Aihe', 255, '');
     const [body, setBody] = useState<{ value: string; error?: string }>({ value: '' });
     const [serializedEditor, setSerializedEditor] = useState<SerializedEditorState>(undefined);
-    const onBodyChange = (text: string, editor: LexicalEditor) => {
+    const [text, setText] = useState('');
+    const onBodyChange = (newText: string, editor: LexicalEditor) => {
+        if (newText == text) {
+            return;
+        }
+        setText(newText);
         const MAX_BODY_LENGTH = 4_000_000;
-        if (text.length == 0) {
-            setBody({ value: text, error: `Viesti on pakollinen` });
-        } else if (text.length > MAX_BODY_LENGTH) {
-            setBody({ value: text, error: `Viesti on liian pitkä (${text.length} merkkiä)` });
+        if (newText.length == 0) {
+            setBody({ value: newText, error: `Viesti on pakollinen` });
+        } else if (newText.length > MAX_BODY_LENGTH) {
+            setBody({ value: newText, error: `Viesti on liian pitkä (${newText.length} merkkiä)` });
         } else {
-            setBody({ value: text });
+            setBody({ value: newText });
             setSerializedEditor(editor.getEditorState().toJSON());
         }
     };
@@ -247,6 +254,11 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
         }
     }
 
+    const URL_REGEX = /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+    const autoLinkMatcher = createLinkMatcherWithRegExp(URL_REGEX, (text) => {
+        return text.startsWith('http') ? text : `https://${text}`;
+    });
+
     return (
         <div className={styles.ViestiView}>
             <div className={hakutulosStyles.TitleRow}>
@@ -312,7 +324,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                         onError: (error: Error, editor: LexicalEditor): void => {
                                             console.error(error, editor);
                                         },
-                                        nodes: [HeadingNode],
+                                        nodes: [HeadingNode, AutoLinkNode],
                                         theme: {
                                             text: {
                                                 underline: styles.LexicalThemeUnderline,
@@ -337,12 +349,12 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                         </ToolbarIcon>
                                         <FormattingButtons />
                                     </div>
-
                                     <RichTextPlugin
                                         contentEditable={<ContentEditable className={styles.ViestiTextarea} />}
                                         placeholder={<div></div>}
                                         ErrorBoundary={LexicalErrorBoundary}
                                     />
+                                    <AutoLinkPlugin matchers={[autoLinkMatcher]} />
                                     <SerializingOnChangePlugin onChange={onBodyChange} />
                                     <div className={styles.ViestiFooter}>
                                         <strong>Osoitelähde:</strong> OPH Opintopolku (Organisaatiopalvelu). Osoitetta

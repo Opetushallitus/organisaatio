@@ -47,6 +47,24 @@ class LexicalEditorStateRendererTest {
                 """);
     }
 
+    @Test
+    void testPlainTextRendering() throws IOException {
+        var body = readLexicalState("/lexical/plaintext-test.json");
+        var renderer = new LexicalEditorStateRenderer();
+        assertThat(renderer.toHtml(body)).isEqualTo("""
+                <p>plain text</p>
+                """);
+    }
+
+    @Test
+    void testLinkRendering() throws IOException {
+        var body = readLexicalState("/lexical/link-test.json");
+        var renderer = new LexicalEditorStateRenderer();
+        assertThat(renderer.toHtml(body)).isEqualTo("""
+                <p><a href="https://oph.fi">https://oph.fi</a></p>
+                """);
+    }
+
     private JsonNode readLexicalState(String file) throws IOException {
         try (var is = getClass().getResourceAsStream(file)) {
             return objectMapper.readTree(is);

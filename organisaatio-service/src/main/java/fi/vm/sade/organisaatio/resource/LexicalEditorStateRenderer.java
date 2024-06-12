@@ -25,7 +25,20 @@ public class LexicalEditorStateRenderer {
             renderText(node);
         } else if (isHeadingNode(node)) {
             renderHeading(node);
+        } else if (isAutoLink(node)) {
+            renderAutoLink(node);
         }
+    }
+
+    private boolean isAutoLink(JsonNode node) {
+        return "autolink".equals(node.get("type").textValue());
+    }
+
+    private void renderAutoLink(JsonNode node) {
+        var url = node.get("url").textValue();
+        html("<a href=\"" + url + "\">");
+        node.get("children").forEach(this::renderNode);
+        html("</a>");
     }
 
     private boolean isHeadingNode(JsonNode node) {
