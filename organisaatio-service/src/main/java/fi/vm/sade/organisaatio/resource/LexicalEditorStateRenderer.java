@@ -3,6 +3,8 @@ package fi.vm.sade.organisaatio.resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.List;
+
 public class LexicalEditorStateRenderer {
     private StringBuilder sb;
 
@@ -66,7 +68,7 @@ public class LexicalEditorStateRenderer {
 
     private void renderAutoLink(JsonNode node) {
         var url = node.get("url").textValue();
-        html("<a href=\"" + url + "\">");
+        html("<a href=\"" + HtmlUtils.htmlEscape(url, "UTF-8") + "\">");
         node.get("children").forEach(this::renderNode);
         html("</a>");
     }
@@ -75,11 +77,18 @@ public class LexicalEditorStateRenderer {
         return "heading".equals(node.get("type").textValue());
     }
 
+    private static final List<String> headingTags = List.of("h1", "h2", "h3", "h4");
+
     private void renderHeading(JsonNode node) {
-        var tag = node.get("tag").textValue();
-        html("<" + tag + ">");
+        var tag = headingTags.stream().filter(t -> t.equals(node.get("tag").textValue())).findFirst();
+
+        if (tag.isPresent()) {
+            html("<" + tag.get() + ">");
+        }
         node.get("children").forEach(this::renderNode);
-        html("</" + tag + ">\n");
+        if (tag.isPresent()) {
+            html("</" + tag.get() + ">\n");
+        }
     }
 
     private boolean isLinebreak(JsonNode node) {
