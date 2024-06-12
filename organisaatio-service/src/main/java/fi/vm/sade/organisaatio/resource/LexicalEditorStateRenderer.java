@@ -27,7 +27,37 @@ public class LexicalEditorStateRenderer {
             renderHeading(node);
         } else if (isAutoLink(node)) {
             renderAutoLink(node);
+        } else if (isList(node)) {
+            renderList(node);
+        } else if (isListItem(node)) {
+            renderListItem(node);
         }
+    }
+
+    private boolean isList(JsonNode node) {
+        return "list".equals(node.get("type").textValue());
+    }
+
+    private void renderList(JsonNode node) {
+        var listType = node.get("listType").textValue();
+        var ol = "number".equals(listType);
+        var ul = "bullet".equals(listType);
+
+        if (ol) html("<ol>");
+        if (ul) html("<ul>");
+        node.get("children").forEach(this::renderNode);
+        if (ol) html("</ol>\n");
+        if (ul) html("</ul>\n");
+    }
+
+    private boolean isListItem(JsonNode node) {
+        return "listitem".equals(node.get("type").textValue());
+    }
+
+    private void renderListItem(JsonNode node) {
+        html("<li>");
+        node.get("children").forEach(this::renderNode);
+        html("</li>");
     }
 
     private boolean isAutoLink(JsonNode node) {

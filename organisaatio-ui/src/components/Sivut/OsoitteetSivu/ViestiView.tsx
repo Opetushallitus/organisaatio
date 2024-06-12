@@ -46,6 +46,8 @@ import Select from 'react-select';
 import { DropdownOption } from './SelectDropdown';
 import { AutoLinkPlugin, createLinkMatcherWithRegExp } from '@lexical/react/LexicalAutoLinkPlugin';
 import { AutoLinkNode } from '@lexical/link';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, ListItemNode, ListNode } from '@lexical/list';
 
 type ViestiViewProps = {
     selection: Set<string>;
@@ -324,7 +326,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                         onError: (error: Error, editor: LexicalEditor): void => {
                                             console.error(error, editor);
                                         },
-                                        nodes: [HeadingNode, AutoLinkNode],
+                                        nodes: [HeadingNode, AutoLinkNode, ListNode, ListItemNode],
                                         theme: {
                                             text: {
                                                 underline: styles.LexicalThemeUnderline,
@@ -354,6 +356,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                         placeholder={<div></div>}
                                         ErrorBoundary={LexicalErrorBoundary}
                                     />
+                                    <ListPlugin />
                                     <AutoLinkPlugin matchers={[autoLinkMatcher]} />
                                     <SerializingOnChangePlugin onChange={onBodyChange} />
                                     <div className={styles.ViestiFooter}>
@@ -450,7 +453,7 @@ function FormattingButtons() {
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
-    const [headingType, setHeadingType] = useState('parapgrah');
+    const [headingType, setHeadingType] = useState('paragraph');
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -499,27 +502,35 @@ function FormattingButtons() {
         );
     }, [editor, $updateToolbar]);
 
-    type HeadingTagTypeWithParagraph = HeadingTagType & 'paragraph';
+    type BlockType = HeadingTagType & 'paragraph' & 'bullet' & 'number';
 
-    const formatHeadingType = (heading: HeadingTagTypeWithParagraph) => {
-        editor.update(() => {
-            const selection = $getSelection();
-            if ($isRangeSelection(selection)) {
-                if (heading == 'paragraph') {
-                    $setBlocksType(selection, () => $createParagraphNode());
-                } else {
-                    $setBlocksType(selection, () => $createHeadingNode(heading));
+    const formatBlockType = (blockType: BlockType) => {
+        if (blockType == 'bullet') {
+            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
+        } else if (blockType == 'number') {
+            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
+        } else {
+            editor.update(() => {
+                const selection = $getSelection();
+                if ($isRangeSelection(selection)) {
+                    if (blockType == 'paragraph') {
+                        $setBlocksType(selection, () => $createParagraphNode());
+                    } else {
+                        $setBlocksType(selection, () => $createHeadingNode(blockType));
+                    }
                 }
-            }
-        });
+            });
+        }
     };
 
-    const options: DropdownOption[] = [
+    const blockTypeOptions: DropdownOption[] = [
         { value: 'paragraph', label: 'Leipäteksti' },
         { value: 'h1', label: 'Otsikko 1' },
         { value: 'h2', label: 'Otsikko 2' },
         { value: 'h3', label: 'Otsikko 3' },
         { value: 'h4', label: 'Otsikko 4' },
+        { value: 'bullet', label: 'Luettelomerkki' },
+        { value: 'number', label: 'Numeroitu lista' },
     ];
 
     return (
@@ -553,12 +564,10 @@ function FormattingButtons() {
             </ToolbarIcon>
             <div className={styles.HeadingTypeSelector}>
                 <Select<DropdownOption>
-                    options={options}
-                    defaultValue={options[0]}
-                    value={options.find((option) => option.value == headingType)}
-                    onChange={(option: DropdownOption) =>
-                        formatHeadingType(option.value as HeadingTagTypeWithParagraph)
-                    }
+                    options={blockTypeOptions}
+                    defaultValue={blockTypeOptions[0]}
+                    value={blockTypeOptions.find((option) => option.value == headingType)}
+                    onChange={(option: DropdownOption) => formatBlockType(option.value as BlockType)}
                 />
             </div>
         </>

@@ -65,6 +65,16 @@ class LexicalEditorStateRendererTest {
                 """);
     }
 
+    @Test
+    void testListRendering() throws IOException {
+        var body = readLexicalState("/lexical/list-test.json");
+        var renderer = new LexicalEditorStateRenderer();
+        assertThat(renderer.toHtml(body)).isEqualTo("""
+                <ul><li>ding</li><li>dong</li></ul>
+                <ol><li>bing</li><li>bong</li></ol>
+                """);
+    }
+
     private JsonNode readLexicalState(String file) throws IOException {
         try (var is = getClass().getResourceAsStream(file)) {
             return objectMapper.readTree(is);
