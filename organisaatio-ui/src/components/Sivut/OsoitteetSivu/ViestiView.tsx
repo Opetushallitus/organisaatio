@@ -366,14 +366,12 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
                                     <AutoLinkPlugin matchers={[autoLinkMatcher]} />
                                     <SerializingOnChangePlugin onChange={onBodyChange} />
                                     <div className={styles.ViestiFooter}>
-                                        <strong>Osoitelähde:</strong> OPH Opintopolku. Osoitetta
-                                        käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen
-                                        viestintään.
+                                        <strong>Osoitelähde:</strong> OPH Opintopolku. Osoitetta käytetään
+                                        Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.
                                         <br />
                                         <strong>Adresskälla:</strong> Utbildningsstyrelsen Studieinfo.
-                                        Utbildningsstyrelsen och undervisnings- och
-                                        kulturministeriet använder adressen i sin kommunikation till skolorna och
-                                        skolornas administratörer.
+                                        Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen
+                                        i sin kommunikation till skolorna och skolornas administratörer.
                                     </div>
                                 </LexicalComposer>
                             </div>
