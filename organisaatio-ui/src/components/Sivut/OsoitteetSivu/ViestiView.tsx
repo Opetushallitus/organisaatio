@@ -47,7 +47,13 @@ import { DropdownOption } from './SelectDropdown';
 import { AutoLinkPlugin, createLinkMatcherWithRegExp } from '@lexical/react/LexicalAutoLinkPlugin';
 import { AutoLinkNode } from '@lexical/link';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, ListItemNode, ListNode } from '@lexical/list';
+import {
+    $isListNode,
+    INSERT_ORDERED_LIST_COMMAND,
+    INSERT_UNORDERED_LIST_COMMAND,
+    ListItemNode,
+    ListNode,
+} from '@lexical/list';
 
 type ViestiViewProps = {
     selection: Set<string>;
@@ -478,7 +484,11 @@ function FormattingButtons() {
             const elementDOM = editor.getElementByKey(element.getKey());
 
             if (elementDOM !== null) {
-                const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+                const type = $isHeadingNode(element)
+                    ? element.getTag()
+                    : $isListNode(element)
+                    ? element.getListType()
+                    : element.getType();
                 setHeadingType(type);
             }
         }
@@ -502,25 +512,19 @@ function FormattingButtons() {
         );
     }, [editor, $updateToolbar]);
 
-    type BlockType = HeadingTagType & 'paragraph' & 'bullet' & 'number';
+    type BlockType = HeadingTagType & 'paragraph' & 'numbered' & 'bullet';
 
     const formatBlockType = (blockType: BlockType) => {
-        if (blockType == 'bullet') {
-            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
-        } else if (blockType == 'number') {
-            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
-        } else {
-            editor.update(() => {
-                const selection = $getSelection();
-                if ($isRangeSelection(selection)) {
-                    if (blockType == 'paragraph') {
-                        $setBlocksType(selection, () => $createParagraphNode());
-                    } else {
-                        $setBlocksType(selection, () => $createHeadingNode(blockType));
-                    }
+        editor.update(() => {
+            const selection = $getSelection();
+            if ($isRangeSelection(selection)) {
+                if (blockType == 'paragraph') {
+                    $setBlocksType(selection, () => $createParagraphNode());
+                } else {
+                    $setBlocksType(selection, () => $createHeadingNode(blockType));
                 }
-            });
-        }
+            }
+        });
     };
 
     const blockTypeOptions: DropdownOption[] = [
@@ -529,8 +533,6 @@ function FormattingButtons() {
         { value: 'h2', label: 'Otsikko 2' },
         { value: 'h3', label: 'Otsikko 3' },
         { value: 'h4', label: 'Otsikko 4' },
-        { value: 'bullet', label: 'Luettelomerkki' },
-        { value: 'number', label: 'Numeroitu lista' },
     ];
 
     return (
@@ -561,6 +563,20 @@ function FormattingButtons() {
                 }}
             >
                 <UnderlineIcon />
+            </ToolbarIcon>
+            <ToolbarIcon
+                active={headingType == 'bullet'}
+                label="Numeroimaton lista"
+                onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
+            >
+                <UnorderedListIcon />
+            </ToolbarIcon>
+            <ToolbarIcon
+                active={headingType == 'number'}
+                label="Numeroitu lista"
+                onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}
+            >
+                <OrderedListIcon />
             </ToolbarIcon>
             <div className={styles.HeadingTypeSelector}>
                 <Select<DropdownOption>
@@ -660,6 +676,22 @@ function UnderlineIcon() {
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368">
             <path d="M0 0h24v24H0V0z" fill="none" />
             <path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z" />
+        </svg>
+    );
+}
+
+function UnorderedListIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <path d="M360-200v-80h480v80H360Zm0-240v-80h480v80H360Zm0-240v-80h480v80H360ZM200-160q-33 0-56.5-23.5T120-240q0-33 23.5-56.5T200-320q33 0 56.5 23.5T280-240q0 33-23.5 56.5T200-160Zm0-240q-33 0-56.5-23.5T120-480q0-33 23.5-56.5T200-560q33 0 56.5 23.5T280-480q0 33-23.5 56.5T200-400Zm0-240q-33 0-56.5-23.5T120-720q0-33 23.5-56.5T200-800q33 0 56.5 23.5T280-720q0 33-23.5 56.5T200-640Z" />
+        </svg>
+    );
+}
+
+function OrderedListIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <path d="M120-80v-60h100v-30h-60v-60h60v-30H120v-60h120q17 0 28.5 11.5T280-280v40q0 17-11.5 28.5T240-200q17 0 28.5 11.5T280-160v40q0 17-11.5 28.5T240-80H120Zm0-280v-110q0-17 11.5-28.5T160-510h60v-30H120v-60h120q17 0 28.5 11.5T280-560v70q0 17-11.5 28.5T240-450h-60v30h100v60H120Zm60-280v-180h-60v-60h120v240h-60Zm180 440v-80h480v80H360Zm0-240v-80h480v80H360Zm0-240v-80h480v80H360Z" />
         </svg>
     );
 }
