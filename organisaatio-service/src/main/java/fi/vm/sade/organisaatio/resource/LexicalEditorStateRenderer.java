@@ -119,10 +119,11 @@ public class LexicalEditorStateRenderer {
 
     private void renderText(JsonNode node) {
         var text = node.get("text").textValue();
+        int format = node.get("format").intValue();
 
-        var bold = (node.get("format").intValue() & 0x1) == 0x1;
-        var italic = (node.get("format").intValue() & 0x2) == 0x2;
-        var underlined = (node.get("format").intValue() & 0x8) == 0x8;
+        var bold = (format & 0x1) == 0x1;
+        var italic = (format & 0x2) == 0x2;
+        var underlined = (format & 0x8) == 0x8;
 
         if (bold) html("<b>");
         if (italic) html("<em>");
