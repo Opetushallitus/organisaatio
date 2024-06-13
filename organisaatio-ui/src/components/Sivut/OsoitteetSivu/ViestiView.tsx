@@ -459,7 +459,7 @@ function FormattingButtons() {
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
-    const [headingType, setHeadingType] = useState('paragraph');
+    const [blockType, setBlockType] = useState('paragraph');
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -489,7 +489,7 @@ function FormattingButtons() {
                     : $isListNode(element)
                     ? element.getListType()
                     : element.getType();
-                setHeadingType(type);
+                setBlockType(type);
             }
         }
     }, [editor]);
@@ -565,14 +565,14 @@ function FormattingButtons() {
                 <UnderlineIcon />
             </ToolbarIcon>
             <ToolbarIcon
-                active={headingType == 'bullet'}
+                active={blockType == 'bullet'}
                 label="Numeroimaton lista"
                 onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
             >
                 <UnorderedListIcon />
             </ToolbarIcon>
             <ToolbarIcon
-                active={headingType == 'number'}
+                active={blockType == 'number'}
                 label="Numeroitu lista"
                 onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}
             >
@@ -582,7 +582,7 @@ function FormattingButtons() {
                 <Select<DropdownOption>
                     options={blockTypeOptions}
                     defaultValue={blockTypeOptions[0]}
-                    value={blockTypeOptions.find((option) => option.value == headingType)}
+                    value={blockTypeOptions.find((option) => option.value == blockType)}
                     onChange={(option: DropdownOption) => formatBlockType(option.value as BlockType)}
                 />
             </div>
