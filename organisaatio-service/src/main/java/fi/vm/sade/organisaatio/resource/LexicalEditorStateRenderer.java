@@ -20,7 +20,7 @@ public class LexicalEditorStateRenderer {
 
     public void renderNode(JsonNode node) {
         if (isLinebreak(node)) {
-            renderLinebreak(node);
+            renderLinebreak();
         } else if (isParagraph(node)) {
             renderParagraph(node);
         } else if (isText(node)) {
@@ -99,7 +99,7 @@ public class LexicalEditorStateRenderer {
         return "linebreak".equals(node.get("type").textValue());
     }
 
-    private void renderLinebreak(JsonNode node) {
+    private void renderLinebreak() {
         html("<br/>\n");
     }
 
