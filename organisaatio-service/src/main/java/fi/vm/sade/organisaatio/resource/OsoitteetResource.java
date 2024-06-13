@@ -260,8 +260,8 @@ public class OsoitteetResource {
                 <body>
                 %s
                 <p>
-                <b>Osoitelähde:</b> OPH Opintopolku (Organisaatiopalvelu). Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.<br/>
-                <b>Adresskälla:</b> Utbildningsstyrelsen Studieinfo (Organisationstjänst). Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
+                <b>Osoitelähde:</b> OPH Opintopolku. Osoitetta käytetään Opetushallituksen ja Opetus- ja kulttuuriministeriön viralliseen viestintään.<br/>
+                <b>Adresskälla:</b> Utbildningsstyrelsen Studieinfo. Utbildningsstyrelsen och undervisnings- och kulturministeriet använder adressen i sin kommunikation till skolorna och skolornas administratörer.
                 </p>
                 </body>
                 </html>
