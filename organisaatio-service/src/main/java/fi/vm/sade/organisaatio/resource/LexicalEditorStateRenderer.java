@@ -15,7 +15,7 @@ public class LexicalEditorStateRenderer {
     }
 
     public void renderRoot(JsonNode root) {
-        root.get("children").forEach(this::renderNode);
+        renderChildren(root);
     }
 
     public void renderNode(JsonNode node) {
@@ -47,7 +47,7 @@ public class LexicalEditorStateRenderer {
 
         if (ol) html("<ol>");
         if (ul) html("<ul>");
-        node.get("children").forEach(this::renderNode);
+        renderChildren(node);
         if (ol) html("</ol>\n");
         if (ul) html("</ul>\n");
     }
@@ -58,7 +58,7 @@ public class LexicalEditorStateRenderer {
 
     private void renderListItem(JsonNode node) {
         html("<li>");
-        node.get("children").forEach(this::renderNode);
+        renderChildren(node);
         html("</li>");
     }
 
@@ -69,8 +69,12 @@ public class LexicalEditorStateRenderer {
     private void renderAutoLink(JsonNode node) {
         var url = node.get("url").textValue();
         html("<a href=\"" + HtmlUtils.htmlEscape(url, "UTF-8") + "\">");
-        node.get("children").forEach(this::renderNode);
+        renderChildren(node);
         html("</a>");
+    }
+
+    private void renderChildren(JsonNode node) {
+        node.get("children").forEach(this::renderNode);
     }
 
     private boolean isHeadingNode(JsonNode node) {
@@ -85,7 +89,7 @@ public class LexicalEditorStateRenderer {
         if (tag.isPresent()) {
             html("<" + tag.get() + ">");
         }
-        node.get("children").forEach(this::renderNode);
+        renderChildren(node);
         if (tag.isPresent()) {
             html("</" + tag.get() + ">\n");
         }
@@ -105,7 +109,7 @@ public class LexicalEditorStateRenderer {
 
     private void renderParagraph(JsonNode node) {
         html("<p>");
-        node.get("children").forEach(this::renderNode);
+        renderChildren(node);
         html("</p>\n");
     }
 
