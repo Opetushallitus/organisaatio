@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.client.viestinvalitys;
+package fi.vm.sade.organisaatio.cas;
 
 import lombok.extern.slf4j.Slf4j;
 

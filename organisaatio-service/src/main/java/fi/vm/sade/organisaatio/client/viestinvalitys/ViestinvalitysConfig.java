@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.organisaatio.cas.CasClient;
 import fi.vm.sade.properties.OphProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

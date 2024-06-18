@@ -1,9 +1,14 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import fi.vm.sade.organisaatio.cas.CasAuthenticatedServiceClient;
+import fi.vm.sade.organisaatio.cas.CasClient;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,11 +16,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 public class ViestinvalitysClient extends CasAuthenticatedServiceClient {

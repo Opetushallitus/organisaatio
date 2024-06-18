@@ -1,4 +1,6 @@
-package fi.vm.sade.organisaatio.client.viestinvalitys;
+package fi.vm.sade.organisaatio.cas;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,8 +11,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CasClient {
