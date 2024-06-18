@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class HttpClientConfiguration {
 
-    private static final String CALLER_ID = "1.2.246.562.10.00000000001.organisaatio-service";
+    public static final String CALLER_ID = "1.2.246.562.10.00000000001.organisaatio-service";
     public static final String HTTP_CLIENT_KAYTTOOIKEUS = "kayttooikeusHttpClient";
     public static final String HTTP_CLIENT_VIESTINTA = "viestintaHttpClient";
     public static final String HTTP_CLIENT_KOODISTO = "koodistoHttpClient";

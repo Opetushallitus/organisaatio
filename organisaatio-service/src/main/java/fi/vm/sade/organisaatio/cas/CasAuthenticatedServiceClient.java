@@ -9,6 +9,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.CALLER_ID;
+
 @Slf4j
 public abstract class CasAuthenticatedServiceClient {
     protected final HttpClient httpClient;
@@ -25,7 +27,7 @@ public abstract class CasAuthenticatedServiceClient {
     protected HttpResponse<String> sendRequest(HttpRequest.Builder requestBuilder) throws IOException, InterruptedException {
         log.info("Sending CAS authenticated request");
         requestBuilder.timeout(Duration.ofSeconds(35))
-                .header("Caller-Id", "1.2.246.562.10.00000000001.organisaatio-service")
+                .header("Caller-Id", CALLER_ID)
                 .header("CSRF", "CSRF")
                 .header("Cookie", "CSRF=CSRF");
         var response = httpClient.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());

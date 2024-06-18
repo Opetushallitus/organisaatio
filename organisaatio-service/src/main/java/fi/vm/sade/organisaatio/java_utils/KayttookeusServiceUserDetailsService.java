@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.CALLER_ID;
+
 @Slf4j
 @RequiredArgsConstructor
 public class KayttookeusServiceUserDetailsService implements UserDetailsService {
@@ -56,7 +58,7 @@ public class KayttookeusServiceUserDetailsService implements UserDetailsService 
                 .uri(uri)
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Accept", "application/json")
-                .header("Caller-Id", "1.2.246.562.10.00000000001.organisaatio-service")
+                .header("Caller-Id", CALLER_ID)
                 .header("CSRF", "CSRF")
                 .header("Cookie", "CSRF=CSRF")
                 .build();
