@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class OpintopolkuCasAuthenticationFilter extends CasAuthenticationFilter {
     public static final String CAS_SECURITY_TICKET = "CasSecurityTicket";
@@ -24,10 +25,12 @@ public class OpintopolkuCasAuthenticationFilter extends CasAuthenticationFilter 
         // ticket-parametrin lisäksi autentikoidaan myös CasSecurityTicket-headerissa oleva ticket
         String casTicketHeader = request.getHeader(CAS_SECURITY_TICKET);
         if (casTicketHeader != null) {
+            var callerId = Optional.ofNullable(request.getHeader("Caller-ID")).orElse("-");
+            logger.info("Received cas ticket in header (Caller-ID: " + callerId + ")");
 
             // jos ko tiketillä ollaan jo autentikoiduttu sessio, ei tehdä sitä enää
             if (casTicketHeader.equals(getSessionTicket())) {
-                logger.debug("ticket already authenticated in session: " + casTicketHeader);
+                logger.info("ticket already authenticated in session: " + casTicketHeader);
                 return null;
             } else {
                 return casTicketHeader;
@@ -37,7 +40,7 @@ public class OpintopolkuCasAuthenticationFilter extends CasAuthenticationFilter 
         // getParameter -kutsu saattaa hajottaa tietyt post-requestit,
         // siksi ticket-paremeter validointi skipataan, jos a) post-request, ja c) headerissa ei tikettiä
         if ("POST".equals(request.getMethod())) {
-            logger.debug("skipping cas obtainArtifact because post and already authenticated");
+            logger.info("skipping cas obtainArtifact because post and already authenticated");
             return null;
         }
 
@@ -52,7 +55,7 @@ public class OpintopolkuCasAuthenticationFilter extends CasAuthenticationFilter 
             String requestTicket = obtainArtifact(request);
             boolean ticketChanged = requestTicket != null && !requestTicket.equals(sessionTicket);
             if (ticketChanged) {
-                logger.warn("clear authentication because ticket changed, requestTicket: " + requestTicket + ", sessionTicket: " + sessionTicket); // normal scenario but want to log it
+                logger.info("clear authentication because ticket changed, requestTicket: " + requestTicket + ", sessionTicket: " + sessionTicket); // normal scenario but want to log it
                 SecurityContextHolder.clearContext();
             }
         }
