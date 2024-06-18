@@ -1,9 +1,9 @@
 package fi.vm.sade.organisaatio.config;
-import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
+
 import fi.vm.sade.organisaatio.config.properties.CasProperties;
+import fi.vm.sade.organisaatio.java_utils.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.properties.OphProperties;
 import lombok.RequiredArgsConstructor;
-
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas30ProxyTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
