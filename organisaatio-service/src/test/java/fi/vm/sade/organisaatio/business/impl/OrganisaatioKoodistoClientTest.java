@@ -3,6 +3,8 @@ package fi.vm.sade.organisaatio.business.impl;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoClient;
 import fi.vm.sade.organisaatio.config.HttpClientConfiguration;
+import fi.vm.sade.organisaatio.config.JsonJavaSqlDateSerializer;
+import fi.vm.sade.organisaatio.config.ObjectMapperConfiguration;
 import fi.vm.sade.properties.OphProperties;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ContextConfiguration(classes = {
+        JsonJavaSqlDateSerializer.class,
+        ObjectMapperConfiguration.class,
         HttpClientConfiguration.class,
         OrganisaatioKoodistoClient.class
 })

@@ -5,7 +5,7 @@ import fi.vm.sade.organisaatio.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.*;
 import fi.vm.sade.organisaatio.business.impl.OrganisaatioNimiMasking;
-import fi.vm.sade.organisaatio.client.OppijanumeroClient;
+import fi.vm.sade.organisaatio.client.OppijanumerorekisteriClient;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
@@ -55,7 +55,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class OrganisaatioApiImpl implements OrganisaatioApi {
-    private final OppijanumeroClient oppijanumeroClient;
+    private final OppijanumerorekisteriClient oppijanumerorekisteriClient;
     private final OrganisaatioResourceV2 organisaatioResourceV2;
 
     private final OrganisaatioDTOV4ModelMapper organisaatioDTOV4ModelMapper;
@@ -270,9 +270,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             tulos.setPaivittaja(org.getPaivittaja());
             tulos.setPaivitysPvm(org.getPaivitysPvm());
             try {
-                OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
-                tulos.setEtuNimet(henkilo.getEtunimet());
-                tulos.setSukuNimi(henkilo.getSukunimi());
+                var henkilo = oppijanumerorekisteriClient.getHenkilo(org.getPaivittaja());
+                tulos.setEtuNimet(henkilo.etunimet());
+                tulos.setSukuNimi(henkilo.sukunimi());
 
             } catch (Exception ex) {
                 log.error(ex.getMessage());
