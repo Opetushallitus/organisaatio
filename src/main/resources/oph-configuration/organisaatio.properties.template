@@ -10,7 +10,6 @@ auth.mode={{auth_mode}}
 env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
 host.ilb={{host_ilb}}
-host.alb={{host_alb}}
 host.virkailija={{host_virkailija}}
 port.organisaatio-service={{port_organisaatio_service}}
 port.koodisto-service={{port_koodisto_service}}
