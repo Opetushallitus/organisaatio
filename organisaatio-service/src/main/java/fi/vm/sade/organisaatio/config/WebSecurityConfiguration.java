@@ -1,9 +1,10 @@
 package fi.vm.sade.organisaatio.config;
+
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
+import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.organisaatio.config.properties.CasProperties;
 import fi.vm.sade.properties.OphProperties;
 import lombok.RequiredArgsConstructor;
-
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas30ProxyTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
@@ -18,7 +19,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -48,9 +48,9 @@ public class WebSecurityConfiguration {
     //
 
     @Bean
-    CasAuthenticationProvider casAuthenticationProvider(ServiceProperties serviceProperties, TicketValidator ticketValidator, UserDetailsService userDetailsService) {
+    CasAuthenticationProvider casAuthenticationProvider(ServiceProperties serviceProperties, TicketValidator ticketValidator) {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setUserDetailsService(userDetailsService);
+        casAuthenticationProvider.setAuthenticationUserDetailsService(new OphUserDetailsServiceImpl());
         casAuthenticationProvider.setServiceProperties(serviceProperties);
         casAuthenticationProvider.setTicketValidator(ticketValidator);
         casAuthenticationProvider.setKey(casProperties.getKey());
