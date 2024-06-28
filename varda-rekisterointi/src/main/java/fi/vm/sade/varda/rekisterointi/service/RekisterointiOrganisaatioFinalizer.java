@@ -90,29 +90,26 @@ public class RekisterointiOrganisaatioFinalizer {
         OrganisaatioDto dto = organisaatioClient.getOrganisaatioByOid(organisaatioOid).orElseThrow(
                 () -> new InvalidInputException("Organisaatiota ei löydy, oid: " + organisaatioOid)
         );
-        OrganisaatioDto saved = null;
         if (!dto.tyypit.contains(JOTPA_ORGANISAATIOTYYPPI)) {
             dto.tyypit = new HashSet<>(dto.tyypit);
             dto.tyypit.add(JOTPA_ORGANISAATIOTYYPPI);
             dto.lakkautusPvm = null;
-            saved = organisaatioClient.save(dto);
+            dto = organisaatioClient.save(dto);
             LOGGER.info("Lisätty jotpa organisaatiotyyppi organisaatiolle, oid: {}", organisaatioOid);
         } else if (dto.lakkautusPvm != null) {
             dto.lakkautusPvm = null;
-            saved = organisaatioClient.save(dto);
+            dto = organisaatioClient.save(dto);
             LOGGER.info("Organisaation lakkautuspäivämäärä poistettu, oid: {}", organisaatioOid);
         } else {
             LOGGER.debug("Organisaatioon ei tarvittu muutoksia, oid: {}", organisaatioOid);
         }
-        if (saved != null) {
-            Collection<OrganisaatioDto> jotpaOrgChilden = organisaatioClient.getOrganisaatioJalkelaisetByOid(saved.oid);
-            if (jotpaOrgChilden.stream().noneMatch(o -> o.oppilaitostyyppi.equals(JOTPA_CHILD_OPPILAITOSTYYPPI))) {
-               LOGGER.debug("Jotpa-organisaation päivityksen jälkeen huomattu että aliorganisaatio puuttuu, jotpa organisaation oid: {}", organisaatioOid);
-               OrganisaatioDto jotpaOppilaitosDto = OrganisaatioDto.jotpaChildOppilaitosFrom(saved);
-               OrganisaatioDto jotpaSaved = organisaatioClient.save(jotpaOppilaitosDto);
-               LOGGER.info("Luotu puuttuva oppilaitostyyppinen aliorganisaatio(uuden oid: {}) Jotpa organisaatiolle(jotpa oid: {})", jotpaSaved.oid, organisaatioOid);
 
-            }
+        Collection<OrganisaatioDto> jotpaOrgChilden = organisaatioClient.getOrganisaatioJalkelaisetByOid(dto.oid);
+        if (jotpaOrgChilden.stream().noneMatch(o -> o.oppilaitostyyppi.equals(JOTPA_CHILD_OPPILAITOSTYYPPI))) {
+           LOGGER.debug("Jotpa-organisaation päivityksen jälkeen huomattu että aliorganisaatio puuttuu, jotpa organisaation oid: {}", organisaatioOid);
+           OrganisaatioDto jotpaOppilaitosDto = OrganisaatioDto.jotpaChildOppilaitosFrom(dto);
+           OrganisaatioDto jotpaSaved = organisaatioClient.save(jotpaOppilaitosDto);
+           LOGGER.info("Luotu puuttuva oppilaitostyyppinen aliorganisaatio(uuden oid: {}) Jotpa organisaatiolle(jotpa oid: {})", jotpaSaved.oid, organisaatioOid);
         }
     }
 }
