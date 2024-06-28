@@ -118,7 +118,7 @@ public class RekisterointiService {
         Rekisterointi saved = rekisterointiRepository.save(rekisterointi.withPaatos(paatos));
         LOGGER.info("Päätös tallennettu rekisteröinnille: {}", rekisterointi.id);
         RekisterointiAuditDto auditAfterDto = new RekisterointiAuditDto(saved.tila);
-        LOGGER.debug("Rekisteröinnin {} tila päivitetty: {}", saved.id, saved.tila);
+        LOGGER.info("Rekisteröinnin {} tila päivitetty: {}", saved.id, saved.tila);
         eventPublisher.publishEvent(new UpdatedEvent<>(requestContext, "rekisterointi", saved.id,
                 auditBeforeDto, auditAfterDto));
 

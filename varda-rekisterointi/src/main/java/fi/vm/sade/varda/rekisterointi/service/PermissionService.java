@@ -18,14 +18,14 @@ public class PermissionService implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        LOGGER.debug("PermissionService#hasPermission({}, {}, {})", authentication.getName(), targetDomainObject, permission);
+        LOGGER.info("PermissionService#hasPermission({}, {}, {})", authentication.getName(), targetDomainObject, permission);
         LOGGER.warn("Target '{}' is not supported with permission '{}'", targetDomainObject, permission);
         return false;
     }
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-        LOGGER.debug("PermissionService#hasPermission({}, {}, {}, {})", authentication.getName(), targetId, targetType, permission);
+        LOGGER.info("PermissionService#hasPermission({}, {}, {}, {})", authentication.getName(), targetId, targetType, permission);
         if (permission instanceof String) {
             return hasPermission(authentication, targetId, targetType, (String) permission);
         }

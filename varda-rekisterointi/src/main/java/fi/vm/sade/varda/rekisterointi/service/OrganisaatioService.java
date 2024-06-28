@@ -120,7 +120,7 @@ public class OrganisaatioService {
     String yritysMuotoKoodiUriToNimi(String uri) {
         String nimi = null;
         if (YRITYSMUOTOURI_PATTERN.matcher(uri).matches()) {
-            LOGGER.debug("Muunnetaan yritysmuotokoodi: {}", uri);
+            LOGGER.info("Muunnetaan yritysmuotokoodi: {}", uri);
             Koodi koodi = yritysmuotoUriToKoodi.get(uri);
             if (koodi != null) {
                 nimi = koodi.nimi.get(DEFAULT_KIELI_KOODI_ARVO);

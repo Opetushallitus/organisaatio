@@ -123,12 +123,12 @@ public class VirkailijaController {
             @ApiParam("rekisteröityvän organisaation nimi (tai sen osa)") @RequestParam(value = "hakutermi", required = false) String hakutermi) {
         List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
         if (onOphVirkailija(organisaatioOidit)) {
-            LOGGER.debug("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
+            LOGGER.info("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
             return rekisterointiService.listByTilaAndOrganisaatio(tila, hakutermi);
         }
         List<String> kunnat = virkailijanKunnat(organisaatioOidit);
         if (kunnat.isEmpty()) {
-            LOGGER.debug("Käyttäjällä ei ole oikeutta nähdä yhdenkään kunnan rekisteröintejä.");
+            LOGGER.info("Käyttäjällä ei ole oikeutta nähdä yhdenkään kunnan rekisteröintejä.");
             return List.of();
         }
         return rekisterointiService.listByTilaAndKunnatAndOrganisaatio(

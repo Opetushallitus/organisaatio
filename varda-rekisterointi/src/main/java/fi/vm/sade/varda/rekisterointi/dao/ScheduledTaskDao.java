@@ -24,7 +24,7 @@ public class ScheduledTaskDao {
     public Set<TaskMonitoringService.TaskFailure> haeEpaonnistumiset() {
         Set<TaskMonitoringService.TaskFailure> epaonnistumiset = new HashSet<>();
         for (TaskMonitoringService.MonitoredTaskType tyyppi : TaskMonitoringService.MonitoredTaskType.values()) {
-            LOGGER.debug("Haetaan yli {} kertaa epäonnistuneet taskit tyyppiä: {}",
+            LOGGER.info("Haetaan yli {} kertaa epäonnistuneet taskit tyyppiä: {}",
                     TaskMonitoringService.MAX_ALLOWED_FAILURES, tyyppi.taskName);
             template.query(
                     FAILING_TASKS_QUERY,

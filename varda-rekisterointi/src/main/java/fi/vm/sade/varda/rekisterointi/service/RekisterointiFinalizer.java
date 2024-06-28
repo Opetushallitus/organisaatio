@@ -42,7 +42,7 @@ public class RekisterointiFinalizer {
         Rekisterointi rekisterointi = lataaRekisterointi(rekisterointiId);
         String oid = rekisterointiOrgFinalizer.luoTaiPaivitaOrganisaatio(rekisterointi);
         if (rekisterointi.organisaatio.oid == null) {
-            LOGGER.debug("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
+            LOGGER.info("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
             rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
         }
         schedulerClient.schedule(
@@ -77,6 +77,6 @@ public class RekisterointiFinalizer {
                 paatosEmailTask.instance(taskId(paatosEmailTask, rekisterointiId), rekisterointiId),
                 Instant.now()
         );
-        LOGGER.debug("Päätös-email ajastettu rekisteröinnille {}.", rekisterointiId);
+        LOGGER.info("Päätös-email ajastettu rekisteröinnille {}.", rekisterointiId);
     }
 }
