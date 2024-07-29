@@ -1,6 +1,4 @@
 feature.mockapi: false
-feature.ostj-182-uusi-osoitepalvelu: true
-feature.ostj-201-muotoilematon-viesti: true
 
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.hahtuvaopintopolku.fi/lahetys"

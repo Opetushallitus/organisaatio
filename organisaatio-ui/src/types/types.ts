@@ -223,8 +223,6 @@ export type SelectOptionType = {
 export type FrontProperties = {
     urlVirkailija: string;
     viestinvalityspalveluUrl: string;
-    uusiOsoitepalveluEnabled: 'true' | 'false';
-    uusiOsoitepalveluMuotoilematonViestiEnabled: 'true' | 'false';
 };
 
 export interface Option {

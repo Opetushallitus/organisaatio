@@ -14,19 +14,13 @@ import styles from './HakutulosView.module.css';
 import searchStyles from './SearchView.module.css';
 
 type HakutulosViewProps = {
-    muotoilematonViestiEnabled: boolean;
     result?: Hakutulos;
     selection: Set<string>;
     setSelection: (s: Set<string>) => void;
     hakutulosCache?: Hakutulos;
 };
 
-export function HakutulosView({
-    muotoilematonViestiEnabled,
-    selection,
-    setSelection,
-    hakutulosCache,
-}: HakutulosViewProps) {
+export function HakutulosView({ selection, setSelection, hakutulosCache }: HakutulosViewProps) {
     const history = useHistory();
     const location = useLocation();
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
@@ -88,19 +82,13 @@ export function HakutulosView({
                 <KayttajaHakutulosTable rows={hakutulos.rows} selection={selection} setSelection={setSelection} />
             )}
             <div className={styles.ButtonRow}>
-                {muotoilematonViestiEnabled && (
-                    <Button onClick={onWriteMail} disabled={!selection.size}>
-                        Kirjoita sähköpostiviesti
-                    </Button>
-                )}
+                <Button onClick={onWriteMail} disabled={!selection.size}>
+                    Kirjoita sähköpostiviesti
+                </Button>
                 <form action={`${API_CONTEXT}/osoitteet/hae/xls`} method="POST">
                     <input type="hidden" name="resultId" value={hakutulos.id} />
                     {selectionString && <input type="hidden" name="selectedOids" value={selectionString} />}
-                    <Button
-                        variant={muotoilematonViestiEnabled ? 'outlined' : 'contained'}
-                        type="submit"
-                        disabled={!selection.size}
-                    >
+                    <Button variant="outlined" type="submit" disabled={!selection.size}>
                         Lataa Excel
                     </Button>
                 </form>

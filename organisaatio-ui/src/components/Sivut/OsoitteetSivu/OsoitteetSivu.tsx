@@ -20,10 +20,9 @@ import styles from './OsoitteetSivu.module.css';
 
 type OsoitteetSivuProps = {
     frontProperties: FrontProperties;
-    muotoilematonViestiEnabled: boolean;
 };
 
-const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: OsoitteetSivuProps) => {
+const OsoitteetSivu = ({ frontProperties }: OsoitteetSivuProps) => {
     useTitle('Osoitepalvelu');
     const history = useHistory();
     const hakuParametrit = useHakuParametrit();
@@ -84,7 +83,6 @@ const OsoitteetSivu = ({ frontProperties, muotoilematonViestiEnabled }: Osoittee
                 <div className={styles.MainContent}>
                     <div className={styles.WideContentContainer}>
                         <HakutulosView
-                            muotoilematonViestiEnabled={muotoilematonViestiEnabled}
                             selection={selection}
                             setSelection={setSelection}
                             hakutulosCache={hakutulosCache}
