@@ -92,6 +92,7 @@ public class EmailService {
                 .lahettavanVirkailijanOid(email.getVirkailijaOid())
                 .otsikko(email.getSubject())
                 .lahettavaPalvelu("osoitepalvelu")
+                .kayttooikeusRajoitukset(new KayttooikeusRajoitukset("1.2.246.562.10.00000000001", "APP_OSOITE_CRUD"))
                 .prioriteetti(Prioriteetti.normaali)
                 .sailytysaika(SAILYTYSAIKA)
                 .build();

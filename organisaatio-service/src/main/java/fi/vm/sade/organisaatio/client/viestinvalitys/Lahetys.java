@@ -23,4 +23,5 @@ public class Lahetys {
     private Prioriteetti prioriteetti;
     @NonNull
     private Integer sailytysaika;
+    private KayttooikeusRajoitukset kayttooikeusRajoitukset;
 }
