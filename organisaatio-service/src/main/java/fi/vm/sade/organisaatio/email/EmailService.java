@@ -41,8 +41,8 @@ public class EmailService {
         var emailId = UUID.randomUUID().toString();
         log.info("Queueing email with subject and id: {}, {}", email.getSubject(), emailId);
         var sql = """
-                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, copy, replyto, subject, body, attachment_ids)
-                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO queuedemail (id, osoitteet_haku_and_hakutulos_id, queuedemailstatus_id, recipients, copy, replyto, subject, body, attachment_ids, idempotency_key)
+                VALUES (?::uuid, ?::uuid, ?, ?, ?, ?, ?, ?, ?, ?::uuid)
                 """;
 
         jdbcTemplate.update(con -> {
@@ -61,6 +61,7 @@ public class EmailService {
             } else {
                 ps.setArray(col++, null);
             }
+            ps.setString(col++, UUID.randomUUID().toString());
             return ps;
         });
 
@@ -96,7 +97,6 @@ public class EmailService {
                 .lahettavanVirkailijanOid(email.getVirkailijaOid())
                 .otsikko(email.getSubject())
                 .lahettavaPalvelu("osoitepalvelu")
-                .kayttooikeusRajoitukset(kayttooikeusRajoitukset)
                 .prioriteetti(Prioriteetti.normaali)
                 .sailytysaika(SAILYTYSAIKA)
                 .build();
@@ -117,11 +117,11 @@ public class EmailService {
         log.info("Attempting to send viesti for email {} starting from recipient {} with batch size {}", emailId, email.getBatchSent(), batchRecipients.size());
         viestinvalitysClient.luoViesti(getViesti(email, batchRecipients, lahetystunniste));
         log.info("Sent viesti {} and received lähetystunniste {}", emailId, lahetystunniste);
-        markEmailBatchSent(emailId, email.getBatchSent() + batchRecipients.size());
         if (recipients.size() <= email.getBatchSent() + MAX_BATCH_SIZE) {
-            markEmailAsSent(emailId);
+            markEmailAsSent(emailId, email.getBatchSent() + batchRecipients.size());
             return true;
         } else {
+            markEmailBatchSent(emailId, email.getBatchSent() + batchRecipients.size());
             return false;
         }
     }
@@ -134,6 +134,8 @@ public class EmailService {
             .sisalto(email.getBody())
             .sisallonTyyppi(SisallonTyyppi.html)
             .liitteidenTunnisteet(email.getAttachmentIds())
+            .kayttooikeusRajoitukset(kayttooikeusRajoitukset)
+            .idempotencyKey(email.getIdempotencyKey())
             .build();
     }
 
@@ -155,7 +157,7 @@ public class EmailService {
 
     private List<QueuedEmail> queryEmails(String where, String emailId) {
         var select = """
-                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids, batch_sent
+                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids, batch_sent, idempotency_key
                 FROM queuedemail
                 JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
                 """;
@@ -181,6 +183,7 @@ public class EmailService {
                 ? Arrays.asList((String[]) rs.getArray("attachment_ids").getArray())
                 : null)
             .batchSent(rs.getInt("batch_sent"))
+            .idempotencyKey(rs.getString("idempotency_key"))
             .build();
 
     private void markEmailInvalid(String emailId) {
@@ -219,21 +222,23 @@ public class EmailService {
                 UPDATE queuedemail SET
                     last_attempt = current_timestamp,
                     modified = current_timestamp,
+                    idempotency_key = ?::uuid,
                     batch_sent = ?
                 WHERE id = ?::uuid
                 """;
-        jdbcTemplate.update(sql, batchSize, emailId);
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), batchSize, emailId);
     }
 
-    private void markEmailAsSent(String emailId) {
+    private void markEmailAsSent(String emailId, int batchSize) {
         var sql = """
                 UPDATE queuedemail SET
                     queuedemailstatus_id = 'SENT',
                     last_attempt = current_timestamp,
                     sent_at = current_timestamp,
+                    batch_sent = ?,
                     modified = current_timestamp
                 WHERE id = ?::uuid
                 """;
-        jdbcTemplate.update(sql, emailId);
+        jdbcTemplate.update(sql, batchSize, emailId);
     }
 }

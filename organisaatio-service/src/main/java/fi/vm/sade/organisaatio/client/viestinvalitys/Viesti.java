@@ -29,6 +29,7 @@ public class Viesti {
     private String lahettavaPalvelu;
     private Prioriteetti prioriteetti;
     private Integer sailytysaika;
-    private List<String> kayttooikeusRajoitukset;
+    private List<KayttooikeusRajoitukset> kayttooikeusRajoitukset;
     private Map<String, List<String>> metadata;
+    private String idempotencyKey;
 }

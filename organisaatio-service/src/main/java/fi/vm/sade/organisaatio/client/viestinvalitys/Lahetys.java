@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,5 +23,4 @@ public class Lahetys {
     private Prioriteetti prioriteetti;
     @NonNull
     private Integer sailytysaika;
-    private List<KayttooikeusRajoitukset> kayttooikeusRajoitukset;
 }

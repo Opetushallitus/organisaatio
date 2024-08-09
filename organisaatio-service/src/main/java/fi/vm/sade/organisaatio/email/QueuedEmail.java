@@ -25,4 +25,5 @@ public class QueuedEmail {
     private Timestamp modified;
     private List<String> attachmentIds;
     private int batchSent;
+    private String idempotencyKey;
 }
