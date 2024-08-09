@@ -16,7 +16,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailService {
-    private static final int MAX_BATCH_SIZE = 2048;
+    private static final int MAX_BATCH_SIZE = 512;
     private static final int SAILYTYSAIKA = 365;
     private static final Lahettaja OSOITEPALVELU_LAHETTAJA = Lahettaja.builder()
             .nimi("Opetushallitus")
