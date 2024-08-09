@@ -27,6 +27,10 @@ public class EmailService {
     private final JdbcTemplate jdbcTemplate;
     private final TransactionTemplate transactionTemplate;
 
+    private final List<KayttooikeusRajoitukset> kayttooikeusRajoitukset = List.of(
+        new KayttooikeusRajoitukset("1.2.246.562.10.00000000001", "APP_OSOITE_CRUD")
+    );
+
     public String saveAttachment(String hakutulosId, MultipartFile file) {
         String liiteTunniste = viestinvalitysClient.postAttachment(file).getLiiteTunniste();
         log.info("Email attachment {} saved with hakutulos {}", liiteTunniste, hakutulosId);
@@ -92,7 +96,7 @@ public class EmailService {
                 .lahettavanVirkailijanOid(email.getVirkailijaOid())
                 .otsikko(email.getSubject())
                 .lahettavaPalvelu("osoitepalvelu")
-                .kayttooikeusRajoitukset(new KayttooikeusRajoitukset("1.2.246.562.10.00000000001", "APP_OSOITE_CRUD"))
+                .kayttooikeusRajoitukset(kayttooikeusRajoitukset)
                 .prioriteetti(Prioriteetti.normaali)
                 .sailytysaika(SAILYTYSAIKA)
                 .build();
