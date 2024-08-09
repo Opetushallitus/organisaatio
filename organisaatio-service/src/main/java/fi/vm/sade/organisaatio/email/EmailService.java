@@ -145,7 +145,7 @@ public class EmailService {
 
     public List<QueuedEmail> getQueuedEmailsToRetry() {
         var sql = """
-                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids, batch_sent
+                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids, batch_sent, idempotency_key
                 FROM queuedemail
                 JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
                 WHERE queuedemailstatus_id = 'QUEUED'
