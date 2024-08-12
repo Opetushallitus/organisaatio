@@ -1,5 +1,7 @@
 # Organisaatioiden hallintapalvelu
 
+[Palvelukortti](https://wiki.eduuni.fi/display/OPHPALV/Organisaatiopalvelu)
+
 Sisältää sovellukset
 
     Organisaatiopalvelun REST- ja SOAP-palvelut
