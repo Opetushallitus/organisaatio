@@ -274,7 +274,7 @@ function TietosuojeselosteLinkki() {
     const [i18n] = useAtom(languageAtom);
     const url = i18n.translate('SAHKOPOSTI_TIETOSUOJASELOSTE_LINKKI_URL');
     return (
-        <a className={styles.TietosuojaLinkki} href={url}>
+        <a className={styles.TietosuojaLinkki} href={url} target="_blank">
             {i18n.translate('SAHKOPOSTI_TIETOSUOJASELOSTE_LINKKI')}
         </a>
     );
