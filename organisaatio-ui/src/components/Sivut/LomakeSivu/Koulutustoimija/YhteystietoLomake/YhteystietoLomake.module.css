@@ -33,3 +33,8 @@
     padding-bottom: 2rem;
     flex-wrap: wrap;
 }
+
+.TietosuojaLinkki {
+    display: block;
+    margin-bottom: 5px;
+}

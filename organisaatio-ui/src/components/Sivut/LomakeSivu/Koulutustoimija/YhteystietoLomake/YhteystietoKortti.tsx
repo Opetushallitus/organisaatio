@@ -176,6 +176,7 @@ export const YhteystietoKortti = ({
                     isRequired
                     error={getError(error, kortinKieli, 'email')}
                 >
+                    <TietosuojeselosteLinkki />
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.email` as const)}
@@ -251,6 +252,7 @@ export const YhteystietoKortti = ({
                 />
             </RiviKentta>
             <RiviKentta label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE" isRequired error={getError(error, kortinKieli, 'email')}>
+                <TietosuojeselosteLinkki />
                 <Input
                     disabled={readOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.email` as const)}
@@ -267,3 +269,13 @@ export const YhteystietoKortti = ({
         </div>
     );
 };
+
+function TietosuojeselosteLinkki() {
+    const [i18n] = useAtom(languageAtom);
+    const url = i18n.translate('SAHKOPOSTI_TIETOSUOJASELOSTE_LINKKI_URL');
+    return (
+        <a className={styles.TietosuojaLinkki} href={url}>
+            {i18n.translate('SAHKOPOSTI_TIETOSUOJASELOSTE_LINKKI')}
+        </a>
+    );
+}
