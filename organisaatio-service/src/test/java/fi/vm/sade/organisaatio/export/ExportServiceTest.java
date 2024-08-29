@@ -8,8 +8,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Sql({"/data/truncate_tables.sql"})
-@Sql({"/data/basic_organisaatio_data.sql"})
 @SpringBootTest(properties = {
         "organisaatio.tasks.export.upload-to-s3=false",
 })
@@ -18,19 +16,50 @@ class ExportServiceTest {
     @Autowired private JdbcTemplate jdbcTemplate;
 
     @Test
-    void exportSchemaIsCreated() {
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    void organisaatioExport() {
         exportService.createSchema();
 
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatio", Long.class)).isEqualTo(13L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(19L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatiosuhde", Long.class)).isEqualTo(11L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.ryhma", Long.class)).isEqualTo(0L);
 
         assertThat(getParentOid("1.2.2004.2")).isEqualTo("1.2.2004.1");
         assertThat(getParentOid("1.2.2004.1")).isEqualTo("1.2.246.562.24.00000000001");
         assertThat(getParentOid("1.2.246.562.24.00000000001")).isNull();
     }
 
+    @Test
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/ryhma_organisaatio_data.sql"})
+    void ryhmaExport() {
+        exportService.createSchema();
+
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatio", Long.class)).isEqualTo(2L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(4L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatiosuhde", Long.class)).isEqualTo(1L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.ryhma", Long.class)).isEqualTo(1L);
+
+        var ryhma = getRyhma("SELECT * FROM export.ryhma WHERE ryhma_oid = '1.2.2004.2'");
+        assertThat(ryhma.nimi_fi()).isEqualTo("ryhma");
+        assertThat(ryhma.nimi_sv()).isNull();
+        assertThat(ryhma.nimi_en()).isNull();
+    }
+
     private String getParentOid(String oid) {
         return jdbcTemplate.queryForObject("SELECT parent_oid FROM export.organisaatio WHERE organisaatio_oid = ?", String.class, oid);
     }
+
+    private RyhmaRow getRyhma(String sql) {
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new RyhmaRow(
+                rs.getString("ryhma_oid"),
+                rs.getString("nimi_fi"),
+                rs.getString("nimi_sv"),
+                rs.getString("nimi_en")
+        )).getFirst();
+    }
 }
+
+record RyhmaRow(String ryhma_oid, String nimi_fi, String nimi_sv, String nimi_en) {}
