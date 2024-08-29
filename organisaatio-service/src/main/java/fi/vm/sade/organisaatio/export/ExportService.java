@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.export;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -32,6 +34,7 @@ import java.util.stream.Stream;
 public class ExportService {
     private static final String S3_PREFIX = "fulldump/organisaatio/v2";
     private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     @Value("${organisaatio.tasks.export.bucket-name}")
@@ -118,6 +121,18 @@ public class ExportService {
             AND NOT EXISTS (SELECT * FROM organisaatio_tyypit WHERE organisaatio_id = child.id AND tyypit = 'Ryhma')
             """;
 
+    private final String CREATE_EXPORT_RYHMA_SQL = """
+            CREATE TABLE exportnew.ryhma AS
+            SELECT oid AS ryhma_oid,
+            (SELECT v.value FROM monikielinenteksti_values v WHERE v.id = r.nimi_mkt AND v.key = 'fi') nimi_fi,
+            (SELECT v.value FROM monikielinenteksti_values v WHERE v.id = r.nimi_mkt AND v.key = 'sv') nimi_sv,
+            (SELECT v.value FROM monikielinenteksti_values v WHERE v.id = r.nimi_mkt AND v.key = 'en') nimi_en
+            FROM organisaatio r
+            WHERE EXISTS (SELECT * FROM organisaatio_tyypit WHERE organisaatio_id = r.id AND tyypit = 'Ryhma')
+            AND NOT r.organisaatiopoistettu
+            AND (r.lakkautuspvm IS NULL OR r.lakkautuspvm > current_date)
+            """;
+
     @Transactional
     public void createSchema() {
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS exportnew CASCADE");
@@ -129,6 +144,9 @@ public class ExportService {
         jdbcTemplate.execute("ALTER TABLE exportnew.osoite ADD CONSTRAINT organisaatio_fk FOREIGN KEY (organisaatio_oid) REFERENCES exportnew.organisaatio (organisaatio_oid)");
         jdbcTemplate.execute("ALTER TABLE exportnew.organisaatiosuhde ADD CONSTRAINT parent_fk FOREIGN KEY (parent_oid) REFERENCES exportnew.organisaatio (organisaatio_oid)");
         jdbcTemplate.execute("ALTER TABLE exportnew.organisaatiosuhde ADD CONSTRAINT child_fk FOREIGN KEY (child_oid) REFERENCES exportnew.organisaatio (organisaatio_oid)");
+        jdbcTemplate.execute(CREATE_EXPORT_RYHMA_SQL);
+        jdbcTemplate.execute("ALTER TABLE exportnew.ryhma ADD CONSTRAINT ryhma_pk PRIMARY KEY (ryhma_oid)");
+        jdbcTemplate.execute("ALTER TABLE exportnew.ryhma ALTER COLUMN nimi_fi SET NOT NULL");
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA exportnew RENAME TO export");
     }
@@ -141,11 +159,13 @@ public class ExportService {
     private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila FROM export.organisaatio";
     private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli FROM export.osoite";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid, alkupvm, loppupvm FROM export.organisaatiosuhde";
+    private static final String RYHMA_QUERY = "SELECT ryhma_oid, nimi_fi, nimi_sv, nimi_en FROM export.ryhma";
 
     public void generateCsvExports() {
         exportQueryToS3(S3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
         exportQueryToS3(S3_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
         exportQueryToS3(S3_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
+        exportQueryToS3(S3_PREFIX + "/csv/ryhma.csv", RYHMA_QUERY);
     }
 
     private void exportQueryToS3(String objectKey, String query) {
@@ -196,7 +216,15 @@ public class ExportService {
                         rs.getString("loppupvm")
                 )
         ));
-        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile);
+        var ryhmaFile = exportQueryToS3AsJson(RYHMA_QUERY, S3_PREFIX + "/json/ryhma.json", unchecked(rs ->
+                new ExportedRyhma(
+                        rs.getString("ryhma_oid"),
+                        rs.getString("nimi_fi"),
+                        Optional.ofNullable(rs.getString("nimi_sv")),
+                        Optional.ofNullable(rs.getString("nimi_en"))
+                )
+        ));
+        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile, ryhmaFile);
     }
 
     private <T> File exportQueryToS3AsJson(String query, String objectKey, Function<ResultSet, T> mapper) throws IOException {
@@ -338,4 +366,7 @@ record ExportedOsoite(String organisaatio_oid,
 }
 
 record ExportedOrganisaatioSuhde(String suhdetyyppi, String parent_oid, String child_oid, String alkupvm, String loppupvm) {
+}
+
+record ExportedRyhma(String oid, String nimiFi, Optional<String> nimiSv, Optional<String> nimiEn) {
 }
