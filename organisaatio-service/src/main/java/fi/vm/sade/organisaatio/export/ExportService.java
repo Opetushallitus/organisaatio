@@ -283,12 +283,14 @@ public class ExportService {
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatio.csv"));
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/osoite.csv"));
         csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatiosuhde.csv"));
+        csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/ryhma.csv"));
         writeManifest(S3_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
 
         var jsonManifest = new ArrayList<ExportManifest.ExportFileDetails>();
         jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/organisaatio.json"));
         jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/osoite.json"));
         jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/organisaatiosuhde.json"));
+        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/ryhma.json"));
         writeManifest(S3_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
     }
 
