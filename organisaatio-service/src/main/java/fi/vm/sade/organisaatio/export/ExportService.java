@@ -35,7 +35,8 @@ public class ExportService {
     private static final String S3_PREFIX = "fulldump/organisaatio/v2";
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
 
     @Value("${organisaatio.tasks.export.bucket-name}")
     private String bucketName;
