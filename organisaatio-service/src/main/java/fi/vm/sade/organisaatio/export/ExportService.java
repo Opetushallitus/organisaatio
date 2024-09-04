@@ -32,7 +32,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Service
 public class ExportService {
-    private static final String S3_PREFIX = "fulldump/organisaatio/v2";
+    private static final String V2_PREFIX = "fulldump/organisaatio/v2";
+    private static final String V3_PREFIX = "fulldump/organisaatio/v3";
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
@@ -153,8 +154,10 @@ public class ExportService {
     }
 
     public void generateExportFiles() throws IOException {
-        generateCsvExports();
-        generateJsonExports();
+        generateCsvExportsV2();
+        generateJsonExportsV2();
+        generateCsvExportsV3();
+        generateJsonExportsV3();
     }
 
     private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila FROM export.organisaatio";
@@ -162,11 +165,14 @@ public class ExportService {
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid, alkupvm, loppupvm FROM export.organisaatiosuhde";
     private static final String RYHMA_QUERY = "SELECT ryhma_oid, nimi_fi, nimi_sv, nimi_en FROM export.ryhma";
 
-    public void generateCsvExports() {
-        exportQueryToS3(S3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
-        exportQueryToS3(S3_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
-        exportQueryToS3(S3_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
-        exportQueryToS3(S3_PREFIX + "/csv/ryhma.csv", RYHMA_QUERY);
+    public void generateCsvExportsV2() {
+        exportQueryToS3(V2_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
+        exportQueryToS3(V2_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
+        exportQueryToS3(V2_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
+    }
+
+    public void generateCsvExportsV3() {
+        exportQueryToS3(V3_PREFIX + "/csv/ryhma.csv", RYHMA_QUERY);
     }
 
     private void exportQueryToS3(String objectKey, String query) {
@@ -176,8 +182,8 @@ public class ExportService {
         log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
     }
 
-    List<File> generateJsonExports() throws IOException {
-        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, S3_PREFIX + "/json/organisaatio.json", unchecked(rs ->
+    List<File> generateJsonExportsV2() throws IOException {
+        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, V2_PREFIX + "/json/organisaatio.json", unchecked(rs ->
                 new ExportedOrganisaatio(
                         rs.getString("organisaatio_oid"),
                         rs.getString("organisaatiotyypit"),
@@ -198,7 +204,7 @@ public class ExportService {
                         rs.getString("tila")
                 )
         ));
-        var osoiteFile = exportQueryToS3AsJson(OSOITE_QUERY, S3_PREFIX + "/json/osoite.json", unchecked(rs ->
+        var osoiteFile = exportQueryToS3AsJson(OSOITE_QUERY, V2_PREFIX + "/json/osoite.json", unchecked(rs ->
                 new ExportedOsoite(
                         rs.getString("organisaatio_oid"),
                         rs.getString("osoitetyyppi"),
@@ -208,7 +214,7 @@ public class ExportService {
                         rs.getString("kieli")
                 )
         ));
-        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, S3_PREFIX + "/json/organisaatiosuhde.json", unchecked(rs ->
+        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, V2_PREFIX + "/json/organisaatiosuhde.json", unchecked(rs ->
                 new ExportedOrganisaatioSuhde(
                         rs.getString("suhdetyyppi"),
                         rs.getString("parent_oid"),
@@ -217,7 +223,11 @@ public class ExportService {
                         rs.getString("loppupvm")
                 )
         ));
-        var ryhmaFile = exportQueryToS3AsJson(RYHMA_QUERY, S3_PREFIX + "/json/ryhma.json", unchecked(rs ->
+        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile);
+    }
+
+    List<File> generateJsonExportsV3() throws IOException {
+        var ryhmaFile = exportQueryToS3AsJson(RYHMA_QUERY, V3_PREFIX + "/json/ryhma.json", unchecked(rs ->
                 new ExportedRyhma(
                         rs.getString("ryhma_oid"),
                         rs.getString("nimi_fi"),
@@ -225,7 +235,7 @@ public class ExportService {
                         Optional.ofNullable(rs.getString("nimi_en"))
                 )
         ));
-        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile, ryhmaFile);
+        return List.of(ryhmaFile);
     }
 
     private <T> File exportQueryToS3AsJson(String query, String objectKey, Function<ResultSet, T> mapper) throws IOException {
@@ -280,19 +290,34 @@ public class ExportService {
     }
 
     public void copyExportFilesToLampi() throws IOException {
+        copyExportFilesV2();
+        copyExportFilesV3();
+    }
+
+    private void copyExportFilesV2() throws IOException {
+        log.info("Copying v2 export files to Lampi");
         var csvManifest = new ArrayList<ExportManifest.ExportFileDetails>();
-        csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatio.csv"));
-        csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/osoite.csv"));
-        csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/organisaatiosuhde.csv"));
-        csvManifest.add(copyFileToLampi(S3_PREFIX + "/csv/ryhma.csv"));
-        writeManifest(S3_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
+        csvManifest.add(copyFileToLampi(V2_PREFIX + "/csv/organisaatio.csv"));
+        csvManifest.add(copyFileToLampi(V2_PREFIX + "/csv/osoite.csv"));
+        csvManifest.add(copyFileToLampi(V2_PREFIX + "/csv/organisaatiosuhde.csv"));
+        writeManifest(V2_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
 
         var jsonManifest = new ArrayList<ExportManifest.ExportFileDetails>();
-        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/organisaatio.json"));
-        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/osoite.json"));
-        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/organisaatiosuhde.json"));
-        jsonManifest.add(copyFileToLampi(S3_PREFIX + "/json/ryhma.json"));
-        writeManifest(S3_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
+        jsonManifest.add(copyFileToLampi(V2_PREFIX + "/json/organisaatio.json"));
+        jsonManifest.add(copyFileToLampi(V2_PREFIX + "/json/osoite.json"));
+        jsonManifest.add(copyFileToLampi(V2_PREFIX + "/json/organisaatiosuhde.json"));
+        writeManifest(V2_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
+    }
+
+    private void copyExportFilesV3() throws IOException {
+        log.info("Copying v3 export files to Lampi");
+        var csvManifest = new ArrayList<ExportManifest.ExportFileDetails>();
+        csvManifest.add(copyFileToLampi(V3_PREFIX + "/csv/ryhma.csv"));
+        writeManifest(V3_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
+
+        var jsonManifest = new ArrayList<ExportManifest.ExportFileDetails>();
+        jsonManifest.add(copyFileToLampi(V3_PREFIX + "/json/ryhma.json"));
+        writeManifest(V3_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
     }
 
     private ExportManifest.ExportFileDetails copyFileToLampi(String objectKey) throws IOException {
@@ -332,6 +357,7 @@ public class ExportService {
     }
 
     private void writeManifest(String objectKey, ExportManifest manifest) throws JsonProcessingException {
+        log.info("Writing manifest file {}/{}: {}", lampiBucketName, objectKey, manifest);
         var manifestJson = objectMapper.writeValueAsString(manifest);
         var response = lampiS3Client.putObject(
                 b -> b.bucket(lampiBucketName).key(objectKey),
