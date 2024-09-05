@@ -590,7 +590,7 @@ public class OsoitteetResource {
                     SELECT DISTINCT o.oid FROM organisaatio o
                     LEFT JOIN organisaatiosuhde os ON (o.id = os.child_id)
                     LEFT JOIN organisaatio parent ON (os.parent_id = parent.id)
-                    WHERE organisaatio_is_active(o)
+                    WHERE organisaatio_is_active(o) AND o.piilotettu = false
                     AND (o.oppilaitostyyppi IN (:oppilaitostyypit) OR parent.oppilaitostyyppi IN (:oppilaitostyypit))
                 """,
                 Map.of("oppilaitostyypit", req.getOppilaitostyypit()),
@@ -624,7 +624,7 @@ public class OsoitteetResource {
                     """);
         }
 
-        sql.add("WHERE organisaatio_is_active(o)");
+        sql.add("WHERE organisaatio_is_active(o) AND o.piilotettu = false");
         if (!req.getJarjestamisluvat().isEmpty()) {
             sql.add("AND koodisto_koulutus.koodiuri IN (:jarestamisluvat)");
             params.put("jarestamisluvat", req.getJarjestamisluvat());
