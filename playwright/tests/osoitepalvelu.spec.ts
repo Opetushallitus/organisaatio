@@ -273,19 +273,13 @@ test.describe("Osoitepalvelu", () => {
       const vuosiluokatInput = await page.getByLabel(
         "Hae perusopetuksen vuosiluokkatiedolla"
       );
-      await test.step(
-        "vuosiluokka selection is disabled if no peruskoulut is selected",
-        async () => {
-          await expect(vuosiluokatInput).toBeDisabled();
-        }
-      );
+      await test.step("vuosiluokka selection is disabled if no peruskoulut is selected", async () => {
+        await expect(vuosiluokatInput).toBeDisabled();
+      });
       await oppilaitostyyppiFilter.toggleCheckboxByLabel("Peruskoulut");
-      await test.step(
-        "vuosiluokka selection is enabled after selecting peruskoulut",
-        async () => {
-          await expect(vuosiluokatInput).toBeEnabled();
-        }
-      );
+      await test.step("vuosiluokka selection is enabled after selecting peruskoulut", async () => {
+        await expect(vuosiluokatInput).toBeEnabled();
+      });
 
       await selectFromDropdown(
         page,
@@ -310,14 +304,11 @@ test.describe("Osoitepalvelu", () => {
         "Sotilaskorkeakoulut",
         "Yliopistot",
       ]);
-      await test.step(
-        "selection description shows group name instead of individiaul types",
-        async () => {
-          await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
-            "Korkeakoulutus"
-          );
-        }
-      );
+      await test.step("selection description shows group name instead of individiaul types", async () => {
+        await expect(oppilaitostyyppiFilter.selectionIndicator).toHaveText(
+          "Korkeakoulutus"
+        );
+      });
       await oppilaitostyyppiFilter.toggleCheckboxByLabel("Korkeakoulutus");
       await expect(getCheckedItems(page)).toHaveCount(0);
     });
@@ -349,65 +340,57 @@ test.describe("Osoitepalvelu", () => {
       );
     });
 
-    await test.step(
-      "reverts to default value after being re-enabled",
-      async () => {
-        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
-        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Manner-Suomi (ei Ahvenanmaa)"
-        );
-      }
-    );
+    await test.step("reverts to default value after being re-enabled", async () => {
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Manner-Suomi (ei Ahvenanmaa)"
+      );
+    });
 
     await osoitepalveluPage.kieliFilter.clear();
     await sijaintiFilter.open();
 
-    await test.step(
-      "Changes filter description on selection change",
-      async () => {
-        await selectFromDropdown(
-          page,
-          "Hae alueen tai maakunnan nimellä",
-          "Koko Suomi"
-        );
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Koko Suomi"
-        );
+    await test.step("Changes filter description on selection change", async () => {
+      await selectFromDropdown(
+        page,
+        "Hae alueen tai maakunnan nimellä",
+        "Koko Suomi"
+      );
+      await expect(sijaintiFilter.selectionIndicator).toHaveText("Koko Suomi");
 
-        await selectFromAlueDropdown(page, "Ahvenanmaa");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Manner-Suomi (ei Ahvenanmaa)"
-        );
+      await selectFromAlueDropdown(page, "Ahvenanmaa");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Manner-Suomi (ei Ahvenanmaa)"
+      );
 
-        await selectFromAlueDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText("");
+      await selectFromAlueDropdown(page, "Manner-Suomi (ei Ahvenanmaa)");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText("");
 
-        await selectFromAlueDropdown(page, "Ulkomaa");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText("Ulkomaa");
+      await selectFromAlueDropdown(page, "Ulkomaa");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText("Ulkomaa");
 
-        await selectFromAlueDropdown(page, "Uusimaa");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Ulkomaa, Uusimaa"
-        );
+      await selectFromAlueDropdown(page, "Uusimaa");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Ulkomaa, Uusimaa"
+      );
 
-        await selectFromKuntaDropdown(page, "Imatra");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Ulkomaa, Uusimaa, Imatra"
-        );
+      await selectFromKuntaDropdown(page, "Imatra");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Ulkomaa, Uusimaa, Imatra"
+      );
 
-        await selectFromKuntaDropdown(page, "Helsinki");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Ulkomaa, Uusimaa, Helsinki, Imatra"
-        );
+      await selectFromKuntaDropdown(page, "Helsinki");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Ulkomaa, Uusimaa, Helsinki, Imatra"
+      );
 
-        await selectFromKuntaDropdown(page, "Helsinki");
-        await selectFromKuntaDropdown(page, "Imatra");
-        await expect(sijaintiFilter.selectionIndicator).toHaveText(
-          "Ulkomaa, Uusimaa"
-        );
-      }
-    );
+      await selectFromKuntaDropdown(page, "Helsinki");
+      await selectFromKuntaDropdown(page, "Imatra");
+      await expect(sijaintiFilter.selectionIndicator).toHaveText(
+        "Ulkomaa, Uusimaa"
+      );
+    });
 
     await test.step("Filters results by alue", async () => {
       await expect(sijaintiFilter.selectionIndicator).toHaveText(
@@ -478,14 +461,11 @@ test.describe("Osoitepalvelu", () => {
       await expect(kieliFilter.selectionIndicator).toHaveText("suomi");
     });
 
-    await test.step(
-      "reverts to default value after being re-enabled",
-      async () => {
-        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
-        await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
-        await expect(kieliFilter.selectionIndicator).toHaveText("suomi");
-      }
-    );
+    await test.step("reverts to default value after being re-enabled", async () => {
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await osoitepalveluPage.koulutusotimijatKohderyhma.toggle();
+      await expect(kieliFilter.selectionIndicator).toHaveText("suomi");
+    });
 
     await osoitepalveluPage.kieliFilter.clear();
     await kieliFilter.open();
@@ -560,8 +540,12 @@ test.describe("Osoitepalvelu", () => {
           "KOSKI-virheilmoituksen osoite": "",
           "Organisaation OID": "1.2.246.562.99.00000000001",
           Oppilaitostunnus: "",
-          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
-          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Postinumero: "00009",
+          Postiosoite: "Testikuja 5",
+          Postitoimipaikka: "DIGITOINTI",
+          "Käyntiosoitteen postinumero": "00009",
+          Käyntiosoite: "Testikuja 5",
+          "Käyntiosoitteen kunta": "DIGITOINTI",
         },
         {
           "Organisaation nimi": "Mustikkalan testi yhdistys",
@@ -573,8 +557,12 @@ test.describe("Osoitepalvelu", () => {
           "KOSKI-virheilmoituksen osoite": "",
           "Organisaation OID": "1.2.246.562.99.00000000008",
           Oppilaitostunnus: "",
-          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
-          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Postinumero: "00009",
+          Postiosoite: "Testikuja 5",
+          Postitoimipaikka: "DIGITOINTI",
+          "Käyntiosoitteen postinumero": "00009",
+          Käyntiosoite: "Testikuja 5",
+          "Käyntiosoitteen kunta": "DIGITOINTI",
         },
         {
           "Organisaation nimi": "Testi Koulutuskuntayhtymä Puolukka",
@@ -586,8 +574,12 @@ test.describe("Osoitepalvelu", () => {
           "KOSKI-virheilmoituksen osoite": "",
           "Organisaation OID": "1.2.246.562.99.00000000005",
           Oppilaitostunnus: "",
-          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
-          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Postinumero: "00009",
+          Postiosoite: "Testikuja 5",
+          Postitoimipaikka: "DIGITOINTI",
+          "Käyntiosoitteen postinumero": "00009",
+          Käyntiosoite: "Testikuja 5",
+          "Käyntiosoitteen kunta": "DIGITOINTI",
         },
       ]);
     });
@@ -648,8 +640,12 @@ test.describe("Osoitepalvelu", () => {
           "KOSKI-virheilmoituksen osoite": "",
           "Organisaation OID": "1.2.246.562.99.00000000008",
           Oppilaitostunnus: "",
-          Postiosoite: "Testikuja 5, 00009 DIGITOINTI",
-          Käyntiosoite: "Testikuja 5, 00009 DIGITOINTI",
+          Postinumero: "00009",
+          Postiosoite: "Testikuja 5",
+          Postitoimipaikka: "DIGITOINTI",
+          "Käyntiosoitteen postinumero": "00009",
+          Käyntiosoite: "Testikuja 5",
+          "Käyntiosoitteen kunta": "DIGITOINTI",
         },
       ]);
     });
@@ -990,7 +986,7 @@ test.describe("Osoitepalvelu", () => {
     await test.step("has required fields", async () => {
       await aiheField.input.fill("Aihe");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
-      await viestiField.fill("Viesti")
+      await viestiField.fill("Viesti");
       await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
       await aiheField.input.fill("");
       await expect(kirjoitaViestiForm.lahetaButton).toBeDisabled();
