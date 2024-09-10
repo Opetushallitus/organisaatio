@@ -1090,6 +1090,12 @@ test.describe("Osoitepalvelu", () => {
       ).not.toBeVisible();
     });
 
+    test("accepts attachments with unwanted characters in name", async ({ page }) => {
+      const kirjoitaViestiForm = new ViestiView(page);
+      await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "ääää.pdf");
+      await expect(page.getByLabel("Poista liite ääää.pdf")).toBeVisible();
+    })
+
     test("prevents adding too large files", async ({ page }) => {
       const kirjoitaViestiForm = new ViestiView(page);
       await uploadFile(

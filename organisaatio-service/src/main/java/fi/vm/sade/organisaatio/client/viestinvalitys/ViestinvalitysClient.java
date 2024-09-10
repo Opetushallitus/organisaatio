@@ -1,9 +1,12 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,11 +14,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
@@ -79,7 +77,7 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
 
     private HttpRequest.Builder getAttachmentRequestBuilder(MultipartFile file) throws IOException {
         HttpEntity httpEntity = MultipartEntityBuilder.create()
-                .addBinaryBody("liite", file.getInputStream(), ContentType.create(file.getContentType()), file.getOriginalFilename())
+                .addBinaryBody("liite", file.getInputStream(), ContentType.create(file.getContentType()), removeUnwantedCharactersFromFilename(file.getOriginalFilename()))
                 .build();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         httpEntity.writeTo(os);
@@ -89,6 +87,15 @@ public class ViestinvalitysClient extends CasAuthenticatedServiceClient {
                 .header("Content-Type", httpEntity.getContentType().getValue())
                 .header("Accept", "application/json")
                 .POST(BodyPublishers.ofByteArray(os.toByteArray()));
+    }
+
+    private String removeUnwantedCharactersFromFilename(String filename) {
+        // Tämä regex mätsää Viestinvälityspalvelun LiiteValidatoriin:
+        // https://github.com/Opetushallitus/viestinvalityspalvelu/blob/9ae813853b09756be6eefcad9efb2e4afddb9d98/lambdat/vastaanotto/src/main/scala/fi/oph/viestinvalitys/vastaanotto/validation/LiiteValidator.scala#L28
+        var regex = "[^0-9A-Za-z\\s._\\-+]";
+        // MultipartFile#getOriginalFilename() voi palauttaa esim. "ä" kirjaimen muodossa "a?",
+        // jolloin tämän operaation jälkeen "ääää.pdf" on kätevästi, mutta yllättävästi "aaaa.pdf" :)
+        return filename.replaceAll(regex, "");
     }
 
     public ApiResponse post(String path, String requestBody) throws IOException, InterruptedException {

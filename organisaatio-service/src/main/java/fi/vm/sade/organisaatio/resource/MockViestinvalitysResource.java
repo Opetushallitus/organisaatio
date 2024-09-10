@@ -1,11 +1,6 @@
 package fi.vm.sade.organisaatio.resource;
 
-import fi.vm.sade.organisaatio.client.viestinvalitys.ApiResponse;
-import fi.vm.sade.organisaatio.client.viestinvalitys.BadRequestException;
-import fi.vm.sade.organisaatio.client.viestinvalitys.Lahetys;
-import fi.vm.sade.organisaatio.client.viestinvalitys.LuoLahetysSuccessResponse;
-import fi.vm.sade.organisaatio.client.viestinvalitys.LuoViestiSuccessResponse;
-import fi.vm.sade.organisaatio.client.viestinvalitys.Viesti;
+import fi.vm.sade.organisaatio.client.viestinvalitys.*;
 import fi.vm.sade.organisaatio.client.viestinvalitys.ViestinvalitysClient.PostAttachmentResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -13,18 +8,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @ConditionalOnProperty(name = "feature.mockapi")
 @Hidden
@@ -34,8 +23,19 @@ import java.util.UUID;
 public class MockViestinvalitysResource {
     private Boolean enabled = true;
 
+    private static final Pattern TIEDOSTONIMIPATTERN = Pattern.compile("^[0-9A-Za-z\\s\\._\\-+]+$");
+
     @PostMapping(path = "/v1/liitteet", produces = MediaType.APPLICATION_JSON_VALUE)
     public PostAttachmentResponse uploadAttachment(@NonNull @RequestParam("liite") MultipartFile liite) throws IOException {
+        if (!TIEDOSTONIMIPATTERN.matcher(liite.getOriginalFilename()).matches()) {
+            throw new BadRequestException(new ApiResponse(400, """
+                    {
+                        "virheet": [
+                            "tiedostonimi: Nimi voi sisältää vain isoja ja pieniä kirjaimia, numeroita, sekä seuraavia merkkejä: +, -, ., _: "
+                        ]
+                    }
+                """));
+        }
         PostAttachmentResponse response = new PostAttachmentResponse();
         response.setLiiteTunniste(UUID.randomUUID().toString());
         return response;
