@@ -364,7 +364,11 @@ public class OsoitteetResource {
         createCell(header, col++, "Oppilaitostunnus", style);
         createCell(header, col++, "Y-tunnus", style);
         createCell(header, col++, "Postiosoite", style);
+        createCell(header, col++, "Postinumero", style);
+        createCell(header, col++, "Postitoimipaikka", style);
         createCell(header, col++, "Käyntiosoite", style);
+        createCell(header, col++, "Käyntiosoitteen postinumero", style);
+        createCell(header, col++, "Käyntiosoitteen kunta", style);
 
         for (Integer row = 1; row <= tulos.size(); row++) {
             OrganisaatioHakutulosRow h = tulos.get(row - 1);
@@ -380,8 +384,12 @@ public class OsoitteetResource {
             r.createCell(col++).setCellValue(h.oid);
             r.createCell(col++).setCellValue(h.oppilaitostunnus.orElse(""));
             r.createCell(col++).setCellValue(h.ytunnus);
-            r.createCell(col++).setCellValue(h.postiosoite.orElse(""));
-            r.createCell(col++).setCellValue(h.kayntiosoite.orElse(""));
+            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getOsoite()).orElse(""));
+            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getPostinumero()).get().orElse(""));
+            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getPostitoimipaikka()).get().orElse(""));
+            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getOsoite()).orElse(""));
+            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getPostinumero()).get().orElse(""));
+            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getPostitoimipaikka()).get().orElse(""));
         }
 
         Integer columnCount = 12;
@@ -468,7 +476,7 @@ public class OsoitteetResource {
         Map<Long, String> koskiOsoitteet = fetchKoskiOsoitteet(organisaatioIds, kieliKoodi);
         Map<String, String> opetuskieletMap = fetchOpetuskielet(kieli);
         Map<String, String> kuntaMap = fetchKuntaKoodisto(kieli);
-        Map<String, String> postinumeroMap = fetchPostikoodis(kieli);
+        Map<String, String[]> postinumeroMap = fetchPostikoodis(kieli);
 
 
         List<OrganisaatioHakutulosRow> rows = orgs.stream().map(o -> {
@@ -487,8 +495,8 @@ public class OsoitteetResource {
                             kuntaMap.get(o.getKotipaikka()),
                             Optional.ofNullable(koskiOsoitteet.get(o.getId())),
                             o.getYtunnus(),
-                            Optional.ofNullable(o.getPostiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite)),
-                            Optional.ofNullable(o.getKayntiosoite()).map(osoite -> osoiteToString(postinumeroMap, osoite))
+                            getHakutulosOsoite(o.getPostiosoite(), postinumeroMap),
+                            getHakutulosOsoite(o.getKayntiosoite(), postinumeroMap)
                     );
                 })
                 .collect(Collectors.toList());
@@ -517,12 +525,12 @@ public class OsoitteetResource {
         ).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
-    private Map<String, String> fetchPostikoodis(String kieli) {
+    private Map<String, String[]> fetchPostikoodis(String kieli) {
         String sql = "fi".equals(kieli)
                 ? "SELECT koodiuri, koodiarvo, nimi_fi AS nimi FROM koodisto_posti WHERE nimi_fi IS NOT NULL"
                 : "SELECT koodiuri, koodiarvo, nimi_sv AS nimi FROM koodisto_posti WHERE nimi_sv IS NOT NULL";
         return jdbcTemplate.query(sql, (rs, i) ->
-                Map.entry(rs.getString("koodiuri"), String.format("%s %s", rs.getString("koodiarvo"), rs.getString("nimi")))
+                Map.entry(rs.getString("koodiuri"), new String[]{rs.getString("koodiarvo"), rs.getString("nimi")})
         ).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 
@@ -703,14 +711,15 @@ public class OsoitteetResource {
         return jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 
-    private String osoiteToString(Map<String, String> postinumeroMap, Osoite osoite) {
-        if (osoite.getPostinumero() == null || osoite.getPostitoimipaikka() == null)
-            return osoite.getOsoite();
-        String postiKoodi = postinumeroMap.get(osoite.getPostinumero());
-        if (postiKoodi == null)
-            return osoite.getOsoite();
-
-        return String.format("%s, %s", osoite.getOsoite(), postiKoodi);
+    private Optional<HakutulosOsoite> getHakutulosOsoite(Osoite osoiteModel, Map<String, String[]> postinumeroMap) {
+        return Optional.ofNullable(osoiteModel)
+            .map(osoite -> {
+                String[] postiosoite = osoite.getPostinumero() != null ? postinumeroMap.get(osoite.getPostinumero()) : null;
+                return new HakutulosOsoite(
+                    osoite.getOsoite(),
+                    Optional.ofNullable(postiosoite != null ? postiosoite[0] : null),
+                    Optional.ofNullable(postiosoite != null ? postiosoite[1] : null));
+            });
     }
 
     @Data
@@ -751,8 +760,16 @@ public class OsoitteetResource {
         final String kunta;
         final Optional<String> koskiVirheilmoituksenOsoite;
         final String ytunnus;
-        final Optional<String> postiosoite;
-        final Optional<String> kayntiosoite;
+        final Optional<HakutulosOsoite> postiosoite;
+        final Optional<HakutulosOsoite> kayntiosoite;
+    }
+
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    static class HakutulosOsoite {
+        final String osoite;
+        final Optional<String> postinumero;
+        final Optional<String> postitoimipaikka;
     }
 
     private final List<String> perusopetusOppilaitostyypit = List.of("oppilaitostyyppi_12#1", "oppilaitostyyppi_11#1", "oppilaitostyyppi_19#1");

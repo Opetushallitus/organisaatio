@@ -39,8 +39,14 @@ export type HakutulosRow = {
     kunta: string;
     koskiVirheilmoituksenOsoite?: string;
     ytunnus: string;
-    postiosoite?: string;
-    kayntiosoite?: string;
+    postiosoite?: Osoite;
+    kayntiosoite?: Osoite;
+};
+
+export type Osoite = {
+    osoite: string;
+    postinumero?: string;
+    postitoimipaikka?: string;
 };
 
 export type HaeRequest = {

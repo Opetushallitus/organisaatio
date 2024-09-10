@@ -1,7 +1,7 @@
 import React from 'react';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 
-import { HakutulosRow } from './OsoitteetApi';
+import { HakutulosRow, Osoite } from './OsoitteetApi';
 import styles from './HakutulosTable.module.css';
 import { Checkbox } from './Checkbox';
 
@@ -27,6 +27,15 @@ export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: Ha
             setSelection(new Set());
         } else {
             setSelection(new Set(rows.map((r) => r.oid)));
+        }
+    };
+
+    const stringifyOsoite = (osoite?: Osoite) => {
+        if (!osoite) {
+            return '-';
+        } else {
+            const postiosoite = osoite.postinumero ? `, ${osoite.postinumero} ${osoite.postitoimipaikka}` : '';
+            return osoite.osoite + postiosoite;
         }
     };
 
@@ -56,8 +65,8 @@ export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: Ha
                 <div className={styles.ColumnOid + ' ' + styles.Fade}>{_.oid}</div>
                 <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.oppilaitostunnus ?? '-'}</div>
                 <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.ytunnus}</div>
-                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{_.postiosoite ?? '-'}</div>
-                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{_.kayntiosoite ?? '-'}</div>
+                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{stringifyOsoite(_.postiosoite)}</div>
+                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{stringifyOsoite(_.kayntiosoite)}</div>
             </div>
         );
     };
