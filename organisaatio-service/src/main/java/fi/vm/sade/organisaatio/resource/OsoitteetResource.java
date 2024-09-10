@@ -385,11 +385,11 @@ public class OsoitteetResource {
             r.createCell(col++).setCellValue(h.oppilaitostunnus.orElse(""));
             r.createCell(col++).setCellValue(h.ytunnus);
             r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getOsoite()).orElse(""));
-            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getPostinumero()).get().orElse(""));
-            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getPostitoimipaikka()).get().orElse(""));
+            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getPostinumero().orElse("")).orElse(""));
+            r.createCell(col++).setCellValue(h.postiosoite.map(osoite -> osoite.getPostitoimipaikka().orElse("")).orElse(""));
             r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getOsoite()).orElse(""));
-            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getPostinumero()).get().orElse(""));
-            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getPostitoimipaikka()).get().orElse(""));
+            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getPostinumero().orElse("")).orElse(""));
+            r.createCell(col++).setCellValue(h.kayntiosoite.map(osoite -> osoite.getPostitoimipaikka().orElse("")).orElse(""));
         }
 
         Integer columnCount = 12;
