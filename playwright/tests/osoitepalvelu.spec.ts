@@ -288,6 +288,16 @@ test.describe("Osoitepalvelu", () => {
       );
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("0 hakutulosta valittu")).toBeVisible();
+
+      await page.getByRole("button", { name: "Muokkaa hakua" }).click();
+
+      await selectFromDropdown(
+        page,
+        "Hae perusopetuksen vuosiluokkatiedolla",
+        "9. vuosiluokalla"
+      );
+      await osoitepalveluPage.haeButton.click();
+      await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
     });
 
     test("checks and unchecks all oppilaitostyyppi that are part of a group", async ({

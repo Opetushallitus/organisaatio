@@ -37,6 +37,8 @@ with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.
 select createOrganisaatio('1.2.246.562.99.00000000004','Ahomansikan päiväkoti',parent.oid,parent.id,concat(parent.parentidpath,parent.id,'|'), array['organisaatiotyyppi_08'], null, null, null, null) from parent where parent.oid is not null
 union all select * from a union all select * from b;
 
+insert into organisaatio_vuosiluokat select organisaatio.id, 'vuosiluokat_9#2' from organisaatio where oid = '1.2.246.562.99.00000000002';
+
 with parent as (select id,oid,parentidpath from createOrganisaatio('1.2.246.562.99.00000000005','Testi Koulutuskuntayhtymä Puolukka', '1.2.246.562.10.00000000001', 0, '|0|', array['organisaatiotyyppi_01','organisaatiotyyppi_09'], null, null, 'Kuntayhtymä', null) as foo(id bigint,oid varchar, parentidpath varchar)),
      a as (select createOrganisaatio('1.2.246.562.99.00000000006','Testi Ammattiopisto Puolukka',parent.oid,parent.id,concat(parent.parentidpath,parent.id,'|'), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_21#1', '30079', null, null) from parent where parent.oid is not null )
 select createOrganisaatio('1.2.246.562.99.00000000007','Testi Puolukkalan liikuntaopisto',parent.oid,parent.id,concat(parent.parentidpath,parent.id,'|'), array['organisaatiotyyppi_02'], 'oppilaitostyyppi_62#1', '30080', null, null) from parent where parent.oid is not null

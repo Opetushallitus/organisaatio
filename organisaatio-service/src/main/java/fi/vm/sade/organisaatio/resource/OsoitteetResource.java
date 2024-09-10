@@ -611,11 +611,15 @@ public class OsoitteetResource {
         var params = new HashMap<String, Object>(Map.of(
                 "organisaatiotyyppi", organisaatiotyyppi
         ));
+        var versionFreeVuosiluokat = req.getVuosiluokat().stream().map(v -> v.split("#")[0]).toList();
 
         sql.add("""
                 SELECT DISTINCT o.id FROM organisaatio o
                 JOIN organisaatio_tyypit ON (organisaatio_tyypit.organisaatio_id = o.id AND tyypit = :organisaatiotyyppi)
                 """);
+        if (!versionFreeVuosiluokat.isEmpty()) {
+            sql.add("JOIN organisaatio_vuosiluokat ON (o.id = organisaatio_vuosiluokat.organisaatio_id)");
+        }
         if (!req.getJarjestamisluvat().isEmpty()) {
             sql.add("""
                     JOIN organisaatio_koulutuslupa ON (organisaatio_koulutuslupa.organisaatio_id = o.id)
@@ -634,8 +638,8 @@ public class OsoitteetResource {
 
         sql.add("WHERE organisaatio_is_active(o) AND o.piilotettu = false");
         if (!req.getJarjestamisluvat().isEmpty()) {
-            sql.add("AND koodisto_koulutus.koodiuri IN (:jarestamisluvat)");
-            params.put("jarestamisluvat", req.getJarjestamisluvat());
+            sql.add("AND koodisto_koulutus.koodiuri IN (:jarjestamisluvat)");
+            params.put("jarjestamisluvat", req.getJarjestamisluvat());
         } else if (req.isAnyJarjestamislupa()) {
             sql.add("AND EXISTS (SELECT 1 FROM organisaatio_koulutuslupa WHERE organisaatio_koulutuslupa.organisaatio_id = o.id)");
         }
@@ -649,7 +653,10 @@ public class OsoitteetResource {
                 params.put("oppilaitostyypit", req.getOppilaitostyypit());
             }
         }
-
+        if (!versionFreeVuosiluokat.isEmpty()) {
+            sql.add("AND split_part(organisaatio_vuosiluokat.vuosiluokat, '#', 1) IN (:vuosiluokat)");
+            params.put("vuosiluokat", versionFreeVuosiluokat);
+        }
         if (!req.getKunnat().isEmpty()) {
             sql.add("AND o.kotipaikka IN (:kunnat)");
             params.put("kunnat", req.getKunnat());
@@ -669,9 +676,7 @@ public class OsoitteetResource {
                 "oppilaitosKoodi", OrganisaatioTyyppi.OPPILAITOS.koodiValue(),
                 "oppilaitostyypit", oppilaitostyypit
         ));
-        if (!vuosiluokat.isEmpty()) {
-            params.put("vuosiluokat", vuosiluokat);
-        }
+        var versionFreeVuosiluokat = vuosiluokat.stream().map(v -> v.split("#")[0]).toList();
 
         String sql = """
                 SELECT DISTINCT parent.id
@@ -681,7 +686,7 @@ public class OsoitteetResource {
                 JOIN organisaatio child ON (child.id = suhde.child_id)
                 JOIN organisaatio_tyypit child_tyypit ON (child_tyypit.organisaatio_id = child.id AND child_tyypit.tyypit = :oppilaitosKoodi)
                 """;
-        if (!vuosiluokat.isEmpty()) {
+        if (!versionFreeVuosiluokat.isEmpty()) {
             sql += "JOIN organisaatio_vuosiluokat ON (child.id = organisaatio_vuosiluokat.organisaatio_id)";
         }
         if (!kielet.isEmpty()) {
@@ -694,8 +699,9 @@ public class OsoitteetResource {
                 AND organisaatio_is_active(child)
                 AND child.oppilaitostyyppi IN (:oppilaitostyypit)
                 """;
-        if (!vuosiluokat.isEmpty()) {
-            sql += " AND organisaatio_vuosiluokat.vuosiluokat IN (:vuosiluokat)";
+        if (!versionFreeVuosiluokat.isEmpty()) {
+            sql += " AND split_part(organisaatio_vuosiluokat.vuosiluokat, '#', 1) IN (:vuosiluokat)";
+            params.put("vuosiluokat", versionFreeVuosiluokat);
         }
 
         if (!kielet.isEmpty()) {
