@@ -3,14 +3,14 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "lexical":  "^0.15.0",
-        "@lexical/html":  "^0.15.0",
-        "@lexical/link":  "^0.15.0",
-        "@lexical/list":  "^0.15.0",
-        "@lexical/react":  "^0.15.0",
-        "@lexical/utils":  "^0.15.0",
-        "@lexical/selection":  "^0.15.0",
-	"@lexical/rich-text": "^0.15.0",
+        "lexical": "^0.15.0",
+        "@lexical/html": "^0.15.0",
+        "@lexical/link": "^0.15.0",
+        "@lexical/list": "^0.15.0",
+        "@lexical/react": "^0.15.0",
+        "@lexical/utils": "^0.15.0",
+        "@lexical/selection": "^0.15.0",
+        "@lexical/rich-text": "^0.15.0",
         "@hookform/resolvers": "^2.5.2",
         "@iconify/icons-fa-solid": "1.1.1",
         "@iconify/react": "3.1.0",
@@ -25,14 +25,14 @@
         "oph-urls-js": "github:Opetushallitus/oph-urls-js#master",
         "query-string": "^7.0.1",
         "react": "^17.0.2",
-        "react-accessible-accordion": "3.3.3",
-        "react-datepicker": "3.2.2",
+        "react-accessible-accordion": "^4.0.0",
+        "react-datepicker": "^3.8.0",
         "react-dom": "^17.0.2",
         "react-hook-form": "^7.8.4",
-        "react-notifications-component": "^2.4.1",
+        "react-notifications-component": "^3.3.3",
         "react-router-dom": "5.2.0",
         "react-select": "^5.8.0",
-        "react-table": "7.2.0",
+        "react-table": "^7.8.0",
         "react-window": "^1.8.10",
         "reactjs-popup": "^2.0.5",
         "styled-components": "5.1.1",
@@ -139,5 +139,13 @@
     "engines": {
         "npm": "^10",
         "node": "^20"
+    },
+    "overrides": {
+        "@opetushallitus/virkailija-ui-components": {
+            "@emotion/react": "11.13.3"
+        },
+        "react-select": {
+            "@emotion/react": "11.13.3"
+        }
     }
 }
