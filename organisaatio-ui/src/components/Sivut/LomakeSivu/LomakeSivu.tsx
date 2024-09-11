@@ -22,7 +22,7 @@ import PerustietoLomake from './Koulutustoimija/PerustietoLomake/PerustietoLomak
 import YhteystietoLomake from './Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
 import NimiHistoriaLomake from './Koulutustoimija/NimiHistoriaLomake/NimiHistoriaLomake';
 import OrganisaatioHistoriaLomake from './Koulutustoimija/OrganisaatioHistoriaLomake/OrganisaatioHistoriaLomake';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
@@ -86,15 +86,12 @@ import { DecoratedNimi } from '../../OrganisaatioComponents';
 import Popup from 'reactjs-popup';
 import { Confirmation } from '../../Modaalit/Confirmation/Confirmation';
 
-type LomakeSivuProps = {
-    match: { params: { oid: string } };
-    history: string[];
-};
-
 const PERUSTIEDOTID = 'perustietolomake';
 const YHTEYSTIEDOTID = 'yhteystietolomake';
 
-const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
+const LomakeSivu = () => {
+    const params = useParams();
+    const navigate = useNavigate();
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);
     useAtom(koodistotAtom);
@@ -184,7 +181,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
     const [muokattu, setMuokattu] = useState(0);
     const readOnly = !casMe.canEditIfParent(params.oid, organisaatioNimiPolku);
     const handleLisaaUusiToimija = () => {
-        return history.push(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
+        return navigate(`/lomake/uusi?parentOid=${organisaatioBase ? organisaatioBase.oid : ROOT_OID}`);
     };
 
     const mapOrganisaatioToUi = (
@@ -632,7 +629,7 @@ const LomakeSivu = ({ match: { params }, history }: LomakeSivuProps) => {
                     <Muokattu oid={organisaatioBase.oid} muokattu={muokattu} />
                 </VersioContainer>
                 <ValiNappulat>
-                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => history.push('/organisaatiot')} />
+                    <LomakeButton label={'BUTTON_SULJE'} onClick={() => navigate('/organisaatiot')} />
                     {casMe.canHaveButton('BUTTON_TALLENNA', params.oid, organisaatioNimiPolku) && (
                         <LomakeButton label={'BUTTON_TALLENNA'} onClick={saveOrganisaatio} />
                     )}

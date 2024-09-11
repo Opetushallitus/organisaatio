@@ -8,7 +8,7 @@ import { getRyhmat } from '../../../api/ryhma';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import { Column, Row } from 'react-table';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../Loading/Loading';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
@@ -19,7 +19,7 @@ const Ryhmat = () => {
     const [ryhmaTyypitKoodisto] = useAtom(ryhmaTyypitKoodistoAtom);
     const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
     const [ryhmat, setRyhmat] = useState<Ryhma[]>([]);
-    const history = useHistory();
+    const navigate = useNavigate();
     const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
         () => [
             {
@@ -102,7 +102,7 @@ const Ryhmat = () => {
     }, []);
 
     const handleLisaaRyhma = () => {
-        return history.push('/ryhmat/uusi');
+        return navigate('/ryhmat/uusi');
     };
 
     if (ryhmat.length === 0) {

@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
@@ -31,27 +31,16 @@ const OrganisaatioApp: React.FC = () => {
                 <ThemeProvider theme={theme}>
                     <Notification />
                     <BrowserRouter basename={BASE_PATH}>
-                        <Switch>
-                            <Route path={'/organisaatiot'} exact component={TaulukkoSivu} />
-                            <Route
-                                path={'/osoitteet'}
-                                component={(props: RouteComponentProps) => (
-                                    <OsoitteetSivu {...props} frontProperties={frontProperties} />
-                                )}
-                            ></Route>
-                            <Route exact path={'/lomake/uusi'} component={UusiToimijaLomake} />
-                            <Route path={'/lomake/:oid'} component={LomakeSivu} />
-                            <Route path={'/ryhmat'} exact component={Ryhmat} />
-                            <Route
-                                exact
-                                path={'/ryhmat/uusi'}
-                                component={(props: RouteComponentProps) => <RyhmanMuokkaus {...props} isNew />}
-                            />
-                            <Route path={'/ryhmat/:oid'} component={RyhmanMuokkaus} />
-                            <Route path={'*'}>
-                                <VirheSivu>{'ERROR_404'}</VirheSivu>
-                            </Route>
-                        </Switch>
+                        <Routes>
+                            <Route path="organisaatiot" element={<TaulukkoSivu />} />
+                            <Route path="osoitteet/*" element={<OsoitteetSivu frontProperties={frontProperties} />} />
+                            <Route path="lomake/uusi" element={<UusiToimijaLomake />} />
+                            <Route path="lomake/:oid" element={<LomakeSivu />} />
+                            <Route path="ryhmat" element={<Ryhmat />} />
+                            <Route path="ryhmat/uusi" element={<RyhmanMuokkaus isNew />} />
+                            <Route path="ryhmat/:oid" element={<RyhmanMuokkaus />} />
+                            <Route path="*" element={<VirheSivu>{'ERROR_404'}</VirheSivu>} />
+                        </Routes>
                     </BrowserRouter>
                 </ThemeProvider>
             </React.Suspense>

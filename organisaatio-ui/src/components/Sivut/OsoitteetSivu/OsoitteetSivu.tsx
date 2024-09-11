@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, useHistory } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import {
     Hakutulos,
@@ -17,6 +17,7 @@ import { GenericOsoitepalveluError } from './GenericOsoitepalveluError';
 import { FrontProperties } from '../../../types/types';
 
 import styles from './OsoitteetSivu.module.css';
+import VirheSivu from '../VirheSivu/VirheSivu';
 
 type OsoitteetSivuProps = {
     frontProperties: FrontProperties;
@@ -24,7 +25,7 @@ type OsoitteetSivuProps = {
 
 const OsoitteetSivu = ({ frontProperties }: OsoitteetSivuProps) => {
     useTitle('Osoitepalvelu');
-    const history = useHistory();
+    const navigate = useNavigate();
     const hakuParametrit = useHakuParametrit();
     const kayttooikeusryhmat = useKayttooikeusryhmat(frontProperties);
     const [hakutulosCache, setHakutulosCache] = useState<Hakutulos>();
@@ -37,7 +38,7 @@ const OsoitteetSivu = ({ frontProperties }: OsoitteetSivuProps) => {
     }, [hakutulosCache]);
 
     function onSearchResult(hakutulos: Hakutulos) {
-        history.push(`/osoitteet/hakutulos/${hakutulos.id}`);
+        navigate(`/osoitteet/hakutulos/${hakutulos.id}`);
     }
 
     if (hakuParametrit.state === 'ERROR') {
@@ -58,52 +59,70 @@ const OsoitteetSivu = ({ frontProperties }: OsoitteetSivuProps) => {
 
     return (
         <div className={styles.OsoitteetSivu}>
-            <Route exact path={'/osoitteet'}>
-                <div className={styles.Header}>
-                    <div className={styles.ContentContainer}>
-                        <p>
-                            Osoitepalveluun kerätään yhteystietoja OPH:n muista palveluista. Yhteystietojen ylläpidosta
-                            ja ajantasaisuudesta huolehtivat koulutustoimijoiden virkailijat itse.
-                        </p>
-                    </div>
-                </div>
-                <div className={styles.MainContent}>
-                    <div className={styles.ContentContainer}>
-                        <SearchView
-                            hakuParametrit={hakuParametrit.value}
-                            kayttooikeusryhmat={kayttooikeusryhmat}
-                            onResult={onSearchResult}
-                            setSelection={setSelection}
-                            setHakutulosCache={setHakutulosCache}
-                        />
-                    </div>
-                </div>
-            </Route>
-            <Route exact path={'/osoitteet/hakutulos/:hakutulosId'}>
-                <div className={styles.MainContent}>
-                    <div className={styles.WideContentContainer}>
-                        <HakutulosView
-                            selection={selection}
-                            setSelection={setSelection}
-                            hakutulosCache={hakutulosCache}
-                        />
-                    </div>
-                </div>
-            </Route>
-            <Route exact path={'/osoitteet/hakutulos/:hakutulosId/viesti'}>
-                <div className={styles.MainContent}>
-                    <div className={styles.ContentContainer}>
-                        <ViestiView selection={selection} setSelection={setSelection} />
-                    </div>
-                </div>
-            </Route>
-            <Route exact path={'/osoitteet/viesti/:emailId'}>
-                <div className={styles.MainContent}>
-                    <div className={styles.ContentContainer}>
-                        <ViestiStatusView />
-                    </div>
-                </div>
-            </Route>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <>
+                            <div className={styles.Header}>
+                                <div className={styles.ContentContainer}>
+                                    <p>
+                                        Osoitepalveluun kerätään yhteystietoja OPH:n muista palveluista. Yhteystietojen
+                                        ylläpidosta ja ajantasaisuudesta huolehtivat koulutustoimijoiden virkailijat
+                                        itse.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className={styles.MainContent}>
+                                <div className={styles.ContentContainer}>
+                                    <SearchView
+                                        hakuParametrit={hakuParametrit.value}
+                                        kayttooikeusryhmat={kayttooikeusryhmat}
+                                        onResult={onSearchResult}
+                                        setSelection={setSelection}
+                                        setHakutulosCache={setHakutulosCache}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    }
+                />
+                <Route
+                    path="hakutulos/:hakutulosId"
+                    element={
+                        <div className={styles.MainContent}>
+                            <div className={styles.WideContentContainer}>
+                                <HakutulosView
+                                    selection={selection}
+                                    setSelection={setSelection}
+                                    hakutulosCache={hakutulosCache}
+                                />
+                            </div>
+                        </div>
+                    }
+                />
+                <Route
+                    path="hakutulos/:hakutulosId/viesti"
+                    element={
+                        <div className={styles.MainContent}>
+                            <div className={styles.ContentContainer}>
+                                <ViestiView selection={selection} setSelection={setSelection} />
+                            </div>
+                        </div>
+                    }
+                />
+                <Route
+                    path="viesti/:emailId"
+                    element={
+                        <div className={styles.MainContent}>
+                            <div className={styles.ContentContainer}>
+                                <ViestiStatusView />
+                            </div>
+                        </div>
+                    }
+                />
+                <Route path="*" element={<VirheSivu>{'ERROR_404'}</VirheSivu>} />
+            </Routes>
         </div>
     );
 };

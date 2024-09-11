@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 
@@ -21,7 +21,7 @@ type HakutulosViewProps = {
 };
 
 export function HakutulosView({ selection, setSelection, hakutulosCache }: HakutulosViewProps) {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
     const fetchedHakutulos = useHakutulos(hakutulosId);
@@ -42,14 +42,14 @@ export function HakutulosView({ selection, setSelection, hakutulosCache }: Hakut
 
     function navigateBackToSearch() {
         if (location.key) {
-            history.goBack();
+            navigate(-1);
         } else {
-            history.push('/osoitteet');
+            navigate('/osoitteet');
         }
     }
 
     function onWriteMail() {
-        history.push(`/osoitteet/hakutulos/${hakutulosId}/viesti`);
+        navigate(`/osoitteet/hakutulos/${hakutulosId}/viesti`);
     }
 
     if (fetchedHakutulos?.state === 'ERROR') {

@@ -5,7 +5,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LinklikeButton } from './LinklikeButton';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as sijaintiFilter from './SijaintiFilter';
 import { KoodiUri } from '../../../types/types';
 import * as jarjestamislupaFilter from './JarjestamislupaFilter';
@@ -294,13 +294,14 @@ export function SearchView({
 }
 
 function useUrlHashBackedState<T>(initialState: T): [T, (newState: T) => void] {
-    const history = useHistory();
-    const hasStateInUrl = history.location.hash !== '';
-    const trueInitialState = hasStateInUrl ? (parseHashState(history.location.hash) as T) : initialState;
+    const navigate = useNavigate();
+    const location = useLocation();
+    const hasStateInUrl = location.hash !== '';
+    const trueInitialState = hasStateInUrl ? (parseHashState(location.hash) as T) : initialState;
 
     const [state, setState] = useState<T>(trueInitialState);
     const setLocalStorageState: (newState) => void = useCallback((newState) => {
-        history.replace({ hash: stringifyHashState(newState) });
+        navigate({ hash: stringifyHashState(newState) }, { replace: true });
         setState(newState);
     }, []);
     return [state, setLocalStorageState];

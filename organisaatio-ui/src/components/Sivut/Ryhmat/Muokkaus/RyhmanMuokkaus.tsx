@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { deleteRyhma, getRyhma, postRyhma, putRyhma } from '../../../../api/ryhma';
 import { NewRyhma, Ryhma } from '../../../../types/types';
@@ -10,6 +9,7 @@ import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { formatUiDateStrToApi } from '../../../../tools/mappers';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 export type RyhmanMuokausProps = {
     oid?: string;
@@ -29,22 +29,25 @@ const emptyRyhma: Partial<NewRyhma> = {
     tyypit: ['Ryhma'],
 };
 
-const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuokausProps> & { isNew?: boolean }) => {
+const RyhmanMuokkaus = ({ isNew }: { isNew?: boolean }) => {
+    const location = useLocation();
+    const params = useParams();
+    const navigate = useNavigate();
     const [i18n] = useAtom(languageAtom);
     const [ryhma, setRyhma] = useState<Ryhma>();
-    const onUusi = isNew || history.location.pathname.includes('uusi');
+    const onUusi = isNew || location.pathname.includes('uusi');
 
     useEffect(() => {
         async function fetch(oid: string) {
             const ryhma = await getRyhma(oid);
             setRyhma(ryhma as Ryhma);
         }
-        if (match.params.oid && !onUusi) {
-            fetch(match.params.oid);
+        if (params.oid && !onUusi) {
+            fetch(params.oid);
         } else {
             setRyhma({ ...(emptyRyhma as Ryhma) });
         }
-    }, [onUusi, match.params.oid]);
+    }, [onUusi, params.oid]);
 
     if (!ryhma) {
         return <Spin />;
@@ -73,17 +76,17 @@ const RyhmanMuokkaus = ({ match, history, isNew }: RouteComponentProps<RyhmanMuo
                 kayttoryhmat: kayttoryhmat.map((a: { value: string; versio: number }) => `${a.value}#${a.versio}`),
             };
             onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
-            history.push('/ryhmat');
+            navigate('/ryhmat');
         }
     };
 
     const handlePeruuta = () => {
-        history.push('/ryhmat');
+        navigate('/ryhmat');
     };
     const handlePoista = async () => {
         const r = global.window.confirm(i18n.translate('RYHMAT_POISTO_VARMISTUSTEKSTI'));
         r && (await deleteRyhma(ryhma));
-        history.push('/ryhmat');
+        navigate('/ryhmat');
     };
 
     const handlePassivoi = async () => {

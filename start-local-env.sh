@@ -30,7 +30,7 @@ function main {
   tmux splitw -h
   tmux send-keys "$repo/scripts/run-organisaatio-service.sh" C-m
 
-  open "http://localhost:3003/organisaatiot"
+  open "http://localhost:3003/organisaatio-service/organisaatiot"
 
   tmux attach-session -t "$session"
 }

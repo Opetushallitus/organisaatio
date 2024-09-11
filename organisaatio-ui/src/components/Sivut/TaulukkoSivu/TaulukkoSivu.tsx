@@ -7,10 +7,12 @@ import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/Or
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
+import { useNavigate } from 'react-router-dom';
 
-const TaulukkoSivu = (props: { history: string[] }) => {
+const TaulukkoSivu = () => {
+    const navigate = useNavigate();
     const handleLisaaUusiToimija = () => {
-        return props.history.push(`/lomake/uusi?parentOid=${ROOT_OID}`);
+        return navigate(`/lomake/uusi?parentOid=${ROOT_OID}`);
     };
     const [i18n] = useAtom(languageAtom);
     const [casMe] = useAtom(casMeAtom);

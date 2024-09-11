@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 import { SerializedEditorState } from 'lexical';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import FormLabel from '@opetushallitus/virkailija-ui-components/FormLabel';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
@@ -63,7 +63,7 @@ type UploadedFile = {
 
 export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
     const { hakutulosId } = useParams<{ hakutulosId: string }>();
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const [sendError, setSendError] = useState<boolean>(false);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -126,7 +126,7 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
             };
             setIsSending(true);
             const response = await sendEmail(hakutulosId, request);
-            history.push(`/osoitteet/viesti/${response.emailId}`);
+            navigate(`/osoitteet/viesti/${response.emailId}`);
         } catch (e) {
             console.error(e);
             setIsSending(false);
@@ -209,9 +209,9 @@ export const ViestiView = ({ selection, setSelection }: ViestiViewProps) => {
 
     function navigateBackToSearch() {
         if (location.key) {
-            history.goBack();
+            navigate(-1);
         } else {
-            history.push(`/osoitteet/hakutulos/${hakutulosId}`);
+            navigate(`/osoitteet/hakutulos/${hakutulosId}`);
         }
     }
 

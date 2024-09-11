@@ -8,7 +8,7 @@ import { rakenne } from '../../../../contexts/constants';
 import { Nimi, ParentTiedot, Perustiedot } from '../../../../types/types';
 import PerustietoLomake from './PerustietoLomake/PerustietoLomake';
 import YhteystietoLomake from '../Koulutustoimija/YhteystietoLomake/YhteystietoLomake';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { createOrganisaatio, readOrganisaatio } from '../../../../api/organisaatio';
@@ -39,12 +39,13 @@ import { languageAtom } from '../../../../api/lokalisaatio';
 const PERUSTIEDOTUUID = 'perustietolomake';
 const YHTEYSTIEDOTUUID = 'yhteystietolomake';
 
-const UusiToimijaLomake = (props: { history: string[]; location: { search: string } }) => {
-    const history = useHistory();
+const UusiToimijaLomake = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [i18n] = useAtom(languageAtom);
     useAtom(koodistotAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
-    const parentOid = resolveParentOidByQuery(props.location.search);
+    const parentOid = resolveParentOidByQuery(location.search);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
     const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
@@ -126,7 +127,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
                     );
                     const savedOrganisaatio = await createOrganisaatio(apiOrganisaatio);
                     if (savedOrganisaatio) {
-                        props.history.push(`/lomake/${savedOrganisaatio.oid}`);
+                        navigate(`/lomake/${savedOrganisaatio.oid}`);
                     }
                 } finally {
                     setIsLoading(false);
@@ -183,7 +184,7 @@ const UusiToimijaLomake = (props: { history: string[]; location: { search: strin
     function handleCancel() {
         resetPerustiedot();
         resetYhteystiedot();
-        history.goBack();
+        navigate(-1);
     }
 
     return (
