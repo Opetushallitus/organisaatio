@@ -368,7 +368,7 @@ public class OsoitteetResource {
         createCell(header, col++, "Postitoimipaikka", style);
         createCell(header, col++, "Käyntiosoite", style);
         createCell(header, col++, "Käyntiosoitteen postinumero", style);
-        createCell(header, col++, "Käyntiosoitteen kunta", style);
+        createCell(header, col++, "Käyntiosoitteen postitoimipaikka", style);
 
         for (Integer row = 1; row <= tulos.size(); row++) {
             OrganisaatioHakutulosRow h = tulos.get(row - 1);
