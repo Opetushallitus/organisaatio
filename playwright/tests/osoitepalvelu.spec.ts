@@ -555,7 +555,7 @@ test.describe("Osoitepalvelu", () => {
           Postitoimipaikka: "DIGITOINTI",
           "Käyntiosoitteen postinumero": "00009",
           Käyntiosoite: "Testikuja 5",
-          "Käyntiosoitteen kunta": "DIGITOINTI",
+          "Käyntiosoitteen postitoimipaikka": "DIGITOINTI",
         },
         {
           "Organisaation nimi": "Mustikkalan testi yhdistys",
@@ -572,7 +572,7 @@ test.describe("Osoitepalvelu", () => {
           Postitoimipaikka: "DIGITOINTI",
           "Käyntiosoitteen postinumero": "00009",
           Käyntiosoite: "Testikuja 5",
-          "Käyntiosoitteen kunta": "DIGITOINTI",
+          "Käyntiosoitteen postitoimipaikka": "DIGITOINTI",
         },
         {
           "Organisaation nimi": "Testi Koulutuskuntayhtymä Puolukka",
@@ -589,7 +589,7 @@ test.describe("Osoitepalvelu", () => {
           Postitoimipaikka: "DIGITOINTI",
           "Käyntiosoitteen postinumero": "00009",
           Käyntiosoite: "Testikuja 5",
-          "Käyntiosoitteen kunta": "DIGITOINTI",
+          "Käyntiosoitteen postitoimipaikka": "DIGITOINTI",
         },
       ]);
     });
@@ -655,7 +655,7 @@ test.describe("Osoitepalvelu", () => {
           Postitoimipaikka: "DIGITOINTI",
           "Käyntiosoitteen postinumero": "00009",
           Käyntiosoite: "Testikuja 5",
-          "Käyntiosoitteen kunta": "DIGITOINTI",
+          "Käyntiosoitteen postitoimipaikka": "DIGITOINTI",
         },
       ]);
     });
@@ -1090,11 +1090,13 @@ test.describe("Osoitepalvelu", () => {
       ).not.toBeVisible();
     });
 
-    test("accepts attachments with unwanted characters in name", async ({ page }) => {
+    test("accepts attachments with unwanted characters in name", async ({
+      page,
+    }) => {
       const kirjoitaViestiForm = new ViestiView(page);
       await uploadFile(page, kirjoitaViestiForm.fileUploadButton, "ääää.pdf");
       await expect(page.getByLabel("Poista liite ääää.pdf")).toBeVisible();
-    })
+    });
 
     test("prevents adding too large files", async ({ page }) => {
       const kirjoitaViestiForm = new ViestiView(page);
