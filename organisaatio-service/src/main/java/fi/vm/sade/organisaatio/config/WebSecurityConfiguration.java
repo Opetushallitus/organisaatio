@@ -129,7 +129,6 @@ public class WebSecurityConfiguration {
                     .requestMatchers("/api/**").permitAll()
                     .requestMatchers("/rest/**").permitAll()
                     .requestMatchers("/mock/**").permitAll()
-                    .requestMatchers("/static/**").permitAll()
                     .anyRequest().authenticated())
             .addFilterAt(casAuthenticationFilter, CasAuthenticationFilter.class)
             .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
