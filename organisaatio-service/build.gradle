@@ -133,8 +133,8 @@ jacocoTestReport {
     }
 }
 
-bootJar {
-    from ('../organisaatio-ui/build') {
-        into 'META-INF/resources'
+processResources {
+    from ('../organisaatio-ui/build/') {
+        into 'public'
     }
 }
