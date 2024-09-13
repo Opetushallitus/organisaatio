@@ -76,13 +76,9 @@ module.exports = function () {
         output: {
             path: path.resolve(__dirname, 'build'),
             pathinfo: isEnvDevelopment,
-            filename: isEnvProduction
-                ? 'static/js/[name].[contenthash:8].js'
-                : isEnvDevelopment && 'static/js/[name].bundle.js',
-            chunkFilename: isEnvProduction
-                ? 'static/js/[name].[contenthash:8].chunk.js'
-                : isEnvDevelopment && 'static/js/[name].chunk.js',
-            assetModuleFilename: 'static/media/[name].[hash][ext]',
+            filename: isEnvProduction ? '[name].[contenthash:8].js' : isEnvDevelopment && '[name].bundle.js',
+            chunkFilename: isEnvProduction ? '[name].[contenthash:8].chunk.js' : isEnvDevelopment && '[name].chunk.js',
+            assetModuleFilename: '[name].[hash][ext]',
             publicPath: '/organisaatio-service/',
             devtoolModuleFilenameTemplate: isEnvProduction
                 ? (info) => path.relative(path.resolve(__dirname, 'src'), info.absoluteResourcePath).replace(/\\/g, '/')
@@ -182,8 +178,8 @@ module.exports = function () {
             }),
             isEnvProduction &&
                 new MiniCssExtractPlugin({
-                    filename: 'static/css/[name].[contenthash:8].css',
-                    chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+                    filename: '[name].[contenthash:8].css',
+                    chunkFilename: '[name].[contenthash:8].chunk.css',
                 }),
             new CopyWebpackPlugin({
                 patterns: [{ from: path.resolve(__dirname, 'public', 'favicon.ico') }],
