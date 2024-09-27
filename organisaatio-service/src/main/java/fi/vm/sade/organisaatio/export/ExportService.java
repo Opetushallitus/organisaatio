@@ -172,6 +172,9 @@ public class ExportService {
     }
 
     public void generateCsvExportsV3() {
+        exportQueryToS3(V3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
+        exportQueryToS3(V3_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
+        exportQueryToS3(V3_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
         exportQueryToS3(V3_PREFIX + "/csv/ryhma.csv", RYHMA_QUERY);
     }
 
@@ -227,6 +230,46 @@ public class ExportService {
     }
 
     List<File> generateJsonExportsV3() throws IOException {
+        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, V3_PREFIX + "/json/organisaatio.json", unchecked(rs ->
+                new ExportedOrganisaatio(
+                        rs.getString("organisaatio_oid"),
+                        rs.getString("organisaatiotyypit"),
+                        rs.getString("oppilaitosnumero"),
+                        rs.getString("kotipaikka"),
+                        rs.getString("yritysmuoto"),
+                        rs.getString("y_tunnus"),
+                        rs.getString("alkupvm"),
+                        rs.getString("lakkautuspvm"),
+                        rs.getString("tuontipvm"),
+                        rs.getString("paivityspvm"),
+                        rs.getString("nimi_fi"),
+                        rs.getString("nimi_sv"),
+                        rs.getString("oppilaitostyyppi"),
+                        rs.getString("opetuskielet"),
+                        rs.getString("grandparent_oid"),
+                        rs.getString("parent_oid"),
+                        rs.getString("tila")
+                )
+        ));
+        var osoiteFile = exportQueryToS3AsJson(OSOITE_QUERY, V3_PREFIX + "/json/osoite.json", unchecked(rs ->
+                new ExportedOsoite(
+                        rs.getString("organisaatio_oid"),
+                        rs.getString("osoitetyyppi"),
+                        rs.getString("osoite"),
+                        rs.getString("postinumero"),
+                        rs.getString("postitoimipaikka"),
+                        rs.getString("kieli")
+                )
+        ));
+        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, V3_PREFIX + "/json/organisaatiosuhde.json", unchecked(rs ->
+                new ExportedOrganisaatioSuhde(
+                        rs.getString("suhdetyyppi"),
+                        rs.getString("parent_oid"),
+                        rs.getString("child_oid"),
+                        rs.getString("alkupvm"),
+                        rs.getString("loppupvm")
+                )
+        ));
         var ryhmaFile = exportQueryToS3AsJson(RYHMA_QUERY, V3_PREFIX + "/json/ryhma.json", unchecked(rs ->
                 new ExportedRyhma(
                         rs.getString("ryhma_oid"),
@@ -235,7 +278,7 @@ public class ExportService {
                         Optional.ofNullable(rs.getString("nimi_en"))
                 )
         ));
-        return List.of(ryhmaFile);
+        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile, ryhmaFile);
     }
 
     private <T> File exportQueryToS3AsJson(String query, String objectKey, Function<ResultSet, T> mapper) throws IOException {
@@ -312,10 +355,16 @@ public class ExportService {
     private void copyExportFilesV3() throws IOException {
         log.info("Copying v3 export files to Lampi");
         var csvManifest = new ArrayList<ExportManifest.ExportFileDetails>();
+        csvManifest.add(copyFileToLampi(V3_PREFIX + "/csv/organisaatio.csv"));
+        csvManifest.add(copyFileToLampi(V3_PREFIX + "/csv/osoite.csv"));
+        csvManifest.add(copyFileToLampi(V3_PREFIX + "/csv/organisaatiosuhde.csv"));
         csvManifest.add(copyFileToLampi(V3_PREFIX + "/csv/ryhma.csv"));
         writeManifest(V3_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
 
         var jsonManifest = new ArrayList<ExportManifest.ExportFileDetails>();
+        jsonManifest.add(copyFileToLampi(V3_PREFIX + "/json/organisaatio.json"));
+        jsonManifest.add(copyFileToLampi(V3_PREFIX + "/json/osoite.json"));
+        jsonManifest.add(copyFileToLampi(V3_PREFIX + "/json/organisaatiosuhde.json"));
         jsonManifest.add(copyFileToLampi(V3_PREFIX + "/json/ryhma.json"));
         writeManifest(V3_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
     }
