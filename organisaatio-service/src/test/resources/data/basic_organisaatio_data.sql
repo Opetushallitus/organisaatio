@@ -152,7 +152,11 @@ INSERT INTO YHTEYSTIETO(DTYPE, ID, VERSION, KIELI, YHTEYSTIETOOID, COORDINATETYP
 ('Osoite', 50, 0, 'kieli_fi#1', '1674212896.872914' , NULL, NULL, NULL, NULL, NULL, NULL, 'Haapasaarentie 7', 'kaynti' , 'posti_00960' , 'Helsinki' , NULL, NULL, NULL, NULL, NULL, 13),
 ('Email', 51, 0, 'kieli_fi#1', '1674212904.18573', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testiorganisaatio13@example.com', NULL, 13),
 ('Osoite', 52, 0, 'kieli_fi#1', '1674212910.814504', NULL, NULL, NULL, NULL, NULL, NULL, 'Haapasaarentie 7', 'posti' , 'posti_00960' , 'Helsinki' , NULL, NULL, NULL, NULL, NULL, 13),
-('Puhelinnumero', 53, 0, 'kieli_fi#1', '1674212916.068001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0400123456' , 'puhelin' , NULL, NULL, 13);
+('Puhelinnumero', 53, 0, 'kieli_fi#1', '1674212916.068001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0400123456' , 'puhelin' , NULL, NULL, 13),
+('Osoite', 54, 0, 'kieli_sv#1', '1674212916.132425', NULL, NULL, NULL, NULL, NULL, NULL, 'Örkkiniityntie 1', 'kaynti' , 'posti_02970' , 'Helsinki' , NULL, NULL, NULL, NULL, NULL, 13),
+('Email', 55, 0, 'kieli_sv#1', '1674212916.135125', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'testiorganisaatio13b@bexample.com', NULL, 13),
+('Osoite', 56, 0, 'kieli_sv#1', '1674212916.3465346', NULL, NULL, NULL, NULL, NULL, NULL, 'Örkkiniityntie 1', 'posti' , 'posti_02970' , 'Helsinki' , NULL, NULL, NULL, NULL, NULL, 13),
+('Puhelinnumero', 57, 0, 'kieli_sv#1', '1674212916.456323', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0400123456' , 'puhelin' , NULL, NULL, 13);
 
 INSERT INTO ORGANISAATIO_NIMI(ID, VERSION, ALKUPVM, PAIVITTAJA, NIMI_MKT, ORGANISAATIO_ID) VALUES
 (1, 0, DATE '1970-01-01', NULL, 1, 1),

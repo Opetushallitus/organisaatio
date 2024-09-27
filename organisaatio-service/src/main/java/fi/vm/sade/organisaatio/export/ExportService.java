@@ -84,6 +84,10 @@ public class ExportService {
                FROM organisaatio_parent_oids
                WHERE organisaatio_id = o.id
                AND parent_position = 0) AS parent_oid,
+              (SELECT string_agg(email, ',')
+               FROM yhteystieto
+               WHERE organisaatio_id = o.id AND yhteystieto.dtype = 'Email'
+              ) AS email,
               CASE
                 WHEN o.organisaatiopoistettu = true THEN 'POISTETTU'
                 WHEN current_date < o.alkupvm THEN 'SUUNNITELTU'
@@ -161,6 +165,7 @@ public class ExportService {
     }
 
     private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila FROM export.organisaatio";
+    private static final String ORGANISAATIO_V3_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila, email FROM export.organisaatio";
     private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli FROM export.osoite";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid, alkupvm, loppupvm FROM export.organisaatiosuhde";
     private static final String RYHMA_QUERY = "SELECT ryhma_oid, nimi_fi, nimi_sv, nimi_en FROM export.ryhma";
@@ -172,7 +177,7 @@ public class ExportService {
     }
 
     public void generateCsvExportsV3() {
-        exportQueryToS3(V3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
+        exportQueryToS3(V3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_V3_QUERY);
         exportQueryToS3(V3_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
         exportQueryToS3(V3_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
         exportQueryToS3(V3_PREFIX + "/csv/ryhma.csv", RYHMA_QUERY);
@@ -230,8 +235,8 @@ public class ExportService {
     }
 
     List<File> generateJsonExportsV3() throws IOException {
-        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, V3_PREFIX + "/json/organisaatio.json", unchecked(rs ->
-                new ExportedOrganisaatio(
+        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_V3_QUERY, V3_PREFIX + "/json/organisaatio.json", unchecked(rs ->
+                new ExportedOrganisaatioV3(
                         rs.getString("organisaatio_oid"),
                         rs.getString("organisaatiotyypit"),
                         rs.getString("oppilaitosnumero"),
@@ -248,7 +253,8 @@ public class ExportService {
                         rs.getString("opetuskielet"),
                         rs.getString("grandparent_oid"),
                         rs.getString("parent_oid"),
-                        rs.getString("tila")
+                        rs.getString("tila"),
+                        rs.getString("email")
                 )
         ));
         var osoiteFile = exportQueryToS3AsJson(OSOITE_QUERY, V3_PREFIX + "/json/osoite.json", unchecked(rs ->
@@ -433,6 +439,26 @@ record ExportedOrganisaatio(String organisaatio_oid,
                             String grandparent_oid,
                             String parent_oid,
                             String tila) {
+}
+
+record ExportedOrganisaatioV3(String organisaatio_oid,
+                            String organisaatiotyypit,
+                            String oppilaitosnumero,
+                            String kotipaikka,
+                            String yritysmuoto,
+                            String y_tunnus,
+                            String alkupvm,
+                            String lakkautuspvm,
+                            String tuontipvm,
+                            String paivityspvm,
+                            String nimi_fi,
+                            String nimi_sv,
+                            String oppilaitostyyppi,
+                            String opetuskielet,
+                            String grandparent_oid,
+                            String parent_oid,
+                            String tila,
+                            String email) {
 }
 
 record ExportedOsoite(String organisaatio_oid,

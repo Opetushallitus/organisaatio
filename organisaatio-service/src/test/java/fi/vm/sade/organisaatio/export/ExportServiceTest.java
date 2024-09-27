@@ -22,13 +22,15 @@ class ExportServiceTest {
         exportService.createSchema();
 
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatio", Long.class)).isEqualTo(13L);
-        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(19L);
+        assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.osoite", Long.class)).isEqualTo(21L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.organisaatiosuhde", Long.class)).isEqualTo(11L);
         assertThat(jdbcTemplate.queryForObject("SELECT count(*) FROM export.ryhma", Long.class)).isEqualTo(0L);
 
         assertThat(getParentOid("1.2.2004.2")).isEqualTo("1.2.2004.1");
         assertThat(getParentOid("1.2.2004.1")).isEqualTo("1.2.246.562.24.00000000001");
         assertThat(getParentOid("1.2.246.562.24.00000000001")).isNull();
+        assertThat(getEmail("1.2.2004.1")).isEqualTo("testi@oph.fi");
+        assertThat(getEmail("1.2.8001.2")).isEqualTo("testiorganisaatio13@example.com,testiorganisaatio13b@bexample.com");
     }
 
     @Test
@@ -46,6 +48,10 @@ class ExportServiceTest {
         assertThat(ryhma.nimi_fi()).isEqualTo("ryhma");
         assertThat(ryhma.nimi_sv()).isNull();
         assertThat(ryhma.nimi_en()).isNull();
+    }
+
+    private String getEmail(String oid) {
+        return jdbcTemplate.queryForObject("SELECT email FROM export.organisaatio WHERE organisaatio_oid = ?", String.class, oid);
     }
 
     private String getParentOid(String oid) {

@@ -181,7 +181,11 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "{\"kieli\":\"kieli_fi#1\",\"yhteystietoOid\":\"1674212904.18573\",\"id\":\"51\",\"email\":\"testiorganisaatio13@example.com\"}," +
                                 "{\"osoiteTyyppi\":\"posti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212910.814504\",\"id\":\"52\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}," +
                                 "{\"kieli\":\"kieli_fi#1\",\"numero\":\"0400123456\",\"tyyppi\":\"puhelin\",\"yhteystietoOid\":\"1674212916.068001\",\"id\":\"53\"}," +
-                                "{\"osoiteTyyppi\":\"kaynti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212896.872914\",\"id\":\"50\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}" +
+                                "{\"osoiteTyyppi\":\"kaynti\",\"kieli\":\"kieli_fi#1\",\"postinumeroUri\":\"posti_00960\",\"yhteystietoOid\":\"1674212896.872914\",\"id\":\"50\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Haapasaarentie 7\"}," +
+                                "{\"kieli\":\"kieli_sv#1\",\"yhteystietoOid\":\"1674212916.135125\",\"id\":\"55\",\"email\":\"testiorganisaatio13b@bexample.com\"}," +
+                                "{\"osoiteTyyppi\":\"posti\",\"kieli\":\"kieli_sv#1\",\"postinumeroUri\":\"posti_02970\",\"yhteystietoOid\":\"1674212916.3465346\",\"id\":\"56\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Örkkiniityntie 1\"}," +
+                                "{\"kieli\":\"kieli_sv#1\",\"numero\":\"0400123456\",\"tyyppi\":\"puhelin\",\"yhteystietoOid\":\"1674212916.456323\",\"id\":\"57\"}," +
+                                "{\"osoiteTyyppi\":\"kaynti\",\"kieli\":\"kieli_sv#1\",\"postinumeroUri\":\"posti_02970\",\"yhteystietoOid\":\"1674212916.132425\",\"id\":\"54\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Örkkiniityntie 1\"}" +
                                 "]" +
                                 "}]", false));
     }
