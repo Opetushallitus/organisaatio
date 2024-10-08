@@ -1,6 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
+import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.properties.OphProperties;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ProxyTicketValidator;
@@ -36,11 +37,9 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     private static final String VIRKAILIJA_PATH_CLOB = "/virkailija/**";
 
     private final OphProperties ophProperties;
-    private final UserDetailsService userDetailsService;
 
-    VirkailijaWebSecurityConfiguration(OphProperties ophProperties, UserDetailsService userDetailsService) {
+    VirkailijaWebSecurityConfiguration(OphProperties ophProperties) {
         this.ophProperties = ophProperties;
-        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class VirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAda
     @Bean
     public AuthenticationProvider virkailijaAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setUserDetailsService(userDetailsService);
+        casAuthenticationProvider.setAuthenticationUserDetailsService(new OphUserDetailsServiceImpl());
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
         casAuthenticationProvider.setKey("varda-rekisterointi");
