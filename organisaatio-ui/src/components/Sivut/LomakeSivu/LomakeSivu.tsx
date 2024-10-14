@@ -554,6 +554,7 @@ const LomakeSivu = () => {
                                 ...organisaatioBase,
                                 tarkastusPvm: await setTarkastusPvm(organisaatioBase.oid),
                             });
+                            setMuokattu(muokattu + 1);
                         }}
                     />
                     {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&

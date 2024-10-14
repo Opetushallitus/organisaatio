@@ -907,6 +907,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     public Timestamp updateTarkastusPvm(String oid) {
         Organisaatio org = getOrganisaatio(oid);
         org.setTarkastusPvm(new Date());
+        setPaivittajaData(org);
         return new Timestamp(org.getTarkastusPvm().getTime());
     }
 
