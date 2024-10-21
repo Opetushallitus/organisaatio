@@ -11,6 +11,7 @@ function main {
 
   cd "$repo/playwright"
   npm ci
+  npx playwright install --with-deps
   npx playwright test "$@"
 }
 
