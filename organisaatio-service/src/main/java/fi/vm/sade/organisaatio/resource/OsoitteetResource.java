@@ -556,13 +556,34 @@ public class OsoitteetResource {
             return new HashMap<>();
 
         String sql = """
-                SELECT organisaatio.id, monikielinenteksti_values.value FROM organisaatio
-                JOIN monikielinenteksti_values ON monikielinenteksti_values.id = organisaatio.nimi_mkt
-                WHERE organisaatio.id IN (:ids) AND monikielinenteksti_values.key = :kieli
+                SELECT organisaatio.id, organisaatio_nimi.value AS value
+                FROM organisaatio
+                LEFT JOIN organisaatio_tyypit ON organisaatio_tyypit.organisaatio_id = organisaatio.id
+                LEFT JOIN monikielinenteksti_values AS organisaatio_nimi
+                    ON organisaatio.nimi_mkt = organisaatio_nimi.id
+                    AND organisaatio_nimi.key = :kieli
+                WHERE organisaatio_tyypit.tyypit != :toimipiste_tyyppi
+                AND organisaatio.id IN (:ids)
+                UNION
+                SELECT toimipiste.id, CONCAT(oppilaitos_nimi.value, ', ', toimipiste_nimi.value) AS value
+                FROM organisaatio AS toimipiste
+                LEFT JOIN organisaatio_tyypit ON organisaatio_tyypit.organisaatio_id = toimipiste.id
+                LEFT JOIN organisaatio_parent_oids opo
+                    ON opo.organisaatio_id = toimipiste.id
+                    AND opo.parent_position = 0
+                LEFT JOIN organisaatio AS oppilaitos ON opo.parent_oid = oppilaitos.oid
+                LEFT JOIN monikielinenteksti_values AS toimipiste_nimi
+                    ON toimipiste.nimi_mkt = toimipiste_nimi.id
+                    AND toimipiste_nimi.key = :kieli
+                LEFT JOIN monikielinenteksti_values AS oppilaitos_nimi
+                    ON oppilaitos.nimi_mkt = oppilaitos_nimi.id
+                    AND oppilaitos_nimi.key = :kieli
+                WHERE organisaatio_tyypit.tyypit = :toimipiste_tyyppi
+                AND toimipiste.id IN (:ids)
                 """;
         try (Stream<Map.Entry<Long, String>> stream = jdbcTemplate.queryForStream(
                 sql,
-                Map.of("ids", organisaatioIds, "kieli", kieli),
+                Map.of("ids", organisaatioIds, "kieli", kieli, "toimipiste_tyyppi", OrganisaatioTyyppi.TOIMIPISTE.koodiValue()),
                 (rs, rowNum) -> Map.entry(rs.getLong("id"), rs.getString("value"))
         )) {
             return stream.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));

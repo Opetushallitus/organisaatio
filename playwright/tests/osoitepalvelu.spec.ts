@@ -718,7 +718,7 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await expect(
-        page.getByText("Ammattiopisto Puolukka, testi toimipiste")
+        page.getByText("Testi Ammattiopisto Puolukka, Ammattiopisto Puolukka, testi toimipiste")
       ).toBeVisible();
     });
 
