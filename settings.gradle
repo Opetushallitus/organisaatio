@@ -1,7 +1,0 @@
-
-rootProject.name = 'fi.vm.sade.organisaatio'
-include 'ytj-client:ytj-generated-model'
-include 'ytj-client:ytj-api'
-include 'ytj-client:ytj-webservice'
-include 'organisaatio-api'
-include 'organisaatio-service'
