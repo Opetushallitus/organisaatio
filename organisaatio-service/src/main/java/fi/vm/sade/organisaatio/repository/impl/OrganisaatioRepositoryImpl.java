@@ -346,12 +346,6 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
     public Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvmLocalDate, Collection<String> oids, long limit) {
         java.sql.Date voimassaPvm = java.sql.Date.valueOf(voimassaPvmLocalDate);
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        QOrganisaatioSahkoposti qOrganisaatioSahkoposti = QOrganisaatioSahkoposti.organisaatioSahkoposti;
-        JPQLQuery<Organisaatio> sahkopostiLahetettySubQuery = JPAExpressions
-                .selectDistinct(qOrganisaatioSahkoposti.organisaatio)
-                .from(qOrganisaatioSahkoposti)
-                .where(qOrganisaatioSahkoposti.tyyppi.eq(OrganisaatioSahkoposti.Tyyppi.VANHENTUNEET_TIEDOT))
-                .where(qOrganisaatioSahkoposti.aikaleima.after(tarkastusPvm));
         return jpa()
                 .from(qOrganisaatio)
                 .where(qOrganisaatio.organisaatioPoistettu.isFalse())
@@ -359,7 +353,6 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
                 .where(anyOf(qOrganisaatio.lakkautusPvm.after(voimassaPvm), qOrganisaatio.lakkautusPvm.isNull()))
                 .where(qOrganisaatio.oid.in(oids))
                 .where(anyOf(qOrganisaatio.tarkastusPvm.before(tarkastusPvm), qOrganisaatio.tarkastusPvm.isNull()))
-                .where(qOrganisaatio.notIn(sahkopostiLahetettySubQuery))
                 .select(qOrganisaatio)
                 .distinct()
                 .orderBy(qOrganisaatio.tarkastusPvm.asc().nullsFirst(), qOrganisaatio.id.asc())

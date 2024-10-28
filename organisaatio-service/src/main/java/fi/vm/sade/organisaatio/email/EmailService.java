@@ -96,7 +96,7 @@ public class EmailService {
                 .replyTo(email.getReplyTo())
                 .lahettavanVirkailijanOid(email.getVirkailijaOid())
                 .otsikko(email.getSubject())
-                .lahettavaPalvelu("osoitepalvelu")
+                .lahettavaPalvelu("organisaatiopalvelu")
                 .prioriteetti(Prioriteetti.normaali)
                 .sailytysaika(SAILYTYSAIKA)
                 .build();

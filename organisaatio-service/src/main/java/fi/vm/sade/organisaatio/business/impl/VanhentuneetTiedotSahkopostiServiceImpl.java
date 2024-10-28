@@ -1,20 +1,15 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.organisaatio.business.OrganisaatioViestinta;
 import fi.vm.sade.organisaatio.business.VanhentuneetTiedotSahkopostiService;
 import fi.vm.sade.organisaatio.client.KayttooikeusClient;
 import fi.vm.sade.organisaatio.dto.HenkiloOrganisaatioCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
+import fi.vm.sade.organisaatio.email.EmailService;
+import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import fi.vm.sade.organisaatio.model.OrganisaatioSahkoposti;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.organisaatio.repository.OrganisaatioSahkopostiRepository;
-import fi.vm.sade.organisaatio.service.util.ViestintaUtil;
 import fi.vm.sade.properties.OphProperties;
-import fi.vm.sade.organisaatio.model.email.EmailData;
-import fi.vm.sade.organisaatio.model.email.EmailMessage;
-import fi.vm.sade.organisaatio.model.email.EmailRecipient;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -43,26 +38,22 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
     private static final long MAKSIMIMAARA = 20;
 
     private final KayttooikeusClient kayttooikeusClient;
-    private final OrganisaatioViestinta organisaatioViestinta;
+    private final EmailService emailService;
     private final OrganisaatioRepository organisaatioRepository;
-    private final OrganisaatioSahkopostiRepository organisaatioSahkopostiRepository;
     private final MessageSource messageSource;
     private final Configuration freemarker;
     private final OphProperties properties;
 
     public VanhentuneetTiedotSahkopostiServiceImpl(KayttooikeusClient kayttooikeusClient,
-                                                   OrganisaatioViestinta organisaatioViestinta,
+                                                   EmailService emailService,
                                                    OrganisaatioRepository organisaatioRepository,
-                                                   OrganisaatioSahkopostiRepository organisaatioSahkopostiRepository,
                                                    MessageSource messageSource,
                                                    Configuration freemarker,
                                                    OphProperties properties) {
         this.kayttooikeusClient = kayttooikeusClient;
-        this.organisaatioViestinta = organisaatioViestinta;
+        this.emailService = emailService;
         this.organisaatioRepository = organisaatioRepository;
-        this.organisaatioSahkopostiRepository = organisaatioSahkopostiRepository;
         this.messageSource = messageSource;
-
         this.freemarker = freemarker;
         this.properties = properties;
     }
@@ -92,7 +83,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
         haeVirkailijat(organisaatio.getOid()).stream()
                 .filter(virkailija -> virkailija.getSahkoposti() != null)
                 .collect(groupingBy(VanhentuneetTiedotSahkopostiServiceImpl::getAsiointikieli,
-                        mapping(VirkailijaDto::getSahkoposti, toSet())))
+                        mapping(VirkailijaDto::getSahkoposti, toList())))
                 .forEach((kieli, sahkopostiosoitteet) -> lahetaSahkoposti(organisaatio, kieli, sahkopostiosoitteet));
     }
 
@@ -110,37 +101,23 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
         return Optional.ofNullable(virkailija.getAsiointikieli()).filter(TUETUT_KIELET::contains).orElse(OLETUSKIELI);
     }
 
-    private void lahetaSahkoposti(Organisaatio organisaatio, String kieli, Collection<String> sahkopostiosoitteet) {
-        Locale locale = new Locale(kieli);
-
-        EmailMessage message = new EmailMessage();
-        message.setCallingProcess(ViestintaUtil.CALLING_PROCESS);
-        message.setLanguageCode(kieli);
+    private void lahetaSahkoposti(Organisaatio organisaatio, String kieli, List<String> sahkopostiosoitteet) {
+        Locale locale = Locale.of(kieli);
         String otsikko = messageSource.getMessage("sahkopostit.vanhentuneettiedot.otsikko", null, locale);
-        message.setSubject(otsikko);
-        message.setBody(createBody(locale, organisaatio.getOid(), otsikko));
-        message.setHtml(true);
+        QueuedEmail email = QueuedEmail.builder()
+            .subject(otsikko)
+            .recipients(sahkopostiosoitteet)
+            .body(createBody(kieli, organisaatio.getOid(), otsikko))
+            .build();
 
-        EmailData data = new EmailData();
-        data.setEmail(message);
-        data.setRecipient(sahkopostiosoitteet.stream()
-                .map(sahkopostiosoite -> new EmailRecipient(null, null, sahkopostiosoite, kieli))
-                .collect(toList()));
-
-        String sahkopostiId = organisaatioViestinta.sendEmail(data, false);
-
-        OrganisaatioSahkoposti organisaatioSahkoposti = new OrganisaatioSahkoposti();
-        organisaatioSahkoposti.setOrganisaatio(organisaatio);
-        organisaatioSahkoposti.setTyyppi(OrganisaatioSahkoposti.Tyyppi.VANHENTUNEET_TIEDOT);
-        organisaatioSahkoposti.setAikaleima(new Date());
-        organisaatioSahkoposti.setViestintapalveluId(sahkopostiId);
-        organisaatioSahkopostiRepository.save(organisaatioSahkoposti);
+        String emailId = emailService.queueEmail(email);
+        emailService.attemptSendingEmail(emailId);
     }
 
-    private String createBody(Locale locale, String organisaatioOid, String otsikko) {
+    private String createBody(String kieli, String organisaatioOid, String otsikko) {
         try {
             freemarker.setClassForTemplateLoading(this.getClass(), "/templates");
-            Template template = freemarker.getTemplate("/sahkoposti/vanhentuneettiedot.ftlh", locale);
+            Template template = freemarker.getTemplate("sahkoposti/vanhentuneettiedot_" + kieli + ".ftlh");
             Map<String, Object> model = new HashMap<>();
             model.put("otsikko", otsikko);
             model.put("linkki", properties.url("organisaatio-ui.organisaatio.byOid", organisaatioOid));

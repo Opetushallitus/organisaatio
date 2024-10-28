@@ -13,7 +13,6 @@ public class HttpClientConfiguration {
 
     private static final String CALLER_ID = "1.2.246.562.10.00000000001.organisaatio-service";
     public static final String HTTP_CLIENT_KAYTTOOIKEUS = "kayttooikeusHttpClient";
-    public static final String HTTP_CLIENT_VIESTINTA = "viestintaHttpClient";
     public static final String HTTP_CLIENT_KOODISTO = "koodistoHttpClient";
     public static final String HTTP_CLIENT_LOKALISOINTI = "lokalisointiHttpClient";
     public static final String HTTP_CLIENT_OPPIJANUMERO = "oppijanumeroHttpClient";
@@ -48,17 +47,6 @@ public class HttpClientConfiguration {
                 .password(properties.require("organisaatio.service.password"))
                 .webCasUrl(properties.url("cas.base"))
                 .casServiceUrl(properties.url("oppijanumero-service.login"))
-                .build();
-        return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
-    }
-
-    @Bean(name = HTTP_CLIENT_VIESTINTA)
-    public OphHttpClient viestintaHttpClient(OphProperties properties) {
-        CasAuthenticator authenticator = new CasAuthenticator.Builder()
-                .username(properties.require("organisaatio.service.username.to.viestinta"))
-                .password(properties.require("organisaatio.service.password.to.viestinta"))
-                .webCasUrl(properties.url("cas.base"))
-                .casServiceUrl(properties.url("organisaatio-service.ryhmasahkoposti-service.login"))
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }

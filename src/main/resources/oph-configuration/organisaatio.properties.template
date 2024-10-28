@@ -22,11 +22,9 @@ organisaatio.service.password={{organisaatio_service_password}}
 organisaatio.service.username.to.koodisto={{organisaatio_service_username_to_koodisto}}
 organisaatio.service.password.to.koodisto={{organisaatio_service_password_to_koodisto}}
 organisaatio-service.scheduled.update.cron.expression=0 0 1 * * ?
-organisaatio.service.username.to.viestinta={{organisaatio_service_username_to_viestinta | default("username")}}
-organisaatio.service.password.to.viestinta={{organisaatio_service_password_to_viestinta | default("password")}}
 organisaatio.ui.url={{host_virkailija}}/organisaatio/html/organisaatiot
 organisaatio.ui.ilmoitukset.url=${organisaatio.ui.url}/ilmoitukset
-ryhmasahkoposti.service.email={{ryhmasahkoposti_service_email | default("jatkuvatpalvelut@oph.fi")}}
+ytjpaivitysloki.service.email={{ryhmasahkoposti_service_email | default("jatkuvatpalvelut@oph.fi")}}
 organisaatio-service.postgresql.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
 organisaatio-service.postgresql.user={{postgres_app_user}}
 organisaatio-service.postgresql.password={{host_postgresql_organisaatio_app_password}}
@@ -77,7 +75,6 @@ web.url.cas=https\://${host.cas}/cas
 
 organisaatio-service.tarjonta-service.rest.url=https://${host.virkailija}:${port.tarjonta-service}/tarjonta-service/rest
 organisaatio-service.koodisto-service.rest.url=https://${host.virkailija}/koodisto-service
-organisaatio-service.ryhmasahkoposti-service.rest.url=https://${host.virkailija}/ryhmasahkoposti-service
 
 oiva.baseurl={{ organisaatio_oiva_baseurl }}
 oiva.username={{ organisaatio_oiva_username }}
