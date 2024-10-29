@@ -87,7 +87,7 @@ public class EmailService {
 
     private String sendLahetys(String emailId) {
         log.info("Attempting to send lähetys for email {}", emailId);
-        var email = queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).stream().findFirst().orElseThrow();
+        var email = queryEmailForUpdate(emailId).orElseThrow();
         if (email.getLahetysTunniste() != null) {
             return email.getLahetysTunniste();
         }
@@ -107,7 +107,7 @@ public class EmailService {
     }
 
     private boolean sendViestiInBatches(String emailId, String lahetystunniste) {
-        var email = queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).stream().findFirst().orElseThrow();
+        var email = queryEmailForUpdate(emailId).orElseThrow();
         var recipients = new ArrayList<>(email.getRecipients());
         if (email.getCopy() != null) recipients.add(email.getCopy());
         var lastRecipientIndex = recipients.size() <= email.getBatchSent() + MAX_BATCH_SIZE
@@ -164,6 +164,15 @@ public class EmailService {
         return jdbcTemplate.query(sql, queuedEmailRowMapper, emailId);
     }
 
+    private Optional<QueuedEmail> queryEmailForUpdate(String emailId) {
+        var sql = """
+                SELECT id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, attachment_ids, batch_sent, idempotency_key
+                FROM queuedemail
+                WHERE id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE
+                """;
+        return jdbcTemplate.query(sql, queuedEmailForUpdateRowMapper, emailId).stream().findFirst();
+    }
+
     private final RowMapper<QueuedEmail> queuedEmailRowMapper = (rs, rowNum) -> QueuedEmail.builder()
             .id(rs.getString("id"))
             .lahetysTunniste(rs.getString("lahetystunniste"))
@@ -174,6 +183,26 @@ public class EmailService {
             .subject(rs.getString("subject"))
             .body(rs.getString("body"))
             .virkailijaOid(rs.getString("virkailija_oid"))
+            .lastAttempt(rs.getTimestamp("last_attempt"))
+            .sentAt(rs.getTimestamp("sent_at"))
+            .created(rs.getTimestamp("created"))
+            .modified(rs.getTimestamp("modified"))
+            .attachmentIds(rs.getArray("attachment_ids") != null
+                ? Arrays.asList((String[]) rs.getArray("attachment_ids").getArray())
+                : null)
+            .batchSent(rs.getInt("batch_sent"))
+            .idempotencyKey(rs.getString("idempotency_key"))
+            .build();
+
+    private final RowMapper<QueuedEmail> queuedEmailForUpdateRowMapper = (rs, rowNum) -> QueuedEmail.builder()
+            .id(rs.getString("id"))
+            .lahetysTunniste(rs.getString("lahetystunniste"))
+            .copy(rs.getString("copy"))
+            .status(rs.getString("queuedemailstatus_id"))
+            .recipients(Arrays.asList((String[]) rs.getArray("recipients").getArray()))
+            .replyTo(rs.getString("replyto"))
+            .subject(rs.getString("subject"))
+            .body(rs.getString("body"))
             .lastAttempt(rs.getTimestamp("last_attempt"))
             .sentAt(rs.getTimestamp("sent_at"))
             .created(rs.getTimestamp("created"))
