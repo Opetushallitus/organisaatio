@@ -148,7 +148,7 @@ public class EmailService {
                 SELECT id
                 FROM queuedemail
                 WHERE queuedemailstatus_id = 'QUEUED'
-                AND last_attempt < current_timestamp - INTERVAL '10 minutes'
+                AND last_attempt IS NULL OR last_attempt < current_timestamp - INTERVAL '10 minutes'
                 LIMIT 10
                 """;
         return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("id"));
