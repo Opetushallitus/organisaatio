@@ -202,17 +202,17 @@ public class OrganisaatioBusinessChecker {
         LOG.debug(String.format("käytetty alkuPvm: %s, aikaisin sallittu alkuPvm: %s, käytetty loppuPvm: %s, myöhäisin sallittu loppuPvm: %s", actualStart, minPvm, actualEnd, maxPvm));
         if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, actualEnd) > 0) {
             String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", organisaatio.getOid(), actualStart, actualEnd);
-            LOG.error(virhe);
+            LOG.warn(virhe);
             return virhe;
         }
         if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, minPvm) < 0) {
             String virhe = String.format("oid: %s: käytetty alkuPvm (%s) < min päivämäärä (%s)", organisaatio.getOid(), actualStart, minPvm);
-            LOG.error(virhe);
+            LOG.warn(virhe);
             return virhe;
         }
         if (DateTimeComparator.getDateOnlyInstance().compare(actualEnd, maxPvm) > 0) {
             String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", organisaatio.getOid(), actualEnd, maxPvm);
-            LOG.error(virhe);
+            LOG.warn(virhe);
             return virhe;
         }
         for (Organisaatio child : organisaatio.getChildren(true)) {
@@ -220,7 +220,7 @@ public class OrganisaatioBusinessChecker {
             String lapsenVirhe = checkPvmConstraints(child, null, actualEnd, muokkausTiedot);
             if (!lapsenVirhe.equals("")) {
                 String virhe = String.format("lapsen %s virhe: %s", child.getOid(), lapsenVirhe);
-                LOG.error("lapsella ajat NOK: " + lapsenVirhe);
+                LOG.warn("lapsella ajat NOK: " + lapsenVirhe);
                 return virhe;
             }
         }

@@ -810,7 +810,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         for (Organisaatio o : roots) {
             virheViesti = checker.checkPvmConstraints(o, null, null, givenData);
             if (!virheViesti.equals("")) {
-                log.error("bulkUpdatePvm() error: {}", virheViesti);
+                log.warn("bulkUpdatePvm() error: {}", virheViesti);
                 throw new OrganisaatioDateException();
             }
         }
@@ -822,7 +822,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (tieto != null) {
                 log.debug("bulkUpdatePvm(): testataan onko Organisaatiolla (oid {}) koulutuksia loppupäivämäärän {} jälkeen", org.getOid(), tieto.getLoppuPvm());
                 if ((tieto.getLoppuPvm() != null) && !tieto.getLoppuPvm().equals(org.getLakkautusPvm()) && (organisaatioTarjonta.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
-                    log.error("Organisaatiolla (oid {}) koulutuksia jotka alkavat lakkautuspäivämäärän ({}) jälkeen", oid, tieto.getLoppuPvm());
+                    log.warn("Organisaatiolla (oid {}) koulutuksia jotka alkavat lakkautuspäivämäärän ({}) jälkeen", oid, tieto.getLoppuPvm());
                     throw new AliorganisaatioLakkautusKoulutuksiaException();
                 }
             }
