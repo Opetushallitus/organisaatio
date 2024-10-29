@@ -143,16 +143,15 @@ public class EmailService {
         return queryEmails("WHERE queuedemail.id = ?::uuid", emailId).stream().findFirst();
     }
 
-    public List<QueuedEmail> getQueuedEmailsToRetry() {
+    public List<String> getQueuedEmailIdsToRetry() {
         var sql = """
-                SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids, batch_sent, idempotency_key
+                SELECT id
                 FROM queuedemail
-                JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
                 WHERE queuedemailstatus_id = 'QUEUED'
                 AND last_attempt < current_timestamp - INTERVAL '10 minutes'
                 LIMIT 10
                 """;
-        return jdbcTemplate.query(sql, queuedEmailRowMapper);
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("id"));
     }
 
     private List<QueuedEmail> queryEmails(String where, String emailId) {

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Lazy;
 
 import com.github.kagkarlsson.scheduler.SchedulerClient;
 
-import fi.vm.sade.organisaatio.email.OsoitepalveluEmailRetryTask;
+import fi.vm.sade.organisaatio.email.EmailRetryTask;
 
 @Configuration
 public class SchedulingClientConfiguration {
@@ -18,11 +18,11 @@ public class SchedulingClientConfiguration {
                         KoodistoUpdateTask koodistoUpdateTask,
                         FetchKoodistotTask fetchKoodistotTask,
                         FetchKoulutusluvatTask fetchKoulutusluvatTask,
-                        OsoitepalveluEmailRetryTask osoitepalveluEmailRetryTask,
+                        EmailRetryTask emailRetryTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         return SchedulerClient
             .Builder
-            .create(dataSource, koodistoUpdateTask, vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask, osoitepalveluEmailRetryTask)
+            .create(dataSource, koodistoUpdateTask, vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask, emailRetryTask)
             .build();
     }
 }

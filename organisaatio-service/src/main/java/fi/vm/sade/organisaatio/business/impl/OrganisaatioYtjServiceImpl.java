@@ -221,20 +221,18 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         ytjPaivitysLoki.setPaivitetytLkm(updateOrganisaatioList.size());
         ytjPaivitysLokiRepository.save(ytjPaivitysLoki);
-        sendEmail(ytjPaivitysLoki);
+        queueEmail(ytjPaivitysLoki);
         return ytjPaivitysLoki;
     }
 
-    private void sendEmail(YtjPaivitysLoki ytjPaivitysLoki) {
+    private void queueEmail(YtjPaivitysLoki ytjPaivitysLoki) {
         String subject = "YTJ-paivitys info";
         QueuedEmail email = QueuedEmail.builder()
             .subject(subject)
             .recipients(List.of(serviceEmail))
             .body(createBody(ytjPaivitysLoki, subject))
             .build();
-
-        String emailId = emailService.queueEmail(email);
-        emailService.attemptSendingEmail(emailId);
+        emailService.queueEmail(email);
     }
 
     @Data

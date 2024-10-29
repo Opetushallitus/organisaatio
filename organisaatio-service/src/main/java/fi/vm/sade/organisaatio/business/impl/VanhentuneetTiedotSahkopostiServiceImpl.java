@@ -84,7 +84,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
                 .filter(virkailija -> virkailija.getSahkoposti() != null)
                 .collect(groupingBy(VanhentuneetTiedotSahkopostiServiceImpl::getAsiointikieli,
                         mapping(VirkailijaDto::getSahkoposti, toList())))
-                .forEach((kieli, sahkopostiosoitteet) -> lahetaSahkoposti(organisaatio, kieli, sahkopostiosoitteet));
+                .forEach((kieli, sahkopostiosoitteet) -> queueEmail(organisaatio, kieli, sahkopostiosoitteet));
     }
 
     private Collection<VirkailijaDto> haeVirkailijat(String organisaatioOid) {
@@ -101,7 +101,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
         return Optional.ofNullable(virkailija.getAsiointikieli()).filter(TUETUT_KIELET::contains).orElse(OLETUSKIELI);
     }
 
-    private void lahetaSahkoposti(Organisaatio organisaatio, String kieli, List<String> sahkopostiosoitteet) {
+    private void queueEmail(Organisaatio organisaatio, String kieli, List<String> sahkopostiosoitteet) {
         Locale locale = Locale.of(kieli);
         String otsikko = messageSource.getMessage("sahkopostit.vanhentuneettiedot.otsikko", null, locale);
         QueuedEmail email = QueuedEmail.builder()
@@ -110,8 +110,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
             .body(createBody(kieli, organisaatio.getOid(), otsikko))
             .build();
 
-        String emailId = emailService.queueEmail(email);
-        emailService.attemptSendingEmail(emailId);
+        emailService.queueEmail(email);
     }
 
     private String createBody(String kieli, String organisaatioOid, String otsikko) {

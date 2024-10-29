@@ -18,13 +18,13 @@ import java.time.Duration;
 
 @Component
 @Slf4j
-public class OsoitepalveluEmailRetryTask extends RecurringTask<Void> {
+public class EmailRetryTask extends RecurringTask<Void> {
     @Autowired
     private EmailService emailService;
     @Autowired
     private AuthenticationUtil authenticationUtil;
 
-    public OsoitepalveluEmailRetryTask() {
+    public EmailRetryTask() {
         super("OsoitepalveluEmailRetryTask", FixedDelay.of(Duration.ofMinutes(5)), Void.class, (FailureHandler<Void>) null);
     }
 
@@ -44,11 +44,11 @@ public class OsoitepalveluEmailRetryTask extends RecurringTask<Void> {
 
 
     private void execute() {
-        emailService.getQueuedEmailsToRetry().forEach(email -> {
+        emailService.getQueuedEmailIdsToRetry().forEach(emailId -> {
             try {
-                emailService.attemptSendingEmail(email.getId());
+                emailService.attemptSendingEmail(emailId);
             } catch (Exception e) {
-                log.info("Failed to send email " + email.getId(), e);
+                log.info("Failed to send email " + emailId, e);
             }
         });
     }
