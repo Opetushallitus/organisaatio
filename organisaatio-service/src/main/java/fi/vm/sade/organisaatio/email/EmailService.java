@@ -158,7 +158,7 @@ public class EmailService {
         var select = """
                 SELECT queuedemail.id, lahetystunniste, queuedemailstatus_id, copy, recipients, replyto, subject, body, last_attempt, sent_at, created, modified, virkailija_oid, attachment_ids, batch_sent, idempotency_key
                 FROM queuedemail
-                JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
+                LEFT JOIN osoitteet_haku_and_hakutulos ON osoitteet_haku_and_hakutulos.id = queuedemail.osoitteet_haku_and_hakutulos_id
                 """;
         var sql = String.join("\n", List.of(select, where));
         return jdbcTemplate.query(sql, queuedEmailRowMapper, emailId);
