@@ -87,7 +87,7 @@ public class EmailService {
 
     private String sendLahetys(String emailId) {
         log.info("Attempting to send lähetys for email {}", emailId);
-        var email = queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).stream().findFirst().orElseThrow();
+        var email = queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE OF queuedemail", emailId).stream().findFirst().orElseThrow();
         if (email.getLahetysTunniste() != null) {
             return email.getLahetysTunniste();
         }
@@ -107,7 +107,7 @@ public class EmailService {
     }
 
     private boolean sendViestiInBatches(String emailId, String lahetystunniste) {
-        var email = queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE", emailId).stream().findFirst().orElseThrow();
+        var email = queryEmails("WHERE queuedemail.id = ?::uuid AND queuedemailstatus_id = 'QUEUED' FOR UPDATE OF queuedemail", emailId).stream().findFirst().orElseThrow();
         var recipients = new ArrayList<>(email.getRecipients());
         if (email.getCopy() != null) recipients.add(email.getCopy());
         var lastRecipientIndex = recipients.size() <= email.getBatchSent() + MAX_BATCH_SIZE
