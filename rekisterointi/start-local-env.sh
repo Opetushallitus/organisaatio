@@ -22,7 +22,7 @@ tmux new-session -d -s $session
 tmux splitw -h
 
 echo "starting redis"
-tmux send-keys "docker-compose up" C-m
+tmux send-keys "docker compose up" C-m
 
 tmux splitw -v
 echo "starting server"
@@ -35,6 +35,8 @@ tmux send-keys "cd rekisterointi-ui && npm run build:watch" C-m
 tmux splitw -v
 echo "starting mock-api"
 tmux send-keys "cd mock-api && npm install && npm start" C-m
+
+open "http://localhost:3000/jotpa"
 
 tmux select-pane -t 0
 tmux attach-session -t $session
