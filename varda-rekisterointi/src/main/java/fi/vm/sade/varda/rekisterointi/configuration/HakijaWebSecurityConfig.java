@@ -2,36 +2,35 @@ package fi.vm.sade.varda.rekisterointi.configuration;
 
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.NameContainer;
-import org.jasig.cas.client.validation.*;
+
+import org.apereo.cas.client.validation.Cas20ServiceTicketValidator;
+import org.apereo.cas.client.validation.TicketValidationException;
+import org.apereo.cas.client.validation.TicketValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.preauth.*;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
-
-import javax.servlet.Filter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.*;
 
 import static fi.vm.sade.varda.rekisterointi.configuration.LocaleConfiguration.DEFAULT_LOCALE;
@@ -40,10 +39,8 @@ import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttrib
 import static java.util.Collections.singletonList;
 
 @Configuration
-@Order(2)
 @EnableWebSecurity
-public class HakijaWebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+public class HakijaWebSecurityConfig {
     private static final String HAKIJA_ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
     private static final String HAKIJA_PATH_CLOB = "/hakija/**";
 
@@ -53,46 +50,50 @@ public class HakijaWebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.ophProperties = ophProperties;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.headers().disable().csrf().disable();
-        http.antMatcher(HAKIJA_PATH_CLOB).authorizeRequests()
-                .anyRequest().hasRole(HAKIJA_ROLE)
-                .and()
-                .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(hakijaAuthenticationEntryPoint());
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(hakijaAuthenticationProvider());
-    }
-
     @Bean
-    @DependsOn("properties")
-    public TicketValidator casOppijaticketValidator() {
+    @Order(2)
+    SecurityFilterChain hakijSecurityFilterChain(HttpSecurity http) throws Exception {
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        requestCache.setMatchingRequestParameterName(null);
+        return http
+                .headers(headers -> headers.disable())
+                .csrf(csrf -> csrf.disable())
+                .securityMatcher(HAKIJA_PATH_CLOB)
+                .authorizeHttpRequests(authz -> authz.anyRequest().hasRole(HAKIJA_ROLE))
+                .addFilterBefore(hakijaAuthenticationProcessingFilter(), BasicAuthenticationFilter.class)
+                .securityContext(securityContext -> securityContext
+                        .requireExplicitSave(true)
+                        .securityContextRepository(new HttpSessionSecurityContextRepository()))
+                .requestCache(cache -> cache.requestCache(requestCache))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(hakijaAuthenticationEntryPoint()))
+                .build();
+    }
+
+    TicketValidator casOppijaticketValidator() {
         return new Cas20ServiceTicketValidator(ophProperties.url("varda-rekisterointi.cas.oppija.url"));
     }
 
-    @Bean
-    public Filter hakijaAuthenticationProcessingFilter() throws Exception {
+    Filter hakijaAuthenticationProcessingFilter() throws Exception {
         HakijaAuthenticationFilter filter = new HakijaAuthenticationFilter("/hakija/login", casOppijaticketValidator(), ophProperties);
-        filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthenticationManager(new ProviderManager(hakijaAuthenticationProvider()));
         String authenticationSuccessUrl = ophProperties.url("varda-rekisterointi.hakija.valtuudet.redirect");
         filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler(authenticationSuccessUrl));
         return filter;
     }
 
-    @Bean
-    public AuthenticationEntryPoint hakijaAuthenticationEntryPoint() {
+    AuthenticationEntryPoint hakijaAuthenticationEntryPoint() {
         String loginCallbackUrl = ophProperties.url("varda-rekisterointi.hakija.login");
         String defaultLoginUrl = ophProperties.url("varda-rekisterointi.cas.oppija.login", loginCallbackUrl);
         return new AuthenticationEntryPointImpl(defaultLoginUrl, ophProperties, loginCallbackUrl);
     }
 
-    private static class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoint {
+    AuthenticationProvider hakijaAuthenticationProvider() {
+        PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
+        authenticationProvider.setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
+        return authenticationProvider;
+    }
 
+    private static class AuthenticationEntryPointImpl extends LoginUrlAuthenticationEntryPoint {
         private final OphProperties properties;
         private final String loginCallbackUrl;
 
@@ -109,13 +110,6 @@ public class HakijaWebSecurityConfig extends WebSecurityConfigurerAdapter {
             String language = locale.getLanguage();
             return properties.url("varda-rekisterointi.cas.oppija.login", loginCallbackUrl, language);
         }
-    }
-
-    @Bean
-    public AuthenticationProvider hakijaAuthenticationProvider() {
-        PreAuthenticatedAuthenticationProvider authenticationProvider = new PreAuthenticatedAuthenticationProvider();
-        authenticationProvider.setPreAuthenticatedUserDetailsService(new PreAuthenticatedGrantedAuthoritiesUserDetailsService());
-        return authenticationProvider;
     }
 
     private static class HakijaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {

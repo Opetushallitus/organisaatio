@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.With;
 import org.springframework.data.relational.core.mapping.Embedded;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @AllArgsConstructor(staticName = "of")
 public class Yhteystiedot {

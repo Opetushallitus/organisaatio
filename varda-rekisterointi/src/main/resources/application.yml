@@ -20,13 +20,12 @@ spring:
     out-of-order: true
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
-  resources:
-    cache:
-      cachecontrol:
-        no-store: true
-  session:
-    store-type: jdbc
+      matching-strategy: ANT_PATH_MATCHER
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          no-store: true
 varda-rekisterointi:
   url-virkailija: http://localhost:${server.port}
   url-oppija: http://localhost:${server.port}

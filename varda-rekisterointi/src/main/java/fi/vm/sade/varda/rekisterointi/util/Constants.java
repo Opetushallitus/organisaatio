@@ -18,6 +18,7 @@ public final class Constants {
     public static final String[] VIRKAILIJA_UI_ROLES = new String[]{VIRKAILIJA_ROLE, VARDA_ROLE, JOTPA_ROLE};
     public static final String VIRKAILIJA_PRE_AUTH = "hasAnyRole('" + VIRKAILIJA_ROLE + "','" + VARDA_ROLE + "','" + JOTPA_ROLE + "')";
 
-    public static final String PAAKAYTTAJA_AUTHORITY = "ROLE_" + VIRKAILIJA_ROLE + "_1.2.246.562.10.00000000001";
+    public static final String PAAKAYTTAJA_ROLE = VIRKAILIJA_ROLE + "_1.2.246.562.10.00000000001";
+    public static final String PAAKAYTTAJA_AUTHORITY = "ROLE_" + PAAKAYTTAJA_ROLE;
 
 }

@@ -3,7 +3,7 @@ package fi.vm.sade.varda.rekisterointi.model;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @EqualsAndHashCode
 @AllArgsConstructor(staticName = "of")

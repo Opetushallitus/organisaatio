@@ -45,7 +45,7 @@ public class RekisterointiFinalizer {
             LOGGER.info("Tallennetaan rekisteröintiin luodun organisaation oid: {}", oid);
             rekisterointiRepository.save(rekisterointi.withOrganisaatio(rekisterointi.organisaatio.withOid(oid)));
         }
-        schedulerClient.schedule(
+        schedulerClient.scheduleIfNotExists(
                 kutsuKayttajaTask.instance(taskId(kutsuKayttajaTask, rekisterointiId), rekisterointiId),
                 Instant.now().plus(ORGANISAATIO_CACHE_KLUDGE_MINUUTIT, ChronoUnit.MINUTES)
         );
@@ -73,7 +73,7 @@ public class RekisterointiFinalizer {
     }
 
     private void ajastaPaatosEmail(Long rekisterointiId) {
-        schedulerClient.schedule(
+        schedulerClient.scheduleIfNotExists(
                 paatosEmailTask.instance(taskId(paatosEmailTask, rekisterointiId), rekisterointiId),
                 Instant.now()
         );

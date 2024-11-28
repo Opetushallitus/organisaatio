@@ -6,14 +6,12 @@ import fi.vm.sade.varda.rekisterointi.exception.NotFoundException;
 import fi.vm.sade.varda.rekisterointi.model.Organisaatio;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto;
 import fi.vm.sade.varda.rekisterointi.service.OrganisaatioService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static fi.vm.sade.varda.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_BUSINESS_ID;
 import static fi.vm.sade.varda.rekisterointi.util.Constants.SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME;
@@ -40,11 +38,6 @@ public class OrganisaatioController {
      * @return organisaatiotiedot (mahdollisesti tyhjät)
      */
     @GetMapping
-    @ApiOperation("Hae organisaatio")
-    @ApiResponse(
-            code = 200,
-            response = Organisaatio.class,
-            message = "Organisaation tiedot (tyhjä, mikäli ei löydy)")
     public Organisaatio getOrganisaatio(HttpServletRequest request) {
         String businessId = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, String.class)
                 .orElseThrow(() -> new NotFoundException("Organisaatiota ei löydy istunnosta"));

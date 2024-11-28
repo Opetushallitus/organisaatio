@@ -91,7 +91,7 @@ public class RekisterointiService {
         rekisterointi.organisaatio.setUudelleenRekisterointi(rekisterointiRepository.findByYtunnus(rekisterointi.organisaatio.ytunnus).iterator().hasNext());
         Rekisterointi saved = rekisterointiRepository.save(rekisterointi);
         String taskId = String.format("%s-%d", rekisterointiEmailTask.getName(), saved.id);
-        schedulerClient.schedule(rekisterointiEmailTask.instance(taskId, saved.id), Instant.now());
+        schedulerClient.scheduleIfNotExists(rekisterointiEmailTask.instance(taskId, saved.id), Instant.now());
         eventPublisher.publishEvent(new CreatedEvent<>(requestContext, "rekisterointi", saved.id));
         LOGGER.info("Rekisteröinti luotu tunnuksella: {}", saved.id);
         return saved.id;
@@ -131,14 +131,14 @@ public class RekisterointiService {
     }
 
     private void ajastaOrganisaationLuontiTaiPaivitys(Rekisterointi rekisterointi) {
-        schedulerClient.schedule(
+        schedulerClient.scheduleIfNotExists(
                 luoTaiPaivitaOrganisaatioTask.instance(taskId(luoTaiPaivitaOrganisaatioTask, rekisterointi.id), rekisterointi.id),
                 Instant.now()
         );
     }
 
     private void ajastaHylkaysViesti(Rekisterointi rekisterointi) {
-        schedulerClient.schedule(
+        schedulerClient.scheduleIfNotExists(
                 paatosEmailTask.instance(taskId(paatosEmailTask, rekisterointi.id), rekisterointi.id),
                 Instant.now());
     }

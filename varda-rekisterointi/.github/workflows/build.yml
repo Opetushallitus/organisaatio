@@ -34,7 +34,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
       - name: Build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn clean install -B -Dbranch=$GITHUB_REF_NAME -Drevision=$GITHUB_SHA -DbuildNumber=$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Opetushallitus_varda-rekisterointi
       - name: Upload varda-rekisterointi-jar

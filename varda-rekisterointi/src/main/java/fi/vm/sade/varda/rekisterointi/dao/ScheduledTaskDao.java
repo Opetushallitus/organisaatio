@@ -28,7 +28,6 @@ public class ScheduledTaskDao {
                     TaskMonitoringService.MAX_ALLOWED_FAILURES, tyyppi.taskName);
             template.query(
                     FAILING_TASKS_QUERY,
-                    new Object[] { tyyppi.taskName, TaskMonitoringService.MAX_ALLOWED_FAILURES },
                     (resultSet) -> {
                         String taskInstance =  resultSet.getString("task_instance");
                         epaonnistumiset.add(
@@ -37,7 +36,9 @@ public class ScheduledTaskDao {
                                         Long.parseLong(taskInstance.substring(taskInstance.lastIndexOf('-') + 1))
                                 )
                         ); // parsitaan rekisteröinti: task_instance muodostetaan task_name + rekisteröinnin id
-                    }
+                    },
+                    tyyppi.taskName,
+                    TaskMonitoringService.MAX_ALLOWED_FAILURES
             );
         }
         return epaonnistumiset;

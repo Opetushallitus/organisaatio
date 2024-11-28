@@ -4,7 +4,7 @@ import fi.vm.sade.varda.rekisterointi.NameContainer;
 import fi.vm.sade.varda.rekisterointi.RequestContext;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;

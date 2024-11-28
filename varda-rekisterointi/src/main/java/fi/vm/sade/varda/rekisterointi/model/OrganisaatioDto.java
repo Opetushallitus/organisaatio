@@ -3,14 +3,13 @@ package fi.vm.sade.varda.rekisterointi.model;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Collections.singletonList;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class OrganisaatioDto extends BaseDto {
 
     public static final String OPPILAITOS_ORGANISAATIOTYYPPI = "organisaatiotyyppi_02";

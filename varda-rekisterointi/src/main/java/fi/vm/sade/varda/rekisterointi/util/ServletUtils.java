@@ -2,8 +2,8 @@ package fi.vm.sade.varda.rekisterointi.util;
 
 import fi.vm.sade.javautils.http.HttpServletRequestUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Optional;
 

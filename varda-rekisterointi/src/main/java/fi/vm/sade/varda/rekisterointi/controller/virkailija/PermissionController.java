@@ -1,8 +1,5 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -34,16 +31,10 @@ public class PermissionController {
      * @return onko käyttäjällä valtuus?
      */
     @GetMapping("{targetType}/{permission}")
-    @ApiOperation("Tarkista valtuus")
-    @ApiResponse(
-            code = 200,
-            message = "Onko valtuutta (true/false)",
-            response = Boolean.class
-    )
     public boolean hasPermission(Authentication authentication,
-                                 @ApiParam("valtuuden kohteen tyyppi") @PathVariable String targetType,
-                                 @ApiParam("tarkistettava valtuus") @PathVariable String permission,
-                                 @ApiParam("valtuuden kohteen tunniste") @RequestParam(required = false) Serializable targetId) {
+                                 @PathVariable String targetType,
+                                 @PathVariable String permission,
+                                 @RequestParam(required = false) Serializable targetId) {
         return permissionEvaluator.hasPermission(authentication, targetId, targetType, permission);
     }
 
@@ -55,12 +46,6 @@ public class PermissionController {
      * @return valtuudet?
      */
     @GetMapping("rekisterointi")
-    @ApiOperation("Tarkista valtuudet")
-    @ApiResponse(
-            code = 200,
-            message = "Valtuudet",
-            response = Permissions.class
-    )
     public Permissions hasPermission(Authentication authentication) {
         return Permissions.of(
             isAuthority(authentication, Constants.PAAKAYTTAJA_AUTHORITY),

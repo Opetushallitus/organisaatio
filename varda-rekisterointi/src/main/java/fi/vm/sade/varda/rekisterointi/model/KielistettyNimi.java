@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @EqualsAndHashCode

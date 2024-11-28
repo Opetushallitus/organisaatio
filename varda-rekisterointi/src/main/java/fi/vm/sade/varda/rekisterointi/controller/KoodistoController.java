@@ -3,8 +3,6 @@ package fi.vm.sade.varda.rekisterointi.controller;
 import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -29,10 +27,9 @@ public class KoodistoController {
      * @return löydetyt koodit.
      */
     @GetMapping("/{koodisto}/koodi")
-    @ApiOperation("Hae koodiston koodit")
-    Collection<Koodi> getKoodi(@ApiParam("haluttu koodisto") @PathVariable KoodistoType koodisto,
-                               @ApiParam("haluttu versio") @RequestParam(required = false) Optional<Integer> versio,
-                               @ApiParam("listataanko vain voimassaolevat") @RequestParam(required = false) Optional<Boolean> onlyValid) {
+    Collection<Koodi> getKoodi(@PathVariable KoodistoType koodisto,
+                               @RequestParam(required = false) Optional<Integer> versio,
+                               @RequestParam(required = false) Optional<Boolean> onlyValid) {
         return koodistoClient.listKoodit(koodisto, versio, onlyValid);
     }
 

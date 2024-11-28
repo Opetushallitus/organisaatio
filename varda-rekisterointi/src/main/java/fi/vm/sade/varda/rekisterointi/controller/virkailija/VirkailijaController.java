@@ -9,9 +9,6 @@ import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import fi.vm.sade.varda.rekisterointi.util.AuthenticationUtils;
 import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -58,13 +55,7 @@ public class VirkailijaController {
      * @return organisaatio (mahdollisesti tyhjä)
      */
     @GetMapping(ORGANISAATIOT_PATH + "/ytunnus={ytunnus}")
-    @ApiOperation("Hae organisaatio y-tunnuksella")
-    @ApiResponse(
-            code = 200,
-            message = "Organisaatio, tyhjä mikäli ei löytynyt",
-            response = Organisaatio.class
-    )
-    public Organisaatio getOrganisaatioByYtunnus(@ApiParam("y-tunnus") @PathVariable String ytunnus) {
+    public Organisaatio getOrganisaatioByYtunnus(@PathVariable String ytunnus) {
         Organisaatio organisaatio = organisaatioService.muunnaOrganisaatioDto(organisaatioClient.getOrganisaatioByYtunnus(ytunnus)
                 .or(exceptionToEmptySupplier(() -> organisaatioClient.getOrganisaatioByYtunnusFromYtj(ytunnus)))
                 .orElseGet(() -> OrganisaatioDto.of(ytunnus, "")));
@@ -82,15 +73,9 @@ public class VirkailijaController {
      * @return paluuosoite.
      */
     @PostMapping(REKISTEROINNIT_PATH)
-    @ApiOperation("Luo rekisteröintihakemus")
-    @ApiResponse(
-            code = 200,
-            message = "Onnistuneen hakemuksen jälkeinen paluuosoite",
-            response = String.class
-    )
     public String luoRekisterointi(
             Authentication authentication,
-            @ApiParam("rekisteröintihakemus") @RequestBody @Validated RekisterointiDto dto,
+            @RequestBody @Validated RekisterointiDto dto,
             HttpServletRequest request) {
         List<String> roles = AuthenticationUtils.getRoles(authentication);
         if (roles.contains("OPH")) {
@@ -110,17 +95,10 @@ public class VirkailijaController {
      * @return löytyneet hakemukset.
      */
     @GetMapping(REKISTEROINNIT_PATH)
-    @ApiOperation("Listaa rekisteröintihakemukset")
-    @ApiResponse(
-            code = 200,
-            message = "ehtoja vastaavat rekisteröintihakemukset",
-            response = Rekisterointi.class,
-            responseContainer = "java.lang.Iterable"
-    )
     public Iterable<Rekisterointi> listaaRekisteroinnit(
             Authentication authentication,
-            @ApiParam("rekisteröintien tila") @RequestParam("tila") Rekisterointi.Tila tila,
-            @ApiParam("rekisteröityvän organisaation nimi (tai sen osa)") @RequestParam(value = "hakutermi", required = false) String hakutermi) {
+            @RequestParam("tila") Rekisterointi.Tila tila,
+            @RequestParam(value = "hakutermi", required = false) String hakutermi) {
         List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
         if (onOphVirkailija(organisaatioOidit)) {
             LOGGER.info("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
@@ -143,13 +121,6 @@ public class VirkailijaController {
      * @return hakemukset.
      */
     @GetMapping("/rekisterointi")
-    @ApiOperation("Listaa rekisteröintihakemukset, joihin käyttäjällä on oikeus")
-    @ApiResponse(
-            code = 200,
-            message = "rekisteröintihakemukset",
-            response = Rekisterointi.class,
-            responseContainer = "java.lang.Iterable"
-    )
     public Iterable<Rekisterointi> listRegistrations(Authentication authentication) {
         String[] registrationTypes = AuthenticationUtils.getRegistrationTypes(authentication);
         if (registrationTypes.length == 1 && registrationTypes[0].equals("varda")) {
@@ -171,15 +142,9 @@ public class VirkailijaController {
      */
     @PostMapping(PAATOKSET_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("Luo päätös hakemukselle")
-    @ApiResponse(
-            code = 201,
-            message = "Päätöksen saanut rekisteröintihakemus",
-            response = Rekisterointi.class
-    )
     public Rekisterointi luoPaatos(
             Authentication authentication,
-            @ApiParam("luotava päätös") @RequestBody @Validated PaatosDto paatos,
+            @RequestBody @Validated PaatosDto paatos,
             HttpServletRequest request) {
         return rekisterointiService.resolve(authentication.getName(), paatos, RequestContextImpl.of(request));
     }
@@ -193,14 +158,9 @@ public class VirkailijaController {
      */
     @PostMapping(PAATOKSET_BATCH_PATH)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("Luo useampi päätös")
-    @ApiResponse(
-            code = 201,
-            message = "Päätökset luotu onnistuneesti"
-    )
     public void luoPaatokset(
             Authentication authentication,
-            @ApiParam("luotavat päätökset") @RequestBody @Validated PaatosBatch paatokset,
+            @RequestBody @Validated PaatosBatch paatokset,
             HttpServletRequest request) {
         rekisterointiService.resolveBatch(authentication.getName(), paatokset, RequestContextImpl.of(request));
     }
