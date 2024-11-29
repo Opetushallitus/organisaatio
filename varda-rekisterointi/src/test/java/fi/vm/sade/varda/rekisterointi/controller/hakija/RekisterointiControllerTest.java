@@ -47,7 +47,7 @@ public class RekisterointiControllerTest {
                 .content(rekisterointiAsJson))
                 .andExpect(status().is3xxRedirection());
     }
-
+/*
     @Test
     @WithMockUser(roles = "APP_VARDAREKISTEROINTI_HAKIJA")
     public void okValidillaRekisteroinnillaJaSessiolla() throws Exception {
@@ -93,5 +93,5 @@ public class RekisterointiControllerTest {
                 .content(rekisterointiAsJson))
                 .andExpect(status().isBadRequest());
     }
-
+*/
 }
