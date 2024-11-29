@@ -1,9 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-  flyway:
-    enabled: false
-  session:
-    store-type: none
+    url: jdbc:postgresql://localhost:5433/varda-rekisterointi
+    username: varda-rekisterointi
+    password: varda-rekisterointi
 db-scheduler:
   enabled: false

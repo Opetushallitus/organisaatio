@@ -22,6 +22,7 @@ import static org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScr
 @SpringBootTest
 @ActiveProfiles({"integration-test", "dev"})
 @Transactional
+@AutoConfigureTestDatabase
 public class RekisterointiRepositoryIT {
 
     @Autowired

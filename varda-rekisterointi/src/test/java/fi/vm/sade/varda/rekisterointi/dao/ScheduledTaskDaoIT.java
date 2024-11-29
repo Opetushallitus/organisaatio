@@ -4,6 +4,7 @@ import fi.vm.sade.varda.rekisterointi.service.TaskMonitoringService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest
 @ActiveProfiles({"integration-test", "dev"})
 @Transactional
+@AutoConfigureTestDatabase
 public class ScheduledTaskDaoIT {
 
     @Autowired
