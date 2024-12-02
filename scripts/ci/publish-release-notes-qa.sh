@@ -1,0 +1,1 @@
+publish-release-notes.sh
