@@ -158,9 +158,9 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
             type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
             value: `/env/${env}/slack-notifications-channel-webhook`,
           },
-          MVN_SETTINGSXML: {
+          GRADLE_GITHUB_PACKAGES_PROPERTIES: {
             type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: `/mvn/settingsxml`,
+            value: `/gradle/github-packages-gradle-properties`,
           },
         },
         buildSpec: codebuild.BuildSpec.fromObject({
@@ -173,7 +173,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
               commands: [
                 "sudo yum install -y perl-Digest-SHA", // for shasum command
                 `git checkout ${tag}`,
-                "echo $MVN_SETTINGSXML > ./settings.xml",
+                "echo $GRADLE_GITHUB_PACKAGES_PROPERTIES > github-packages-gradle.properties",
               ],
             },
             build: {
