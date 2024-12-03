@@ -39,6 +39,13 @@ class ContinuousDeploymentStack extends cdk.Stack {
           props
         )
     );
+
+    const radiatorAccountId = "905418271050"
+    const radiatorReader = new iam.Role(this, "RadiatorReaderRole", {
+      assumedBy: new iam.AccountPrincipal(radiatorAccountId),
+      roleName: "RadiatorReader",
+    })
+    radiatorReader.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("AWSCodePipeline_ReadOnlyAccess"))
   }
 }
 
