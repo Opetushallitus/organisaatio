@@ -20,6 +20,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as path from "node:path";
 import {getConfig, getEnvironment} from "./config";
+import {createHealthCheckStacks} from "./health-check";
 
 class CdkApp extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -32,11 +33,11 @@ class CdkApp extends cdk.App {
     };
 
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
-    const { alarmTopic } = new AlarmStack(this, "AlarmStack", stackProps);
+    const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(this, "AlarmStack", stackProps);
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
     const databaseStack = new DatabaseStack(this, "Database", vpc, bastion, stackProps);
-    //createHealthCheckStacks(this)
+    createHealthCheckStacks(this, alarmsToSlackLambda)
     new ApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
       database: databaseStack.database,
       exportBucket: databaseStack.exportBucket,
@@ -124,14 +125,15 @@ class VpcStack extends cdk.Stack {
 
 class AlarmStack extends cdk.Stack {
   readonly alarmTopic: sns.ITopic;
+  readonly alarmsToSlackLambda: lambda.IFunction;
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
 
-    const alarmsToSlackLambda = this.createAlarmsToSlackLambda();
+    this.alarmsToSlackLambda = this.createAlarmsToSlackLambda();
     this.alarmTopic = this.createAlarmTopic();
 
     this.alarmTopic.addSubscription(
-      new subscriptions.LambdaSubscription(alarmsToSlackLambda),
+      new subscriptions.LambdaSubscription(this.alarmsToSlackLambda),
     );
   }
 

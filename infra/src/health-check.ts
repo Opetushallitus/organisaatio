@@ -10,7 +10,7 @@ import * as sns_subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 
 export const ROUTE53_HEALTH_CHECK_REGION = "us-east-1"
 
-export function createHealthCheckStacks(app: cdk.App) {
+export function createHealthCheckStacks(app: cdk.App, alarmsToSlackLambda: lambda.IFunction) {
   const healthCheckStack = new GlobalHealthCheckStack(app, "GlobalHealthCheckStack", {
     env: {
       account: process.env.CDK_DEPLOY_TARGET_ACCOUNT,
@@ -22,17 +22,18 @@ export function createHealthCheckStacks(app: cdk.App) {
       account: process.env.CDK_DEPLOY_TARGET_ACCOUNT,
       region: process.env.CDK_DEPLOY_TARGET_REGION,
     },
-    regionalAlarmTopicName: healthCheckStack.regionalAlarmTopic.topicName,
+    globalAlarmTopicName: healthCheckStack.globalAlarmTopic.topicName,
+    alarmsToSlackLambda,
   });
 }
 
 class GlobalHealthCheckStack extends cdk.Stack {
-  readonly regionalAlarmTopic: sns.ITopic
+  readonly globalAlarmTopic: sns.ITopic
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
 
-    this.regionalAlarmTopic = new sns.Topic(this, "AlarmTopic", {
-      topicName: "AlarmGlobalTopic",
+    this.globalAlarmTopic = new sns.Topic(this, "AlarmTopic", {
+      topicName: "GlobalAlarm",
     });
 
     const check = new route53.CfnHealthCheck(this, "VirkailijaDomainHealthCheck", {
@@ -62,33 +63,27 @@ class GlobalHealthCheckStack extends cdk.Stack {
       treatMissingData: cloudwatch.TreatMissingData.BREACHING,
       comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
     })
-    alarm.addOkAction(new cloudwatch_actions.SnsAction(this.regionalAlarmTopic));
-    alarm.addAlarmAction(new cloudwatch_actions.SnsAction(this.regionalAlarmTopic));
+    alarm.addOkAction(new cloudwatch_actions.SnsAction(this.globalAlarmTopic));
+    alarm.addAlarmAction(new cloudwatch_actions.SnsAction(this.globalAlarmTopic));
   }
 }
 
 type RegionalHealthCheckStackProps = cdk.StackProps & {
-  regionalAlarmTopicName: string
+  globalAlarmTopicName: string
+  alarmsToSlackLambda: lambda.IFunction,
 }
 
 class RegionalHealthCheckStack extends cdk.Stack {
   constructor(scope: constructs.Construct, id: string, props: RegionalHealthCheckStackProps) {
     super(scope, id, props);
-
     const stack = cdk.Stack.of(this);
-
-    const regionalAlarmTopic = sns.Topic.fromTopicArn(
+    const globalAlarmTopic = sns.Topic.fromTopicArn(
       this,
-      "RegionalAlarmTopic",
-      `arn:aws:sns:${ROUTE53_HEALTH_CHECK_REGION}:${stack.account}:${props.regionalAlarmTopicName}`
+      "GlobalAlarmTopic",
+      `arn:aws:sns:${ROUTE53_HEALTH_CHECK_REGION}:${stack.account}:${props.globalAlarmTopicName}`
     );
-    const alarmsToSlackLambda = lambda.Function.fromFunctionArn(
-      this,
-      "AlarmsToSlackLambda",
-      `arn:aws:lambda:${stack.region}:${stack.account}:function:alarms-to-slack`,
-    );
-    regionalAlarmTopic.addSubscription(
-      new sns_subscriptions.LambdaSubscription(alarmsToSlackLambda)
+    globalAlarmTopic.addSubscription(
+      new sns_subscriptions.LambdaSubscription(props.alarmsToSlackLambda)
     );
   }
 }
