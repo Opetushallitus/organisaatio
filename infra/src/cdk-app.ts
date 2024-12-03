@@ -10,15 +10,15 @@ import * as elasticloadbalancingv2 from "aws-cdk-lib/aws-elasticloadbalancingv2"
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
-import * as path from "node:path";
 import * as rds from "aws-cdk-lib/aws-rds"
 import * as route53 from "aws-cdk-lib/aws-route53";
-import * as route53_targets from "aws-cdk-lib/aws-route53-targets";
+import * as route53_targets from "aws-cdk-lib/aws-route53-targets"
 import * as s3 from "aws-cdk-lib/aws-s3"
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
+import * as path from "node:path";
 import {getConfig, getEnvironment} from "./config";
 
 class CdkApp extends cdk.App {
@@ -34,16 +34,15 @@ class CdkApp extends cdk.App {
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
     const { alarmTopic } = new AlarmStack(this, "AlarmStack", stackProps);
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
-    //const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
-    new DatabaseStack(this, "Database", vpc, bastion, stackProps);
+    const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
+    const databaseStack = new DatabaseStack(this, "Database", vpc, bastion, stackProps);
     //createHealthCheckStacks(this)
-    //new ApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
-    //  database: databaseStack.database,
-    //  bastion: databaseStack.bastion,
-    //  exportBucket: databaseStack.exportBucket,
-    //  ecsCluster: ecsStack.cluster,
-    //  ...stackProps,
-    //});
+    new ApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
+      database: databaseStack.database,
+      exportBucket: databaseStack.exportBucket,
+      ecsCluster: ecsStack.cluster,
+      ...stackProps,
+    });
   }
 }
 
@@ -233,7 +232,6 @@ class DatabaseStack extends cdk.Stack {
 type ApplicationStackProps = cdk.StackProps & {
   database: rds.DatabaseCluster
   ecsCluster: ecs.Cluster
-  bastion: ec2.BastionHostLinux
   exportBucket: s3.Bucket
 }
 
@@ -247,13 +245,11 @@ class ApplicationStack extends cdk.Stack {
       props: ApplicationStackProps,
   ) {
     super(scope, id, props);
-    const stack = cdk.Stack.of(this);
 
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
       logGroupName: "Organisaatio/organisaatio",
       retention: logs.RetentionDays.INFINITE,
     });
-    this.exportFailureAlarm(logGroup, alarmTopic)
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {
       directory: path.join(__dirname, "../../"),
@@ -266,8 +262,8 @@ class ApplicationStack extends cdk.Stack {
         this,
         "TaskDefinition",
         {
-          cpu: 1024,
-          memoryLimitMiB: 8192,
+          cpu: 4096,
+          memoryLimitMiB: 12288,
           runtimePlatform: {
             operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
             cpuArchitecture: ecs.CpuArchitecture.ARM64,
@@ -280,6 +276,7 @@ class ApplicationStack extends cdk.Stack {
       logging: new ecs.AwsLogDriver({ logGroup, streamPrefix: "app" }),
       environment: {
         ENV: getEnvironment(),
+        CONFIG_FILE: getEnvironment() == "hahtuva" ? "hahtuva2" : getEnvironment(),
         postgresql_host: props.database.clusterEndpoint.hostname,
         postgresql_port: props.database.clusterEndpoint.port.toString(),
         postgresql_db: "organisaatio",
@@ -295,35 +292,18 @@ class ApplicationStack extends cdk.Stack {
             props.database.secret!,
             "password"
         ),
-        authentication_app_password_to_haku: this.ssmSecret("AuthenticationAppPasswordToHaku"),
-        authentication_app_username_to_haku: this.ssmSecret("AuthenticationAppUsernameToHaku"),
-        authentication_app_password_to_vtj: this.ssmSecret("AuthenticationAppPasswordToVtj"),
-        authentication_app_username_to_vtj: this.ssmSecret("AuthenticationAppUsernameToVtj"),
-        authentication_app_password_to_henkilotietomuutos: this.ssmSecret("AuthenticationAppPasswordToHenkilotietomuutos"),
-        authentication_app_username_to_henkilotietomuutos: this.ssmSecret("AuthenticationAppUsernameToHenkilotietomuutos"),
-        kayttooikeus_password: this.ssmSecret("KayttooikeusPassword"),
-        kayttooikeus_username: this.ssmSecret("KayttooikeusUsername"),
+        lampi_role_arn: this.ssmString("LampiRoleArn"),
         lampi_external_id: this.ssmSecret("LampiExternalId"),
-        lampi_role_arn: this.ssmString("LampiRoleArn2"),
-        palveluvayla_access_key_id: this.ssmSecret("PalveluvaylaAccessKeyId"),
-        palveluvayla_secret_access_key: this.ssmSecret("PalveluvaylaSecretAccessKey"),
-        viestinta_username: this.ssmSecret("ViestintaUsername"),
-        viestinta_password: this.ssmSecret("ViestintaPassword"),
-        ataru_username: this.ssmSecret("AtaruUsername"),
-        ataru_password: this.ssmSecret("AtaruPassword"),
-        oauth2_clientid: this.ssmSecret("Oauth2Clientid"),
-        oauth2_clientsecret: this.ssmSecret("Oauth2Clientsecret"),
-        host_cas: this.ssmSecret("HostCas"),
-        host_virkailija: this.ssmSecret("HostVirkailija"),
-        vtj_muutosrajapinta_username: this.ssmSecret("VtjMuutosrajapintaUsername"),
-        vtj_muutosrajapinta_password: this.ssmSecret("VtjMuutosrajapintaPassword"),
-        vtjkysely_truststore_password: this.ssmSecret("VtjkyselyTruststorePassword"),
-        vtjkysely_keystore_password: this.ssmSecret("VtjkyselyKeystorePassword"),
-        vtjkysely_username: this.ssmSecret("VtjkyselyUsername"),
-        vtjkysely_password: this.ssmSecret("VtjkyselyPassword"),
-        vtjkysely_testoids: this.ssmSecret("VtjkyselyTestoids"),
-        henkilo_modified_sns_topic_arn: this.ssmSecret("HenkiloModifiedSnsTopicArn"),
-        opintopolku_cross_account_role: this.ssmString("OpintopolkuCrossAccountRole"),
+        organisaatio_service_username: this.ssmSecret("PalvelukayttajaUsername"),
+        organisaatio_service_password: this.ssmSecret("PalvelukayttajaPassword"),
+        rajapinnat_ytj_asiakastunnus: this.ssmSecret("YtjAsiakastunnus"),
+        rajapinnat_ytj_avain: this.ssmSecret("YtjAvain"),
+        organisaatio_service_username_to_koodisto: this.ssmSecret("KoodistoUsername"),
+        organisaatio_service_password_to_koodisto: this.ssmSecret("KoodistoPassword"),
+        oiva_baseurl: this.ssmSecret("OivaBaseurl"),
+        oiva_username: this.ssmSecret("OivaUsername"),
+        oiva_password: this.ssmSecret("OivaPassword"),
+        organisaatio_lakkautus_arn: this.ssmSecret("OrganisaatioLakkautusTopicArn"),
       },
       portMappings: [
         {
@@ -341,18 +321,7 @@ class ApplicationStack extends cdk.Stack {
         resources: [
           ssm.StringParameter.valueFromLookup(
             this,
-            "/organisaatio/LampiRoleArn2"
-          ),
-        ],
-      })
-    );
-    taskDefinition.addToTaskRolePolicy(
-      new iam.PolicyStatement({
-        actions: ["sts:AssumeRole"],
-        resources: [
-          ssm.StringParameter.valueFromLookup(
-            this,
-            "/organisaatio/OpintopolkuCrossAccountRole"
+            "/organisaatio/LampiRoleArn"
           ),
         ],
       })
@@ -382,7 +351,6 @@ class ApplicationStack extends cdk.Stack {
         { lower: 80, change: +3 },
       ],
     });
-
     service.connections.allowToDefaultPort(props.database);
 
     const alb = new elasticloadbalancingv2.ApplicationLoadBalancer(
@@ -431,6 +399,8 @@ class ApplicationStack extends cdk.Stack {
         port: appPort.toString(),
       },
     });
+
+    //this.exportFailureAlarm(logGroup, alarmTopic)
   }
 
   exportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {

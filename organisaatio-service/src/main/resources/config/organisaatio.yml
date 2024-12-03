@@ -1,0 +1,76 @@
+# Base for all AWS environment configuration
+
+auth.mode: "cas"
+env.loglevel: "INFO"
+port.organisaatio-service: "443"
+port.koodisto-service: "443"
+port.tarjonta-service: "443"
+
+port.postgresql: ${postgresql_port}
+# END
+
+rajapinnat.ytj.asiakastunnus: ${rajapinnat_ytj_asiakastunnus} # TODO ssm
+rajapinnat.ytj.avain: ${rajapinnat_ytj_avain} # TODO ssm
+organisaatio.service.username: ${organisaatio_service_username}
+organisaatio.service.password: ${organisaatio_service_password}
+organisaatio.service.username.to.koodisto: ${organisaatio_service_username_to_koodisto} # TODO ssm
+organisaatio.service.password.to.koodisto: ${organisaatio_service_password_to_koodisto} # TODO ssm
+organisaatio-service.scheduled.update.cron.expression: "0 0 1 * * ?"
+organisaatio.ui.url: ${host.virkailija}/organisaatio/html/organisaatiot # TODO
+organisaatio.ui.ilmoitukset.url: ${organisaatio.ui.url}/ilmoitukset # TODO
+ytjpaivitysloki.service.email: ${ryhmasahkoposti_service_email:jatkuvatpalvelut@oph.fi} # TODO
+organisaatio-service.postgresql.url: jdbc:postgresql://${postgresql_host}:${postgresql_port}/${postgresql_db}
+organisaatio-service.postgresql.user: ${postgresql_username}
+organisaatio-service.postgresql.password: ${postgresql_password}
+organisaatio-service.postgresql.maxactive: 30
+organisaatio-service.postgresql.maxwait: 10000
+organisaatio-service.postgresql.maxlifetimemillis: 60000
+organisaatio-service.hikaricp.leakDetectionThreshold: 0
+spring.datasource.url: jdbc:postgresql://${postgresql_host}:${postgresql_port}/${postgresql_db}
+spring.datasource.username: ${postgresql_username}
+spring.datasource.password: ${postgresql_password}
+aws.sns.lakkautusTopicArn: ${organisaatio_lakkautus_arn}
+aws.opintopolku-cross-account-role-arn: ${opintopolku_cross_account_role}
+aws.sns.enabled: true
+
+# Oletusarvoja
+cas.callback.organisaatio-app: http://${cluster_organisaatio_host}:80/organisaatio
+cas.callback.organisaatio-service: http://${cluster_organisaatio_host}:80/organisaatio
+cas.callback.organisaatio-ui: http://${cluster_organisaatio_host}:80/organisaatio
+cas.group-role-attribute: cn
+cas.group-search-base: "ou=groups"
+cas.group-search-filter: "(uniqueMember={0})"
+cas.sendRenew: false
+cas.user-search-base: "ou=people"
+cas.user-search-filter: "(|(mail={0})(uid={0}))"
+cas.callback.tarjonta-service: http://${cluster_tarjonta_host}:80/tarjonta-service
+cas.service.organisaatio-ui: https://${host.virkailija}/organisaatio-service
+cas.service.organisaatio-service: https://${host.virkailija}/organisaatio-service
+cas.service.tarjonta-service: https://${host.virkailija}/tarjonta-service
+flyway.initOnMigrate: true
+flyway.validateOnMigrate: false
+koodi.public.webservice.url.backend: https://${host.virkailija}/koodisto-service/services/koodiService
+koodisto.public.webservice.url.backend: https://${host.virkailija}/koodisto-service/services/koodistoService
+jpa.schemaUpdate: validate
+jpa.showSql: false
+jpa.generateStats: false
+oid.rest.url.backend: ${host.ilb}/oid-service/rest/oid
+oid.webservice.url.backend: ${host.ilb}/services/oidService
+organisaatio.rest.url: https://${host.virkailija}/organisaatio-service/rest/organisaatio/hae
+organisaatio.webservice.url.backend: https://${host.virkailija}/organisaatio-service/services/organisaatioService
+oppijanumerorekisteri-service-url.rest: https://${host.virkailija}/oppijanumerorekisteri-service/
+kayttooikeus-service-url.rest: https://${host.virkailija}/kayttooikeus-service/
+organisaatio-ui.cas.url: https://${host.virkailija}/cas/myroles
+koodisto-service.url.rest: https://${host.virkailija}/koodisto-service/rest/
+lokalisointi.url.rest: https://${host.virkailija}/lokalisointi/cxf/rest
+organisaatio-service.url.rest: https://${host.virkailija}/organisaatio-service/rest/
+organisaatio-ui.organisaatio-ui-url: https://${host.virkailija}/organisaatio-service/organisaatiot
+root.organisaatio.oid: "1.2.246.562.10.00000000001"
+web.url.cas: https://${host.cas}/cas
+
+organisaatio-service.tarjonta-service.rest.url: https://${host.virkailija}:${port.tarjonta-service}/tarjonta-service/rest
+organisaatio-service.koodisto-service.rest.url: https://${host.virkailija}/koodisto-service
+
+oiva.baseurl: ${oiva_baseurl}
+oiva.username: ${oiva_username}
+oiva.password: ${oiva_password}

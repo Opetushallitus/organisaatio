@@ -32,6 +32,8 @@ export function getConfig(): Config {
 export const hahtuva: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.hahtuvaopintopolku.fi",
+    minCapacity: 1,
+    maxCapacity: 1,
 };
 
 export const dev: Config = {

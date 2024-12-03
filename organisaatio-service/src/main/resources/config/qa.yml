@@ -1,0 +1,21 @@
+host.cas: "virkailija.testiopintopolku.fi"
+host.ilb: "https://virkailija.testiopintopolku.fi"
+host.virkailija: "virkailija.testiopintopolku.fi"
+cluster_tarjonta_host: "alb.testiopintopolku.fi"
+cluster_organisaatio_host: "alb.testiopintopolku.fi"
+
+
+feature.mockapi: false
+
+koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
+viestinvalitys.baseurl: "https://viestinvalitys.testiopintopolku.fi/lahetys"
+viestinvalitys.uiurl: "https://viestinvalitys.testiopintopolku.fi/raportointi"
+
+organisaatio.tasks.export.enabled: true
+organisaatio.tasks.export.bucket-name: ${export_bucket_name}
+organisaatio.tasks.export.copy-to-lampi: false
+organisaatio.tasks.export.lampi-bucket-name: oph-lampi-qa
+organisaatio.tasks.export.lampi-role-arn: ${lampi_role_arn}
+organisaatio.tasks.export.lampi-external-id: ${lampi_external_id}
+
+varda-rekisterointi.kayttooikeusryhma-id: 68995313
