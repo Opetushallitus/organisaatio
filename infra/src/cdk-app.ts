@@ -32,7 +32,7 @@ class CdkApp extends cdk.App {
     };
 
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
-    //const { alarmTopic } = new AlarmStack(this, "AlarmStack", stackProps);
+    const { alarmTopic } = new AlarmStack(this, "AlarmStack", stackProps);
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     //const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
     new DatabaseStack(this, "Database", vpc, bastion, stackProps);
@@ -124,33 +124,28 @@ class VpcStack extends cdk.Stack {
 }
 
 class AlarmStack extends cdk.Stack {
+  readonly alarmTopic: sns.ITopic;
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
 
     const alarmsToSlackLambda = this.createAlarmsToSlackLambda();
-    const alarmTopic = this.createAlarmTopic();
+    this.alarmTopic = this.createAlarmTopic();
 
-    alarmTopic.addSubscription(
+    this.alarmTopic.addSubscription(
       new subscriptions.LambdaSubscription(alarmsToSlackLambda),
     );
   }
 
   createAlarmTopic() {
-    const topic = new sns.Topic(this, "AlarmTopic", {
+    return new sns.Topic(this, "AlarmTopic", {
       topicName: "alarm",
     });
-    new ssm.StringParameter(this, "AlarmTopiArn", {
-      parameterName: "alarm-topic-arn",
-      stringValue: topic.topicArn,
-    });
-
-    return topic
   }
 
   createAlarmsToSlackLambda() {
     const alarmsToSlack = new lambda.Function(this, "AlarmsToSlack", {
       functionName: "alarms-to-slack",
-      code: lambda.Code.fromAsset("alarms-to-slack"),
+      code: lambda.Code.fromAsset("../alarms-to-slack"),
       handler: "alarms-to-slack.handler",
       runtime: lambda.Runtime.NODEJS_20_X,
       architecture: lambda.Architecture.ARM_64,
