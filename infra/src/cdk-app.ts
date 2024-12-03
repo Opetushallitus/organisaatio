@@ -33,9 +33,9 @@ class CdkApp extends cdk.App {
 
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
     //const { alarmTopic } = new AlarmStack(this, "AlarmStack", stackProps);
-    const { vpc } = new VpcStack(this, "VpcStack", stackProps);
+    const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     //const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
-    //const databaseStack = new DatabaseStack(this, "Database", vpc, stackProps);
+    new DatabaseStack(this, "Database", vpc, bastion, stackProps);
     //createHealthCheckStacks(this)
     //new ApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
     //  database: databaseStack.database,
@@ -62,9 +62,11 @@ export class DnsStack extends cdk.Stack {
 
 class VpcStack extends cdk.Stack {
   readonly vpc: ec2.IVpc;
+  readonly bastion: ec2.BastionHostLinux;
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
     this.vpc = this.createVpc();
+    this.bastion = this.createBastion()
   }
 
   createVpc() {
@@ -98,6 +100,13 @@ class VpcStack extends cdk.Stack {
       service: ec2.GatewayVpcEndpointAwsService.S3,
     });
     return vpc;
+  }
+
+  private createBastion(): ec2.BastionHostLinux {
+    return new ec2.BastionHostLinux(this, "Bastion", {
+      vpc: this.vpc,
+      instanceName: "Bastion",
+    })
   }
 
   private createOutIpAddresses() {
@@ -186,7 +195,6 @@ class ECSStack extends cdk.Stack {
 }
 
 class DatabaseStack extends cdk.Stack {
-  readonly bastion: ec2.BastionHostLinux;
   readonly database: rds.DatabaseCluster;
   readonly exportBucket: s3.Bucket;
 
@@ -194,6 +202,7 @@ class DatabaseStack extends cdk.Stack {
       scope: constructs.Construct,
       id: string,
       vpc: ec2.IVpc,
+      bastion: ec2.BastionHostLinux,
       props: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -205,7 +214,7 @@ class DatabaseStack extends cdk.Stack {
       vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
       defaultDatabaseName: "organisaatio",
       engine: rds.DatabaseClusterEngine.auroraPostgres({
-        version: rds.AuroraPostgresEngineVersion.VER_12_19,
+        version: rds.AuroraPostgresEngineVersion.VER_15_7,
       }),
       credentials: rds.Credentials.fromGeneratedSecret("organisaatio", {
         secretName: "DatabaseSecret",
@@ -222,12 +231,7 @@ class DatabaseStack extends cdk.Stack {
       readers: [],
       s3ExportBuckets: [this.exportBucket],
     });
-
-    this.bastion = new ec2.BastionHostLinux(this, "BastionHost", {
-      vpc,
-      instanceName: "Bastion",
-    });
-    this.database.connections.allowDefaultPortFrom(this.bastion);
+    this.database.connections.allowDefaultPortFrom(bastion);
   }
 }
 
