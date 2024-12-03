@@ -104,15 +104,6 @@ function is_running_on_codebuild {
   [ -n "${CODEBUILD_BUILD_ID:-}" ]
 }
 
-function export_aws_credentials {
-  local -r env=$1
-  export AWS_PROFILE="oph-organisaatio-${env}"
-
-  if ! aws sts get-caller-identity >/dev/null; then
-    fatal "AWS credentials are not configured env $env. Aborting."
-  fi
-}
-
 function get_aws_region_of_env {
   local -r env=$1
   get_env_specific_param "${env}" region

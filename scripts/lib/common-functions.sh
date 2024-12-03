@@ -39,6 +39,15 @@ function parse_env_from_script_name {
   fi
 }
 
+function export_aws_credentials {
+  local -r env=$1
+  export AWS_PROFILE="oph-organisaatio-${env}"
+
+  if ! aws sts get-caller-identity >/dev/null; then
+    fatal "AWS credentials are not configured env $env. Aborting."
+  fi
+}
+
 function aws {
   docker run \
     --platform linux/amd64 \
