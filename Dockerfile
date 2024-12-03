@@ -1,7 +1,7 @@
 FROM gradle:8.11-jdk21-corretto AS build
 WORKDIR /app
 
-COPY github-packages-gradle.properties /root/.gradle/gradle.properties
+COPY github-packages-gradle.properties /opt/gradle/gradle.properties
 COPY ytj-client ./ytj-client
 COPY organisaatio-api ./organisaatio-api
 COPY organisaatio-service ./organisaatio-service
