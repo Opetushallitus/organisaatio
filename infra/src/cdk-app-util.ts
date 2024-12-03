@@ -95,7 +95,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
         repo: repository.name,
         branch: repository.branch,
         output: sourceOutput,
-        triggerOnPush: false, //env == "hahtuva",
+        triggerOnPush: env == "hahtuva",
       });
     const sourceStage = pipeline.addStage({ stageName: "Source" });
     sourceStage.addAction(sourceAction);
