@@ -33,7 +33,7 @@ class CdkApp extends cdk.App {
 
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
     //const { alarmTopic } = new AlarmStack(this, "AlarmStack", stackProps);
-    //const { vpc } = new VpcStack(this, "VpcStack", stackProps);
+    const { vpc } = new VpcStack(this, "VpcStack", stackProps);
     //const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
     //const databaseStack = new DatabaseStack(this, "Database", vpc, stackProps);
     //createHealthCheckStacks(this)
