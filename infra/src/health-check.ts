@@ -76,10 +76,13 @@ type RegionalHealthCheckStackProps = cdk.StackProps & {
 class RegionalHealthCheckStack extends cdk.Stack {
   constructor(scope: constructs.Construct, id: string, props: RegionalHealthCheckStackProps) {
     super(scope, id, props);
-    const alarmsToSlackLambda = lambda.Function.fromFunctionArn(
+    const alarmsToSlackLambda = lambda.Function.fromFunctionAttributes(
       this,
       "AlarmsToSlackLambda",
-      props.alarmsToSlackLambdaArn
+      {
+        functionArn: props.alarmsToSlackLambdaArn,
+        sameEnvironment: true
+      },
     )
     const globalAlarmTopic = sns.Topic.fromTopicArn(
       this,
