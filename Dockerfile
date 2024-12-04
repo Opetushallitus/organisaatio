@@ -1,6 +1,17 @@
 FROM gradle:8.11-jdk21-corretto AS build
 WORKDIR /app
 
+RUN dnf install -y nodejs20 \
+  && alternatives --install /usr/bin/node node /usr/bin/node-20 90 \
+  && alternatives --install /usr/bin/npm npm /usr/bin/npm-20 90 \
+  && alternatives --install /usr/bin/npx npx /usr/bin/npx-20 90
+
+COPY organisaatio-ui ./organisaatio-ui
+WORKDIR /app/organisaatio-ui
+RUN npm ci
+RUN npm run build
+
+WORKDIR /app
 COPY github-packages-gradle.properties /opt/gradle/gradle.properties
 COPY ytj-client ./ytj-client
 COPY organisaatio-api ./organisaatio-api
