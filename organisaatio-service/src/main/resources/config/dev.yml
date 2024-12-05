@@ -1,3 +1,4 @@
+spring.flyway.locations: classpath:db/migration,classpath:db/migration-test
 host.cas: "virkailija.untuvaopintopolku.fi"
 host.ilb: "https://virkailija.untuvaopintopolku.fi"
 host.virkailija: "virkailija.untuvaopintopolku.fi"
