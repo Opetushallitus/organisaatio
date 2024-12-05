@@ -107,24 +107,24 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
     const sourceStage = pipeline.addStage({ stageName: "Source" });
     sourceStage.addAction(sourceAction);
 
-    //const runTests = env === "hahtuva";
-    //if (runTests) {
-    //  const testStage = pipeline.addStage({ stageName: "Test" });
-    //  testStage.addAction(
-    //    new codepipeline_actions.CodeBuildAction({
-    //      actionName: "TestOrganisaatio",
-    //      input: sourceOutput,
-    //      project: makeTestProject(
-    //        this,
-    //        env,
-    //        tag,
-    //        "TestOrganisaatio",
-    //        ["scripts/ci/run-tests.sh"],
-    //        "corretto21"
-    //      ),
-    //    })
-    //  );
-    //}
+    const runTests = env === "hahtuva";
+    if (runTests) {
+      const testStage = pipeline.addStage({ stageName: "Test" });
+      testStage.addAction(
+        new codepipeline_actions.CodeBuildAction({
+          actionName: "TestOrganisaatio",
+          input: sourceOutput,
+          project: makeTestProject(
+            this,
+            env,
+            tag,
+            "TestOrganisaatio",
+            ["scripts/ci/run-tests.sh"],
+            "corretto21"
+          ),
+        })
+      );
+    }
 
     const deployProject = new codebuild.PipelineProject(
       this,
