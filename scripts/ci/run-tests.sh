@@ -12,6 +12,7 @@ function main {
   start_database
   build_and_test_frontend
   build_and_test_jar
+  run_cypress_tests
 }
 
 function install_npm_dependencies {
@@ -44,6 +45,30 @@ function build_and_test_frontend {
 function build_and_test_jar {
   cd $repo
   ./gradlew clean build
+}
+
+function run_cypress_tests {
+  cd "${repo}/mock-api" && npm run mock-api &
+  mock_api_pid=$!
+  cd "${repo}/organisaatio-ui" && npm run start &
+  ui_pid=$!
+  cd "${repo}"
+  java -jar -Xms2g -Xmx2g \
+    -Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties \
+    -Dspring.profiles.active=dev \
+    -Dspring.flyway.enabled=true \
+    -Durl-virkailija=http://localhost:9000 \
+    -Dhost.virkailija=localhost:9000 \
+    -Durl-ytj=http://localhost:9000/ytj \
+    -Durl-oidservice=http://localhost:9000/oidservice \
+    -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available \
+    organisaatio-service/build/libs/organisaatio-service.jar &
+
+  cd "${repo}/organisaatio-ui"
+  npm run cypress:ci
+
+  kill $mock_api_pid
+  kill $ui_pid
 }
 
 main "$@"
