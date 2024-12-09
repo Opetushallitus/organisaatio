@@ -46,6 +46,8 @@ export const dev: Config = {
 export const qa: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.testiopintopolku.fi",
+    minCapacity: 1,
+    maxCapacity: 1,
 };
 
 export const prod: Config = {
