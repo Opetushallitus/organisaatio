@@ -21,6 +21,7 @@ import java.util.Optional;
 import static fi.vm.sade.varda.rekisterointi.util.Constants.*;
 import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
 import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.setSessionAttribute;
+import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.removeSessionAttribute;
 
 @Controller
 @RequestMapping("/hakija")
@@ -97,8 +98,11 @@ public class ValtuudetController {
         setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_BUSINESS_ID, organisation.identifier);
         setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, organisation.name);
 
-        String redirectUrl = properties.url("varda-rekisterointi.hakija");
-        return new RedirectView(redirectUrl);
+        var redirectUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, String.class);
+        if (redirectUrl.isPresent()) {
+          removeSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST);
+        }
+        return new RedirectView(redirectUrl.orElse(properties.url("varda-rekisterointi.hakija")));
     }
 
 }

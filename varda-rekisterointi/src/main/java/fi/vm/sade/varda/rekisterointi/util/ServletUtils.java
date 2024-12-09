@@ -19,6 +19,11 @@ public final class ServletUtils {
                 .map(type::cast);
     }
 
+    public static void removeSessionAttribute(HttpServletRequest request, String name) {
+      HttpSession session = request.getSession();
+      session.removeAttribute(name);
+    }
+
     public static <T> T setSessionAttribute(HttpServletRequest request, String name, T value) {
         HttpSession session = request.getSession();
         session.setAttribute(name, value);

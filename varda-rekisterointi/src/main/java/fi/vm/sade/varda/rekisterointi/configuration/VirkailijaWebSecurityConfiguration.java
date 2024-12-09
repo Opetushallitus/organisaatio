@@ -24,6 +24,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import jakarta.servlet.Filter;
@@ -45,7 +46,7 @@ public class VirkailijaWebSecurityConfiguration {
     @Profile("!dev")
     @Bean
     @Order(1)
-    SecurityFilterChain virkailiSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain virkailiSecurityFilterChain(HttpSecurity http, SecurityContextRepository securityContextRepository) throws Exception {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
         requestCache.setMatchingRequestParameterName(null);
@@ -58,10 +59,15 @@ public class VirkailijaWebSecurityConfiguration {
             .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
             .securityContext(securityContext -> securityContext
                     .requireExplicitSave(true)
-                    .securityContextRepository(new HttpSessionSecurityContextRepository()))
+                    .securityContextRepository(securityContextRepository))
             .requestCache(cache -> cache.requestCache(requestCache))
             .exceptionHandling(ex -> ex.authenticationEntryPoint(virkailijaAuthenticationEntryPoint()))
             .build();
+    }
+
+    @Bean
+    SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
     }
 
     ServiceProperties serviceProperties() {
