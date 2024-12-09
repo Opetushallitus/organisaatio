@@ -250,9 +250,9 @@ function makeTestProject(
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: "/docker/password",
         },
-        MVN_SETTINGSXML: {
+        GITHUB_PACKAGES_GRADLE_PROPERTIES: {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-          value: "/mvn/settingsxml",
+          value: "/gradle/github-packages-gradle-properties",
         },
       },
       buildSpec: codebuild.BuildSpec.fromObject({
@@ -271,8 +271,8 @@ function makeTestProject(
               "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD",
               "sudo yum install -y perl-Digest-SHA", // for shasum command
               `git checkout ${tag}`,
-              "echo $MVN_SETTINGSXML > ./settings.xml",
-            ],
+              "mkdir -p ~/.gradle && echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ~/.gradle/gradle.properties",
+            ]
           },
           build: {
             commands: testCommands,
