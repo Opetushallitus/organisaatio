@@ -254,6 +254,10 @@ function makeTestProject(
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: "/gradle/github-packages-gradle-properties",
         },
+        TZ: {
+          type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
+          value: "Europe/Helsinki",
+        }
       },
       buildSpec: codebuild.BuildSpec.fromObject({
         version: "0.2",
