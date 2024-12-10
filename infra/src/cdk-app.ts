@@ -402,23 +402,40 @@ class ApplicationStack extends cdk.Stack {
       },
     });
 
-    //this.exportFailureAlarm(logGroup, alarmTopic)
+    this.exportFailureAlarm(logGroup, alarmTopic);
+    this.oivaIntegrationAlarm(logGroup, alarmTopic);
   }
 
   exportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
+    this.alarmIfExpectedLogLineIsMissing(
+      "ExportTask",
+      logGroup,
+      alarmTopic,
+      logs.FilterPattern.literal('"Organisaatio export task completed"'),
+    );
+  }
+
+  private oivaIntegrationAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
+    this.alarmIfExpectedLogLineIsMissing(
+      "FetchKoulutusluvatTask",
+      logGroup,
+      alarmTopic,
+      logs.FilterPattern.literal('"Completed FetchKoulutusluvatTask"'),
+    );
+  }
+
+  private alarmIfExpectedLogLineIsMissing(id: String, logGroup: logs.LogGroup, alarmTopic: sns.ITopic, filterPattern: logs.IFilterPattern) {
     const metricFilter = logGroup.addMetricFilter(
-      "ExportTaskSuccessMetricFilter",
+      `${id}SuccessMetricFilter`,
       {
-        filterPattern: logs.FilterPattern.literal(
-          '"Organisaatio export task completed"'
-        ),
-        metricName: "ExportTaskSuccess",
+        filterPattern,
+        metricName: `${id}Success`,
         metricNamespace: "Organisaatio",
         metricValue: "1",
       }
     );
-    const alarm = new cloudwatch.Alarm(this, "ExportFailingAlarm", {
-      alarmName: "ExportFailing",
+    const alarm = new cloudwatch.Alarm(this, `${id}FailingAlarm`, {
+      alarmName: id,
       metric: metricFilter.metric({
         statistic: "Sum",
         period: cdk.Duration.hours(1),
