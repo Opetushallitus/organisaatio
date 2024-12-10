@@ -110,9 +110,10 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
     const runTests = env === "hahtuva";
     if (runTests) {
       const tests = [
-        { name: "TestOrganisaatioService", commands: ["scripts/ci/run-java-tests.sh"] },
-        { name: "TestOrganisaatioUi", commands: ["scripts/ci/run-frontend-tests.sh"] },
-        { name: "TestOrganisaatioCypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
+        { name: "Service", commands: ["scripts/ci/run-java-tests.sh"] },
+        { name: "Frontend", commands: ["scripts/ci/run-frontend-tests.sh"] },
+        { name: "Cypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
+        { name: "Playwright", commands: ["scripts/ci/run-playwright-tests.sh"] },
       ]
 
       const testStage = pipeline.addStage({ stageName: "Test" });
@@ -121,7 +122,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
-            project: makeTestProject(this, env, tag, test.name, test.commands, "corretto21"),
+            project: makeTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands, "corretto21"),
           })
         );
       }
