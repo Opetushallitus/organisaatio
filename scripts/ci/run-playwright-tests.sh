@@ -4,7 +4,7 @@ set -o errexit -o nounset -o pipefail
 repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
 source "${repo}/scripts/lib/common-functions.sh"
 
-trap stop_database EXIT
+trap cleanup EXIT
 
 function main {
   init_nodejs
@@ -43,7 +43,7 @@ function start_server {
     -Durl-oidservice=http://localhost:9000/oidservice \
     -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available \
     organisaatio-service/build/libs/organisaatio-service.jar &
-    wait_for_port 8080
+  wait_for_port 8080
 }
 
 function install_npm_dependencies {
@@ -60,9 +60,10 @@ function start_database {
   docker compose up --detach
 }
 
-function stop_database {
+function cleanup {
   cd $repo
-  docker compose down
+  docker compose down || true
+  kill $( jobs -p ) || true
 }
 
 function wait_for_port {

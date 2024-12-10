@@ -4,7 +4,7 @@ set -o errexit -o nounset -o pipefail
 repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
 source "${repo}/scripts/lib/common-functions.sh"
 
-trap stop_database EXIT
+trap cleanup EXIT
 
 function main {
   init_nodejs
@@ -59,9 +59,10 @@ function start_database {
   docker compose up --detach
 }
 
-function stop_database {
+function cleanup {
   cd $repo
-  docker compose down
+  docker compose down || true
+  kill $(jobs -p) || true
 }
 
 function wait_for_port {
