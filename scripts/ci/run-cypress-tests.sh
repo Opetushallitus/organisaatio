@@ -32,7 +32,7 @@ function start_ui {
 function start_server {
   cd "${repo}"
   ./gradlew clean build -x test
-  java -jar -Xms2g -Xmx2g \
+  java -jar \
     -Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties \
     -Dspring.profiles.active=dev \
     -Dspring.flyway.enabled=true \
