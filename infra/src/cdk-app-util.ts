@@ -109,20 +109,34 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
 
     const runTests = env === "hahtuva";
     if (runTests) {
-      const tests = [
+      const testStage = pipeline.addStage({ stageName: "Test" });
+
+      const amazonLinuxTests = [
         { name: "Service", commands: ["scripts/ci/run-java-tests.sh"] },
         { name: "Frontend", commands: ["scripts/ci/run-frontend-tests.sh"] },
-        { name: "Cypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
-        { name: "Playwright", commands: ["scripts/ci/run-playwright-tests.sh"] },
       ]
-
-      const testStage = pipeline.addStage({ stageName: "Test" });
-      for (const test of tests) {
+      for (const test of amazonLinuxTests) {
         testStage.addAction(
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
-            project: makeTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands, "corretto21"),
+            project: makeAmazonLinuxTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands),
+            type: codepipeline_actions.CodeBuildActionType.TEST,
+          })
+        );
+      }
+
+      const ubuntuTests = [
+        { name: "Cypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
+        { name: "Playwright", commands: ["scripts/ci/run-playwright-tests.sh"] },
+      ]
+      for (const test of ubuntuTests) {
+        testStage.addAction(
+          new codepipeline_actions.CodeBuildAction({
+            actionName: test.name,
+            input: sourceOutput,
+            project: makeUbuntuTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands),
+            type: codepipeline_actions.CodeBuildActionType.TEST,
           })
         );
       }
@@ -224,20 +238,18 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
   }
 }
 
-function makeTestProject(
+function makeAmazonLinuxTestProject(
   scope: constructs.Construct,
   env: string,
   tag: string,
   name: string,
   testCommands: string[],
-  javaVersion: "corretto11" | "corretto21"
 ): codebuild.PipelineProject {
   return new codebuild.PipelineProject(
     scope,
     `${name}${capitalize(env)}Project`,
     {
       projectName: `${name}${capitalize(env)}`,
-      concurrentBuildLimit: 1,
       environment: {
         buildImage: codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
         computeType: codebuild.ComputeType.SMALL,
@@ -269,13 +281,77 @@ function makeTestProject(
         phases: {
           install: {
             "runtime-versions": {
-              java: javaVersion,
+              java: "corretto21",
             },
           },
           pre_build: {
             commands: [
               "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD",
               "sudo yum install -y perl-Digest-SHA", // for shasum command
+              `git checkout ${tag}`,
+              "mkdir -p ~/.gradle && echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ~/.gradle/gradle.properties",
+            ]
+          },
+          build: {
+            commands: testCommands,
+          },
+        },
+      }),
+    }
+  );
+}
+
+function makeUbuntuTestProject(
+  scope: constructs.Construct,
+  env: string,
+  tag: string,
+  name: string,
+  testCommands: string[],
+): codebuild.PipelineProject {
+  return new codebuild.PipelineProject(
+    scope,
+    `${name}${capitalize(env)}Project`,
+    {
+      projectName: `${name}${capitalize(env)}`,
+      environment: {
+        buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
+        computeType: codebuild.ComputeType.SMALL,
+        privileged: true,
+      },
+      environmentVariables: {
+        DOCKER_USERNAME: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/docker/username",
+        },
+        DOCKER_PASSWORD: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/docker/password",
+        },
+        GITHUB_PACKAGES_GRADLE_PROPERTIES: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/gradle/github-packages-gradle-properties",
+        },
+        TZ: {
+          type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
+          value: "Europe/Helsinki",
+        }
+      },
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: "0.2",
+        env: {
+          "git-credential-helper": "yes",
+        },
+        phases: {
+          install: {
+            "runtime-versions": {
+              java: "corretto21",
+            },
+          },
+          pre_build: {
+            commands: [
+              "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD",
+              "sudo apt-get install -y netcat", // for nc command
+              "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Cypress/Chromium
               `git checkout ${tag}`,
               "mkdir -p ~/.gradle && echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ~/.gradle/gradle.properties",
             ]
