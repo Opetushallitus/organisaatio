@@ -16,6 +16,7 @@ function main {
   start_server
 
   cd "${repo}/playwright"
+  npx playwright install --with-deps
   npx playwright test
 }
 
