@@ -121,7 +121,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
             actionName: test.name,
             input: sourceOutput,
             project: makeAmazonLinuxTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands),
-            type: codepipeline_actions.CodeBuildActionType.TEST,
           })
         );
       }
@@ -136,7 +135,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
             actionName: test.name,
             input: sourceOutput,
             project: makeUbuntuTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands),
-            type: codepipeline_actions.CodeBuildActionType.TEST,
           })
         );
       }
@@ -252,7 +250,7 @@ function makeAmazonLinuxTestProject(
       projectName: `${name}${capitalize(env)}`,
       environment: {
         buildImage: codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
-        computeType: codebuild.ComputeType.SMALL,
+        computeType: codebuild.ComputeType.MEDIUM,
         privileged: true,
       },
       environmentVariables: {
@@ -315,7 +313,7 @@ function makeUbuntuTestProject(
       projectName: `${name}${capitalize(env)}`,
       environment: {
         buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
-        computeType: codebuild.ComputeType.SMALL,
+        computeType: codebuild.ComputeType.MEDIUM,
         privileged: true,
       },
       environmentVariables: {
