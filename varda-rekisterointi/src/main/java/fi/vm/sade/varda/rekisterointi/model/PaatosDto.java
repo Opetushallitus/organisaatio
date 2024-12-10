@@ -2,7 +2,7 @@ package fi.vm.sade.varda.rekisterointi.model;
 
 import lombok.Value;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Value
 public class PaatosDto {

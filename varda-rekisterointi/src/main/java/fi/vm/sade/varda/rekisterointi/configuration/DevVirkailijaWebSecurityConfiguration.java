@@ -1,36 +1,55 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
-import static fi.vm.sade.varda.rekisterointi.util.Constants.JOTPA_ROLE;
-import static fi.vm.sade.varda.rekisterointi.util.Constants.PAAKAYTTAJA_AUTHORITY;
-import static fi.vm.sade.varda.rekisterointi.util.Constants.VARDA_ROLE;
-import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_ROLE;
-import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_UI_ROLES;
+import static fi.vm.sade.varda.rekisterointi.util.Constants.PAAKAYTTAJA_ROLE;
 
-@Profile("dev")
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
-public class DevVirkailijaWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/virkailija/**").permitAll()
-                .anyRequest().authenticated()
-                .and().exceptionHandling()
-                .and().httpBasic();
-        ;
+@EnableMethodSecurity(jsr250Enabled = false, prePostEnabled = true, securedEnabled = true)
+public class DevVirkailijaWebSecurityConfiguration {
+    @Profile("dev")
+    @Bean
+    @Order(1)
+    SecurityFilterChain devVirkailijaSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .headers(headers -> headers.disable())
+                .csrf(csrf -> csrf.disable())
+                .securityMatcher("/virkailija/**")
+                .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())
+                .httpBasic(withDefaults())
+                .authenticationManager(authenticationManager())
+                .build();
     }
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication()
-        .withUser("devaaja").password("{noop}devaaja")
-        .authorities(PAAKAYTTAJA_AUTHORITY);
-  }
+    AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        return new ProviderManager(authenticationProvider);
+    }
+
+    UserDetailsService userDetailsService() {
+        UserDetails specialUser = User.withUsername("devaaja")
+            .password("{noop}devaaja")
+            .roles(PAAKAYTTAJA_ROLE)
+            .build();
+
+        return new InMemoryUserDetailsManager(specialUser);
+    }
 }

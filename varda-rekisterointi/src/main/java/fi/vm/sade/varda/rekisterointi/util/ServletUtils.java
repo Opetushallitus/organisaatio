@@ -2,8 +2,8 @@ package fi.vm.sade.varda.rekisterointi.util;
 
 import fi.vm.sade.javautils.http.HttpServletRequestUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -17,6 +17,11 @@ public final class ServletUtils {
                 .flatMap(session -> Optional.ofNullable(session.getAttribute(name)))
                 .filter(type::isInstance)
                 .map(type::cast);
+    }
+
+    public static void removeSessionAttribute(HttpServletRequest request, String name) {
+      HttpSession session = request.getSession();
+      session.removeAttribute(name);
     }
 
     public static <T> T setSessionAttribute(HttpServletRequest request, String name, T value) {

@@ -1,6 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

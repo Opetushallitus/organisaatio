@@ -7,7 +7,8 @@
 <div layout:fragment="sisalto">
     <div th:each="locale,iterStat: ${locales}">
         <span th:text="${messageSource.getMessage('hei', null, locale)}">Hei</span>,<br>
-        <span th:text="${messageSource.getMessage('varda.rekisteroityminen.hylatty.teksti', new Object[]{organisaatioNimi , perustelu}, locale)}">teksti</span>
+        <span th:text="${messageSource.getMessage('varda.rekisteroityminen.hylatty.teksti', organisaatioNimi, locale)}">teksti</span>
+        <span th:text="${perustelu}">perustelu</span>
         <p th:text="${messageSource.getMessage('varda.rekisteroityminen.hylatty.lisatieto', null, locale)}">lisätieto</p>
         <span th:text="${messageSource.getMessage('terveisin', null, locale)}">Terveisin</span><br/>
         <span th:text="${messageSource.getMessage('varda.asiakaspalvelu', null, locale)}">Vardan asiakaspalvelu</span><br/>

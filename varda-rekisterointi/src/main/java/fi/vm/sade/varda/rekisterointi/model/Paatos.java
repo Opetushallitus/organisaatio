@@ -3,7 +3,7 @@ package fi.vm.sade.varda.rekisterointi.model;
 import lombok.Value;
 import org.springframework.data.relational.core.mapping.Column;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Value

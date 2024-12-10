@@ -73,7 +73,7 @@ public class RekisterointiFinalizerTest {
         rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
         verify(rekisterointiRepository).save(any(Rekisterointi.class));
         verify(kutsuKayttajaTask).instance(anyString(), anyLong());
-        verify(schedulerClient).schedule(any(), any());
+        verify(schedulerClient).scheduleIfNotExists(any(), any());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class RekisterointiFinalizerTest {
         rekisterointiFinalizer.luoTaiPaivitaOrganisaatio(1L);
         verify(rekisterointiRepository, never()).save(any(Rekisterointi.class));
         verify(kutsuKayttajaTask).instance(anyString(), anyLong());
-        verify(schedulerClient).schedule(any(), any());
+        verify(schedulerClient).scheduleIfNotExists(any(), any());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class RekisterointiFinalizerTest {
         rekisterointiFinalizer.kutsuKayttaja(1L);
         verify(kayttajaFinalizer).kutsuKayttaja(rekisterointi);
         verify(paatosEmailTask).instance(anyString(), anyLong());
-        verify(schedulerClient).schedule(any(), any());
+        verify(schedulerClient).scheduleIfNotExists(any(), any());
     }
 
 }

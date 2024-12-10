@@ -16,7 +16,6 @@ Below is non-exhaustive list of the key technologies & frameworks used in the pr
 * Postgresql
 * Flyway
 * Lombok
-* Swagger
 * db-scheduler
 
 ### Frontend
@@ -35,14 +34,6 @@ Required tools for building the project:
 * Docker
 
 Project includes maven wrapper so it doesn't have to be installed. Just use `./mvnw` (unix) and `mvnw.cmd` (win).
-
-## Database
-
-Create database by running:
-
-    docker run --name varda-rekisterointi-db -p 5432:5432 -e POSTGRES_USER=varda-rekisterointi -e POSTGRES_PASSWORD=varda-rekisterointi -e POSTGRES_DB=varda-rekisterointi -d postgres:10.9
-
-This will start the container. Later, it can be started and stopped with `docker <start|stop> varda-rekisterointi-db`. Integration tests automatically start and stop a database server.
 
 ## Build
 

@@ -55,7 +55,7 @@ export default function RekisterointiAloitus() {
                 <p>
                     <a
                         className={`oph-button oph-button-primary ${styles.varimuutos}`}
-                        href="/varda-rekisterointi/hakija"
+                        href="/varda-rekisterointi/hakija?login=true"
                     >
                         {i18n.translateWithLang('HAKIJA_ALOITA_REKISTEROITYMINEN', data.kieli)}
                     </a>

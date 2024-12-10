@@ -1,9 +1,0 @@
-varda-rekisterointi:
-    service:
-        username: <your_username>
-        password: <your_password>
-    valtuudet:
-        host: https://asiointivaltuustarkastus.test.suomi.fi
-        client-id: <client_id>
-        api-key: <api_key>
-        oauth-password: <oauth_password>

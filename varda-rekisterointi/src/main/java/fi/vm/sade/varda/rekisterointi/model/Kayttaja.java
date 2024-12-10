@@ -3,8 +3,8 @@ package fi.vm.sade.varda.rekisterointi.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
 @EqualsAndHashCode
 @AllArgsConstructor(staticName = "of")

@@ -4,7 +4,7 @@ readonly repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function stop() {
   cd "$repo"
-  docker-compose down
+  docker compose down
 }
 trap stop EXIT
 
@@ -16,7 +16,7 @@ function main {
   tmux new-session -d -s "$session"
 
   tmux select-pane -t 0
-  tmux send-keys "docker-compose down --volumes; docker-compose up --force-recreate --renew-anon-volumes" C-m
+  tmux send-keys "docker compose down --volumes; docker compose up --force-recreate --renew-anon-volumes" C-m
 
   tmux splitw -v
   tmux select-pane -t 1

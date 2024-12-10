@@ -49,8 +49,6 @@ varda-rekisterointi:
             ryhmaperhepaivakoti: {{ kayttooikeus_ryhma_ryhmaperhepaivakoti }}
             perhepaivahoitaja: {{ kayttooikeus_ryhma_perhepaivahoitaja }}
             jotpa: {{ kayttooikeus_ryhma_jotpa_paakayttaja }}
-    swagger:
-        enabled: {{ varda_rekisterointi_swagger_enabled | default('false') }}
     rekisterointi-ui:
         username: {{ varda_rekisterointi_rekisterointi_ui_username }}
         password: {{ varda_rekisterointi_rekisterointi_ui_password }}

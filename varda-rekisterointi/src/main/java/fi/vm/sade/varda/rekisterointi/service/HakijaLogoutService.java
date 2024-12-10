@@ -4,8 +4,8 @@ import fi.vm.sade.properties.OphProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Service

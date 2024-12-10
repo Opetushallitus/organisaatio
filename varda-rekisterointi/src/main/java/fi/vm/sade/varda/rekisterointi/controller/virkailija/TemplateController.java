@@ -2,9 +2,6 @@ package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
 import fi.vm.sade.varda.rekisterointi.Template;
 import fi.vm.sade.varda.rekisterointi.service.TemplateService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,15 +32,9 @@ public class TemplateController {
      * @return viestipohja.
      */
     @GetMapping(value = "/{template}", produces = "text/html")
-    @ApiOperation("Lataa viestipohja")
-    @ApiResponse(
-            code = 200,
-            message = "Viestipohja HTML-formaatissa",
-            response = String.class
-    )
-    public String getTemplate(@ApiParam("viestipohja") @PathVariable Template template,
-                              @ApiParam("kieli") @RequestParam(required = false, defaultValue = "fi") String language,
-                              @ApiParam("tyyppi") @RequestParam(required = false, defaultValue = "varda") String tyyppi) {
+    public String getTemplate(@PathVariable Template template,
+                              @RequestParam(required = false, defaultValue = "fi") String language,
+                              @RequestParam(required = false, defaultValue = "varda") String tyyppi) {
         return templateService.getContent(tyyppi, template, new Locale(language), getDefaultVariables(template));
     }
 
