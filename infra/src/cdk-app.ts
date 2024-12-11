@@ -424,7 +424,7 @@ class ApplicationStack extends cdk.Stack {
     );
   }
 
-  private alarmIfExpectedLogLineIsMissing(id: String, logGroup: logs.LogGroup, alarmTopic: sns.ITopic, filterPattern: logs.IFilterPattern) {
+  private alarmIfExpectedLogLineIsMissing(id: string, logGroup: logs.LogGroup, alarmTopic: sns.ITopic, filterPattern: logs.IFilterPattern) {
     const metricFilter = logGroup.addMetricFilter(
       `${id}SuccessMetricFilter`,
       {
