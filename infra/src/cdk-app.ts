@@ -408,7 +408,7 @@ class ApplicationStack extends cdk.Stack {
 
   exportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
     this.alarmIfExpectedLogLineIsMissing(
-      "ExportTask",
+      "OrganisaatioExportTask",
       logGroup,
       alarmTopic,
       logs.FilterPattern.literal('"Organisaatio export task completed"'),
@@ -417,7 +417,7 @@ class ApplicationStack extends cdk.Stack {
 
   private oivaIntegrationAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
     this.alarmIfExpectedLogLineIsMissing(
-      "FetchKoulutusluvatTask",
+      "OrganisaatioFetchKoulutusluvatTask",
       logGroup,
       alarmTopic,
       logs.FilterPattern.literal('"Completed FetchKoulutusluvatTask"'),
