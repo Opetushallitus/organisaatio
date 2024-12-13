@@ -3,8 +3,8 @@ type EnvironmentName = (typeof environments)[number];
 
 const defaultConfig = {
     virkailijaHost: "",
-    minCapacity: 0,
-    maxCapacity: 0,
+    minCapacity: 1,
+    maxCapacity: 1,
 };
 
 export type Config = typeof defaultConfig;
@@ -32,22 +32,16 @@ export function getConfig(): Config {
 export const hahtuva: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.hahtuvaopintopolku.fi",
-    minCapacity: 1,
-    maxCapacity: 1,
 };
 
 export const dev: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.untuvaopintopolku.fi",
-    minCapacity: 1,
-    maxCapacity: 1,
 };
 
 export const qa: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.testiopintopolku.fi",
-    minCapacity: 1,
-    maxCapacity: 1,
 };
 
 export const prod: Config = {
