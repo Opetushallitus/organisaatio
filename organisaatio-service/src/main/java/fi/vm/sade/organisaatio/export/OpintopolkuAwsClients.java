@@ -18,7 +18,7 @@ public class OpintopolkuAwsClients {
 
     @Bean
     public S3AsyncClient opintopolkuS3Client(AwsCredentialsProvider opintopolkuCredentialsProvider) {
-        return S3AsyncClient.builder()
+        return S3AsyncClient.crtBuilder()
                 .credentialsProvider(opintopolkuCredentialsProvider)
                 .region(REGION)
                 .build();

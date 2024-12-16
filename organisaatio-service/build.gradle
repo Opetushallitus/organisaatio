@@ -70,6 +70,7 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.25.23')
     implementation 'software.amazon.awssdk:sts'
     implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk.crt:aws-crt:0.29.19'
     implementation 'software.amazon.awssdk:s3-transfer-manager'
 
     // Lombok
