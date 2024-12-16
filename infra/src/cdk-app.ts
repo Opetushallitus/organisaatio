@@ -21,6 +21,7 @@ import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as path from "node:path";
 import {getConfig, getEnvironment} from "./config";
 import {createHealthCheckStacks} from "./health-check";
+import {DatabaseBackupToS3} from "./DatabaseBackupToS3";
 
 class CdkApp extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -36,7 +37,7 @@ class CdkApp extends cdk.App {
     const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(this, "AlarmStack", stackProps);
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
-    const databaseStack = new DatabaseStack(this, "Database", vpc, bastion, stackProps);
+    const databaseStack = new DatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
     createHealthCheckStacks(this, alarmsToSlackLambda)
     new ApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
       database: databaseStack.database,
@@ -198,7 +199,9 @@ class DatabaseStack extends cdk.Stack {
       scope: constructs.Construct,
       id: string,
       vpc: ec2.IVpc,
+      ecsCluster: ecs.Cluster,
       bastion: ec2.BastionHostLinux,
+      alarmTopic: sns.ITopic,
       props: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -228,6 +231,13 @@ class DatabaseStack extends cdk.Stack {
       s3ExportBuckets: [this.exportBucket],
     });
     this.database.connections.allowDefaultPortFrom(bastion);
+
+    const backup = new DatabaseBackupToS3(this, "DatabaseBackupToS3", {
+      ecsCluster: ecsCluster,
+      dbCluster: this.database,
+      dbName: "organisaatio",
+      alarmTopic,
+    });
   }
 }
 
