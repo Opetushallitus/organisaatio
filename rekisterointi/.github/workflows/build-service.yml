@@ -37,6 +37,7 @@ jobs:
           name: rekisterointi-jar
           path: target/rekisterointi.jar
   sonarcloud:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -108,6 +109,7 @@ jobs:
           path: rekisterointi-ui/playwright-results
           retention-days: 10
   deploy-container:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     needs: [build, test]
     runs-on: ubuntu-latest
     steps:
