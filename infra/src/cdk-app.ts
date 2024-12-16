@@ -288,7 +288,6 @@ class ApplicationStack extends cdk.Stack {
       logging: new ecs.AwsLogDriver({ logGroup, streamPrefix: "app" }),
       environment: {
         ENV: getEnvironment(),
-        CONFIG_FILE: getEnvironment() == "hahtuva" ? "hahtuva2" : getEnvironment(),
         postgresql_host: props.database.clusterEndpoint.hostname,
         postgresql_port: props.database.clusterEndpoint.port.toString(),
         postgresql_db: "organisaatio",

@@ -32,7 +32,7 @@ COPY --chmod=755 <<"EOF" /app/entrypoint.sh
 set -o errexit -o nounset -o pipefail
 
 exec java \
-  -Dspring.config.additional-location=classpath:/config/organisaatio.yml,classpath:/config/$CONFIG_FILE.yml \
+  -Dspring.config.additional-location=classpath:/config/organisaatio.yml,classpath:/config/$ENV.yml \
   -Denv.name=$ENV \
   -Dlogging.config=classpath:/config/logback.xml \
   -Dserver.port=8080 \
