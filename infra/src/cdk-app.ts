@@ -305,7 +305,6 @@ class ApplicationStack extends cdk.Stack {
         oiva_baseurl: this.ssmSecret("OivaBaseurl"),
         oiva_username: this.ssmSecret("OivaUsername"),
         oiva_password: this.ssmSecret("OivaPassword"),
-        organisaatio_lakkautus_arn: this.ssmSecret("OrganisaatioLakkautusTopicArn"),
       },
       portMappings: [
         {

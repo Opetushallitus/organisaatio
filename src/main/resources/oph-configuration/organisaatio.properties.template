@@ -35,8 +35,6 @@ organisaatio-service.hikaricp.leakDetectionThreshold={{organisaatio_hikaricp_lea
 spring.datasource.url=jdbc:postgresql://{{host_postgresql_organisaatio}}:{{port_postgresql}}/organisaatio
 spring.datasource.username={{postgres_app_user}}
 spring.datasource.password={{host_postgresql_organisaatio_app_password}}
-aws.sns.lakkautusTopicArn={{organisaatio_lakkautus_arn}}
-aws.sns.enabled={{organisaatio_sns_enabled}}
 
 # Oletusarvoja
 cas.callback.organisaatio-app=http://{{ cluster_organisaatio_host | default("${server.name}") }}:{{ cluster_organisaatio_port | default("8301") }}/organisaatio

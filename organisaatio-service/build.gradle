@@ -66,7 +66,6 @@ dependencies {
     implementation 'ch.qos.logback:logback-access:1.4.14'
 
     // AWS
-    implementation group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.12.328'
     implementation platform('software.amazon.awssdk:bom:2.25.23')
     implementation 'software.amazon.awssdk:sts'
     implementation 'software.amazon.awssdk:s3'
