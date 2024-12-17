@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>fi.vm.sade.organisaatio</groupId>
+        <artifactId>organisaatio</artifactId>
+        <version>2024-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <groupId>fi.vm.sade.organisaatio.ytj</groupId>
+    <artifactId>ytj-client</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ytj-api</module>
+        <module>ytj-generated-model</module>
+        <module>ytj-webservice</module>
+    </modules>
+</project>
