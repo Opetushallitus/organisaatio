@@ -20,8 +20,8 @@ type DatabaseBackupToS3Props = {
   alarmTopic: sns.ITopic;
 };
 
-export class DatabaseBackupToS3 extends constructs.Construct {
-  readonly securityGroup: ec2.SecurityGroup;
+export class DatabaseBackupToS3 extends constructs.Construct implements ec2.IConnectable {
+  readonly connections: ec2.Connections;
 
   constructor(
     scope: constructs.Construct,
@@ -54,7 +54,7 @@ export class DatabaseBackupToS3 extends constructs.Construct {
       ],
     });
 
-    this.securityGroup = new ec2.SecurityGroup(this, "AppSecurityGroup", {
+    const securityGroup = new ec2.SecurityGroup(this, "AppSecurityGroup", {
       vpc: ecsCluster.vpc,
     });
 
@@ -162,8 +162,12 @@ export class DatabaseBackupToS3 extends constructs.Construct {
       new events_targets.EcsTask({
         cluster: ecsCluster,
         taskDefinition,
-        securityGroups: [this.securityGroup],
+        securityGroups: [securityGroup],
       }),
     );
+
+    this.connections = new ec2.Connections({
+      securityGroups: [securityGroup]
+    });
   }
 }

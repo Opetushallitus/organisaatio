@@ -249,6 +249,7 @@ class DatabaseStack extends cdk.Stack {
       dbName: "organisaatio",
       alarmTopic,
     });
+    this.database.connections.allowDefaultPortFrom(backup);
   }
 }
 
