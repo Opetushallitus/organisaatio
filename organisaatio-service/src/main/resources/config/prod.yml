@@ -12,7 +12,7 @@ viestinvalitys.uiurl: "https://viestinvalitys.opintopolku.fi/raportointi"
 
 organisaatio.tasks.export.enabled: true
 organisaatio.tasks.export.bucket-name: ${export_bucket_name}
-organisaatio.tasks.export.copy-to-lampi: false
+organisaatio.tasks.export.copy-to-lampi: true
 organisaatio.tasks.export.lampi-bucket-name: oph-lampi-prod
 organisaatio.tasks.export.lampi-role-arn: ${lampi_role_arn}
 organisaatio.tasks.export.lampi-external-id: ${lampi_external_id}
