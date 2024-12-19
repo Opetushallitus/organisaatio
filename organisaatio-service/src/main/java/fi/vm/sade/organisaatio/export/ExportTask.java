@@ -23,7 +23,12 @@ public class ExportTask extends RecurringTask<Void> {
     private ExportService exportService;
 
     public ExportTask() {
-        super("ExportTask", FixedDelay.of(Duration.ofHours(1)), Void.class, (FailureHandler<Void>) null);
+        super(
+                "ExportTask",
+                FixedDelay.of(Duration.ofHours(1)),
+                Void.class,
+                new FailureHandler.OnFailureReschedule<>(FixedDelay.of(Duration.ofHours(1)))
+        );
         log.info("Creating export task");
     }
 
