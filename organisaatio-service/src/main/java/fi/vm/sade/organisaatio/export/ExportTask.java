@@ -9,7 +9,7 @@ import fi.vm.sade.organisaatio.service.filters.RequestIdFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,12 +17,10 @@ import java.time.Duration;
 
 @Component
 @Slf4j
+@ConditionalOnProperty(value = "organisaatio.tasks.export.enabled", havingValue = "true")
 public class ExportTask extends RecurringTask<Void> {
     @Autowired
     private ExportService exportService;
-
-    @Value("${organisaatio.tasks.export.copy-to-lampi}")
-    private boolean copyToLampi;
 
     public ExportTask() {
         super("ExportTask", FixedDelay.of(Duration.ofHours(1)), Void.class, (FailureHandler<Void>) null);
@@ -36,11 +34,7 @@ public class ExportTask extends RecurringTask<Void> {
             log.info("Running organisaatio export task");
             exportService.createSchema();
             exportService.generateExportFiles();
-            if (copyToLampi) {
-                exportService.copyExportFilesToLampi();
-            } else {
-                log.info("Copying export files to Lampi is disabled");
-            }
+            exportService.copyExportFilesToLampi();
             log.info("Organisaatio export task completed");
         } catch (IOException e) {
             throw new RuntimeException(e);
