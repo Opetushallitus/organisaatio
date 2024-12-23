@@ -5,6 +5,7 @@ const defaultConfig = {
     virkailijaHost: "",
     minCapacity: 1,
     maxCapacity: 1,
+    vardaRekisterointiCapacity: 0,
 };
 
 export type Config = typeof defaultConfig;
@@ -32,19 +33,23 @@ export function getConfig(): Config {
 export const hahtuva: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.hahtuvaopintopolku.fi",
+    vardaRekisterointiCapacity: 0,
 };
 
 export const dev: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.untuvaopintopolku.fi",
+    vardaRekisterointiCapacity: 0,
 };
 
 export const qa: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.testiopintopolku.fi",
+    vardaRekisterointiCapacity: 0,
 };
 
 export const prod: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.opintopolku.fi",
+    vardaRekisterointiCapacity: 0,
 };

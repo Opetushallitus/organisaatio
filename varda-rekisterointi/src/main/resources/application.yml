@@ -29,7 +29,6 @@ spring:
 varda-rekisterointi:
   url-virkailija: http://localhost:${server.port}
   url-oppija: http://localhost:${server.port}
-  url-alb: http://localhost:${server.port}
   service:
     username: varda-rekisterointi
     password: varda-rekisterointi
@@ -42,3 +41,14 @@ varda-rekisterointi:
   rekisterointi-ui:
     username: varda-rekisterointi
     password: varda-rekisterointi
+
+server.tomcat.accesslog.enabled: true
+server.tomcat.accesslog.directory: /dev
+server.tomcat.accesslog.prefix: stdout
+server.tomcat.accesslog.suffix:
+server.tomcat.accesslog.file-date-format:
+server.tomcat.accesslog.buffered: false
+server.tomcat.accesslog.rotate: false
+server.tomcat.accesslog.rename-on-rotate: false
+server.tomcat.accesslog.request-attributes-enabled: true
+server.tomcat.accesslog.pattern: "{\"timestamp\": \"%{yyyy-MM-dd'T'HH:mm:ss.SSSZ}t\", \"responseCode\": \"%s\", \"request\": \"%r\", \"responseTime\": \"%D\", \"requestMethod\": \"%m\", \"service\": \"varda-rekisterointi\", \"environment\": \"${env.name}\", \"customer\": \"OPH\", \"user-agent\": \"%{User-Agent}i\", \"caller-id\": \"%{Caller-Id}i\", \"clientSubSystemCode\": \"%{clientSubSystemCode}i\", \"x-forwarded-for\": \"%{X-Forwarded-For}i\", \"x-real-ip\": \"%{X-Real-IP}i\", \"remote-ip\": \"%a\", \"session\": \"%{JSESSIONID}c\", \"response-size\": \"%B\", \"referer\": \"%{Referer}i\", \"opintopolku-api-key\": \"%{Opintopolku-Api-Key}i\"}"

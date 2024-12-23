@@ -1,0 +1,11 @@
+host_oppija: testiopintopolku.fi
+host_virkailija: virkailija.testiopintopolku.fi
+
+varda-rekisterointi.schedule.kunta-email-task: "FIXED_DELAY|3600s"
+varda-rekisterointi.schedule.raportoi-epaonnistumiset-task: "DAILY|07:00"
+varda-rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.test.suomi.fi"
+
+varda-rekisterointi.kayttooikeus.ryhma.paivakoti: 68995313
+varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti: 68995333
+varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja: 68995347
+varda-rekisterointi.kayttooikeus.ryhma.jotpa: 69336906

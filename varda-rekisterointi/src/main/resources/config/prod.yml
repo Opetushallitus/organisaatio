@@ -1,0 +1,11 @@
+host_oppija: opintopolku.fi
+host_virkailija: virkailija.opintopolku.fi
+
+varda-rekisterointi.schedule.kunta-email-task: "DAILY|07:00"
+varda-rekisterointi.schedule.raportoi-epaonnistumiset-task: "DAILY|07:00"
+varda-rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.suomi.fi"
+
+varda-rekisterointi.kayttooikeus.ryhma.paivakoti: 107000756
+varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti: 107000786
+varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja: 107000737
+varda-rekisterointi.kayttooikeus.ryhma.jotpa: 108740796

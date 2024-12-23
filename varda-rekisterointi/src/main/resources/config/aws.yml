@@ -1,0 +1,26 @@
+logging.config: classpath:/config/logback.xml
+server.port: 8080
+server.servlet.session.timeout: 1h
+server.servlet.session.cookie:
+server.servlet.session.cookie.domain: ${host_oppija}
+server.servlet.session.cookie.secure: true
+server.servlet.session.cookie.max-age: 1h
+
+server.tomcat.port-header: X-Real-Port
+server.tomcat.protocol-header: X-Real-Proto
+
+spring.datasource.url: jdbc:postgresql://${postgresql_host}:${postgresql_port}/${postgresql_db}
+spring.datasource.username: ${postgresql_username}
+spring.datasource.password: ${postgresql_password}
+
+varda-rekisterointi.url-oppija:  https://${host_oppija}
+varda-rekisterointi.url-virkailija: https://${host_virkailija}
+varda-rekisterointi.service.username: ${palvelukayttaja_username}
+varda-rekisterointi.service.password: ${palvelukayttaja_password}
+varda-rekisterointi.schedule.kasittelyssa-email-task: "DAILY|06:30"
+varda-rekisterointi.valtuudet.client-id: ${varda_rekisterointi_valtuudet_client_id}
+varda-rekisterointi.valtuudet.api-key: ${varda_rekisterointi_valtuudet_api_key}
+varda-rekisterointi.valtuudet.oauth-password: ${varda_rekisterointi_valtuudet_oauth_password}
+
+varda-rekisterointi.rekisterointi-ui.username: ${varda_rekisterointi_rekisterointi_ui_username}
+varda-rekisterointi.rekisterointi-ui.password: ${varda_rekisterointi_rekisterointi_ui_password}

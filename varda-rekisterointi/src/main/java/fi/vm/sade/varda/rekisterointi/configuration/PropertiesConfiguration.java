@@ -17,7 +17,6 @@ public class PropertiesConfiguration {
         OphProperties properties = new OphProperties("/varda-rekisterointi-oph.properties");
         properties.addDefault("url-oppija", environment.getRequiredProperty("varda-rekisterointi.url-oppija"));
         properties.addDefault("url-virkailija", environment.getRequiredProperty("varda-rekisterointi.url-virkailija"));
-        properties.addDefault("url-alb", environment.getRequiredProperty("varda-rekisterointi.url-alb"));
         properties.addDefault("varda-rekisterointi.service.username", environment.getRequiredProperty("varda-rekisterointi.service.username"));
         properties.addDefault("varda-rekisterointi.service.password", environment.getRequiredProperty("varda-rekisterointi.service.password"));
         Arrays.asList(

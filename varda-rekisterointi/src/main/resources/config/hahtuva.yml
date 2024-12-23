@@ -1,0 +1,12 @@
+host_oppija: hahtuvaopintopolku.fi
+host_virkailija: virkailija.hahtuvaopintopolku.fi
+
+# never
+varda-rekisterointi.schedule.kunta-email-task: "FIXED_DELAY|3600s" # never?
+varda-rekisterointi.schedule.raportoi-epaonnistumiset-task: "DAILY|07:00" # never
+varda-rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.test.suomi.fi"
+
+varda-rekisterointi.kayttooikeus.ryhma.paivakoti: -1
+varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti: -1
+varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja: -1
+varda-rekisterointi.kayttooikeus.ryhma.jotpa: -1
