@@ -37,11 +37,12 @@ class CdkApp extends cdk.App {
     const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(this, "AlarmStack", stackProps);
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
-    const databaseStack = new DatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
+    const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(this, "VardaRekisterointiDatabase", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
+    const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
     createHealthCheckStacks(this, alarmsToSlackLambda)
     new ApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
-      database: databaseStack.database,
-      exportBucket: databaseStack.exportBucket,
+      database: organisaatioDatabaseStack.database,
+      exportBucket: organisaatioDatabaseStack.exportBucket,
       ecsCluster: ecsStack.cluster,
       ...stackProps,
     });
@@ -202,7 +203,7 @@ class ECSStack extends cdk.Stack {
   }
 }
 
-class DatabaseStack extends cdk.Stack {
+class OrganisaatioDatabaseStack extends cdk.Stack {
   readonly database: rds.DatabaseCluster;
   readonly exportBucket: s3.Bucket;
 
@@ -247,6 +248,53 @@ class DatabaseStack extends cdk.Stack {
       ecsCluster: ecsCluster,
       dbCluster: this.database,
       dbName: "organisaatio",
+      alarmTopic,
+    });
+    this.database.connections.allowDefaultPortFrom(backup);
+  }
+}
+
+class VardRekisterointiDatabaseStack extends cdk.Stack {
+  readonly database: rds.DatabaseCluster;
+
+  constructor(
+      scope: constructs.Construct,
+      id: string,
+      vpc: ec2.IVpc,
+      ecsCluster: ecs.Cluster,
+      bastion: ec2.BastionHostLinux,
+      alarmTopic: sns.ITopic,
+      props: cdk.StackProps
+  ) {
+    super(scope, id, props);
+
+    this.database = new rds.DatabaseCluster(this, "Database", {
+      vpc,
+      vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
+      defaultDatabaseName: "vardarekisterointi",
+      engine: rds.DatabaseClusterEngine.auroraPostgres({
+        version: rds.AuroraPostgresEngineVersion.VER_15_7,
+      }),
+      credentials: rds.Credentials.fromGeneratedSecret("organisaatio", {
+        secretName: "DatabaseSecret",
+      }),
+      storageType: rds.DBClusterStorageType.AURORA,
+      writer: rds.ClusterInstance.provisioned("writer", {
+        enablePerformanceInsights: true,
+        instanceType: ec2.InstanceType.of(
+            ec2.InstanceClass.T4G,
+            ec2.InstanceSize.SMALL
+        ),
+      }),
+      storageEncrypted: true,
+      readers: [],
+    });
+    this.database.connections.allowDefaultPortFrom(bastion);
+
+    const backup = new DatabaseBackupToS3(this, "DatabaseBackupToS3", {
+      ecsCluster: ecsCluster,
+      dbCluster: this.database,
+      dbName: "vardarekisterointi",
       alarmTopic,
     });
     this.database.connections.allowDefaultPortFrom(backup);
