@@ -29,6 +29,7 @@ jobs:
           node-version: 20
           cache: 'npm'
       - name: Build frontend
+        working-directory: ./varda-rekisterointi
         run: |
           npm ci
           npm run lint
@@ -51,34 +52,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: ./varda-rekisterointi
         run: mvn clean install -B -Dbranch=$GITHUB_REF_NAME -Drevision=$GITHUB_SHA -DbuildNumber=$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Opetushallitus_varda-rekisterointi
       - name: Upload varda-rekisterointi-jar
         uses: actions/upload-artifact@v4
         with:
           name: varda-rekisterointi-jar
           path: target/varda-rekisterointi.jar
-  deploy-container:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
-      - name: Download varda-rekisterointi-jar
-        uses: actions/download-artifact@v4
-        with:
-          name: varda-rekisterointi-jar
-      - name: Build Docker Conainer
-        shell: bash
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          git clone https://github.com/Opetushallitus/ci-tools.git
-          source ci-tools/common/setup-tools.sh
-          export BASE_IMAGE="baseimage-fatjar-openjdk21:master"
-          export ARTIFACT_NAME="varda-rekisterointi"
-          cp varda-rekisterointi.jar $DOCKER_BUILD_DIR/artifact/$ARTIFACT_NAME.jar
-          cp -vr oph-configuration $DOCKER_BUILD_DIR/config/
-          ./ci-tools/common/pull-image.sh
-          ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
-          ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
