@@ -10,7 +10,7 @@ jobs:
       postgres:
         image: postgres:15.7
         ports:
-          - 5433:5432
+          - 5439:5432
         env:
           POSTGRES_USER: varda-rekisterointi
           POSTGRES_DB: varda-rekisterointi
