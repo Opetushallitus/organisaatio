@@ -275,7 +275,7 @@ class VardRekisterointiDatabaseStack extends cdk.Stack {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
         version: rds.AuroraPostgresEngineVersion.VER_15_7,
       }),
-      credentials: rds.Credentials.fromGeneratedSecret("organisaatio", {
+      credentials: rds.Credentials.fromGeneratedSecret("vardarekisterointi", {
         secretName: "DatabaseSecret",
       }),
       storageType: rds.DBClusterStorageType.AURORA,
