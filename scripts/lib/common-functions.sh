@@ -1,6 +1,16 @@
 export repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 readonly node_version=$( cat "$repo/.nvmrc" )
 
+function wait_for_container_to_be_healthy {
+  require_docker
+  local -r container_name="$1"
+
+  info "Waiting for docker container $container_name to be healthy"
+  until [ "$(docker inspect -f {{.State.Health.Status}} "$container_name" 2>/dev/null || echo "not-running")" == "healthy" ]; do
+    sleep 2
+  done
+}
+
 function require_docker {
   require_command docker
   docker ps >/dev/null 2>&1 || fatal "Running 'docker ps' failed. Is docker daemon running? Aborting."

@@ -13,7 +13,7 @@ spring:
   main:
     banner-mode: "off"
   datasource:
-    url: jdbc:postgresql://localhost:${db.port:5432}/varda-rekisterointi
+    url: jdbc:postgresql://localhost:5438/varda-rekisterointi
     username: varda-rekisterointi
     password: varda-rekisterointi
   flyway:

@@ -30,7 +30,16 @@ function main {
   tmux splitw -h
   tmux send-keys "$repo/scripts/run-organisaatio-service.sh" C-m
 
+  tmux select-pane -t 1
+  tmux splitw -v
+  tmux send-keys "$repo/scripts/run-varda-rekisterointi.sh" C-m
+
+  tmux select-pane -t 4
+  tmux splitw -v
+  tmux send-keys "$repo/scripts/run-varda-rekisterointi-ui.sh" C-m
+
   open "http://localhost:3003/organisaatio-service/organisaatiot"
+  open "http://localhost:3000/varda-rekisterointi"
 
   tmux attach-session -t "$session"
 }
