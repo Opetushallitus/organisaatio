@@ -4,6 +4,7 @@ import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,11 +37,21 @@ public class OrganisaatioService {
     private static final String EMAIL_TYYPPI = "email";
     private static final Pattern YRITYSMUOTOURI_PATTERN = Pattern.compile("yritysmuoto_\\d+");
 
+    @Autowired private final KoodistoClient koodistoClient;
     private final Map<String,Koodi> yritysmuotoUriToKoodi = new HashMap<>();
 
     public OrganisaatioService(KoodistoClient koodistoClient) {
-        koodistoClient.listKoodit(KoodistoType.YRITYSMUOTO).forEach(
-                koodi -> yritysmuotoUriToKoodi.put(koodi.uri, koodi));
+        this.koodistoClient = koodistoClient;
+        tryUpdateYritysmuotoKoodisto();
+    }
+
+    private void tryUpdateYritysmuotoKoodisto() {
+        try {
+            koodistoClient.listKoodit(KoodistoType.YRITYSMUOTO).forEach(
+                    koodi -> yritysmuotoUriToKoodi.put(koodi.uri, koodi));
+        } catch (Exception e) {
+            LOGGER.error("Failed to fetch koodisto data", e);
+        }
     }
 
     /**
@@ -115,13 +126,20 @@ public class OrganisaatioService {
         return List.of(organisaatioNimi);
     }
 
+    private Koodi getYritysmuotoFromUri(String uri) {
+        if (yritysmuotoUriToKoodi.isEmpty()) {
+            tryUpdateYritysmuotoKoodisto();
+        }
+        return yritysmuotoUriToKoodi.get(uri);
+    }
+
     // organisaatiopalvelu tallentaa ikävä kyllä kielistettyjä yritysmuotoja,
     // muunnetaan kunnes saadaan organisaatiopalvelu järkevämpään kuosiin
     String yritysMuotoKoodiUriToNimi(String uri) {
         String nimi = null;
         if (YRITYSMUOTOURI_PATTERN.matcher(uri).matches()) {
             LOGGER.info("Muunnetaan yritysmuotokoodi: {}", uri);
-            Koodi koodi = yritysmuotoUriToKoodi.get(uri);
+            Koodi koodi = getYritysmuotoFromUri(uri);
             if (koodi != null) {
                 nimi = koodi.nimi.get(DEFAULT_KIELI_KOODI_ARVO);
             } else {
