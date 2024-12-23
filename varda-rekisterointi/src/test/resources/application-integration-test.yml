@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/varda-rekisterointi
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+db-scheduler:
+  enabled: true

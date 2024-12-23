@@ -1,0 +1,14 @@
+.section {
+    display: grid;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.child {
+    grid-row: 1;
+    grid-column: col-start 2 / span 10;
+}
+
+.center {
+    max-width: 400px;
+    text-align: center;
+}

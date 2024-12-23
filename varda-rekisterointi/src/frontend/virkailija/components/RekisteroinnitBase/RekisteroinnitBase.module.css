@@ -1,0 +1,97 @@
+.pageBase {
+    background: #f2f2f2;
+    padding: 1px 4rem 0;
+    min-height: 87vh;
+    position: relative;
+}
+
+.rekisterointiOsio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.lisaaHakemusOsio {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 2em;
+}
+
+.lisaaHakemusOsio div {
+    margin: 0 1em 1em 0;
+}
+
+.tilaTabit {
+    margin-left: 2em;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 800px) {
+    .rekisteroinnit {
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+    .tilaTabit {
+        margin-left: 0;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .rekisteroinnit {
+        margin-left: 7.5%;
+        margin-right: 7.5%;
+    }
+}
+
+.suodata.suodata {
+    width: 20em;
+    border-radius: 24px;
+    border-style: none;
+    background-color: #f0f0f0;
+}
+
+.suodataIcon {
+    color: darkgray;
+    font-weight: lighter;
+}
+
+a.nappi {
+    height: 100%;
+    border-radius: 4px;
+    border-color: #0a789c;
+    background-color: #0a789c;
+    padding: 6px 16px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a.nappiDisabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.headerPrefix {
+    text-transform: capitalize;
+}
+
+.registrationTypeButtons {
+    padding-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.registrationTypeButton {
+    cursor: pointer;
+}
+
+.toast {
+    --toastify-color-success: #43a047;
+    --toastify-font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+
+.toast > div {
+    border-radius: 3px;
+}

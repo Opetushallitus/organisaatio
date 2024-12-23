@@ -1,0 +1,49 @@
+.varda-rekisterointi-hakija div.oph-field {
+   padding: 0.5em 0.5em 0.5em 2em;
+    flex-wrap: unset;
+}
+
+.varda-rekisterointi-hakija div.oph-field label.oph-label {
+    width: 30%;
+}
+
+@media (max-width:540px) {
+    .varda-rekisterointi-hakija div.oph-field {
+        flex-wrap: wrap;
+        padding: 0.5em;
+    }
+    .varda-rekisterointi-hakija div.oph-field label.oph-label {
+        width: auto;
+        padding: 0.5em 0 0.5em 0;
+    }
+}
+
+.varda-rekisterointi-hakija div.oph-field div.oph-select-container {
+    width: auto;
+}
+
+.varda-rekisterointi-hakija div.oph-field:nth-child(odd) {
+    background-color: #f7f7f7;
+}
+
+.varda-rekisterointi-hakija div.oph-field .oph-input {
+    box-shadow: none;
+}
+
+.varda-rekisterointi-hakija div.oph-field .oph-input:disabled {
+    background-color: transparent;
+    color: #2a2a2a;
+    border: 0;
+    padding: 0.5em 0;
+}
+.varda-rekisterointi-hakija div.oph-field input:read-only {
+    background-color: transparent;
+    color: #2a2a2a;
+    border: 0;
+    padding: 0.5em 0;
+}
+
+
+.varda-rekisterointi-hakija .oph-checkable-input:focus + .oph-checkable-text {
+    color: #2a2a2a;
+}

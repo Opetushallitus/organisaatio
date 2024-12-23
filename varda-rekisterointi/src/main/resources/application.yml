@@ -1,0 +1,44 @@
+server:
+  forward-headers-strategy: native
+  port: 8081
+  servlet:
+    context-path: /varda-rekisterointi
+    session:
+      timeout: 1d
+      tracking-modes: cookie
+      cookie:
+        http-only: true
+        max-age: 1d
+spring:
+  main:
+    banner-mode: "off"
+  datasource:
+    url: jdbc:postgresql://localhost:${db.port:5432}/varda-rekisterointi
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+  flyway:
+    out-of-order: true
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          no-store: true
+varda-rekisterointi:
+  url-virkailija: http://localhost:${server.port}
+  url-oppija: http://localhost:${server.port}
+  url-alb: http://localhost:${server.port}
+  service:
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+  kayttooikeus:
+    ryhma:
+      paivakoti: 70008488
+      ryhmaperhepaivakoti: 70008504
+      perhepaivahoitaja: 70008477
+      jotpa: 1224455
+  rekisterointi-ui:
+    username: varda-rekisterointi
+    password: varda-rekisterointi

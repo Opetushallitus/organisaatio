@@ -1,0 +1,25 @@
+.buttonGroup {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.buttonGroup button {
+  border-radius: 0;
+  border: 2px solid #0a789c;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.buttonGroup button:not(:last-of-type) {
+  border-right: none;
+}
+
+.buttonGroup button:first-of-type {
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+.buttonGroup button:last-of-type {
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+}

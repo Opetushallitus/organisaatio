@@ -1,0 +1,18 @@
+<!doctype html>
+<html layout:decorate="~{generic/pohja-kaikki-kielet}">
+<head>
+    <title th:text="#{generic.rekisteroityminen.hylatty.otsikko}">otsikko</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    <div th:each="locale,iterStat: ${locales}">
+        <span th:text="${messageSource.getMessage('hei', null, locale)}">Hei</span>,<br>
+        <span th:text="${messageSource.getMessage('generic.rekisteroityminen.hylatty.teksti', perustelu, locale)}">teksti</span>
+        <p th:text="${messageSource.getMessage('generic.rekisteroityminen.hylatty.lisatieto', null, locale)}">lisätieto</p>
+        <span th:text="${messageSource.getMessage('generic.terveisin', null, locale)}">Terveisin</span><br/>
+        <span th:text="${messageSource.getMessage('generic.jotpa', null, locale)}">Jotpa</span>
+        <div th:if="${!iterStat.last}">***</div>
+    </div>
+</div>
+</body>
+</html>

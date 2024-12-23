@@ -1,0 +1,13 @@
+<!doctype html>
+<html layout:decorate="~{generic/pohja-yhteisetpalvelut}">
+<head>
+    <title th:text="#{generic.rekisteroityminen.kasittelemattomat.otsikko}">otsikko</title>
+</head>
+<body>
+<div layout:fragment="sisalto">
+    <span th:text="#{hei}">Hei</span>,<br>
+    <span th:utext="#{generic.rekisteroityminen.kasittelemattomat.teksti}">teksti</span>
+    <p th:text="#{generic.rekisteroityminen.kasittelemattomat.lisatieto(${kasittelemattomat})}">lisätieto</p>
+</div>
+</body>
+</html>

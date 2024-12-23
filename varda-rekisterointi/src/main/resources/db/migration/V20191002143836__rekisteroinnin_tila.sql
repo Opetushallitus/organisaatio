@@ -1,0 +1,2 @@
+ALTER TABLE rekisterointi ADD COLUMN tila varchar NOT NULL DEFAULT 'KASITTELYSSA';
+ALTER TABLE rekisterointi ADD CONSTRAINT valid_tila CHECK (tila = 'KASITTELYSSA' OR tila = 'HYVAKSYTTY' OR tila = 'HYLATTY');

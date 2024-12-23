@@ -1,0 +1,25 @@
+.header {
+    background-color: #0A789C;
+    color: #ffffff;
+    padding: 0.5em;
+    display: grid;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.title {
+    grid-column: col-start 2 / span 8;
+}
+
+.language {
+    grid-column: col-start 10 / span 3;
+    text-align: right;
+}
+
+.select {
+    border: 0;
+    background-color: transparent;
+    color: #ffffff;
+}
+.select option {
+    background-color: #0A789C;
+}

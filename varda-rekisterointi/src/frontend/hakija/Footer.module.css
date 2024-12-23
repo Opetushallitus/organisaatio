@@ -1,0 +1,18 @@
+.footer {
+    padding: 0.5em;
+    display: grid;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.column {
+    grid-column: col-start 2 / span 8;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid #cccccc;
+}
+
+.logo {
+    height: 80px;
+}

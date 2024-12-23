@@ -1,0 +1,25 @@
+.section {
+    display: grid;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+}
+
+.child {
+    grid-row: 1;
+    grid-column: col-start 2 / span 10;
+}
+
+.buttons {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-align: right;
+    grid-row: 2;
+    grid-column: col-start / span 11;
+}
+
+.buttons button {
+    margin-right: 0.5em;
+}
+.buttons button:last-child {
+    margin-right: 0;
+}
+

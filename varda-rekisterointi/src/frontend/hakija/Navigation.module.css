@@ -1,0 +1,61 @@
+.nav {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #cccccc;
+}
+
+.nav > div {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2em 0;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.nav div.step .circle {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    margin: 0 auto;
+}
+
+.nav div.step.current .circle {
+    background-color: #ffffff;
+    border: 1px solid #0A789C;
+    color: #0A789C;
+}
+
+.nav div.step.previous .circle {
+    background-color: #0A789C;
+    border: 1px solid #0A789C;
+    color: #ffffff;
+}
+
+
+.nav div.line {
+    flex-grow: 1;
+    border-top: 2px solid #cccccc;
+    margin: 2em;
+}
+
+@media (max-width:540px) {
+    .nav div.line {
+        border-top: none;
+    }
+
+    .nav > div {
+        flex-direction: column;
+    }
+}
+
+.nav div.line.previous {
+    border-top: 2px solid #0A789C;
+}
+
+.ariaLabel {
+    display: none;
+}

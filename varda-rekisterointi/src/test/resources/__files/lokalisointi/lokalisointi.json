@@ -1,0 +1,20 @@
+[
+  {
+    "locale": "fi",
+    "key": "key1",
+    "value": "value1-fi",
+    "unknown": "unknown field"
+  },
+  {
+    "locale": "fi",
+    "key": "key2",
+    "value": "value2-fi",
+    "unknown": "unknown field"
+  },
+  {
+    "locale": "sv",
+    "key": "key1",
+    "value": "value1-sv",
+    "unknown": "unknown field"
+  }
+]
