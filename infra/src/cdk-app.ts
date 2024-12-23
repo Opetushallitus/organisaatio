@@ -283,7 +283,7 @@ class VardRekisterointiDatabaseStack extends cdk.Stack {
         enablePerformanceInsights: true,
         instanceType: ec2.InstanceType.of(
             ec2.InstanceClass.T4G,
-            ec2.InstanceSize.SMALL
+            ec2.InstanceSize.MEDIUM
         ),
       }),
       storageEncrypted: true,
