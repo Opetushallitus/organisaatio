@@ -374,6 +374,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         organisaatio_service_password: this.ssmSecret("PalvelukayttajaPassword"),
         rajapinnat_ytj_asiakastunnus: this.ssmSecret("YtjAsiakastunnus"),
         rajapinnat_ytj_avain: this.ssmSecret("YtjAvain"),
+        ytjpaivitysloki_service_email: this.ssmSecret("YtjpaivityslokiServiceEmail"),
         organisaatio_service_username_to_koodisto: this.ssmSecret("KoodistoUsername"),
         organisaatio_service_password_to_koodisto: this.ssmSecret("KoodistoPassword"),
         oiva_baseurl: this.ssmSecret("OivaBaseurl"),
