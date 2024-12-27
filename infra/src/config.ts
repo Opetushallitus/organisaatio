@@ -2,7 +2,7 @@ const environments = ["hahtuva", "dev", "qa", "prod"] as const;
 type EnvironmentName = (typeof environments)[number];
 
 const defaultConfig = {
-    virkailijaHost: "",
+    opintopolkuHost: "",
     minCapacity: 1,
     maxCapacity: 1,
     vardaRekisterointiCapacity: 0,
@@ -32,24 +32,24 @@ export function getConfig(): Config {
 
 export const hahtuva: Config = {
     ...defaultConfig,
-    virkailijaHost: "virkailija.hahtuvaopintopolku.fi",
+    opintopolkuHost: "hahtuvaopintopolku.fi",
     vardaRekisterointiCapacity: 1,
 };
 
 export const dev: Config = {
     ...defaultConfig,
-    virkailijaHost: "virkailija.untuvaopintopolku.fi",
+    opintopolkuHost: "untuvaopintopolku.fi",
     vardaRekisterointiCapacity: 1,
 };
 
 export const qa: Config = {
     ...defaultConfig,
-    virkailijaHost: "virkailija.testiopintopolku.fi",
+    opintopolkuHost: "testiopintopolku.fi",
     vardaRekisterointiCapacity: 1,
 };
 
 export const prod: Config = {
     ...defaultConfig,
-    virkailijaHost: "virkailija.opintopolku.fi",
+    opintopolkuHost: "opintopolku.fi",
     vardaRekisterointiCapacity: 0,
 };
