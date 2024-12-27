@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjExceptionType;
 import io.swagger.v3.oas.annotations.Hidden;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import java.util.List;
 
 @Hidden
 @RestController
+@Slf4j
 @RequestMapping({"${server.internal.context-path}/ytj", "${server.rest.context-path}/ytj"})
 public class YTJResource {
 
@@ -102,6 +104,7 @@ public class YTJResource {
         try {
             ytjListResult = ytjService.findByYTunnusBatch(ytunnuses, YTJKieli.FI);
         } catch (YtjConnectionException ex) {
+            log.error("YtjService invocation failed", ex);
             throw new OrganisaatioResourceException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getExceptionType().name());
         }
         return ytjListResult;
