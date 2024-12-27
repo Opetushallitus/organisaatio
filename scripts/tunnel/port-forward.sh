@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
 
-ssm_target="$( aws ec2 describe-instances --filters 'Name=tag:Name,Values=Bastion' --query 'Reservations[0].Instances[0].InstanceId' --output text )"
+ssm_target="$( aws ec2 describe-instances --filters 'Name=tag:Name,Values=Bastion' 'Name=instance-state-name,Values=running' --query 'Reservations[0].Instances[0].InstanceId' --output text )"
 
 dbhost="$(aws secretsmanager get-secret-value --secret-id "${DB_SECRET}" --query 'SecretString' --output text | jq -r '.host')"
 dbport="$(aws secretsmanager get-secret-value --secret-id "${DB_SECRET}" --query 'SecretString' --output text | jq -r '.port')"
