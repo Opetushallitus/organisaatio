@@ -33,13 +33,13 @@ export function getConfig(): Config {
 export const hahtuva: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.hahtuvaopintopolku.fi",
-    vardaRekisterointiCapacity: 0,
+    vardaRekisterointiCapacity: 1,
 };
 
 export const dev: Config = {
     ...defaultConfig,
     virkailijaHost: "virkailija.untuvaopintopolku.fi",
-    vardaRekisterointiCapacity: 0,
+    vardaRekisterointiCapacity: 1,
 };
 
 export const qa: Config = {
