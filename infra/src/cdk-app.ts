@@ -33,13 +33,18 @@ class CdkApp extends cdk.App {
       },
     };
 
+    const config = getConfig();
+
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
     const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(this, "AlarmStack", stackProps);
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
     const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(this, "VardaRekisterointiDatabase", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
     const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
-    createHealthCheckStacks(this, alarmsToSlackLambda)
+    createHealthCheckStacks(this, alarmsToSlackLambda, [
+      { name: "Organisaatio", url: new URL(`https://${config.virkailijaHost}/organisaatio-service/actuator/health`) },
+      { name: "VardaRekisterointi", url: new URL(`https://${config.virkailijaHost}/varda-rekisterointi/actuator/health`) },
+    ])
     new VardaRekisterointiApplicationStack(this, "VardaRekisterointiApplication", vpc, hostedZone, {
       database: vardaRekisterointiDatabaseStack.database,
       ecsCluster: ecsStack.cluster,
