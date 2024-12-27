@@ -105,6 +105,28 @@ class OrganisaatioYtjServiceImplPersistanceTest {
         assertEquals(1, loki.getPaivitetytLkm());
     }
 
+    @Test
+    void testYtjConnectionFailureCreatesAccurateLog() {
+        when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of());
+
+        organisaatioYtjService.updateYTJData(false);
+
+        ArgumentCaptor<QueuedEmail> queuedEmail = ArgumentCaptor.forClass(QueuedEmail.class);
+        verify(emailService).queueEmail(queuedEmail.capture());
+        QueuedEmail email = queuedEmail.getValue();
+        assertThat(email.getBody()).containsPattern("YTJ-Tietojen haku .......... klo ..... epäonnistui \\(Tietojen haku YTJ-palvelusta epäonnistui\\)");
+        assertThat(email.getRecipients()).containsExactly("e@mail.com");
+
+        List<YtjPaivitysLoki> ytjLoki = ytjPaivitysLokiRepository.findLatest(1000);
+        assertEquals(1, ytjLoki.size(), "Ytj Pavitys Loki should contain exactly one row");
+
+        YtjPaivitysLoki loki = ytjLoki.get(0);
+        assertEquals(0, loki.getYtjVirheet().size());
+        assertEquals(0, loki.getPaivitetytLkm());
+        assertEquals("EPAONNISTUNUT", loki.getPaivitysTila().toString());
+        assertEquals("Tietojen haku YTJ-palvelusta epäonnistui", loki.getPaivitysTilaSelite());
+    }
+
     private static YTJDTO getDto(String ytunnus, String kieli) {
         YTunnusDTO ytdto = new YTunnusDTO();
         ytdto.setYritysLopetettu(false);

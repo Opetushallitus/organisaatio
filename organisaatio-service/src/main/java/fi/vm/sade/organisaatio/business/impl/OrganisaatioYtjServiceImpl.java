@@ -182,8 +182,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(ytjdtoList.isEmpty()) {
             log.error("YTJ-tietoja ei saatu haettua, päivitys keskeytetään.");
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
-            ytjPaivitysLoki.setPaivitysTilaSelite("ilmoitukset.log.virhe.ytjyhteys");
+            ytjPaivitysLoki.setPaivitysTilaSelite(messageSource.getMessage("ilmoitukset.log.virhe.ytjyhteys", null, Locale.of("fi", "FI")));
             ytjPaivitysLoki.setPaivitetytLkm(0);
+            ytjPaivitysLokiRepository.save(ytjPaivitysLoki);
+            queueEmail(ytjPaivitysLoki);
             return ytjPaivitysLoki;
         }
         // Update from YTJ data and get list of updated organisations
