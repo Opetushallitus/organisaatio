@@ -157,9 +157,10 @@ public class YTJServiceImpl implements YTJService {
                     TIKETTI);
 
         } catch (SOAPFaultException exp) {
+            LOG.error("Failed to invoke SOAP endpoint", exp);
             throw new YtjConnectionException(YtjExceptionType.SOAP, exp.getFault().getFaultString());
-
         } catch (Exception commonExp) {
+            LOG.error("Failed to invoke SOAP endpoint", commonExp);
             throw new YtjConnectionException(YtjExceptionType.OTHER, commonExp.getMessage());
         }
 
