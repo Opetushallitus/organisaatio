@@ -16,6 +16,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,8 +59,9 @@ public class YTJServiceImpl implements YTJService {
     }
 
     private String aikaleima() {
-        DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-        return df.format(new Date());
+        ZonedDateTime nowInFinnishTime = ZonedDateTime.now(ZoneId.of("Europe/Helsinki"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        return nowInFinnishTime.format(formatter);
     }
 
     @Override
