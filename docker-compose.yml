@@ -38,7 +38,7 @@ services:
       - "5438:5432"
     command: ["postgres", "-c", "log_statement=all"]
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U varda-rekisterointi"]
       interval: 10s
       timeout: 5s
       retries: 5
