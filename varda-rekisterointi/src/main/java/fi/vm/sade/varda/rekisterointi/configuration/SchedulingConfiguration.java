@@ -1,10 +1,15 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
 import com.github.kagkarlsson.scheduler.task.Task;
+import com.github.kagkarlsson.scheduler.task.TaskWithoutDataDescriptor;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
+import com.github.kagkarlsson.scheduler.task.schedule.FixedDelay;
+
 import fi.vm.sade.varda.rekisterointi.service.EmailService;
+import fi.vm.sade.varda.rekisterointi.service.QueueingEmailService;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiFinalizer;
 import fi.vm.sade.varda.rekisterointi.service.TaskMonitoringService;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +22,17 @@ import static com.github.kagkarlsson.scheduler.task.schedule.Schedules.parseSche
 public class SchedulingConfiguration {
 
     private final EmailService emailService;
+    private final QueueingEmailService queueingEmailService;
     private final TaskMonitoringService taskMonitoringService;
     private final RekisterointiFinalizer rekisterointiFinalizer;
 
+
     public SchedulingConfiguration(EmailService emailService,
+                                   QueueingEmailService queueingEmailService,
                                    TaskMonitoringService taskMonitoringService,
                                    @Lazy RekisterointiFinalizer rekisterointiFinalizer) {
         this.emailService = emailService;
+        this.queueingEmailService = queueingEmailService;
         this.taskMonitoringService = taskMonitoringService;
         this.rekisterointiFinalizer = rekisterointiFinalizer;
     }
@@ -78,4 +87,10 @@ public class SchedulingConfiguration {
                 .execute((instance, ctx) -> taskMonitoringService.raportoiEpaonnistumiset());
     }
 
+    @Bean
+    Task<Void> emailRetryTask() {
+        return Tasks
+                .recurring(new TaskWithoutDataDescriptor("email-retry-task"), FixedDelay.ofMinutes(1))
+                .execute((instance, ctx) -> queueingEmailService.emailRetryTask());
+    }
 }
