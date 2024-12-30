@@ -200,30 +200,6 @@ class OrganisaatioApiSpringTest {
 
     }
 
-    @Test
-    @DisplayName("Test auth, not authenticated ")
-    void testAuth1() throws Exception {
-        mockMvc.perform(get("/api/auth"))
-                .andExpect(status().is3xxRedirection());
-
-    }
-
-    @Test
-    @DisplayName("Test auth, when authenticated, not authorized ")
-    @WithMockUser(value = "1.2.3.4.5", roles = {"FOO"})
-    void testAuth2() throws Exception {
-        mockMvc.perform(get("/api/auth"))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DisplayName("Test auth, when authenticated and authorized ")
-    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA"})
-    void testAuth3() throws Exception {
-        mockMvc.perform(get("/api/auth"))
-                .andExpect(status().isNoContent());
-    }
-
     private void expectForbiddenAtPath(MockHttpServletRequestBuilder request, String errorResponse) throws Exception {
         mockMvc.perform(request)
                 .andExpect(status().isForbidden())

@@ -76,9 +76,6 @@ public interface OrganisaatioResource {
             @PathVariable String oid,
             @RequestParam(defaultValue = "false") boolean includeImage) throws Exception;
 
-    @GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
-    String hello();
-
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     List<String> search(@RequestParam(required = false) String searchTerms,
                         @RequestParam(defaultValue = "0") int count,
@@ -96,8 +93,4 @@ public interface OrganisaatioResource {
 
     @GetMapping(path = "/yhteystietometadata", produces = MediaType.APPLICATION_JSON_VALUE)
     Set<YhteystietojenTyyppiRDTO> getYhteystietoMetadata(@RequestParam(defaultValue = "") Set<String> organisaatioTyyppi);
-
-    @GetMapping(path = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
-    String authHello();
-
 }

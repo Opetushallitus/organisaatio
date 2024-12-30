@@ -36,10 +36,6 @@ import java.util.List;
  */
 @Hidden
 public interface OrganisaatioResourceV2 {
-
-    @GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
-    String hello();
-
     @GetMapping(path = "/hierarkia/hae", produces = MediaType.APPLICATION_JSON_VALUE)
     OrganisaatioHakutulos searchOrganisaatioHierarkia(
             OrganisaatioSearchCriteriaDTOV2 hakuEhdot);

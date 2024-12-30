@@ -376,12 +376,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
                 .filter(StringUtils::hasLength).collect(Collectors.toList());
     }
 
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public void authHello() {
-        // just check authorization, no implementation needed
-    }
-
     // GET /api/{oid}/nimet
     @Override
     @CheckReadPermission

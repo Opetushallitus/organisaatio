@@ -129,12 +129,6 @@ public class OrganisaatioResourceImplV2 implements OrganisaatioResourceV2 {
         return organisaatioModelMapper.map(organisaatiot, organisaatioYhteystiedotDTOV2ListType);
     }
 
-    // GET /organisaatio/v2/hello
-    @Override
-    public String hello() {
-        return "Hello V2! " + new Date();
-    }
-
     // GET /organisaatio/v2/hierarkia/hae
     @Override
     public OrganisaatioHakutulos searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV2 hakuEhdot) {

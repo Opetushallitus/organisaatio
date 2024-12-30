@@ -9,15 +9,12 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.api.util.OrganisaatioPerustietoUtil;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
-import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
-import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.business.exception.NotAuthorizedException;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.helper.OrganisaatioDisplayHelper;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YhteystietojenTyyppi;
-import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.YhteystietojenTyyppiRepository;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
@@ -31,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,15 +45,9 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrganisaatioResourceImpl.class);
     @Autowired
-    private OrganisaatioBusinessService organisaatioBusinessService;
-    @Autowired
-    private OrganisaatioDeleteBusinessService organisaatioDeleteBusinessService;
-    @Autowired
     private OrganisaatioFindBusinessService organisaatioFindBusinessService;
     @Autowired
     private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
-    @Autowired
-    private OrganisaatioRepository organisaatioRepository;
     @Autowired
     private ConversionService conversionService;
 
@@ -174,12 +164,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
                 .collect(joining(OID_SEPARATOR));
     }
 
-    // GET /organisaatio/hello
-    @Override
-    public String hello() {
-        return "Well Hello! " + new Date();
-    }
-
     // GET /organisaatio?searchTerms=x&count=10&startIndex=100&lastModifiedBefore=X&lastModifiedSince=Y
     @Override
     public List<String> search(String searchTerms, int count, int startIndex, Date lastModifiedBefore, Date lastModifiedSince) {
@@ -252,13 +236,6 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
             result.add(conversionService.convert(entity, YhteystietojenTyyppiRDTO.class));
         }
         return result;
-    }
-
-    // GET /organisaatio/auth
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
-    public String authHello() {
-        return "{\"message\": \"Well Hello! " + new Date() + "\"}";
     }
 
     // GET /organisaatio/{oid}/ryhmat
