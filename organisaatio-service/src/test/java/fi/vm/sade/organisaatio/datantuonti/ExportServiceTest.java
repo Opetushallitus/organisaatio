@@ -38,7 +38,7 @@ class ExportServiceTest {
     }
 
     private List<String> getExportedOrganisaatioCount() {
-        return jdbcTemplate.queryForList("SELECT organisaatio_oid FROM datantuonti_export.organisaatio", String.class);
+        return jdbcTemplate.queryForList("SELECT oid FROM datantuonti_export.organisaatio", String.class);
     }
 
     private List<String> getVarhaiskasvatusOrganisaatioOids() {
