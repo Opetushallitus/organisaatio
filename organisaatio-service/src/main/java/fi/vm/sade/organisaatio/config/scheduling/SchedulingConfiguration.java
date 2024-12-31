@@ -28,9 +28,16 @@ public class SchedulingConfiguration {
                         FetchKoulutusluvatTask fetchKoulutusluvatTask,
                         EmailRetryTask emailRetryTask,
                         ExportTask exportTask,
+                        fi.vm.sade.organisaatio.datantuonti.ExportTask datanTuontiExportTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
-                .startTasks(vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask, emailRetryTask, exportTask)
+                .startTasks(vanhentuneetTiedotSahkopostiTask,
+                            organisaatioUpdateTask,
+                            fetchKoodistotTask,
+                            fetchKoulutusluvatTask,
+                            emailRetryTask,
+                            exportTask,
+                            datanTuontiExportTask)
                 .threads(1)
                 .build();
         scheduler.start();
