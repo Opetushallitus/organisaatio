@@ -39,6 +39,7 @@ public class ExportTask extends RecurringTask<Void> {
             MDC.put("requestId", RequestIdFilter.generateRequestId());
             log.info("Running organisaatio datantuonti export task");
             exportService.createSchema();
+            exportService.generateExportFiles();
             log.info("Organisaatio datantuonti export task completed");
         } finally {
             MDC.remove("requestId");
