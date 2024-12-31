@@ -30,7 +30,7 @@ public class ExportTask extends RecurringTask<Void> {
                 Void.class,
                 new FailureHandler.OnFailureReschedule<>(FixedDelay.of(Duration.ofHours(1)))
         );
-        log.info("Creating export task");
+        log.info("Creating datantuonti export task");
     }
 
     @Override
