@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
-@Component
+@Component(value = "DatantuontiExportTask")
 @Slf4j
 @ConditionalOnProperty(value = "organisaatio.tasks.datantuonti.export.enabled", havingValue = "true")
 public class ExportTask extends RecurringTask<Void> {
