@@ -415,6 +415,9 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       desiredCount: conf.minCapacity,
       minHealthyPercent: 100,
       maxHealthyPercent: 200,
+      circuitBreaker: {
+        enable: true
+      },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       healthCheckGracePeriod: cdk.Duration.minutes(5),
     });
@@ -631,6 +634,9 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       desiredCount: conf.vardaRekisterointiCapacity,
       minHealthyPercent: 100,
       maxHealthyPercent: 200,
+      circuitBreaker: {
+        enable: true
+      },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       healthCheckGracePeriod: cdk.Duration.minutes(5),
     });
