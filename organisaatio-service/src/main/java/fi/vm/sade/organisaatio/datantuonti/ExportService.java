@@ -143,7 +143,7 @@ public class ExportService {
         var keySet = objectKeysAndQueries.keySet();
         keySet.forEach(key -> exportQueryToS3(key, objectKeysAndQueries.get(key)));
         var manifestEntries = keySet.stream().parallel().map(this::toManifestEntry).toList();
-        writeManifest(V1_PREFIX + "/csv/manifest.json", new ExportManifest(manifestEntries));
+        writeManifest(V1_PREFIX + "/manifest.json", new ExportManifest(manifestEntries));
     }
 
     private ExportManifest.ExportFileDetails toManifestEntry(String key) {
