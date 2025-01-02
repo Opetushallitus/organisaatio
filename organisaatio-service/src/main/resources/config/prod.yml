@@ -16,4 +16,7 @@ organisaatio.tasks.export.lampi-bucket-name: oph-lampi-prod
 organisaatio.tasks.export.lampi-role-arn: ${lampi_role_arn}
 organisaatio.tasks.export.lampi-external-id: ${lampi_external_id}
 
+organisaatio.tasks.datantuonti.export.enabled: true
+organisaatio.tasks.datantuonti.export.bucket-name: ${export_bucket_name}
+
 varda-rekisterointi.kayttooikeusryhma-id: 107000756
