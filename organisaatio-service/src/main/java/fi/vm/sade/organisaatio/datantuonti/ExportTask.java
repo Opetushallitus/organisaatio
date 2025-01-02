@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.Duration;
 
 @Component(value = "DatantuontiExportTask")
@@ -41,6 +42,8 @@ public class ExportTask extends RecurringTask<Void> {
             exportService.createSchema();
             exportService.generateExportFiles();
             log.info("Organisaatio datantuonti export task completed");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
             MDC.remove("requestId");
         }

@@ -1,12 +1,21 @@
 package fi.vm.sade.organisaatio.datantuonti;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import fi.vm.sade.organisaatio.export.ExportManifest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -14,8 +23,14 @@ import java.util.Map;
 public class ExportService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private S3AsyncClient opintopolkuS3Client;
     @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
     private String bucketName;
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new Jdk8Module())
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
     private final String V1_PREFIX = "datantuonti/organisaatio/v1";
     private final String CREATE_ORGANISAATIO_SQL = """
         CREATE TABLE datantuonti_export_new.organisaatio AS
@@ -119,12 +134,20 @@ public class ExportService {
         jdbcTemplate.execute("ALTER SCHEMA datantuonti_export_new RENAME TO datantuonti_export");
     }
 
-    public void generateExportFiles() {
+    public void generateExportFiles() throws JsonProcessingException {
+        var timestamp = new Date().getTime();
         Map<String, String> objectKeysAndQueries = Map.of(
-                V1_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY,
-                V1_PREFIX + "/csv/osoite.csv", OSOITE_QUERY
+                V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv", ORGANISAATIO_QUERY,
+                V1_PREFIX + "/csv/osoite-" + timestamp + ".csv", OSOITE_QUERY
         );
-        objectKeysAndQueries.keySet().forEach(key -> exportQueryToS3(key, objectKeysAndQueries.get(key)));
+        var keySet = objectKeysAndQueries.keySet();
+        keySet.forEach(key -> exportQueryToS3(key, objectKeysAndQueries.get(key)));
+        var manifestEntries = keySet.stream().parallel().map(this::toManifestEntry).toList();
+        writeManifest(V1_PREFIX + "/csv/manifest.json", new ExportManifest(manifestEntries));
+    }
+
+    private ExportManifest.ExportFileDetails toManifestEntry(String key) {
+        return new ExportManifest.ExportFileDetails(key, null);
     }
 
     private void exportQueryToS3(String objectKey, String query) {
@@ -132,5 +155,15 @@ public class ExportService {
         var sql = "SELECT rows_uploaded FROM aws_s3.query_export_to_s3(?, aws_commons.create_s3_uri(?, ?, ?), options := 'FORMAT CSV, HEADER TRUE')";
         var rowsUploaded = jdbcTemplate.queryForObject(sql, Long.class, query, bucketName, objectKey, Region.EU_WEST_1.id());
         log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
+    }
+
+    private void writeManifest(String objectKey, ExportManifest manifest) throws JsonProcessingException {
+        log.info("Writing manifest file {}/{}: {}", bucketName, objectKey, manifest);
+        var manifestJson = objectMapper.writeValueAsString(manifest);
+        var response = opintopolkuS3Client.putObject(
+                b -> b.bucket(bucketName).key(objectKey),
+                AsyncRequestBody.fromString(manifestJson)
+        ).join();
+        log.info("Wrote manifest to S3: {}", response);
     }
 }
