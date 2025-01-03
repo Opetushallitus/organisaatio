@@ -243,7 +243,8 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
         this,
         "/organisaatio/datantuonti/export/role/ExternalId"
     );
-    const readDatantuontiExportObjectsRole = new iam.Role(this, "ReadDatantuontiExport", {
+    const readDatantuontiExportObjectsRole = new iam.Role(this, "DatantuontiExportReader", {
+      roleName: "DatantuontiExportReader",
       assumedBy: new iam.AccountPrincipal(targetAccountId),
       externalIds: [externalId],
     });
