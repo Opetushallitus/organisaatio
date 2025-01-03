@@ -235,6 +235,16 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       expiration: cdk.Duration.days(7),
       prefix: "datantuonti/organisaatio/v1/csv/"
     });
+    const targetAccountId = ssm.StringParameter.valueFromLookup(
+        this,
+        "/organisaatio/datantuonti/export/role/TargetAccountId"
+    );
+    const externalId = cdk.SecretValue.ssmSecure("/organisaatio/datantuonti/export/role/ExternalId").toString();
+    const readDatantuontiExportObjectsRole = new iam.Role(this, "ReadDatantuontiExport", {
+      assumedBy: new iam.AccountPrincipal(targetAccountId),
+      externalIds: [externalId],
+    });
+    this.exportBucket.grantRead(readDatantuontiExportObjectsRole);
 
     this.database = new rds.DatabaseCluster(this, "Database", {
       vpc,
