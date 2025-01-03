@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class DatantuontiExportServiceTest {
     @Autowired
-    @Qualifier("DatantuontiExportService")
     private DatantuontiExportService datantuontiExportService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
