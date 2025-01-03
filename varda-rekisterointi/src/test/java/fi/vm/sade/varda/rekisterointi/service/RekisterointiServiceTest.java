@@ -151,7 +151,7 @@ public class RekisterointiServiceTest {
                 return new RequestContextImpl(userId, "127.0.0.1");
         }
 
-        private static Rekisterointi getRekisterointi() {
+        public static Rekisterointi getRekisterointi() {
                 return new Rekisterointi(
                                 SAVED_REKISTEROINTI_ID,
                                 Organisaatio.of(
@@ -173,11 +173,11 @@ public class RekisterointiServiceTest {
                                 "varda",
                                 "vardatoimintamuoto_tm01",
                                 Set.of("kunta_091"),
-                                Set.of("testi.henkilo@foo.bar"),
+                                Set.of("testi.sahkoposti@foo.bar"),
                                 Kayttaja.builder()
                                                 .etunimi("Testi")
                                                 .sukunimi("Henkilö")
-                                                .sahkoposti("testi.henkilo@foo.bar")
+                                                .sahkoposti("testi.kayttaja@foo.bar")
                                                 .asiointikieli("fi")
                                                 .build(),
                                 LocalDateTime.now(),

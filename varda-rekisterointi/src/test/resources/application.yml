@@ -1,0 +1,30 @@
+spring:
+  flyway:
+    locations: classpath:db/migration,classpath:db/devdata
+    out-of-order: true
+  datasource:
+    url: jdbc:postgresql://localhost:5439/varda-rekisterointi
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+db-scheduler:
+  enabled: true
+varda-rekisterointi:
+  url-virkailija: http://localhost
+  url-oppija: http://localhost
+  service:
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+  kayttooikeus:
+    ryhma:
+      paivakoti: 70008488
+      ryhmaperhepaivakoti: 70008504
+      perhepaivahoitaja: 70008477
+      jotpa: 1224455
+  rekisterointi-ui:
+    username: varda-rekisterointi
+    password: varda-rekisterointi
+
+viestinvalitys.baseurl: https://viestinvalitys.hahtuvaopintopolku.fi/lahetys

@@ -9,3 +9,5 @@ varda-rekisterointi.kayttooikeus.ryhma.paivakoti: 70008488
 varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti: 70008504
 varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja: 70008477
 varda-rekisterointi.kayttooikeus.ryhma.jotpa: 70492916
+
+viestinvalitys.baseurl: https://viestinvalitys.untuvaopintopolku.fi/lahetys
