@@ -239,7 +239,10 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
         this,
         "/organisaatio/datantuonti/export/role/TargetAccountId"
     );
-    const externalId = cdk.SecretValue.ssmSecure("/organisaatio/datantuonti/export/role/ExternalId").toString();
+    const externalId = ssm.StringParameter.valueFromLookup(
+        this,
+        "/organisaatio/datantuonti/export/role/ExternalId"
+    );
     const readDatantuontiExportObjectsRole = new iam.Role(this, "ReadDatantuontiExport", {
       assumedBy: new iam.AccountPrincipal(targetAccountId),
       externalIds: [externalId],
