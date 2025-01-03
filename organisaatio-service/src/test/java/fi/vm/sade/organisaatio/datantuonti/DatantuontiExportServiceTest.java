@@ -12,10 +12,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class ExportServiceTest {
+class DatantuontiExportServiceTest {
     @Autowired
     @Qualifier("DatantuontiExportService")
-    private ExportService exportService;
+    private DatantuontiExportService datantuontiExportService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -30,7 +30,7 @@ class ExportServiceTest {
         assertThat(allOrganisaatioCount).isEqualTo(13L);
         assertThat(varhaiskasvatusOrganisaatioCount).isEqualTo(3L);
 
-        exportService.createSchema();
+        datantuontiExportService.createSchema();
 
         var exportedOrganisatioOids = getExportedOrganisaatioCount();
         assertThat(exportedOrganisatioOids.size()).isEqualTo(10L);

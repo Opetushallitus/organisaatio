@@ -2,9 +2,9 @@ package fi.vm.sade.organisaatio.config.scheduling;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
 
+import fi.vm.sade.organisaatio.datantuonti.DatantuontiExportTask;
 import fi.vm.sade.organisaatio.email.EmailRetryTask;
 import fi.vm.sade.organisaatio.export.ExportTask;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,8 +29,7 @@ public class SchedulingConfiguration {
                         FetchKoulutusluvatTask fetchKoulutusluvatTask,
                         EmailRetryTask emailRetryTask,
                         ExportTask exportTask,
-                        @Qualifier(value = "DatantuontiExportTask")
-                        fi.vm.sade.organisaatio.datantuonti.ExportTask datanTuontiExportTask,
+                        DatantuontiExportTask datanTuontiExportTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
                 .startTasks(vanhentuneetTiedotSahkopostiTask,

@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.Map;
 
 @Slf4j
-@Service(value = "DatantuontiExportService")
-public class ExportService {
+@Service
+public class DatantuontiExportService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
