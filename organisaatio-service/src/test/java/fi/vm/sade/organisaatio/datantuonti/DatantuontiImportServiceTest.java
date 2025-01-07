@@ -87,7 +87,7 @@ public class DatantuontiImportServiceTest {
         Organisaatio eka = organisaatioRepository.findByOids(List.of("1.2.2321.0"), false, false).get(0);
         assertThat(eka)
             .returns("4733601-1", from(Organisaatio::getYtunnus))
-            //.returns(Optional.of("1.2.246.562.24.00000000001"), from(Organisaatio::getParentOid))
+            .returns(Optional.empty(), from(Organisaatio::getParentOid))
             .returns(null, from(Organisaatio::getOppilaitosTyyppi))
             .returns(Set.of("organisaatiotyyppi_06"), from(Organisaatio::getTyypit))
             .returns(Date.from(LocalDate.of(2024, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), from(Organisaatio::getAlkuPvm))
@@ -103,7 +103,7 @@ public class DatantuontiImportServiceTest {
         Organisaatio toka = organisaatioRepository.findByOids(List.of("1.2.2123.4"), false, false).get(0);
         assertThat(toka)
             .returns("1621417-7", from(Organisaatio::getYtunnus))
-            //.returns(Optional.of("1.2.2004.1"), from(Organisaatio::getParentOid))
+            .returns(Optional.of("1.2.2004.1"), from(Organisaatio::getParentOid))
             .returns(Date.from(LocalDate.of(2023, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), from(Organisaatio::getAlkuPvm))
             .returns(Date.from(LocalDate.of(2025, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), from(Organisaatio::getLakkautusPvm))
             .returns("oppilaitostyyppi_19#1", from(Organisaatio::getOppilaitosTyyppi))

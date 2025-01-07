@@ -48,6 +48,7 @@ public interface OrganisaatioBusinessService {
     public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException;
 
     public OrganisaatioResult saveDatantuontiOrganisaatio(OrganisaatioRDTOV4 model);
+    public OrganisaatioResult updateDatantuontiOrganisaatio(OrganisaatioRDTOV4 model);
 
     /**
      * @param oid

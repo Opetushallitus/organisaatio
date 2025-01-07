@@ -180,7 +180,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new ValidationException("validation.organisaatio.convert.error");
         }
         if (entity.getOid() != null) {
-            return update(entity, model.getParentOid());
+            return update(entity, model.getParentOid(), false);
         }
         return save(entity, model.getParentOid(), false);
     }
@@ -194,7 +194,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         OrganisaatioResult organisaatioResult;
         if (entity.getOid() != null) {
-            organisaatioResult = update(entity, model.getParentOid());
+            organisaatioResult = update(entity, model.getParentOid(), false);
         } else {
             organisaatioResult = save(entity, model.getParentOid(), false);
         }
@@ -207,7 +207,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         return save(o, organisaatio.getParentOid(), true);
     }
 
-    private OrganisaatioResult update(Organisaatio entity, String parentOid) {
+    @Override
+    public OrganisaatioResult updateDatantuontiOrganisaatio(OrganisaatioRDTOV4 organisaatio) {
+        Organisaatio o = conversionService.convert(organisaatio, Organisaatio.class);
+        return update(o, organisaatio.getParentOid(), true);
+    }
+
+    private OrganisaatioResult update(Organisaatio entity, String parentOid, boolean isDatantuonti) {
 
         Organisaatio parentOrg = fetchParentOrg(parentOid);
 
@@ -256,7 +262,12 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
         entity.setOrganisaatioPoistettu(false);
 
-        setPaivittajaData(entity);
+        if (isDatantuonti) {
+            entity.setPaivittaja("DATANTUONTI");
+            entity.setPaivitysPvm(new Date());
+        } else {
+            setPaivittajaData(entity);
+        }
 
         checkDateConstraints(entity, parentOrg);
 

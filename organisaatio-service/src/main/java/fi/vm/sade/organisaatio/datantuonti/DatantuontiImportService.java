@@ -165,7 +165,7 @@ public class DatantuontiImportService {
                 .map(this::mapWithYhteystiedot)
                 .peek(this::saveNewOrganisation)
                 .toList();
-            //createdOrgs.stream().forEach(this::saveParentOid);
+            createdOrgs.stream().forEach(this::saveParentOid);
         }
     }
 
@@ -201,7 +201,8 @@ public class DatantuontiImportService {
         if (o.parentOid() != null) {
             try {
                 log.info("Updating parent oids for organisation oid {}", o.organisaatio().getOid());
-                organisaatioBusinessService.saveOrUpdate(o.organisaatio());
+                o.organisaatio().setParentOid(o.parentOid());
+                organisaatioBusinessService.updateDatantuontiOrganisaatio(o.organisaatio());
             } catch (Exception e) {
                 log.error("Failed to update parent oids for organisation oid " + o.organisaatio().getOid(), e);
                 throw e;
