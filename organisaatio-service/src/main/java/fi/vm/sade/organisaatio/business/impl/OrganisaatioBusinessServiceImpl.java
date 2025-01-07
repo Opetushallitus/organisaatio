@@ -182,7 +182,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (entity.getOid() != null) {
             return update(entity, model.getParentOid());
         }
-        return save(entity, model.getParentOid());
+        return save(entity, model.getParentOid(), false);
     }
 
     @Override
@@ -196,9 +196,15 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         if (entity.getOid() != null) {
             organisaatioResult = update(entity, model.getParentOid());
         } else {
-            organisaatioResult = save(entity, model.getParentOid());
+            organisaatioResult = save(entity, model.getParentOid(), false);
         }
         return new ResultRDTOV4(this.conversionService.convert(organisaatioResult.getOrganisaatio(), OrganisaatioRDTOV4.class), organisaatioResult.getInfo());
+    }
+
+    @Override
+    public OrganisaatioResult saveDatantuontiOrganisaatio(OrganisaatioRDTOV4 organisaatio) {
+        Organisaatio o = conversionService.convert(organisaatio, Organisaatio.class);
+        return save(o, organisaatio.getParentOid(), true);
     }
 
     private OrganisaatioResult update(Organisaatio entity, String parentOid) {
@@ -293,7 +299,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private OrganisaatioResult save(Organisaatio entity, String parentOid) {
+    private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean isDatantuonti) {
 
         if ((entity.getOid() != null) && (organisaatioRepository.findFirstByOid(entity.getOid()) != null)) {
             throw new OrganisaatioExistsException(entity.getOid());
@@ -322,11 +328,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // Asetetaan parent path
         setParentPath(entity, parentOid);
 
-
-        setPaivittajaData(entity);
-
-        // Tarkistetaan organisaatio hierarkia
-        checker.checkOrganisaatioHierarchy(entity, parentOid);
+        if (isDatantuonti) {
+            entity.setPaivittaja("DATANTUONTI");
+            entity.setPaivitysPvm(new Date());
+        } else {
+            setPaivittajaData(entity);
+            checker.checkOrganisaatioHierarchy(entity, parentOid);
+        }
 
         // Generoidaan oidit
         try {

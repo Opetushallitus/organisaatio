@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
 
 @Configuration
 public class OpintopolkuAwsClients {
-    static final Region REGION = Region.EU_WEST_1;
+    public static final Region REGION = Region.EU_WEST_1;
 
     @Bean
     public AwsCredentialsProvider opintopolkuCredentialsProvider() {

@@ -27,3 +27,6 @@ truncate table koodisto_oppilaitoksenopetuskieli;
 truncate table koodisto_posti;
 truncate table koodisto_vuosiluokat;
 truncate table koodisto_koulutus cascade;
+
+drop table if exists datantuonti_organisaatio_temp cascade;
+drop table if exists datantuonti_osoite_temp cascade;
