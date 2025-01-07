@@ -41,6 +41,9 @@ public class DatantuontiExportService {
              WHERE organisaatio_id = o.id
              AND parent_position = 0) AS parent_oid,
             o.oppilaitostyyppi,
+            (SELECT string_agg(tyypit, ',')
+             FROM organisaatio_tyypit
+             WHERE organisaatio_id = o.id) AS organisaatiotyypit,
             o.ytunnus,
             o.piilotettu,
             (SELECT v.value
@@ -79,6 +82,7 @@ public class DatantuontiExportService {
           oid,
           parent_oid,
           oppilaitostyyppi,
+          organisaatiotyypit,
           ytunnus,
           piilotettu,
           nimi_fi,

@@ -23,7 +23,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 
 @SpringBootTest
-public class ImportServiceTest {
+public class DatantuontiImportServiceTest {
     @Autowired
     private DatantuontiImportService importService;
     @Autowired
@@ -33,28 +33,13 @@ public class ImportServiceTest {
 
     @BeforeEach
     public void insertDatantuonti() throws Exception {
-        jdbcTemplate.execute("""
-            CREATE TABLE IF NOT EXISTS datantuonti_organisaatio_temp(
-                oid text,
-                parent_oid text,
-                oppilaitostyyppi text,
-                ytunnus text,
-                piilotettu boolean,
-                nimi_fi text,
-                nimi_sv text,
-                nimi_en text,
-                alkupvm timestamp,
-                lakkautuspvm timestamp,
-                yritysmuoto text,
-                kotipaikka text,
-                maa text,
-                kielet text
-        )""");
+        jdbcTemplate.execute(DatantuontiImportService.CREATE_DATANTUONTI_ORGANISAATIO);
         jdbcTemplate.execute("""
             INSERT INTO datantuonti_organisaatio_temp (
                 oid,
                 parent_oid,
                 oppilaitostyyppi,
+                organisaatiotyypit,
                 ytunnus,
                 piilotettu,
                 nimi_fi,
@@ -67,19 +52,11 @@ public class ImportServiceTest {
                 maa,
                 kielet)
             VALUES
-                ('1.2.2004.1', '1.2.2321.0', NULL, '3763114-8', true, 'nimifi', 'nimisv', 'nimien', DATE '2025-01-01', DATE '2025-01-02', 'ry', 'Helsinki', 'maatjavaltiot1_fin', NULL),
-                ('1.2.2321.0', NULL, NULL, '4733601-1', false, 'eka', 'första', 'first', DATE '2024-01-01', NULL, 'ry', 'kunta_445', 'maatjavaltiot1_fin', 'oppilaitoksenopetuskieli_1#2'),
-                ('1.2.2123.4', '1.2.2004.1', 'oppilaitostyyppi_19#1', '1621417-7', true, 'toka', 'andra', 'second', DATE '2023-01-01', DATE '2025-01-01', 'ry', 'kunta_445', NULL, 'oppilaitoksenopetuskieli_1#1,oppilaitoksenopetuskieli_2#2')
+                ('1.2.2004.1', '1.2.2321.0', NULL, 'organisaatiotyyppi_06', '3763114-8', true, 'nimifi', 'nimisv', 'nimien', DATE '2025-01-01', DATE '2025-01-02', 'ry', 'Helsinki', 'maatjavaltiot1_fin', NULL),
+                ('1.2.2321.0', NULL, NULL, 'organisaatiotyyppi_06', '4733601-1', false, 'eka', 'första', 'first', DATE '2024-01-01', NULL, 'ry', 'kunta_445', 'maatjavaltiot1_fin', 'oppilaitoksenopetuskieli_1#2'),
+                ('1.2.2123.4', '1.2.2004.1', 'oppilaitostyyppi_19#1', 'organisaatiotyyppi_03,organisaatiotyyppi_04', '1621417-7', true, 'toka', 'andra', 'second', DATE '2023-01-01', DATE '2025-01-01', 'ry', 'kunta_445', NULL, 'oppilaitoksenopetuskieli_1#1,oppilaitoksenopetuskieli_2#2')
         """);
-        jdbcTemplate.execute("""
-            CREATE TABLE IF NOT EXISTS datantuonti_osoite_temp(
-                oid text,
-                osoitetyyppi text,
-                osoite text,
-                postinumero text,
-                postitoimipaikka text,
-                kieli text
-        )""");
+        jdbcTemplate.execute(DatantuontiImportService.CREATE_DATANTUONTI_OSOITE);
         jdbcTemplate.execute("""
             INSERT INTO datantuonti_osoite_temp (
                 oid,
@@ -112,6 +89,7 @@ public class ImportServiceTest {
             .returns("4733601-1", from(Organisaatio::getYtunnus))
             //.returns(Optional.of("1.2.246.562.24.00000000001"), from(Organisaatio::getParentOid))
             .returns(null, from(Organisaatio::getOppilaitosTyyppi))
+            .returns(Set.of("organisaatiotyyppi_06"), from(Organisaatio::getTyypit))
             .returns(Date.from(LocalDate.of(2024, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), from(Organisaatio::getAlkuPvm))
             .returns(null, from(Organisaatio::getLakkautusPvm))
             .returns(Set.of("oppilaitoksenopetuskieli_1#2"), from(Organisaatio::getKielet))
@@ -129,6 +107,7 @@ public class ImportServiceTest {
             .returns(Date.from(LocalDate.of(2023, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), from(Organisaatio::getAlkuPvm))
             .returns(Date.from(LocalDate.of(2025, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant()), from(Organisaatio::getLakkautusPvm))
             .returns("oppilaitostyyppi_19#1", from(Organisaatio::getOppilaitosTyyppi))
+            .returns(Set.of("organisaatiotyyppi_03", "organisaatiotyyppi_04"), from(Organisaatio::getTyypit))
             .returns(Set.of("oppilaitoksenopetuskieli_1#1", "oppilaitoksenopetuskieli_2#2"), from(Organisaatio::getKielet))
             .returns(Map.of("fi", "toka", "sv", "andra", "en", "second"), o -> o.getActualNimi().getValues())
             .returns("ry", from(Organisaatio::getYritysmuoto))

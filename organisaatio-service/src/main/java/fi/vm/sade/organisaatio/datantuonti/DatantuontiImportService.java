@@ -30,18 +30,12 @@ public class DatantuontiImportService {
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final OrganisaatioBusinessService organisaatioBusinessService;
 
-    @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
-    private String bucketName;
-
-    @Transactional
-    public void importTempTableFromS3() {
-        log.info("Importing table from S3");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_organisaatio_temp");
-        jdbcTemplate.execute("""
+    static final String CREATE_DATANTUONTI_ORGANISAATIO = """
             CREATE TABLE IF NOT EXISTS datantuonti_organisaatio_temp(
                 oid text,
                 parent_oid text,
                 oppilaitostyyppi text,
+                organisaatiotyypit text,
                 ytunnus text,
                 piilotettu boolean,
                 nimi_fi text,
@@ -53,15 +47,9 @@ public class DatantuontiImportService {
                 kotipaikka text,
                 maa text,
                 kielet text
-            )""");
-        jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_organisaatio_temp_oid_idx ON datantuonti_organisaatio_temp(oid)");
+            )""";
 
-        String organisaatioSql = "aws_s3.table_import_from_s3('datantuonti_organisaatio_temp', '',  '(format csv)', aws_commons.create_s3_uri(?, ?, ?))";
-        String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, "organisaatiopath", OpintopolkuAwsClients.REGION.id());
-        log.info("Importing datantuontiorganisaatiot from S3 returned {}", organisaatioTxt);
-
-        jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_osoite_temp");
-        jdbcTemplate.execute("""
+    static final String CREATE_DATANTUONTI_OSOITE = """
             CREATE TABLE IF NOT EXISTS datantuonti_osoite_temp(
                 oid text,
                 osoitetyyppi text,
@@ -69,7 +57,24 @@ public class DatantuontiImportService {
                 postinumero text,
                 postitoimipaikka text,
                 kieli text
-            )""");
+            )""";
+
+    @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
+    private String bucketName;
+
+    @Transactional
+    public void importTempTableFromS3() {
+        log.info("Importing table from S3");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_organisaatio_temp");
+        jdbcTemplate.execute(CREATE_DATANTUONTI_ORGANISAATIO);
+        jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_organisaatio_temp_oid_idx ON datantuonti_organisaatio_temp(oid)");
+
+        String organisaatioSql = "aws_s3.table_import_from_s3('datantuonti_organisaatio_temp', '',  '(format csv)', aws_commons.create_s3_uri(?, ?, ?))";
+        String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, "organisaatiopath", OpintopolkuAwsClients.REGION.id());
+        log.info("Importing datantuontiorganisaatiot from S3 returned {}", organisaatioTxt);
+
+        jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_osoite_temp");
+        jdbcTemplate.execute(CREATE_DATANTUONTI_OSOITE);
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_osoite_temp_oid_idx ON datantuonti_osoite_temp(oid)");
         String osoiteSql = "aws_s3.table_import_from_s3('datantuonti_osoite_temp', '',  '(format csv)', aws_commons.create_s3_uri(?, ?, ?))";
         String osoiteTxt = jdbcTemplate.queryForObject(osoiteSql, String.class, bucketName, "osoitepath", OpintopolkuAwsClients.REGION.id());
@@ -81,6 +86,7 @@ public class DatantuontiImportService {
         o.setOid(dorg.oid());
         o.setParentOid("1.2.246.562.10.00000000001");
         o.setOppilaitosTyyppiUri(dorg.oppilaitostyyppi());
+        o.setTyypit(Set.of(dorg.organisaatiotyypit().split(",")));
         o.setYTunnus(dorg.ytunnus());
         o.setPiilotettu(dorg.piilotettu());
         o.setNimi(Map.of(
@@ -113,6 +119,7 @@ public class DatantuontiImportService {
                 d.oid,
                 d.parent_oid,
                 d.oppilaitostyyppi,
+                d.organisaatiotyypit,
                 d.ytunnus,
                 d.piilotettu,
                 d.nimi_fi,
@@ -134,6 +141,7 @@ public class DatantuontiImportService {
         rs.getString("oid"),
         rs.getString("parent_oid"),
         rs.getString("oppilaitostyyppi"),
+        rs.getString("organisaatiotyypit"),
         rs.getString("ytunnus"),
         rs.getBoolean("piilotettu"),
         rs.getString("nimi_fi"),
@@ -211,6 +219,7 @@ record DatantuontiOrganisaatio(
     String oid,
     String parent_oid,
     String oppilaitostyyppi,
+    String organisaatiotyypit,
     String ytunnus,
     Boolean piilotettu,
     String nimi_fi,
