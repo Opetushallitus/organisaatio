@@ -240,16 +240,25 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
         this,
         "/organisaatio/datantuonti/export/role/TargetAccountId"
     );
-    const externalId = ssm.StringParameter.valueFromLookup(
+    this.exportBucket.grantRead(new iam.AccountPrincipal(targetAccountId));
+
+    const importBucketName = ssm.StringParameter.valueFromLookup(
         this,
-        "/organisaatio/datantuonti/export/role/ExternalId"
+        "organisaatio.tasks.datantuonti.import.source.bucket.name"
     );
-    const readDatantuontiExportObjectsRole = new iam.Role(this, "DatantuontiExportReader", {
-      roleName: "DatantuontiExportReader",
-      assumedBy: new iam.AccountPrincipal(targetAccountId),
-      externalIds: [externalId],
+    const s3ImportRole = new iam.Role(this, "S3ImportRole", {
+      assumedBy: new iam.ServicePrincipal("rds.amazonaws.com")
     });
-    this.exportBucket.grantRead(readDatantuontiExportObjectsRole);
+    s3ImportRole.addToPolicy(new iam.PolicyStatement({
+      actions: [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      resources: [
+        `${importBucketName}`,
+        `${importBucketName}/datantuonti/organisaatio/*`
+      ],
+    }));
 
     this.database = new rds.DatabaseCluster(this, "Database", {
       vpc,
@@ -272,6 +281,7 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       storageEncrypted: true,
       readers: [],
       s3ExportBuckets: [this.exportBucket],
+      s3ImportRole: s3ImportRole,
     });
     this.database.connections.allowDefaultPortFrom(bastion);
 
