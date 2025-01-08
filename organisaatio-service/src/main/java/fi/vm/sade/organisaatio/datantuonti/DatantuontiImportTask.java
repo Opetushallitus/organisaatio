@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalTime;
 
@@ -41,6 +42,8 @@ public class DatantuontiImportTask extends RecurringTask<Void> {
             importService.importTempTableFromS3();
             importService.createNewOrganisations();
             log.info("Organisaatio datantuonti import task completed");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
             MDC.remove("requestId");
         }

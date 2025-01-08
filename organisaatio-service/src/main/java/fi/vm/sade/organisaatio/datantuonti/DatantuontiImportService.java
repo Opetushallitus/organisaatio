@@ -2,6 +2,9 @@ package fi.vm.sade.organisaatio.datantuonti;
 
 import static java.util.stream.Collectors.toSet;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +17,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.export.OpintopolkuAwsClients;
@@ -21,14 +26,21 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.transfer.s3.S3TransferManager;
+import software.amazon.awssdk.transfer.s3.model.DownloadFileRequest;
+
+import static fi.vm.sade.organisaatio.datantuonti.DatantuontiExportService.MANIFEST_OBJECT_KEY;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class DatantuontiImportService {
+    private final S3AsyncClient opintopolkuS3Client;
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final OrganisaatioBusinessService organisaatioBusinessService;
+    private final ObjectMapper objectMapper;
 
     static final String CREATE_DATANTUONTI_ORGANISAATIO = """
             CREATE TABLE IF NOT EXISTS datantuonti_organisaatio_temp(
@@ -63,21 +75,23 @@ public class DatantuontiImportService {
     private String bucketName;
 
     @Transactional
-    public void importTempTableFromS3() {
-        log.info("Importing table from S3");
+    public void importTempTableFromS3() throws IOException {
+        DatantuontiManifest manifest = getManifest();
+
+        log.info("Importing tables from S3");
         jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_organisaatio_temp");
         jdbcTemplate.execute(CREATE_DATANTUONTI_ORGANISAATIO);
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_organisaatio_temp_oid_idx ON datantuonti_organisaatio_temp(oid)");
 
-        String organisaatioSql = "aws_s3.table_import_from_s3('datantuonti_organisaatio_temp', '',  '(format csv)', aws_commons.create_s3_uri(?, ?, ?))";
-        String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, "organisaatiopath", OpintopolkuAwsClients.REGION.id());
+        String organisaatioSql = "aws_s3.table_import_from_s3('datantuonti_organisaatio_temp', '',  '(FORMAT CSV,HEADER true)', aws_commons.create_s3_uri(?, ?, ?))";
+        String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, manifest.getOrganisaatio(), OpintopolkuAwsClients.REGION.id());
         log.info("Importing datantuontiorganisaatiot from S3 returned {}", organisaatioTxt);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_osoite_temp");
         jdbcTemplate.execute(CREATE_DATANTUONTI_OSOITE);
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_osoite_temp_oid_idx ON datantuonti_osoite_temp(oid)");
-        String osoiteSql = "aws_s3.table_import_from_s3('datantuonti_osoite_temp', '',  '(format csv)', aws_commons.create_s3_uri(?, ?, ?))";
-        String osoiteTxt = jdbcTemplate.queryForObject(osoiteSql, String.class, bucketName, "osoitepath", OpintopolkuAwsClients.REGION.id());
+        String osoiteSql = "aws_s3.table_import_from_s3('datantuonti_osoite_temp', '',  '(FORMAT CSV,HEADER true)', aws_commons.create_s3_uri(?, ?, ?))";
+        String osoiteTxt = jdbcTemplate.queryForObject(osoiteSql, String.class, bucketName, manifest.getOsoite(), OpintopolkuAwsClients.REGION.id());
         log.info("Importing datantuontiosoite from S3 returned {}", osoiteTxt);
     }
 
@@ -207,6 +221,24 @@ public class DatantuontiImportService {
                 log.error("Failed to update parent oids for organisation oid " + o.organisaatio().getOid(), e);
                 throw e;
             }
+        }
+    }
+
+    private DatantuontiManifest getManifest() throws IOException {
+        @SuppressWarnings("java:S5443")
+        var temporaryFile = File.createTempFile("export", ".csv");
+        try {
+            log.info("Downloading manifest from S3: {}/{}", bucketName, MANIFEST_OBJECT_KEY);
+            try (var downloader = S3TransferManager.builder().s3Client(opintopolkuS3Client).build()) {
+                var fileDownload = downloader.downloadFile(DownloadFileRequest.builder()
+                        .getObjectRequest(b -> b.bucket(bucketName).key(MANIFEST_OBJECT_KEY))
+                        .destination(temporaryFile)
+                        .build());
+                fileDownload.completionFuture().join();
+                return objectMapper.readValue(temporaryFile, DatantuontiManifest.class);
+            }
+        } finally {
+            Files.deleteIfExists(temporaryFile.toPath());
         }
     }
 }

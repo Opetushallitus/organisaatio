@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import fi.vm.sade.organisaatio.export.ExportManifest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 
 import java.util.Date;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -31,7 +29,8 @@ public class DatantuontiExportService {
             .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
-    private final String V1_PREFIX = "datantuonti/organisaatio/v1";
+    private final static String V1_PREFIX = "datantuonti/organisaatio/v1";
+    public final static String MANIFEST_OBJECT_KEY = V1_PREFIX + "/manifest.json";
     private final String CREATE_ORGANISAATIO_SQL = """
         CREATE TABLE datantuonti_export_new.organisaatio AS
           SELECT
@@ -140,18 +139,11 @@ public class DatantuontiExportService {
 
     public void generateExportFiles() throws JsonProcessingException {
         var timestamp = new Date().getTime();
-        Map<String, String> objectKeysAndQueries = Map.of(
-                V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv", ORGANISAATIO_QUERY,
-                V1_PREFIX + "/csv/osoite-" + timestamp + ".csv", OSOITE_QUERY
-        );
-        var keySet = objectKeysAndQueries.keySet();
-        keySet.forEach(key -> exportQueryToS3(key, objectKeysAndQueries.get(key)));
-        var manifestEntries = keySet.stream().parallel().map(this::toManifestEntry).toList();
-        writeManifest(V1_PREFIX + "/manifest.json", new ExportManifest(manifestEntries));
-    }
-
-    private ExportManifest.ExportFileDetails toManifestEntry(String key) {
-        return new ExportManifest.ExportFileDetails(key, null);
+        var organisaatioObjectKey = V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv";
+        exportQueryToS3(organisaatioObjectKey, ORGANISAATIO_QUERY);
+        var osoiteObjectKey = V1_PREFIX + "/csv/osoite-" + timestamp + ".csv";
+        exportQueryToS3(osoiteObjectKey, OSOITE_QUERY);
+        writeManifest(MANIFEST_OBJECT_KEY, new DatantuontiManifest(organisaatioObjectKey, osoiteObjectKey));
     }
 
     private void exportQueryToS3(String objectKey, String query) {
@@ -161,7 +153,7 @@ public class DatantuontiExportService {
         log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
     }
 
-    private void writeManifest(String objectKey, ExportManifest manifest) throws JsonProcessingException {
+    private void writeManifest(String objectKey, DatantuontiManifest manifest) throws JsonProcessingException {
         log.info("Writing manifest file {}/{}: {}", bucketName, objectKey, manifest);
         var manifestJson = objectMapper.writeValueAsString(manifest);
         var response = opintopolkuS3Client.putObject(
