@@ -255,8 +255,8 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
         "s3:ListBucket"
       ],
       resources: [
-        `${importBucketName}`,
-        `${importBucketName}/datantuonti/organisaatio/*`
+        `arn:aws:s3:::${importBucketName}`,
+        `arn:aws:s3:::${importBucketName}/datantuonti/organisaatio/*`
       ],
     }));
 
