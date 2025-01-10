@@ -51,5 +51,5 @@ export const qa: Config = {
 export const prod: Config = {
     ...defaultConfig,
     opintopolkuHost: "opintopolku.fi",
-    vardaRekisterointiCapacity: 0,
+    vardaRekisterointiCapacity: 1,
 };
