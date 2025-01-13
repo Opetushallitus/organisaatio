@@ -10,7 +10,7 @@ function main {
   start_database
 
   cd "${repo}"
-  ./gradlew clean build
+  mvn clean install
 }
 
 function start_database {
