@@ -22,6 +22,7 @@ import * as path from "node:path";
 import {getConfig, getEnvironment} from "./config";
 import {createHealthCheckStacks} from "./health-check";
 import {DatabaseBackupToS3} from "./DatabaseBackupToS3";
+import {DatantuontiStack} from "./datantuonti";
 
 class CdkApp extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -40,6 +41,7 @@ class CdkApp extends cdk.App {
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
     const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(this, "VardaRekisterointiDatabase", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
+    new DatantuontiStack(this, "OrganisaatioDatantuonti", stackProps);
     const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
     createHealthCheckStacks(this, alarmsToSlackLambda, [
       { name: "Organisaatio", url: new URL(`https://virkailija.${config.opintopolkuHost}/organisaatio-service/actuator/health`) },
