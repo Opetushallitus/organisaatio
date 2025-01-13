@@ -192,6 +192,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
                 "sudo yum install -y perl-Digest-SHA", // for shasum command
                 `git checkout ${tag}`,
                 "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > github-packages-gradle.properties",
+                "echo $MVN_SETTINGSXML > ./settings.xml",
                 "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
               ],
             },
@@ -299,6 +300,10 @@ function makeTestProject(
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: "/gradle/github-packages-gradle-properties",
         },
+        MVN_SETTINGSXML: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: `/mvn/settingsxml`,
+        },
         TZ: {
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
           value: "Europe/Helsinki",
@@ -322,6 +327,7 @@ function makeTestProject(
               `git checkout ${tag}`,
               "mkdir -p ~/.gradle && echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ~/.gradle/gradle.properties",
               "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ./organisaatio-service/github-packages-gradle.properties",
+              "echo $MVN_SETTINGSXML > ./settings.xml",
               "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
             ]
           },
