@@ -246,16 +246,16 @@ class OrganisaatioApiSpringTest {
                         .param("count", "-1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{" +
-                        "\"parameters\":[\"oids.arg1\"]," +
-                        "\"errorMessage\":\"oids.arg1: must be greater than or equal to 0\"," +
+                        "\"parameters\":[\"oids.count\"]," +
+                        "\"errorMessage\":\"oids.count: must be greater than or equal to 0\"," +
                         "\"errorKey\":\"constraint.violation\"}"));
 
         mockMvc.perform(get("/api/oids")
                         .param("startIndex", "-1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{" +
-                        "\"parameters\":[\"oids.arg2\"]," +
-                        "\"errorMessage\":\"oids.arg2: must be greater than or equal to 0\"," +
+                        "\"parameters\":[\"oids.startIndex\"]," +
+                        "\"errorMessage\":\"oids.startIndex: must be greater than or equal to 0\"," +
                         "\"errorKey\":\"constraint.violation\"}"));
 
         mockMvc.perform(get("/api/oids")

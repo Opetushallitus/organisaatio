@@ -31,7 +31,7 @@ function start_ui {
 
 function start_server {
   cd "${repo}"
-  ./gradlew clean build -x test
+  mvn clean package -DskipTests
   java -jar \
     -Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties \
     -Dspring.profiles.active=dev \
@@ -41,7 +41,7 @@ function start_server {
     -Durl-ytj=http://localhost:9000/ytj \
     -Durl-oidservice=http://localhost:9000/oidservice \
     -Dcas.service.organisaatio-service=http://localhost:8080/organisaatio-service-not-available \
-    organisaatio-service/build/libs/organisaatio-service.jar &
+    organisaatio-service/target/organisaatio-service.jar &
   wait_for_port 8080
 }
 
