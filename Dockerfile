@@ -1,4 +1,4 @@
-FROM gradle:8.11-jdk21-corretto AS build
+FROM maven:3.9.8-amazoncorretto-21-al2023 AS build
 WORKDIR /app
 
 RUN dnf install -y nodejs20 \
@@ -12,21 +12,18 @@ RUN npm ci
 RUN npm run build
 
 WORKDIR /app
-COPY github-packages-gradle.properties /opt/gradle/gradle.properties
 COPY ytj-client ./ytj-client
 COPY organisaatio-api ./organisaatio-api
 COPY organisaatio-service ./organisaatio-service
-COPY gradle ./gradle
-COPY settings.gradle .
-COPY gradle.properties .
-COPY build.gradle .
+COPY settings.xml .
+COPY pom.xml .
 
-RUN gradle clean build -x test
+RUN mvn clean package -s settings.xml -DskipTests
 
 FROM amazoncorretto:21
 WORKDIR /app
 
-COPY --from=build /app/organisaatio-service/build/libs/organisaatio-service.jar organisaatio.jar
+COPY --from=build /app/organisaatio-service/target/organisaatio-service.jar organisaatio-service.jar
 COPY --chmod=755 <<"EOF" /app/entrypoint.sh
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
@@ -36,7 +33,7 @@ exec java \
   -Denv.name=$ENV \
   -Dlogging.config=classpath:/config/logback.xml \
   -Dserver.port=8080 \
-  -jar organisaatio.jar
+  -jar organisaatio-service.jar
 EOF
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
