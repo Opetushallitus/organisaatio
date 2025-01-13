@@ -10,7 +10,7 @@ function main {
   start_database
 
   cd "${repo}"
-  mvn clean install
+  mvn clean install -s ./settings.xml
 }
 
 function start_database {

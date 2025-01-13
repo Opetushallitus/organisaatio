@@ -32,7 +32,7 @@ function start_ui {
 
 function start_server {
   cd "${repo}"
-  mvn clean package -DskipTests
+  mvn clean package -DskipTests -s ./settings.xml
   java -jar \
     -Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties \
     -Dspring.profiles.active=dev \
