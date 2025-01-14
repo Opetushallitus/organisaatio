@@ -90,7 +90,7 @@ public class QueueingEmailService {
                 .lahettaja(OPH_LAHETTAJA)
                 .replyTo(email.getReplyTo())
                 .otsikko(email.getSubject())
-                .lahettavaPalvelu("oppijanumerorekisteri")
+                .lahettavaPalvelu("varda-rekisterointi")
                 .prioriteetti(Prioriteetti.normaali)
                 .sailytysaika(SAILYTYSAIKA)
                 .build();
