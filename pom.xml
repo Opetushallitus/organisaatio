@@ -46,10 +46,6 @@
         <buildNumber>Not provided</buildNumber>
         <branch>Not provided</branch>
         <revision>Not provided</revision>
-
-        <sonar.organization>opetushallitus</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.coverage.jacoco.xmlReportPaths>**/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencyManagement>
@@ -166,11 +162,6 @@ buildTtime=${maven.build.timestamp}
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>4.0</version>
             </plugin>
         </plugins>
     </build>

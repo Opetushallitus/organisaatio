@@ -15,12 +15,6 @@
 
     <properties>
         <java.version>21</java.version>
-        <sonar.organization>opetushallitus</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.sources>src/main/java,src/frontend</sonar.sources>
-        <sonar.exclusions>**/*.test.tsx?</sonar.exclusions>
-        <sonar.coverage.jacoco.xmlReportPaths>**/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.javascript.lcov.reportPaths>coverage/lcov.info</sonar.javascript.lcov.reportPaths>
     </properties>
 
     <dependencies>
