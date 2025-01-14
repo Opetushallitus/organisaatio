@@ -525,7 +525,7 @@ const LomakeSivu = () => {
                 </div>
                 {organisaatioNimiPolku.map((o, index) => [
                     <div key={o.oid}>
-                        <Link to={`${o.oid}`}>{i18n.translateNimi(o.nimi)}</Link>
+                        <Link to={`/lomake/${o.oid}`}>{i18n.translateNimi(o.nimi)}</Link>
                     </div>,
                     organisaatioNimiPolku.length - 1 !== index && <div key={'first-in-path'}> &gt; </div>,
                 ])}
