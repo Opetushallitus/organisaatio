@@ -1,11 +1,10 @@
 {
-  "extends": ["config:recommended"],
+  "extends": ["config:best-practices"],
   "automerge": false,
-  "packageRules": [{
-    "matchPackageNames": ["*"],
-    "enabled": false
-  }],
+  "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "enabled": true
-  }
+    "enabled": true,
+    "labels": ["security"]
+  },
+  "prConcurrentLimit": 5
 }
