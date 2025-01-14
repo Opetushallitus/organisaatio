@@ -28,7 +28,6 @@
     </parent>
 
     <modules>
-        <module>organisaatio-api</module>
         <module>organisaatio-service</module>
         <module>ytj-client</module>
     </modules>

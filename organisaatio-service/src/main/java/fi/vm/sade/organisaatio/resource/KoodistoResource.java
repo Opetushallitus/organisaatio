@@ -1,7 +1,5 @@
 package fi.vm.sade.organisaatio.resource;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioSearchCriteriaDTOV4;
 import fi.vm.sade.organisaatio.service.KoodistoService;
 import io.swagger.v3.oas.annotations.Hidden;
