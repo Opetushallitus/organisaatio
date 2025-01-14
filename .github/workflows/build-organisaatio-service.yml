@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12.14
+        image: postgres:15.7
         ports:
           - 5433:5432
         env:
@@ -162,7 +162,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:12.14
+        image: postgres:15.7
         ports:
           - 5433:5432
         env:
