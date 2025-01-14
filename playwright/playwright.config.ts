@@ -5,7 +5,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: 2,
-  reporter: "html",
+  reporter: process.env.CI ? [["junit", { outputFile: "playwright-results.xml" }]] : "html",
   use: {
     trace: "retain-on-first-failure",
     httpCredentials: {
