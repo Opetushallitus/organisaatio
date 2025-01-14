@@ -1,0 +1,1 @@
+ALTER SEQUENCE hibernate_sequence RESTART WITH 20000000;

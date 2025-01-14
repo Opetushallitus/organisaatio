@@ -37,8 +37,8 @@ public class BaseEntity implements Persistable<Long>, Serializable {
 
     @Id
     @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment" )
+    @SequenceGenerator(name = "hibernate_sequence", sequenceName = "hibernate_sequence", allocationSize = 1)
+    @GeneratedValue(generator = "hibernate_sequence")
     private Long id;
 
     @Version
