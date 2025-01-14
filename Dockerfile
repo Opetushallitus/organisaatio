@@ -13,7 +13,6 @@ RUN npm run build
 
 WORKDIR /app
 COPY ytj-client ./ytj-client
-COPY organisaatio-api ./organisaatio-api
 COPY organisaatio-service ./organisaatio-service
 COPY settings.xml .
 COPY pom.xml .
