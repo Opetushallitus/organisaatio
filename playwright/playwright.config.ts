@@ -1,11 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
+const CI = !!process.env.CI || !!process.env.CODEBUILD_BUILD_ID
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  forbidOnly: CI,
+  retries: CI ? 2 : 0,
   workers: 2,
-  reporter: process.env.CI ? [["junit", { outputFile: "playwright-results.xml" }]] : "html",
+  reporter: CI ? [["junit", { outputFile: "playwright-results.xml" }]] : "html",
   use: {
     trace: "retain-on-first-failure",
     httpCredentials: {
