@@ -10,8 +10,14 @@ function force_push_tag {
 
 function main {
   local -r env=$(parse_env_from_script_name)
-  force_push_tag "green-${env}"
+  force_push_branch "green-${env}"
   force_push_tag "green-${env}-$(date +%s)"
+}
+
+function force_push_branch {
+  local -r branch="$1"
+  git branch --force "${branch}"
+  git push --force origin "${branch}:${branch}"
 }
 
 main "$@"

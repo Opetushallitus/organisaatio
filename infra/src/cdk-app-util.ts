@@ -29,15 +29,33 @@ class ContinuousDeploymentStack extends cdk.Stack {
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
 
-    (["hahtuva", "dev", "qa", "prod"] as const).forEach(
-      (env) =>
-        new ContinuousDeploymentPipelineStack(
-          this,
-          `${capitalize(env)}ContinuousDeploymentPipelineStack`,
-          env,
-          { owner: "Opetushallitus", name: "organisaatio", branch: "master" },
-          props
-        )
+    new ContinuousDeploymentPipelineStack(
+      this,
+      "HahtuvaContinuousDeploymentPipelineStack",
+      "hahtuva",
+      { owner: "Opetushallitus", name: "organisaatio", branch: "master" },
+      props
+    );
+    new ContinuousDeploymentPipelineStack(
+      this,
+      "DevContinuousDeploymentPipelineStack",
+      "dev",
+      { owner: "Opetushallitus", name: "organisaatio", branch: "green-hahtuva" },
+      props
+    );
+    new ContinuousDeploymentPipelineStack(
+      this,
+      "QaContinuousDeploymentPipelineStack",
+      "qa",
+      { owner: "Opetushallitus", name: "organisaatio", branch: "green-dev" },
+      props
+    );
+    new ContinuousDeploymentPipelineStack(
+      this,
+      "ProdContinuousDeploymentPipelineStack",
+      "prod",
+      { owner: "Opetushallitus", name: "organisaatio", branch: "green-qa" },
+      props
     );
 
     const radiatorAccountId = "905418271050"
@@ -85,12 +103,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
         pipelineType: codepipeline.PipelineType.V1,
       }
     );
-    const tag = {
-      hahtuva: repository.branch,
-      dev: "green-hahtuva",
-      qa: "green-dev",
-      prod: "green-qa",
-    }[env];
 
     const sourceOutput = new codepipeline.Artifact();
     const sourceAction =
@@ -120,7 +132,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
-            project: makeAmazonLinuxTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands),
+            project: makeAmazonLinuxTestProject(this, env, `TestOrganisaatio${test.name}`, test.commands),
           })
         );
       }
@@ -134,7 +146,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
-            project: makeUbuntuTestProject(this, env, tag, `TestOrganisaatio${test.name}`, test.commands),
+            project: makeUbuntuTestProject(this, env, `TestOrganisaatio${test.name}`, test.commands),
           })
         );
       }
@@ -190,7 +202,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
             pre_build: {
               commands: [
                 "sudo yum install -y perl-Digest-SHA", // for shasum command
-                `git checkout ${tag}`,
                 "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > github-packages-gradle.properties",
                 "echo $MVN_SETTINGSXML > ./settings.xml",
                 "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
@@ -245,11 +256,10 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
 function makeAmazonLinuxTestProject(
   scope: constructs.Construct,
   env: string,
-  tag: string,
   name: string,
   testCommands: string[],
 ): codebuild.PipelineProject {
-  return makeTestProject(scope, env, tag, name, testCommands, codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0, [
+  return makeTestProject(scope, env, name, testCommands, codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0, [
     "sudo yum install -y perl-Digest-SHA", // for shasum command
   ]);
 }
@@ -257,11 +267,10 @@ function makeAmazonLinuxTestProject(
 function makeUbuntuTestProject(
   scope: constructs.Construct,
   env: string,
-  tag: string,
   name: string,
   testCommands: string[],
 ): codebuild.PipelineProject {
-  return makeTestProject(scope, env, tag, name, testCommands, codebuild.LinuxBuildImage.STANDARD_7_0,  [
+  return makeTestProject(scope, env, name, testCommands, codebuild.LinuxBuildImage.STANDARD_7_0,  [
     "sudo apt-get update -y",
     "sudo apt-get install -y netcat", // for nc command
     "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Cypress/Chromium
@@ -271,7 +280,6 @@ function makeUbuntuTestProject(
 function makeTestProject(
   scope: constructs.Construct,
   env: string,
-  tag: string,
   name: string,
   testCommands: string[],
   buildImage: codebuild.IBuildImage,
@@ -324,7 +332,6 @@ function makeTestProject(
             commands: [
               "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD",
               ...preBuildCommands,
-              `git checkout ${tag}`,
               "mkdir -p ~/.gradle && echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ~/.gradle/gradle.properties",
               "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ./organisaatio-service/github-packages-gradle.properties",
               "echo $MVN_SETTINGSXML > ./settings.xml",
