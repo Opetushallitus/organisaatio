@@ -18,6 +18,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
+import * as kms from "aws-cdk-lib/aws-kms";
 import * as path from "node:path";
 import {getConfig, getEnvironment} from "./config";
 import {createHealthCheckStacks} from "./health-check";
@@ -60,6 +61,7 @@ class CdkApp extends cdk.App {
       exportBucket: organisaatioDatabaseStack.exportBucket,
       ecsCluster: ecsStack.cluster,
       datantuontiExportBucket: datantuontiStack.exportBucket,
+      datantuontiEncryptionKey: datantuontiStack.encryptionKey,
       ...stackProps,
     });
   }
@@ -347,6 +349,7 @@ type OrganisaatioApplicationStackProps = cdk.StackProps & {
   ecsCluster: ecs.Cluster
   exportBucket: s3.Bucket
   datantuontiExportBucket: s3.Bucket
+  datantuontiEncryptionKey: kms.Key
 }
 
 class OrganisaatioApplicationStack extends cdk.Stack {
@@ -396,6 +399,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         aws_region: this.region,
         export_bucket_name: props.exportBucket.bucketName,
         "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
+        "organisaatio.tasks.datantuonti.export.encryption-key-id": props.datantuontiEncryptionKey.keyId,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(

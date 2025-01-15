@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.ServerSideEncryption;
+import software.amazon.awssdk.transfer.s3.model.Copy;
 
 import java.util.Date;
 
@@ -25,6 +28,8 @@ public class DatantuontiExportService {
     private S3AsyncClient opintopolkuS3Client;
     @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
     private String bucketName;
+    @Value("${organisaatio.tasks.datantuonti.export.encryption-key-id}")
+    private String encryptionKeyId;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
@@ -142,8 +147,10 @@ public class DatantuontiExportService {
         var timestamp = new Date().getTime();
         var organisaatioObjectKey = V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv";
         exportQueryToS3(organisaatioObjectKey, ORGANISAATIO_QUERY);
+        reEncryptFile(organisaatioObjectKey);
         var osoiteObjectKey = V1_PREFIX + "/csv/osoite-" + timestamp + ".csv";
         exportQueryToS3(osoiteObjectKey, OSOITE_QUERY);
+        reEncryptFile(osoiteObjectKey);
         writeManifest(MANIFEST_OBJECT_KEY, new DatantuontiManifest(organisaatioObjectKey, osoiteObjectKey));
     }
 
@@ -162,5 +169,19 @@ public class DatantuontiExportService {
                 AsyncRequestBody.fromString(manifestJson)
         ).join();
         log.info("Wrote manifest to S3: {}", response);
+    }
+
+    private void reEncryptFile(String objectKey) {
+        log.info("Re-encrypting {}/{} with custom key", bucketName, objectKey);
+        CopyObjectRequest request = CopyObjectRequest.builder()
+                .sourceBucket(bucketName)
+                .destinationBucket(bucketName)
+                .sourceKey(objectKey)
+                .destinationKey(objectKey)
+                .ssekmsKeyId(encryptionKeyId)
+                .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                .build();
+        opintopolkuS3Client.copyObject(request);
+        log.info("{}/{} re-encrypted with custom key", bucketName, objectKey);
     }
 }
