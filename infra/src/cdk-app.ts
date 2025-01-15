@@ -432,6 +432,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       ],
     });
 
+    props.datantuontiExportBucket.grantReadWrite(taskDefinition.taskRole);
     props.exportBucket.grantReadWrite(taskDefinition.taskRole);
     taskDefinition.addToTaskRolePolicy(
       new iam.PolicyStatement({
