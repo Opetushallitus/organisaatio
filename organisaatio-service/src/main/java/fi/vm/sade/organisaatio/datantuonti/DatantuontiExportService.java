@@ -25,11 +25,12 @@ public class DatantuontiExportService {
     private S3AsyncClient opintopolkuS3Client;
     @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
     private String bucketName;
+
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
-    private final static String V1_PREFIX = "datantuonti/organisaatio/v1";
+    private final static String V1_PREFIX = "organisaatio/v1";
     public final static String MANIFEST_OBJECT_KEY = V1_PREFIX + "/manifest.json";
     private final String CREATE_ORGANISAATIO_SQL = """
         CREATE TABLE datantuonti_export_new.organisaatio AS

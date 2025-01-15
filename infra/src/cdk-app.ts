@@ -23,6 +23,7 @@ import {getConfig, getEnvironment} from "./config";
 import {createHealthCheckStacks} from "./health-check";
 import {DatabaseBackupToS3} from "./DatabaseBackupToS3";
 import {DatantuontiStack} from "./datantuonti";
+import {Bucket} from "aws-cdk-lib/aws-s3";
 
 class CdkApp extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -41,8 +42,9 @@ class CdkApp extends cdk.App {
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
     const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(this, "VardaRekisterointiDatabase", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
-    new DatantuontiStack(this, "OrganisaatioDatantuonti", stackProps);
-    const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
+    const datantuontiStack = new DatantuontiStack(this, "OrganisaatioDatantuonti", stackProps);
+    const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion,
+        alarmTopic, datantuontiStack.exportBucket, stackProps);
     createHealthCheckStacks(this, alarmsToSlackLambda, [
       { name: "Organisaatio", url: new URL(`https://virkailija.${config.opintopolkuHost}/organisaatio-service/actuator/health`) },
       { name: "VardaRekisterointi", url: new URL(`https://virkailija.${config.opintopolkuHost}/varda-rekisterointi/actuator/health`) },
@@ -57,6 +59,7 @@ class CdkApp extends cdk.App {
       database: organisaatioDatabaseStack.database,
       exportBucket: organisaatioDatabaseStack.exportBucket,
       ecsCluster: ecsStack.cluster,
+      datantuontiExportBucket: datantuontiStack.exportBucket,
       ...stackProps,
     });
   }
@@ -227,6 +230,7 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       ecsCluster: ecs.Cluster,
       bastion: ec2.BastionHostLinux,
       alarmTopic: sns.ITopic,
+      datantuontiExportBucket: s3.Bucket,
       props: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -238,12 +242,6 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       expiration: cdk.Duration.days(7),
       prefix: "datantuonti/organisaatio/v1/csv/"
     });
-    const targetAccountId = ssm.StringParameter.valueFromLookup(
-        this,
-        "/organisaatio/datantuonti/export/role/TargetAccountId"
-    );
-    this.exportBucket.grantRead(new iam.AccountPrincipal(targetAccountId));
-
     const importBucketName = ssm.StringParameter.valueFromLookup(
         this,
         "organisaatio.tasks.datantuonti.import.source.bucket.name"
@@ -282,7 +280,7 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       }),
       storageEncrypted: true,
       readers: [],
-      s3ExportBuckets: [this.exportBucket],
+      s3ExportBuckets: [this.exportBucket, datantuontiExportBucket],
       s3ImportRole: s3ImportRole,
     });
     this.database.connections.allowDefaultPortFrom(bastion);
@@ -348,6 +346,7 @@ type OrganisaatioApplicationStackProps = cdk.StackProps & {
   database: rds.DatabaseCluster
   ecsCluster: ecs.Cluster
   exportBucket: s3.Bucket
+  datantuontiExportBucket: s3.Bucket
 }
 
 class OrganisaatioApplicationStack extends cdk.Stack {
@@ -396,6 +395,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         postgresql_db: "organisaatio",
         aws_region: this.region,
         export_bucket_name: props.exportBucket.bucketName,
+        "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
