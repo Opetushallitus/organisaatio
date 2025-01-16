@@ -524,6 +524,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
 
     this.exportFailureAlarm(logGroup, alarmTopic);
     this.datantuontiExportFailureAlarm(logGroup, alarmTopic)
+    this.datantuontiImportFailureAlarm(logGroup, alarmTopic);
     this.oivaIntegrationAlarm(logGroup, alarmTopic);
   }
 
@@ -543,6 +544,15 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       alarmTopic,
       logs.FilterPattern.literal('"Organisaatio datantuonti export task completed"')
     )
+  }
+
+  datantuontiImportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
+    this.alarmIfExpectedLogLineIsMissing(
+        "DatantuontiExportTask",
+        logGroup,
+        alarmTopic,
+        logs.FilterPattern.literal('"Organisaatio datantuonti import task completed"')
+    );
   }
 
   private oivaIntegrationAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
