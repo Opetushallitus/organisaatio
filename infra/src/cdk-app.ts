@@ -45,7 +45,7 @@ class CdkApp extends cdk.App {
     const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(this, "VardaRekisterointiDatabase", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
     const datantuontiStack = new DatantuontiStack(this, "OrganisaatioDatantuonti", stackProps);
     const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion,
-        alarmTopic, datantuontiStack.exportBucket, stackProps);
+        alarmTopic, datantuontiStack.exportBucket, datantuontiStack.s3ImportRole, stackProps);
     createHealthCheckStacks(this, alarmsToSlackLambda, [
       { name: "Organisaatio", url: new URL(`https://virkailija.${config.opintopolkuHost}/organisaatio-service/actuator/health`) },
       { name: "VardaRekisterointi", url: new URL(`https://virkailija.${config.opintopolkuHost}/varda-rekisterointi/actuator/health`) },
@@ -233,6 +233,7 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       bastion: ec2.BastionHostLinux,
       alarmTopic: sns.ITopic,
       datantuontiExportBucket: s3.Bucket,
+      datantuontiS3ImportRole: iam.Role,
       props: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -244,23 +245,6 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       expiration: cdk.Duration.days(7),
       prefix: "datantuonti/organisaatio/v1/csv/"
     });
-    const importBucketName = ssm.StringParameter.valueFromLookup(
-        this,
-        "organisaatio.tasks.datantuonti.import.source.bucket.name"
-    );
-    const s3ImportRole = new iam.Role(this, "S3ImportRole", {
-      assumedBy: new iam.ServicePrincipal("rds.amazonaws.com")
-    });
-    s3ImportRole.addToPolicy(new iam.PolicyStatement({
-      actions: [
-        "s3:GetObject",
-        "s3:ListBucket"
-      ],
-      resources: [
-        `arn:aws:s3:::${importBucketName}`,
-        `arn:aws:s3:::${importBucketName}/datantuonti/organisaatio/*`
-      ],
-    }));
 
     this.database = new rds.DatabaseCluster(this, "Database", {
       vpc,
@@ -283,7 +267,7 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       storageEncrypted: true,
       readers: [],
       s3ExportBuckets: [this.exportBucket, datantuontiExportBucket],
-      s3ImportRole: s3ImportRole,
+      s3ImportRole: datantuontiS3ImportRole,
     });
     this.database.connections.allowDefaultPortFrom(bastion);
 
