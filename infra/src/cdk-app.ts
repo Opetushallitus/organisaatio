@@ -339,7 +339,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       props: OrganisaatioApplicationStackProps,
   ) {
     super(scope, id, props);
-
+    const conf = getConfig();
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
       logGroupName: "Organisaatio/organisaatio",
       retention: logs.RetentionDays.INFINITE,
@@ -377,6 +377,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         export_bucket_name: props.exportBucket.bucketName,
         "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
         "organisaatio.tasks.datantuonti.export.encryption-key-id": props.datantuontiEncryptionKey.keyId,
+        "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
@@ -423,7 +424,6 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       })
     );
 
-    const conf = getConfig();
     const service = new ecs.FargateService(this, "Service", {
       cluster: props.ecsCluster,
       taskDefinition,

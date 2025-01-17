@@ -6,6 +6,9 @@ const defaultConfig = {
     minCapacity: 1,
     maxCapacity: 1,
     vardaRekisterointiCapacity: 0,
+    features: {
+      "organisaatio.tasks.datantuonti.import.enabled": false
+    }
 };
 
 export type Config = typeof defaultConfig;
@@ -34,6 +37,9 @@ export const hahtuva: Config = {
     ...defaultConfig,
     opintopolkuHost: "hahtuvaopintopolku.fi",
     vardaRekisterointiCapacity: 1,
+    features: {
+        "organisaatio.tasks.datantuonti.import.enabled": true
+    }
 };
 
 export const dev: Config = {
