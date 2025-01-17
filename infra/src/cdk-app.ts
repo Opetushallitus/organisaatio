@@ -548,7 +548,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
 
   datantuontiImportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
     this.alarmIfExpectedLogLineIsMissing(
-        "DatantuontiExportTask",
+        "DatantuontiImportTask",
         logGroup,
         alarmTopic,
         logs.FilterPattern.literal('"Organisaatio datantuonti import task completed"')
