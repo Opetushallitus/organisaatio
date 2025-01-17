@@ -239,13 +239,6 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
     super(scope, id, props);
 
     this.exportBucket = new s3.Bucket(this, "ExportBucket", {});
-    this.exportBucket.addLifecycleRule({
-      id: "deleteDatantuontiObjectsAfterSevenDays",
-      enabled: true,
-      expiration: cdk.Duration.days(7),
-      prefix: "datantuonti/organisaatio/v1/csv/"
-    });
-
     this.database = new rds.DatabaseCluster(this, "Database", {
       vpc,
       vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
