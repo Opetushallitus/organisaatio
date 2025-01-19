@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.config.scheduling;
 import com.github.kagkarlsson.scheduler.Scheduler;
 
 import fi.vm.sade.organisaatio.datantuonti.DatantuontiExportTask;
+import fi.vm.sade.organisaatio.datantuonti.DatantuontiImportTask;
 import fi.vm.sade.organisaatio.email.EmailRetryTask;
 import fi.vm.sade.organisaatio.export.ExportTask;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ public class SchedulingConfiguration {
                         EmailRetryTask emailRetryTask,
                         ExportTask exportTask,
                         DatantuontiExportTask datanTuontiExportTask,
+                        DatantuontiImportTask datantuontiImportTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
                 .startTasks(vanhentuneetTiedotSahkopostiTask,
@@ -38,7 +40,8 @@ public class SchedulingConfiguration {
                             fetchKoulutusluvatTask,
                             emailRetryTask,
                             exportTask,
-                            datanTuontiExportTask)
+                            datanTuontiExportTask,
+                            datantuontiImportTask)
                 .threads(1)
                 .build();
         scheduler.start();
