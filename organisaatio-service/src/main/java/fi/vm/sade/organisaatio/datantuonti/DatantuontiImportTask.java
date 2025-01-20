@@ -11,6 +11,7 @@ import fi.vm.sade.organisaatio.service.filters.RequestIdFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,12 @@ import java.time.LocalTime;
 
 @Component
 @Slf4j
-@ConditionalOnProperty(value = "organisaatio.tasks.datantuonti.import.enabled", havingValue = "true")
 public class DatantuontiImportTask extends RecurringTask<Void> {
     @Autowired
     private DatantuontiImportService importService;
+
+    @Value("organisaatio.tasks.datantuonti.import.enabled")
+    private Boolean taskEnabled;
 
     public DatantuontiImportTask() {
         super(
@@ -36,16 +39,20 @@ public class DatantuontiImportTask extends RecurringTask<Void> {
 
     @Override
     public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
-        try {
-            MDC.put("requestId", RequestIdFilter.generateRequestId());
-            log.info("Running organisaatio datantuonti import task");
-            importService.importTempTableFromS3();
-            importService.createNewOrganisations();
-            log.info("Organisaatio datantuonti import task completed");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            MDC.remove("requestId");
+        if (taskEnabled) {
+            try {
+                MDC.put("requestId", RequestIdFilter.generateRequestId());
+                log.info("Running organisaatio datantuonti import task");
+                importService.importTempTableFromS3();
+                importService.createNewOrganisations();
+                log.info("Organisaatio datantuonti import task completed");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                MDC.remove("requestId");
+            }
+        } else {
+            log.info("Skipping organisaatio datantuonti import since it is not enabled");
         }
     }
 }
