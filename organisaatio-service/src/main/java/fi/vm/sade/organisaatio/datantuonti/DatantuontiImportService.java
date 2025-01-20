@@ -84,14 +84,14 @@ public class DatantuontiImportService {
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_organisaatio_temp_oid_idx ON datantuonti_organisaatio_temp(oid)");
 
         String organisaatioSql = "aws_s3.table_import_from_s3('datantuonti_organisaatio_temp', '',  '(FORMAT CSV,HEADER true)', aws_commons.create_s3_uri(?, ?, ?))";
-        String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, manifest.getOrganisaatio(), OpintopolkuAwsClients.REGION.id());
+        String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, manifest.organisaatio(), OpintopolkuAwsClients.REGION.id());
         log.info("Importing datantuontiorganisaatiot from S3 returned {}", organisaatioTxt);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_osoite_temp");
         jdbcTemplate.execute(CREATE_DATANTUONTI_OSOITE);
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_osoite_temp_oid_idx ON datantuonti_osoite_temp(oid)");
         String osoiteSql = "aws_s3.table_import_from_s3('datantuonti_osoite_temp', '',  '(FORMAT CSV,HEADER true)', aws_commons.create_s3_uri(?, ?, ?))";
-        String osoiteTxt = jdbcTemplate.queryForObject(osoiteSql, String.class, bucketName, manifest.getOsoite(), OpintopolkuAwsClients.REGION.id());
+        String osoiteTxt = jdbcTemplate.queryForObject(osoiteSql, String.class, bucketName, manifest.osoite(), OpintopolkuAwsClients.REGION.id());
         log.info("Importing datantuontiosoite from S3 returned {}", osoiteTxt);
     }
 
