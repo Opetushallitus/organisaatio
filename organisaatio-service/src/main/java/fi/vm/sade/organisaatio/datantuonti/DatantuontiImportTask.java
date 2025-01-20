@@ -25,7 +25,7 @@ public class DatantuontiImportTask extends RecurringTask<Void> {
     @Autowired
     private DatantuontiImportService importService;
 
-    @Value("organisaatio.tasks.datantuonti.import.enabled")
+    @Value("${organisaatio.tasks.datantuonti.import.enabled}")
     private Boolean taskEnabled;
 
     public DatantuontiImportTask() {
