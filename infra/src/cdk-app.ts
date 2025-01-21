@@ -376,6 +376,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         aws_region: this.region,
         export_bucket_name: props.exportBucket.bucketName,
         "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
+        "organisaatio.tasks.datantuonti.export.encryption-key-id": props.datantuontiEncryptionKey.keyId,
         "organisaatio.tasks.datantuonti.export.encryption-key-arn": props.datantuontiEncryptionKey.keyArn,
         "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`
       },
