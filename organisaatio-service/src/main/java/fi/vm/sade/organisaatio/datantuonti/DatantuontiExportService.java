@@ -28,8 +28,8 @@ public class DatantuontiExportService {
     private S3AsyncClient opintopolkuS3Client;
     @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
     private String bucketName;
-    @Value("${organisaatio.tasks.datantuonti.export.encryption-key-id}")
-    private String encryptionKeyId;
+    @Value("${organisaatio.tasks.datantuonti.export.encryption-key-arn}")
+    private String encryptionKeyArn;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
@@ -179,7 +179,7 @@ public class DatantuontiExportService {
                 .destinationBucket(bucketName)
                 .sourceKey(objectKey)
                 .destinationKey(objectKey)
-                .ssekmsKeyId(encryptionKeyId)
+                .ssekmsKeyId(encryptionKeyArn)
                 .serverSideEncryption(ServerSideEncryption.AWS_KMS)
                 .build();
         opintopolkuS3Client.copyObject(request);
