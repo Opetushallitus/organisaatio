@@ -15,7 +15,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.ServerSideEncryption;
-import software.amazon.awssdk.transfer.s3.model.Copy;
 
 import java.util.Date;
 
