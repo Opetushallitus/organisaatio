@@ -411,6 +411,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       ],
     });
 
+    props.datantuontiEncryptionKey.grantEncrypt(taskDefinition.taskRole);
     props.datantuontiExportBucket.grantReadWrite(taskDefinition.taskRole);
     props.exportBucket.grantReadWrite(taskDefinition.taskRole);
     taskDefinition.addToTaskRolePolicy(
