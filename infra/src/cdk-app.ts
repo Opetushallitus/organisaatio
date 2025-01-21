@@ -401,6 +401,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         oiva_baseurl: this.ssmSecret("OivaBaseurl"),
         oiva_username: this.ssmSecret("OivaUsername"),
         oiva_password: this.ssmSecret("OivaPassword"),
+        "organisaatio.tasks.datantuonti.import.bucket.name": this.ssmString("organisaatio.tasks.datantuonti.import.bucket.name", "")
       },
       portMappings: [
         {
@@ -588,12 +589,12 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     alarm.addAlarmAction(new cloudwatch_actions.SnsAction(alarmTopic));
   }
 
-  ssmString(name: string): ecs.Secret {
+  ssmString(name: string, prefix: string = "/organisaatio/"): ecs.Secret {
     return ecs.Secret.fromSsmParameter(
       ssm.StringParameter.fromStringParameterName(
         this,
         `Param${name}`,
-        `/organisaatio/${name}`
+        `${prefix}${name}`
       )
     );
   }

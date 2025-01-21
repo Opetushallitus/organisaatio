@@ -71,7 +71,7 @@ public class DatantuontiImportService {
                 kieli text
             )""";
 
-    @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
+    @Value("${organisaatio.tasks.datantuonti.import.bucket.name}")
     private String bucketName;
 
     @Transactional
