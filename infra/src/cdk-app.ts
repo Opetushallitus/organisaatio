@@ -539,7 +539,9 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         "OrganisaatioUpdateTask",
         logGroup,
         alarmTopic,
-        logs.FilterPattern.literal('"Organisaatio update task completed"')
+        logs.FilterPattern.literal('"Organisaatio update task completed"'),
+        cdk.Duration.hours(25),
+        1,
     );
   }
 
@@ -552,7 +554,14 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     );
   }
 
-  private alarmIfExpectedLogLineIsMissing(id: string, logGroup: logs.LogGroup, alarmTopic: sns.ITopic, filterPattern: logs.IFilterPattern) {
+  private alarmIfExpectedLogLineIsMissing(
+    id: string,
+    logGroup: logs.LogGroup,
+    alarmTopic: sns.ITopic,
+    filterPattern: logs.IFilterPattern,
+    period: cdk.Duration = cdk.Duration.hours(1),
+    evaluationPeriods: number = 8
+  ) {
     const metricFilter = logGroup.addMetricFilter(
       `${id}SuccessMetricFilter`,
       {
@@ -566,12 +575,12 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       alarmName: id,
       metric: metricFilter.metric({
         statistic: "Sum",
-        period: cdk.Duration.hours(1),
+        period,
       }),
       comparisonOperator:
       cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
       threshold: 0,
-      evaluationPeriods: 8,
+      evaluationPeriods,
       treatMissingData: cloudwatch.TreatMissingData.BREACHING,
     });
     alarm.addOkAction(new cloudwatch_actions.SnsAction(alarmTopic));
