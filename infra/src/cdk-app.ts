@@ -426,6 +426,29 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         ],
       })
     );
+    const importBucketName = ssm.StringParameter.valueFromLookup(
+          this,
+          "organisaatio.tasks.datantuonti.import.bucket.name"
+    );
+    const decryptionKeyArn = ssm.StringParameter.valueFromLookup(
+          this,
+          "organisaatio.tasks.datantuonti.import.bucket.decryption-key-arn"
+    );
+    taskDefinition.addToTaskRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:GetObject", "s3:ListBucket"],
+        resources: [
+          `arn:aws:s3:::${importBucketName}`,
+          `arn:aws:s3:::${importBucketName}/*`,
+        ],
+      })
+    )
+    taskDefinition.addToTaskRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["kms:Decrypt"],
+        resources: [decryptionKeyArn],
+      })
+    );
 
     const service = new ecs.FargateService(this, "Service", {
       cluster: props.ecsCluster,
