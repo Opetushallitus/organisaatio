@@ -181,7 +181,7 @@ public class DatantuontiExportService {
                 .ssekmsKeyId(encryptionKeyArn)
                 .serverSideEncryption(ServerSideEncryption.AWS_KMS)
                 .build();
-        opintopolkuS3Client.copyObject(request);
+        opintopolkuS3Client.copyObject(request).join();
         log.info("{}/{} re-encrypted with custom key", bucketName, objectKey);
     }
 }
