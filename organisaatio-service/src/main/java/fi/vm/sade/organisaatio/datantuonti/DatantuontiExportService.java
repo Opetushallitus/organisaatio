@@ -71,7 +71,8 @@ public class DatantuontiExportService {
              FROM organisaatio_kielet
              WHERE organisaatio_id = o.id) as kielet
           FROM organisaatio o
-          WHERE NOT EXISTS(
+          WHERE o.oid like '1.2.246.562.10.%'
+          AND NOT EXISTS(
             SELECT 1
             FROM organisaatio_tyypit
             WHERE organisaatio_id = o.id
@@ -121,6 +122,7 @@ public class DatantuontiExportService {
           FROM yhteystieto y
           JOIN organisaatio o ON o.id = y.organisaatio_id
           WHERE y.osoitetyyppi in ('posti', 'kaynti')
+          AND o.oid like '1.2.246.562.10.%'
           AND NOT EXISTS(
             SELECT 1
             FROM organisaatio_tyypit
