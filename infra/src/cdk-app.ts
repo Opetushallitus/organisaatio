@@ -527,9 +527,12 @@ class OrganisaatioApplicationStack extends cdk.Stack {
 
     this.exportFailureAlarm(logGroup, alarmTopic);
     this.datantuontiExportFailureAlarm(logGroup, alarmTopic)
-    this.datantuontiImportFailureAlarm(logGroup, alarmTopic);
     this.organisaatioUpdateFailureAlarm(logGroup, alarmTopic);
     this.oivaIntegrationAlarm(logGroup, alarmTopic);
+
+    if (conf.features["organisaatio.tasks.datantuonti.import.enabled"]) {
+      this.datantuontiImportFailureAlarm(logGroup, alarmTopic);
+    }
   }
 
   exportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
