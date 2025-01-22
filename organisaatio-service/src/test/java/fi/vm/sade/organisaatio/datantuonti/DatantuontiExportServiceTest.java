@@ -20,7 +20,7 @@ class DatantuontiExportServiceTest {
 
     @Test
     @Sql({"/data/truncate_tables.sql"})
-    @Sql({"/data/basic_organisaatio_data.sql"})
+    @Sql({"/data/datantuonti_organisaatio_data.sql"})
     void doesNotExportVarhaiskasvastusOrganisaatiot() {
         var allOrganisaatioOids = getAllOrgansaatioOids();
         var allOrganisaatioCount = allOrganisaatioOids.size();
