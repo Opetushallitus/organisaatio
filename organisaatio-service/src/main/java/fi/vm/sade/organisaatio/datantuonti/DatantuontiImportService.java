@@ -101,9 +101,9 @@ public class DatantuontiImportService {
         o.setYTunnus(dorg.ytunnus());
         o.setPiilotettu(dorg.piilotettu());
         o.setNimi(Map.of(
-            "fi", Optional.of(dorg.nimi_fi()).orElse(""),
-            "sv", Optional.of(dorg.nimi_sv()).orElse(""),
-            "en", Optional.of(dorg.nimi_en()).orElse("")
+            "fi", Optional.ofNullable(dorg.nimi_fi()).orElse(""),
+            "sv", Optional.ofNullable(dorg.nimi_sv()).orElse(""),
+            "en", Optional.ofNullable(dorg.nimi_en()).orElse("")
         ));
         var orgNimi = new OrganisaatioNimiRDTO();
         orgNimi.setNimi(o.getNimi());
@@ -116,11 +116,11 @@ public class DatantuontiImportService {
         o.setMaaUri(dorg.maa());
         o.setKieletUris(Set.of(dorg.kielet().split(",")));
         o.setYhteystiedot(osoitteet.stream().map(osoite -> Map.of(
-            "osoite", Optional.of(osoite.osoite()).orElse(""),
-            "osoiteTyyppi", Optional.of(osoite.osoitetyyppi()).orElse(""),
-            "postinumeroUri", Optional.of(osoite.postinumero()).orElse(""),
-            "postitoimipaikka", Optional.of(osoite.postitoimipaikka()).orElse(""),
-            "kieli", Optional.of(osoite.kieli()).orElse("")
+            "osoite", Optional.ofNullable(osoite.osoite()).orElse(""),
+            "osoiteTyyppi", Optional.ofNullable(osoite.osoitetyyppi()).orElse(""),
+            "postinumeroUri", Optional.ofNullable(osoite.postinumero()).orElse(""),
+            "postitoimipaikka", Optional.ofNullable(osoite.postitoimipaikka()).orElse(""),
+            "kieli", Optional.ofNullable(osoite.kieli()).orElse("")
         )).collect(toSet()));
         return o;
     }
