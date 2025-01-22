@@ -46,6 +46,9 @@ export const dev: Config = {
     ...defaultConfig,
     opintopolkuHost: "untuvaopintopolku.fi",
     vardaRekisterointiCapacity: 1,
+    features: {
+        "organisaatio.tasks.datantuonti.import.enabled": true
+    }
 };
 
 export const qa: Config = {
