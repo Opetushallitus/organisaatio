@@ -5,10 +5,7 @@ import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -104,10 +101,10 @@ public class DatantuontiImportService {
         o.setYTunnus(dorg.ytunnus());
         o.setPiilotettu(dorg.piilotettu());
         o.setNimi(Map.of(
-            "fi", dorg.nimi_fi(),
-            "sv", dorg.nimi_sv(),
-            "en", dorg.nimi_en())
-        );
+            "fi", Optional.of(dorg.nimi_fi()).orElse(""),
+            "sv", Optional.of(dorg.nimi_sv()).orElse(""),
+            "en", Optional.of(dorg.nimi_en()).orElse("")
+        ));
         var orgNimi = new OrganisaatioNimiRDTO();
         orgNimi.setNimi(o.getNimi());
         orgNimi.setAlkuPvm(dorg.alkupvm());
@@ -119,11 +116,11 @@ public class DatantuontiImportService {
         o.setMaaUri(dorg.maa());
         o.setKieletUris(Set.of(dorg.kielet().split(",")));
         o.setYhteystiedot(osoitteet.stream().map(osoite -> Map.of(
-            "osoite", osoite.osoite(),
-            "osoiteTyyppi", osoite.osoitetyyppi(),
-            "postinumeroUri", osoite.postinumero(),
-            "postitoimipaikka", osoite.postitoimipaikka(),
-            "kieli", osoite.kieli()
+            "osoite", Optional.of(osoite.osoite()).orElse(""),
+            "osoiteTyyppi", Optional.of(osoite.osoitetyyppi()).orElse(""),
+            "postinumeroUri", Optional.of(osoite.postinumero()).orElse(""),
+            "postitoimipaikka", Optional.of(osoite.postitoimipaikka()).orElse(""),
+            "kieli", Optional.of(osoite.kieli()).orElse("")
         )).collect(toSet()));
         return o;
     }
