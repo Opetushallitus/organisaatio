@@ -55,6 +55,9 @@ export const qa: Config = {
     ...defaultConfig,
     opintopolkuHost: "testiopintopolku.fi",
     vardaRekisterointiCapacity: 1,
+    features: {
+        "organisaatio.tasks.datantuonti.import.enabled": true
+    },
 };
 
 export const prod: Config = {
