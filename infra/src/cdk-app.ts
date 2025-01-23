@@ -558,7 +558,8 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         "DatantuontiImportTask",
         logGroup,
         alarmTopic,
-        logs.FilterPattern.literal('"Organisaatio datantuonti import task completed"')
+        logs.FilterPattern.literal('"Organisaatio datantuonti import task completed"'),
+        cdk.Duration.hours(25),
     );
   }
 
