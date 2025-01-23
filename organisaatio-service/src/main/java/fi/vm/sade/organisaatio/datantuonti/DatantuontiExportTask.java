@@ -37,8 +37,8 @@ public class DatantuontiExportTask extends RecurringTask<Void> {
         try {
             MDC.put("requestId", RequestIdFilter.generateRequestId());
             log.info("Running organisaatio datantuonti export task");
-            datantuontiExportService.createSchema();
-            datantuontiExportService.generateExportFiles();
+            String secondsFromEpoch = datantuontiExportService.createSchemaAndReturnTransactionTimestampFromEpoch();
+            datantuontiExportService.generateExportFiles(secondsFromEpoch);
             log.info("Organisaatio datantuonti export task completed");
         } catch (IOException e) {
             throw new RuntimeException(e);

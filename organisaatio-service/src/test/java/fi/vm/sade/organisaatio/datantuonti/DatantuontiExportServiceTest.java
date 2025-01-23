@@ -29,7 +29,7 @@ class DatantuontiExportServiceTest {
         assertThat(allOrganisaatioCount).isEqualTo(13L);
         assertThat(varhaiskasvatusOrganisaatioCount).isEqualTo(3L);
 
-        datantuontiExportService.createSchema();
+        datantuontiExportService.createSchemaAndReturnTransactionTimestampFromEpoch();
 
         var exportedOrganisatioOids = getExportedOrganisaatioCount();
         assertThat(exportedOrganisatioOids.size()).isEqualTo(10L);

@@ -137,17 +137,18 @@ public class DatantuontiExportService {
     """;
 
     @Transactional
-    public void createSchema() {
+    public String createSchemaAndReturnTransactionTimestampFromEpoch() {
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS datantuonti_export_new CASCADE");
         jdbcTemplate.execute("CREATE SCHEMA datantuonti_export_new");
         jdbcTemplate.execute(CREATE_ORGANISAATIO_SQL);
         jdbcTemplate.execute(CREATE_EXPORT_OSOITE_SQL);
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS datantuonti_export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA datantuonti_export_new RENAME TO datantuonti_export");
+
+        return jdbcTemplate.queryForObject("SELECT extract(epoch from transaction_timestamp())", String.class);
     }
 
-    public void generateExportFiles() throws JsonProcessingException {
-        var timestamp = new Date().getTime();
+    public void generateExportFiles(String timestamp) throws JsonProcessingException {
         var organisaatioObjectKey = V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv";
         exportQueryToS3(organisaatioObjectKey, ORGANISAATIO_QUERY);
         reEncryptFile(organisaatioObjectKey);
