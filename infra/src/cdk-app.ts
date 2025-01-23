@@ -560,6 +560,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         alarmTopic,
         logs.FilterPattern.literal('"Organisaatio datantuonti import task completed"'),
         cdk.Duration.hours(25),
+        1,
     );
   }
 
