@@ -1,0 +1,11 @@
+:root {
+    --black: #000;
+    --white: #fff;
+    --green: #3a7a10;
+    --gray-font: #4c4c4c;
+    --gray-heading: #1d1d1d;
+    --light-gray: #b2b2b2;
+    --gray-header-background: #f5f7f9;
+    --light-green-background: rgba(58, 122, 16, 0.14);
+    --red-error: #cc3300;
+}

@@ -1,0 +1,12 @@
+.successContent {
+    min-height: 55vh;
+}
+
+.success {
+    display: flex;
+    align-items: center;
+}
+
+.successDescription {
+    margin-left: 30px;
+}

@@ -1,0 +1,44 @@
+.switcherContainer {
+    width: 100%;
+    display: flex;
+}
+
+.languageSwitcher {
+    margin: 14px 0;
+    box-sizing: border-box;
+}
+
+.languageButton {
+    width: 103px;
+    height: 30px;
+    color: var(--gray-font);
+    border: 1px solid var(--light-gray);
+}
+
+.languageButton:disabled {
+    color: var(--white);
+    background-color: var(--green);
+    border: 1px solid var(--green);
+}
+
+.leftButton {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-right: none;
+}
+
+.rightButton {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-left: none;
+}
+
+@media (min-width: 768px) {
+    .switcherContainer {
+        justify-content: end;
+    }
+
+    .languageSwitcher {
+        margin: 28px;
+    }
+}

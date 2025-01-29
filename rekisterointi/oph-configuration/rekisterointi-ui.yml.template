@@ -1,0 +1,51 @@
+server:
+    port: 8080
+    servlet:
+        session:
+            timeout: 1h
+            cookie:
+                domain: {{ host_oppija }}
+                secure: true
+                max-age: 1h
+    tomcat:
+        accesslog:
+            enabled: true
+            directory: /root/logs
+            prefix: access_rekisterointi
+            suffix: .log
+            pattern: "{\"timestamp\": \"%{yyyy-MM-dd'T'HH:mm:ss.SSSZ}t\", \"responseCode\": \"%s\", \"request\": \"%r\", \"responseTime\": \"%D\", \"requestMethod\": \"%m\", \"service\": \"rekisterointi\", \"environment\": \"${env.name}\", \"customer\": \"OPH\", \"user-agent\": \"%{User-Agent}i\", \"caller-id\": \"%{Caller-Id}i\", \"clientSubSystemCode\": \"%{clientSubSystemCode}i\", \"x-forwarded-for\": \"%{X-Forwarded-For}i\", \"x-real-ip\": \"%{X-Real-IP}i\", \"remote-ip\": \"%a\", \"session\": \"%{JSESSIONID}c\", \"response-size\": \"%B\", \"referer\": \"%{Referer}i\", \"opintopolku-api-key\": \"%{Opintopolku-Api-Key}i\"}"
+            request-attributes-enabled: true
+            rotate: true
+            rename-on-rotate: true
+            max-days: 7
+        port-header: X-Real-Port
+        protocol-header: X-Real-Proto
+spring:
+    data:
+        redis:
+            host: {{ rekisterointi_redis_host }}
+            port: 6379
+    session:
+        store-type: redis
+        redis:
+            flush-mode: on_save
+            namespace: spring:session
+
+url-oppija:  https://{{ host_oppija }}
+url-virkailija: https://{{ host_virkailija }}
+url-rekisterointi: https://rekisterointi.{{ host_oppija }}
+url-alb: {{ host_alb }}
+
+rekisterointi:
+    service:
+        username: {{ varda_rekisterointi_service_username }}
+        password: {{ varda_rekisterointi_service_password }}
+    valtuudet:
+        host: {{ varda_rekisterointi_valtuudet_host }}
+        client-id: {{ varda_rekisterointi_valtuudet_client_id }}
+        api-key: {{ varda_rekisterointi_valtuudet_api_key }}
+        oauth-password: {{ varda_rekisterointi_valtuudet_oauth_password }}
+varda-rekisterointi:
+    url: https://{{ host_virkailija }}/varda-rekisterointi/api/rekisterointi
+    username: {{ varda_rekisterointi_rekisterointi_ui_username }}
+    password: {{ varda_rekisterointi_rekisterointi_ui_password }}

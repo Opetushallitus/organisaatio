@@ -1,0 +1,28 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+/target/
+
+# dependencies
+node_modules/
+/rekisterointi-ui/dist/
+/rekisterointi-ui/.pnp
+/rekisterointi-ui.pnp.js
+/rekisterointi-ui/playwright-results/
+/rekisterointi-ui/playwright/.cache/
+
+# testing
+/rekisterointi-ui/coverage
+
+# production
+/rekisterointi-ui/build
+
+# misc
+/rekisterointi-ui/.DS_Store
+/rekisterointi-ui/.env.local
+/rekisterointi-ui/.env.development.local
+/rekisterointi-ui/.env.test.local
+/rekisterointi-ui/.env.production.local
+
+/rekisterointi-ui/npm-debug.log*
+/rekisterointi-ui/yarn-debug.log*
+/rekisterointi-ui/yarn-error.log*

@@ -1,0 +1,52 @@
+{
+    "name": "rekisterointi-ui",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@hookform/resolvers": "^3.1.0",
+        "@reduxjs/toolkit": "^1.9.5",
+        "axios": "^1.7.4",
+        "date-fns": "^2.29.2",
+        "normalize.css": "^8.0.1",
+        "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
+        "react": "^18.2.0",
+        "react-datepicker": "^4.11.0",
+        "react-dom": "^18.2.0",
+        "react-helmet": "^6.1.0",
+        "react-hook-form": "^7.43.9",
+        "react-markdown": "^8.0.7",
+        "react-redux": "^8.0.5",
+        "react-router": "^6.10.0",
+        "react-router-dom": "^6.10.0",
+        "react-select": "^5.7.2",
+        "redux": "^4.2.1",
+        "universal-cookie": "^7.2.2",
+        "yup": "^1.1.1"
+    },
+    "devDependencies": {
+        "@axe-core/playwright": "^4.6.1",
+        "@playwright/test": "^1.32.3",
+        "@types/react": "^18.0.37",
+        "@types/react-datepicker": "^4.10.0",
+        "@types/react-dom": "^18.0.11",
+        "@types/react-helmet": "^6.1.6",
+        "copy-webpack-plugin": "^11.0.0",
+        "css-loader": "^6.7.3",
+        "fork-ts-checker-webpack-plugin": "^8.0.0",
+        "html-webpack-plugin": "^5.5.1",
+        "playwright-chromium": "^1.32.3",
+        "prettier": "^2.8.7",
+        "style-loader": "^3.3.2",
+        "ts-loader": "^9.4.2",
+        "typescript": "^5.0.4",
+        "webpack": "^5.96.1",
+        "webpack-cli": "^5.0.1",
+        "webpack-dev-server": "^4.13.3"
+    },
+    "scripts": {
+        "build": "webpack --config=./webpack.prod.js",
+        "build:watch": "webpack --watch --config=./webpack.watch.js",
+        "playwright:test": "playwright test --config=playwright/playwright.config.ts",
+        "lint": "npx prettier --write src/ playwright/"
+    }
+}

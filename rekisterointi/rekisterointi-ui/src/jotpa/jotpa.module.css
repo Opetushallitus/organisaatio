@@ -1,0 +1,108 @@
+.jotpaLogo {
+    width: 211px;
+}
+
+.infoList {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 12px 12px 28px;
+    background: var(--gray-header-background);
+    line-height: 26px;
+}
+
+.info {
+    width: 100%;
+    padding: 1px 12px;
+    background: var(--gray-header-background);
+    line-height: 26px;
+    box-sizing: border-box;
+}
+
+.buttons {
+    display: flex;
+    justify-content: end;
+    margin-top: 66px;
+}
+
+.cancelButton {
+    padding: 13px 33px;
+    box-sizing: border-box;
+    border: 2px solid var(--white);
+    background: var(--white);
+    color: var(--green);
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.previousButton {
+    padding: 13px 33px;
+    box-sizing: border-box;
+    border: 2px solid var(--green);
+    background: var(--white);
+    color: var(--green);
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.emailRow {
+    display: flex;
+    width: 100%;
+}
+
+.addEmailButton {
+    display: flex;
+    padding: 13px 13px 13px 0;
+    border: none;
+    background: var(--white);
+    color: var(--green);
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.addEmailButton > svg {
+    margin-right: 6px;
+}
+
+.removeEmailPlaceholder {
+    height: 38px;
+    width: 38px;
+}
+
+.removeEmailButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 38px;
+    width: 38px;
+    border: none;
+    background: var(--white);
+}
+
+.postitoimipaikka {
+    height: 22px;
+}
+
+.emailInput {
+    height: 40px;
+    width: 100%;
+    padding: 2px 8px;
+    border-radius: 2px;
+    border: 1px solid var(--light-gray);
+    margin: 1px;
+}
+
+.errorInput {
+    border: 2px solid var(--red-error);
+    margin: 0;
+}
+
+.copyKayntiosoite {
+    margin-top: 26px;
+}
+
+.submitError {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    color: var(--red-error);
+}

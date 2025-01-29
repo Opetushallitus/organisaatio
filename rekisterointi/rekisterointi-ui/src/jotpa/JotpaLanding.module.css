@@ -1,0 +1,25 @@
+.bannerContainer {
+    width: 100%;
+    background-color: #3a7a10;
+}
+
+.banner {
+    display: block;
+    width: 100%;
+    mix-blend-mode: overlay;
+}
+
+.registerButton {
+    padding: 13px 79px;
+    border: none;
+    background: var(--green);
+    color: var(--white);
+}
+
+.link {
+    display: flex;
+}
+
+.link > svg {
+    padding-left: 8px;
+}
