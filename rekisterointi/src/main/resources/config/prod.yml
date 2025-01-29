@@ -1,0 +1,21 @@
+server.servlet.session.cookie.domain: opintopolku.fi
+spring.data.redis.host: ${rekisterointi_redis_host}
+
+url-oppija:  https://opintopolku.fi
+url-virkailija: https://virkailija.opintopolku.fi
+url-rekisterointi: https://rekisterointi.opintopolku.fi
+url-alb: opintopolku.fi
+
+rekisterointi:
+    service:
+        username: ${varda_rekisterointi_service_username}
+        password: ${varda_rekisterointi_service_password}
+    valtuudet:
+        host: ${varda_rekisterointi_valtuudet_host}
+        client-id: ${varda_rekisterointi_valtuudet_client_id}
+        api-key: ${varda_rekisterointi_valtuudet_api_key}
+        oauth-password: ${varda_rekisterointi_valtuudet_oauth_password}
+varda-rekisterointi:
+    url: https://virkailija.opintopolku.fi/varda-rekisterointi/api/rekisterointi
+    username: ${varda_rekisterointi_rekisterointi_ui_username}
+    password: ${varda_rekisterointi_rekisterointi_ui_password}
