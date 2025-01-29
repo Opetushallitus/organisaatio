@@ -7,16 +7,6 @@ server:
                 secure: true
                 max-age: 1h
     tomcat:
-        accesslog:
-            enabled: true
-            directory: /root/logs
-            prefix: access_rekisterointi
-            suffix: .log
-            pattern: "{\"timestamp\": \"%{yyyy-MM-dd'T'HH:mm:ss.SSSZ}t\", \"responseCode\": \"%s\", \"request\": \"%r\", \"responseTime\": \"%D\", \"requestMethod\": \"%m\", \"service\": \"rekisterointi\", \"environment\": \"${env.name}\", \"customer\": \"OPH\", \"user-agent\": \"%{User-Agent}i\", \"caller-id\": \"%{Caller-Id}i\", \"clientSubSystemCode\": \"%{clientSubSystemCode}i\", \"x-forwarded-for\": \"%{X-Forwarded-For}i\", \"x-real-ip\": \"%{X-Real-IP}i\", \"remote-ip\": \"%a\", \"session\": \"%{JSESSIONID}c\", \"response-size\": \"%B\", \"referer\": \"%{Referer}i\", \"opintopolku-api-key\": \"%{Opintopolku-Api-Key}i\"}"
-            request-attributes-enabled: true
-            rotate: true
-            rename-on-rotate: true
-            max-days: 7
         port-header: X-Real-Port
         protocol-header: X-Real-Proto
 spring:
