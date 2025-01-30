@@ -61,7 +61,7 @@ jobs:
         run: npm ci
         working-directory: rekisterointi/rekisterointi-ui
       - name: Install Playwright dependencies
-        run: npx playwright install-deps chromium
+        run: npx playwright install --with-deps
         working-directory: rekisterointi/rekisterointi-ui
       - name: Run playwright tests
         run: |
