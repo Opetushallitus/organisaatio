@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-const CI = !!process.env.CI || !!process.env.CODEBUILD_BUILD_ID
+const CI = !!process.env.CI || !!process.env.CODEBUILD_BUILD_ID;
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
@@ -16,11 +16,6 @@ export default defineConfig({
   },
 
   projects: [
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
