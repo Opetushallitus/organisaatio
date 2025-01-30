@@ -33,9 +33,6 @@ jobs:
         with:
           java-version: "21"
           distribution: "corretto"
-      - uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: "Europe/Helsinki"
       - name: Build frontend
         working-directory: organisaatio-ui
         run: |
@@ -47,7 +44,10 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn clean install -B -Dbranch=$GITHUB_REF_NAME -Drevision=$GITHUB_SHA -DbuildNumber=$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT
+        run: |
+          sudo timedatectl set-timezone Europe/Helsinki
+          echo "Europe/Helsinki" | sudo tee /etc/timezone
+          mvn clean install -B -Dbranch=$GITHUB_REF_NAME -Drevision=$GITHUB_SHA -DbuildNumber=$GITHUB_RUN_NUMBER/$GITHUB_RUN_ATTEMPT
       - uses: actions/upload-artifact@v4
         with:
           name: organisaatio-service-jar
