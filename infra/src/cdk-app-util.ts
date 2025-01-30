@@ -124,8 +124,8 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
       const testStage = pipeline.addStage({ stageName: "Test" });
 
       const amazonLinuxTests = [
-        { name: "Service", commands: ["scripts/ci/run-java-tests.sh"] },
-        { name: "Frontend", commands: ["scripts/ci/run-frontend-tests.sh"] },
+        { name: "Organisaatio Service", commands: ["scripts/ci/run-java-tests.sh"] },
+        { name: "Organisaatio Frontend", commands: ["scripts/ci/run-frontend-tests.sh"] },
       ]
       for (const test of amazonLinuxTests) {
         testStage.addAction(
@@ -138,8 +138,9 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
       }
 
       const ubuntuTests = [
-        { name: "Cypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
-        { name: "Playwright", commands: ["scripts/ci/run-playwright-tests.sh"] },
+        { name: "Organisaatio Cypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
+        { name: "Organisaatio Playwright", commands: ["scripts/ci/run-playwright-tests.sh"] },
+        { name: "Rekisterointi Playwright", commands: ["scripts/ci/run-rekisterointi-tests.sh"] },
       ]
       for (const test of ubuntuTests) {
         testStage.addAction(
