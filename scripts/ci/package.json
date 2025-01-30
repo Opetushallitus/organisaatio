@@ -1,4 +1,5 @@
 {
+  "name": "organisaatio-ci",
   "devDependencies": {
     "@types/node": "20.15.0"
   }
