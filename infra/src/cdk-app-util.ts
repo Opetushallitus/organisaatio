@@ -206,6 +206,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
                 "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > github-packages-gradle.properties",
                 "echo $MVN_SETTINGSXML > ./settings.xml",
                 "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
+                "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
               ],
             },
             build: {
@@ -337,6 +338,7 @@ function makeTestProject(
               "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ./organisaatio-service/github-packages-gradle.properties",
               "echo $MVN_SETTINGSXML > ./settings.xml",
               "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
+              "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
             ]
           },
           build: {
