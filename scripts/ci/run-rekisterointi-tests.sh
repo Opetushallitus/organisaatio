@@ -14,9 +14,9 @@ function main {
   start_mock_api
   start_server
 
-  cd "${repo}/playwright"
+  cd "${repo}/rekisterointi/rekisterointi-ui"
   npx playwright install --with-deps
-  HEADLESS=true npx playwright test
+  HEADLESS=true npm run playwright:test
 }
 
 function start_mock_api {
@@ -25,9 +25,11 @@ function start_mock_api {
 }
 
 function start_server {
-  cd "${repo}"
-  mvn clean package -DskipTests -s ./settings.xml
-  java -jar -Dspring.profiles.active=dev rekisterointi.jar &
+  cd "${repo}/rekisterointi/rekisterointi-ui"
+  npm run build
+  cd "${repo}/rekisterointi"
+  mvn clean package -DskipTests -s ../settings.xml
+  java -jar -Dspring.profiles.active=dev target/rekisterointi.jar &
   wait_for_port 3000
 }
 
@@ -45,7 +47,7 @@ function start_database {
 }
 
 function cleanup {
-  cd $repo
+  cd "${repo}/rekisterointi"
   docker compose down || true
   kill $( jobs -p ) || true
 }
