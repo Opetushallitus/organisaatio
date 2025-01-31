@@ -4,13 +4,10 @@ set -o errexit -o nounset -o pipefail
 repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
 source "${repo}/scripts/lib/common-functions.sh"
 
-trap cleanup EXIT
-
 function main {
   init_nodejs
   install_npm_dependencies
 
-  start_database
   start_mock_api
   start_server
 
@@ -39,17 +36,6 @@ function install_npm_dependencies {
     cd ${bom_dir}
     npm_ci_if_needed
   done
-}
-
-function start_database {
-  cd "${repo}/rekisterointi"
-  docker compose up --detach
-}
-
-function cleanup {
-  cd "${repo}/rekisterointi"
-  docker compose down || true
-  kill $( jobs -p ) || true
 }
 
 function wait_for_port {

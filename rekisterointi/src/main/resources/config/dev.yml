@@ -1,21 +1,9 @@
 server.servlet.session.cookie.domain: untuvaopintopolku.fi
-spring.data.redis.host: ${rekisterointi_redis_host}
 
 url-oppija:  https://untuvaopintopolku.fi
 url-virkailija: https://virkailija.untuvaopintopolku.fi
 url-rekisterointi: https://rekisterointi.untuvaopintopolku.fi
 url-alb: untuvaopintopolku.fi
 
-rekisterointi:
-    service:
-        username: ${varda_rekisterointi_service_username}
-        password: ${varda_rekisterointi_service_password}
-    valtuudet:
-        host: ${varda_rekisterointi_valtuudet_host}
-        client-id: ${varda_rekisterointi_valtuudet_client_id}
-        api-key: ${varda_rekisterointi_valtuudet_api_key}
-        oauth-password: ${varda_rekisterointi_valtuudet_oauth_password}
-varda-rekisterointi:
-    url: https://virkailija.untuvaopintopolku.fi/varda-rekisterointi/api/rekisterointi
-    username: ${varda_rekisterointi_rekisterointi_ui_username}
-    password: ${varda_rekisterointi_rekisterointi_ui_password}
+varda-rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.test.suomi.fi"
+varda-rekisterointi.url: https://virkailija.untuvaopintopolku.fi/varda-rekisterointi/api/rekisterointi

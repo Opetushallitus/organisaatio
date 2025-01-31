@@ -64,16 +64,12 @@ jobs:
         working-directory: rekisterointi/rekisterointi-ui
       - name: Run playwright tests
         run: |
-          docker compose up &
-          cd ..
           java -jar -Dspring.profiles.active=dev rekisterointi.jar &
           cd rekisterointi/mock-api
-          npm install
-          npm start &
+          npm install && npm start &
           cd ../rekisterointi-ui
           ./scripts/ci-wait-for-frontend.sh
           HEADLESS=true npm run playwright:test
-        working-directory: rekisterointi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -21,10 +21,6 @@ tmux new-session -d -s $session
 
 tmux splitw -h
 
-echo "starting redis"
-tmux send-keys "docker compose up" C-m
-
-tmux splitw -v
 echo "starting server"
 tmux send-keys "./start-local-backend.sh" C-m
 

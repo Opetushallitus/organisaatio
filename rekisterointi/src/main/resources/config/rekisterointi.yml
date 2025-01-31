@@ -9,12 +9,15 @@ server:
     tomcat:
         port-header: X-Real-Port
         protocol-header: X-Real-Proto
-spring:
-    data:
-        redis:
-            port: 6379
-    session:
-        store-type: redis
-        redis:
-            flush-mode: on_save
-            namespace: spring:session
+rekisterointi:
+    service:
+        username: ${varda_rekisterointi_service_username}
+        password: ${varda_rekisterointi_service_password}
+    valtuudet:
+        host: ${varda_rekisterointi_valtuudet_host}
+        client-id: ${varda_rekisterointi_valtuudet_client_id}
+        api-key: ${varda_rekisterointi_valtuudet_api_key}
+        oauth-password: ${varda_rekisterointi_valtuudet_oauth_password}
+varda-rekisterointi:
+    username: ${varda_rekisterointi_rekisterointi_ui_username}
+    password: ${varda_rekisterointi_rekisterointi_ui_password}
