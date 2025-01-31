@@ -40,7 +40,7 @@ function install_npm_dependencies {
 }
 
 function start_database {
-  cd $repo
+  cd "${repo}/rekisterointi"
   docker compose up --detach
 }
 
