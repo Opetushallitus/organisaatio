@@ -33,7 +33,7 @@ function start_server {
 
 function install_npm_dependencies {
   for bom_dir in "${repo}/rekisterointi/rekisterointi-ui" \
-                 "${repo}/mock-api"; do
+                 "${repo}/rekisterointi/mock-api"; do
     cd ${bom_dir}
     npm_ci_if_needed
   done
