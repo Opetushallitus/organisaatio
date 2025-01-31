@@ -56,6 +56,7 @@ class CdkApp extends cdk.App {
       ecsCluster: ecsStack.cluster,
       ...stackProps,
     });
+    new RekisterointiApplicationStack(this, "RekisterointiApplication", vpc, hostedZone, { ecsCluster: ecsStack.cluster, ...stackProps, });
     new OrganisaatioApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
       database: organisaatioDatabaseStack.database,
       exportBucket: organisaatioDatabaseStack.exportBucket,
@@ -770,6 +771,139 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         enabled: true,
         interval: cdk.Duration.seconds(10),
         path: "/varda-rekisterointi/actuator/health",
+        port: appPort.toString(),
+      },
+    });
+  }
+
+  ssmSecret(name: string): ecs.Secret {
+    return ecs.Secret.fromSsmParameter(
+      ssm.StringParameter.fromSecureStringParameterAttributes(
+        this,
+        `Param${name}`,
+        { parameterName: `/vardarekisterointi/${name}` }
+      )
+    );
+  }
+}
+
+type RekisterointiApplicationStackProps = cdk.StackProps & {
+  ecsCluster: ecs.Cluster
+}
+
+class RekisterointiApplicationStack extends cdk.Stack {
+  constructor(
+    scope: constructs.Construct,
+    id: string,
+    vpc: ec2.IVpc,
+    hostedZone: route53.IHostedZone,
+    props: RekisterointiApplicationStackProps,
+  ) {
+    super(scope, id, props);
+
+    const logGroup = new logs.LogGroup(this, "AppLogGroup", {
+      logGroupName: "Organisaatio/rekisterointi",
+      retention: logs.RetentionDays.INFINITE,
+    });
+
+    const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {
+      directory: path.join(__dirname, "../../rekisterointi"),
+      file: "Dockerfile",
+      platform: ecr_assets.Platform.LINUX_ARM64,
+    });
+
+    const taskDefinition = new ecs.FargateTaskDefinition(
+      this,
+      "TaskDefinition",
+      {
+        cpu: 512,
+        memoryLimitMiB: 2048,
+        runtimePlatform: {
+          operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
+          cpuArchitecture: ecs.CpuArchitecture.ARM64,
+        },
+      });
+
+    const appPort = 8080;
+    taskDefinition.addContainer("AppContainer", {
+      image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
+      logging: new ecs.AwsLogDriver({ logGroup, streamPrefix: "app" }),
+      environment: {
+        ENV: getEnvironment(),
+        aws_region: this.region,
+      },
+      secrets: {
+        varda_rekisterointi_service_username: this.ssmSecret("PalvelukayttajaUsername"),
+        varda_rekisterointi_service_password: this.ssmSecret("PalvelukayttajaPassword"),
+        varda_rekisterointi_valtuudet_client_id: this.ssmSecret("ValtuudetClientId"),
+        varda_rekisterointi_valtuudet_api_key: this.ssmSecret("ValtuudetApiKey"),
+        varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret("ValtuudetOauthPassword"),
+        varda_rekisterointi_rekisterointi_ui_username: this.ssmSecret("RekisterointiUiUsername"),
+        varda_rekisterointi_rekisterointi_ui_password: this.ssmSecret("RekisterointiUiPassword"),
+      },
+      portMappings: [
+        {
+          name: "rekisterointi",
+          containerPort: appPort,
+          appProtocol: ecs.AppProtocol.http,
+        },
+      ],
+    });
+
+    const service = new ecs.FargateService(this, "Service", {
+      cluster: props.ecsCluster,
+      taskDefinition,
+      desiredCount: 1,
+      minHealthyPercent: 100,
+      maxHealthyPercent: 200,
+      circuitBreaker: { enable: true },
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
+      healthCheckGracePeriod: cdk.Duration.minutes(5),
+    });
+
+    const alb = new elasticloadbalancingv2.ApplicationLoadBalancer(
+      this,
+      "LoadBalancer",
+      {
+        vpc,
+        internetFacing: true,
+      }
+    );
+
+    const albHostname = `rekisterointi.${hostedZone.zoneName}`;
+
+    new route53.ARecord(this, "ALBARecord", {
+      zone: hostedZone,
+      recordName: albHostname,
+      target: route53.RecordTarget.fromAlias(
+        new route53_targets.LoadBalancerTarget(alb)
+      ),
+    });
+
+    const albCertificate = new certificatemanager.Certificate(
+      this,
+      "AlbCertificate",
+      {
+        domainName: albHostname,
+        validation:
+          certificatemanager.CertificateValidation.fromDns(hostedZone),
+      }
+    );
+
+    const listener = alb.addListener("Listener", {
+      protocol: elasticloadbalancingv2.ApplicationProtocol.HTTPS,
+      port: 443,
+      open: true,
+      certificates: [albCertificate],
+    });
+
+    listener.addTargets("ServiceTarget", {
+      port: appPort,
+      targets: [service],
+      healthCheck: {
+        enabled: true,
+        interval: cdk.Duration.seconds(10),
+        path: "/rekisterointi/actuator/health",
         port: appPort.toString(),
       },
     });
