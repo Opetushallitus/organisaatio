@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Service
 public class ExportService {
-    private static final String V2_PREFIX = "fulldump/organisaatio/v2";
     private static final String V3_PREFIX = "fulldump/organisaatio/v3";
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
@@ -158,23 +157,14 @@ public class ExportService {
     }
 
     public void generateExportFiles() throws IOException {
-        generateCsvExportsV2();
-        generateJsonExportsV2();
         generateCsvExportsV3();
         generateJsonExportsV3();
     }
 
-    private static final String ORGANISAATIO_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila FROM export.organisaatio";
     private static final String ORGANISAATIO_V3_QUERY = "SELECT organisaatio_oid, organisaatiotyypit, oppilaitosnumero, kotipaikka, yritysmuoto, y_tunnus, alkupvm, lakkautuspvm, tuontipvm, paivityspvm, nimi_fi, nimi_sv, oppilaitostyyppi, opetuskielet, grandparent_oid, parent_oid, tila, email FROM export.organisaatio";
     private static final String OSOITE_QUERY = "SELECT organisaatio_oid, osoitetyyppi, osoite, postinumero, postitoimipaikka, kieli FROM export.osoite";
     private static final String ORGANISAATIOSUHDE_QUERY = "SELECT suhdetyyppi, parent_oid, child_oid, alkupvm, loppupvm FROM export.organisaatiosuhde";
     private static final String RYHMA_QUERY = "SELECT ryhma_oid, nimi_fi, nimi_sv, nimi_en FROM export.ryhma";
-
-    public void generateCsvExportsV2() {
-        exportQueryToS3(V2_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_QUERY);
-        exportQueryToS3(V2_PREFIX + "/csv/osoite.csv", OSOITE_QUERY);
-        exportQueryToS3(V2_PREFIX + "/csv/organisaatiosuhde.csv", ORGANISAATIOSUHDE_QUERY);
-    }
 
     public void generateCsvExportsV3() {
         exportQueryToS3(V3_PREFIX + "/csv/organisaatio.csv", ORGANISAATIO_V3_QUERY);
@@ -188,50 +178,6 @@ public class ExportService {
         var sql = "SELECT rows_uploaded FROM aws_s3.query_export_to_s3(?, aws_commons.create_s3_uri(?, ?, ?), options := 'FORMAT CSV, HEADER TRUE')";
         var rowsUploaded = jdbcTemplate.queryForObject(sql, Long.class, query, bucketName, objectKey, OpintopolkuAwsClients.REGION.id());
         log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
-    }
-
-    List<File> generateJsonExportsV2() throws IOException {
-        var organisaatioFile = exportQueryToS3AsJson(ORGANISAATIO_QUERY, V2_PREFIX + "/json/organisaatio.json", unchecked(rs ->
-                new ExportedOrganisaatio(
-                        rs.getString("organisaatio_oid"),
-                        rs.getString("organisaatiotyypit"),
-                        rs.getString("oppilaitosnumero"),
-                        rs.getString("kotipaikka"),
-                        rs.getString("yritysmuoto"),
-                        rs.getString("y_tunnus"),
-                        rs.getString("alkupvm"),
-                        rs.getString("lakkautuspvm"),
-                        rs.getString("tuontipvm"),
-                        rs.getString("paivityspvm"),
-                        rs.getString("nimi_fi"),
-                        rs.getString("nimi_sv"),
-                        rs.getString("oppilaitostyyppi"),
-                        rs.getString("opetuskielet"),
-                        rs.getString("grandparent_oid"),
-                        rs.getString("parent_oid"),
-                        rs.getString("tila")
-                )
-        ));
-        var osoiteFile = exportQueryToS3AsJson(OSOITE_QUERY, V2_PREFIX + "/json/osoite.json", unchecked(rs ->
-                new ExportedOsoite(
-                        rs.getString("organisaatio_oid"),
-                        rs.getString("osoitetyyppi"),
-                        rs.getString("osoite"),
-                        rs.getString("postinumero"),
-                        rs.getString("postitoimipaikka"),
-                        rs.getString("kieli")
-                )
-        ));
-        var organisaatioSuhdeFile = exportQueryToS3AsJson(ORGANISAATIOSUHDE_QUERY, V2_PREFIX + "/json/organisaatiosuhde.json", unchecked(rs ->
-                new ExportedOrganisaatioSuhde(
-                        rs.getString("suhdetyyppi"),
-                        rs.getString("parent_oid"),
-                        rs.getString("child_oid"),
-                        rs.getString("alkupvm"),
-                        rs.getString("loppupvm")
-                )
-        ));
-        return List.of(organisaatioFile, osoiteFile, organisaatioSuhdeFile);
     }
 
     List<File> generateJsonExportsV3() throws IOException {
@@ -339,23 +285,7 @@ public class ExportService {
     }
 
     public void copyExportFilesToLampi() throws IOException {
-        copyExportFilesV2();
         copyExportFilesV3();
-    }
-
-    private void copyExportFilesV2() throws IOException {
-        log.info("Copying v2 export files to Lampi");
-        var csvManifest = new ArrayList<ExportManifest.ExportFileDetails>();
-        csvManifest.add(copyFileToLampi(V2_PREFIX + "/csv/organisaatio.csv"));
-        csvManifest.add(copyFileToLampi(V2_PREFIX + "/csv/osoite.csv"));
-        csvManifest.add(copyFileToLampi(V2_PREFIX + "/csv/organisaatiosuhde.csv"));
-        writeManifest(V2_PREFIX + "/csv/manifest.json", new ExportManifest(csvManifest));
-
-        var jsonManifest = new ArrayList<ExportManifest.ExportFileDetails>();
-        jsonManifest.add(copyFileToLampi(V2_PREFIX + "/json/organisaatio.json"));
-        jsonManifest.add(copyFileToLampi(V2_PREFIX + "/json/osoite.json"));
-        jsonManifest.add(copyFileToLampi(V2_PREFIX + "/json/organisaatiosuhde.json"));
-        writeManifest(V2_PREFIX + "/json/manifest.json", new ExportManifest(jsonManifest));
     }
 
     private void copyExportFilesV3() throws IOException {
