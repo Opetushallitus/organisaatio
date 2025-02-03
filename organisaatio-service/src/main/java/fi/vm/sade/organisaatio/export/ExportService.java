@@ -352,25 +352,6 @@ public class ExportService {
     }
 }
 
-record ExportedOrganisaatio(String organisaatio_oid,
-                            String organisaatiotyypit,
-                            String oppilaitosnumero,
-                            String kotipaikka,
-                            String yritysmuoto,
-                            String y_tunnus,
-                            String alkupvm,
-                            String lakkautuspvm,
-                            String tuontipvm,
-                            String paivityspvm,
-                            String nimi_fi,
-                            String nimi_sv,
-                            String oppilaitostyyppi,
-                            String opetuskielet,
-                            String grandparent_oid,
-                            String parent_oid,
-                            String tila) {
-}
-
 record ExportedOrganisaatioV3(String organisaatio_oid,
                             String organisaatiotyypit,
                             String oppilaitosnumero,
