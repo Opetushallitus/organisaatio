@@ -13,7 +13,7 @@ function main {
   SERVICE_PASSWORD="dummy"
 
   cd "${repo}/varda-rekisterointi"
-  mvn spring-boot:run \
+  ../mvnw spring-boot:run \
     -Dspring-boot.run.profiles=dev \
     -Dspring-boot.run.jvmArguments="
       -Dvarda-rekisterointi.service.username=$SERVICE_USERNAME
