@@ -5,5 +5,5 @@ url-virkailija: https://virkailija.hahtuvaopintopolku.fi
 url-rekisterointi: https://rekisterointi.hahtuvaopintopolku.fi
 url-alb: hahtuvaopintopolku.fi
 
-varda-rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.test.suomi.fi"
+rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.test.suomi.fi"
 varda-rekisterointi.url: https://virkailija.hahtuvaopintopolku.fi/varda-rekisterointi/api/rekisterointi
