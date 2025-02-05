@@ -79,7 +79,6 @@ public class DatantuontiExportService {
             AND (
               tyypit = 'organisaatiotyyppi_08'
               OR tyypit = 'organisaatiotyyppi_07'
-              OR tyypit = 'Ryhma'
             )
           );
     """;
