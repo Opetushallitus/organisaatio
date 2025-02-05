@@ -903,7 +903,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
       healthCheck: {
         enabled: true,
         interval: cdk.Duration.seconds(10),
-        path: "/rekisterointi/actuator/health",
+        path: "/actuator/health",
         port: appPort.toString(),
       },
     });
