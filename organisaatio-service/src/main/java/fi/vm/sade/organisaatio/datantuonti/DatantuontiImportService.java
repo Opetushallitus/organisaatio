@@ -114,7 +114,7 @@ public class DatantuontiImportService {
         o.setYritysmuoto(dorg.yritysmuoto());
         o.setKotipaikkaUri(dorg.kotipaikka());
         o.setMaaUri(dorg.maa());
-        o.setKieletUris(Set.of(dorg.kielet().split(",")));
+        o.setKieletUris(Set.of(Optional.ofNullable(dorg.kielet()).map(k -> k.split(",")).orElse(new String[0])));
         o.setYhteystiedot(osoitteet.stream().map(osoite -> Map.of(
             "osoite", Optional.ofNullable(osoite.osoite()).orElse(""),
             "osoiteTyyppi", Optional.ofNullable(osoite.osoitetyyppi()).orElse(""),
