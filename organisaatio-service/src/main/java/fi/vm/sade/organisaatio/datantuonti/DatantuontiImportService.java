@@ -128,7 +128,7 @@ public class DatantuontiImportService {
     }
 
     private boolean isNotRyhma(DatantuontiOrganisaatio dorg) {
-        return dorg.oid().startsWith("1.2.246.562.10");
+        return Arrays.stream(dorg.organisaatiotyypit().split("/")).noneMatch("Ryhma"::equals);
     }
 
     String newOrganisationQuery = """
