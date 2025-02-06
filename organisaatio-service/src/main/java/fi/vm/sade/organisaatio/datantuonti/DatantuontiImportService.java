@@ -105,10 +105,12 @@ public class DatantuontiImportService {
             "sv", Optional.ofNullable(dorg.nimi_sv()).orElse(""),
             "en", Optional.ofNullable(dorg.nimi_en()).orElse("")
         ));
-        var orgNimi = new OrganisaatioNimiRDTO();
-        orgNimi.setNimi(o.getNimi());
-        orgNimi.setAlkuPvm(dorg.alkupvm());
-        o.setNimet(List.of(orgNimi));
+        if (isNotRyhma(dorg)) {
+            var orgNimi = new OrganisaatioNimiRDTO();
+            orgNimi.setNimi(o.getNimi());
+            orgNimi.setAlkuPvm(dorg.alkupvm());
+            o.setNimet(List.of(orgNimi));
+        }
         o.setAlkuPvm(dorg.alkupvm());
         o.setLakkautusPvm(dorg.lakkautuspvm());
         o.setYritysmuoto(dorg.yritysmuoto());
@@ -123,6 +125,10 @@ public class DatantuontiImportService {
             "kieli", Optional.ofNullable(osoite.kieli()).orElse("")
         )).collect(toSet()));
         return o;
+    }
+
+    private boolean isNotRyhma(DatantuontiOrganisaatio dorg) {
+        return dorg.oid().startsWith("1.2.246.562.10");
     }
 
     String newOrganisationQuery = """
