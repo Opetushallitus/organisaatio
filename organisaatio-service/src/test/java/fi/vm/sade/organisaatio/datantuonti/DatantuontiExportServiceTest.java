@@ -1,5 +1,9 @@
 package fi.vm.sade.organisaatio.datantuonti;
 
+import fi.vm.sade.organisaatio.RyhmaBuilder;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
+import fi.vm.sade.organisaatio.model.Organisaatio;
+import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class DatantuontiExportServiceTest {
+    @Autowired
+    OrganisaatioRepository organisaatioRepository;
     @Autowired
     private DatantuontiExportService datantuontiExportService;
     @Autowired
@@ -34,6 +40,39 @@ class DatantuontiExportServiceTest {
         var exportedOrganisatioOids = getExportedOrganisaatioCount();
         assertThat(exportedOrganisatioOids.size()).isEqualTo(10L);
         assertThat(exportedOrganisatioOids).doesNotContainSequence(varhaiskasvatusOrganisaatioOids);
+    }
+
+    @Test
+    @Sql({"/data/truncate_tables.sql"})
+    void exportsRyhmat() {
+        long expectedRyhmaCount = 10;
+        for (int i = 0; i < expectedRyhmaCount; ++i) {
+            var ryhma = new RyhmaBuilder("1.2.246.562.28." + i)
+                    .nimi("FI", "Ryhma_" + i)
+                    .nimi("SV", "Ryhma_" + i)
+                    .build();
+            organisaatioRepository.saveAndFlush(ryhma);
+        }
+
+        var actualRyhmaCount = getRyhmaOids().size();
+        assertThat(actualRyhmaCount).isEqualTo(expectedRyhmaCount);
+
+        datantuontiExportService.createSchemaAndReturnTransactionTimestampFromEpoch();
+
+        var actualExportedRyhmaCount = getExportedRyhmaOids().size();
+        assertThat(actualExportedRyhmaCount).isEqualTo(expectedRyhmaCount);
+    }
+
+    private List<String> getRyhmaOids() {
+        return organisaatioRepository
+                .findByOrganisaatiotyyppi(OrganisaatioTyyppi.RYHMA.koodiValue())
+                .stream()
+                .map(Organisaatio::getOid)
+                .toList();
+    }
+
+    private List<String> getExportedRyhmaOids() {
+        return jdbcTemplate.queryForList("SELECT oid FROM datantuonti_export.organisaatio WHERE organisaatiotyypit = 'Ryhma'", String.class);
     }
 
     private List<String> getExportedOrganisaatioCount() {
