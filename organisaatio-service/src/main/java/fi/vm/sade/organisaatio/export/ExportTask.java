@@ -9,6 +9,7 @@ import fi.vm.sade.organisaatio.service.filters.RequestIdFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +18,12 @@ import java.time.Duration;
 
 @Component
 @Slf4j
-@ConditionalOnProperty(value = "organisaatio.tasks.export.enabled", havingValue = "true")
 public class ExportTask extends RecurringTask<Void> {
     @Autowired
     private ExportService exportService;
+
+    @Value("${organisaatio.tasks.export.enabled}")
+    private Boolean taskEnabled;
 
     public ExportTask() {
         super(
@@ -36,11 +39,15 @@ public class ExportTask extends RecurringTask<Void> {
     public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
         try {
             MDC.put("requestId", RequestIdFilter.generateRequestId());
-            log.info("Running organisaatio export task");
-            exportService.createSchema();
-            exportService.generateExportFiles();
-            exportService.copyExportFilesToLampi();
-            log.info("Organisaatio export task completed");
+            if (taskEnabled) {
+                log.info("Running organisaatio export task");
+                exportService.createSchema();
+                exportService.generateExportFiles();
+                exportService.copyExportFilesToLampi();
+                log.info("Organisaatio export task completed");
+            } else {
+                log.info("Skipping organisaatio export since it is not enabled");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
