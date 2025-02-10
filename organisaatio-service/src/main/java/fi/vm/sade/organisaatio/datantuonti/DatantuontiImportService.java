@@ -5,11 +5,14 @@ import static java.util.stream.Collectors.toSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -58,6 +61,13 @@ public class DatantuontiImportService {
                 kielet text
             )""";
 
+    static final String CREATE_DATANTUONTI_RYHMA = """
+            CREATE TABLE IF NOT EXISTS datantuonti_ryhma_temp(
+                oid text,
+                ryhmatyypit text,
+                kayttoryhmat text
+            )""";
+
     static final String CREATE_DATANTUONTI_OSOITE = """
             CREATE TABLE IF NOT EXISTS datantuonti_osoite_temp(
                 oid text,
@@ -79,10 +89,16 @@ public class DatantuontiImportService {
         jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_organisaatio_temp");
         jdbcTemplate.execute(CREATE_DATANTUONTI_ORGANISAATIO);
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_organisaatio_temp_oid_idx ON datantuonti_organisaatio_temp(oid)");
-
         String organisaatioSql = "select * from aws_s3.table_import_from_s3('datantuonti_organisaatio_temp', '',  '(FORMAT CSV,HEADER true)', aws_commons.create_s3_uri(?, ?, ?))";
         String organisaatioTxt = jdbcTemplate.queryForObject(organisaatioSql, String.class, bucketName, manifest.organisaatio(), OpintopolkuAwsClients.REGION.id());
         log.info("Importing datantuontiorganisaatiot from S3 returned {}", organisaatioTxt);
+
+        jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_ryhma_temp");
+        jdbcTemplate.execute(CREATE_DATANTUONTI_RYHMA);
+        jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS datantuonti_ryhma_temp_oid_idx ON datantuonti_ryhma_temp(oid)");
+        String ryhmaSql = "select * from aws_s3.table_import_from_s3('datantuonti_ryhma_temp', '',  '(FORMAT CSV,HEADER true)', aws_commons.create_s3_uri(?, ?, ?))";
+        String ryhmaText = jdbcTemplate.queryForObject(ryhmaSql, String.class, bucketName, manifest.ryhma(), OpintopolkuAwsClients.REGION.id());
+        log.info("Importing datantuontiryhmat from S3 returned {}", ryhmaText);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS datantuonti_osoite_temp");
         jdbcTemplate.execute(CREATE_DATANTUONTI_OSOITE);
@@ -227,6 +243,74 @@ public class DatantuontiImportService {
         }
     }
 
+    @Transactional
+    public void saveRyhmaData() {
+        try {
+            List<DatantuontiRyhma> ryhmat = jdbcTemplate.query(
+                "SELECT oid, ryhmatyypit, kayttoryhmat FROM datantuonti_ryhma_temp",
+                (rs, rn) -> new DatantuontiRyhma(
+                    rs.getString("oid"),
+                    rs.getString("ryhmatyypit") != null ? rs.getString("ryhmatyypit").split(",") : null,
+                    rs.getString("kayttoryhmat") != null ? rs.getString("kayttoryhmat").split(",") : null)
+            );
+            insertRyhmatyypit(ryhmat);
+            insertKayttoryhmat(ryhmat);
+        } catch (Exception e) {
+            log.error("Failed to save ryhmadata", e);
+            throw e;
+        }
+    }
+
+    private void insertRyhmatyypit(List<DatantuontiRyhma> ryhmat) {
+        List<DatantuontiRyhmatyyppi> ryhmatyypit = ryhmat.stream()
+            .filter(r -> r.ryhmatyypit() != null)
+            .map(ryhma -> Stream.of(ryhma.ryhmatyypit()).map(t -> new DatantuontiRyhmatyyppi(ryhma.oid(), t)).toList())
+            .flatMap(list -> list.stream())
+            .toList();
+        jdbcTemplate.execute("LOCK TABLE organisaatio_ryhmatyypit IN ACCESS EXCLUSIVE MODE");
+        jdbcTemplate.execute("DELETE FROM organisaatio_ryhmatyypit WHERE organisaatio_id IN (SELECT id FROM organisaatio WHERE oid LIKE '1.2.246.562.28.%')");
+        jdbcTemplate.batchUpdate(
+                """
+                    INSERT INTO organisaatio_ryhmatyypit(organisaatio_id, ryhmatyypit)
+                    VALUES ((SELECT id FROM organisaatio WHERE oid = ?), ?)
+                """,
+                ryhmatyypit,
+                512,
+                new ParameterizedPreparedStatementSetter<DatantuontiRyhmatyyppi>() {
+                    public void setValues(PreparedStatement ps, DatantuontiRyhmatyyppi argument)
+						throws SQLException {
+                        ps.setString(1, argument.oid());
+                        ps.setString(2, argument.ryhmatyyppi());
+                    }
+                }
+        );
+    }
+
+    private void insertKayttoryhmat(List<DatantuontiRyhma> ryhmat) {
+        List<DatantuontiKayttoryhma> ryhmatyypit = ryhmat.stream()
+            .filter(r -> r.ryhmatyypit() != null)
+            .map(ryhma -> Stream.of(ryhma.kayttoryhmat()).map(t -> new DatantuontiKayttoryhma(ryhma.oid(), t)).toList())
+            .flatMap(list -> list.stream())
+            .toList();
+        jdbcTemplate.execute("LOCK TABLE organisaatio_kayttoryhmat IN ACCESS EXCLUSIVE MODE");
+        jdbcTemplate.execute("DELETE FROM organisaatio_kayttoryhmat WHERE organisaatio_id IN (SELECT id FROM organisaatio WHERE oid LIKE '1.2.246.562.28.%')");
+        jdbcTemplate.batchUpdate(
+                """
+                    INSERT INTO organisaatio_kayttoryhmat(organisaatio_id, kayttoryhmat)
+                    VALUES ((SELECT id FROM organisaatio WHERE oid = ?), ?)
+                """,
+                ryhmatyypit,
+                512,
+                new ParameterizedPreparedStatementSetter<DatantuontiKayttoryhma>() {
+                    public void setValues(PreparedStatement ps, DatantuontiKayttoryhma argument)
+						throws SQLException {
+                        ps.setString(1, argument.oid());
+                        ps.setString(2, argument.kayttoryhma());
+                    }
+                }
+        );
+    }
+
     private DatantuontiManifest getManifest() throws IOException {
         @SuppressWarnings("java:S5443")
         var temporaryFile = File.createTempFile("export", ".csv");
@@ -275,4 +359,20 @@ record DatantuontiOsoite(
     String postinumero,
     String postitoimipaikka,
     String kieli
+) {};
+
+record DatantuontiRyhma(
+    String oid,
+    String[] ryhmatyypit,
+    String[] kayttoryhmat
+) {};
+
+record DatantuontiRyhmatyyppi(
+    String oid,
+    String ryhmatyyppi
+) {};
+
+record DatantuontiKayttoryhma(
+    String oid,
+    String kayttoryhma
 ) {};

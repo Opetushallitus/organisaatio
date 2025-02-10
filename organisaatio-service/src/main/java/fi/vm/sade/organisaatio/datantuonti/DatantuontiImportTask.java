@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -45,6 +44,7 @@ public class DatantuontiImportTask extends RecurringTask<Void> {
                 log.info("Running organisaatio datantuonti import task");
                 importService.importTempTableFromS3();
                 importService.createNewOrganisations();
+                importService.saveRyhmaData();
                 log.info("Organisaatio datantuonti import task completed");
             } catch (IOException e) {
                 throw new RuntimeException(e);

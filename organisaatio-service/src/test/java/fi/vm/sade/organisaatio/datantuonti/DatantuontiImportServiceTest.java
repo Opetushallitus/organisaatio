@@ -56,6 +56,16 @@ public class DatantuontiImportServiceTest {
                 ('1.2.2321.0', NULL, NULL, 'organisaatiotyyppi_06', '4733601-1', false, 'eka', 'första', 'first', DATE '2024-01-01', NULL, 'ry', 'kunta_445', 'maatjavaltiot1_fin', 'oppilaitoksenopetuskieli_1#2'),
                 ('1.2.2123.4', '1.2.2004.1', 'oppilaitostyyppi_19#1', 'organisaatiotyyppi_03,organisaatiotyyppi_04', '1621417-7', true, 'toka', 'andra', 'second', DATE '2023-01-01', DATE '2025-01-01', 'ry', 'kunta_445', NULL, 'oppilaitoksenopetuskieli_1#1,oppilaitoksenopetuskieli_2#2')
         """);
+        jdbcTemplate.execute(DatantuontiImportService.CREATE_DATANTUONTI_RYHMA);
+        jdbcTemplate.execute("""
+            INSERT INTO datantuonti_ryhma_temp (
+                oid,
+                ryhmatyypit,
+                kayttoryhmat)
+            VALUES
+                ('1.2.2004.1', 'ryhma1,ryhma2,ryhma3', 'kayttoryhma1'),
+                ('1.2.2004.2', 'ryhma2', 'kayttoryhma2,kayttoryhma3')
+        """);
         jdbcTemplate.execute(DatantuontiImportService.CREATE_DATANTUONTI_OSOITE);
         jdbcTemplate.execute("""
             INSERT INTO datantuonti_osoite_temp (
@@ -137,5 +147,28 @@ public class DatantuontiImportServiceTest {
             .returns("Helsinki", from(Organisaatio::getKotipaikka))
             .returns("Mannerheimintie 1", o -> o.getPostiosoite().getOsoite())
             .returns("Mannerheimintie 1", o -> o.getKayntiosoite().getOsoite());
+    }
+
+    @Test
+    @Transactional
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    public void saveRyhmaDataSavesRyhmatyypitAndKayttoryhmat() throws Exception {
+        Long id1 = jdbcTemplate.queryForObject("SELECT id FROM organisaatio WHERE oid = '1.2.2004.1'", Long.class);
+        Long id2 = jdbcTemplate.queryForObject("SELECT id FROM organisaatio WHERE oid = '1.2.2004.2'", Long.class);
+
+        importService.saveRyhmaData();
+
+        List<String> org1Ryhmatyypit = jdbcTemplate.queryForList("SELECT ryhmatyypit FROM organisaatio_ryhmatyypit WHERE organisaatio_id = " + id1, String.class);
+        assertThat(org1Ryhmatyypit).containsExactlyInAnyOrder("ryhma1", "ryhma2", "ryhma3");
+
+        List<String> org1Kayttoryhmat = jdbcTemplate.queryForList("SELECT kayttoryhmat FROM organisaatio_kayttoryhmat WHERE organisaatio_id = " + id1, String.class);
+        assertThat(org1Kayttoryhmat).containsExactlyInAnyOrder("kayttoryhma1");
+
+        List<String> org2Ryhmatyypit = jdbcTemplate.queryForList("SELECT ryhmatyypit FROM organisaatio_ryhmatyypit WHERE organisaatio_id = " + id2, String.class);
+        assertThat(org2Ryhmatyypit).containsExactlyInAnyOrder("ryhma2");
+
+        List<String> org2Kayttoryhmat = jdbcTemplate.queryForList("SELECT kayttoryhmat FROM organisaatio_kayttoryhmat WHERE organisaatio_id = " + id2, String.class);
+        assertThat(org2Kayttoryhmat).containsExactlyInAnyOrder("kayttoryhma2", "kayttoryhma3");
     }
 }
