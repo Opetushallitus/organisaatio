@@ -11,12 +11,6 @@ koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
 viestinvalitys.baseurl: "https://viestinvalitys.hahtuvaopintopolku.fi/lahetys"
 viestinvalitys.uiurl: "https://viestinvalitys.hahtuvaopintopolku.fi/raportointi"
 
-organisaatio.tasks.export.enabled: true
-organisaatio.tasks.export.bucket-name: ${export_bucket_name}
-organisaatio.tasks.export.lampi-bucket-name: none
-organisaatio.tasks.export.lampi-role-arn: none
-organisaatio.tasks.export.lampi-external-id: none
-
 organisaatio.tasks.datantuonti.export.enabled: true
 organisaatio.tasks.datantuonti.export.bucket-name: ${export_bucket_name}
 

@@ -167,6 +167,7 @@ class AlarmStack extends cdk.Stack {
       actions: ["cloudwatch:DescribeAlarms"],
       resources: ["*"],
     }))
+    this.exportValue(this.alarmTopic.topicArn);
   }
 
   createAlarmTopic() {
@@ -365,6 +366,16 @@ class OrganisaatioApplicationStack extends cdk.Stack {
           },
         });
 
+    const lampiProperties: ecs.ContainerDefinitionProps["environment"] = conf.lampiExport ? {
+      "organisaatio.tasks.export.enabled": conf.lampiExport.enabled.toString(),
+      "organisaatio.tasks.export.bucket-name": props.exportBucket.bucketName,
+      "organisaatio.tasks.export.lampi-bucket-name": conf.lampiExport.bucketName
+    } : {};
+    const lampiSecrets: ecs.ContainerDefinitionProps["secrets"] = conf.lampiExport ? {
+      "organisaatio.tasks.export.lampi-role-arn": this.ssmString("LampiRoleArn"),
+      "organisaatio.tasks.export.lampi-external-id": this.ssmSecret("LampiExternalId"),
+    } : {};
+
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
@@ -379,7 +390,8 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
         "organisaatio.tasks.datantuonti.export.encryption-key-id": props.datantuontiEncryptionKey.keyId,
         "organisaatio.tasks.datantuonti.export.encryption-key-arn": props.datantuontiEncryptionKey.keyArn,
-        "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`
+        "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`,
+        ...lampiProperties,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
@@ -390,8 +402,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
             props.database.secret!,
             "password"
         ),
-        lampi_role_arn: this.ssmString("LampiRoleArn"),
-        lampi_external_id: this.ssmSecret("LampiExternalId"),
+        ...lampiSecrets,
         organisaatio_service_username: this.ssmSecret("PalvelukayttajaUsername"),
         organisaatio_service_password: this.ssmSecret("PalvelukayttajaPassword"),
         rajapinnat_ytj_asiakastunnus: this.ssmSecret("YtjAsiakastunnus"),
@@ -416,17 +427,19 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     props.datantuontiEncryptionKey.grantEncrypt(taskDefinition.taskRole);
     props.datantuontiExportBucket.grantReadWrite(taskDefinition.taskRole);
     props.exportBucket.grantReadWrite(taskDefinition.taskRole);
-    taskDefinition.addToTaskRolePolicy(
-      new iam.PolicyStatement({
-        actions: ["sts:AssumeRole"],
-        resources: [
-          ssm.StringParameter.valueFromLookup(
-            this,
-            "/organisaatio/LampiRoleArn"
-          ),
-        ],
-      })
-    );
+    if (conf.lampiExport) {
+      taskDefinition.addToTaskRolePolicy(
+        new iam.PolicyStatement({
+          actions: ["sts:AssumeRole"],
+          resources: [
+            ssm.StringParameter.valueFromLookup(
+              this,
+              "/organisaatio/LampiRoleArn"
+            ),
+          ],
+        })
+      );
+    }
     const importBucketName = ssm.StringParameter.valueFromLookup(
           this,
           "organisaatio.tasks.datantuonti.import.bucket.name"
@@ -526,7 +539,9 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       },
     });
 
-    this.exportFailureAlarm(logGroup, alarmTopic);
+    if (conf.lampiExport) {
+      this.exportFailureAlarm(logGroup, alarmTopic);
+    }
     this.datantuontiExportFailureAlarm(logGroup, alarmTopic)
     this.organisaatioUpdateFailureAlarm(logGroup, alarmTopic);
     this.oivaIntegrationAlarm(logGroup, alarmTopic);
