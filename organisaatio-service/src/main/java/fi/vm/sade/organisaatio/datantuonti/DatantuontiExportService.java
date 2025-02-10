@@ -164,7 +164,7 @@ public class DatantuontiExportService {
           poistettu,
           ryhmatyypit,
           kayttoryhmat
-        FROM datantuonti_export.ryhmas
+        FROM datantuonti_export.ryhma
     """;
     private final String OSOITE_QUERY = """
         SELECT
