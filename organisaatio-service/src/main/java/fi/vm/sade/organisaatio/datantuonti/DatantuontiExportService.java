@@ -82,6 +82,55 @@ public class DatantuontiExportService {
             )
           );
     """;
+    private final String CREATE_RYHMA_SQL = """
+        CREATE TABLE datantuonti_export_new.ryhma AS
+          SELECT
+            o.oid,
+            (SELECT parent_oid
+             FROM organisaatio_parent_oids
+             WHERE organisaatio_id = o.id
+             AND parent_position = 0) AS parent_oid,
+            (SELECT v.value
+             FROM monikielinenteksti_values v
+             WHERE v.id = o.nimi_mkt
+             AND v.key = 'fi') as nimi_fi,
+            (SELECT v.value
+             FROM monikielinenteksti_values v
+             WHERE v.id = o.nimi_mkt
+             AND v.key = 'sv') as nimi_sv,
+            (SELECT v.value
+             FROM monikielinenteksti_values v
+             WHERE v.id = o.nimi_mkt
+             AND v.key = 'en') as nimi_en,
+            (SELECT v.value
+             FROM monikielinenteksti_values v
+             WHERE v.id = o.kuvaus_mkt
+             AND v.key = 'fi') as kuvaus_fi,
+            (SELECT v.value
+             FROM monikielinenteksti_values v
+             WHERE v.id = o.kuvaus_mkt
+             AND v.key = 'sv') as kuvaus_sv,
+            (SELECT v.value
+             FROM monikielinenteksti_values v
+             WHERE v.id = o.kuvaus_mkt
+             AND v.key = 'en') as kuvaus_en,
+            o.lakkautuspvm,
+            o.organisaatiopoistettu as poistettu,
+            (SELECT string_agg(ryhmatyypit, ',')
+             FROM organisaatio_ryhmatyypit
+             WHERE organisaatio_id = o.id) AS ryhmatyypit,
+            (SELECT string_agg(kayttoryhmat, ',')
+             FROM organisaatio_kayttoryhmat
+             WHERE organisaatio_id = o.id) AS kayttoryhmat
+          FROM organisaatio o
+          WHERE o.oid like '1.2.246.562.28.%'
+          AND EXISTS(
+            SELECT 1
+            FROM organisaatio_tyypit
+            WHERE organisaatio_id = o.id
+            AND tyypit = 'Ryhma'
+          );
+    """;
     private final String ORGANISAATIO_QUERY = """
         SELECT
           oid,
@@ -100,6 +149,22 @@ public class DatantuontiExportService {
           maa,
           kielet
         FROM datantuonti_export.organisaatio
+    """;
+    private final String RYHMA_QUERY = """
+        SELECT
+          oid,
+          parent_oid,
+          nimi_fi,
+          nimi_sv,
+          nimi_en,
+          kuvaus_fi,
+          kuvaus_sv,
+          kuvaus_en,
+          lakkautuspvm,
+          poistettu,
+          ryhmatyypit,
+          kayttoryhmat
+        FROM datantuonti_export.ryhmas
     """;
     private final String OSOITE_QUERY = """
         SELECT
@@ -139,6 +204,7 @@ public class DatantuontiExportService {
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS datantuonti_export_new CASCADE");
         jdbcTemplate.execute("CREATE SCHEMA datantuonti_export_new");
         jdbcTemplate.execute(CREATE_ORGANISAATIO_SQL);
+        jdbcTemplate.execute(CREATE_RYHMA_SQL);
         jdbcTemplate.execute(CREATE_EXPORT_OSOITE_SQL);
         jdbcTemplate.execute("DROP SCHEMA IF EXISTS datantuonti_export CASCADE");
         jdbcTemplate.execute("ALTER SCHEMA datantuonti_export_new RENAME TO datantuonti_export");
@@ -150,10 +216,13 @@ public class DatantuontiExportService {
         var organisaatioObjectKey = V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv";
         exportQueryToS3(organisaatioObjectKey, ORGANISAATIO_QUERY);
         reEncryptFile(organisaatioObjectKey);
+        var ryhmaObjectKey = V1_PREFIX + "/csv/ryhma-" + timestamp + ".csv";
+        exportQueryToS3(ryhmaObjectKey, RYHMA_QUERY);
+        reEncryptFile(ryhmaObjectKey);
         var osoiteObjectKey = V1_PREFIX + "/csv/osoite-" + timestamp + ".csv";
         exportQueryToS3(osoiteObjectKey, OSOITE_QUERY);
         reEncryptFile(osoiteObjectKey);
-        writeManifest(MANIFEST_OBJECT_KEY, new DatantuontiManifest(organisaatioObjectKey, osoiteObjectKey));
+        writeManifest(MANIFEST_OBJECT_KEY, new DatantuontiManifest(organisaatioObjectKey, ryhmaObjectKey, osoiteObjectKey));
     }
 
     private void exportQueryToS3(String objectKey, String query) {

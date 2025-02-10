@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,6 +64,47 @@ class DatantuontiExportServiceTest {
         assertThat(actualExportedRyhmaCount).isEqualTo(expectedRyhmaCount);
     }
 
+    @Test
+    @Sql({"/data/truncate_tables.sql"})
+    void exportsRyhmatSeparateFromOrganisaatiot() {
+        long expectedRyhmaCount = 10;
+        insertRyhmat(expectedRyhmaCount);
+
+        var actualRyhmaCount = getRyhmaOids().size();
+        assertThat(actualRyhmaCount).isEqualTo(expectedRyhmaCount);
+
+        datantuontiExportService.createSchemaAndReturnTransactionTimestampFromEpoch();
+
+        var actualExportedRyhmaCount = getSepratelyExportedRyhmaOids().size();
+        assertThat(actualExportedRyhmaCount).isEqualTo(expectedRyhmaCount);
+    }
+
+    private void insertRyhmat(long expectedRyhmaCount) {
+        for (int i = 0; i < expectedRyhmaCount; ++i) {
+            var ryhmaBuilder = new RyhmaBuilder("1.2.246.562.28." + i)
+                    .nimi("FI", "Ryhma_" + i)
+                    .nimi("SV", "Ryhma_" + i)
+                    .nimi("EN", "Ryhma_" + i)
+                    .kuvaus2("FI", "Kuvaus_" + i)
+                    .kuvaus2("SV", "Kuvaus_" + i)
+                    .kuvaus2("EN", "Kuvaus_" + i)
+                    .kayttoryhma("kayttoryhma_" + ((i % 2) + 1))
+                    .ryhmatyyppi("ryhmatyyppi_" + ((i % 2) + 1));
+
+            if (i % 4 == 0) {
+                ryhmaBuilder.poistettu();
+            }
+
+            if (i % 5 == 0) {
+                ryhmaBuilder.lakkautusPvm(LocalDate.now());
+            }
+
+            var ryhma = ryhmaBuilder.build();
+
+            organisaatioRepository.saveAndFlush(ryhma);
+        }
+    }
+
     private List<String> getRyhmaOids() {
         return organisaatioRepository
                 .findByOrganisaatiotyyppi(OrganisaatioTyyppi.RYHMA.koodiValue())
@@ -73,6 +115,10 @@ class DatantuontiExportServiceTest {
 
     private List<String> getExportedRyhmaOids() {
         return jdbcTemplate.queryForList("SELECT oid FROM datantuonti_export.organisaatio WHERE organisaatiotyypit = 'Ryhma'", String.class);
+    }
+
+    private List<String> getSepratelyExportedRyhmaOids() {
+        return jdbcTemplate.queryForList("SELECT oid FROM datantuonti_export.ryhma", String.class);
     }
 
     private List<String> getExportedOrganisaatioCount() {
