@@ -64,6 +64,15 @@ public class DatantuontiImportService {
     static final String CREATE_DATANTUONTI_RYHMA = """
             CREATE TABLE IF NOT EXISTS datantuonti_ryhma_temp(
                 oid text,
+                parent_oid text,
+                nimi_fi text,
+                nimi_sv text,
+                nimi_en text,
+                kuvaus_fi text,
+                kuvaus_sv text,
+                kuvaus_en text,
+                lakkautuspvm timestamp,
+                poistettu boolean,
                 ryhmatyypit text,
                 kayttoryhmat text
             )""";
