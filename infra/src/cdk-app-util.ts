@@ -139,7 +139,8 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
 
       const ubuntuTests = [
         { name: "OrganisaatioCypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
-        { name: "OrganisaatioPlaywright", commands: ["scripts/ci/run-playwright-tests.sh"] },
+        { name: "OrganisaatioPlaywright", commands: ["scripts/ci/run-playwright-tests.sh test:organisaatiot"] },
+        { name: "OsoitepalveluPlaywright", commands: ["scripts/ci/run-playwright-tests.sh test:osoitepalvelu"] },
         { name: "RekisterointiPlaywright", commands: ["scripts/ci/run-rekisterointi-tests.sh"] },
       ]
       for (const test of ubuntuTests) {

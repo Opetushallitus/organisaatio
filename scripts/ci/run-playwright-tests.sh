@@ -17,7 +17,7 @@ function main {
 
   cd "${repo}/playwright"
   npx playwright install --with-deps
-  npx playwright test
+  npm run "$1"
 }
 
 function start_mock_api {
