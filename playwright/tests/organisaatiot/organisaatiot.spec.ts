@@ -1,6 +1,9 @@
 import { expect, Page, test } from "@playwright/test";
 
-import { persistOrganisation } from "../organisations";
+import {
+  persistOrganisation,
+  persistOrganisationWithPrefix,
+} from "../organisations";
 import { LomakeView } from "./LomakeView";
 import { NewApiOrganisaatio } from "../../../organisaatio-ui/src/types/apiTypes";
 import { RyhmatView, RyhmaEditView } from "./RyhmatView";
@@ -10,7 +13,7 @@ const createAndGotoLomake = async (
   prefix: string,
   override: Partial<NewApiOrganisaatio>
 ) => {
-  const response = await persistOrganisation(prefix, override);
+  const response = await persistOrganisationWithPrefix(prefix, override);
 
   const organisaatioPage = new LomakeView(page);
   await organisaatioPage.goto(response.organisaatio.oid);
@@ -158,11 +161,12 @@ test.describe("Organisations", () => {
     const ryhmatPage = new RyhmatView(page);
     await ryhmatPage.goto();
     await expect(ryhmatPage.uusiRyhmaButton).toBeVisible();
+    const nimi = "Suominimi " + new Date();
 
     await test.step("Can save a new ryhma", async () => {
       await ryhmatPage.uusiRyhmaButton.click();
       const uusiRyhmaPage = new RyhmaEditView(page);
-      await uusiRyhmaPage.fillInput("nimiFi", "Suominimi");
+      await uusiRyhmaPage.fillInput("nimiFi", nimi);
       await uusiRyhmaPage.fillInput("nimiSv", "Ruotsinimi");
       await uusiRyhmaPage.fillInput("nimiEn", "Enkkunimi");
       await uusiRyhmaPage.fillInput("kuvaus2Fi", "Suomi kuvaus");
@@ -172,16 +176,17 @@ test.describe("Organisations", () => {
       await uusiRyhmaPage.selectRyhmanKayttotarkoitus("Yleinen");
       await uusiRyhmaPage.tallennaButton.click();
 
-      await expect(ryhmatPage.ryhmaLink("Suominimi")).toBeVisible();
+      await expect(ryhmatPage.ryhmaLink(nimi)).toBeVisible();
     });
 
     await test.step("Can edit just saved Suominimi", async () => {
-      await ryhmatPage.ryhmaLink("Suominimi").click();
+      const newNimi = "Parempi " + nimi;
+      await ryhmatPage.ryhmaLink(nimi).click();
       const editRyhmaView = new RyhmaEditView(page);
-      await editRyhmaView.fillInput("nimiFi", "Parempi nimi");
+      await editRyhmaView.fillInput("nimiFi", newNimi);
       await editRyhmaView.tallennaButton.click();
 
-      await expect(ryhmatPage.ryhmaLink("Parempi nimi")).toBeVisible();
+      await expect(ryhmatPage.ryhmaLink(newNimi)).toBeVisible();
     });
   });
 });
