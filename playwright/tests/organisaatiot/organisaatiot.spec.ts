@@ -1,11 +1,4 @@
-import path from "path";
-import {
-  APIRequestContext,
-  expect,
-  Locator,
-  Page,
-  test,
-} from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 
 import { persistOrganisation } from "../organisations";
 import { LomakeView } from "./LomakeView";
