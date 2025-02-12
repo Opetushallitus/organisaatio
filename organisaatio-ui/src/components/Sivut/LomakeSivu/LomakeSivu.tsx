@@ -538,7 +538,7 @@ const LomakeSivu = () => {
                             i18n.translate('LABEL_NOT_AVAILABLE')}
                     </h3>
 
-                    <h1>
+                    <h1 data-testid="organisation-name">
                         <DecoratedNimi nimi={organisaatioBase.nimi} status={organisaatioBase.status} />
                     </h1>
                 </ValiOtsikko>

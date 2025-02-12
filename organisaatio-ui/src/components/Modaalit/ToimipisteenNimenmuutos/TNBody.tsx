@@ -43,10 +43,18 @@ export default function TNBody(props: TNProps) {
                         name={'muutostyyppi'}
                         render={({ field: { ref, value = 'CREATE', ...rest } }) => (
                             <RadioGroup {...rest} value={value}>
-                                <Radio name={MUUTOSTYYPPI_CREATE} value={MUUTOSTYYPPI_CREATE}>
+                                <Radio
+                                    name={MUUTOSTYYPPI_CREATE}
+                                    value={MUUTOSTYYPPI_CREATE}
+                                    data-testid="CREATE_NAME_CHANGE"
+                                >
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_JAA_HISTORIAAN')}
                                 </Radio>
-                                <Radio name={MUUTOSTYYPPI_EDIT} value={MUUTOSTYYPPI_EDIT}>
+                                <Radio
+                                    name={MUUTOSTYYPPI_EDIT}
+                                    value={MUUTOSTYYPPI_EDIT}
+                                    data-testid="EDIT_NAME_CHANGE"
+                                >
                                     {i18n.translate('NIMENMUUTOS_RADIO_LUO_UUSI_NIMI_EI_HISTORIAAN')}
                                 </Radio>
                             </RadioGroup>

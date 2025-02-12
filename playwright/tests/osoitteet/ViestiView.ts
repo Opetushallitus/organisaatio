@@ -1,5 +1,5 @@
-import {Locator, Page} from "@playwright/test";
-import {selectAll} from "./LexicalUtil";
+import { Locator, Page } from "@playwright/test";
+import { selectAll } from "../LexicalUtil";
 
 export class ViestiView {
   readonly page: Page;
@@ -47,11 +47,11 @@ class ViestiField extends FormField {
   async fill(text: string) {
     await this.input.focus();
     await this.clear();
-    await this.page.keyboard.type(text)
+    await this.page.keyboard.type(text);
   }
 
   async clear() {
-    await selectAll(this.page)
+    await selectAll(this.page);
     await this.page.keyboard.press("Backspace");
     await this.page.keyboard.press("Backspace");
   }
