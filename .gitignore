@@ -14,7 +14,7 @@ bin/
 */log
 *.iml
 nb-configuration.xml
-phantomjsdriver.log
+playwright/*.xlsx
 **/build
 /organisaatio-api/build
 /organisaatio-service/build

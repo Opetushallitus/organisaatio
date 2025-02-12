@@ -718,7 +718,9 @@ test.describe("Osoitepalvelu", () => {
       await osoitepalveluPage.haeButton.click();
       await expect(page.getByText("1 hakutulosta valittu")).toBeVisible();
       await expect(
-        page.getByText("Testi Ammattiopisto Puolukka, Ammattiopisto Puolukka, testi toimipiste")
+        page.getByText(
+          "Testi Ammattiopisto Puolukka, Ammattiopisto Puolukka, testi toimipiste"
+        )
       ).toBeVisible();
     });
 
@@ -1275,7 +1277,9 @@ async function uploadFile(page: Page, locator: Locator, fileName: string) {
   const fileChooserPromise = page.waitForEvent("filechooser");
   await locator.click();
   const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles(path.join(__dirname, "..", "resources", fileName));
+  await fileChooser.setFiles(
+    path.join(__dirname, "..", "..", "resources", fileName)
+  );
 }
 
 async function enableViestinvalitysIntegration(request: APIRequestContext) {
