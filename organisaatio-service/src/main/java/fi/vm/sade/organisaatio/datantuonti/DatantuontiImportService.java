@@ -297,7 +297,7 @@ public class DatantuontiImportService {
 
     private void insertKayttoryhmat(List<DatantuontiRyhma> ryhmat) {
         List<DatantuontiKayttoryhma> ryhmatyypit = ryhmat.stream()
-            .filter(r -> r.ryhmatyypit() != null)
+            .filter(r -> r.kayttoryhmat() != null)
             .map(ryhma -> Stream.of(ryhma.kayttoryhmat()).map(t -> new DatantuontiKayttoryhma(ryhma.oid(), t)).toList())
             .flatMap(list -> list.stream())
             .toList();
