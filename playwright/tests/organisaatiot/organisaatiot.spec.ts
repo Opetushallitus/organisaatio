@@ -7,6 +7,7 @@ import {
 import { LomakeView } from "./LomakeView";
 import { NewApiOrganisaatio } from "../../../organisaatio-ui/src/types/apiTypes";
 import { RyhmatView, RyhmaEditView } from "./RyhmatView";
+import { ryhmat } from "./ryhmat";
 
 const createAndGotoLomake = async (
   page: Page,
@@ -157,7 +158,62 @@ test.describe("Organisations", () => {
     });
   });
 
-  test("Ryhma View", async ({ page }) => {
+  test("Ryhmat View", async ({ page }) => {
+    await page.route("**/ryhmat?aktiivinen=true", (route) =>
+      route.fulfill({
+        status: 200,
+        body: JSON.stringify(ryhmat),
+      })
+    );
+
+    const ryhmatPage = new RyhmatView(page);
+    await ryhmatPage.goto();
+
+    await test.step("can filter by ryhmätyyppi", async () => {
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).not.toBeVisible();
+      await ryhmatPage.filterByRyhmatyyppi("Perustetyöryhmä");
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).toBeVisible();
+      await ryhmatPage.clearRyhmatyyppi();
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).not.toBeVisible();
+    });
+
+    await test.step("can filter by käyttötarkoitus", async () => {
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).not.toBeVisible();
+      await ryhmatPage.filterByKayttotarkoitus("Perusteiden laadinta");
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).toBeVisible();
+      await ryhmatPage.clearKayttotarkoitus();
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).not.toBeVisible();
+    });
+
+    await test.step("can filter by tila", async () => {
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).not.toBeVisible();
+      await ryhmatPage.filterByTila("Passiivinen");
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).toBeVisible();
+      await ryhmatPage.clearTila();
+      await expect(ryhmatPage.ryhmaLink("AM_opaslehtiset")).not.toBeVisible();
+    });
+
+    await test.step("can use table pagination", async () => {
+      await expect(ryhmatPage.ryhmaLink("ADSDAS")).toBeVisible();
+      await page.locator('button:text("2")').click();
+      await expect(ryhmatPage.ryhmaLink("ADSDAS")).not.toBeVisible();
+      await expect(
+        ryhmatPage.ryhmaLink(
+          "AMK hakukohde kevät II 2020: EB, IB, RP ja DIA arvosanat"
+        )
+      ).toBeVisible();
+      await page.locator('button:text("1")').click();
+      await expect(ryhmatPage.ryhmaLink("ADSDAS")).toBeVisible();
+    });
+
+    await test.step("can change amount shown on page", async () => {
+      await expect(page.getByRole("table").locator("a")).toHaveCount(10);
+      await ryhmatPage.setShownOnPage("20");
+      await expect(page.getByRole("table").locator("a")).toHaveCount(20);
+    });
+  });
+
+  test("Ryhma Edit View", async ({ page }) => {
     const ryhmatPage = new RyhmatView(page);
     await ryhmatPage.goto();
     await expect(ryhmatPage.uusiRyhmaButton).toBeVisible();

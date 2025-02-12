@@ -7,7 +7,7 @@ export class RyhmatView {
 
   constructor(page: Page) {
     this.page = page;
-    this.uusiRyhmaButton = page.getByText("+ RYHMAT_LISAA_UUSI_FI");
+    this.uusiRyhmaButton = page.getByTestId("new-ryhma-button");
   }
 
   async goto() {
@@ -16,6 +16,62 @@ export class RyhmatView {
 
   ryhmaLink(name: string) {
     return this.page.locator("a", { hasText: name });
+  }
+
+  async filterByRyhmatyyppi(value: string) {
+    await this.page.locator("#RYHMAN_TYYPPI_SELECT input[type=text]").focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.type(value);
+    await this.page.keyboard.press("Enter");
+  }
+
+  async clearRyhmatyyppi() {
+    await this.page.locator("#RYHMAN_TYYPPI_SELECT input[type=text]").focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Enter");
+  }
+
+  async filterByKayttotarkoitus(value: string) {
+    await this.page
+      .locator("#RYHMAN_KAYTTOTARKOITUS_SELECT input[type=text]")
+      .focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.type(value);
+    await this.page.keyboard.press("Enter");
+  }
+
+  async clearKayttotarkoitus() {
+    await this.page
+      .locator("#RYHMAN_KAYTTOTARKOITUS_SELECT input[type=text]")
+      .focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Enter");
+  }
+
+  async filterByTila(value: string) {
+    await this.page.locator("#RYHMAN_TILA_SELECT input[type=text]").focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.type(value);
+    await this.page.keyboard.press("Enter");
+  }
+
+  async clearTila() {
+    await this.page.locator("#RYHMAN_TILA_SELECT input[type=text]").focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Enter");
+  }
+
+  async setShownOnPage(amount: string) {
+    await this.page
+      .locator(`option[value="10"]`)
+      .locator("..")
+      .selectOption(amount);
   }
 }
 

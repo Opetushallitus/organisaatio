@@ -116,7 +116,7 @@ const Ryhmat = () => {
                     <h3>{i18n.translate('RYHMAT_OTSIKKO')}</h3>
                 </div>
                 <div>
-                    <Button onClick={handleLisaaRyhma} className={styles.LisaaUusiBtn}>
+                    <Button onClick={handleLisaaRyhma} className={styles.LisaaUusiBtn} data-testid="new-ryhma-button">
                         {' '}
                         + {i18n.translate('RYHMAT_LISAA_UUSI')}
                     </Button>
