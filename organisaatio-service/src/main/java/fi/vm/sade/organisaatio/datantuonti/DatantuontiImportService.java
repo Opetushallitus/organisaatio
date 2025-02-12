@@ -262,15 +262,15 @@ public class DatantuontiImportService {
                     rs.getString("ryhmatyypit") != null ? rs.getString("ryhmatyypit").split(",") : null,
                     rs.getString("kayttoryhmat") != null ? rs.getString("kayttoryhmat").split(",") : null)
             );
-            insertRyhmatyypit(ryhmat);
-            insertKayttoryhmat(ryhmat);
+            replaceRyhmatyypit(ryhmat);
+            replaceKayttoryhmat(ryhmat);
         } catch (Exception e) {
             log.error("Failed to save ryhmadata", e);
             throw e;
         }
     }
 
-    private void insertRyhmatyypit(List<DatantuontiRyhma> ryhmat) {
+    private void replaceRyhmatyypit(List<DatantuontiRyhma> ryhmat) {
         List<DatantuontiRyhmatyyppi> ryhmatyypit = ryhmat.stream()
             .filter(r -> r.ryhmatyypit() != null)
             .map(ryhma -> Stream.of(ryhma.ryhmatyypit()).map(t -> new DatantuontiRyhmatyyppi(ryhma.oid(), t)).toList())
@@ -295,7 +295,7 @@ public class DatantuontiImportService {
         );
     }
 
-    private void insertKayttoryhmat(List<DatantuontiRyhma> ryhmat) {
+    private void replaceKayttoryhmat(List<DatantuontiRyhma> ryhmat) {
         List<DatantuontiKayttoryhma> ryhmatyypit = ryhmat.stream()
             .filter(r -> r.kayttoryhmat() != null)
             .map(ryhma -> Stream.of(ryhma.kayttoryhmat()).map(t -> new DatantuontiKayttoryhma(ryhma.oid(), t)).toList())
