@@ -3,6 +3,7 @@ import { expect, Page, test } from "@playwright/test";
 import { persistOrganisation } from "../organisations";
 import { LomakeView } from "./LomakeView";
 import { NewApiOrganisaatio } from "../../../organisaatio-ui/src/types/apiTypes";
+import { RyhmatView, RyhmaEditView } from "./RyhmatView";
 
 const createAndGotoLomake = async (
   page: Page,
@@ -150,6 +151,37 @@ test.describe("Organisations", () => {
       await expect(organisaatioPage.nimihistoriaPanel).not.toContainText(
         "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]"
       );
+    });
+  });
+
+  test("Ryhma View", async ({ page }) => {
+    const ryhmatPage = new RyhmatView(page);
+    await ryhmatPage.goto();
+    await expect(ryhmatPage.uusiRyhmaButton).toBeVisible();
+
+    await test.step("Can save a new ryhma", async () => {
+      await ryhmatPage.uusiRyhmaButton.click();
+      const uusiRyhmaPage = new RyhmaEditView(page);
+      await uusiRyhmaPage.fillInput("nimiFi", "Suominimi");
+      await uusiRyhmaPage.fillInput("nimiSv", "Ruotsinimi");
+      await uusiRyhmaPage.fillInput("nimiEn", "Enkkunimi");
+      await uusiRyhmaPage.fillInput("kuvaus2Fi", "Suomi kuvaus");
+      await uusiRyhmaPage.fillInput("kuvaus2Sv", "Ruotsi kuvaus");
+      await uusiRyhmaPage.fillInput("kuvaus2En", "Enkku kuvaus");
+      await uusiRyhmaPage.selectRyhmanTyyppi("Hakukohde");
+      await uusiRyhmaPage.selectRyhmanKayttotarkoitus("Yleinen");
+      await uusiRyhmaPage.tallennaButton.click();
+
+      await expect(ryhmatPage.ryhmaLink("Suominimi")).toBeVisible();
+    });
+
+    await test.step("Can edit just saved Suominimi", async () => {
+      await ryhmatPage.ryhmaLink("Suominimi").click();
+      const editRyhmaView = new RyhmaEditView(page);
+      await editRyhmaView.fillInput("nimiFi", "Parempi nimi");
+      await editRyhmaView.tallennaButton.click();
+
+      await expect(ryhmatPage.ryhmaLink("Parempi nimi")).toBeVisible();
     });
   });
 });
