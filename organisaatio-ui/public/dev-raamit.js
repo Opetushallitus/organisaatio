@@ -18,9 +18,9 @@ if (!element) {
     headingElement.style.cssText = magentaStyleText;
     const a1 = document.createElement('a');
     container.appendChild(headingElement);
-    container.appendChild(createLink('/organisaatiot'));
-    container.appendChild(createLink('/osoitteet'));
-    container.appendChild(createLink('/ryhmat'));
+    container.appendChild(createLink('/organisaatio-service/organisaatiot'));
+    container.appendChild(createLink('/organisaatio-service/osoitteet'));
+    container.appendChild(createLink('/organisaatio-service/ryhmat'));
     document.body.prepend(container);
 }
 
