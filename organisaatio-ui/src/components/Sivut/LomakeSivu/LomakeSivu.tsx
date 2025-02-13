@@ -483,6 +483,7 @@ const LomakeSivu = () => {
                 <KoskiPostiLomake
                     readOnly={readOnly && !casMe.canEditLomake('LOMAKE_KOSKI_POSTI', params.oid, organisaatioNimiPolku)}
                     tyyppiOid={KOSKIPOSTI_TYYPI_OID}
+                    key="koskipostilomake"
                     yhteystietoArvoRegister={yhteystietoArvoRegister}
                 />
             );

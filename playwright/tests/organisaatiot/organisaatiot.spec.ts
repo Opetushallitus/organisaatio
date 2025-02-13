@@ -1,11 +1,9 @@
 import { expect, Page, test } from "@playwright/test";
 
-import {
-  persistOrganisation,
-  persistOrganisationWithPrefix,
-} from "../organisations";
+import { persistOrganisationWithPrefix } from "../organisations";
 import { LomakeView } from "./LomakeView";
 import { NewApiOrganisaatio } from "../../../organisaatio-ui/src/types/apiTypes";
+import { KOSKIPOSTI_BASE } from "../../../organisaatio-ui/src/contexts/constants";
 import { RyhmatView, RyhmaEditView } from "./RyhmatView";
 import { ryhmat } from "./ryhmat";
 import { OrganisaatiotView } from "./OrganisaatiotView";
@@ -211,6 +209,57 @@ test.describe("Organisations", () => {
         "Peruskouluasteen erityiskoulut"
       );
       await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
+    });
+
+    test("shows and edits koskiposti fields", async ({ page }) => {
+      const parentResponse = await persistOrganisationWithPrefix("PARENT1", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const childResponse = await persistOrganisationWithPrefix("CHILD", {
+        parentOid: parentResponse.organisaatio.oid,
+        tyypit: [`organisaatiotyyppi_02`],
+        yhteystietoArvos: [
+          {
+            ...KOSKIPOSTI_BASE,
+            "YhteystietoArvo.arvoText": "testi@testi.com",
+            "YhteystietoArvo.kieli": "kieli_fi#1",
+          },
+        ],
+      });
+
+      const organisaatioPage = new LomakeView(page);
+      organisaatioPage.goto(childResponse.organisaatio.oid);
+      await page
+        .locator("#accordion__panel-perustietolomake")
+        .getByText("Oppilaitos", { exact: true })
+        .click();
+      await expect(page.getByText("LOMAKE_KOSKI_POSTI")).not.toBeVisible();
+      await page
+        .locator("#accordion__panel-perustietolomake")
+        .getByText("Oppilaitos", { exact: true })
+        .click();
+      await expect(page.getByText("LOMAKE_KOSKI_POSTI")).toBeVisible();
+      await organisaatioPage.koskiPostiAccordion.click();
+      await organisaatioPage.fillInput("koskiposti.fi", "muokattufi@testi.com");
+      await organisaatioPage.fillInput("koskiposti.sv", "muokattusv@testi.com");
+      await organisaatioPage.fillInput("koskiposti.en", "muokattuen@testi.com");
+      await organisaatioPage.fillYhteystiedot();
+      await organisaatioPage.tallennaButton.click();
+      await expect(
+        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
+      ).toBeVisible();
+
+      organisaatioPage.goto(childResponse.organisaatio.oid);
+      await organisaatioPage.koskiPostiAccordion.click();
+      await expect(page.locator('input[name="koskiposti.fi"]')).toHaveValue(
+        "muokattufi@testi.com"
+      );
+      await expect(page.locator('input[name="koskiposti.sv"]')).toHaveValue(
+        "muokattusv@testi.com"
+      );
+      await expect(page.locator('input[name="koskiposti.en"]')).toHaveValue(
+        "muokattuen@testi.com"
+      );
     });
   });
 

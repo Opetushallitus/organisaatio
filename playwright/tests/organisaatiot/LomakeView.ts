@@ -9,7 +9,10 @@ export class LomakeView extends FormView {
   readonly muokkaaNimea: MuokkaaNimeaModal;
   readonly nimihistoriaAccordion: Locator;
   readonly nimihistoriaPanel: Locator;
+  readonly koskiPostiAccordion: Locator;
+  readonly koskiPostiPanel: Locator;
   readonly poistaAjastettuNimenmuutos: Locator;
+  readonly tallennaButton: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -25,9 +28,14 @@ export class LomakeView extends FormView {
     this.nimihistoriaPanel = page.locator(
       "#accordion__panel-nimihistorialomake"
     );
+    this.koskiPostiAccordion = page.locator(
+      "#accordion__heading-koskipostilomake"
+    );
+    this.koskiPostiPanel = page.locator("#accordion__panel-koskipostilomake");
     this.poistaAjastettuNimenmuutos = page.getByTitle(
       "POISTA_AJASTETTU_NIMENMUUTOS"
     );
+    this.tallennaButton = page.getByText("BUTTON_TALLENNA_FI");
   }
 
   async goto(oid: string) {
@@ -42,6 +50,13 @@ export class LomakeView extends FormView {
         parentOid ? `?parentOid=${parentOid}` : ""
       }`
     );
+  }
+
+  async fillYhteystiedot() {
+    await this.page.locator("#accordion__heading-yhteystietolomake").click();
+    await this.fillInput("sv.postiOsoite", "osoite");
+    await this.fillInput("sv.postiOsoitePostiNro", "00100");
+    await this.fillInput("sv.email", "email@test.fi");
   }
 }
 

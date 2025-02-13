@@ -8,7 +8,7 @@ export default defineConfig({
   workers: 2,
   reporter: CI ? [["junit", { outputFile: "playwright-results.xml" }]] : "html",
   use: {
-    trace: "retain-on-first-failure",
+    trace: "on",
     httpCredentials: {
       username: "devaaja",
       password: "devaaja",
