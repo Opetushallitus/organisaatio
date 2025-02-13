@@ -31,7 +31,7 @@ export const persistOrganisation = async (organisation: NewApiOrganisaatio) => {
 
 export const organisaatio = (
   prefix = "",
-  override: Partial<NewApiOrganisaatio>
+  override?: Partial<NewApiOrganisaatio>
 ): NewApiOrganisaatio => {
   return {
     parentOid: `1.2.246.562.10.00000000001`,

@@ -1,7 +1,9 @@
 import { expect, Page, test } from "@playwright/test";
+import { FinnishBusinessIds } from "finnish-business-ids";
 
 import {
   helsinki,
+  organisaatio,
   persistOrganisation,
   persistOrganisationWithPrefix,
 } from "../organisations";
@@ -11,6 +13,7 @@ import { KOSKIPOSTI_BASE } from "../../../organisaatio-ui/src/contexts/constants
 import { RyhmatView, RyhmaEditView } from "./RyhmatView";
 import { ryhmat } from "./ryhmat";
 import { OrganisaatiotView } from "./OrganisaatiotView";
+import { ytjHameen } from "./ytjHameen";
 
 const createAndGotoLomake = async (
   page: Page,
@@ -281,6 +284,60 @@ test.describe("Organisations", () => {
       await expect(
         page.getByText("Helsingin kaupunki (LABEL_POISTETTU)", { exact: true })
       ).toBeVisible();
+    });
+
+    test("creates a new organisation with y-tunnus", async ({ page }) => {
+      const yTunnus = FinnishBusinessIds.generateBusinessId();
+      await page.route(`**/rest/ytj/${yTunnus}`, (route) =>
+        route.fulfill({
+          status: 200,
+          body: JSON.stringify(ytjHameen(yTunnus)),
+        })
+      );
+
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.gotoUusi("1.2.246.562.10.00000000001");
+
+      await page.getByText("Koulutustoimija").click();
+      await page.getByText("HAE_YTJ_TIEDOT").click();
+      await organisaatioPage.fillInput("ytjinput", yTunnus);
+      await page.getByText("HAE_YTJTIEDOT").click();
+      await page.getByText("Hameen ammatti").click();
+      await page.getByText("BUTTON_JATKA").click();
+      await organisaatioPage.tallennaButton.click();
+
+      await expect(
+        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
+      ).toBeVisible();
+      await expect(page.locator("h1")).toHaveText(
+        " Hameen ammatti-instituutti Oy 4"
+      );
+    });
+
+    test("edits existing organisation with info from ytj", async ({ page }) => {
+      const yTunnus = FinnishBusinessIds.generateBusinessId();
+      await page.route(`**/rest/ytj/${yTunnus}`, (route) =>
+        route.fulfill({
+          status: 200,
+          body: JSON.stringify(ytjHameen(yTunnus)),
+        })
+      );
+
+      const response = await persistOrganisation(organisaatio("BERFORE_FETCH"));
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.goto(response.organisaatio.oid);
+      await page.getByText("PAIVITA_YTJ_TIEDOT").click();
+      await organisaatioPage.fillInput("ytjinput", yTunnus);
+      await page.getByText("HAE_YTJTIEDOT").click();
+      await page.getByText("Hameen ammatti").click();
+      await organisaatioPage.tallennaButton.click();
+
+      await expect(
+        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
+      ).toBeVisible();
+      await expect(page.locator("h1")).toHaveText(
+        " Hameen ammatti-instituutti Oy 4"
+      );
     });
   });
 
