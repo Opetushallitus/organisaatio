@@ -339,6 +339,51 @@ test.describe("Organisations", () => {
         " Hameen ammatti-instituutti Oy 4"
       );
     });
+
+    test("merges organisations", async ({ page }) => {
+      const parent1 = await persistOrganisationWithPrefix("PARENT1", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const parent2 = await persistOrganisationWithPrefix("PARENT2", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const parent3 = await persistOrganisationWithPrefix("PARENT3", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+
+      const child1 = await persistOrganisationWithPrefix("CHILD1", {
+        parentOid: parent1.organisaatio.oid,
+        tyypit: [`organisaatiotyyppi_02`],
+      });
+      const child2 = await persistOrganisationWithPrefix("CHILD2", {
+        parentOid: parent2.organisaatio.oid,
+        tyypit: [`organisaatiotyyppi_02`],
+      });
+      const child3 = await persistOrganisationWithPrefix("CHILD3", {
+        parentOid: parent3.organisaatio.oid,
+        tyypit: [`organisaatiotyyppi_02`],
+      });
+
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.goto(child2.organisaatio.oid);
+      await page.getByText("LOMAKE_YHDISTA_ORGANISAATIO").click();
+      await organisaatioPage.selectFromDropdown(
+        "ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO",
+        child3.organisaatio.ytunnus
+      );
+      await page.getByText("BUTTON_VAHVISTA").click();
+      await expect(
+        page.getByText("TOIMIPISTEEN_YHDISTYS_VAHVISTUS_TITLE")
+      ).toBeVisible();
+      await page.getByText("BUTTON_VAHVISTA").click();
+      await organisaatioPage.rakenneAccordion.click();
+      await expect(
+        organisaatioPage.rakennePanel.getByText("CHILD3")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.rakennePanel.getByText("PARENT2")
+      ).toBeVisible();
+    });
   });
 
   test("Ryhmat View", async ({ page }) => {
