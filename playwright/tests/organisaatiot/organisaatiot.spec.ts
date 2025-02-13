@@ -215,13 +215,12 @@ test.describe("Organisations", () => {
 
   test("Ryhma Edit View", async ({ page }) => {
     const ryhmatPage = new RyhmatView(page);
-    await ryhmatPage.goto();
-    await expect(ryhmatPage.uusiRyhmaButton).toBeVisible();
+    const uusiRyhmaPage = new RyhmaEditView(page);
     const nimi = "Suominimi " + new Date();
 
     await test.step("Can save a new ryhma", async () => {
-      await ryhmatPage.uusiRyhmaButton.click();
-      const uusiRyhmaPage = new RyhmaEditView(page);
+      await uusiRyhmaPage.gotoUusiRyhma();
+
       await uusiRyhmaPage.fillInput("nimiFi", nimi);
       await uusiRyhmaPage.fillInput("nimiSv", "Ruotsinimi");
       await uusiRyhmaPage.fillInput("nimiEn", "Enkkunimi");
