@@ -1,6 +1,10 @@
 import { expect, Page, test } from "@playwright/test";
 
-import { persistOrganisationWithPrefix } from "../organisations";
+import {
+  helsinki,
+  persistOrganisation,
+  persistOrganisationWithPrefix,
+} from "../organisations";
 import { LomakeView } from "./LomakeView";
 import { NewApiOrganisaatio } from "../../../organisaatio-ui/src/types/apiTypes";
 import { KOSKIPOSTI_BASE } from "../../../organisaatio-ui/src/contexts/constants";
@@ -260,6 +264,23 @@ test.describe("Organisations", () => {
       await expect(page.locator('input[name="koskiposti.en"]')).toHaveValue(
         "muokattuen@testi.com"
       );
+    });
+
+    test("marks organisation removed", async ({ page }) => {
+      const response = await persistOrganisation(helsinki({}));
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.goto(response.organisaatio.oid);
+
+      await expect(
+        page.getByText("Helsingin kaupunki", { exact: true })
+      ).toBeVisible();
+      await page.locator("button[name=LOMAKE_POISTA_ORGANISAATIO]").click();
+      await page.locator("button[name=BUTTON_VAHVISTA]").click();
+
+      await organisaatioPage.goto(response.organisaatio.oid);
+      await expect(
+        page.getByText("Helsingin kaupunki (LABEL_POISTETTU)", { exact: true })
+      ).toBeVisible();
     });
   });
 
