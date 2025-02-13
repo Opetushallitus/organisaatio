@@ -1,4 +1,4 @@
-import { KoodiUri, LocalDate, Nimi, OrganisaatioType } from './types';
+import { ApiLocalDate, KoodiUri, LocalDate, Nimi, OrganisaatioType } from './types';
 
 //yyyy-MM-DD
 export type APIEndpontDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}` | '';
@@ -84,13 +84,13 @@ export type ApiVakaTiedot = {
     paikkojenLukumaara: number;
     varhaiskasvatuksenToiminnallinenpainotukset: {
         toiminnallinenpainotus: KoodiUri;
-        alkupvm: LocalDate;
-        loppupvm?: LocalDate;
+        alkupvm: ApiLocalDate;
+        loppupvm?: ApiLocalDate;
     }[];
     varhaiskasvatuksenKielipainotukset: {
         kielipainotus: KoodiUri;
-        alkupvm: LocalDate;
-        loppupvm?: LocalDate;
+        alkupvm: ApiLocalDate;
+        loppupvm?: ApiLocalDate;
     }[];
     varhaiskasvatuksenJarjestamismuodot: KoodiUri[];
 };

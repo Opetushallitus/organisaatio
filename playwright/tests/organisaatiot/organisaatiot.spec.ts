@@ -348,6 +348,90 @@ test.describe("Organisations", () => {
       );
     });
 
+    test("shows VAKA specific fields", async ({ page }) => {
+      const parent = await persistOrganisationWithPrefix("PARENT1", {
+        tyypit: [`organisaatiotyyppi_07`],
+      });
+      const child = await persistOrganisationWithPrefix("CHILD", {
+        parentOid: parent.organisaatio.oid,
+        tyypit: [`organisaatiotyyppi_08`],
+        piilotettu: true,
+        varhaiskasvatuksenToimipaikkaTiedot: {
+          toimintamuoto: "vardatoimintamuoto_tm02",
+          kasvatusopillinenJarjestelma:
+            "vardakasvatusopillinenjarjestelma_kj98",
+          varhaiskasvatuksenJarjestamismuodot: [
+            "vardajarjestamismuoto_jm01",
+            "vardajarjestamismuoto_jm02",
+          ],
+          paikkojenLukumaara: 4,
+          varhaiskasvatuksenKielipainotukset: [
+            {
+              kielipainotus: "kieli_fi",
+              alkupvm: "2021-11-01",
+            },
+            {
+              kielipainotus: "kieli_99",
+              alkupvm: "2005-11-01",
+            },
+          ],
+          varhaiskasvatuksenToiminnallinenpainotukset: [
+            {
+              toiminnallinenpainotus: "vardatoiminnallinenpainotus_tp06",
+              alkupvm: "2021-11-01",
+            },
+            {
+              toiminnallinenpainotus: "vardatoiminnallinenpainotus_tp07",
+              alkupvm: "2020-11-01",
+              loppupvm: "2021-05-05",
+            },
+          ],
+        },
+      });
+
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.goto(child.organisaatio.oid);
+      await expect(
+        page.getByRole("heading", { name: "Varhaiskasvatuksen toimipaikka" })
+      ).toBeVisible();
+      await expect(
+        page.locator('input[name="organisaatiotyyppi_08"]')
+      ).toBeChecked();
+      await expect(
+        page.locator('input[name="organisaatiotyyppi_08"]')
+      ).toBeDisabled();
+      await organisaatioPage.vakaAccordion.click();
+      await expect(
+        organisaatioPage.vakaPanel.getByText("Perhepäivähoito")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText("Ei painotusta")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText("Ympäristö ja luonto")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText("Seikkailu")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText(
+          "Kunnan tai kuntayhtymän järjestämä",
+          { exact: true }
+        )
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText(
+          "Ostopalvelu, kunnan tai kuntayhtymän järjestämä"
+        )
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText("tuntematon 1.11.2005")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.vakaPanel.getByText("suomi 1.11.2021")
+      ).toBeVisible();
+    });
+
     test("marks organisation removed", async ({ page }) => {
       const response = await persistOrganisation(helsinki({}));
       const organisaatioPage = new LomakeView(page);

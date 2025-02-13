@@ -16,6 +16,7 @@ import {
 export type Language = 'fi' | 'sv' | 'en';
 
 // D.M.yyyy | D.M.yyyy HH:mm:ss
+export type ApiLocalDate = `${number}${number}${number}${number}-${number}${number}-${number}${number}`;
 export type LocalDate =
     | `${number}${number}.${number}${number}.${number}${number}${number}${number}`
     | `${number}${number}.${number}${number}.${number}${number}${number}${number} ${number}${number}:${number}${number}:${number}${number}`

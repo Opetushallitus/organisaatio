@@ -13,6 +13,8 @@ export class LomakeView extends FormView {
   readonly koskiPostiPanel: Locator;
   readonly rakenneAccordion: Locator;
   readonly rakennePanel: Locator;
+  readonly vakaAccordion: Locator;
+  readonly vakaPanel: Locator;
   readonly poistaAjastettuNimenmuutos: Locator;
   readonly tallennaButton: Locator;
 
@@ -40,6 +42,8 @@ export class LomakeView extends FormView {
     this.rakennePanel = page.locator(
       "#accordion__panel-organisaatiohistorialomake"
     );
+    this.vakaAccordion = page.locator("#accordion__heading-VakaToimipaikka");
+    this.vakaPanel = page.locator("#accordion__panel-VakaToimipaikka");
     this.poistaAjastettuNimenmuutos = page.getByTitle(
       "POISTA_AJASTETTU_NIMENMUUTOS"
     );
