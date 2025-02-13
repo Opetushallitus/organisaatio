@@ -23,4 +23,12 @@ export class FormView {
     await this.page.keyboard.type(value);
     await this.page.keyboard.press("Enter");
   }
+
+  async setDate(label: string, date: string) {
+    await this.page.getByText(label).locator("..").locator("input").focus();
+    await selectAll(this.page);
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.type(date);
+  }
 }

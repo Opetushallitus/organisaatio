@@ -250,7 +250,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.fillInput("koskiposti.fi", "muokattufi@testi.com");
       await organisaatioPage.fillInput("koskiposti.sv", "muokattusv@testi.com");
       await organisaatioPage.fillInput("koskiposti.en", "muokattuen@testi.com");
-      await organisaatioPage.fillYhteystiedot();
+      await organisaatioPage.fillYhteystiedot("sv");
       await organisaatioPage.tallennaButton.click();
       await expect(
         page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
@@ -338,6 +338,50 @@ test.describe("Organisations", () => {
       await expect(page.locator("h1")).toHaveText(
         " Hameen ammatti-instituutti Oy 4"
       );
+    });
+
+    test("saves child organisation", async ({ page }) => {
+      const response = await persistOrganisationWithPrefix("PARENT", {});
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.goto(response.organisaatio.oid);
+
+      await page.getByText("LISAA_UUSI_TOIMIJA").click();
+      await page
+        .locator("#accordion__panel-perustietolomake")
+        .getByText("Oppilaitos", { exact: true })
+        .click();
+      await organisaatioPage.fillInput("nimi.fi", "CHILD Suominimi");
+      await organisaatioPage.fillInput("nimi.sv", "CHILD Ruotsi");
+      await organisaatioPage.fillInput("nimi.en", "CHILD Enkku");
+      await organisaatioPage.selectFromDropdown(
+        "PERUSTIETO_PAASIJAINTIKUNTA_SELECT",
+        "Ranua"
+      );
+      await organisaatioPage.selectFromDropdown(
+        "PERUSTIETO_MAA_SELECT",
+        "Andorra"
+      );
+      await organisaatioPage.selectFromDropdown(
+        "PERUSTIETO_OPETUSKIELI_SELECT",
+        "ruotsi"
+      );
+      await organisaatioPage.setDate("PERUSTAMISPAIVA", "2.9.2021");
+
+      await page.getByText("JATKA").click();
+      await page.getByText("NAYTA_MUUT_KIELET").click();
+      await organisaatioPage.fillYhteystiedot("sv", true);
+      await organisaatioPage.fillYhteystiedot("fi", true);
+
+      await organisaatioPage.tallennaButton.click();
+
+      await expect(
+        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
+      ).toBeVisible();
+      await page.reload();
+      await organisaatioPage.rakenneAccordion.click();
+      await expect(
+        organisaatioPage.rakennePanel.getByText("PARENT Suominimi")
+      ).toBeVisible();
     });
 
     test("merges organisations", async ({ page }) => {

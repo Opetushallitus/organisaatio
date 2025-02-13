@@ -60,11 +60,13 @@ export class LomakeView extends FormView {
     );
   }
 
-  async fillYhteystiedot() {
-    await this.page.locator("#accordion__heading-yhteystietolomake").click();
-    await this.fillInput("sv.postiOsoite", "osoite");
-    await this.fillInput("sv.postiOsoitePostiNro", "00100");
-    await this.fillInput("sv.email", "email@test.fi");
+  async fillYhteystiedot(lang: string, alreadyOpen = false) {
+    if (!alreadyOpen) {
+      await this.page.locator("#accordion__heading-yhteystietolomake").click();
+    }
+    await this.fillInput(`${lang}.postiOsoite`, "osoite");
+    await this.fillInput(`${lang}.postiOsoitePostiNro`, "00100");
+    await this.fillInput(`${lang}.email`, "email@test.fi");
   }
 }
 
