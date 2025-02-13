@@ -428,6 +428,46 @@ test.describe("Organisations", () => {
         organisaatioPage.rakennePanel.getByText("PARENT2")
       ).toBeVisible();
     });
+
+    test("moves organisations", async ({ page }) => {
+      const parent1 = await persistOrganisationWithPrefix("PARENT1", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const parent2 = await persistOrganisationWithPrefix("PARENT2", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const parent3 = await persistOrganisationWithPrefix("PARENT3", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const parent4 = await persistOrganisationWithPrefix("PARENT4", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+
+      const child = await persistOrganisationWithPrefix("CHILD", {
+        parentOid: parent1.organisaatio.oid,
+        tyypit: [`organisaatiotyyppi_02`],
+      });
+
+      const organisaatioPage = new LomakeView(page);
+      await organisaatioPage.goto(child.organisaatio.oid);
+      await page.getByText("LOMAKE_SIIRRA_ORGANISAATIO").click();
+      await organisaatioPage.selectFromDropdown(
+        "ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO",
+        parent3.organisaatio.ytunnus
+      );
+      await page.getByText("BUTTON_VAHVISTA").click();
+      await expect(
+        page.getByText("Siirretäänkö CHILD Suominimi")
+      ).toBeVisible();
+      await page.getByText("BUTTON_VAHVISTA").click();
+      await organisaatioPage.rakenneAccordion.click();
+      await expect(
+        organisaatioPage.rakennePanel.getByText("PARENT1 Suominimi")
+      ).toBeVisible();
+      await expect(
+        organisaatioPage.rakennePanel.getByText("PARENT3 Suominimi")
+      ).toBeVisible();
+    });
   });
 
   test("Ryhmat View", async ({ page }) => {
