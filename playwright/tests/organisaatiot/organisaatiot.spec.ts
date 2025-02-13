@@ -1,5 +1,6 @@
 import { expect, Page, test } from "@playwright/test";
 import { FinnishBusinessIds } from "finnish-business-ids";
+import moment from "moment";
 
 import {
   helsinki,
@@ -174,6 +175,84 @@ test.describe("Organisations", () => {
       await expect(
         organisaatiotPage.organisaatioLink("Mustikkalan testi opisto")
       ).toBeVisible();
+    });
+
+    test("Organisaatiotarkastus", async ({ page }) => {
+      const now = moment().format("yyyyMMDDssS");
+      const today = moment();
+      const timesPast = moment().subtract(2, "years");
+      const recent = moment().subtract(23, "days");
+      const prefix = `${now} TARKASTUS IS `;
+      const ui_date_format = "D.M.yyyy";
+
+      const org1 = await persistOrganisationWithPrefix(`${prefix}NOT CHECKED`, {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      const org2 = await persistOrganisationWithPrefix(
+        `${prefix}CHECKED LONG AGO`,
+        {
+          tyypit: [`organisaatiotyyppi_01`],
+          tarkastusPvm: timesPast.unix() * 1000,
+        }
+      );
+      const org3 = await persistOrganisationWithPrefix(
+        `${prefix}CHECKED LATELY`,
+        {
+          tyypit: [`organisaatiotyyppi_01`],
+          tarkastusPvm: recent.unix() * 1000,
+        }
+      );
+      const organisaatiotPage = new OrganisaatiotView(page);
+      await organisaatiotPage.goto();
+      await organisaatiotPage.filterByName(prefix);
+
+      await test.step("shows flags when tarkastus missing", async () => {
+        await expect(
+          page
+            .getByRole("row", { name: `${now} TARKASTUS IS NOT` })
+            .getByTitle("TARKASTUS_PUUTTUU")
+        ).toBeVisible();
+      });
+
+      await test.step("shows flags when tarkastus done", async () => {
+        await expect(
+          page
+            .getByRole("row", { name: `${now} TARKASTUS IS CHECKED LATELY` })
+            .getByTitle(`VIIMEINEN_TARKASTUS_${recent.format(ui_date_format)}`)
+        ).toBeVisible();
+      });
+
+      await test.step("shows flags when tarkastus old", async () => {
+        await expect(
+          page
+            .getByRole("row", { name: `${now} TARKASTUS IS CHECKED LONG AGO` })
+            .getByTitle(
+              `VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`
+            )
+        ).toBeVisible();
+      });
+
+      await test.step("sets tarkastus date", async () => {
+        await organisaatiotPage
+          .organisaatioLink("TARKASTUS IS CHECKED LONG AGO")
+          .click();
+        await page
+          .getByTitle(`VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`)
+          .click();
+        await expect(
+          page.getByTitle(`VIIMEINEN_TARKASTUS_${today.format(ui_date_format)}`)
+        ).toBeVisible();
+      });
+
+      await test.step("shows new tarkastus date", async () => {
+        await organisaatiotPage.goto();
+        await organisaatiotPage.filterByName(prefix);
+        await expect(
+          page
+            .getByRole("row", { name: `${now} TARKASTUS IS CHECKED LONG AGO` })
+            .getByTitle(`VIIMEINEN_TARKASTUS_${today.format(ui_date_format)}`)
+        ).toBeVisible();
+      });
     });
   });
 
