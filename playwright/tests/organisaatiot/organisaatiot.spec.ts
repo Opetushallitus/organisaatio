@@ -8,6 +8,7 @@ import { LomakeView } from "./LomakeView";
 import { NewApiOrganisaatio } from "../../../organisaatio-ui/src/types/apiTypes";
 import { RyhmatView, RyhmaEditView } from "./RyhmatView";
 import { ryhmat } from "./ryhmat";
+import { OrganisaatiotView } from "./OrganisaatiotView";
 
 const createAndGotoLomake = async (
   page: Page,
@@ -158,6 +159,19 @@ test.describe("Organisations", () => {
     });
   });
 
+  test.describe("Organisaatiot View", () => {
+    test("can filter by name", async ({ page }) => {
+      const organisaatiotPage = new OrganisaatiotView(page);
+      await organisaatiotPage.goto();
+
+      organisaatiotPage.filterByName("Mustikkalan testi op");
+
+      await expect(
+        organisaatiotPage.organisaatioLink("Mustikkalan testi opisto")
+      ).toBeVisible();
+    });
+  });
+
   test("Ryhmat View", async ({ page }) => {
     await page.route("**/ryhmat?aktiivinen=true", (route) =>
       route.fulfill({
@@ -195,20 +209,20 @@ test.describe("Organisations", () => {
 
     await test.step("can use table pagination", async () => {
       await expect(ryhmatPage.ryhmaLink("ADSDAS")).toBeVisible();
-      await page.locator('button:text("2")').click();
+      await ryhmatPage.setPageNumber(2);
       await expect(ryhmatPage.ryhmaLink("ADSDAS")).not.toBeVisible();
       await expect(
         ryhmatPage.ryhmaLink(
           "AMK hakukohde kevät II 2020: EB, IB, RP ja DIA arvosanat"
         )
       ).toBeVisible();
-      await page.locator('button:text("1")').click();
+      await ryhmatPage.setPageNumber(1);
       await expect(ryhmatPage.ryhmaLink("ADSDAS")).toBeVisible();
     });
 
     await test.step("can change amount shown on page", async () => {
       await expect(page.getByRole("table").locator("a")).toHaveCount(10);
-      await ryhmatPage.setShownOnPage("20");
+      await ryhmatPage.setShownOnPage(20);
       await expect(page.getByRole("table").locator("a")).toHaveCount(20);
     });
   });
@@ -231,6 +245,7 @@ test.describe("Organisations", () => {
       await uusiRyhmaPage.selectRyhmanKayttotarkoitus("Yleinen");
       await uusiRyhmaPage.tallennaButton.click();
 
+      await ryhmatPage.filterByName(nimi);
       await expect(ryhmatPage.ryhmaLink(nimi)).toBeVisible();
     });
 
@@ -241,6 +256,7 @@ test.describe("Organisations", () => {
       await editRyhmaView.fillInput("nimiFi", newNimi);
       await editRyhmaView.tallennaButton.click();
 
+      await ryhmatPage.filterByName(newNimi);
       await expect(ryhmatPage.ryhmaLink(newNimi)).toBeVisible();
     });
   });

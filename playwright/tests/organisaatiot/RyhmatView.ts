@@ -1,13 +1,18 @@
 import { Locator, Page } from "@playwright/test";
 import { FormView } from "../FormView";
+import { TableView } from "../TableView";
+import { selectAll } from "../LexicalUtil";
 
-export class RyhmatView {
+export class RyhmatView extends TableView {
   readonly page: Page;
   readonly uusiRyhmaButton: Locator;
+  readonly searchField: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
     this.uusiRyhmaButton = page.getByTestId("new-ryhma-button");
+    this.searchField = page.getByPlaceholder("RYHMAT_HAKU_PLACEHOLDER_FI");
   }
 
   async goto() {
@@ -16,6 +21,15 @@ export class RyhmatView {
 
   ryhmaLink(name: string) {
     return this.page.locator("a", { hasText: name });
+  }
+
+  async filterByName(name: string) {
+    await this.searchField.focus();
+    await selectAll(this.page);
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.type(name);
+    await this.page.keyboard.press("Enter");
   }
 
   async filterByRyhmatyyppi(value: string) {
@@ -65,13 +79,6 @@ export class RyhmatView {
     await this.page.keyboard.press("Backspace");
     await this.page.keyboard.press("Backspace");
     await this.page.keyboard.press("Enter");
-  }
-
-  async setShownOnPage(amount: string) {
-    await this.page
-      .locator(`option[value="10"]`)
-      .locator("..")
-      .selectOption(amount);
   }
 }
 
