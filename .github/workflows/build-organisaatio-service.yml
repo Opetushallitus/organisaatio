@@ -155,7 +155,7 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: playwright/playwright-report/
+          path: playwright/test-results/
           retention-days: 30
   playwright-organisaatiot:
     timeout-minutes: 60
@@ -211,5 +211,5 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: playwright/playwright-report/
+          path: playwright/test-results/
           retention-days: 30
