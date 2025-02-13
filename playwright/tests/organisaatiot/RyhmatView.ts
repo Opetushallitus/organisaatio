@@ -99,22 +99,13 @@ export class RyhmaEditView extends FormView {
   }
 
   async selectRyhmanTyyppi(value: string) {
-    await this.page
-      .locator("#RYHMALOMAKE_RYHMAN_TYYPPI_SELECT input[type=text]")
-      .focus();
-    await this.page.keyboard.press("Backspace");
-    await this.page.keyboard.press("Backspace");
-    await this.page.keyboard.type(value);
-    await this.page.keyboard.press("Enter");
+    await this.selectFromDropdown("RYHMALOMAKE_RYHMAN_TYYPPI_SELECT", value);
   }
 
   async selectRyhmanKayttotarkoitus(value: string) {
-    await this.page
-      .locator("#RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT input[type=text]")
-      .focus();
-    await this.page.keyboard.press("Backspace");
-    await this.page.keyboard.press("Backspace");
-    await this.page.keyboard.type(value);
-    await this.page.keyboard.press("Enter");
+    await this.selectFromDropdown(
+      "RYHMALOMAKE_RYHMAN_KAYTTOTARKOITUS_SELECT",
+      value
+    );
   }
 }

@@ -16,7 +16,11 @@ export class FormView {
     await this.page.keyboard.type(text);
   }
 
-  async openDropdown(label: string) {
-    await this.page.locator(`div:has(> [aria-label="${label}"])`).click();
+  async selectFromDropdown(id: string, value: string) {
+    await this.page.locator(`#${id} input[type=text]`).focus();
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.press("Backspace");
+    await this.page.keyboard.type(value);
+    await this.page.keyboard.press("Enter");
   }
 }

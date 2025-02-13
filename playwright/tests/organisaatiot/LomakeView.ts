@@ -1,7 +1,8 @@
 import { Locator, Page } from "@playwright/test";
 import { selectAll } from "../LexicalUtil";
+import { FormView } from "../FormView";
 
-export class LomakeView {
+export class LomakeView extends FormView {
   readonly page: Page;
   readonly nimi: Locator;
   readonly muokkaaNimeaButton: Locator;
@@ -11,6 +12,7 @@ export class LomakeView {
   readonly poistaAjastettuNimenmuutos: Locator;
 
   constructor(page: Page) {
+    super(page);
     this.page = page;
     this.nimi = page.getByTestId("organisation-name");
     this.muokkaaNimeaButton = page.getByText(
@@ -31,6 +33,14 @@ export class LomakeView {
   async goto(oid: string) {
     await this.page.goto(
       `http://localhost:3003/organisaatio-service/lomake/${oid}`
+    );
+  }
+
+  async gotoUusi(parentOid?: string) {
+    await this.page.goto(
+      `http://localhost:3003/organisaatio-service/lomake/uusi${
+        parentOid ? `?parentOid=${parentOid}` : ""
+      }`
     );
   }
 }

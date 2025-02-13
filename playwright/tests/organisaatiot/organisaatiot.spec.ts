@@ -172,6 +172,48 @@ test.describe("Organisations", () => {
     });
   });
 
+  test.describe("Organisaatio Lomake View", () => {
+    test("shows oppilaitos specific fields", async ({ page }) => {
+      const organisaatioPage = new LomakeView(page);
+      const response = await persistOrganisationWithPrefix("PARENT1", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+      await organisaatioPage.gotoUusi(response.organisaatio.oid);
+
+      await page.getByText("Oppilaitos").click();
+      await expect(page.getByText("PERUSTIETO_OPPILAITOSKOODI")).toBeVisible();
+      await expect(page.getByText("PERUSTIETO_OPPILAITOSTYYPPI")).toBeVisible();
+      await expect(
+        page.getByText("PERUSTIETO_MUUT_OPPILAITOSTYYPPI")
+      ).toBeVisible();
+      await expect(
+        page.getByText("PERUSTIETO_OPPILAITOS_MUUTOKSET")
+      ).toBeVisible();
+
+      await expect(page.getByText("VUOSILUOKAT")).not.toBeVisible();
+      await organisaatioPage.selectFromDropdown(
+        "oppilaitosTyyppiUri",
+        "Peruskoulut"
+      );
+      await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
+      await organisaatioPage.selectFromDropdown(
+        "oppilaitosTyyppiUri",
+        "Lukiot"
+      );
+      await expect(page.getByText("VUOSILUOKAT")).not.toBeVisible();
+      await organisaatioPage.selectFromDropdown(
+        "oppilaitosTyyppiUri",
+        "Perus- ja lukioasteen koulut"
+      );
+      await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
+      await organisaatioPage.selectFromDropdown(
+        "oppilaitosTyyppiUri",
+        "Peruskouluasteen erityiskoulut"
+      );
+      await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
+    });
+  });
+
   test("Ryhmat View", async ({ page }) => {
     await page.route("**/ryhmat?aktiivinen=true", (route) =>
       route.fulfill({
