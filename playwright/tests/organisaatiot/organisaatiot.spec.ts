@@ -15,6 +15,7 @@ import { RyhmatView, RyhmaEditView } from "./RyhmatView";
 import { ryhmat } from "./ryhmat";
 import { OrganisaatiotView } from "./OrganisaatiotView";
 import { ytjHameen } from "./ytjHameen";
+import { before } from "node:test";
 
 const createAndGotoLomake = async (
   page: Page,
@@ -29,6 +30,34 @@ const createAndGotoLomake = async (
 
   return organisaatioPage;
 };
+
+const baseCasMe = {
+  uid: "mbender",
+  oid: "1.2.246.562.24.41721051355",
+  firstName: "Mike",
+  lastName: "Bender",
+  groups: ["LANG_fi", "VIRKAILIJA"],
+  roles:
+    '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD","LANG_fi","USER_mbender","VIRKAILIJA"]',
+  lang: "fi",
+};
+const taulukkoLisaaUusi = "TAULUKKO_LISAA_UUSI";
+const poistaOrganisaatio = "LOMAKE_POISTA_ORGANISAATIO";
+const lomakeLisaaUusi = "LISAA_UUSI";
+const tallenna = "TALLENNA";
+const oppilaitosButtons = ["SIIRRA", "YHDISTA"];
+const koulutusToimijaButtons = ["PERUSTIETO_PAIVITA_YTJ_TIEDOT"];
+const generalRestrictedButtons = [
+  "MUOKKAA_ORGANISAATION_NIMEA",
+  "PERUSTIETO_MERKITSE_ORGANISAATIO_LAKKAUTETUKSI",
+];
+const suljeButton = "SULJE";
+const allRestrictedButtons = [
+  lomakeLisaaUusi,
+  ...oppilaitosButtons,
+  ...koulutusToimijaButtons,
+  ...generalRestrictedButtons,
+];
 
 test.describe("Organisations", () => {
   test.describe("Name Change", () => {
@@ -166,6 +195,72 @@ test.describe("Organisations", () => {
   });
 
   test.describe("Organisaatiot View", () => {
+    test.describe("Restricts buttons by roles", () => {
+      let parent: string;
+
+      test.beforeAll(async () => {
+        const p = await persistOrganisationWithPrefix("PARENT1", {
+          tyypit: [`organisaatiotyyppi_01`],
+        });
+        parent = p.organisaatio.oid;
+      });
+
+      test("does not show buttons without required roles", async ({ page }) => {
+        await page.route(`**/cas/me`, (route) =>
+          route.fulfill({
+            status: 200,
+            body: JSON.stringify({
+              ...baseCasMe,
+              roles:
+                '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD"]',
+            }),
+          })
+        );
+
+        const organisaatiotPage = new OrganisaatiotView(page);
+        await organisaatiotPage.goto();
+        await expect(page.getByText(taulukkoLisaaUusi)).not.toBeVisible();
+      });
+
+      test("does not show buttons with CRUD roles", async ({ page }) => {
+        await page.route(`**/cas/me`, (route) =>
+          route.fulfill({
+            status: 200,
+            body: JSON.stringify({
+              ...baseCasMe,
+              roles: `["APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_${parent}"]`,
+            }),
+          })
+        );
+
+        const organisaatiotPage = new OrganisaatiotView(page);
+        await organisaatiotPage.goto();
+        await expect(page.getByText(taulukkoLisaaUusi)).not.toBeVisible();
+      });
+
+      test("shows buttons with OPH roles", async ({ page }) => {
+        await page.route(`**/cas/me`, (route) =>
+          route.fulfill({
+            status: 200,
+            body: JSON.stringify({
+              uid: "mbender",
+              oid: "1.2.246.562.24.41721051355",
+              firstName: "Mike",
+              lastName: "Bender",
+              groups: ["LANG_fi", "VIRKAILIJA"],
+              roles:
+                '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001","LANG_fi","USER_mbender","VIRKAILIJA"]',
+              lang: "fi",
+            }),
+          })
+        );
+
+        const organisaatiotPage = new OrganisaatiotView(page);
+        await organisaatiotPage.goto();
+        await expect(page.getByText(taulukkoLisaaUusi)).toBeVisible();
+      });
+    });
+
     test("can filter by name", async ({ page }) => {
       const organisaatiotPage = new OrganisaatiotView(page);
       await organisaatiotPage.goto();
@@ -257,6 +352,207 @@ test.describe("Organisations", () => {
   });
 
   test.describe("Organisaatio Lomake View", () => {
+    test.describe("Restricts buttons by roles", () => {
+      let parent: string, child: string, grandchild: string;
+
+      test.beforeAll(async () => {
+        const p = await persistOrganisationWithPrefix("PARENT1", {
+          tyypit: [`organisaatiotyyppi_01`],
+        });
+        parent = p.organisaatio.oid;
+        const c = await persistOrganisationWithPrefix("CHILD", {
+          parentOid: p.organisaatio.oid,
+          tyypit: [`organisaatiotyyppi_02`],
+        });
+        child = c.organisaatio.oid;
+        const g = await persistOrganisationWithPrefix("GRANDCHILD", {
+          parentOid: c.organisaatio.oid,
+          tyypit: [`organisaatiotyyppi_03`],
+        });
+        grandchild = g.organisaatio.oid;
+      });
+
+      test("does not show buttons without required roles", async ({ page }) => {
+        await page.route(`**/cas/me`, (route) =>
+          route.fulfill({
+            status: 200,
+            body: JSON.stringify({
+              ...baseCasMe,
+              roles:
+                '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD"]',
+            }),
+          })
+        );
+
+        const organisaatioPage = new LomakeView(page);
+
+        await test.step("test for Koulutustoimija", async () => {
+          await organisaatioPage.goto(parent);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of allRestrictedButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+        });
+
+        await test.step("test for Oppilaitos", async () => {
+          await organisaatioPage.goto(child);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of allRestrictedButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+        });
+
+        await test.step("test for Toimipiste", async () => {
+          await organisaatioPage.goto(grandchild);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of allRestrictedButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+        });
+      });
+
+      test("shows buttons with CRUD roles", async ({ page }) => {
+        await page.route(`**/cas/me`, (route) =>
+          route.fulfill({
+            status: 200,
+            body: JSON.stringify({
+              ...baseCasMe,
+              roles: `["APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_${parent}"]`,
+            }),
+          })
+        );
+
+        const organisaatioPage = new LomakeView(page);
+
+        await test.step("test for Koulutustoimija", async () => {
+          await organisaatioPage.goto(parent);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of allRestrictedButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+        });
+
+        await test.step("test for Oppilaitos", async () => {
+          await organisaatioPage.goto(child);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          const visibleButtons = [lomakeLisaaUusi, suljeButton, tallenna];
+          const restrictedButtons = [
+            ...oppilaitosButtons,
+            ...koulutusToimijaButtons,
+            ...generalRestrictedButtons,
+            poistaOrganisaatio,
+          ];
+          for (const button of visibleButtons) {
+            await expect(page.getByText(button)).toBeVisible();
+          }
+          for (const button of restrictedButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+        });
+
+        await test.step("test for Toimipiste", async () => {
+          await organisaatioPage.goto(grandchild);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          const visibleButtons = [
+            lomakeLisaaUusi,
+            ...generalRestrictedButtons,
+            suljeButton,
+            tallenna,
+          ];
+          const restrictedButtons = [
+            ...oppilaitosButtons,
+            ...koulutusToimijaButtons,
+            poistaOrganisaatio,
+          ];
+          for (const button of visibleButtons) {
+            await expect(page.getByText(button)).toBeVisible();
+          }
+          for (const button of restrictedButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+        });
+      });
+
+      test("shows buttons for OPH roles", async ({ page }) => {
+        await page.route(`**/cas/me`, (route) =>
+          route.fulfill({
+            status: 200,
+            body: JSON.stringify({
+              uid: "mbender",
+              oid: "1.2.246.562.24.41721051355",
+              firstName: "Mike",
+              lastName: "Bender",
+              groups: ["LANG_fi", "VIRKAILIJA"],
+              roles:
+                '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001","LANG_fi","USER_mbender","VIRKAILIJA"]',
+              lang: "fi",
+            }),
+          })
+        );
+
+        const organisaatioPage = new LomakeView(page);
+
+        await test.step("test for Koulutustoimija", async () => {
+          await organisaatioPage.goto(parent);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of oppilaitosButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+          const visibleButtons = [
+            ...koulutusToimijaButtons,
+            lomakeLisaaUusi,
+            suljeButton,
+            ...generalRestrictedButtons,
+            tallenna,
+            poistaOrganisaatio,
+          ];
+          for (const button of visibleButtons) {
+            await expect(page.getByText(button)).toBeVisible();
+          }
+        });
+
+        await test.step("test for Oppilaitos", async () => {
+          await organisaatioPage.goto(child);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of koulutusToimijaButtons) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+          const visibleButtons = [
+            ...generalRestrictedButtons,
+            ...oppilaitosButtons,
+            lomakeLisaaUusi,
+            suljeButton,
+            tallenna,
+            poistaOrganisaatio,
+          ];
+          for (const button of visibleButtons) {
+            await expect(page.getByText(button)).toBeVisible();
+          }
+        });
+
+        await test.step("test for Toimipiste", async () => {
+          await organisaatioPage.goto(grandchild);
+          await expect(page.getByText(suljeButton)).toBeVisible();
+          for (const button of [
+            ...oppilaitosButtons,
+            ...koulutusToimijaButtons,
+          ]) {
+            await expect(page.getByText(button)).not.toBeVisible();
+          }
+          const visibleButtons = [
+            lomakeLisaaUusi,
+            ...generalRestrictedButtons,
+            suljeButton,
+            tallenna,
+            poistaOrganisaatio,
+          ];
+          for (const button of visibleButtons) {
+            await expect(page.getByText(button)).toBeVisible();
+          }
+        });
+      });
+    });
+
     test("shows oppilaitos specific fields", async ({ page }) => {
       const organisaatioPage = new LomakeView(page);
       const response = await persistOrganisationWithPrefix("PARENT1", {
