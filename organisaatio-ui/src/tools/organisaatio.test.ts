@@ -1,7 +1,7 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
 
-import { showCreateChildButton, resolveOrganisaatioTyypit, resolveParentOidByQuery } from './organisaatio';
+import { showCreateChildButton, resolveOrganisaatioTyypit } from './organisaatio';
 import { rakenne, ROOT_OID } from '../contexts/constants';
 import { Koodi, Koodisto, OrganisaatioType } from '../types/types';
 const defaultValues = { arvo: '', disabled: false, versio: 0 };
@@ -155,16 +155,6 @@ describe('resolveOrganisaatioTyypit', () => {
                 },
             ]
         );
-    });
-});
-
-describe('resolveParentOidByQuery', () => {
-    it('Maps root oid to parent if there is no parentOid', () => {
-        assert.strictEqual(resolveParentOidByQuery('testiQueryString=testi'), ROOT_OID);
-    });
-    it('Gets parentOid from query string if it exists', () => {
-        const parentOid = '1.23.1.21111000';
-        assert.strictEqual(resolveParentOidByQuery(`parentOid=${parentOid}`), parentOid);
     });
 });
 
