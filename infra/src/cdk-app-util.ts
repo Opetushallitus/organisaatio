@@ -324,6 +324,9 @@ function makeTestProject(
         env: {
           "git-credential-helper": "yes",
         },
+        artifacts: {
+          files: ["playwright-organisaatio-ui.tar.gz"],
+        },
         phases: {
           install: {
             "runtime-versions": {
@@ -344,6 +347,11 @@ function makeTestProject(
           build: {
             commands: testCommands,
           },
+          post_build: {
+            commands: [
+              "mkdir -p playwright/test-results && touch playwright/test-results/dummy && tar czf playwright-organisaatio-ui.tar.gz playwright/test-results/*"
+            ]
+          }
         },
       }),
     }
