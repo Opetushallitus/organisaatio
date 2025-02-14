@@ -9,7 +9,7 @@ import {
 } from '../types/types';
 import { ROOT_OID } from '../contexts/constants';
 import { ApiOrganisaatio } from '../types/apiTypes';
-import queryString from 'query-string';
+import { Location } from 'react-router-dom';
 
 type ResolvingOrganisaatio = { organisaatioTyypit: KoodiUri[]; oppilaitosTyyppiUri?: string; oid?: string };
 export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingOrganisaatio): ResolvedRakenne => {
@@ -74,9 +74,9 @@ export const mapOrganisaatioToSelect = (o: ApiOrganisaatio | undefined, language
 export const organisaatioSelectMapper = (organisaatiot: ApiOrganisaatio[], language: keyof Nimi) =>
     organisaatiot.map((o: ApiOrganisaatio) => mapOrganisaatioToSelect(o, language));
 
-export const resolveParentOidByQuery = (searchStr: string): string => {
-    const { parentOid } = queryString.parse(searchStr);
-    return (parentOid as string) || ROOT_OID;
+export const resolveParentOidByQuery = (location: Location): string => {
+    const params = new URLSearchParams(location.search);
+    return params.has('parentOid') && params.get('parentOid') ? params.get('parentOid') : ROOT_OID;
 };
 
 export const showCreateChildButton = (organisaatioRakenne: ResolvedRakenne): boolean =>

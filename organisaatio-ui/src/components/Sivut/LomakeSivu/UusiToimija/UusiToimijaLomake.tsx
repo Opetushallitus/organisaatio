@@ -45,7 +45,7 @@ const UusiToimijaLomake = () => {
     const [i18n] = useAtom(languageAtom);
     useAtom(koodistotAtom);
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
-    const parentOid = resolveParentOidByQuery(location.search);
+    const parentOid = resolveParentOidByQuery(location);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
     const [postinumerotKoodisto] = useAtom(postinumerotKoodistoAtom);
     const [parentTiedot, setParentTiedot] = useState<ParentTiedot>({
