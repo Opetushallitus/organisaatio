@@ -329,7 +329,7 @@ test.describe("Organisations", () => {
 
       await test.step("sets tarkastus date", async () => {
         await organisaatiotPage
-          .organisaatioLink("TARKASTUS IS CHECKED LONG AGO")
+          .organisaatioLink(`${now} TARKASTUS IS CHECKED LONG AGO`)
           .click();
         await page
           .getByTitle(`VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`)

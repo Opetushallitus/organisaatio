@@ -2,8 +2,5 @@ build/
 .nyc_output
 src/react-app-env.d.ts
 coverage/
-cypress/videos
-cypress/screenshots
-cypress-coverage
 scripts/*.csv
 scripts/*.json

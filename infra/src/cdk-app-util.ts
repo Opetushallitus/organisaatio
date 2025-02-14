@@ -138,7 +138,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
       }
 
       const ubuntuTests = [
-        { name: "OrganisaatioCypress", commands: ["scripts/ci/run-cypress-tests.sh"] },
         { name: "OrganisaatioPlaywright", commands: ["scripts/ci/run-playwright-tests.sh test:organisaatiot"] },
         { name: "OsoitepalveluPlaywright", commands: ["scripts/ci/run-playwright-tests.sh test:osoitepalvelu"] },
         { name: "RekisterointiPlaywright", commands: ["scripts/ci/run-rekisterointi-tests.sh"] },
@@ -276,7 +275,7 @@ function makeUbuntuTestProject(
   return makeTestProject(scope, env, name, testCommands, codebuild.LinuxBuildImage.STANDARD_7_0,  [
     "sudo apt-get update -y",
     "sudo apt-get install -y netcat", // for nc command
-    "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Cypress/Chromium
+    "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Chromium
   ]);
 }
 
