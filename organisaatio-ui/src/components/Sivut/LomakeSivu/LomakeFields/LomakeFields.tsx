@@ -5,15 +5,7 @@ import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import IconWrapper from '../../../IconWapper/IconWrapper';
-import {
-    FieldError,
-    Path,
-    PathValue,
-    UnpackNestedValue,
-    UseFormRegister,
-    UseFormRegisterReturn,
-    UseFormSetValue,
-} from 'react-hook-form';
+import { FieldError, Path, PathValue, UseFormRegister, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
 import { KenttaError, LocalDate, Nimi } from '../../../../types/types';
 
 const UloinKehys = (props: { children: ReactNode }) => <div className={styles.UloinKehys}>{props.children}</div>;
@@ -145,8 +137,8 @@ type NimiGroupProps<T extends NimiGroupFieldValues> = {
 const NimiGroup = <T extends NimiGroupFieldValues>({ error, register, getValues, setValue }: NimiGroupProps<T>) => {
     const copyToNames = (field: keyof Nimi): void => {
         const muutosTiedot = getValues();
-        setValue('nimi.sv' as Path<T>, muutosTiedot.nimi?.[field] as UnpackNestedValue<PathValue<T, Path<T>>>);
-        setValue('nimi.en' as Path<T>, muutosTiedot.nimi?.[field] as UnpackNestedValue<PathValue<T, Path<T>>>);
+        setValue('nimi.sv' as Path<T>, muutosTiedot.nimi?.[field] as PathValue<T, Path<T>>);
+        setValue('nimi.en' as Path<T>, muutosTiedot.nimi?.[field] as PathValue<T, Path<T>>);
     };
     return (
         <>

@@ -18,7 +18,7 @@ const Ryhmat = () => {
     const [i18n] = useAtom(languageAtom);
     const [ryhmaTyypitKoodisto] = useAtom(ryhmaTyypitKoodistoAtom);
     const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
-    const [ryhmat, setRyhmat] = useState<Ryhma[]>([]);
+    const [ryhmat, setRyhmat] = useState<Ryhma[]>();
     const navigate = useNavigate();
     const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
         () => [
@@ -42,11 +42,17 @@ const Ryhmat = () => {
                 id: 'Tyyppi',
                 Cell: ({ row }: { row: Row<Ryhma> }) => {
                     if (row.original.ryhmatyypit.length > 0) {
-                        return row.original.ryhmatyypit
-                            .map((tyyppi: string) => ryhmaTyypitKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi)))
-                            .join(', ');
+                        return (
+                            <span>
+                                {row.original.ryhmatyypit
+                                    .map((tyyppi: string) =>
+                                        ryhmaTyypitKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi))
+                                    )
+                                    .join(', ')}
+                            </span>
+                        );
                     }
-                    return '';
+                    return <span></span>;
                 },
                 accessor: (row) => {
                     if (row.ryhmatyypit.length > 0) {
@@ -62,11 +68,17 @@ const Ryhmat = () => {
                 id: 'Kayttotarkoitus',
                 Cell: ({ row }: { row: Row<Ryhma> }) => {
                     if (row.original.kayttoryhmat.length > 0) {
-                        return row.original.kayttoryhmat
-                            .map((tyyppi: string) => kayttoRyhmatKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi)))
-                            .join(', ');
+                        return (
+                            <span>
+                                {row.original.kayttoryhmat
+                                    .map((tyyppi: string) =>
+                                        kayttoRyhmatKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi))
+                                    )
+                                    .join(', ')}
+                            </span>
+                        );
                     }
-                    return '';
+                    return <span></span>;
                 },
                 accessor: (row) => {
                     if (row.kayttoryhmat.length > 0) {
@@ -105,7 +117,7 @@ const Ryhmat = () => {
         return navigate('/ryhmat/uusi');
     };
 
-    if (ryhmat.length === 0) {
+    if (!ryhmat) {
         return <Loading />;
     }
 
