@@ -147,6 +147,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
+            outputs: [new codepipeline.Artifact(test.name + "Output")],
             project: makeUbuntuTestProject(this, env, `TestOrganisaatio${test.name}`, test.commands),
           })
         );
