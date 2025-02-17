@@ -837,6 +837,9 @@ test.describe("Organisations", () => {
         page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
       ).toBeVisible();
       await page.reload();
+      await expect(
+        page.getByText("VERSIOHISTORIA_MUOKATTU_VIIMEKSI_FI")
+      ).toBeVisible();
       await organisaatioPage.rakenneAccordion.click();
       await expect(
         organisaatioPage.rakennePanel.getByText("PARENT Suominimi")
