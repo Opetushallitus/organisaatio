@@ -10,7 +10,7 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
 db-scheduler:
-  enabled: true
+  enabled: false
 varda-rekisterointi:
   url-virkailija: http://localhost
   url-oppija: http://localhost

@@ -7,8 +7,7 @@ import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,6 +19,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class RekisterointiFinalizerTest {
 
     private static final Kayttaja TESTI_KAYTTAJA = Kayttaja.builder()
@@ -28,20 +28,6 @@ public class RekisterointiFinalizerTest {
             .sukunimi("Henkilo")
             .sahkoposti("testi.henkilo@osoite.foo")
             .build();
-
-    @TestConfiguration
-    static class Configuration {
-        @Bean
-        public RekisterointiFinalizer rekisterointiFinalizer(RekisterointiRepository rekisterointiRepository,
-                RekisterointiOrganisaatioFinalizer rekisterointiOrgFinalizer,
-                OrganisaatioKayttajaFinalizer kayttajaFinalizer,
-                SchedulerClient schedulerClient,
-                Task<Long> kutsuKayttajaTask,
-                Task<Long> paatosEmailTask) {
-            return new RekisterointiFinalizer(rekisterointiRepository, rekisterointiOrgFinalizer,
-                    kayttajaFinalizer, schedulerClient, kutsuKayttajaTask, paatosEmailTask);
-        }
-    }
 
     @MockitoBean
     private RekisterointiRepository rekisterointiRepository;

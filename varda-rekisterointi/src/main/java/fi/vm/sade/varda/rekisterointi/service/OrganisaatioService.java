@@ -1,16 +1,22 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
+import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,12 +42,17 @@ public class OrganisaatioService {
     private static final String PUHELIN_TYYPPI = "puhelin";
     private static final String EMAIL_TYYPPI = "email";
     private static final Pattern YRITYSMUOTOURI_PATTERN = Pattern.compile("yritysmuoto_\\d+");
+    public static final String OPH_OID = "1.2.246.562.10.00000000001";
 
-    @Autowired private final KoodistoClient koodistoClient;
+    @Autowired
+    private final KoodistoClient koodistoClient;
+    @Autowired
+    private final OrganisaatioClient organisaatioClient;
     private final Map<String,Koodi> yritysmuotoUriToKoodi = new HashMap<>();
 
-    public OrganisaatioService(KoodistoClient koodistoClient) {
+    public OrganisaatioService(KoodistoClient koodistoClient, OrganisaatioClient organisaatioClient) {
         this.koodistoClient = koodistoClient;
+        this.organisaatioClient = organisaatioClient;
         tryUpdateYritysmuotoKoodisto();
     }
 
@@ -244,4 +255,26 @@ public class OrganisaatioService {
         return value == null ? "" : value;
     }
 
+
+    public List<String> haeOrganisaatioOidit(Collection<? extends GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VARDA_ROLE + '_'))
+                .map(grantedAuthority -> {
+                    String authority = grantedAuthority.getAuthority();
+                    return authority.substring(authority.lastIndexOf('_') + 1);
+                }).collect(Collectors.toList());
+    }
+
+    public boolean onOphVirkailija(List<String> organisaatioOidit) {
+        System.out.println(organisaatioOidit);
+        return organisaatioOidit.contains(OPH_OID);
+    }
+
+    public List<String> virkailijanKunnat(List<String> organisaatioOidit) {
+        return organisaatioOidit.stream()
+                .map(organisaatioClient::getKuntaByOid)
+                .filter(Optional::isPresent)
+                .map(optOrganisaatio -> optOrganisaatio.get().kotipaikkaUri)
+                .collect(Collectors.toList());
+    }
 }

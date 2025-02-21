@@ -22,7 +22,7 @@ public class RekisterointiOrganisaatioFinalizerTest {
 
     @Before
     public void setup() {
-        organisaatioService = new OrganisaatioService(mock(KoodistoClient.class));
+        organisaatioService = new OrganisaatioService(mock(KoodistoClient.class), mock(OrganisaatioClient.class));
         organisaatioClient = mock(OrganisaatioClient.class);
         finalizer = new RekisterointiOrganisaatioFinalizer(organisaatioService, organisaatioClient);
     }

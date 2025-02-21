@@ -3,8 +3,11 @@ package fi.vm.sade.varda.rekisterointi.service;
 import com.github.kagkarlsson.scheduler.SchedulerClient;
 import com.github.kagkarlsson.scheduler.task.Task;
 import fi.vm.sade.varda.rekisterointi.RequestContext;
+import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
+import fi.vm.sade.varda.rekisterointi.exception.UnauthorizedException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
 import org.junit.Before;
@@ -12,10 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -33,21 +33,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class RekisterointiServiceTest {
-
-        @TestConfiguration
-        static class RekisterointiServiceTestConfiguration {
-                @Bean
-                public RekisterointiService rekisterointiService(RekisterointiRepository rekisterointiRepository,
-                                ApplicationEventPublisher eventPublisher,
-                                SchedulerClient schedulerClient,
-                                @Qualifier("rekisterointiEmailTask") Task<Long> rekisterointiEmailTask,
-                                @Qualifier("paatosEmailTask") Task<Long> paatosEmailTask,
-                                @Qualifier("luoTaiPaivitaOrganisaatioTask") Task<Long> luoTaiPaivitaOrganisaatioTask) {
-                        return new RekisterointiService(rekisterointiRepository, eventPublisher, schedulerClient,
-                                        rekisterointiEmailTask, paatosEmailTask, luoTaiPaivitaOrganisaatioTask);
-                }
-        }
 
         private static final Long SAVED_REKISTEROINTI_ID = 1L;
         private static final Long INVALID_REKISTEROINTI_ID = 2L;
@@ -72,7 +59,19 @@ public class RekisterointiServiceTest {
         @Autowired
         private RekisterointiService rekisterointiService;
 
-        private Authentication getAuthentication() {
+        @MockitoBean
+        private OrganisaatioClient organisaatioClient;
+
+        private List<String> OPH_AUTHORITIES = List.of("ORGANISAATIOIDEN_REKISTEROITYMINEN_OPH_" + OrganisaatioService.OPH_OID);
+        private List<String> VARDA_AUTHORITIES = List.of("ORGANISAATIOIDEN_REKISTEROITYMINEN_VARDA_1.2.3.4.5");
+        private List<String> JOTPA_AUTHORITIES = List.of("ORGANISAATIOIDEN_REKISTEROITYMINEN_JOTPA_1.2.3.4.5");
+
+        private PaatosDto paatos = new PaatosDto(
+                        SAVED_REKISTEROINTI_ID,
+                        false,
+                        "Rekisteröinti tehty 110% väärin.");
+
+        private Authentication getAuthentication(List<String> roles) {
                 return new Authentication() {
                         @Override
                         public String getName() {
@@ -81,38 +80,34 @@ public class RekisterointiServiceTest {
 
                         @Override
                         public Collection<? extends GrantedAuthority> getAuthorities() {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+                                return roles
+                                        .stream()
+                                        .map(r -> (GrantedAuthority) () -> String.format("ROLE_" + Constants.VARDA_ROLE + "_%s", r))
+                                        .toList();
                         }
 
                         @Override
                         public Object getCredentials() {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'getCredentials'");
+                                return null;
                         }
 
                         @Override
                         public Object getDetails() {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'getDetails'");
+                                return null;
                         }
 
                         @Override
                         public Object getPrincipal() {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'getPrincipal'");
+                                return null;
                         }
 
                         @Override
                         public boolean isAuthenticated() {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'isAuthenticated'");
+                                return true;
                         }
 
                         @Override
                         public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-                                // TODO Auto-generated method stub
-                                throw new UnsupportedOperationException("Unimplemented method 'setAuthenticated'");
                         }
                 };
         }
@@ -153,7 +148,7 @@ public class RekisterointiServiceTest {
                                 INVALID_REKISTEROINTI_ID,
                                 true,
                                 "Miksipä ei?");
-                rekisterointiService.resolve(getAuthentication(), paatos, requestContext(null));
+                rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null));
         }
 
         @Test(expected = IllegalStateException.class)
@@ -164,16 +159,41 @@ public class RekisterointiServiceTest {
                                 .withPaatos(new Paatos(paatos.hyvaksytty, LocalDateTime.now(), PAATTAJA_OID,
                                                 paatos.perustelu));
                 when(rekisterointiRepository.findById(hylatty.id)).thenReturn(Optional.of(hylatty));
-                rekisterointiService.resolve(getAuthentication(), paatos, requestContext(null));
+                rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null));
+        }
+
+        @Test(expected = UnauthorizedException.class)
+        public void resolveThrowsUnauthorizedForJotpaAuthoritiesOnVardaRekisterointi() {
+                rekisterointiService.resolve(getAuthentication(JOTPA_AUTHORITIES), paatos, requestContext(null));
+        }
+
+        @Test(expected = UnauthorizedException.class)
+        public void resolveThrowsUnauthorizedIfVardaVirkailijaHasWrongKunta() {
+                OrganisaatioDto kunta = new OrganisaatioDto();
+                kunta.kotipaikkaUri = "kunta_200";
+                when(organisaatioClient.getKuntaByOid(eq("1.2.3.4.5"))).thenReturn(Optional.of(kunta));
+                rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null));
+        }
+
+        @Test(expected = UnauthorizedException.class)
+        public void resolveThrowsUnauthorizedIfVardaVirkailijaDoesNotHaveAnyKunta() {
+                rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null));
         }
 
         @Test
         public void resolveSavesPaatosAndUpdatesRekisterointiTila() {
-                PaatosDto paatos = new PaatosDto(
-                                SAVED_REKISTEROINTI_ID,
-                                false,
-                                "Rekisteröinti tehty 110% väärin.");
-                rekisterointiService.resolve(getAuthentication(), paatos, requestContext(null));
+                rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null));
+                ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
+                verify(rekisterointiRepository).save(captor.capture());
+                assertEquals(Rekisterointi.Tila.HYLATTY, captor.getValue().tila);
+        }
+
+        @Test
+        public void resolveSavesPaatosAndUpdatesRekisterointiTilaIfVardaVirkailijaHasKunta() {
+                OrganisaatioDto kunta = new OrganisaatioDto();
+                kunta.kotipaikkaUri = "kunta_091";
+                when(organisaatioClient.getKuntaByOid(eq("1.2.3.4.5"))).thenReturn(Optional.of(kunta));
+                rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null));
                 ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
                 verify(rekisterointiRepository).save(captor.capture());
                 assertEquals(Rekisterointi.Tila.HYLATTY, captor.getValue().tila);
@@ -186,7 +206,7 @@ public class RekisterointiServiceTest {
                                 true,
                                 "OK!",
                                 hakemusTunnukset);
-                rekisterointiService.resolveBatch(getAuthentication(), paatokset, requestContext(null));
+                rekisterointiService.resolveBatch(getAuthentication(OPH_AUTHORITIES), paatokset, requestContext(null));
                 ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
                 verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(captor.capture());
                 assertEquals(Rekisterointi.Tila.HYVAKSYTTY, captor.getValue().tila);

@@ -15,15 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmptySupplier;
 
@@ -39,7 +35,6 @@ public class VirkailijaController {
     static final String PAATOKSET_BATCH_PATH = PAATOKSET_PATH + "/batch";
 
     private static final String ORGANISAATIOT_PATH = "/organisaatiot";
-    private static final String OPH_OID = "1.2.246.562.10.00000000001";
     private static final Logger LOGGER = LoggerFactory.getLogger(VirkailijaController.class);
 
     private final OrganisaatioClient organisaatioClient;
@@ -97,14 +92,14 @@ public class VirkailijaController {
     @GetMapping(REKISTEROINNIT_PATH)
     public Iterable<Rekisterointi> listaaRekisteroinnit(
             Authentication authentication,
-            @RequestParam("tila") Rekisterointi.Tila tila,
-            @RequestParam(value = "hakutermi", required = false) String hakutermi) {
-        List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
-        if (onOphVirkailija(organisaatioOidit)) {
+            @RequestParam Rekisterointi.Tila tila,
+            @RequestParam(required = false) String hakutermi) {
+        List<String> organisaatioOidit = organisaatioService.haeOrganisaatioOidit(authentication.getAuthorities());
+        if (organisaatioService.onOphVirkailija(organisaatioOidit)) {
             LOGGER.info("Käyttäjällä on oikeus nähdä kaikki rekisteröinnit.");
             return rekisterointiService.listByTilaAndOrganisaatio(tila, hakutermi);
         }
-        List<String> kunnat = virkailijanKunnat(organisaatioOidit);
+        List<String> kunnat = organisaatioService.virkailijanKunnat(organisaatioOidit);
         if (kunnat.isEmpty()) {
             LOGGER.info("Käyttäjällä ei ole oikeutta nähdä yhdenkään kunnan rekisteröintejä.");
             return List.of();
@@ -124,8 +119,8 @@ public class VirkailijaController {
     public Iterable<Rekisterointi> listRegistrations(Authentication authentication) {
         String[] registrationTypes = AuthenticationUtils.getRegistrationTypes(authentication);
         if (registrationTypes.length == 1 && registrationTypes[0].equals("varda")) {
-            List<String> organisaatioOidit = haeOrganisaatioOidit(authentication.getAuthorities());
-            List<String> kunnat = virkailijanKunnat(organisaatioOidit);
+            List<String> organisaatioOidit = organisaatioService.haeOrganisaatioOidit(authentication.getAuthorities());
+            List<String> kunnat = organisaatioService.virkailijanKunnat(organisaatioOidit);
             return rekisterointiService.listByVardaKunnat(kunnat.toArray(new String[0]));
         } else {
             return rekisterointiService.listByRegistrationTypes(registrationTypes);
@@ -146,7 +141,7 @@ public class VirkailijaController {
             Authentication authentication,
             @RequestBody @Validated PaatosDto paatos,
             HttpServletRequest request) {
-        return rekisterointiService.resolve(authentication.getName(), paatos, RequestContextImpl.of(request));
+        return rekisterointiService.resolve(authentication, paatos, RequestContextImpl.of(request));
     }
 
     /**
@@ -162,28 +157,6 @@ public class VirkailijaController {
             Authentication authentication,
             @RequestBody @Validated PaatosBatch paatokset,
             HttpServletRequest request) {
-        rekisterointiService.resolveBatch(authentication.getName(), paatokset, RequestContextImpl.of(request));
-    }
-
-    List<String> haeOrganisaatioOidit(Collection<? extends GrantedAuthority> grantedAuthorities) {
-        return grantedAuthorities.stream()
-                .filter(grantedAuthority -> grantedAuthority.getAuthority().contains(Constants.VARDA_ROLE + '_'))
-                .map(grantedAuthority -> {
-                    String authority = grantedAuthority.getAuthority();
-                    return authority.substring(authority.lastIndexOf('_') + 1);
-                }).collect(Collectors.toList());
-    }
-
-    private boolean onOphVirkailija(List<String> organisaatioOidit) {
-        return organisaatioOidit.contains(OPH_OID);
-    }
-
-    private List<String> virkailijanKunnat(List<String> organisaatioOidit) {
-        // TODO: batch API useammalle kunnalle tai cachetus?
-        return organisaatioOidit.stream()
-                .map(organisaatioClient::getKuntaByOid)
-                .filter(Optional::isPresent)
-                .map(optOrganisaatio -> optOrganisaatio.get().kotipaikkaUri)
-                .collect(Collectors.toList());
+        rekisterointiService.resolveBatch(authentication, paatokset, RequestContextImpl.of(request));
     }
 }

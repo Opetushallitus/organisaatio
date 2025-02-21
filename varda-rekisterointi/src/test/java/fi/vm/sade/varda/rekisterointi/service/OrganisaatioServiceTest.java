@@ -1,14 +1,18 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
+import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
+import fi.vm.sade.varda.rekisterointi.util.Constants;
+
 import org.junit.Test;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -85,6 +89,16 @@ public class OrganisaatioServiceTest {
         assertEquals(yritysmuoto, result);
     }
 
+    @Test
+    public void haeOrganisaatioOiditReturnsOidSuffix() {
+        String oid = "1.23.456.7890";
+        String authorityValue = String.format("ROLE_" + Constants.VARDA_ROLE + "_%s", oid);
+        GrantedAuthority authority = (GrantedAuthority) () -> authorityValue;
+        List<String> returnedOids = service.haeOrganisaatioOidit(List.of(authority));
+        assertEquals(1, returnedOids.size());
+        assertEquals(oid, returnedOids.get(0));
+    }
+
     private OrganisaatioNimi organisaatioNimi(LocalDate alkuPvm, String kieli, String nimi) {
         OrganisaatioNimi organisaatioNimi = new OrganisaatioNimi();
         organisaatioNimi.alkuPvm = alkuPvm;
@@ -98,6 +112,6 @@ public class OrganisaatioServiceTest {
         koodi.nimi = Map.of("fi", "Yritysmuoto");
         KoodistoClient client = mock(KoodistoClient.class);
         when(client.listKoodit(any(KoodistoType.class))).thenReturn(Collections.singletonList(koodi));
-        return new OrganisaatioService(client);
+        return new OrganisaatioService(client, mock(OrganisaatioClient.class));
     }
 }

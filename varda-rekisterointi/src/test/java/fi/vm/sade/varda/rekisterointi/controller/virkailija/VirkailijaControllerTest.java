@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
-import fi.vm.sade.varda.rekisterointi.util.Constants;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -24,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static fi.vm.sade.varda.rekisterointi.controller.virkailija.WithMockVirkailijaUser.MOCK_VIRKAILIJA_OID;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -107,16 +104,5 @@ public class VirkailijaControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS_BATCH))
         ).andExpect(status().isCreated());
-    }
-
-    @Test
-    public void haeOrganisaatioOiditReturnsOidSuffix() {
-        String oid = "1.23.456.7890";
-        String authorityValue = String.format("ROLE_" + Constants.VARDA_ROLE + "_%s", oid);
-        VirkailijaController controller = new VirkailijaController(null, null, null, null);
-        GrantedAuthority authority = (GrantedAuthority) () -> authorityValue;
-        List<String> returnedOids = controller.haeOrganisaatioOidit(List.of(authority));
-        assertEquals(1, returnedOids.size());
-        assertEquals(oid, returnedOids.get(0));
     }
 }
