@@ -14,13 +14,16 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -51,23 +54,68 @@ public class RekisterointiServiceTest {
         private static final String PAATTAJA_OID = "1.234.56789";
         private static final Rekisterointi SAVED_REKISTEROINTI = getRekisterointi();
 
-        @MockBean
+        @MockitoBean
         private RekisterointiRepository rekisterointiRepository;
 
-        @MockBean
+        @MockitoBean
         private SchedulerClient schedulerClient;
 
-        @MockBean(name = "rekisterointiEmailTask")
+        @MockitoBean(name = "rekisterointiEmailTask")
         Task<Long> rekisterointiEmailTask;
 
-        @MockBean(name = "paatosEmailTask")
+        @MockitoBean(name = "paatosEmailTask")
         Task<Long> paatosEmailTask;
 
-        @MockBean(name = "luoTaiPaivitaOrganisaatioTask")
+        @MockitoBean(name = "luoTaiPaivitaOrganisaatioTask")
         Task<Long> luoTaiPaivitaOrganisaatioTask;
 
         @Autowired
         private RekisterointiService rekisterointiService;
+
+        private Authentication getAuthentication() {
+                return new Authentication() {
+                        @Override
+                        public String getName() {
+                                return PAATTAJA_OID;
+                        }
+
+                        @Override
+                        public Collection<? extends GrantedAuthority> getAuthorities() {
+                                // TODO Auto-generated method stub
+                                throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+                        }
+
+                        @Override
+                        public Object getCredentials() {
+                                // TODO Auto-generated method stub
+                                throw new UnsupportedOperationException("Unimplemented method 'getCredentials'");
+                        }
+
+                        @Override
+                        public Object getDetails() {
+                                // TODO Auto-generated method stub
+                                throw new UnsupportedOperationException("Unimplemented method 'getDetails'");
+                        }
+
+                        @Override
+                        public Object getPrincipal() {
+                                // TODO Auto-generated method stub
+                                throw new UnsupportedOperationException("Unimplemented method 'getPrincipal'");
+                        }
+
+                        @Override
+                        public boolean isAuthenticated() {
+                                // TODO Auto-generated method stub
+                                throw new UnsupportedOperationException("Unimplemented method 'isAuthenticated'");
+                        }
+
+                        @Override
+                        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                                // TODO Auto-generated method stub
+                                throw new UnsupportedOperationException("Unimplemented method 'setAuthenticated'");
+                        }
+                };
+        }
 
         @Before
         public void mockRepositoryCalls() {
@@ -105,7 +153,7 @@ public class RekisterointiServiceTest {
                                 INVALID_REKISTEROINTI_ID,
                                 true,
                                 "Miksipä ei?");
-                rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
+                rekisterointiService.resolve(getAuthentication(), paatos, requestContext(null));
         }
 
         @Test(expected = IllegalStateException.class)
@@ -116,7 +164,7 @@ public class RekisterointiServiceTest {
                                 .withPaatos(new Paatos(paatos.hyvaksytty, LocalDateTime.now(), PAATTAJA_OID,
                                                 paatos.perustelu));
                 when(rekisterointiRepository.findById(hylatty.id)).thenReturn(Optional.of(hylatty));
-                rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
+                rekisterointiService.resolve(getAuthentication(), paatos, requestContext(null));
         }
 
         @Test
@@ -125,7 +173,7 @@ public class RekisterointiServiceTest {
                                 SAVED_REKISTEROINTI_ID,
                                 false,
                                 "Rekisteröinti tehty 110% väärin.");
-                rekisterointiService.resolve(PAATTAJA_OID, paatos, requestContext(null));
+                rekisterointiService.resolve(getAuthentication(), paatos, requestContext(null));
                 ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
                 verify(rekisterointiRepository).save(captor.capture());
                 assertEquals(Rekisterointi.Tila.HYLATTY, captor.getValue().tila);
@@ -138,7 +186,7 @@ public class RekisterointiServiceTest {
                                 true,
                                 "OK!",
                                 hakemusTunnukset);
-                rekisterointiService.resolveBatch(PAATTAJA_OID, paatokset, requestContext(null));
+                rekisterointiService.resolveBatch(getAuthentication(), paatokset, requestContext(null));
                 ArgumentCaptor<Rekisterointi> captor = ArgumentCaptor.forClass(Rekisterointi.class);
                 verify(rekisterointiRepository, times(hakemusTunnukset.size())).save(captor.capture());
                 assertEquals(Rekisterointi.Tila.HYVAKSYTTY, captor.getValue().tila);

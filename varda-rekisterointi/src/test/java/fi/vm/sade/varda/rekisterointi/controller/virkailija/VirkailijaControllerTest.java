@@ -11,11 +11,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -52,7 +52,7 @@ public class VirkailijaControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
+    @MockitoBean
     private RekisterointiService rekisterointiService;
 
     @Autowired
@@ -82,7 +82,7 @@ public class VirkailijaControllerTest {
         Rekisterointi resolved = TestiRekisterointi.validiVardaRekisterointi().withPaatos(
                 new Paatos(TESTI_PAATOS_DTO.hyvaksytty, LocalDateTime.now(), MOCK_VIRKAILIJA_OID, TESTI_PAATOS_DTO.perustelu)
         );
-        when(rekisterointiService.resolve(eq(MOCK_VIRKAILIJA_OID), eq(TESTI_PAATOS_DTO), any())).thenReturn(resolved);
+        when(rekisterointiService.resolve(any(), eq(TESTI_PAATOS_DTO), any())).thenReturn(resolved);
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS_DTO))
@@ -92,7 +92,7 @@ public class VirkailijaControllerTest {
     @Test
     @WithMockVirkailijaUser
     public void luoPaatosReturnsBadRequestOnInvalidRekisterointiId() throws Exception {
-        when(rekisterointiService.resolve(eq(MOCK_VIRKAILIJA_OID), eq(TESTI_PAATOS_DTO), any())).thenThrow(new InvalidInputException("Ouch!"));
+        when(rekisterointiService.resolve(any(), eq(TESTI_PAATOS_DTO), any())).thenThrow(new InvalidInputException("Ouch!"));
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS_DTO))
@@ -102,7 +102,7 @@ public class VirkailijaControllerTest {
     @Test
     @WithMockVirkailijaUser
     public void luoPaatoksetReturnsCreated() throws Exception {
-        doNothing().when(rekisterointiService).resolveBatch(anyString(), any(PaatosBatch.class), any());
+        doNothing().when(rekisterointiService).resolveBatch(any(), any(PaatosBatch.class), any());
         mvc.perform(post(VirkailijaController.BASE_PATH + VirkailijaController.PAATOKSET_BATCH_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(TESTI_PAATOS_BATCH))
