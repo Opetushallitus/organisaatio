@@ -13,6 +13,7 @@ export type Config = {
     enabled: boolean;
     bucketName: string;
   }
+  oauthJwtIssuerUri?: string;
 }
 const defaultConfig = {
     minCapacity: 1,
@@ -49,7 +50,8 @@ export const hahtuva: Config = {
     vardaRekisterointiCapacity: 1,
     features: {
         "organisaatio.tasks.datantuonti.import.enabled": true
-    }
+    },
+    oauthJwtIssuerUri: "https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
 };
 
 export const dev: Config = {

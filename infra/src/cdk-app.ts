@@ -376,6 +376,14 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       "organisaatio.tasks.export.lampi-external-id": this.ssmSecret("LampiExternalId"),
     } : {};
 
+    const oauthProperties: ecs.ContainerDefinitionProps["environment"] = conf.oauthJwtIssuerUri ? {
+      "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
+    } : {}
+    const oauthSecrets: ecs.ContainerDefinitionProps["secrets"] = conf.oauthJwtIssuerUri ? {
+      "organisaatio.palvelukayttaja.client_id": this.ssmSecret("PalvelukayttajaClientId"),
+      "organisaatio.palvelukayttaja.client_secret": this.ssmSecret("PalvelukayttajaClientSecret"),
+    } : {}
+
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
@@ -392,6 +400,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         "organisaatio.tasks.datantuonti.export.encryption-key-arn": props.datantuontiEncryptionKey.keyArn,
         "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`,
         ...lampiProperties,
+        ...oauthProperties,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
@@ -403,6 +412,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
             "password"
         ),
         ...lampiSecrets,
+        ...oauthSecrets,
         organisaatio_service_username: this.ssmSecret("PalvelukayttajaUsername"),
         organisaatio_service_password: this.ssmSecret("PalvelukayttajaPassword"),
         rajapinnat_ytj_asiakastunnus: this.ssmSecret("YtjAsiakastunnus"),
