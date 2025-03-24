@@ -21,6 +21,7 @@ import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.properties.OphProperties;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -33,6 +34,7 @@ import static java.util.function.Function.identity;
  * Koodisto-servicen REST operaatiot ja autentikointi
  */
 @Component
+@ConditionalOnProperty(name = "organisaatio.koodisto-oauth2-client.enabled", havingValue = "false", matchIfMissing = true)
 public class OrganisaatioKoodistoCasClient extends CustomClient implements OrganisaatioKoodistoClient {
 
     public OrganisaatioKoodistoCasClient(@Qualifier(HTTP_CLIENT_KOODISTO) OphHttpClient httpClient, OphProperties properties) {
