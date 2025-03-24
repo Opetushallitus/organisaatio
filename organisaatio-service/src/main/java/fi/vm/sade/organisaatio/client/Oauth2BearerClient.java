@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.net.http.HttpResponse;
 @Slf4j
 @RequiredArgsConstructor
 @Component
+@ConditionalOnProperty("organisaatio.palvelukayttaja.client_id")
 public class Oauth2BearerClient {
     private static final String CACHE_NAME_OAUTH2_BEARER = "oauth2Bearer";
     private final ObjectMapper objectMapper;
@@ -25,7 +27,7 @@ public class Oauth2BearerClient {
     private String clientId;
     @Value("${organisaatio.palvelukayttaja.client_secret}")
     private String clientSecret;
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    @Value("${otuva.jwt.issuer-uri}")
     private String oauth2IssuerUri;
 
     private String cachedToken = null;

@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.client;
 import fi.vm.sade.organisaatio.config.HttpClientConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
@@ -18,6 +19,7 @@ import static java.util.function.Function.identity;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@ConditionalOnBean(Oauth2BearerClient.class)
 public class OtuvaOauth2Client {
     private final Oauth2BearerClient oauth2BearerClient;
     private final HttpClient http = HttpClient.newBuilder().build();
