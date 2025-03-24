@@ -378,6 +378,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
 
     const oauthProperties: ecs.ContainerDefinitionProps["environment"] = conf.oauthJwtIssuerUri ? {
       "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
+      "organisaatio.koodisto-oauth2-client.enabled": "true",
     } : {}
     const oauthSecrets: ecs.ContainerDefinitionProps["secrets"] = conf.oauthJwtIssuerUri ? {
       "organisaatio.palvelukayttaja.client_id": this.ssmSecret("PalvelukayttajaClientId"),
