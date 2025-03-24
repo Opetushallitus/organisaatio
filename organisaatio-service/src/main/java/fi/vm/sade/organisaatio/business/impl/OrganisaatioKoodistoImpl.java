@@ -104,7 +104,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         try {
             getClient().put(gson.toJson(koodi));
         } catch (OrganisaatioKoodistoException e) {
-            LOG.debug("Koodi update failed. Reason: " + e.getMessage());
+            LOG.warn("Koodi update failed. Reason: " + e.getMessage(), e);
             return false;
         }
         return true;
@@ -122,7 +122,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         try {
             getClient().post(gson.toJson(koodi), uri);
         } catch (OrganisaatioKoodistoException e) {
-            LOG.warn("Koodi insert failed. Reason: " + e.getMessage());
+            LOG.warn("Koodi insert failed. Reason: " + e.getMessage(), e);
             return false;
         }
         return true;
@@ -158,7 +158,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             try {
                 uk = haeKoodi(uri, tunniste);
             } catch (OrganisaatioKoodistoException e) {
-                LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
+                LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui", e);
                 return null;
             }
             return uk;
@@ -470,7 +470,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
         try {
             koodi = haeKoodi(uri, tunniste);
         } catch (OrganisaatioKoodistoException e) {
-            LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui");
+            LOG.warn("Koodin " + uri + "_" + tunniste + " hakeminen epäonnistui", e);
             return INFO_CODE_SAVE_FAILED;
         }
 
