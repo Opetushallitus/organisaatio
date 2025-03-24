@@ -14,8 +14,6 @@
  */
 package fi.vm.sade.organisaatio.client;
 
-import fi.vm.sade.javautils.http.OphHttpEntity;
-import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
 import fi.vm.sade.properties.OphProperties;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +22,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
-import java.util.Optional;
-import java.util.function.Supplier;
 
-import static java.util.function.Function.identity;
-
-/**
- * Koodisto-servicen REST operaatiot ja autentikointi
- */
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "organisaatio.koodisto-oauth2-client.enabled", havingValue = "true", matchIfMissing = false)
