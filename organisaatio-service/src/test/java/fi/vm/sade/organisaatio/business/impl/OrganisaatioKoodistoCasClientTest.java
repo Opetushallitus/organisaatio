@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoClient;
+import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoCasClient;
 import fi.vm.sade.organisaatio.config.HttpClientConfiguration;
 import fi.vm.sade.properties.OphProperties;
 import org.junit.jupiter.api.AfterEach;
@@ -19,12 +19,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ContextConfiguration(classes = {
         HttpClientConfiguration.class,
-        OrganisaatioKoodistoClient.class
+        OrganisaatioKoodistoCasClient.class
 })
-public class OrganisaatioKoodistoClientTest {
+public class OrganisaatioKoodistoCasClientTest {
 
     @Autowired
-    private OrganisaatioKoodistoClient client;
+    private OrganisaatioKoodistoCasClient client;
 
     @MockBean
     private OphProperties ophProperties;
