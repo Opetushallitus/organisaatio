@@ -65,6 +65,7 @@ export const dev: Config = {
       enabled: true,
       bucketName: "oph-lampi-dev",
     },
+    oauthJwtIssuerUri: "https://kayttooikeus.dev.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
 };
 
 export const qa: Config = {
@@ -78,6 +79,7 @@ export const qa: Config = {
       enabled: true,
       bucketName: "oph-lampi-qa",
     },
+    oauthJwtIssuerUri: "https://kayttooikeus.qa.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
 };
 
 export const prod: Config = {
