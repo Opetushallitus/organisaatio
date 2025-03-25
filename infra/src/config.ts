@@ -90,4 +90,5 @@ export const prod: Config = {
       enabled: true,
       bucketName: "oph-lampi-prod",
     },
+    oauthJwtIssuerUri: "https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
 };
