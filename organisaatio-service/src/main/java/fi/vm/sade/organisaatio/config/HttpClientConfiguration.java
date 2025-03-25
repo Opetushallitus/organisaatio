@@ -13,7 +13,6 @@ public class HttpClientConfiguration {
 
     public static final String CALLER_ID = "1.2.246.562.10.00000000001.organisaatio-service";
     public static final String HTTP_CLIENT_KAYTTOOIKEUS = "kayttooikeusHttpClient";
-    public static final String HTTP_CLIENT_KOODISTO = "koodistoHttpClient";
     public static final String HTTP_CLIENT_LOKALISOINTI = "lokalisointiHttpClient";
     public static final String HTTP_CLIENT_OPPIJANUMERO = "oppijanumeroHttpClient";
 
@@ -50,16 +49,4 @@ public class HttpClientConfiguration {
                 .build();
         return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
     }
-
-    @Bean(name = HTTP_CLIENT_KOODISTO)
-    public OphHttpClient koodistoHttpClient(OphProperties properties) {
-        CasAuthenticator authenticator = new CasAuthenticator.Builder()
-                .username(properties.require("organisaatio.service.username.to.koodisto"))
-                .password(properties.require("organisaatio.service.password.to.koodisto"))
-                .webCasUrl(properties.url("cas.base"))
-                .casServiceUrl(properties.url("organisaatio-service.koodisto-service.login"))
-                .build();
-        return new OphHttpClient.Builder(CALLER_ID).authenticator(authenticator).build();
-    }
-
 }

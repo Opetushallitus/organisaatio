@@ -13,7 +13,7 @@ export type Config = {
     enabled: boolean;
     bucketName: string;
   }
-  oauthJwtIssuerUri?: string;
+  oauthJwtIssuerUri: string;
 }
 const defaultConfig = {
     minCapacity: 1,
