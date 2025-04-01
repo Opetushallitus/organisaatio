@@ -5,6 +5,7 @@ host.virkailija: "virkailija.untuvaopintopolku.fi"
 cluster_tarjonta_host: "alb.untuvaopintopolku.fi"
 cluster_organisaatio_host: "alb.untuvaopintopolku.fi"
 
+organisaatio.solmuluokka: "199"
 
 feature.mockapi: false
 

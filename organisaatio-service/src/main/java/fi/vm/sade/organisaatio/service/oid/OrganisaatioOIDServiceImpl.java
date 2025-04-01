@@ -25,6 +25,7 @@ import fi.vm.sade.organisaatio.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,9 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     @Autowired
     private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
+    @Value("${organisaatio.solmuluokka}")
+    private String solmuluokka;
 
-
-    private final String root = "1.2.246.562.";
     private final String[] values = new String[]{"5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
         "22", "24", "27"};
     private final NodeClassCode[] codes = new NodeClassCode[] {
@@ -143,7 +144,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     private boolean oidAvailable(String oid, String nodeClassValue) {
         NodeClassCode nodeClass = nodeClassValueToCode(nodeClassValue);
 
-        if (nodeClassValue.equals("28") || nodeClass == NodeClassCode.TOIMIPAIKAT) {
+        if (nodeClassValue.equals("28") || nodeClassValue.equals(solmuluokka) || nodeClass == NodeClassCode.TOIMIPAIKAT) {
             // Organisaation ja ryhmän OID:t löytyvät organisaatio-taulusta
             Organisaatio org = organisaatioRepository.findFirstByOid(oid);
 

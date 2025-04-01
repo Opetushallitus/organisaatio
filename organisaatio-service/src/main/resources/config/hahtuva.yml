@@ -5,6 +5,8 @@ host.virkailija: "virkailija.hahtuvaopintopolku.fi"
 cluster_tarjonta_host: "alb.hahtuvaopintopolku.fi"
 cluster_organisaatio_host: "alb.hahtuvaopintopolku.fi"
 
+organisaatio.solmuluokka: "299"
+
 feature.mockapi: false
 
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"

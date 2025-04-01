@@ -115,6 +115,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
 
+    @Value("${organisaatio.solmuluokka}")
+    private String solmuluokka;
+
     private static final String PARENT_SEPARATOR = "|";
 
     private void mergeAuxData(Organisaatio entity, Organisaatio orgEntity) {
@@ -544,10 +547,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
         if (organisaatio.getOid() == null) {
             if (OrganisaatioUtil.isRyhma(organisaatio)) {
-                /// @TODO: Sitten kun Oid palveluss on ryhmä mukana --> korjaa
-                //  organisaatio.setOid(oidService.newOid(NodeClassCode.RYHMA));
-
-                organisaatio.setOid(oidService.newOidByClassValue("28"));
+                organisaatio.setOid(oidService.newOidByClassValue(solmuluokka));
             } else {
                 organisaatio.setOid(oidService.newOid(NodeClassCode.TOIMIPAIKAT));
             }

@@ -5,6 +5,7 @@ host.virkailija: "virkailija.testiopintopolku.fi"
 cluster_tarjonta_host: "alb.testiopintopolku.fi"
 cluster_organisaatio_host: "alb.testiopintopolku.fi"
 
+organisaatio.solmuluokka: "99"
 
 feature.mockapi: false
 

@@ -4,6 +4,8 @@ host.virkailija: "virkailija.opintopolku.fi"
 cluster_tarjonta_host: "alb.opintopolku.fi"
 cluster_organisaatio_host: "alb.opintopolku.fi"
 
+organisaatio.solmuluokka: "28"
+
 feature.mockapi: false
 
 koodisto.baseurl: "https://${host.virkailija}/koodisto-service"
