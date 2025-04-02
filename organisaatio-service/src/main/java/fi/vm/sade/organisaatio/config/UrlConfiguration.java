@@ -14,8 +14,6 @@ public class UrlConfiguration extends OphProperties {
         this.addOverride("url-virkailija", environment.getRequiredProperty("url-virkailija"));
         this.addDefault("organisaatio.service.username", environment.getRequiredProperty("organisaatio.service.username"));
         this.addDefault("organisaatio.service.password", environment.getRequiredProperty("organisaatio.service.password"));
-        this.addDefault("organisaatio.service.username.to.koodisto", environment.getRequiredProperty("organisaatio.service.username.to.koodisto"));
-        this.addDefault("organisaatio.service.password.to.koodisto", environment.getRequiredProperty("organisaatio.service.password.to.koodisto"));
         this.addDefault("organisaatio.ui.url", environment.getRequiredProperty("organisaatio.ui.url"));
         this.addDefault("organisaatio.ui.ilmoitukset.url", environment.getRequiredProperty("organisaatio.ui.ilmoitukset.url"));
         this.addDefault("port.koodisto-service", environment.getRequiredProperty("port.koodisto-service"));
