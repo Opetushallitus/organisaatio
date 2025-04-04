@@ -1,4 +1,4 @@
-FROM maven:3.9.8-amazoncorretto-21-al2023 AS build
+FROM maven:3.9.8-amazoncorretto-21-al2023@sha256:047632648d979f72b5816eff24625149ed9c5b80caf63e3415392890dc379e73 AS build
 WORKDIR /app
 
 RUN dnf install -y nodejs20 \
@@ -19,7 +19,7 @@ COPY pom.xml .
 
 RUN mvn clean package -s settings.xml -DskipTests
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21@sha256:cfde421b70787b286ea1927738b29ae200dad96978bdd8ad5f5d9cad70697369
 WORKDIR /app
 
 COPY --from=build /app/organisaatio-service/target/organisaatio-service.jar organisaatio-service.jar
