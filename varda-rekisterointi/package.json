@@ -8,7 +8,7 @@
         "@material-ui/icons": "^4.5.1",
         "@opetushallitus/virkailija-ui-components": "^0.4.7",
         "@tanstack/react-table": "^8.5.13",
-        "axios": "^0.28.1",
+        "axios": "^0.30.0",
         "axios-hooks": "^4.0.0",
         "classnames": "^2.5.1",
         "date-fns": "^2.30.0",
