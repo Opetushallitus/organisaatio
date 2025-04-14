@@ -4,13 +4,29 @@ import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.organisaatio.config.properties.CasProperties;
 import fi.vm.sade.properties.OphProperties;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas30ProxyTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -24,6 +40,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Profile("!dev")
 @Configuration
@@ -109,16 +126,44 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter,
-            AuthenticationEntryPoint authenticationEntryPoint, SecurityContextRepository securityContextRepository) throws Exception {
+    @Order(1)
+    @ConditionalOnProperty(name = "spring.security.oauth2.resourceserver.jwt.jwk-set-uri")
+    SecurityFilterChain oauth2FilterChain(HttpSecurity http) throws Exception {
+        return http
+                .headers(headers -> headers.disable())
+                .csrf(csrf -> csrf.disable())
+                .securityMatcher(new RequestMatcher() {
+                    @Override
+                    public boolean matches(HttpServletRequest request) {
+                        return isOauth2Request(request);
+                    }
+                })
+                .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(oauth2JwtConverter())))
+                .build();
+    }
+
+    @Bean
+    @Order(2)
+    SecurityFilterChain casSecurityFilterChain(
+            HttpSecurity http,
+            CasAuthenticationFilter casAuthenticationFilter,
+            AuthenticationEntryPoint authenticationEntryPoint,
+            SecurityContextRepository securityContextRepository
+    ) throws Exception {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setMatchingRequestParameterName(null);
         http
             .headers(headers -> headers.disable())
             .csrf(csrf -> csrf.disable())
-            .securityMatcher("/**")
+            .securityMatcher(new RequestMatcher() {
+                @Override
+                public boolean matches(HttpServletRequest request) {
+                    return !isOauth2Request(request);
+                }
+            })
             .authorizeHttpRequests(authz -> authz
-                    .requestMatchers("/buildversion.txt").permitAll()
                     .requestMatchers("/actuator/health").permitAll()
                     .requestMatchers("/swagger-ui.html").permitAll()
                     .requestMatchers("/swagger-ui/").permitAll()
@@ -138,5 +183,45 @@ public class WebSecurityConfiguration {
             .requestCache(cache -> cache.requestCache(requestCache))
             .exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint));
         return http.build();
+    }
+
+    private Converter<Jwt, AbstractAuthenticationToken> oauth2JwtConverter() {
+        return new Converter<Jwt, AbstractAuthenticationToken>() {
+            JwtGrantedAuthoritiesConverter delegate = new JwtGrantedAuthoritiesConverter();
+
+            @Override
+            public AbstractAuthenticationToken convert(Jwt source) {
+                var authorityList = extractRoles(source);
+                var delegateAuthorities = delegate.convert(source);
+                if (delegateAuthorities != null) {
+                    authorityList.addAll(delegateAuthorities);
+                }
+                return new JwtAuthenticationToken(source, authorityList);
+            }
+
+            private List<GrantedAuthority> extractRoles(Jwt jwt) {
+                Map<String, List<String>> roleClaim = jwt.getClaims().get("roles") != null
+                        ? (Map<String, List<String>>) jwt.getClaims().get("roles")
+                        : Map.of();
+                var roles = roleClaim.keySet()
+                        .stream()
+                        .map((oid) -> {
+                            var orgRoles = roleClaim.get(oid);
+                            return orgRoles.stream().map((role) -> List.of(
+                                    "ROLE_APP_" + role,
+                                    "ROLE_APP_" + role + "_" + oid
+                            )).toList();
+                        })
+                        .flatMap(List::stream)
+                        .flatMap(List::stream)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.<GrantedAuthority>toList());
+                return roles;
+            }
+        };
+    }
+
+    private boolean isOauth2Request(HttpServletRequest request) {
+        return request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Bearer ");
     }
 }

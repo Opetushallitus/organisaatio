@@ -29,10 +29,14 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.google.gson.JsonObject;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -162,11 +166,20 @@ public class AuditLogAspect {
         return new User(getIp(), null, null);
     }
 
+    private static boolean isOauth2User(Authentication auth) {
+        return auth != null && auth.getName() != null && !auth.getName().startsWith("1.");
+    }
+
     static User getUser(HttpServletRequest request) {
         Optional<Oid> oid = getOid(request);
         InetAddress ip = getIp(request);
         String session = getSession(request).orElse(null);
         String userAgent = getUserAgent(request).orElse(null);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (isOauth2User(authentication)) {
+            return new Oauth2User(authentication.getName(), ip, userAgent);
+        }
 
         return oid.map(value -> new User(value, ip, session, userAgent)).orElseGet(() -> new User(ip, session, userAgent));
     }
@@ -207,4 +220,25 @@ public class AuditLogAspect {
         return Optional.ofNullable(request.getHeader("User-Agent"));
     }
 
+    static class Oauth2User extends User {
+       private final String username;
+       private final InetAddress ip;
+       private final String userAgent;
+
+       public Oauth2User(String username, InetAddress ip, String userAgent) {
+          super(null, ip, "", userAgent);
+          this.username = username;
+          this.ip = ip;
+          this.userAgent = userAgent;
+       }
+
+       @Override
+       public JsonObject asJson() {
+          JsonObject o = new JsonObject();
+          o.addProperty("oid", this.username);
+          o.addProperty("ip", this.ip.getHostAddress());
+          o.addProperty("userAgent", this.userAgent);
+          return o;
+       }
+    }
 }

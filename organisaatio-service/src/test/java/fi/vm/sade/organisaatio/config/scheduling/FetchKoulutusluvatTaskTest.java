@@ -13,7 +13,6 @@ import fi.vm.sade.organisaatio.client.Oauth2BearerClient;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 import java.io.IOException;
 

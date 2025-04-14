@@ -1,4 +1,6 @@
 spring.flyway.locations: classpath:db/migration,classpath:db/migration-test
+spring.security.oauth2.resourceserver.jwt.issuer-uri: https://kayttooikeus.qa.yleiskayttoiset.opintopolku.fi/kayttooikeus-service
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://kayttooikeus.qa.yleiskayttoiset.opintopolku.fi/kayttooikeus-service/oauth2/jwks
 host.cas: "virkailija.testiopintopolku.fi"
 host.ilb: "https://virkailija.testiopintopolku.fi"
 host.virkailija: "virkailija.testiopintopolku.fi"
