@@ -1,39 +1,40 @@
 package fi.vm.sade.organisaatio.client;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpRequest;
+import com.google.gson.Gson;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioOppijanumeroException;
 import fi.vm.sade.properties.OphProperties;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import static fi.vm.sade.organisaatio.config.HttpClientConfiguration.HTTP_CLIENT_OPPIJANUMERO;
+import java.net.URI;
+import java.net.http.HttpRequest;
 
 @Component
-public class OppijanumeroClient extends CustomClient {
+@RequiredArgsConstructor
+public class OppijanumeroClient {
+    private final OtuvaOauth2Client httpClient;
+    private final OphProperties properties;
 
-    public OppijanumeroClient(@Qualifier(HTTP_CLIENT_OPPIJANUMERO) OphHttpClient httpClient, OphProperties properties) {
-        super(httpClient, properties);
-    }
+    private Gson gson = new Gson();
 
     public OppijanumeroDto henkilo(String oid) {
         String url = properties.url("oppijanumero-service.henkilo", oid);
-        OphHttpRequest request = OphHttpRequest.Builder.get(url).build();
-        return httpClient.<OppijanumeroDto>execute(request)
-                .expectedStatus(200)
-                .mapWith(json -> fromJson(json, new TypeReference<>() {
-                }))
-                .orElseThrow(() -> new OrganisaatioOppijanumeroException(String.format("Osoite %s palautti 204 tai 404", url)));
+        try {
+            var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
+            var response = httpClient.executeRequest(request);
+            if (response.statusCode() == 200) {
+                return gson.fromJson(response.body(), OppijanumeroDto.class);
+            } else {
+                throw new ClientException(String.format("Osoite %s palautti 204", response.request().uri()));
+            }
+        } catch  (Exception e) {
+            OrganisaatioOppijanumeroException ex = new OrganisaatioOppijanumeroException(e.getMessage());
+            ex.initCause(e);
+            throw ex;
+        }
     }
 
-    @Getter
-    @Setter
-    public static class OppijanumeroDto {
-        private String oidHenkilo;
-        private String etunimet;
-        private String sukunimi;
-    }
+    public record OppijanumeroDto(String oidHenkilo, String etunimet, String sukunimi) {}
 }

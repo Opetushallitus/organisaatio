@@ -271,8 +271,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             tulos.setPaivitysPvm(org.getPaivitysPvm());
             try {
                 OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
-                tulos.setEtuNimet(henkilo.getEtunimet());
-                tulos.setSukuNimi(henkilo.getSukunimi());
+                tulos.setEtuNimet(henkilo.etunimet());
+                tulos.setSukuNimi(henkilo.sukunimi());
 
             } catch (Exception ex) {
                 log.error(ex.getMessage());
