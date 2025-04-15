@@ -16,7 +16,7 @@ public class LocaleConfiguration implements WebMvcConfigurer {
 
   public static final String SESSION_ATTRIBUTE_NAME_LOCALE = "locale";
   public static final String SESSION_ATTRIBUTE_NAME_TIMEZONE = "timezonze";
-  public static final Locale DEFAULT_LOCALE = new Locale("fi");
+  public static final Locale DEFAULT_LOCALE = Locale.forLanguageTag("fi");
   public static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("Europe/Helsinki");
 
   @Bean

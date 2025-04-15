@@ -10,9 +10,9 @@ server:
         port-header: X-Real-Port
         protocol-header: X-Real-Proto
 rekisterointi:
-    service:
-        username: ${varda_rekisterointi_service_username}
-        password: ${varda_rekisterointi_service_password}
+    palvelukayttaja:
+        client-id: ${varda_rekisterointi_palvelukayttaja_client_id}
+        client-secret: ${varda_rekisterointi_palvelukayttaja_client_secret}
     valtuudet:
         client-id: ${varda_rekisterointi_valtuudet_client_id}
         api-key: ${varda_rekisterointi_valtuudet_api_key}

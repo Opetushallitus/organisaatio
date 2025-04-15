@@ -4,17 +4,17 @@ set -o errexit -o nounset -o pipefail
 function main {
   select_java_version "21"
 
-  VALTUUDET_API_KEY=$(aws ssm get-parameter --profile oph-dev --output text --with-decryption --query Parameter.Value --name /untuva/services/varda-rekisterointi/valtuudet-api-key)
-  VALTUUDET_CLIENT_ID=$(aws ssm get-parameter --profile oph-dev --output text --with-decryption --query Parameter.Value --name /untuva/services/varda-rekisterointi/valtuudet-client-id)
-  VALTUUDET_OAUTH_PASSWORD=$(aws ssm get-parameter --profile oph-dev --output text --with-decryption --query Parameter.Value --name /untuva/services/varda-rekisterointi/valtuudet-oauth-password)
-  SERVICE_USERNAME=$(aws ssm get-parameter --profile oph-dev --output text --with-decryption --query Parameter.Value --name /untuva/services/varda-rekisterointi/service-username)
-  SERVICE_PASSWORD=$(aws ssm get-parameter --profile oph-dev --output text --with-decryption --query Parameter.Value --name /untuva/services/varda-rekisterointi/service-password)
+  VALTUUDET_API_KEY=$(aws ssm get-parameter --profile oph-organisaatio-hahtuva --output text --with-decryption --query Parameter.Value --name /vardarekisterointi/ValtuudetApiKey)
+  VALTUUDET_CLIENT_ID=$(aws ssm get-parameter --profile oph-organisaatio-hahtuva --output text --with-decryption --query Parameter.Value --name /vardarekisterointi/ValtuudetClientId)
+  VALTUUDET_OAUTH_PASSWORD=$(aws ssm get-parameter --profile oph-organisaatio-hahtuva --output text --with-decryption --query Parameter.Value --name /vardarekisterointi/ValtuudetOauthPassword)
+  SERVICE_USERNAME=$(aws ssm get-parameter --profile oph-organisaatio-hahtuva --output text --with-decryption --query Parameter.Value --name /vardarekisterointi/PalvelukayttajaClientId)
+  SERVICE_PASSWORD=$(aws ssm get-parameter --profile oph-organisaatio-hahtuva --output text --with-decryption --query Parameter.Value --name /vardarekisterointi/PalvelukayttajaClientSecret)
 
   mvn spring-boot:run \
     -Dspring-boot.run.profiles=dev \
     -Dspring-boot.run.jvmArguments="
-      -Drekisterointi.service.username=$SERVICE_USERNAME
-      -Drekisterointi.service.password=$SERVICE_PASSWORD
+      -Drekisterointi.palvelukayttaja.client-id=$SERVICE_USERNAME
+      -Drekisterointi.palvelukayttaja.client-secret=$SERVICE_PASSWORD
       -Drekisterointi.valtuudet.api-key=$VALTUUDET_API_KEY
       -Drekisterointi.valtuudet.client-id=$VALTUUDET_CLIENT_ID
       -Drekisterointi.valtuudet.oauth-password=$VALTUUDET_OAUTH_PASSWORD

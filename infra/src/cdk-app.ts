@@ -851,6 +851,8 @@ class RekisterointiApplicationStack extends cdk.Stack {
       secrets: {
         varda_rekisterointi_service_username: this.ssmSecret("PalvelukayttajaUsername"),
         varda_rekisterointi_service_password: this.ssmSecret("PalvelukayttajaPassword"),
+        varda_rekisterointi_palvelukayttaja_client_id: this.ssmSecret("PalvelukayttajaClientId"),
+        varda_rekisterointi_palvelukayttaja_client_secret: this.ssmSecret("PalvelukayttajaClientSecret"),
         varda_rekisterointi_valtuudet_client_id: this.ssmSecret("ValtuudetClientId"),
         varda_rekisterointi_valtuudet_api_key: this.ssmSecret("ValtuudetApiKey"),
         varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret("ValtuudetOauthPassword"),

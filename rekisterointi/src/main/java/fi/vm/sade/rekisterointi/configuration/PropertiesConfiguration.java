@@ -24,10 +24,10 @@ public class PropertiesConfiguration {
       properties.addDefault("url-virkailija", environment.getRequiredProperty("url-virkailija"));
       properties.addDefault("url-rekisterointi", environment.getRequiredProperty("url-rekisterointi"));
       properties.addDefault("url-alb", environment.getRequiredProperty("url-alb"));
-      properties.addDefault("rekisterointi.service.username",
-          environment.getRequiredProperty("rekisterointi.service.username"));
-      properties.addDefault("rekisterointi.service.password",
-          environment.getRequiredProperty("rekisterointi.service.password"));
+      properties.addDefault("rekisterointi.palvelukayttaja.client-id",
+          environment.getRequiredProperty("rekisterointi.palvelukayttaja.client-id"));
+      properties.addDefault("rekisterointi.palvelukayttaja.client-secret",
+          environment.getRequiredProperty("rekisterointi.palvelukayttaja.client-secret"));
       properties.addDefault("varda-rekisterointi.url", environment.getRequiredProperty("varda-rekisterointi.url"));
       properties.addDefault("varda-rekisterointi.username",
           environment.getRequiredProperty("varda-rekisterointi.username"));

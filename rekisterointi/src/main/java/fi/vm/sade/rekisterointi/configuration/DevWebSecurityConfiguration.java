@@ -8,7 +8,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -35,7 +34,6 @@ public class DevWebSecurityConfiguration {
   UserDetailsService userDetailsService;
   PasswordEncoder passwordEncoder;
 
-  @Autowired
   public DevWebSecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
     this.userDetailsService = userDetailsService;
     this.passwordEncoder = passwordEncoder;
