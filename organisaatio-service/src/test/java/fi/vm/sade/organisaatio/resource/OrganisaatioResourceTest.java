@@ -7,7 +7,6 @@ import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioSearchCriteria;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioSearchCriteriaDTOV2;
 import fi.vm.sade.organisaatio.resource.v2.OrganisaatioResourceV2;
-import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
@@ -172,7 +172,7 @@ public class OrganisaatioResourceTest {
         OrganisaatioSearchCriteria sc = new OrganisaatioSearchCriteria();
         sc.setOrganisaatiotyyppi(organisaatioTyyppi);//organisaatioTyyppi = organisaatioTyyppi;
         Set<String> tyypit = new HashSet<>();
-        if (!StringUtils.isEmpty(oppilaitosTyyppi)) {
+        if (StringUtils.hasText(oppilaitosTyyppi)) {
             tyypit.add(oppilaitosTyyppi);
         }
         sc.setOppilaitostyyppi(tyypit);

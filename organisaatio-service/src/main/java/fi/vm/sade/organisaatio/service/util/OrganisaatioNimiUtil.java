@@ -18,7 +18,6 @@ package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.model.MonikielinenTeksti;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +85,7 @@ public class OrganisaatioNimiUtil {
         if (nimi.getAlkuPvm() != null) {
             Date today = new Date();
 
-            if (DateUtils.isSameDay(today, nimi.getAlkuPvm()) ||
+            if (OrganisaatioUtil.isSameDay(today, nimi.getAlkuPvm()) ||
                     nimi.getAlkuPvm().before(today)) {
                 return true;
             }

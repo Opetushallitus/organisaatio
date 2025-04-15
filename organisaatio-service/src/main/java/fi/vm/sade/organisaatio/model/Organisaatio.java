@@ -8,7 +8,6 @@ import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,7 +17,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
-
 
 @EntityListeners(ProtectedDataListener.class)
 @Entity
@@ -411,12 +409,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
         return alkuPvm;
     }
 
-    private static Date filterPvm(Date pvm) {
-        return pvm == null ? null : DateUtils.truncate(pvm, Calendar.DATE);
+    private Date truncateToDay(Date pvm) {
+        // implemented as is since this method is called with both java.sql.Date and java.util.Date
+        return pvm == null ? null : new Date(pvm.getYear(), pvm.getMonth(), pvm.getDate());
     }
 
     public void setAlkuPvm(Date alkuPvm) {
-        this.alkuPvm = filterPvm(alkuPvm);
+        this.alkuPvm = truncateToDay(alkuPvm);
     }
 
     public Date getLakkautusPvm() {
@@ -424,7 +423,7 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     }
 
     public void setLakkautusPvm(Date lakkautusPvm) {
-        this.lakkautusPvm = filterPvm(lakkautusPvm);
+        this.lakkautusPvm = truncateToDay(lakkautusPvm);
     }
 
     public Set<String> getTyypit() {

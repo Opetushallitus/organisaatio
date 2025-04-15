@@ -18,8 +18,8 @@ package fi.vm.sade.organisaatio.service.util;
 
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.model.Organisaatio;
-import org.apache.commons.lang.time.DateUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -80,7 +80,8 @@ public abstract class OrganisaatioUtil {
         }
 
         // Kumpikaan ei ole null --> tarkastetaan onko sama päivä
-        return DateUtils.isSameDay(pvm1, pvm2);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(pvm1).equals(fmt.format(pvm2));
     }
 
     /**

@@ -3,9 +3,7 @@ package fi.vm.sade.organisaatio.client;
 import com.google.gson.Gson;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioOppijanumeroException;
 import fi.vm.sade.properties.OphProperties;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;

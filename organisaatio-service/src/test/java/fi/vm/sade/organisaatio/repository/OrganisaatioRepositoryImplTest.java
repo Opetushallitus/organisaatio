@@ -4,7 +4,6 @@ import fi.vm.sade.organisaatio.RyhmaBuilder;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.model.*;
-import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -259,7 +259,7 @@ class OrganisaatioRepositoryImplTest {
         if (parent == null) {
             return null;
         }
-        return (!StringUtils.isEmpty(parent.getParentIdPath()))
+        return (StringUtils.hasText(parent.getParentIdPath()))
                 ? parent.getParentIdPath() + parent.getId() + "|"
                 : "|" + parent.getId() + "|";
     }

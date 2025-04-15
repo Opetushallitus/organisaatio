@@ -1,6 +1,5 @@
 package fi.vm.sade.organisaatio.client;
 
-import fi.vm.sade.organisaatio.config.HttpClientConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,12 +18,14 @@ public class OtuvaOauth2Client {
     private final Oauth2BearerClient oauth2BearerClient;
     private final HttpClient http = HttpClient.newBuilder().build();
 
+    public static final String CALLER_ID = "1.2.246.562.10.00000000001.organisaatio-service";
+
     private HttpResponse<String> execute(HttpRequest.Builder requestBuilder) {
         try {
             var request = requestBuilder
                     .timeout(Duration.ofSeconds(35))
                     .setHeader("Authorization", "Bearer " + oauth2BearerClient.getOauth2Bearer())
-                    .setHeader("Caller-Id", HttpClientConfiguration.CALLER_ID)
+                    .setHeader("Caller-Id", CALLER_ID)
                     .setHeader("CSRF", "CSRF")
                     .setHeader("Cookie", "CSRF=CSRF")
                     .build();

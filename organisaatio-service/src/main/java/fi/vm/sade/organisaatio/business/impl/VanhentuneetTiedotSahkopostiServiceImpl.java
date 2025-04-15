@@ -13,7 +13,6 @@ import fi.vm.sade.properties.OphProperties;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -75,7 +75,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
         }
 
         LocalDate voimassaPvm = LocalDate.now();
-        Date tarkastusPvm = DateUtils.addYears(new Date(), -1);
+        Date tarkastusPvm = Date.from(ZonedDateTime.now().minusYears(1).toInstant());
         return organisaatioRepository.findByTarkastusPvm(tarkastusPvm, voimassaPvm, organisaatioOids, MAKSIMIMAARA);
     }
 

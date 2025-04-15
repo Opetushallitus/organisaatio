@@ -17,24 +17,32 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpRequest;
+
+import fi.vm.sade.organisaatio.client.OtuvaOauth2Client;
+import lombok.RequiredArgsConstructor;
+
+import java.net.URI;
+import java.net.http.HttpRequest;
+
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class OrganisaatioRestToStream {
-
-    private final OphHttpClient httpClient;
-
-    public OrganisaatioRestToStream(OphHttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
+    private final OtuvaOauth2Client httpClient;
 
     public JsonElement getInputStreamFromUri(String uri) {
-        return httpClient.<JsonElement>execute(OphHttpRequest.Builder.get(uri).build())
-                .expectedStatus(200)
-                .mapWith(json -> new JsonParser().parse(json))
-                .orElseThrow(() -> new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri)));
+        try {
+            var request = HttpRequest.newBuilder().uri(new URI(uri)).GET();
+            var response = httpClient.executeRequest(request);
+            if (response.statusCode() == 200) {
+                return JsonParser.parseString(response.body());
+            } else {
+                throw new RuntimeException(String.format("Osoite %s palautti 204 tai 404", uri));
+            }
+        } catch  (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
  }

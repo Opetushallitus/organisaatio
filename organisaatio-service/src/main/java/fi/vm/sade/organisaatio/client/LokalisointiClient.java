@@ -1,8 +1,10 @@
 package fi.vm.sade.organisaatio.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.httpclient.OphHttpClient;
+
 import fi.vm.sade.properties.OphProperties;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -13,18 +15,15 @@ import java.util.function.Supplier;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
-@Component
-public class LokalisointiClient {
+import java.net.URI;
+import java.net.http.HttpRequest;
 
-    private final OphHttpClient httpClient; // TODO check import path (httpClient) compared to other clients.
+@Component
+@RequiredArgsConstructor
+public class LokalisointiClient {
+    private final OtuvaOauth2Client httpClient;
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
-
-    public LokalisointiClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
-        this.httpClient = httpClient;
-        this.properties = properties;
-        this.objectMapper = objectMapper;
-    }
 
     // locale -> key -> value
     public Map<String, Map<String, String>> getByCategory(String category) {
@@ -47,7 +46,13 @@ public class LokalisointiClient {
     }
 
     private Dto[] getAsArray(String url) {
-        return httpClient.get(url).execute(response -> objectMapper.readValue(response.asInputStream(), Dto[].class));
+        try {
+            var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
+            var response = httpClient.executeRequest(request);
+            return objectMapper.readValue(response.body(), Dto[].class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static class Dto {

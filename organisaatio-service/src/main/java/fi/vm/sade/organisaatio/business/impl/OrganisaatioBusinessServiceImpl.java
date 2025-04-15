@@ -38,7 +38,6 @@ import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -990,7 +989,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitetään suhteet ja indeksointi, jos uusi parent on jo voimassa (date == tänään / aiemmin)
         Date today = new Date();
-        if (date.before(today) || DateUtils.isSameDay(date, today)) {
+        if (date.before(today) || OrganisaatioUtil.isSameDay(date, today)) {
             setParentPath(organisaatio, newParent.getOid());
             organisaatioRepository.save(organisaatio); // TODO worrks?
 

@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.service.aspects;/*
 
 
 import fi.vm.sade.auditlog.*;
-import fi.vm.sade.javautils.http.HttpServletRequestUtils;
 import fi.vm.sade.organisaatio.OrganisaatioOperation;
 import fi.vm.sade.organisaatio.api.model.types.YhteystietojenTyyppiDTO;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTulosDTO;
@@ -46,6 +45,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.Principal;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author: Tuomas Katva Date: 9.8.2013
@@ -198,10 +198,21 @@ public class AuditLogAspect {
 
     static InetAddress getIp(HttpServletRequest request) {
         try {
-            return InetAddress.getByName(HttpServletRequestUtils.getRemoteAddress(request));
+            return InetAddress.getByName(getRemoteAddress(request));
         } catch (UnknownHostException e) {
             return getIp();
         }
+    }
+
+    private static String getRemoteAddress(HttpServletRequest httpServletRequest) {
+        Predicate<String> isNotBlank = (String txt) -> txt != null && !txt.isEmpty();
+        if (isNotBlank.test(httpServletRequest.getHeader("X-Real-IP"))) {
+            return httpServletRequest.getHeader("X-Real-IP");
+        }
+        if (isNotBlank.test(httpServletRequest.getHeader("X-Forwarded-For"))) {
+            return httpServletRequest.getHeader("X-Forwarded-For");
+        }
+        return httpServletRequest.getRemoteAddr();
     }
 
     static InetAddress getIp() {
