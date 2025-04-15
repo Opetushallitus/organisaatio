@@ -24,6 +24,7 @@ public class PropertiesConfiguration {
       properties.addDefault("url-virkailija", environment.getRequiredProperty("url-virkailija"));
       properties.addDefault("url-rekisterointi", environment.getRequiredProperty("url-rekisterointi"));
       properties.addDefault("url-alb", environment.getRequiredProperty("url-alb"));
+      properties.addDefault("otuva.jwt.issuer-uri", environment.getRequiredProperty("otuva.jwt.issuer-uri"));
       properties.addDefault("rekisterointi.palvelukayttaja.client-id",
           environment.getRequiredProperty("rekisterointi.palvelukayttaja.client-id"));
       properties.addDefault("rekisterointi.palvelukayttaja.client-secret",

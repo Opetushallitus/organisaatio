@@ -18,6 +18,7 @@ function main {
       -Drekisterointi.valtuudet.api-key=$VALTUUDET_API_KEY
       -Drekisterointi.valtuudet.client-id=$VALTUUDET_CLIENT_ID
       -Drekisterointi.valtuudet.oauth-password=$VALTUUDET_OAUTH_PASSWORD
+      -Dotuva.jwt.issuer-uri=http://localhost:9000
       -DbaseUrl=https://virkailija.untuvaopintopolku.fi
       -Drekisterointi.baseUrl=http://localhost:3000
       -Dcas-oppija.baseUrl=https://untuvaopintopolku.fi"

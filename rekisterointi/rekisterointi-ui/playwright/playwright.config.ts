@@ -33,7 +33,7 @@ const config: PlaywrightTestConfig = {
         [
             'junit',
             {
-                outputFile: 'playwright-results/junit-playwright-js-unit.xml',
+                outputFile: '../playwright-results/junit-playwright-js-unit.xml',
             },
         ],
         [
