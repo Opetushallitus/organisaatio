@@ -840,6 +840,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
         },
       });
 
+    const conf = getConfig();
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
@@ -847,6 +848,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
       environment: {
         ENV: getEnvironment(),
         aws_region: this.region,
+        "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
       },
       secrets: {
         varda_rekisterointi_service_username: this.ssmSecret("PalvelukayttajaUsername"),
