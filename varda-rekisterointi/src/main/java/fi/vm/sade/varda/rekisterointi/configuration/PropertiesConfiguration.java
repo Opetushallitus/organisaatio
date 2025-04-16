@@ -19,6 +19,9 @@ public class PropertiesConfiguration {
         properties.addDefault("url-virkailija", environment.getRequiredProperty("varda-rekisterointi.url-virkailija"));
         properties.addDefault("varda-rekisterointi.service.username", environment.getRequiredProperty("varda-rekisterointi.service.username"));
         properties.addDefault("varda-rekisterointi.service.password", environment.getRequiredProperty("varda-rekisterointi.service.password"));
+        properties.addDefault("varda-rekisterointi.palvelukayttaja.client-id", environment.getRequiredProperty("varda-rekisterointi.palvelukayttaja.client-id"));
+        properties.addDefault("varda-rekisterointi.palvelukayttaja.client-secret", environment.getRequiredProperty("varda-rekisterointi.palvelukayttaja.client-secret"));
+        properties.addDefault("otuva.jwt.issuer-uri", environment.getRequiredProperty("otuva.jwt.issuer-uri"));
         Arrays.asList(
                 "varda-rekisterointi.kayttooikeus.ryhma.paivakoti",
                 "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja",

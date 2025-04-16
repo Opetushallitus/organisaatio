@@ -15,6 +15,8 @@ spring.datasource.password: ${postgresql_password}
 
 varda-rekisterointi.url-oppija:  https://${host_oppija}
 varda-rekisterointi.url-virkailija: https://${host_virkailija}
+varda-rekisterointi.palvelukayttaja.client-id: ${varda_rekisterointi_palvelukayttaja_client_id}
+varda-rekisterointi.palvelukayttaja.client-secret: ${varda_rekisterointi_palvelukayttaja_client_secret}
 varda-rekisterointi.service.username: ${palvelukayttaja_username}
 varda-rekisterointi.service.password: ${palvelukayttaja_password}
 varda-rekisterointi.schedule.kasittelyssa-email-task: "DAILY|06:30"

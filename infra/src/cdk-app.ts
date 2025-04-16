@@ -692,6 +692,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         },
       });
 
+    const conf = getConfig();
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
@@ -702,6 +703,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         postgresql_port: props.database.clusterEndpoint.port.toString(),
         postgresql_db: "vardarekisterointi",
         aws_region: this.region,
+        "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
@@ -714,6 +716,8 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         ),
         palvelukayttaja_username: this.ssmSecret("PalvelukayttajaUsername"),
         palvelukayttaja_password: this.ssmSecret("PalvelukayttajaPassword"),
+        varda_rekisterointi_palvelukayttaja_client_id: this.ssmSecret("PalvelukayttajaClientId"),
+        varda_rekisterointi_palvelukayttaja_client_secret: this.ssmSecret("PalvelukayttajaClientSecret"),
         varda_rekisterointi_valtuudet_client_id: this.ssmSecret("ValtuudetClientId"),
         varda_rekisterointi_valtuudet_api_key: this.ssmSecret("ValtuudetApiKey"),
         varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret("ValtuudetOauthPassword"),
@@ -729,7 +733,6 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       ],
     });
 
-    const conf = getConfig();
     const service = new ecs.FargateService(this, "Service", {
       cluster: props.ecsCluster,
       taskDefinition,

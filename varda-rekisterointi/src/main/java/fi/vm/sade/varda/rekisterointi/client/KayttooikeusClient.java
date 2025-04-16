@@ -2,19 +2,19 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpEntity;
-import fi.vm.sade.javautils.http.OphHttpRequest;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.dto.KayttooikeusKutsuDto;
 import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaCriteria;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaDto;
-import org.apache.http.entity.ContentType;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,26 +24,11 @@ import java.util.Set;
  * Client käyttöoikeuspalvelun käyttämiseen.
  */
 @Component
+@RequiredArgsConstructor
 public class KayttooikeusClient {
-
-    private final OphHttpClient httpClient;
+    private final OtuvaOauth2Client httpClient;
     private final OphProperties properties;
     private final ObjectMapper objectMapper;
-
-    /**
-     * Alustaa clientin annetulla HTTP-clientilla, konfiguraatiolla ja <code>ObjectMapper</code>illä.
-     *
-     * @param httpClient    HTTP-client
-     * @param properties    konfiguraatio
-     * @param objectMapper  Jackson object mapper
-     */
-    public KayttooikeusClient(@Qualifier("httpClientKayttooikeus") OphHttpClient httpClient,
-                              OphProperties properties,
-                              ObjectMapper objectMapper) {
-        this.httpClient = httpClient;
-        this.properties = properties;
-        this.objectMapper = objectMapper;
-    }
 
     private String toJson(Object object) {
         try {
@@ -70,15 +55,20 @@ public class KayttooikeusClient {
      */
     public Collection<VirkailijaDto> listVirkailijaBy(VirkailijaCriteria criteria) {
         String url = properties.url("kayttooikeus-service.virkailija.haku");
-        OphHttpEntity entity = new OphHttpEntity.Builder()
-                .content(toJson(criteria))
-                .contentType(ContentType.APPLICATION_JSON)
-                .build();
-        OphHttpRequest request = OphHttpRequest.Builder.post(url).setEntity(entity).build();
-        return httpClient.<Collection<VirkailijaDto>>execute(request)
-                .expectedStatus(200)
-                .mapWith(json -> Arrays.asList(fromJson(json, VirkailijaDto[].class)))
-                .orElseThrow(() -> new RuntimeException(String.format("Url %s returned 204 or 404", url)));
+        try {
+            var request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(BodyPublishers.ofString(toJson(criteria)));
+            var response = httpClient.executeRequest(request);
+            if (response.statusCode() == 200) {
+                return Arrays.asList(fromJson(response.body(), VirkailijaDto[].class));
+            } else {
+                throw new RuntimeException(String.format("Url %s returned 204 or 404", url));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -106,13 +96,17 @@ public class KayttooikeusClient {
                         ))
                 .build();
         String url = properties.url("kayttooikeus-service.kutsu");
-        OphHttpEntity entity = new OphHttpEntity.Builder()
-                .content(toJson(dto))
-                .contentType(ContentType.APPLICATION_JSON)
-                .build();
-        OphHttpRequest request = OphHttpRequest.Builder.post(url).setEntity(entity).build();
-        httpClient.<Long>execute(request)
-                .expectedStatus(201)
-                .ignoreResponse();
+        try {
+            var request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(BodyPublishers.ofString(toJson(dto)));
+            var response = httpClient.executeRequest(request);
+            if (response.statusCode() != 201) {
+                throw new RuntimeException(String.format("Url %s returned 204 or 404", url));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

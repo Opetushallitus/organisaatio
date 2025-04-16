@@ -18,6 +18,9 @@ function main {
     -Dspring-boot.run.jvmArguments="
       -Dvarda-rekisterointi.service.username=$SERVICE_USERNAME
       -Dvarda-rekisterointi.service.password=$SERVICE_PASSWORD
+      -Dvarda-rekisterointi.palvelukayttaja.client-id=dummy
+      -Dvarda-rekisterointi.palvelukayttaja.client-secret=dummy
+      -Dotuva.jwt.issuer-uri=http://localhost:9000
       -Dvarda-rekisterointi.valtuudet.api-key=$VALTUUDET_API_KEY
       -Dvarda-rekisterointi.valtuudet.client-id=$VALTUUDET_CLIENT_ID
       -Dvarda-rekisterointi.valtuudet.oauth-password=$VALTUUDET_OAUTH_PASSWORD

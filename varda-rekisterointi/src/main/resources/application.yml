@@ -41,6 +41,8 @@ varda-rekisterointi:
   rekisterointi-ui:
     username: varda-rekisterointi
     password: varda-rekisterointi
+varda-rekisterointi.palvelukayttaja.client-id: dummy
+varda-rekisterointi.palvelukayttaja.client-secret: dummy
 
 server.tomcat.accesslog.enabled: true
 server.tomcat.accesslog.directory: /dev
