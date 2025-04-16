@@ -126,6 +126,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
       const amazonLinuxTests = [
         { name: "OrganisaatioService", commands: ["scripts/ci/run-java-tests.sh"] },
         { name: "OrganisaatioFrontend", commands: ["scripts/ci/run-frontend-tests.sh"] },
+        { name: "VardaRekisterointiJunit", commands: ["scripts/ci/run-varda-rekisterointi-java-tests.sh"] },
       ]
       for (const test of amazonLinuxTests) {
         testStage.addAction(
