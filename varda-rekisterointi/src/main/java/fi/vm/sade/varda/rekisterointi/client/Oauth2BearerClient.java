@@ -56,5 +56,9 @@ public class Oauth2BearerClient {
         cachedToken = null;
     }
 
+    public void setOauth2IssuerUri(String oauth2IssuerUri) {
+        this.oauth2IssuerUri = oauth2IssuerUri;
+    }
+
     public record Token(String access_token, String token_type, Integer expires_in) {}
 }

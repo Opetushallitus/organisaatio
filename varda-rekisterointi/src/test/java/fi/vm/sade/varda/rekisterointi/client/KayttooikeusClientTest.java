@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaCriteria;
@@ -23,11 +24,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 public class KayttooikeusClientTest {
-
-    @Autowired
-    private KayttooikeusClient client;
     @Autowired
     private OphProperties properties;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private KayttooikeusClient client;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
@@ -35,12 +37,17 @@ public class KayttooikeusClientTest {
     @Before
     public void setup() {
         properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
+        var bearer = new Oauth2BearerClient(objectMapper);
+        bearer.setOauth2IssuerUri("http://localhost:" + wireMockRule.port());
+        client = new KayttooikeusClient(new OtuvaOauth2Client(bearer), properties, objectMapper);
     }
 
     @Test
     public void listVirkailijaBy() {
         stubFor(post(urlEqualTo("/kayttooikeus-service/virkailija/haku"))
                 .willReturn(aResponse().withStatus(200).withBody("[{\"oid\": \"oid1\"}, {\"oid\": \"oid2\"}]")));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
         VirkailijaCriteria criteria = new VirkailijaCriteria();
 
         Collection<VirkailijaDto> list = client.listVirkailijaBy(criteria);

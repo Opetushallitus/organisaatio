@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioCriteria;
@@ -27,11 +28,12 @@ import static org.assertj.core.api.Assertions.tuple;
 @SpringBootTest
 @ActiveProfiles("test")
 public class OrganisaatioClientTest {
-
-    @Autowired
-    private OrganisaatioClient client;
     @Autowired
     private OphProperties properties;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private OrganisaatioClient client;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
@@ -39,12 +41,17 @@ public class OrganisaatioClientTest {
     @Before
     public void setup() {
         properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
+        var bearer = new Oauth2BearerClient(objectMapper);
+        bearer.setOauth2IssuerUri("http://localhost:" + wireMockRule.port());
+        client = new OrganisaatioClient(new OtuvaOauth2Client(bearer), properties, objectMapper);
     }
 
     @Test
     public void getByYtunnus() {
         stubFor(get(urlEqualTo("/organisaatio-service/api/ytunnus123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
 
         Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnus("ytunnus123");
 
@@ -55,6 +62,8 @@ public class OrganisaatioClientTest {
     public void getByYtunnusNotFound() {
         stubFor(get(urlEqualTo("/organisaatio-service/api/ytunnus123"))
                 .willReturn(aResponse().withStatus(404)));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
 
         Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnus("ytunnus123");
 
@@ -65,6 +74,8 @@ public class OrganisaatioClientTest {
     public void getByYtunnusFromYtj() {
         stubFor(get(urlEqualTo("/organisaatio-service/rest/ytj/ytunnus123/v4"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}")));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
 
         Optional<OrganisaatioDto> organisaatio = client.getOrganisaatioByYtunnusFromYtj("ytunnus123");
 
@@ -75,6 +86,8 @@ public class OrganisaatioClientTest {
     public void create() {
         stubFor(post(urlEqualTo("/organisaatio-service/api/"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
         OrganisaatioDto organisaatio = new OrganisaatioDto();
 
         organisaatio = client.save(organisaatio);
@@ -86,6 +99,8 @@ public class OrganisaatioClientTest {
     public void update() {
         stubFor(put(urlEqualTo("/organisaatio-service/api/oid123"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"organisaatio\": {\"ytunnus\": \"ytunnus123\", \"tuntematon\": \"arvo\"}}")));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
         OrganisaatioDto organisaatio = new OrganisaatioDto();
         organisaatio.oid = "oid123";
 
@@ -101,6 +116,8 @@ public class OrganisaatioClientTest {
                         "{\"oid\": \"oid1\", \"alkuPvm\": \"1992-01-01\"}," +
                         "{\"oid\": \"oid2\", \"alkuPvm\": 258760800000}," +
                         "{\"oid\": \"oid3\", \"alkuPvm\": 1093467600000}]}")));
+        stubFor(post(urlEqualTo("/oauth2/token"))
+                .willReturn(aResponse().withStatus(200).withBody("{ \"access_token\": \"token\", \"expires_in\": 12346, \"token_type\": \"Bear\" }")));
         OrganisaatioCriteria criteria = new OrganisaatioCriteria();
         criteria.aktiiviset = true;
         criteria.yritysmuoto = List.of("Kunta");

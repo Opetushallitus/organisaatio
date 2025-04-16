@@ -140,7 +140,20 @@ public class OrganisaatioClient {
     public OrganisaatioDto create(OrganisaatioDto organisaatio) {
         assert organisaatio.oid == null;
         String url = properties.url("organisaatio-service.organisaatio.api", organisaatio.oid);
-        return postOrganisaatio(url, organisaatio);
+        try {
+            var request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/json")
+                .POST(BodyPublishers.ofString(toJson(organisaatio)));
+            var response = httpClient.executeRequest(request);
+            if (response.statusCode() == 200) {
+                return fromJson(response.body(), OrganisaatioResultDto.class).organisaatio;
+            } else {
+                throw new RuntimeException(String.format("Url %s returned 204 or 404", url));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -153,15 +166,11 @@ public class OrganisaatioClient {
     public OrganisaatioDto update(OrganisaatioDto organisaatio) {
         assert organisaatio.oid != null;
         String url = properties.url("organisaatio-service.organisaatio.api.byOid", organisaatio.oid);
-        return postOrganisaatio(url, organisaatio);
-    }
-
-    public OrganisaatioDto postOrganisaatio(String url, OrganisaatioDto organisaatio) {
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type", "application/json")
-                .POST(BodyPublishers.ofString(toJson(organisaatio)));
+                .PUT(BodyPublishers.ofString(toJson(organisaatio)));
             var response = httpClient.executeRequest(request);
             if (response.statusCode() == 200) {
                 return fromJson(response.body(), OrganisaatioResultDto.class).organisaatio;
