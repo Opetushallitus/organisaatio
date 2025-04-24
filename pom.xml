@@ -40,11 +40,6 @@
         <aws.java.sdk.version>2.21.37</aws.java.sdk.version>
         <querydsl.version>5.1.0</querydsl.version>
         <poi.version>5.4.0</poi.version>
-
-        <!-- defaults for CI server -->
-        <buildNumber>Not provided</buildNumber>
-        <branch>Not provided</branch>
-        <revision>Not provided</revision>
     </properties>
 
     <dependencyManagement>
@@ -78,34 +73,6 @@
                     <configuration>
                         <doclint>none</doclint> <!-- TODO: korjaa javadoc-virheet -->
                     </configuration>
-                </plugin>
-                <!-- Generate buildversion.txt (branch and revision attributes should be set on CI server) -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>write buildversion.txt</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <target>
-                                    <echo message="writing target/public/classes/buildversion.txt"/>
-                                    <echo file="target/classes/public/buildversion.txt">
-                                        <![CDATA[artifactId=${project.artifactId}
-version=${project.version}
-buildNumber=${buildNumber}
-branchName=${branch}
-vcsRevision=${revision}
-buildTtime=${maven.build.timestamp}
-]]>
-                                    </echo>
-                                </target>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
