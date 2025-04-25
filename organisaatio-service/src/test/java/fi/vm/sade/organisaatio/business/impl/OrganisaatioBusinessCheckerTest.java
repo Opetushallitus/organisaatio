@@ -1,31 +1,25 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for {@link OrganisaatioBusinessChecker} class.
  */
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
-@SpringBootTest
-public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
-
-    @Autowired
-    private OrganisaatioBusinessChecker checker;
+public class OrganisaatioBusinessCheckerTest {
+    private OrganisaatioBusinessChecker checker = new OrganisaatioBusinessChecker();
 
     private final String oid1 = "1.2.2004.1";
     private final Organisaatio organisaatio = new Organisaatio();
@@ -39,7 +33,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     @BeforeEach
     public void setUp() {
         organisaatio.setOid(oid1);
-        organisaatio.setAlkuPvm(checker.getMIN_DATE().getTime());
+        organisaatio.setAlkuPvm(Date.from(Instant.from(LocalDate.of(1900, 1, 1).atStartOfDay(ZoneId.systemDefault()))));
 
         parent.setOid("1234.5");
         OrganisaatioSuhde os1 = new OrganisaatioSuhde();
@@ -61,39 +55,11 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void testRootLevelOrgWithMinDate() throws Exception {
-        muokatutTiedot.setAlkuPvm(checker.getMIN_DATE().getTime());
-        data.put(oid1, muokatutTiedot);
-        assertEquals("", checker.checkPvmConstraints(organisaatio, null, null, data));
-    }
-
-    @Test
-    public void testRootLevelOrgBeforeMinDate() throws Exception {
-        muokatutTiedot.setAlkuPvm(new GregorianCalendar(1800, 0, 1).getTime());
-        data.put(oid1, muokatutTiedot);
-        assertNotEquals(checker.checkPvmConstraints(organisaatio, null, null, data), "");
-    }
-
-    @Test
-    public void testRootLevelOrgEndsWithMaxDate() throws Exception {
-        muokatutTiedot.setLoppuPvm(checker.getMAX_DATE().toDate());
-        data.put(oid1, muokatutTiedot);
-        assertEquals("", checker.checkPvmConstraints(organisaatio, null, null, data));
-    }
-
-    @Test
-    public void testRootLevelOrgEndsAfterMaxDate() throws Exception {
-        muokatutTiedot.setLoppuPvm(new GregorianCalendar(2500, 0, 1).getTime());
-        data.put(oid1, muokatutTiedot);
-        assertNotEquals(checker.checkPvmConstraints(organisaatio, null, null, data), "");
-    }
-
-    @Test
     public void testRootLevelOrgEndsBeforeStartDate() throws Exception {
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(2500, 0, 1).getTime());
         muokatutTiedot.setLoppuPvm(new GregorianCalendar(2017, 0, 1).getTime());
         data.put(oid1, muokatutTiedot);
-        assertNotEquals(checker.checkPvmConstraints(organisaatio, null, null, data), "");
+        assertThrows(OrganisaatioDateException.class, () -> checker.checkPvmConstraints(organisaatio, data));
     }
 
     @Test
@@ -101,7 +67,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(2016, 0, 1).getTime());
         ReflectionTestUtils.setField(parent, "childSuhteet", new HashSet<>());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
@@ -109,25 +75,14 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         muokatutTiedot.setAlkuPvm(null);
         muokatutTiedot.setLoppuPvm(null);
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
-    }
-
-    @Test
-    public void parentWithEndDateChildWithout() {
-        // end date in modified data
-        muokatutTiedot.setLoppuPvm(new GregorianCalendar(2017, 0, 1).getTime());
-        data.put(parent.getOid(), muokatutTiedot);
-        // here it differs from OrganisationDateValidator
-        assertNotEquals(checker.checkPvmConstraints(parent, null, null, data), "");
-        // no side effects, in comparison to OrganisationDateValidator
-        assertEquals(parent.getLakkautusPvm(), child1.getLakkautusPvm());
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
     public void parentWithStartDateChildWithout() {
         parent.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
@@ -135,7 +90,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         parent.setAlkuPvm(null);
         child1.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
@@ -143,7 +98,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         child1.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         parent.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
@@ -152,7 +107,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         // method validates modified info, so doesn't matter what koodiValue parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
@@ -161,7 +116,7 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         // method validates modified info, so doesn't matter what koodiValue parent has
         muokatutTiedot.setAlkuPvm(new GregorianCalendar(1980, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 
     @Test
@@ -170,13 +125,13 @@ public class OrganisaatioBusinessCheckerTest extends SecurityAwareTestBase {
         muokatutTiedot.setLoppuPvm(new GregorianCalendar(2017, 0, 1).getTime());
         child1.setLakkautusPvm(new GregorianCalendar(2018, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertNotEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        assertThrows(OrganisaatioDateException.class, () -> checker.checkPvmConstraints(parent, data));
     }
 
     @Test
     public void childWithEndDate() {
         child1.setLakkautusPvm(new GregorianCalendar(2018, 0, 1).getTime());
         data.put(parent.getOid(), muokatutTiedot);
-        assertEquals(checker.checkPvmConstraints(parent, null, null, data), "");
+        checker.checkPvmConstraints(parent, data);
     }
 }

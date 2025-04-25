@@ -15,6 +15,8 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Maps;
+
+import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
@@ -24,8 +26,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,11 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -58,11 +62,6 @@ public class OrganisaatioBusinessChecker {
     public boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }
-
-    // Organisaation järkevä min ja max päivämäärä
-    private final DateTime MAX_DATE = new DateTime(2030, 12, 31, 0, 0, 0, 0);
-    // ei voi käyttää JodaTimea koska se generoi vertailuja sotkevia extraminuutteja java.util.Date-konversiossa
-    private final Calendar MIN_DATE = new GregorianCalendar(1900, 0, 1);
 
     /**
      * Tarkastetaan, että nimihistorian alkupäivämäärät ovat valideja.
@@ -163,76 +162,32 @@ public class OrganisaatioBusinessChecker {
         }
     }
 
+    public void checkPvmConstraints(Organisaatio organisaatio, Map<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
+        checkPvmConstraints(organisaatio, muokkausTiedot, null);
+    }
 
-    /*
-    Validate min and max dates. Check the suborganisation chain too.
-    Child is now supposed to end later than the parent organisation.
-     */
-    public String checkPvmConstraints(Organisaatio organisaatio,
-                                      Date minPvm, Date maxPvm, HashMap<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot) {
-        LOG.debug("isPvmConstraintsOk(" + minPvm + "," + maxPvm + ") (oid:" + organisaatio.getOid() + ")");
-
-        final Date MIN_DATE = this.MIN_DATE.getTime();
-        final Date MAX_DATE = this.MAX_DATE.toDate();
-
-        Date actualStart = organisaatio.getAlkuPvm();
-        Date actualEnd = organisaatio.getLakkautusPvm();
+    private void checkPvmConstraints(Organisaatio organisaatio, Map<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot, Instant maxPvm) {
+        var actualStart = organisaatio.getAlkuPvm() != null ? organisaatio.getAlkuPvm().toInstant() : null;
+        var actualEnd = organisaatio.getLakkautusPvm() != null ? organisaatio.getLakkautusPvm().toInstant() : null;
         OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(organisaatio.getOid());
         if (ownData != null) {
-            // for modified data validate modification, not existing values
-            LOG.debug("isPvmConstraintsOk(): omat tiedot löytyy listasta");
-            actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm() : MIN_DATE;
-            actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm() : MAX_DATE;
-            LOG.debug("uusi alku:" + actualStart + ", uusi loppu:" + actualEnd);
-        } else {
-            LOG.debug("isPvmConstraintsOk(): omia tietoja ei löydy");
+            actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm().toInstant() : actualStart;
+            actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm().toInstant() : actualEnd;
         }
-        if (actualStart == null) {
-            actualStart = MIN_DATE;
-        }
-        if (minPvm == null) {
-            minPvm = MIN_DATE;
-        }
-        if (actualEnd == null) {
-            actualEnd = MAX_DATE;
-        }
-        if (maxPvm == null) {
-            maxPvm = MAX_DATE;
-        }
-        LOG.debug(String.format("käytetty alkuPvm: %s, aikaisin sallittu alkuPvm: %s, käytetty loppuPvm: %s, myöhäisin sallittu loppuPvm: %s", actualStart, minPvm, actualEnd, maxPvm));
-        if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, actualEnd) > 0) {
+
+        if (actualStart != null && actualEnd != null && actualStart.isAfter(actualEnd)) {
             String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", organisaatio.getOid(), actualStart, actualEnd);
             LOG.warn(virhe);
-            return virhe;
+            throw new OrganisaatioDateException();
         }
-        if (DateTimeComparator.getDateOnlyInstance().compare(actualStart, minPvm) < 0) {
-            String virhe = String.format("oid: %s: käytetty alkuPvm (%s) < min päivämäärä (%s)", organisaatio.getOid(), actualStart, minPvm);
-            LOG.warn(virhe);
-            return virhe;
-        }
-        if (DateTimeComparator.getDateOnlyInstance().compare(actualEnd, maxPvm) > 0) {
+        if (actualEnd != null && maxPvm != null && actualEnd.isAfter(maxPvm)) {
             String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", organisaatio.getOid(), actualEnd, maxPvm);
             LOG.warn(virhe);
-            return virhe;
+            throw new OrganisaatioDateException();
         }
+
         for (Organisaatio child : organisaatio.getChildren(true)) {
-            LOG.debug("kysytään lapselta " + child.getOid());
-            String lapsenVirhe = checkPvmConstraints(child, null, actualEnd, muokkausTiedot);
-            if (!lapsenVirhe.equals("")) {
-                String virhe = String.format("lapsen %s virhe: %s", child.getOid(), lapsenVirhe);
-                LOG.warn("lapsella ajat NOK: " + lapsenVirhe);
-                return virhe;
-            }
+            checkPvmConstraints(child, muokkausTiedot, actualEnd);
         }
-        LOG.debug("ajat OK");
-        return "";
-    }
-
-    public DateTime getMAX_DATE() {
-        return MAX_DATE;
-    }
-
-    public Calendar getMIN_DATE() {
-        return MIN_DATE;
     }
 }

@@ -823,14 +823,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
         log.debug("bulkUpdatePvm(): processed:{}", processed);
 
-        String virheViesti = "";
         // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
         for (Organisaatio o : roots) {
-            virheViesti = checker.checkPvmConstraints(o, null, null, givenData);
-            if (!virheViesti.equals("")) {
-                log.warn("bulkUpdatePvm() error: {}", virheViesti);
-                throw new OrganisaatioDateException();
-            }
+            checker.checkPvmConstraints(o, givenData);
         }
         for (Map.Entry<String, Organisaatio> entry : organisaatioMap.entrySet()) {
             String oid = entry.getKey();
@@ -1084,7 +1079,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
 
     private void checkDateConstraints(Organisaatio entity, Organisaatio parentOrg) {
-        // OH-116
         if (parentOrg != null) {
             // Check if organization has parent and if it has, check that passivation dates match to parent
             OrganisationDateValidator dateValidator = new OrganisationDateValidator(true);
@@ -1092,8 +1086,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                 throw new OrganisaatioDateException();
             }
         }
-        // check min and max dates and validate against child organisations too
-        checker.checkPvmConstraints(entity, null, null, new HashMap<>());
     }
 
     private void setYhteystietoArvot(Organisaatio entity, boolean updating) {
