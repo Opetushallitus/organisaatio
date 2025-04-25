@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -28,19 +27,23 @@ class DatantuontiExportServiceTest {
     @Test
     @Sql({"/data/truncate_tables.sql"})
     @Sql({"/data/datantuonti_organisaatio_data.sql"})
-    void doesNotExportVarhaiskasvastusOrganisaatiot() {
+    void doesNotExportVarhaiskasvastusOrganisaatiotOrMuuOrganisaatiot() {
         var allOrganisaatioOids = getAllOrgansaatioOids();
         var allOrganisaatioCount = allOrganisaatioOids.size();
         var varhaiskasvatusOrganisaatioOids = getVarhaiskasvatusOrganisaatioOids();
         var varhaiskasvatusOrganisaatioCount = varhaiskasvatusOrganisaatioOids.size();
-        assertThat(allOrganisaatioCount).isEqualTo(13L);
+        var muuOrganisaatioOids = getMuuOrganisaatioOids();
+        var muuOrganisaatioCount = muuOrganisaatioOids.size();
+        assertThat(allOrganisaatioCount).isEqualTo(15L);
         assertThat(varhaiskasvatusOrganisaatioCount).isEqualTo(3L);
+        assertThat(muuOrganisaatioCount).isEqualTo(2L);
 
         datantuontiExportService.createSchemaAndReturnTransactionTimestampFromEpoch();
 
         var exportedOrganisatioOids = getExportedOrganisaatioCount();
         assertThat(exportedOrganisatioOids.size()).isEqualTo(10L);
         assertThat(exportedOrganisatioOids).doesNotContainSequence(varhaiskasvatusOrganisaatioOids);
+        assertThat(exportedOrganisatioOids).doesNotContainSequence(muuOrganisaatioOids);
     }
 
     @Test
@@ -131,6 +134,15 @@ class DatantuontiExportServiceTest {
             FROM organisaatio_tyypit
             WHERE tyypit = 'organisaatiotyyppi_08'
             OR tyypit = 'organisaatiotyyppi_07'
+        """;
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    private List<String> getMuuOrganisaatioOids() {
+        var sql = """
+            SELECT distinct(organisaatio_id)
+            FROM organisaatio_tyypit
+            WHERE tyypit = 'organisaatiotyyppi_05'
         """;
         return jdbcTemplate.queryForList(sql, String.class);
     }
