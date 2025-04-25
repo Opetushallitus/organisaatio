@@ -3,7 +3,6 @@ package fi.vm.sade.organisaatio.service.converter.v3;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,6 @@ public class RyhmaCriteriaV3Converter implements Converter<RyhmaCriteriaDtoV3, R
 
     private final ModelMapper modelMapper;
 
-    @Autowired
     public RyhmaCriteriaV3Converter(@Qualifier("modelMapper") ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

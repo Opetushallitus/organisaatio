@@ -51,7 +51,7 @@ public class KoodistoService {
     }
 
     public void addKoodistoSyncByOid(String oid, Instant instant) {
-        schedulerClient.schedule(koodistoUpdateTask.instance(oid, oid), instant);
+        schedulerClient.scheduleIfNotExists(koodistoUpdateTask.instance(oid, oid), instant);
     }
 
     public void removeKoodistoSyncByOid(String oid) {

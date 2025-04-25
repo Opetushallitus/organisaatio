@@ -9,7 +9,6 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -22,7 +21,6 @@ import java.util.Set;
 public class OrganisaatioModelMapper extends ModelMapper {
     private final OsoiteModelMapper modelMapper;
 
-    @Autowired
     public OrganisaatioModelMapper(OsoiteModelMapper modelMapper) {
         super();
         this.modelMapper = modelMapper;

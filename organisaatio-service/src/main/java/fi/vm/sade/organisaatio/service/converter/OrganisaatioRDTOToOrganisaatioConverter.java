@@ -10,7 +10,6 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ public class OrganisaatioRDTOToOrganisaatioConverter implements Converter<Organi
 
     private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
-    @Autowired
     public OrganisaatioRDTOToOrganisaatioConverter(OrganisaatioNimiModelMapper organisaatioNimiModelMapper) {
         this.organisaatioNimiModelMapper = organisaatioNimiModelMapper;
     }

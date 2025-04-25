@@ -8,18 +8,15 @@ import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.YtjPaivitysLokiRepository;
 import fi.vm.sade.organisaatio.resource.YTJResource;
-import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import fi.vm.sade.organisaatio.ytj.api.YTJDTO;
 import fi.vm.sade.organisaatio.ytj.api.YTJOsoiteDTO;
 import fi.ytj.YTunnusDTO;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,9 +29,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @Sql({"/data/truncate_tables.sql"})
 @Sql({"/data/basic_organisaatio_data.sql"})
 class OrganisaatioYtjServiceImplPersistanceTest {
-    @MockBean
+    @MockitoBean
     private EmailService emailService;
-    @MockBean
+    @MockitoBean
     private YTJResource ytjResource;
     @Autowired
     private OrganisaatioYtjService organisaatioYtjService;

@@ -4,7 +4,6 @@ import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV2;
 import fi.vm.sade.organisaatio.resource.dto.RyhmaCriteriaDtoV3;
 import fi.vm.sade.organisaatio.service.util.KoodistoUtil;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ public class RyhmaCriteriaV2ToV3Converter implements Converter<RyhmaCriteriaDtoV
 
     private final ModelMapper modelMapper;
 
-    @Autowired
     public RyhmaCriteriaV2ToV3Converter(@Qualifier("modelMapper") ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

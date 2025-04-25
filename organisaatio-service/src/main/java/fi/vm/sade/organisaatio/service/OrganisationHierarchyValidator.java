@@ -144,7 +144,6 @@ public class OrganisationHierarchyValidator implements Predicate<Entry<Organisaa
 
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean apply(Entry<Organisaatio, Organisaatio> parentChild) {
         Preconditions.checkNotNull(parentChild);

@@ -35,8 +35,8 @@ public class OrganisaatioTarjontaTest {
 
     @Test
     public void alkavaKoulutusSeuraavanaPaivana() {
-        when(restToStream.getInputStreamFromUri(anyString())).thenReturn(new JsonParser()
-                .parse("{\"status\": \"OK\", \"result\": {\"tulokset\": [{\"tulokset\": [{\"tila\": \"JULKAISTU\", \"vuosi\": 2018}]}]}}"));
+        when(restToStream.getInputStreamFromUri(anyString())).thenReturn(JsonParser
+                .parseString("{\"status\": \"OK\", \"result\": {\"tulokset\": [{\"tulokset\": [{\"tila\": \"JULKAISTU\", \"vuosi\": 2018}]}]}}"));
         String oid = "oid";
         Date lakkautusPvm = new Date(1546120800000l); // Sun Dec 30 00:00:00 EET 2018
 
@@ -45,8 +45,8 @@ public class OrganisaatioTarjontaTest {
 
     @Test
     public void alkavaKoulutusSamanaPaivana() {
-        when(restToStream.getInputStreamFromUri(anyString())).thenReturn(new JsonParser()
-                .parse("{\"status\": \"OK\", \"result\": {\"tulokset\": [{\"tulokset\": [{\"tila\": \"JULKAISTU\", \"vuosi\": 2018}]}]}}"));
+        when(restToStream.getInputStreamFromUri(anyString())).thenReturn(JsonParser
+                .parseString("{\"status\": \"OK\", \"result\": {\"tulokset\": [{\"tulokset\": [{\"tila\": \"JULKAISTU\", \"vuosi\": 2018}]}]}}"));
         String oid = "oid";
         Date lakkautusPvm = new Date(1546207200000l); // Mon Dec 31 00:00:00 EET 2018
 
@@ -55,8 +55,8 @@ public class OrganisaatioTarjontaTest {
 
     @Test
     public void alkavaKoulutusEdellisenaPaivana() {
-        when(restToStream.getInputStreamFromUri(anyString())).thenReturn(new JsonParser()
-                .parse("{\"status\": \"OK\", \"result\": {\"tulokset\": [{\"tulokset\": [{\"tila\": \"JULKAISTU\", \"vuosi\": 2018}]}]}}"));
+        when(restToStream.getInputStreamFromUri(anyString())).thenReturn(JsonParser
+                .parseString("{\"status\": \"OK\", \"result\": {\"tulokset\": [{\"tulokset\": [{\"tila\": \"JULKAISTU\", \"vuosi\": 2018}]}]}}"));
         String oid = "oid";
         Date lakkautusPvm = new Date(1546293600000l); // Tue Jan 01 00:00:00 EET 2019
 

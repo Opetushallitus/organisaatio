@@ -10,7 +10,6 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -36,7 +35,7 @@ public class OrganisaatioValidationServiceImpl implements OrganisaatioValidation
     private static final String URI_WITH_VERSION_PATTERN = "^.*#[0-9]+$";
     private static final String YTUNNUS_PATTERN = "\\d\\d\\d\\d\\d\\d\\d-\\d";
     private static final String VIRASTOTUNNUS_PATTERN = "\\d\\d\\d\\d\\d\\d.*";
-    @Autowired
+
     OrganisaatioValidationServiceImpl(@Value("${root.organisaatio.oid}") String rootOrganisaatioOid,
                                       OrganisaatioKoodisto organisaatioKoodisto) {
         this.rootOrganisaatioOid = rootOrganisaatioOid;

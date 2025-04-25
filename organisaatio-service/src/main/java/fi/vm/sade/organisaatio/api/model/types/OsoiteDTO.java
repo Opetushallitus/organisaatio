@@ -1,11 +1,10 @@
 
 package fi.vm.sade.organisaatio.api.model.types;
 
-import java.io.Serializable;
 import java.util.Date;
 
 
-public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
+public class OsoiteDTO extends YhteystietoDTO {
     private final static long serialVersionUID = 100L;
     protected String coordinateType;
     protected Double lat;
@@ -23,11 +22,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the coordinateType property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getCoordinateType() {
         return coordinateType;
@@ -35,11 +34,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the coordinateType property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setCoordinateType(String value) {
         this.coordinateType = value;
@@ -47,11 +46,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the lat property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Double }
-     *     
+     *
      */
     public Double getLat() {
         return lat;
@@ -59,11 +58,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the lat property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Double }
-     *     
+     *
      */
     public void setLat(Double value) {
         this.lat = value;
@@ -71,11 +70,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the lng property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link Double }
-     *     
+     *
      */
     public Double getLng() {
         return lng;
@@ -83,11 +82,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the lng property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link Double }
-     *     
+     *
      */
     public void setLng(Double value) {
         this.lng = value;
@@ -95,11 +94,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the maa property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getMaa() {
         return maa;
@@ -107,11 +106,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the maa property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setMaa(String value) {
         this.maa = value;
@@ -119,11 +118,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the osavaltio property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getOsavaltio() {
         return osavaltio;
@@ -131,11 +130,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the osavaltio property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setOsavaltio(String value) {
         this.osavaltio = value;
@@ -143,11 +142,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the osoite property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getOsoite() {
         return osoite;
@@ -155,11 +154,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the osoite property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setOsoite(String value) {
         this.osoite = value;
@@ -167,11 +166,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the extraRivi property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getExtraRivi() {
         return extraRivi;
@@ -179,11 +178,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the extraRivi property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setExtraRivi(String value) {
         this.extraRivi = value;
@@ -191,11 +190,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the osoiteKayttotarkoitus property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getOsoiteKayttotarkoitus() {
         return osoiteKayttotarkoitus;
@@ -203,11 +202,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the osoiteKayttotarkoitus property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setOsoiteKayttotarkoitus(String value) {
         this.osoiteKayttotarkoitus = value;
@@ -215,11 +214,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the osoiteMuuKaytto property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getOsoiteMuuKaytto() {
         return osoiteMuuKaytto;
@@ -227,11 +226,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the osoiteMuuKaytto property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setOsoiteMuuKaytto(String value) {
         this.osoiteMuuKaytto = value;
@@ -239,11 +238,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the osoiteTyyppi property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link OsoiteTyyppi }
-     *     
+     *
      */
     public OsoiteTyyppi getOsoiteTyyppi() {
         return osoiteTyyppi;
@@ -251,11 +250,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the osoiteTyyppi property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link OsoiteTyyppi }
-     *     
+     *
      */
     public void setOsoiteTyyppi(OsoiteTyyppi value) {
         this.osoiteTyyppi = value;
@@ -263,11 +262,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the postinumero property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getPostinumero() {
         return postinumero;
@@ -275,11 +274,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the postinumero property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setPostinumero(String value) {
         this.postinumero = value;
@@ -287,11 +286,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the postitoimipaikka property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getPostitoimipaikka() {
         return postitoimipaikka;
@@ -299,11 +298,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the postitoimipaikka property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setPostitoimipaikka(String value) {
         this.postitoimipaikka = value;
@@ -311,11 +310,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Gets the value of the ytjPaivitysPvm property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public Date getYtjPaivitysPvm() {
         return ytjPaivitysPvm;
@@ -323,11 +322,11 @@ public class OsoiteDTO extends YhteystietoDTO implements Serializable  {
 
     /**
      * Sets the value of the ytjPaivitysPvm property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setYtjPaivitysPvm(Date value) {
         this.ytjPaivitysPvm = value;

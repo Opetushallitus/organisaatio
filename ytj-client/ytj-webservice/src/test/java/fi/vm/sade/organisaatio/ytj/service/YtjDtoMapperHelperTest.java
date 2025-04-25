@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  * @author Tuomas
  */
 public class YtjDtoMapperHelperTest {
-    
+
     public YtjDtoMapperHelperTest() {
     }
 
@@ -29,18 +29,18 @@ public class YtjDtoMapperHelperTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
      * Test of mapYritysTiedotV2DTOtoYTJDTO method, of class YtjDtoMapperHelper.
-     * 
+     *
      * Check that mapper return object even when almost every field is missing
      */
     @Test
@@ -54,10 +54,10 @@ public class YtjDtoMapperHelperTest {
         nimi.setToiminimi("Diibadaa");
         vastaus.setToiminimi(nimi);
         YtjDtoMapperHelper instance = new YtjDtoMapperHelper();
-        
+
         YTJDTO result = instance.mapYritysTiedotV2DTOtoYTJDTO(vastaus);
         assertEquals("Diibadaa", result.getNimi());
-      
+
     }
 
     /**
@@ -68,10 +68,9 @@ public class YtjDtoMapperHelperTest {
         System.out.println("mapYritysHakuDTOListToDtoList");
         List<YritysHakuDTO> vastaukset = null;
         YtjDtoMapperHelper instance = new YtjDtoMapperHelper();
-        List expResult = null;
-        List result = instance.mapYritysHakuDTOListToDtoList(vastaukset);
+        var result = instance.mapYritysHakuDTOListToDtoList(vastaukset);
         assertEquals(null, result);
-       
+
     }
 
     /**
@@ -83,9 +82,8 @@ public class YtjDtoMapperHelperTest {
         YritysHakuDTO ytjParam = new YritysHakuDTO();
         ytjParam.setYritysnimi("Diiba");
         YtjDtoMapperHelper instance = new YtjDtoMapperHelper();
-        YTJDTO expResult = null;
         YTJDTO result = instance.mapYritysHakuDTOToDto(ytjParam);
         assertEquals("Diiba", result.getNimi().trim());
-       
+
     }
 }
