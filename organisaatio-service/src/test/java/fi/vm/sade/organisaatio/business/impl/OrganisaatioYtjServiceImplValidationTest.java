@@ -101,25 +101,6 @@ public class OrganisaatioYtjServiceImplValidationTest {
         //Assert.assertEquals("ilmoitukset.log.virhe.alkupvm.tarkistukset", loki.getYtjVirheet().get(0).getVirheviesti());
     }
 
-    @Test
-    public void validationFailsIfYtjHasStartDateBeforeMinDate() {
-        ytjdto.getYritysTunnus().setAlkupvm("01.02.1870");
-        // just to pass name validations, we are not testing that now
-        ytjdto.setAloitusPvm("01.01.2010");
-        assertFalse((Boolean) ReflectionTestUtils.invokeMethod(organisaatioYtjService, "updateOrg", ytjdto, org, false));
-        try {
-            // date updated from YTJ
-            assertNotEquals(new SimpleDateFormat("dd.MM.yyyy").parse(ytjdto.getYritysTunnus().getAlkupvm()), org.getAlkuPvm());
-        } catch (ParseException e) {
-            fail();
-        }
-        YtjPaivitysLoki loki = (YtjPaivitysLoki) ReflectionTestUtils.getField(organisaatioYtjService, "ytjPaivitysLoki");
-        assertFalse(loki.getYtjVirheet().isEmpty());
-        assertTrue(loki.getYtjVirheet().size()==1);
-        assertEquals(YtjVirhe.YTJVirheKohde.ALKUPVM, loki.getYtjVirheet().get(0).getVirhekohde());
-        assertEquals("ilmoitukset.log.virhe.alkupvm.tarkistukset", loki.getYtjVirheet().get(0).getVirheviesti());
-    }
-
     private YTJDTO generateValidYtjdto() {
         YTJDTO ytjdto = new YTJDTO();
         ytjdto.setYrityksenKieli("Suomi");

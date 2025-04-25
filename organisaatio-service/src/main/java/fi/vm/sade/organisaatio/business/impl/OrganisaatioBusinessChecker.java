@@ -36,6 +36,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -167,12 +168,12 @@ public class OrganisaatioBusinessChecker {
     }
 
     private void checkPvmConstraints(Organisaatio organisaatio, Map<String, OrganisaatioMuokkausTiedotDTO> muokkausTiedot, Instant maxPvm) {
-        var actualStart = organisaatio.getAlkuPvm() != null ? organisaatio.getAlkuPvm().toInstant() : null;
-        var actualEnd = organisaatio.getLakkautusPvm() != null ? organisaatio.getLakkautusPvm().toInstant() : null;
+        var actualStart = organisaatio.getAlkuPvm() != null ? (new Date(organisaatio.getAlkuPvm().getTime())).toInstant() : null;
+        var actualEnd = organisaatio.getLakkautusPvm() != null ? (new Date(organisaatio.getLakkautusPvm().getTime())).toInstant() : null;
         OrganisaatioMuokkausTiedotDTO ownData = muokkausTiedot.get(organisaatio.getOid());
         if (ownData != null) {
-            actualStart = ownData.getAlkuPvm() != null ? ownData.getAlkuPvm().toInstant() : actualStart;
-            actualEnd = ownData.getLoppuPvm() != null ? ownData.getLoppuPvm().toInstant() : actualEnd;
+            actualStart = ownData.getAlkuPvm() != null ? (new Date(ownData.getAlkuPvm().getTime())).toInstant() : actualStart;
+            actualEnd = ownData.getLoppuPvm() != null ? (new Date(ownData.getLoppuPvm().getTime())).toInstant() : actualEnd;
         }
 
         if (actualStart != null && actualEnd != null && actualStart.isAfter(actualEnd)) {
