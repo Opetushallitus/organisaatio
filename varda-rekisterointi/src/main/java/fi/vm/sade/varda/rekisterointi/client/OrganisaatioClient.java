@@ -101,8 +101,7 @@ public class OrganisaatioClient {
             var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
             var response = httpClient.executeRequest(request);
             if (response.statusCode() == 200) {
-                OrganisaatioDto[] jalkelaiset = objectMapper.readValue(response.body(), OrganisaatioDto[].class);
-                return Arrays.asList(jalkelaiset);
+                return objectMapper.readValue(response.body(), OrganisaatioListDto.class).organisaatiot;
             } else {
                 throw new RuntimeException(String.format("Url %s returned 204 or 404", url));
             }
