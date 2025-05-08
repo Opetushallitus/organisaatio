@@ -94,7 +94,7 @@ public class YTJResource {
     // Api for batch searches by y-tunnuses
 
     @GetMapping(path = "/massahaku/{ytunnukset}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public List<YTJDTO> findByYTunnusBatch(@PathVariable List<String> ytunnuses) {
         return doYtjMassSearch(ytunnuses);
     }

@@ -35,7 +35,7 @@ public class OrganisaatioResourceImplV4 extends OrganisaatioApiImpl implements
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public String deleteOrganisaatioOld(String oid) {
         try {
             permissionChecker.checkRemoveOrganisation();

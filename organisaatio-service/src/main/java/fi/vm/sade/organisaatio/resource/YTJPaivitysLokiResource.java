@@ -40,7 +40,7 @@ public class YTJPaivitysLokiResource {
 
 
     @GetMapping(path = "/aikavali", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public List<YtjPaivitysLoki> findByDateRange(@RequestParam("alkupvm") long alkupvm,
                                                  @RequestParam("loppupvm") long loppupvm) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
@@ -53,7 +53,7 @@ public class YTJPaivitysLokiResource {
     }
 
     @GetMapping(path = "/uusimmat", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public List<YtjPaivitysLoki> findByDateRange(@RequestParam("limit") int limit) {
         List<YtjPaivitysLoki> ytjLoki = new ArrayList<>();
         if (limit > 0) {

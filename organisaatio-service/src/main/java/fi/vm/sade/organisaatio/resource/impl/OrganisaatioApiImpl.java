@@ -123,7 +123,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * PUT /api/{oid}
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckUpdatePermission
     public ResultRDTOV4 updateOrganisaatio(String oid, OrganisaatioRDTOV4 ordto) {
         log.info("Saving {}", oid);
@@ -148,7 +148,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * POST /api/
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckAddPermission
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
         try {
@@ -233,7 +233,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public OrganisaatioRDTOV4 changeOrganisationRelationship(String oid, String parentOid, boolean merge, LocalDateTime moveDate) {
         Date date = java.sql.Timestamp.valueOf(moveDate);
         try {
@@ -249,7 +249,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * DELETE /api/{oid}
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckDeletePermission
     public void deleteOrganisaatio(String oid) {
         Organisaatio parent = organisaatioDeleteBusinessService.deleteOrganisaatio(oid);
@@ -261,7 +261,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * GET /api/{oid}/paivittaja
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckReadPermission
     public OrganisaatioPaivittajaDTO getOrganisaatioPaivittaja(String oid) {
         Organisaatio org = this.organisaatioFindBusinessService.findById(oid);
@@ -293,7 +293,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * @return
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckUpdateNamePermission
     public OrganisaatioNimiDTO newOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         OrganisaatioNimi organisaatioNimi = organisaatioBusinessService.newOrganisaatioNimi(oid, nimidto);
@@ -308,7 +308,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * @return
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckUpdateNamePermission
     public OrganisaatioNimiDTO updateOrganisaatioNimi(String oid, OrganisaatioNimiUpdateDTO nimiUpdateDto) {
         Preconditions.checkNotNull(nimiUpdateDto.getCurrentNimi().getAlkuPvm());
@@ -323,7 +323,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      * @param nimidto
      */
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckUpdateNamePermission
     public void deleteOrganisaatioNimi(String oid, OrganisaatioNimiDTO nimidto) {
         Preconditions.checkNotNull(nimidto.getAlkuPvm());
@@ -338,7 +338,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
      */
 
     @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckTarkastusPermission
     public Timestamp updateTarkastusPvm(String oid) {
         return organisaatioBusinessService.updateTarkastusPvm(oid);

@@ -31,13 +31,13 @@ public class LisatietoResource {
     }
 
     @PostMapping(path = "/lisatietotyyppi", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public String createLisatietotyyppi(LisatietotyyppiCreateDto lisatietotyyppiCreateDto) {
         return this.lisatietoService.create(lisatietotyyppiCreateDto);
     }
 
     @DeleteMapping(path = "/lisatietotyyppi/{nimi}")
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA')")
+    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     public void poistaLisatietotyyppi(@PathVariable String nimi) {
         this.lisatietoService.delete(nimi);
     }
