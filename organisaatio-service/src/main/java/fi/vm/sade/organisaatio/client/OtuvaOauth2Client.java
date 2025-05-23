@@ -30,7 +30,7 @@ public class OtuvaOauth2Client {
                     .setHeader("Cookie", "CSRF=CSRF")
                     .build();
             var response = http.send(request, HttpResponse.BodyHandlers.ofString());
-            log.info("{} {} {} {}", response.statusCode(), response.request().method(), response.request().uri(), response.body());
+            log.info("{} {} {}", response.statusCode(), response.request().method(), response.request().uri());
             return response;
         } catch (IOException|InterruptedException e) {
             throw new RestClientException("error while executing request", e);
