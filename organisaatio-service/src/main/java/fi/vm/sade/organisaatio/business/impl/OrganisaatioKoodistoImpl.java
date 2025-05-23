@@ -592,7 +592,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodi.setNimi(metadataTo(koodiType.getMetadata(), metadata -> metadata.getNimi()));
             koodi.setTila(koodiType.getTila());
             koodi.setVoimassaAlkuPvm(parseDate(koodiType.getVoimassaAlkuPvm()));
-            koodi.setVoimassaLoppuPvm(parseDate(koodiType.getVoimassaAlkuPvm()));
+            koodi.setVoimassaLoppuPvm(parseDate(koodiType.getVoimassaLoppuPvm()));
             return koodi;
         }
 
