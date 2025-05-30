@@ -1,4 +1,4 @@
-FROM maven:3.9.8-amazoncorretto-21-al2023 AS build
+FROM maven:3.9.8-amazoncorretto-21-al2023@sha256:047632648d979f72b5816eff24625149ed9c5b80caf63e3415392890dc379e73 AS build
 WORKDIR /app
 
 RUN dnf install -y nodejs20 \
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 RUN mvn clean package -s settings.xml -DskipTests
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21@sha256:d51610ff3c790833e308318d25424361a69680a4b7968329b73012ad502ab936
 WORKDIR /app
 
 COPY --from=build /app/target/varda-rekisterointi.jar varda-rekisterointi.jar
