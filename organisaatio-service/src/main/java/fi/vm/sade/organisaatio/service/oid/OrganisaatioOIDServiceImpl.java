@@ -18,7 +18,6 @@ package fi.vm.sade.organisaatio.service.oid;
 import fi.vm.sade.oid.ExceptionMessage;
 import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.oid.NodeClassCode;
-import fi.vm.sade.oid.NodeClassData;
 import fi.vm.sade.oidgenerator.OIDGenerator;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.*;
@@ -27,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Organisaation OID generointi toimii kuin OIDServiceMock, mutta tarkistaa ettei
@@ -63,27 +62,7 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     private YhteystietojenTyyppiRepository yhteystietojenTyyppiRepository;
 
     @Value("${organisaatio.solmuluokka}")
-    private String solmuluokka;
-
-    private final String[] values = new String[]{"5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
-        "22", "24", "27"};
-    private final NodeClassCode[] codes = new NodeClassCode[] {
-                                        NodeClassCode.TEKN_5,
-                                        NodeClassCode.TEKN_6,
-                                        NodeClassCode.TOIMIPAIKAT,
-                                        NodeClassCode.ASIAKIRJAT,
-                                        NodeClassCode.OHJELMISTOT,
-                                        NodeClassCode.LAITTEET,
-                                        NodeClassCode.PALVELUT,
-                                        NodeClassCode.LASKUTUS,
-                                        NodeClassCode.LOGISTIIKKA,
-                                        NodeClassCode.SANOMALIIKENNE,
-                                        NodeClassCode.REKISTERINPITAJA,
-                                        NodeClassCode.NAYTETUNNISTE,
-                                        NodeClassCode.TILAP_ASIAKAS,
-                                        NodeClassCode.HENKILO,
-                                        NodeClassCode.ROOLI
-                                        };
+    private String organisaatioSolmuluokka;
 
     @Override
     public String newOidByClassValue(String nodeClassValue) throws ExceptionMessage {
@@ -91,38 +70,8 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
     }
 
     @Override
-    public List<NodeClassData> getNodeClasses() throws ExceptionMessage {
-        List<NodeClassData> list = new ArrayList<>();
-
-        for (int i = 0; i < values.length; i++) {
-            NodeClassData data = new NodeClassData();
-            data.setClassCode(codes[i]);
-            data.setNodeValue(values[i]);
-            data.setDescription(i + "");
-            list.add(data);
-        }
-
-        return list;
-    }
-
-    @Override
     public String newOid(NodeClassCode nodeClass) throws ExceptionMessage {
-
-        int valueIndex = -1;
-        for (int i = 0; i < codes.length; ++i) {
-            if (codes[i].equals(nodeClass)) {
-                valueIndex = i;
-                break;
-            }
-        }
-        if (valueIndex < 0) {
-            LOG.warn("It seems that there is a new NodeClassCode defined, please update " +
-                    this.getClass().getSimpleName() + "! NodeClassCode = " + nodeClass);
-            // Generate TEKN_5 oid
-            valueIndex = 0;
-        }
-
-        return generateOid(values[valueIndex]);
+        return newOidByClassValue(mapping().get(nodeClass));
     }
 
     private String generateOid(String nodeClassValue) {
@@ -141,16 +90,14 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
         return newOid;
     }
 
-    private boolean oidAvailable(String oid, String nodeClassValue) {
-        NodeClassCode nodeClass = nodeClassValueToCode(nodeClassValue);
-
-        if (nodeClassValue.equals("28") || nodeClassValue.equals(solmuluokka) || nodeClass == NodeClassCode.TOIMIPAIKAT) {
+    private boolean oidAvailable(String oid, String solmuluokka) {
+        if (check(solmuluokka, NodeClassCode.TOIMIPAIKAT) || check(solmuluokka, NodeClassCode.RYHMA) || check(solmuluokka, NodeClassCode.PROD_TOIMIPAIKAT)) {
             // Organisaation ja ryhmän OID:t löytyvät organisaatio-taulusta
             Organisaatio org = organisaatioRepository.findFirstByOid(oid);
 
             // Jos organisaatio löytyy annetulla oidilla, niin se ei ole vapaana
             return (org == null);
-        } else if (nodeClass == NodeClassCode.TEKN_5) {
+        } else if (check(solmuluokka, NodeClassCode.TEKN_5)) {
             try {
                 // Yhteystietoihin liittyvät OID:t löytyvät neljästä eri taulusta
                 if (yhteystietoRepository.findByYhteystietoOid(oid).size() > 0) {
@@ -172,24 +119,33 @@ public class OrganisaatioOIDServiceImpl implements OIDService {
             return true;
         }
 
-        LOG.warn("Unknown node class koodiValue: " + nodeClassValue);
-
+        LOG.warn("Tuntematon solmuluokka: " + solmuluokka);
         return false;
     }
 
-    private NodeClassCode nodeClassValueToCode(String nodeClassValue) {
-        int valueIndex = -1;
-        for (int i = 0; i < values.length; i++) {
-            if (values[i].equals(nodeClassValue)) {
-                valueIndex = i;
-                break;
-            }
-        }
+    private boolean check(String solmuluokka, NodeClassCode nodeClass) {
+        return mapping().get(nodeClass).equals(solmuluokka);
+    }
 
-        if (valueIndex >= 0) {
-            return codes[valueIndex];
-        }
-
-        return null;
+    private Map<NodeClassCode, String> mapping() {
+        var map = new HashMap<NodeClassCode, String>();
+        map.put(NodeClassCode.TEKN_5, "5");
+        map.put(NodeClassCode.TEKN_6, "6");
+        map.put(NodeClassCode.PROD_TOIMIPAIKAT, "10");
+        map.put(NodeClassCode.ASIAKIRJAT, "11");
+        map.put(NodeClassCode.OHJELMISTOT, "12");
+        map.put(NodeClassCode.LAITTEET, "13");
+        map.put(NodeClassCode.PALVELUT, "14");
+        map.put(NodeClassCode.LASKUTUS, "16");
+        map.put(NodeClassCode.LOGISTIIKKA, "17");
+        map.put(NodeClassCode.SANOMALIIKENNE, "18");
+        map.put(NodeClassCode.REKISTERINPITAJA, "19");
+        map.put(NodeClassCode.NAYTETUNNISTE, "20");
+        map.put(NodeClassCode.TILAP_ASIAKAS, "22");
+        map.put(NodeClassCode.HENKILO, "24");
+        map.put(NodeClassCode.ROOLI, "27");
+        map.put(NodeClassCode.RYHMA, "28");
+        map.put(NodeClassCode.TOIMIPAIKAT, organisaatioSolmuluokka);
+        return map;
     }
 }

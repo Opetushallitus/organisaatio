@@ -4,7 +4,7 @@ public enum NodeClassCode {
 
     TEKN_5,
     TEKN_6,
-    TOIMIPAIKAT,
+    PROD_TOIMIPAIKAT,
     ASIAKIRJAT,
     OHJELMISTOT,
     LAITTEET,
@@ -16,7 +16,9 @@ public enum NodeClassCode {
     NAYTETUNNISTE,
     TILAP_ASIAKAS,
     HENKILO,
-    ROOLI;
+    ROOLI,
+    RYHMA,
+    TOIMIPAIKAT;
 
     public String value() {
         return name();

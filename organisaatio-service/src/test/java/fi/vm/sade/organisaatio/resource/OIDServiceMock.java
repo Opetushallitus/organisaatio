@@ -1,25 +1,22 @@
 package fi.vm.sade.organisaatio.resource;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import fi.vm.sade.oid.ExceptionMessage;
 import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.oid.NodeClassCode;
-import fi.vm.sade.oid.NodeClassData;
 
 public class OIDServiceMock implements OIDService {
 
     private String root = "1.2.246.562.";
 
     private String[] values = new String[] { "5", "6", "10", "11", "12", "13", "14", "16", "17", "18", "19", "20",
-            "22", "24", "27" };
+            "22", "24", "27", "28", "10" };
 
     private NodeClassCode[] codes = new NodeClassCode[] {
                                         NodeClassCode.TEKN_5,
                                         NodeClassCode.TEKN_6,
-                                        NodeClassCode.TOIMIPAIKAT,
+                                        NodeClassCode.PROD_TOIMIPAIKAT,
                                         NodeClassCode.ASIAKIRJAT,
                                         NodeClassCode.OHJELMISTOT,
                                         NodeClassCode.LAITTEET,
@@ -31,29 +28,15 @@ public class OIDServiceMock implements OIDService {
                                         NodeClassCode.NAYTETUNNISTE,
                                         NodeClassCode.TILAP_ASIAKAS,
                                         NodeClassCode.HENKILO,
-                                        NodeClassCode.ROOLI
+                                        NodeClassCode.ROOLI,
+                                        NodeClassCode.RYHMA,
+                                        NodeClassCode.TOIMIPAIKAT,
                                         };
 
     @Override
     public String newOidByClassValue(String nodeClassValue) throws ExceptionMessage {
 
         return root + nodeClassValue + "." + generateRandom();
-    }
-
-    @Override
-    public List<NodeClassData> getNodeClasses() throws ExceptionMessage {
-
-        List<NodeClassData> list = new ArrayList<NodeClassData>();
-
-        for (int i = 0; i < values.length; i++) {
-            NodeClassData data = new NodeClassData();
-            data.setClassCode(codes[i]);
-            data.setNodeValue(values[i]);
-            data.setDescription(i + "");
-            list.add(data);
-        }
-
-        return list;
     }
 
     @Override
