@@ -115,7 +115,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private String rootOrganisaatioOid;
 
     @Value("${organisaatio.solmuluokka}")
-    private String solmuluokka;
+    private String organisaatioSolmuluokka;
 
     private static final String PARENT_SEPARATOR = "|";
 
@@ -546,9 +546,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     private void generateOids(Organisaatio organisaatio) throws ExceptionMessage {
         if (organisaatio.getOid() == null) {
             if (OrganisaatioUtil.isRyhma(organisaatio)) {
-                organisaatio.setOid(oidService.newOidByClassValue(solmuluokka));
+                organisaatio.setOid(oidService.newOidByClassValue("28"));
             } else {
-                organisaatio.setOid(oidService.newOid(NodeClassCode.TOIMIPAIKAT));
+                organisaatio.setOid(oidService.newOidByClassValue(organisaatioSolmuluokka));
             }
         }
         for (Yhteystieto curYt : organisaatio.getYhteystiedot()) {
