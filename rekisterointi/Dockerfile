@@ -15,7 +15,7 @@ RUN npm run build
 WORKDIR /app
 RUN mvn clean package -s settings.xml -DskipTests
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21.0.8@sha256:b3569027d44397d1410603091bba256b1dbc6054ce9ac245b16d0c64e2f462d4
 WORKDIR /app
 
 COPY --from=build /app/target/rekisterointi.jar rekisterointi.jar
