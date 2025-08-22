@@ -1,4 +1,4 @@
-FROM maven:3.9.8-amazoncorretto-21-al2023 AS build
+FROM maven:3.9.8-amazoncorretto-21-al2023@sha256:047632648d979f72b5816eff24625149ed9c5b80caf63e3415392890dc379e73 AS build
 WORKDIR /app
 
 RUN dnf install -y nodejs20 \
@@ -15,7 +15,7 @@ RUN npm run build
 WORKDIR /app
 RUN mvn clean package -s settings.xml -DskipTests
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21@sha256:b3569027d44397d1410603091bba256b1dbc6054ce9ac245b16d0c64e2f462d4
 WORKDIR /app
 
 COPY --from=build /app/target/rekisterointi.jar rekisterointi.jar
