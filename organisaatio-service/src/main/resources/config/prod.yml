@@ -6,7 +6,7 @@ host.virkailija: "virkailija.opintopolku.fi"
 cluster_tarjonta_host: "alb.opintopolku.fi"
 cluster_organisaatio_host: "alb.opintopolku.fi"
 
-organisaatio.solmuluokka: "28"
+organisaatio.solmuluokka: "10"
 
 feature.mockapi: false
 
