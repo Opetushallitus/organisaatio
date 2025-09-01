@@ -7,13 +7,16 @@
     <#if virheet??>
     <p>
         <#list virheet as virhe>
-        <a href="https://${organisaatioUrl}/${virhe.oid}">${virhe.nimi}</a>
-        <br />
-        <ul>
-            <#list virhe.viestit as viesti>
-            <li>${viesti}</li>
-            </#list>
-        </ul>
+        <div>
+            <a href="https://${organisaatioUrl}/${virhe.oid}">${virhe.nimi}</a>
+            <br />
+            <ul>
+                <#list virhe.viestit as viesti>
+                <li>${viesti}</li>
+                </#list>
+            </ul>
+            <br />
+        </div>
         </#list>
     </p>
     </#if>
