@@ -231,6 +231,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Asetetaan parent path
         setParentPath(entity, parentOid);
+        validateNimiHistoria(entity);
+        setNimi(entity);
 
         Organisaatio oldParent = validateHierarchy(parentOid, entity, oldOrg);
 
@@ -241,6 +243,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setOpetuspisteenJarjNro(oldOrg.getOpetuspisteenJarjNro());
         entity.setVersion(oldOrg.getVersion());
         entity.setOrganisaatioPoistettu(false);
+        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), true));
 
         // Generoidaan oidit
         try {
@@ -271,8 +274,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         checkDateConstraints(entity, parentOrg);
 
-        setYhteystietoArvot(entity, true);
-
         generateToimipistekoodi(entity, oldOrg, parentOrg);
 
         try {
@@ -291,12 +292,8 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         setLakkautusPvmForOppilaitosToimipistesRecursive(entity, entity.getLakkautusPvm());
 
-        // Päivitä tiedot koodistoon.
-        // organisaation päivittäminen koodistoon tehdään taustalla
-        // jotta organisaation muokkaus olisi nopeampaa
-        String info = null;
         koodistoService.addKoodistoSyncByOid(entity.getOid());
-        return new OrganisaatioResult(entity, info);
+        return new OrganisaatioResult(entity, null);
     }
 
     private void updateExistingYhteystiedot(Organisaatio entity, Organisaatio oldOrg) {
@@ -325,6 +322,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Asetetaan parent path
         setParentPath(entity, parentOid);
+        setNimi(entity);
 
         if (isDatantuonti) {
             entity.setPaivittaja("DATANTUONTI");
@@ -344,19 +342,13 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setOpetuspisteenJarjNro(generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit()));
         entity.setOrganisaatioPoistettu(false);
         entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
+        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), false));
 
-        setYhteystietoArvot(entity, false);
-
-        //save org
         entity = organisaatioRepository.saveAndFlush(entity);
         // Saving the parent relationship
         entity = saveParentSuhteet(entity, parentOrg, entity.getOpetuspisteenJarjNro());
 
-        // Päivitä tiedot koodistoon.
-        // organisaation päivittäminen koodistoon tehdään taustalla
-        // jotta organisaation muokkaus olisi nopeampaa
         koodistoService.addKoodistoSyncByOid(entity.getOid());
-
         return new OrganisaatioResult(entity, null);
     }
 
@@ -382,6 +374,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         checkDateConstraints(entity, parentOrg);
+        validateNimiHistoria(entity);
     }
 
     private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {
@@ -438,9 +431,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private Set<YhteystietoArvo> mergeYhteystietoArvos(Organisaatio org, Set<YhteystietoArvo> nys, boolean updating) {
-
         Map<String, YhteystietoArvo> ov = new HashMap<>();
-
         for (YhteystietoArvo ya : yhteystietoArvoRepository.findByOrganisaatio(org)) {
             if (!isAllowed(org, ya.getKentta().getYhteystietojenTyyppi())) {
                 yhteystietoArvoRepository.delete(ya);
@@ -450,7 +441,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
 
         Set<YhteystietoArvo> ret = new HashSet<>();
-
         for (YhteystietoArvo ya : nys) {
             List<YhteystietojenTyyppi> yt = yhteystietojenTyyppiRepository.findByOid(ya.getKentta().getYhteystietojenTyyppi().getOid());
             if (yt.isEmpty()) {
@@ -1082,33 +1072,31 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private void setYhteystietoArvot(Organisaatio entity, boolean updating) {
-        // Asetetaan yhteystietoarvot
-        entity.setYhteystietoArvos(mergeYhteystietoArvos(entity, entity.getYhteystietoArvos(), updating));
+    private void setNimi(Organisaatio entity) {
         for (OrganisaatioNimi nimi : entity.getNimet()) {
             nimi.setOrganisaatio(entity);
         }
-        // Kirjoitetaan nimihistoria uusiksi (ei päivitetä vanhoja)
-        // Nimihistoriaan liittyvät tarkistukset (HUOM! Ei koske Ryhmiä)
+
         if (!OrganisaatioUtil.isRyhma(entity)) {
-            /** @TODO --> Tarkistetaan, ettei nimihistoriaa muuteta muuta kuin nykyisen tai uusimman nimen osalta */
-            // Tarkistetaan, että nimen alkupäivämäärä ei ole NULL
+            List<OrganisaatioNimi> nimet = entity.getNimet();
+            MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(nimet);
+            entity.setNimi(nimi);
+        }
+    }
+
+    private void validateNimiHistoria(Organisaatio entity) {
+        if (!OrganisaatioUtil.isRyhma(entity)) {
             List<OrganisaatioNimi> nimet = entity.getNimet();
             checker.checkNimihistoriaAlkupvm(nimet);
 
-            // Tarkistetaan, että nimihistoriassa on organisaatiolle validi nimi
             MonikielinenTeksti nimi = OrganisaatioNimiUtil.getNimi(nimet);
             if (nimi == null) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
 
-            // Tarkistetaan, että organisaatiolle asetettu nimi ei ole
-            // ristiriidassa nimihistorian kanssa
             if (!nimi.getValues().equals(entity.getNimi().getValues())) {
                 throw new OrganisaatioNameHistoryNotValidException();
             }
-            // Asetetaan organisaatiolle sama nimi instanssi kuin nimihistoriassa
-            entity.setNimi(nimi);
         }
     }
 
