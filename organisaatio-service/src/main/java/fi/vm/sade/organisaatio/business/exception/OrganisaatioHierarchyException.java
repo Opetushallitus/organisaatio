@@ -23,4 +23,8 @@ public class OrganisaatioHierarchyException extends OrganisaatioBusinessExceptio
         super("organisaatio.exception.organisaatio.hierarchy");
     }
 
+    public OrganisaatioHierarchyException(String reason) {
+        super("organisaatio.exception.organisaatio.hierarchy." + reason);
+    }
+
 }

@@ -80,7 +80,7 @@ public class RekisterointiResource {
         Organisaatio organisaatio = organisaatioYtjService.findOrganisaatioByYtunnus(request.getYtunnus());
         organisaatio.setTyypit(getTyypitWithVarhaiskasvatuksenJarjestaja(organisaatio));
         OrganisaatioRDTOV4 dto = conversionService.convert(organisaatio, OrganisaatioRDTOV4.class);
-        return organisaatioBusinessService.saveOrUpdate(dto).getOrganisaatio();
+        return organisaatioBusinessService.save(dto, false).getOrganisaatio();
     }
 
     private Set<String> getTyypitWithVarhaiskasvatuksenJarjestaja(Organisaatio organisaatio) {

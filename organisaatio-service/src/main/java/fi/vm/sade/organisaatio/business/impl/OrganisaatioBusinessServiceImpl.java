@@ -32,7 +32,6 @@ import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.*;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 import fi.vm.sade.organisaatio.service.KoodistoService;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
@@ -172,48 +171,22 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     @Override
-    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTO model) throws ValidationException {
-        // Luodaan tallennettava entity objekti
+    public ResultRDTOV4 update(OrganisaatioRDTOV4 model, boolean isDatantuonti) {
+        if (model.getOid() == null) {
+            throw new ValidationException("validation.organisaatio.missing_oid");
+        }
+
         Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
         if (entity == null) {
             throw new ValidationException("validation.organisaatio.convert.error");
         }
-        if (entity.getOid() != null) {
-            return update(entity, model.getParentOid(), false);
+
+        Organisaatio oldOrg = organisaatioRepository.findFirstByOid(entity.getOid());
+        if (oldOrg == null) {
+            throw new ValidationException("validation.Organisaatio.poistettu");
         }
-        return save(entity, model.getParentOid(), false);
-    }
 
-    @Override
-    public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException {
-        // Luodaan tallennettava entity objekti
-        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
-        if (entity == null) {
-            throw new ValidationException("validation.organisaatio.convert.error");
-        }
-        OrganisaatioResult organisaatioResult;
-        if (entity.getOid() != null) {
-            organisaatioResult = update(entity, model.getParentOid(), false);
-        } else {
-            organisaatioResult = save(entity, model.getParentOid(), false);
-        }
-        return new ResultRDTOV4(this.conversionService.convert(organisaatioResult.getOrganisaatio(), OrganisaatioRDTOV4.class), organisaatioResult.getInfo());
-    }
-
-    @Override
-    public OrganisaatioResult saveDatantuontiOrganisaatio(OrganisaatioRDTOV4 organisaatio) {
-        Organisaatio o = conversionService.convert(organisaatio, Organisaatio.class);
-        return save(o, organisaatio.getParentOid(), true);
-    }
-
-    @Override
-    public OrganisaatioResult updateDatantuontiOrganisaatio(OrganisaatioRDTOV4 organisaatio) {
-        Organisaatio o = conversionService.convert(organisaatio, Organisaatio.class);
-        return update(o, organisaatio.getParentOid(), true);
-    }
-
-    private OrganisaatioResult update(Organisaatio entity, String parentOid, boolean isDatantuonti) {
-
+        String parentOid = model.getParentOid();
         Organisaatio parentOrg = fetchParentOrg(parentOid);
 
         // Validate (throws exception)
@@ -224,7 +197,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             persistOrganisaatioLisatietotyyppis(entity);
         }
 
-        Organisaatio oldOrg = organisaatioRepository.findFirstByOid(entity.getOid());
         if (oldOrg.isOrganisaatioPoistettu()) {
             throw new ValidationException("validation.Organisaatio.poistettu");
         }
@@ -293,7 +265,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         setLakkautusPvmForOppilaitosToimipistesRecursive(entity, entity.getLakkautusPvm());
 
         koodistoService.addKoodistoSyncByOid(entity.getOid());
-        return new OrganisaatioResult(entity, null);
+        return new ResultRDTOV4(conversionService.convert(entity, OrganisaatioRDTOV4.class));
     }
 
     private void updateExistingYhteystiedot(Organisaatio entity, Organisaatio oldOrg) {
@@ -307,7 +279,14 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         }
     }
 
-    private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean isDatantuonti) {
+    @Override
+    public ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean isDatantuonti) {
+        Organisaatio entity = conversionService.convert(model, Organisaatio.class); //this entity is populated with new data
+        if (entity == null) {
+            throw new ValidationException("validation.organisaatio.convert.error");
+        }
+
+        String parentOid = model.getParentOid();
         Organisaatio parentOrg = fetchParentOrg(parentOid);
         validateOrganisationSave(entity, parentOid, parentOrg, isDatantuonti);
 
@@ -349,7 +328,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity = saveParentSuhteet(entity, parentOrg, entity.getOpetuspisteenJarjNro());
 
         koodistoService.addKoodistoSyncByOid(entity.getOid());
-        return new OrganisaatioResult(entity, null);
+        return new ResultRDTOV4(conversionService.convert(entity, OrganisaatioRDTOV4.class));
     }
 
     private void validateOrganisationSave(Organisaatio entity, String parentOid, Organisaatio parentOrg, boolean isDatantuonti) {

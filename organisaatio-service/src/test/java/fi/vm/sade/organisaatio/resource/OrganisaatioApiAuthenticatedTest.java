@@ -60,7 +60,7 @@ class OrganisaatioApiAuthenticatedTest {
 
     private OrganisaatioRDTOV4 createOrganisaatio(String nimi, OrganisaatioRDTOV4 parent) {
         LOG.info("createOrganisaatio({})", nimi);
-        OrganisaatioRDTOV4 o = OrganisaatioRDTOTestUtil.createOrganisaatioV4(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue(), parent, true);
+        OrganisaatioRDTOV4 o = OrganisaatioRDTOTestUtil.createOrganisaatioV4(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO, null, parent != null ? parent.getOid() : null);
         return resource.newOrganisaatio(o).getOrganisaatio();
     }
 }

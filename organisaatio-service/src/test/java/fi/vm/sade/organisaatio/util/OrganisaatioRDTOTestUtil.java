@@ -15,15 +15,13 @@
 
 package fi.vm.sade.organisaatio.util;
 
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.OsoiteTyyppi;
 import fi.vm.sade.organisaatio.api.model.types.PuhelinNumeroTyyppi;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import java.util.*;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  * @author simok
@@ -107,78 +105,10 @@ public final class OrganisaatioRDTOTestUtil {
         return new GregorianCalendar(2000+n, 0, 0).getTime();
     }
 
-    public static OrganisaatioRDTO createOrganisaatio(String nimi,
-                                                      String organisaatioTyyppi,
-                                                      String parentOid, boolean nullifyOid) {
-        return createOrganisaatio(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
-    }
-
     public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
-                                                      String organisaatioTyyppi,
-                                                      OrganisaatioRDTOV4 parent, boolean nullifyOid) {
-        String parentOid = OPH_OID;
-        if (parent != null) {
-            parentOid = parent.getOid();
-        }
-        return createOrganisaatioV4(nimi, organisaatioTyyppi, null, parentOid, nullifyOid);
-    }
-
-    /**
-     * Luodaan organisaatio, jolla on asetettu kaikki organisaatiolle pakolliset kentät.
-     * Organisaatiolle pakollisia tietoja ovat:
-     * nimi, tyyppi, alkuPvm, kotipaikka, maa, kieli, postiosoite
-     *
-     * @param nimi
-     * @param organisaatioTyyppi
-     * @param oid
-     * @param parentOid
-     * @return
-     */
-    public static OrganisaatioRDTO createOrganisaatio(String nimi,
-                                                      String organisaatioTyyppi,
+                                                      OrganisaatioTyyppi organisaatioTyyppi,
                                                       String oid,
-                                                      String parentOid, boolean nullifyOid) {
-        OrganisaatioRDTO organisaatio = new OrganisaatioRDTO();
-        OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
-
-        organisaatio.setNimi(nimiRDTO.getNimi());
-        List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
-        nimet.add(nimiRDTO);
-        organisaatio.setNimet(nimet);
-
-        if (nullifyOid) {
-            organisaatio.setOid(null);
-        }
-        else if (isNullOrEmpty(oid)) {
-            organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
-        }
-        else {
-            organisaatio.setOid(oid);
-        }
-
-        organisaatio.setParentOid(parentOid);
-
-        if (organisaatioTyyppi != null) {
-            organisaatio.getTyypit().add(organisaatioTyyppi);
-        }
-
-        organisaatio.setAlkuPvm(DEFAULT_VOIMASSAOLO_ALKU);
-        organisaatio.setKotipaikkaUri(DEFAULT_KOTIPAIKKA);
-        organisaatio.setMaaUri(DEFAULT_MAA);
-        organisaatio.setKieletUris(DEFAULT_KIELET);
-
-        organisaatio.getYhteystiedot().add(DEFAULT_POSTIOSOITE);
-        organisaatio.getYhteystiedot().add(DEFAULT_KAYNTIOSOITE);
-        organisaatio.getYhteystiedot().add(DEFAULT_PUHELIN);
-        organisaatio.getYhteystiedot().add(DEFAULT_WWW);
-        organisaatio.getYhteystiedot().add(DEFAULT_EMAIL);
-
-        return organisaatio;
-    }
-    public static OrganisaatioRDTOV4 createOrganisaatioV4(String nimi,
-                                                      String organisaatioTyyppi,
-                                                      String oid,
-                                                      String parentOid, boolean nullifyOid) {
+                                                      String parentOid) {
         OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
         OrganisaatioNimiRDTO nimiRDTO = createNimi(nimi, null);
 
@@ -186,21 +116,11 @@ public final class OrganisaatioRDTOTestUtil {
         List<OrganisaatioNimiRDTO> nimet = new ArrayList<>();
         nimet.add(nimiRDTO);
         organisaatio.setNimet(nimet);
-
-        if (nullifyOid) {
-            organisaatio.setOid(null);
-        }
-        else if (isNullOrEmpty(oid)) {
-            organisaatio.setOid(OrganisaatioOidTestUtil.createOid());
-        }
-        else {
-            organisaatio.setOid(oid);
-        }
-
-        organisaatio.setParentOid(parentOid);
+        organisaatio.setOid(oid);
+        organisaatio.setParentOid(parentOid != null ? parentOid : OPH_OID);
 
         if (organisaatioTyyppi != null) {
-            organisaatio.getTyypit().add(organisaatioTyyppi);
+            organisaatio.getTyypit().add(organisaatioTyyppi.koodiValue());
         }
 
         organisaatio.setAlkuPvm(DEFAULT_VOIMASSAOLO_ALKU);

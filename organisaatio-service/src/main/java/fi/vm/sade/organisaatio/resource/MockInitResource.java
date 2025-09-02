@@ -55,7 +55,7 @@ public class MockInitResource {
             o.setNimet(List.of(orgnimi));
             o.setTyypit(Set.of(OrganisaatioTyyppi.KOULUTUSTOIMIJA.koodiValue()));
             o.setYTunnus("0201256-6");
-            organisaatioBusinessService.saveOrUpdate(o);
+            organisaatioBusinessService.save(o, false);
         } catch (YtunnusException e) {
             log.info("Test organization already exists", e);
         }

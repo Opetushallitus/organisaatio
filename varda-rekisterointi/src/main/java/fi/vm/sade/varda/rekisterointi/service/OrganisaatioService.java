@@ -266,7 +266,6 @@ public class OrganisaatioService {
     }
 
     public boolean onOphVirkailija(List<String> organisaatioOidit) {
-        System.out.println(organisaatioOidit);
         return organisaatioOidit.contains(OPH_OID);
     }
 

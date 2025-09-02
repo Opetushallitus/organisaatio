@@ -232,7 +232,7 @@ public class DatantuontiImportService {
     private void saveNewOrganisation(OrganisaatioWithParentOid o) {
         log.info("Saving new organisation oid {}", o.organisaatio().getOid());
         try {
-            organisaatioBusinessService.saveDatantuontiOrganisaatio(o.organisaatio());
+            organisaatioBusinessService.save(o.organisaatio(), true);
         } catch (Exception e) {
             log.error("Failed to create new organisation with oid " + o.organisaatio().getOid(), e);
             throw e;
@@ -244,7 +244,7 @@ public class DatantuontiImportService {
             try {
                 log.info("Updating parent oids for organisation oid {}", o.organisaatio().getOid());
                 o.organisaatio().setParentOid(o.parentOid());
-                organisaatioBusinessService.updateDatantuontiOrganisaatio(o.organisaatio());
+                organisaatioBusinessService.update(o.organisaatio(), true);
             } catch (Exception e) {
                 log.error("Failed to update parent oids for organisation oid " + o.organisaatio().getOid(), e);
                 throw e;

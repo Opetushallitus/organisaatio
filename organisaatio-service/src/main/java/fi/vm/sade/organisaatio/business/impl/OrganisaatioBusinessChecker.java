@@ -138,7 +138,7 @@ public class OrganisaatioBusinessChecker {
                 List<Organisaatio> children = organisaatioRepository.findChildren(organisaatio.getId());
                 for (Organisaatio child : children) {
                     if (!validator.apply(Maps.immutableEntry(organisaatio, child))) {
-                        throw new OrganisaatioHierarchyException();
+                        throw new OrganisaatioHierarchyException("invalid_child." + child.getOid());
                     }
                 }
             }

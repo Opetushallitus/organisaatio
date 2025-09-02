@@ -128,7 +128,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public ResultRDTOV4 updateOrganisaatio(String oid, OrganisaatioRDTOV4 ordto) {
         log.info("Saving {}", oid);
         try {
-            return organisaatioBusinessService.saveOrUpdate(ordto);
+            return organisaatioBusinessService.update(ordto, false);
         } catch (ValidationException ex) {
             log.warn("ValidationException while saving {}", oid, ex);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -152,7 +152,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @CheckAddPermission
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
         try {
-            return organisaatioBusinessService.saveOrUpdate(ordto);
+            return organisaatioBusinessService.save(ordto, false);
         } catch (ValidationException ex) {
             log.warn("ValidationException saving new org");
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,

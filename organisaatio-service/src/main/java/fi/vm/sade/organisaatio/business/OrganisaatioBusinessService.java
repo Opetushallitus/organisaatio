@@ -30,25 +30,8 @@ import java.sql.Timestamp;
 import java.util.*;
 
 public interface OrganisaatioBusinessService {
-
-    /**
-     * @param model
-     * @return
-     * @throws ValidationException
-     */
-    public OrganisaatioResult saveOrUpdate(OrganisaatioRDTO model) throws ValidationException;
-
-
-    /**
-     * Organisaatio api v4 wrapperi organisaation luomiseen ja tallennukseen.
-     * @param model Organisaatio v4 rajapinnan mukainen dto organisaatiosta
-     * @return Organisaatio v4 rajapinnan tulos dto
-     * @throws ValidationException Validointivirhe jos organisaation tiedot ovat virheellisiä
-     */
-    public ResultRDTOV4 saveOrUpdate(OrganisaatioRDTOV4 model) throws ValidationException;
-
-    public OrganisaatioResult saveDatantuontiOrganisaatio(OrganisaatioRDTOV4 model);
-    public OrganisaatioResult updateDatantuontiOrganisaatio(OrganisaatioRDTOV4 model);
+    public ResultRDTOV4 save(OrganisaatioRDTOV4 model, boolean isDatantuonti) throws ValidationException;
+    public ResultRDTOV4 update(OrganisaatioRDTOV4 model, boolean isDatantuonti) throws ValidationException;
 
     /**
      * @param oid

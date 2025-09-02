@@ -80,7 +80,7 @@ class OrganisaatioApiDeleteTest {
         OrganisaatioRDTOV4 ad = createOrganisaatio("AD", a);
         when(tarjontaMock.alkaviaKoulutuksia(ad.getOid())).thenReturn(true);
         String oid = ad.getOid();
-        OrganisaatioDeleteKoulutuksiaException ex = Assertions.assertThrows(OrganisaatioDeleteKoulutuksiaException.class,
+        Assertions.assertThrows(OrganisaatioDeleteKoulutuksiaException.class,
                 () -> resource.deleteOrganisaatio(oid), "OrganisaatioDeleteKoulutuksiaException was expected");
     }
 
@@ -90,13 +90,13 @@ class OrganisaatioApiDeleteTest {
         OrganisaatioRDTOV4 parent = createOrganisaatio("Parent", null);
         createOrganisaatio("Child", parent);
         String parentOid = parent.getOid();
-        OrganisaatioCrudException ex = Assertions.assertThrows(OrganisaatioCrudException.class,
+        Assertions.assertThrows(OrganisaatioCrudException.class,
                 () -> resource.deleteOrganisaatio(parentOid), "OrganisaatioResourceException was expected");
     }
 
     private OrganisaatioRDTOV4 createOrganisaatio(String nimi, OrganisaatioRDTOV4 parent) {
         LOG.info("createOrganisaatio({})", nimi);
-        OrganisaatioRDTOV4 o = OrganisaatioRDTOTestUtil.createOrganisaatioV4(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO.koodiValue(), parent, true);
+        OrganisaatioRDTOV4 o = OrganisaatioRDTOTestUtil.createOrganisaatioV4(nimi, OrganisaatioTyyppi.MUU_ORGANISAATIO, null, parent != null ? parent.getOid() : null);
         return resource.newOrganisaatio(o).getOrganisaatio();
     }
 }
