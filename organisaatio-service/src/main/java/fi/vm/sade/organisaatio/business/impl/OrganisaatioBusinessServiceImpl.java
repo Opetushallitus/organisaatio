@@ -240,6 +240,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setId(oldOrg.getId());
         entity.setOpetuspisteenJarjNro(oldOrg.getOpetuspisteenJarjNro());
         entity.setVersion(oldOrg.getVersion());
+        entity.setOrganisaatioPoistettu(false);
 
         // Generoidaan oidit
         try {
@@ -257,9 +258,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             opJarjNro = entity.getOpetuspisteenJarjNro();
         }
 
-        boolean isVarhaiskasvatuksenToimipaikka = checkIfVarhaiskasvatuksenToimipaikka(entity);
-        setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
-        entity.setOrganisaatioPoistettu(false);
+        if (checkIfVarhaiskasvatuksenToimipaikka(entity)) {
+            setVarhaiskasvatuksenToimipaikkaTietoRelations(entity);
+        }
 
         if (isDatantuonti) {
             entity.setPaivittaja("DATANTUONTI");
@@ -310,30 +311,17 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     }
 
     private OrganisaatioResult save(Organisaatio entity, String parentOid, boolean isDatantuonti) {
-
-        if ((entity.getOid() != null) && (organisaatioRepository.findFirstByOid(entity.getOid()) != null)) {
-            throw new OrganisaatioExistsException(entity.getOid());
-        }
-
-        if (entity.getOppilaitosKoodi() != null && entity.getOppilaitosKoodi().length() > 0) {
-            if (checker.checkLearningInstitutionCodeIsUniqueAndNotUsed(entity)) {
-            throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
-            }
-        }
         Organisaatio parentOrg = fetchParentOrg(parentOid);
-
-        // Validate (throws exception)
-        this.organisaatioValidationService.validateOrganisation(entity, parentOid, parentOrg);
+        validateOrganisationSave(entity, parentOid, parentOrg, isDatantuonti);
 
         // Validate and persist lisatietotyypit
         if (!CollectionUtils.isEmpty(entity.getOrganisaatioLisatietotyypit())) {
             persistOrganisaatioLisatietotyyppis(entity);
         }
 
-        boolean isVarhaiskasvatuksenToimipaikka = checkIfVarhaiskasvatuksenToimipaikka(entity);
-        setVarhaiskasvatuksenToimipaikkaTietoRelations(entity, isVarhaiskasvatuksenToimipaikka);
-
-        Organisaatio oldOrg = null;
+        if (checkIfVarhaiskasvatuksenToimipaikka(entity)) {
+            setVarhaiskasvatuksenToimipaikkaTietoRelations(entity);
+        }
 
         // Asetetaan parent path
         setParentPath(entity, parentOid);
@@ -343,7 +331,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             entity.setPaivitysPvm(new Date());
         } else {
             setPaivittajaData(entity);
-            checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
 
         // Generoidaan oidit
@@ -354,35 +341,47 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
         }
 
-        // Generoidaan opetuspiteenJarjNro
-        String opJarjNro;
-        opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit());
-        entity.setOpetuspisteenJarjNro(opJarjNro);
-
-        // If inserting, check if ytunnus allready exists in the database
-        if (entity.getYtunnus() != null) {
-            checker.checkYtunnusIsUniqueAndNotUsed(entity.getYtunnus());
-        }
-
+        entity.setOpetuspisteenJarjNro(generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit()));
         entity.setOrganisaatioPoistettu(false);
-
-        checkDateConstraints(entity, parentOrg);
+        entity.setToimipisteKoodi(calculateToimipisteKoodi(entity, parentOrg));
 
         setYhteystietoArvot(entity, false);
-
-        generateToimipistekoodi(entity, oldOrg, parentOrg);
 
         //save org
         entity = organisaatioRepository.saveAndFlush(entity);
         // Saving the parent relationship
-        entity = saveParentSuhteet(entity, parentOrg, opJarjNro);
+        entity = saveParentSuhteet(entity, parentOrg, entity.getOpetuspisteenJarjNro());
 
         // Päivitä tiedot koodistoon.
         // organisaation päivittäminen koodistoon tehdään taustalla
         // jotta organisaation muokkaus olisi nopeampaa
-        String info = null;
         koodistoService.addKoodistoSyncByOid(entity.getOid());
-        return new OrganisaatioResult(entity, info);
+
+        return new OrganisaatioResult(entity, null);
+    }
+
+    private void validateOrganisationSave(Organisaatio entity, String parentOid, Organisaatio parentOrg, boolean isDatantuonti) {
+        if ((entity.getOid() != null) && (organisaatioRepository.findFirstByOid(entity.getOid()) != null)) {
+            throw new OrganisaatioExistsException(entity.getOid());
+        }
+
+        if (entity.getOppilaitosKoodi() != null && entity.getOppilaitosKoodi().length() > 0) {
+            if (checker.checkLearningInstitutionCodeIsUniqueAndNotUsed(entity)) {
+                throw new LearningInstitutionExistsException("organisaatio.oppilaitos.exists.with.code");
+            }
+        }
+
+        organisaatioValidationService.validateOrganisation(entity, parentOid, parentOrg);
+
+        if (entity.getYtunnus() != null) {
+            checker.checkYtunnusIsUniqueAndNotUsed(entity.getYtunnus());
+        }
+
+        if (!isDatantuonti) {
+            checker.checkOrganisaatioHierarchy(entity, parentOid);
+        }
+
+        checkDateConstraints(entity, parentOrg);
     }
 
     private void persistOrganisaatioLisatietotyyppis(Organisaatio entity) {
@@ -395,11 +394,9 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         entity.setOrganisaatioLisatietotyypit(persistedLisatietotyypit);
     }
 
-    private void setVarhaiskasvatuksenToimipaikkaTietoRelations(Organisaatio entity, boolean isVarhaiskasvatuksenToimipaikka) {
-        if (isVarhaiskasvatuksenToimipaikka) {
-            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset().forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
-            entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset().forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
-        }
+    private void setVarhaiskasvatuksenToimipaikkaTietoRelations(Organisaatio entity) {
+        entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenKielipainotukset().forEach(kielipainotus -> kielipainotus.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
+        entity.getVarhaiskasvatuksenToimipaikkaTiedot().getVarhaiskasvatuksenToiminnallinenpainotukset().forEach(toimintamuoto -> toimintamuoto.setVarhaiskasvatuksenToimipaikkaTiedot(entity.getVarhaiskasvatuksenToimipaikkaTiedot()));
     }
 
     private Organisaatio validateHierarchy(String parentOid, Organisaatio entity, Organisaatio oldOrg) {
