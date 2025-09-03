@@ -2,10 +2,12 @@ package fi.vm.sade.organisaatio.resource;
 
 import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
+import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.auth.OrganisaatioPermissionServiceImpl;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioHakutulosV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
+import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
@@ -24,13 +26,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.mock;
+
+import static fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil.OPH_OID;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
@@ -152,5 +159,54 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
                 organisaatio -> childOid.equals(organisaatio.getOid())
         ).findFirst().orElseThrow(() -> new IllegalStateException("Organisaatiota ei löydy: " + childOid));
         assertThat(childOrg.getParentOidPath()).isEqualTo(expectedParentPath);
+    }
+
+    @Test
+    void newOrganisaatioSavesYhteystiedot() {
+        setCurrentUser("1.2.3.4.5", getAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD", OPH_OID));
+        OrganisaatioRDTOV4 model = OrganisaatioRDTOTestUtil.createOrganisaatioV4("orgwithyhteystiedot", OrganisaatioTyyppi.MUU_ORGANISAATIO, null, OPH_OID);
+        model.setYhteystiedot(Set.of(
+            Map.of(
+                "kieli", "kieli_fi#1",
+                "osoite", "posti 1",
+                "osoiteTyyppi", "posti",
+                "postinumeroUri", "posti_00100",
+                "postitoimipaikka", "HELSINKI"
+            ),
+            Map.of(
+                "kieli", "kieli_fi#1",
+                "osoite", "posti 2",
+                "osoiteTyyppi", "kaynti",
+                "postinumeroUri", "posti_00100",
+                "postitoimipaikka", "HELSINKI"
+            ),
+            Map.of(
+                "email", "testi@muusi.com",
+                "kieli", "kieli_fi#1"
+            )
+        ));
+        model.setAlkuPvm(new Date());
+        OrganisaatioRDTOV4 organisaatioResult = resource.newOrganisaatio(model).getOrganisaatio();
+
+        OrganisaatioRDTOV4 savedOrg = resource.findByOids(Set.of(organisaatioResult.getOid())).get(0);
+        assertThat(savedOrg.getPostiosoite()).contains(
+                entry("osoite", "posti 1"),
+                entry("postinumeroUri", "posti_00100"),
+                entry("postitoimipaikka", "HELSINKI"));
+
+        assertThat(savedOrg.getKayntiosoite()).contains(
+                entry("osoite", "posti 2"),
+                entry("postinumeroUri", "posti_00100"),
+                entry("postitoimipaikka", "HELSINKI"));
+        assertThat(savedOrg
+                .getYhteystiedot()
+                .stream()
+                .filter((y) -> {
+                    return y.get("email") != null;
+                })
+                .findFirst()
+                .get()
+                .get("email")
+            ).isEqualTo("testi@muusi.com");
     }
 }

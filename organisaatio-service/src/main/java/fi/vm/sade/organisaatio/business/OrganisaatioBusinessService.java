@@ -22,8 +22,6 @@ import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.dto.v4.ResultRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
-import fi.vm.sade.organisaatio.model.OrganisaatioResult;
-import fi.vm.sade.organisaatio.resource.dto.OrganisaatioRDTO;
 
 import jakarta.validation.ValidationException;
 import java.sql.Timestamp;

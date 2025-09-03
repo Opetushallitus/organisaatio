@@ -97,6 +97,7 @@ public class OrganisaatioRDTOV4ToOrganisaatioConverter implements Converter<Orga
 
         for (Map<String, String> m : source.getYhteystiedot()) {
             Yhteystieto y = YhteystietoConverterUtils.convertYhteystietoGeneric(m);
+            y.setOrganisaatio(target);
             if (y != null) {
                 yhteystietos.add(y);
             }
