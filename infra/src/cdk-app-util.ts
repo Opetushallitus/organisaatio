@@ -165,6 +165,10 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
 
       const ubuntuTests = [
         {
+          name: "Prettier",
+          commands: ["scripts/ci/run-prettier-check.sh"],
+        },
+        {
           name: "OrganisaatioPlaywright",
           commands: ["scripts/ci/run-playwright-tests.sh test:organisaatiot"],
         },
