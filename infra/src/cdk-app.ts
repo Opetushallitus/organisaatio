@@ -10,20 +10,20 @@ import * as elasticloadbalancingv2 from "aws-cdk-lib/aws-elasticloadbalancingv2"
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
-import * as rds from "aws-cdk-lib/aws-rds"
+import * as rds from "aws-cdk-lib/aws-rds";
 import * as route53 from "aws-cdk-lib/aws-route53";
-import * as route53_targets from "aws-cdk-lib/aws-route53-targets"
-import * as s3 from "aws-cdk-lib/aws-s3"
+import * as route53_targets from "aws-cdk-lib/aws-route53-targets";
+import * as s3 from "aws-cdk-lib/aws-s3";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as kms from "aws-cdk-lib/aws-kms";
 import * as path from "node:path";
-import {getConfig, getEnvironment} from "./config";
-import {createHealthCheckStacks} from "./health-check";
-import {DatabaseBackupToS3} from "./DatabaseBackupToS3";
-import {DatantuontiStack} from "./datantuonti";
+import { getConfig, getEnvironment } from "./config";
+import { createHealthCheckStacks } from "./health-check";
+import { DatabaseBackupToS3 } from "./DatabaseBackupToS3";
+import { DatantuontiStack } from "./datantuonti";
 
 const config = getConfig();
 
@@ -38,37 +38,96 @@ class CdkApp extends cdk.App {
     };
 
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
-    const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(this, "AlarmStack", stackProps);
+    const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(
+      this,
+      "AlarmStack",
+      stackProps,
+    );
     const { vpc, bastion } = new VpcStack(this, "VpcStack", stackProps);
     const ecsStack = new ECSStack(this, "ECSStack", vpc, stackProps);
-    const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(this, "VardaRekisterointiDatabase", vpc, ecsStack.cluster, bastion, alarmTopic, stackProps);
-    const datantuontiStack = new DatantuontiStack(this, "OrganisaatioDatantuonti", stackProps);
-    const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(this, "Database", vpc, ecsStack.cluster, bastion,
-        alarmTopic, datantuontiStack.exportBucket, datantuontiStack.s3ImportRole, stackProps);
+    const vardaRekisterointiDatabaseStack = new VardRekisterointiDatabaseStack(
+      this,
+      "VardaRekisterointiDatabase",
+      vpc,
+      ecsStack.cluster,
+      bastion,
+      alarmTopic,
+      stackProps,
+    );
+    const datantuontiStack = new DatantuontiStack(
+      this,
+      "OrganisaatioDatantuonti",
+      stackProps,
+    );
+    const organisaatioDatabaseStack = new OrganisaatioDatabaseStack(
+      this,
+      "Database",
+      vpc,
+      ecsStack.cluster,
+      bastion,
+      alarmTopic,
+      datantuontiStack.exportBucket,
+      datantuontiStack.s3ImportRole,
+      stackProps,
+    );
     createHealthCheckStacks(this, alarmsToSlackLambda, [
-      { name: "Organisaatio", url: new URL(`https://virkailija.${config.opintopolkuHost}/organisaatio-service/actuator/health`) },
-      { name: "VardaRekisterointi", url: new URL(`https://virkailija.${config.opintopolkuHost}/varda-rekisterointi/actuator/health`) },
-      { name: "JotpaRekisterointi", url: new URL(`https://rekisterointi.${config.opintopolkuHost}/actuator/health`) },
-    ])
-    new VardaRekisterointiApplicationStack(this, "VardaRekisterointiApplication", vpc, hostedZone, {
-      database: vardaRekisterointiDatabaseStack.database,
-      ecsCluster: ecsStack.cluster,
-      ...stackProps,
-    });
-    new RekisterointiApplicationStack(this, "RekisterointiApplication", vpc, hostedZone, { ecsCluster: ecsStack.cluster, ...stackProps, });
-    new OrganisaatioApplicationStack(this, "OrganisaatioApplication", vpc, hostedZone, alarmTopic, {
-      database: organisaatioDatabaseStack.database,
-      exportBucket: organisaatioDatabaseStack.exportBucket,
-      ecsCluster: ecsStack.cluster,
-      datantuontiExportBucket: datantuontiStack.exportBucket,
-      datantuontiEncryptionKey: datantuontiStack.encryptionKey,
-      ...stackProps,
-    });
+      {
+        name: "Organisaatio",
+        url: new URL(
+          `https://virkailija.${config.opintopolkuHost}/organisaatio-service/actuator/health`,
+        ),
+      },
+      {
+        name: "VardaRekisterointi",
+        url: new URL(
+          `https://virkailija.${config.opintopolkuHost}/varda-rekisterointi/actuator/health`,
+        ),
+      },
+      {
+        name: "JotpaRekisterointi",
+        url: new URL(
+          `https://rekisterointi.${config.opintopolkuHost}/actuator/health`,
+        ),
+      },
+    ]);
+    new VardaRekisterointiApplicationStack(
+      this,
+      "VardaRekisterointiApplication",
+      vpc,
+      hostedZone,
+      {
+        database: vardaRekisterointiDatabaseStack.database,
+        ecsCluster: ecsStack.cluster,
+        ...stackProps,
+      },
+    );
+    new RekisterointiApplicationStack(
+      this,
+      "RekisterointiApplication",
+      vpc,
+      hostedZone,
+      { ecsCluster: ecsStack.cluster, ...stackProps },
+    );
+    new OrganisaatioApplicationStack(
+      this,
+      "OrganisaatioApplication",
+      vpc,
+      hostedZone,
+      alarmTopic,
+      {
+        database: organisaatioDatabaseStack.database,
+        exportBucket: organisaatioDatabaseStack.exportBucket,
+        ecsCluster: ecsStack.cluster,
+        datantuontiExportBucket: datantuontiStack.exportBucket,
+        datantuontiEncryptionKey: datantuontiStack.encryptionKey,
+        ...stackProps,
+      },
+    );
   }
 }
 
 export class DnsStack extends cdk.Stack {
-  readonly hostedZone: route53.IHostedZone
+  readonly hostedZone: route53.IHostedZone;
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
 
@@ -86,14 +145,14 @@ class VpcStack extends cdk.Stack {
   constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
     this.vpc = this.createVpc();
-    this.bastion = this.createBastion()
+    this.bastion = this.createBastion();
   }
 
   createVpc() {
     const outIpAddresses = this.createOutIpAddresses();
     const natProvider = ec2.NatProvider.gateway({
       eipAllocationIds: outIpAddresses.map((ip) =>
-        ip.getAtt("AllocationId").toString()
+        ip.getAtt("AllocationId").toString(),
       ),
     });
     const vpc = new ec2.Vpc(this, "Vpc", {
@@ -126,13 +185,13 @@ class VpcStack extends cdk.Stack {
     return new ec2.BastionHostLinux(this, "Bastion", {
       vpc: this.vpc,
       instanceName: "Bastion",
-    })
+    });
   }
 
   private createOutIpAddresses() {
     // Ainakin Oiva näitä IP-osoitteita rajaamaan pääsyä palvelun rajapintoihin
     return ["OutIpAddress1", "OutIpAddress2", "OutIpAddress3"].map((ip) =>
-      this.createIpAddress(ip)
+      this.createIpAddress(ip),
     );
   }
 
@@ -156,16 +215,18 @@ class AlarmStack extends cdk.Stack {
       new subscriptions.LambdaSubscription(this.alarmsToSlackLambda),
     );
 
-    const radiatorAccountId = "905418271050"
+    const radiatorAccountId = "905418271050";
     const radiatorReader = new iam.Role(this, "RadiatorReaderRole", {
       assumedBy: new iam.AccountPrincipal(radiatorAccountId),
       roleName: "RadiatorReader",
-    })
-    radiatorReader.addToPolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: ["cloudwatch:DescribeAlarms"],
-      resources: ["*"],
-    }))
+    });
+    radiatorReader.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["cloudwatch:DescribeAlarms"],
+        resources: ["*"],
+      }),
+    );
     this.exportValue(this.alarmTopic.topicArn);
   }
 
@@ -227,22 +288,22 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
   readonly exportBucket: s3.Bucket;
 
   constructor(
-      scope: constructs.Construct,
-      id: string,
-      vpc: ec2.IVpc,
-      ecsCluster: ecs.Cluster,
-      bastion: ec2.BastionHostLinux,
-      alarmTopic: sns.ITopic,
-      datantuontiExportBucket: s3.Bucket,
-      datantuontiS3ImportRole: iam.Role,
-      props: cdk.StackProps
+    scope: constructs.Construct,
+    id: string,
+    vpc: ec2.IVpc,
+    ecsCluster: ecs.Cluster,
+    bastion: ec2.BastionHostLinux,
+    alarmTopic: sns.ITopic,
+    datantuontiExportBucket: s3.Bucket,
+    datantuontiS3ImportRole: iam.Role,
+    props: cdk.StackProps,
   ) {
     super(scope, id, props);
 
     this.exportBucket = new s3.Bucket(this, "ExportBucket", {});
     this.database = new rds.DatabaseCluster(this, "Database", {
       vpc,
-      vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
       defaultDatabaseName: "organisaatio",
       engine: rds.DatabaseClusterEngine.auroraPostgres({
         version: rds.AuroraPostgresEngineVersion.VER_15_7,
@@ -254,8 +315,8 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       writer: rds.ClusterInstance.provisioned("writer", {
         enablePerformanceInsights: true,
         instanceType: ec2.InstanceType.of(
-            ec2.InstanceClass.R6G,
-            ec2.InstanceSize.XLARGE
+          ec2.InstanceClass.R6G,
+          ec2.InstanceSize.XLARGE,
         ),
       }),
       storageEncrypted: true,
@@ -279,19 +340,19 @@ class VardRekisterointiDatabaseStack extends cdk.Stack {
   readonly database: rds.DatabaseCluster;
 
   constructor(
-      scope: constructs.Construct,
-      id: string,
-      vpc: ec2.IVpc,
-      ecsCluster: ecs.Cluster,
-      bastion: ec2.BastionHostLinux,
-      alarmTopic: sns.ITopic,
-      props: cdk.StackProps
+    scope: constructs.Construct,
+    id: string,
+    vpc: ec2.IVpc,
+    ecsCluster: ecs.Cluster,
+    bastion: ec2.BastionHostLinux,
+    alarmTopic: sns.ITopic,
+    props: cdk.StackProps,
   ) {
     super(scope, id, props);
 
     this.database = new rds.DatabaseCluster(this, "Database", {
       vpc,
-      vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
+      vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
       defaultDatabaseName: "vardarekisterointi",
       engine: rds.DatabaseClusterEngine.auroraPostgres({
         version: rds.AuroraPostgresEngineVersion.VER_15_7,
@@ -303,8 +364,8 @@ class VardRekisterointiDatabaseStack extends cdk.Stack {
       writer: rds.ClusterInstance.provisioned("writer", {
         enablePerformanceInsights: true,
         instanceType: ec2.InstanceType.of(
-            ec2.InstanceClass.T4G,
-            ec2.InstanceSize.MEDIUM
+          ec2.InstanceClass.T4G,
+          ec2.InstanceSize.MEDIUM,
         ),
       }),
       storageEncrypted: true,
@@ -323,21 +384,21 @@ class VardRekisterointiDatabaseStack extends cdk.Stack {
 }
 
 type OrganisaatioApplicationStackProps = cdk.StackProps & {
-  database: rds.DatabaseCluster
-  ecsCluster: ecs.Cluster
-  exportBucket: s3.Bucket
-  datantuontiExportBucket: s3.Bucket
-  datantuontiEncryptionKey: kms.Key
-}
+  database: rds.DatabaseCluster;
+  ecsCluster: ecs.Cluster;
+  exportBucket: s3.Bucket;
+  datantuontiExportBucket: s3.Bucket;
+  datantuontiEncryptionKey: kms.Key;
+};
 
 class OrganisaatioApplicationStack extends cdk.Stack {
   constructor(
-      scope: constructs.Construct,
-      id: string,
-      vpc: ec2.IVpc,
-      hostedZone: route53.IHostedZone,
-      alarmTopic: sns.ITopic,
-      props: OrganisaatioApplicationStackProps,
+    scope: constructs.Construct,
+    id: string,
+    vpc: ec2.IVpc,
+    hostedZone: route53.IHostedZone,
+    alarmTopic: sns.ITopic,
+    props: OrganisaatioApplicationStackProps,
   ) {
     super(scope, id, props);
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
@@ -349,30 +410,42 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       directory: path.join(__dirname, "../../"),
       file: "Dockerfile",
       platform: ecr_assets.Platform.LINUX_ARM64,
-      exclude: ['infra/cdk.out'],
+      exclude: ["infra/cdk.out"],
     });
 
     const taskDefinition = new ecs.FargateTaskDefinition(
-        this,
-        "TaskDefinition",
-        {
-          cpu: 4096,
-          memoryLimitMiB: 12288,
-          runtimePlatform: {
-            operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-            cpuArchitecture: ecs.CpuArchitecture.ARM64,
-          },
-        });
+      this,
+      "TaskDefinition",
+      {
+        cpu: 4096,
+        memoryLimitMiB: 12288,
+        runtimePlatform: {
+          operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
+          cpuArchitecture: ecs.CpuArchitecture.ARM64,
+        },
+      },
+    );
 
-    const lampiProperties: ecs.ContainerDefinitionProps["environment"] = config.lampiExport ? {
-      "organisaatio.tasks.export.enabled": config.lampiExport.enabled.toString(),
-      "organisaatio.tasks.export.bucket-name": props.exportBucket.bucketName,
-      "organisaatio.tasks.export.lampi-bucket-name": config.lampiExport.bucketName
-    } : {};
-    const lampiSecrets: ecs.ContainerDefinitionProps["secrets"] = config.lampiExport ? {
-      "organisaatio.tasks.export.lampi-role-arn": this.ssmString("LampiRoleArn"),
-      "organisaatio.tasks.export.lampi-external-id": this.ssmSecret("LampiExternalId"),
-    } : {};
+    const lampiProperties: ecs.ContainerDefinitionProps["environment"] =
+      config.lampiExport
+        ? {
+            "organisaatio.tasks.export.enabled":
+              config.lampiExport.enabled.toString(),
+            "organisaatio.tasks.export.bucket-name":
+              props.exportBucket.bucketName,
+            "organisaatio.tasks.export.lampi-bucket-name":
+              config.lampiExport.bucketName,
+          }
+        : {};
+    const lampiSecrets: ecs.ContainerDefinitionProps["secrets"] =
+      config.lampiExport
+        ? {
+            "organisaatio.tasks.export.lampi-role-arn":
+              this.ssmString("LampiRoleArn"),
+            "organisaatio.tasks.export.lampi-external-id":
+              this.ssmSecret("LampiExternalId"),
+          }
+        : {};
 
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
@@ -385,9 +458,12 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         postgresql_db: "organisaatio",
         aws_region: this.region,
         export_bucket_name: props.exportBucket.bucketName,
-        "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
-        "organisaatio.tasks.datantuonti.export.encryption-key-id": props.datantuontiEncryptionKey.keyId,
-        "organisaatio.tasks.datantuonti.export.encryption-key-arn": props.datantuontiEncryptionKey.keyArn,
+        "organisaatio.tasks.datantuonti.export.bucket-name":
+          props.datantuontiExportBucket.bucketName,
+        "organisaatio.tasks.datantuonti.export.encryption-key-id":
+          props.datantuontiEncryptionKey.keyId,
+        "organisaatio.tasks.datantuonti.export.encryption-key-arn":
+          props.datantuontiEncryptionKey.keyArn,
         "organisaatio.tasks.datantuonti.import.enabled": `${config.features["organisaatio.tasks.datantuonti.import.enabled"]}`,
         ...lampiProperties,
         "otuva.jwt.issuer-uri": config.oauthJwtIssuerUri,
@@ -395,25 +471,38 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
-            props.database.secret!,
-            "username"
+          props.database.secret!,
+          "username",
         ),
         postgresql_password: ecs.Secret.fromSecretsManager(
-            props.database.secret!,
-            "password"
+          props.database.secret!,
+          "password",
         ),
         ...lampiSecrets,
-        "organisaatio.palvelukayttaja.client_id": this.ssmSecret("PalvelukayttajaClientId"),
-        "organisaatio.palvelukayttaja.client_secret": this.ssmSecret("PalvelukayttajaClientSecret"),
-        organisaatio_service_username: this.ssmSecret("PalvelukayttajaUsername"),
-        organisaatio_service_password: this.ssmSecret("PalvelukayttajaPassword"),
+        "organisaatio.palvelukayttaja.client_id": this.ssmSecret(
+          "PalvelukayttajaClientId",
+        ),
+        "organisaatio.palvelukayttaja.client_secret": this.ssmSecret(
+          "PalvelukayttajaClientSecret",
+        ),
+        organisaatio_service_username: this.ssmSecret(
+          "PalvelukayttajaUsername",
+        ),
+        organisaatio_service_password: this.ssmSecret(
+          "PalvelukayttajaPassword",
+        ),
         rajapinnat_ytj_asiakastunnus: this.ssmSecret("YtjAsiakastunnus"),
         rajapinnat_ytj_avain: this.ssmSecret("YtjAvain"),
-        ytjpaivitysloki_service_email: this.ssmSecret("YtjpaivityslokiServiceEmail"),
+        ytjpaivitysloki_service_email: this.ssmSecret(
+          "YtjpaivityslokiServiceEmail",
+        ),
         oiva_baseurl: this.ssmSecret("OivaBaseurl"),
         oiva_username: this.ssmSecret("OivaUsername"),
         oiva_password: this.ssmSecret("OivaPassword"),
-        "organisaatio.tasks.datantuonti.import.bucket.name": this.ssmString("organisaatio.tasks.datantuonti.import.bucket.name", "")
+        "organisaatio.tasks.datantuonti.import.bucket.name": this.ssmString(
+          "organisaatio.tasks.datantuonti.import.bucket.name",
+          "",
+        ),
       },
       portMappings: [
         {
@@ -434,19 +523,19 @@ class OrganisaatioApplicationStack extends cdk.Stack {
           resources: [
             ssm.StringParameter.valueFromLookup(
               this,
-              "/organisaatio/LampiRoleArn"
+              "/organisaatio/LampiRoleArn",
             ),
           ],
-        })
+        }),
       );
     }
     const importBucketName = ssm.StringParameter.valueFromLookup(
-          this,
-          "organisaatio.tasks.datantuonti.import.bucket.name"
+      this,
+      "organisaatio.tasks.datantuonti.import.bucket.name",
     );
     const decryptionKeyArn = ssm.StringParameter.valueFromLookup(
-          this,
-          "organisaatio.tasks.datantuonti.import.bucket.decryption-key-arn"
+      this,
+      "organisaatio.tasks.datantuonti.import.bucket.decryption-key-arn",
     );
     taskDefinition.addToTaskRolePolicy(
       new iam.PolicyStatement({
@@ -455,13 +544,13 @@ class OrganisaatioApplicationStack extends cdk.Stack {
           `arn:aws:s3:::${importBucketName}`,
           `arn:aws:s3:::${importBucketName}/*`,
         ],
-      })
-    )
+      }),
+    );
     taskDefinition.addToTaskRolePolicy(
       new iam.PolicyStatement({
         actions: ["kms:Decrypt"],
         resources: [decryptionKeyArn],
-      })
+      }),
     );
 
     const service = new ecs.FargateService(this, "Service", {
@@ -471,7 +560,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       minHealthyPercent: 100,
       maxHealthyPercent: 200,
       circuitBreaker: {
-        enable: true
+        enable: true,
       },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       healthCheckGracePeriod: cdk.Duration.minutes(5),
@@ -493,12 +582,12 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     service.connections.allowToDefaultPort(props.database);
 
     const alb = new elasticloadbalancingv2.ApplicationLoadBalancer(
-        this,
-        "LoadBalancer",
-        {
-          vpc,
-          internetFacing: true,
-        }
+      this,
+      "LoadBalancer",
+      {
+        vpc,
+        internetFacing: true,
+      },
     );
 
     const albHostname = `organisaatio.${hostedZone.zoneName}`;
@@ -507,18 +596,18 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       zone: hostedZone,
       recordName: albHostname,
       target: route53.RecordTarget.fromAlias(
-          new route53_targets.LoadBalancerTarget(alb)
+        new route53_targets.LoadBalancerTarget(alb),
       ),
     });
 
     const albCertificate = new certificatemanager.Certificate(
-        this,
-        "AlbCertificate",
-        {
-          domainName: albHostname,
-          validation:
-              certificatemanager.CertificateValidation.fromDns(hostedZone),
-        }
+      this,
+      "AlbCertificate",
+      {
+        domainName: albHostname,
+        validation:
+          certificatemanager.CertificateValidation.fromDns(hostedZone),
+      },
     );
 
     const listener = alb.addListener("Listener", {
@@ -542,7 +631,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     if (config.lampiExport) {
       this.exportFailureAlarm(logGroup, alarmTopic);
     }
-    this.datantuontiExportFailureAlarm(logGroup, alarmTopic)
+    this.datantuontiExportFailureAlarm(logGroup, alarmTopic);
     this.organisaatioUpdateFailureAlarm(logGroup, alarmTopic);
     this.oivaIntegrationAlarm(logGroup, alarmTopic);
 
@@ -560,38 +649,54 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     );
   }
 
-  datantuontiExportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
+  datantuontiExportFailureAlarm(
+    logGroup: logs.LogGroup,
+    alarmTopic: sns.ITopic,
+  ) {
     this.alarmIfExpectedLogLineIsMissing(
       "DatantuontiExportTask",
       logGroup,
       alarmTopic,
-      logs.FilterPattern.literal('"Organisaatio datantuonti export task completed"')
-    )
-  }
-
-  datantuontiImportFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
-    this.alarmIfExpectedLogLineIsMissing(
-        "DatantuontiImportTask",
-        logGroup,
-        alarmTopic,
-        logs.FilterPattern.literal('"Organisaatio datantuonti import task completed"'),
-        cdk.Duration.hours(25),
-        1,
+      logs.FilterPattern.literal(
+        '"Organisaatio datantuonti export task completed"',
+      ),
     );
   }
 
-  organisaatioUpdateFailureAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
+  datantuontiImportFailureAlarm(
+    logGroup: logs.LogGroup,
+    alarmTopic: sns.ITopic,
+  ) {
     this.alarmIfExpectedLogLineIsMissing(
-        "OrganisaatioUpdateTask",
-        logGroup,
-        alarmTopic,
-        logs.FilterPattern.literal('"Organisaatio update task completed"'),
-        cdk.Duration.hours(25),
-        1,
+      "DatantuontiImportTask",
+      logGroup,
+      alarmTopic,
+      logs.FilterPattern.literal(
+        '"Organisaatio datantuonti import task completed"',
+      ),
+      cdk.Duration.hours(25),
+      1,
     );
   }
 
-  private oivaIntegrationAlarm(logGroup: logs.LogGroup, alarmTopic: sns.ITopic) {
+  organisaatioUpdateFailureAlarm(
+    logGroup: logs.LogGroup,
+    alarmTopic: sns.ITopic,
+  ) {
+    this.alarmIfExpectedLogLineIsMissing(
+      "OrganisaatioUpdateTask",
+      logGroup,
+      alarmTopic,
+      logs.FilterPattern.literal('"Organisaatio update task completed"'),
+      cdk.Duration.hours(25),
+      1,
+    );
+  }
+
+  private oivaIntegrationAlarm(
+    logGroup: logs.LogGroup,
+    alarmTopic: sns.ITopic,
+  ) {
     this.alarmIfExpectedLogLineIsMissing(
       "OrganisaatioFetchKoulutusluvatTask",
       logGroup,
@@ -606,17 +711,14 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     alarmTopic: sns.ITopic,
     filterPattern: logs.IFilterPattern,
     period: cdk.Duration = cdk.Duration.hours(1),
-    evaluationPeriods: number = 8
+    evaluationPeriods: number = 8,
   ) {
-    const metricFilter = logGroup.addMetricFilter(
-      `${id}SuccessMetricFilter`,
-      {
-        filterPattern,
-        metricName: `${id}Success`,
-        metricNamespace: "Organisaatio",
-        metricValue: "1",
-      }
-    );
+    const metricFilter = logGroup.addMetricFilter(`${id}SuccessMetricFilter`, {
+      filterPattern,
+      metricName: `${id}Success`,
+      metricNamespace: "Organisaatio",
+      metricValue: "1",
+    });
     const alarm = new cloudwatch.Alarm(this, `${id}FailingAlarm`, {
       alarmName: id,
       metric: metricFilter.metric({
@@ -624,7 +726,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         period,
       }),
       comparisonOperator:
-      cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+        cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
       threshold: 0,
       evaluationPeriods,
       treatMissingData: cloudwatch.TreatMissingData.BREACHING,
@@ -638,25 +740,25 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       ssm.StringParameter.fromStringParameterName(
         this,
         `Param${name}`,
-        `${prefix}${name}`
-      )
+        `${prefix}${name}`,
+      ),
     );
   }
   ssmSecret(name: string): ecs.Secret {
     return ecs.Secret.fromSsmParameter(
-        ssm.StringParameter.fromSecureStringParameterAttributes(
-            this,
-            `Param${name}`,
-            { parameterName: `/organisaatio/${name}` }
-        )
+      ssm.StringParameter.fromSecureStringParameterAttributes(
+        this,
+        `Param${name}`,
+        { parameterName: `/organisaatio/${name}` },
+      ),
     );
   }
 }
 
 type VardaRekisterointiApplicationStackProps = cdk.StackProps & {
-  database: rds.DatabaseCluster
-  ecsCluster: ecs.Cluster
-}
+  database: rds.DatabaseCluster;
+  ecsCluster: ecs.Cluster;
+};
 
 class VardaRekisterointiApplicationStack extends cdk.Stack {
   constructor(
@@ -689,7 +791,8 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
           operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
         },
-      });
+      },
+    );
 
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
@@ -706,21 +809,33 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
           props.database.secret!,
-          "username"
+          "username",
         ),
         postgresql_password: ecs.Secret.fromSecretsManager(
           props.database.secret!,
-          "password"
+          "password",
         ),
         palvelukayttaja_username: this.ssmSecret("PalvelukayttajaUsername"),
         palvelukayttaja_password: this.ssmSecret("PalvelukayttajaPassword"),
-        varda_rekisterointi_palvelukayttaja_client_id: this.ssmSecret("PalvelukayttajaClientId"),
-        varda_rekisterointi_palvelukayttaja_client_secret: this.ssmSecret("PalvelukayttajaClientSecret"),
-        varda_rekisterointi_valtuudet_client_id: this.ssmSecret("ValtuudetClientId"),
-        varda_rekisterointi_valtuudet_api_key: this.ssmSecret("ValtuudetApiKey"),
-        varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret("ValtuudetOauthPassword"),
-        varda_rekisterointi_rekisterointi_ui_username: this.ssmSecret("RekisterointiUiUsername"),
-        varda_rekisterointi_rekisterointi_ui_password: this.ssmSecret("RekisterointiUiPassword"),
+        varda_rekisterointi_palvelukayttaja_client_id: this.ssmSecret(
+          "PalvelukayttajaClientId",
+        ),
+        varda_rekisterointi_palvelukayttaja_client_secret: this.ssmSecret(
+          "PalvelukayttajaClientSecret",
+        ),
+        varda_rekisterointi_valtuudet_client_id:
+          this.ssmSecret("ValtuudetClientId"),
+        varda_rekisterointi_valtuudet_api_key:
+          this.ssmSecret("ValtuudetApiKey"),
+        varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret(
+          "ValtuudetOauthPassword",
+        ),
+        varda_rekisterointi_rekisterointi_ui_username: this.ssmSecret(
+          "RekisterointiUiUsername",
+        ),
+        varda_rekisterointi_rekisterointi_ui_password: this.ssmSecret(
+          "RekisterointiUiPassword",
+        ),
       },
       portMappings: [
         {
@@ -738,7 +853,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       minHealthyPercent: 100,
       maxHealthyPercent: 200,
       circuitBreaker: {
-        enable: true
+        enable: true,
       },
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
       healthCheckGracePeriod: cdk.Duration.minutes(5),
@@ -751,7 +866,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       {
         vpc,
         internetFacing: true,
-      }
+      },
     );
 
     const albHostname = `vardarekisterointi.${hostedZone.zoneName}`;
@@ -760,7 +875,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       zone: hostedZone,
       recordName: albHostname,
       target: route53.RecordTarget.fromAlias(
-        new route53_targets.LoadBalancerTarget(alb)
+        new route53_targets.LoadBalancerTarget(alb),
       ),
     });
 
@@ -771,7 +886,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         domainName: albHostname,
         validation:
           certificatemanager.CertificateValidation.fromDns(hostedZone),
-      }
+      },
     );
 
     const listener = alb.addListener("Listener", {
@@ -798,15 +913,15 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       ssm.StringParameter.fromSecureStringParameterAttributes(
         this,
         `Param${name}`,
-        { parameterName: `/vardarekisterointi/${name}` }
-      )
+        { parameterName: `/vardarekisterointi/${name}` },
+      ),
     );
   }
 }
 
 type RekisterointiApplicationStackProps = cdk.StackProps & {
-  ecsCluster: ecs.Cluster
-}
+  ecsCluster: ecs.Cluster;
+};
 
 class RekisterointiApplicationStack extends cdk.Stack {
   constructor(
@@ -839,7 +954,8 @@ class RekisterointiApplicationStack extends cdk.Stack {
           operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
         },
-      });
+      },
+    );
 
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
@@ -851,15 +967,31 @@ class RekisterointiApplicationStack extends cdk.Stack {
         "otuva.jwt.issuer-uri": config.oauthJwtIssuerUri,
       },
       secrets: {
-        varda_rekisterointi_service_username: this.ssmSecret("PalvelukayttajaUsername"),
-        varda_rekisterointi_service_password: this.ssmSecret("PalvelukayttajaPassword"),
-        varda_rekisterointi_palvelukayttaja_client_id: this.ssmSecret("PalvelukayttajaClientId"),
-        varda_rekisterointi_palvelukayttaja_client_secret: this.ssmSecret("PalvelukayttajaClientSecret"),
-        varda_rekisterointi_valtuudet_client_id: this.ssmSecret("ValtuudetClientId"),
-        varda_rekisterointi_valtuudet_api_key: this.ssmSecret("ValtuudetApiKey"),
-        varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret("ValtuudetOauthPassword"),
-        varda_rekisterointi_rekisterointi_ui_username: this.ssmSecret("RekisterointiUiUsername"),
-        varda_rekisterointi_rekisterointi_ui_password: this.ssmSecret("RekisterointiUiPassword"),
+        varda_rekisterointi_service_username: this.ssmSecret(
+          "PalvelukayttajaUsername",
+        ),
+        varda_rekisterointi_service_password: this.ssmSecret(
+          "PalvelukayttajaPassword",
+        ),
+        varda_rekisterointi_palvelukayttaja_client_id: this.ssmSecret(
+          "PalvelukayttajaClientId",
+        ),
+        varda_rekisterointi_palvelukayttaja_client_secret: this.ssmSecret(
+          "PalvelukayttajaClientSecret",
+        ),
+        varda_rekisterointi_valtuudet_client_id:
+          this.ssmSecret("ValtuudetClientId"),
+        varda_rekisterointi_valtuudet_api_key:
+          this.ssmSecret("ValtuudetApiKey"),
+        varda_rekisterointi_valtuudet_oauth_password: this.ssmSecret(
+          "ValtuudetOauthPassword",
+        ),
+        varda_rekisterointi_rekisterointi_ui_username: this.ssmSecret(
+          "RekisterointiUiUsername",
+        ),
+        varda_rekisterointi_rekisterointi_ui_password: this.ssmSecret(
+          "RekisterointiUiPassword",
+        ),
       },
       portMappings: [
         {
@@ -887,7 +1019,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
       {
         vpc,
         internetFacing: true,
-      }
+      },
     );
 
     const albHostname = `rekisterointi.${hostedZone.zoneName}`;
@@ -896,7 +1028,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
       zone: hostedZone,
       recordName: albHostname,
       target: route53.RecordTarget.fromAlias(
-        new route53_targets.LoadBalancerTarget(alb)
+        new route53_targets.LoadBalancerTarget(alb),
       ),
     });
 
@@ -907,7 +1039,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
         domainName: albHostname,
         validation:
           certificatemanager.CertificateValidation.fromDns(hostedZone),
-      }
+      },
     );
 
     const listener = alb.addListener("Listener", {
@@ -934,8 +1066,8 @@ class RekisterointiApplicationStack extends cdk.Stack {
       ssm.StringParameter.fromSecureStringParameterAttributes(
         this,
         `Param${name}`,
-        { parameterName: `/vardarekisterointi/${name}` }
-      )
+        { parameterName: `/vardarekisterointi/${name}` },
+      ),
     );
   }
 }

@@ -15,23 +15,23 @@ const PolicyDocument = JSON.stringify({
     {
       Effect: "Allow",
       Action: [
-          "ssm:*",
-          "ecs:*",
-          "secretsmanager:*",
-          "rds:*",
-          "ec2:*",
-          "s3:*",
-          "iam:*",
-          "sns:*",
-          "route53:*",
-          "acm:*",
-          "elasticloadbalancing:*",
-          "events:*",
-          "lambda:*",
-          "logs:*",
-          "application-autoscaling:*",
-          "cloudwatch:*",
-          "kms:*"
+        "ssm:*",
+        "ecs:*",
+        "secretsmanager:*",
+        "rds:*",
+        "ec2:*",
+        "s3:*",
+        "iam:*",
+        "sns:*",
+        "route53:*",
+        "acm:*",
+        "elasticloadbalancing:*",
+        "events:*",
+        "lambda:*",
+        "logs:*",
+        "application-autoscaling:*",
+        "cloudwatch:*",
+        "kms:*",
       ],
       Resource: "*",
     },
@@ -43,7 +43,7 @@ function main() {
 }
 
 function buildPolicyArn() {
-  const policyName = getPolicyName()
+  const policyName = getPolicyName();
   return new STSClient({})
     .send(new GetCallerIdentityCommand({}))
     .then((_) => `arn:aws:iam::${_.Account}:policy/${policyName}`);

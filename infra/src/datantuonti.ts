@@ -49,7 +49,7 @@ class Export extends constructs.Construct {
   private createTargetAccountPrincipal() {
     const targetAccountId = ssm.StringParameter.valueFromLookup(
       this,
-      "organisaatio.tasks.datantuonti.export.role.target-account-id"
+      "organisaatio.tasks.datantuonti.export.role.target-account-id",
     );
 
     return new iam.AccountPrincipal(targetAccountId);
@@ -93,12 +93,12 @@ class Import extends constructs.Construct {
   private createPolicy() {
     const importBucketName = ssm.StringParameter.valueFromLookup(
       this,
-      "organisaatio.tasks.datantuonti.import.bucket.name"
+      "organisaatio.tasks.datantuonti.import.bucket.name",
     );
 
     const decryptionKeyArn = ssm.StringParameter.valueFromLookup(
       this,
-      "organisaatio.tasks.datantuonti.import.bucket.decryption-key-arn"
+      "organisaatio.tasks.datantuonti.import.bucket.decryption-key-arn",
     );
     const policy = new iam.Policy(this, "Import");
 
@@ -113,7 +113,7 @@ class Import extends constructs.Construct {
       new iam.PolicyStatement({
         actions: ["kms:Decrypt"],
         resources: [decryptionKeyArn],
-      })
+      }),
     );
 
     return policy;

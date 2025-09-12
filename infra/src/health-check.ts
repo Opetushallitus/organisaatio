@@ -8,24 +8,29 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as sns_subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as url from "node:url";
 
-export const ROUTE53_HEALTH_CHECK_REGION = "us-east-1"
+export const ROUTE53_HEALTH_CHECK_REGION = "us-east-1";
 
 export type HealthCheck = {
-  name: string
-  url: url.URL
-}
+  name: string;
+  url: url.URL;
+};
 
 export function createHealthCheckStacks(
   app: cdk.App,
   alarmsToSlackLambda: lambda.IFunction,
   healthChecks: HealthCheck[],
 ) {
-  const healthCheckStack = new GlobalHealthCheckStack(app, "GlobalHealthCheckStack", healthChecks, {
-    env: {
-      account: process.env.CDK_DEPLOY_TARGET_ACCOUNT,
-      region: ROUTE53_HEALTH_CHECK_REGION,
-    }
-  });
+  const healthCheckStack = new GlobalHealthCheckStack(
+    app,
+    "GlobalHealthCheckStack",
+    healthChecks,
+    {
+      env: {
+        account: process.env.CDK_DEPLOY_TARGET_ACCOUNT,
+        region: ROUTE53_HEALTH_CHECK_REGION,
+      },
+    },
+  );
   new RegionalHealthCheckStack(app, "RegionalHealthCheckStack", {
     env: {
       account: process.env.CDK_DEPLOY_TARGET_ACCOUNT,
@@ -37,8 +42,13 @@ export function createHealthCheckStacks(
 }
 
 class GlobalHealthCheckStack extends cdk.Stack {
-  readonly globalAlarmTopic: sns.ITopic
-  constructor(scope: constructs.Construct, id: string, healthChecks: HealthCheck[], props: cdk.StackProps) {
+  readonly globalAlarmTopic: sns.ITopic;
+  constructor(
+    scope: constructs.Construct,
+    id: string,
+    healthChecks: HealthCheck[],
+    props: cdk.StackProps,
+  ) {
     super(scope, id, props);
 
     this.globalAlarmTopic = new sns.Topic(this, "AlarmTopic", {
@@ -46,18 +56,24 @@ class GlobalHealthCheckStack extends cdk.Stack {
     });
 
     for (const healthCheck of healthChecks) {
-      const check = new route53.CfnHealthCheck(this, `${healthCheck.name}HealthCheck`, {
-        healthCheckConfig: {
-          type: "HTTPS",
-          fullyQualifiedDomainName: healthCheck.url.hostname,
-          port: 443,
-          resourcePath: healthCheck.url.pathname,
+      const check = new route53.CfnHealthCheck(
+        this,
+        `${healthCheck.name}HealthCheck`,
+        {
+          healthCheckConfig: {
+            type: "HTTPS",
+            fullyQualifiedDomainName: healthCheck.url.hostname,
+            port: 443,
+            resourcePath: healthCheck.url.pathname,
+          },
+          healthCheckTags: [
+            {
+              key: "Name",
+              value: `${healthCheck.name}HealthCheck`,
+            },
+          ],
         },
-        healthCheckTags: [{
-          key: "Name",
-          value: `${healthCheck.name}HealthCheck`,
-        }],
-      });
+      );
 
       const metric = new cloudwatch.Metric({
         namespace: "AWS/Route53",
@@ -65,43 +81,55 @@ class GlobalHealthCheckStack extends cdk.Stack {
         dimensionsMap: {
           HealthCheckId: check.attrHealthCheckId,
         },
-      })
-      const alarm = metric.createAlarm(this, `${healthCheck.name}HealthCheckAlarm`, {
-        alarmName: `${healthCheck.name}HealthCheckAlarm`,
-        threshold: 1,
-        evaluationPeriods: 1,
-        treatMissingData: cloudwatch.TreatMissingData.BREACHING,
-        comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
-      })
-      alarm.addOkAction(new cloudwatch_actions.SnsAction(this.globalAlarmTopic));
-      alarm.addAlarmAction(new cloudwatch_actions.SnsAction(this.globalAlarmTopic));
+      });
+      const alarm = metric.createAlarm(
+        this,
+        `${healthCheck.name}HealthCheckAlarm`,
+        {
+          alarmName: `${healthCheck.name}HealthCheckAlarm`,
+          threshold: 1,
+          evaluationPeriods: 1,
+          treatMissingData: cloudwatch.TreatMissingData.BREACHING,
+          comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
+        },
+      );
+      alarm.addOkAction(
+        new cloudwatch_actions.SnsAction(this.globalAlarmTopic),
+      );
+      alarm.addAlarmAction(
+        new cloudwatch_actions.SnsAction(this.globalAlarmTopic),
+      );
     }
   }
 }
 
 type RegionalHealthCheckStackProps = cdk.StackProps & {
-  globalAlarmTopicArn: string
-  alarmsToSlackLambdaArn: string,
-}
+  globalAlarmTopicArn: string;
+  alarmsToSlackLambdaArn: string;
+};
 
 class RegionalHealthCheckStack extends cdk.Stack {
-  constructor(scope: constructs.Construct, id: string, props: RegionalHealthCheckStackProps) {
+  constructor(
+    scope: constructs.Construct,
+    id: string,
+    props: RegionalHealthCheckStackProps,
+  ) {
     super(scope, id, props);
     const alarmsToSlackLambda = lambda.Function.fromFunctionAttributes(
       this,
       "AlarmsToSlackLambda",
       {
         functionArn: props.alarmsToSlackLambdaArn,
-        sameEnvironment: true
+        sameEnvironment: true,
       },
-    )
+    );
     const globalAlarmTopic = sns.Topic.fromTopicArn(
       this,
       "GlobalAlarmTopic",
-      props.globalAlarmTopicArn
+      props.globalAlarmTopicArn,
     );
     globalAlarmTopic.addSubscription(
-      new sns_subscriptions.LambdaSubscription(alarmsToSlackLambda)
+      new sns_subscriptions.LambdaSubscription(alarmsToSlackLambda),
     );
   }
 }

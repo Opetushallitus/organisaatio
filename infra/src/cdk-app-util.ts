@@ -1,12 +1,12 @@
 import * as cdk from "aws-cdk-lib";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
-import * as codepipeline from "aws-cdk-lib/aws-codepipeline"
-import * as codepipeline_actions from "aws-cdk-lib/aws-codepipeline-actions"
+import * as codepipeline from "aws-cdk-lib/aws-codepipeline";
+import * as codepipeline_actions from "aws-cdk-lib/aws-codepipeline-actions";
 import * as codestarconnections from "aws-cdk-lib/aws-codestarconnections";
 import * as constructs from "constructs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import {ROUTE53_HEALTH_CHECK_REGION} from "./health-check";
+import { ROUTE53_HEALTH_CHECK_REGION } from "./health-check";
 
 class CdkAppUtil extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -15,13 +15,9 @@ class CdkAppUtil extends cdk.App {
       account: process.env.CDK_DEFAULT_ACCOUNT,
       region: process.env.CDK_DEFAULT_REGION,
     };
-    new ContinuousDeploymentStack(
-      this,
-      "ContinuousDeploymentStack",
-      {
-        env,
-      }
-    );
+    new ContinuousDeploymentStack(this, "ContinuousDeploymentStack", {
+      env,
+    });
   }
 }
 
@@ -34,36 +30,44 @@ class ContinuousDeploymentStack extends cdk.Stack {
       "HahtuvaContinuousDeploymentPipelineStack",
       "hahtuva",
       { owner: "Opetushallitus", name: "organisaatio", branch: "master" },
-      props
+      props,
     );
     new ContinuousDeploymentPipelineStack(
       this,
       "DevContinuousDeploymentPipelineStack",
       "dev",
-      { owner: "Opetushallitus", name: "organisaatio", branch: "green-hahtuva" },
-      props
+      {
+        owner: "Opetushallitus",
+        name: "organisaatio",
+        branch: "green-hahtuva",
+      },
+      props,
     );
     new ContinuousDeploymentPipelineStack(
       this,
       "QaContinuousDeploymentPipelineStack",
       "qa",
       { owner: "Opetushallitus", name: "organisaatio", branch: "green-dev" },
-      props
+      props,
     );
     new ContinuousDeploymentPipelineStack(
       this,
       "ProdContinuousDeploymentPipelineStack",
       "prod",
       { owner: "Opetushallitus", name: "organisaatio", branch: "green-qa" },
-      props
+      props,
     );
 
-    const radiatorAccountId = "905418271050"
+    const radiatorAccountId = "905418271050";
     const radiatorReader = new iam.Role(this, "RadiatorReaderRole", {
       assumedBy: new iam.AccountPrincipal(radiatorAccountId),
       roleName: "RadiatorReader",
-    })
-    radiatorReader.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("AWSCodePipeline_ReadOnlyAccess"))
+    });
+    radiatorReader.addManagedPolicy(
+      iam.ManagedPolicy.fromAwsManagedPolicyName(
+        "AWSCodePipeline_ReadOnlyAccess",
+      ),
+    );
   }
 }
 
@@ -81,7 +85,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
     id: string,
     env: EnvironmentName,
     repository: Repository,
-    props: cdk.StackProps
+    props: cdk.StackProps,
   ) {
     super(scope, id, props);
     const capitalizedEnv = capitalize(env);
@@ -95,17 +99,21 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
       },
     );
 
-    const pipeline = new codepipeline.Pipeline(
-      this,
-      `DeployPipeline`,
-      {
-        pipelineName: `Deploy${capitalizedEnv}`,
-        pipelineType: codepipeline.PipelineType.V1,
-      }
+    const pipeline = new codepipeline.Pipeline(this, `DeployPipeline`, {
+      pipelineName: `Deploy${capitalizedEnv}`,
+      pipelineType: codepipeline.PipelineType.V1,
+    });
+    cdk.Tags.of(pipeline).add(
+      "Repository",
+      `${repository.owner}/${repository.name}`,
+      { includeResourceTypes: ["AWS::CodePipeline::Pipeline"] },
     );
-    cdk.Tags.of(pipeline).add("Repository", `${repository.owner}/${repository.name}`, { includeResourceTypes: ["AWS::CodePipeline::Pipeline"] });
-    cdk.Tags.of(pipeline).add("FromBranch", repository.branch, { includeResourceTypes: ["AWS::CodePipeline::Pipeline"] });
-    cdk.Tags.of(pipeline).add("ToBranch", `green-${env}`, { includeResourceTypes: ["AWS::CodePipeline::Pipeline"] });
+    cdk.Tags.of(pipeline).add("FromBranch", repository.branch, {
+      includeResourceTypes: ["AWS::CodePipeline::Pipeline"],
+    });
+    cdk.Tags.of(pipeline).add("ToBranch", `green-${env}`, {
+      includeResourceTypes: ["AWS::CodePipeline::Pipeline"],
+    });
 
     const sourceOutput = new codepipeline.Artifact();
     const sourceAction =
@@ -127,110 +135,134 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
       const testStage = pipeline.addStage({ stageName: "Test" });
 
       const amazonLinuxTests = [
-        { name: "OrganisaatioService", commands: ["scripts/ci/run-java-tests.sh"] },
-        { name: "OrganisaatioFrontend", commands: ["scripts/ci/run-frontend-tests.sh"] },
-        { name: "VardaRekisterointiJunit", commands: ["scripts/ci/run-varda-rekisterointi-java-tests.sh"] },
-      ]
+        {
+          name: "OrganisaatioService",
+          commands: ["scripts/ci/run-java-tests.sh"],
+        },
+        {
+          name: "OrganisaatioFrontend",
+          commands: ["scripts/ci/run-frontend-tests.sh"],
+        },
+        {
+          name: "VardaRekisterointiJunit",
+          commands: ["scripts/ci/run-varda-rekisterointi-java-tests.sh"],
+        },
+      ];
       for (const test of amazonLinuxTests) {
         testStage.addAction(
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
-            project: makeAmazonLinuxTestProject(this, env, `TestOrganisaatio${test.name}`, test.commands),
-          })
+            project: makeAmazonLinuxTestProject(
+              this,
+              env,
+              `TestOrganisaatio${test.name}`,
+              test.commands,
+            ),
+          }),
         );
       }
 
       const ubuntuTests = [
-        { name: "OrganisaatioPlaywright", commands: ["scripts/ci/run-playwright-tests.sh test:organisaatiot"] },
-        { name: "OsoitepalveluPlaywright", commands: ["scripts/ci/run-playwright-tests.sh test:osoitepalvelu"] },
-        { name: "RekisterointiPlaywright", commands: ["scripts/ci/run-rekisterointi-tests.sh"] },
-      ]
+        {
+          name: "OrganisaatioPlaywright",
+          commands: ["scripts/ci/run-playwright-tests.sh test:organisaatiot"],
+        },
+        {
+          name: "OsoitepalveluPlaywright",
+          commands: ["scripts/ci/run-playwright-tests.sh test:osoitepalvelu"],
+        },
+        {
+          name: "RekisterointiPlaywright",
+          commands: ["scripts/ci/run-rekisterointi-tests.sh"],
+        },
+      ];
       for (const test of ubuntuTests) {
         testStage.addAction(
           new codepipeline_actions.CodeBuildAction({
             actionName: test.name,
             input: sourceOutput,
             outputs: [new codepipeline.Artifact(test.name + "Output")],
-            project: makeUbuntuTestProject(this, env, `TestOrganisaatio${test.name}`, test.commands),
-          })
+            project: makeUbuntuTestProject(
+              this,
+              env,
+              `TestOrganisaatio${test.name}`,
+              test.commands,
+            ),
+          }),
         );
       }
     }
 
-    const deployProject = new codebuild.PipelineProject(
-      this,
-      `DeployProject`,
-      {
-        projectName: `Deploy${capitalizedEnv}`,
-        concurrentBuildLimit: 1,
-        environment: {
-          buildImage: codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
-          computeType: codebuild.ComputeType.SMALL,
-          privileged: true,
+    const deployProject = new codebuild.PipelineProject(this, `DeployProject`, {
+      projectName: `Deploy${capitalizedEnv}`,
+      concurrentBuildLimit: 1,
+      environment: {
+        buildImage: codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
+        computeType: codebuild.ComputeType.SMALL,
+        privileged: true,
+      },
+      environmentVariables: {
+        CDK_DEPLOY_TARGET_ACCOUNT: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: `/env/${env}/account_id`,
         },
-        environmentVariables: {
-          CDK_DEPLOY_TARGET_ACCOUNT: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: `/env/${env}/account_id`,
+        CDK_DEPLOY_TARGET_REGION: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: `/env/${env}/region`,
+        },
+        DOCKER_USERNAME: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/docker/username",
+        },
+        DOCKER_PASSWORD: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/docker/password",
+        },
+        SLACK_NOTIFICATIONS_CHANNEL_WEBHOOK_URL: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: `/env/${env}/slack-notifications-channel-webhook`,
+        },
+        GITHUB_PACKAGES_GRADLE_PROPERTIES: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: "/gradle/github-packages-gradle-properties",
+        },
+        MVN_SETTINGSXML: {
+          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
+          value: `/mvn/settingsxml`,
+        },
+      },
+      buildSpec: codebuild.BuildSpec.fromObject({
+        version: "0.2",
+        env: {
+          "git-credential-helper": "yes",
+        },
+        phases: {
+          pre_build: {
+            commands: [
+              "sudo yum install -y perl-Digest-SHA", // for shasum command
+              "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > github-packages-gradle.properties",
+              "echo $MVN_SETTINGSXML > ./settings.xml",
+              "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
+              "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
+            ],
           },
-          CDK_DEPLOY_TARGET_REGION: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: `/env/${env}/region`,
-          },
-          DOCKER_USERNAME: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: "/docker/username",
-          },
-          DOCKER_PASSWORD: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: "/docker/password",
-          },
-          SLACK_NOTIFICATIONS_CHANNEL_WEBHOOK_URL: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: `/env/${env}/slack-notifications-channel-webhook`,
-          },
-          GITHUB_PACKAGES_GRADLE_PROPERTIES: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: "/gradle/github-packages-gradle-properties",
-          },
-          MVN_SETTINGSXML: {
-            type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-            value: `/mvn/settingsxml`,
+          build: {
+            commands: [
+              `./deploy-${env}.sh && ./scripts/ci/tag-green-build-${env}.sh && ./scripts/ci/publish-release-notes-${env}.sh`,
+            ],
           },
         },
-        buildSpec: codebuild.BuildSpec.fromObject({
-          version: "0.2",
-          env: {
-            "git-credential-helper": "yes",
-          },
-          phases: {
-            pre_build: {
-              commands: [
-                "sudo yum install -y perl-Digest-SHA", // for shasum command
-                "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > github-packages-gradle.properties",
-                "echo $MVN_SETTINGSXML > ./settings.xml",
-                "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
-                "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
-              ],
-            },
-            build: {
-              commands: [
-                `./deploy-${env}.sh && ./scripts/ci/tag-green-build-${env}.sh && ./scripts/ci/publish-release-notes-${env}.sh`,
-              ],
-            },
-          },
-        }),
-      }
-    );
+      }),
+    });
 
     const deploymentTargetAccount = ssm.StringParameter.valueFromLookup(
       this,
-      `/env/${env}/account_id`
+      `/env/${env}/account_id`,
     );
     const deploymentTargetRegion = ssm.StringParameter.valueFromLookup(
       this,
-      `/env/${env}/region`
+      `/env/${env}/region`,
     );
 
     const targetRegions = [deploymentTargetRegion, ROUTE53_HEALTH_CHECK_REGION];
@@ -240,15 +272,15 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           new iam.PolicyStatement({
             effect: iam.Effect.ALLOW,
             actions: ["sts:AssumeRole"],
-            resources: targetRegions.flatMap(targetRegion => [
+            resources: targetRegions.flatMap((targetRegion) => [
               `arn:aws:iam::${deploymentTargetAccount}:role/cdk-hnb659fds-lookup-role-${deploymentTargetAccount}-${targetRegion}`,
               `arn:aws:iam::${deploymentTargetAccount}:role/cdk-hnb659fds-file-publishing-role-${deploymentTargetAccount}-${targetRegion}`,
               `arn:aws:iam::${deploymentTargetAccount}:role/cdk-hnb659fds-image-publishing-role-${deploymentTargetAccount}-${targetRegion}`,
               `arn:aws:iam::${deploymentTargetAccount}:role/cdk-hnb659fds-deploy-role-${deploymentTargetAccount}-${targetRegion}`,
-            ])
+            ]),
           }),
         ],
-      })
+      }),
     );
     const deployAction = new codepipeline_actions.CodeBuildAction({
       actionName: "Deploy",
@@ -266,9 +298,16 @@ function makeAmazonLinuxTestProject(
   name: string,
   testCommands: string[],
 ): codebuild.PipelineProject {
-  return makeTestProject(scope, env, name, testCommands, codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0, [
-    "sudo yum install -y perl-Digest-SHA", // for shasum command
-  ]);
+  return makeTestProject(
+    scope,
+    env,
+    name,
+    testCommands,
+    codebuild.LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
+    [
+      "sudo yum install -y perl-Digest-SHA", // for shasum command
+    ],
+  );
 }
 
 function makeUbuntuTestProject(
@@ -277,11 +316,18 @@ function makeUbuntuTestProject(
   name: string,
   testCommands: string[],
 ): codebuild.PipelineProject {
-  return makeTestProject(scope, env, name, testCommands, codebuild.LinuxBuildImage.STANDARD_7_0,  [
-    "sudo apt-get update -y",
-    "sudo apt-get install -y netcat", // for nc command
-    "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Chromium
-  ]);
+  return makeTestProject(
+    scope,
+    env,
+    name,
+    testCommands,
+    codebuild.LinuxBuildImage.STANDARD_7_0,
+    [
+      "sudo apt-get update -y",
+      "sudo apt-get install -y netcat", // for nc command
+      "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Chromium
+    ],
+  );
 }
 
 function makeTestProject(
@@ -322,7 +368,7 @@ function makeTestProject(
         TZ: {
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
           value: "Europe/Helsinki",
-        }
+        },
       },
       buildSpec: codebuild.BuildSpec.fromObject({
         version: "0.2",
@@ -347,19 +393,19 @@ function makeTestProject(
               "echo $MVN_SETTINGSXML > ./settings.xml",
               "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
               "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
-            ]
+            ],
           },
           build: {
             commands: testCommands,
           },
           post_build: {
             commands: [
-              "mkdir -p playwright/test-results && touch playwright/test-results/dummy && tar czf playwright-organisaatio-ui.tar.gz playwright/test-results/*"
-            ]
-          }
+              "mkdir -p playwright/test-results && touch playwright/test-results/dummy && tar czf playwright-organisaatio-ui.tar.gz playwright/test-results/*",
+            ],
+          },
         },
       }),
-    }
+    },
   );
 }
 

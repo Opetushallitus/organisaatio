@@ -12,88 +12,96 @@ export type Config = {
   lampiExport?: {
     enabled: boolean;
     bucketName: string;
-  }
+  };
   oauthJwtIssuerUri: string;
   oppijanumerorekisteriBaseUrl: string;
-}
+};
 const defaultConfig = {
-    minCapacity: 1,
-    maxCapacity: 1,
-    vardaRekisterointiCapacity: 0,
-    features: {
-      "organisaatio.tasks.datantuonti.import.enabled": false
-    }
+  minCapacity: 1,
+  maxCapacity: 1,
+  vardaRekisterointiCapacity: 0,
+  features: {
+    "organisaatio.tasks.datantuonti.import.enabled": false,
+  },
 };
 
 export function getEnvironment(): EnvironmentName {
-    const env = process.env.ENV;
-    if (!env) {
-        throw new Error("ENV environment variable is not set");
-    }
-    if (!contains(environments, env)) {
-        throw new Error(`Invalid environment name: ${env}`);
-    }
-    return env as EnvironmentName;
+  const env = process.env.ENV;
+  if (!env) {
+    throw new Error("ENV environment variable is not set");
+  }
+  if (!contains(environments, env)) {
+    throw new Error(`Invalid environment name: ${env}`);
+  }
+  return env as EnvironmentName;
 }
 
 function contains(arr: readonly string[], value: string): boolean {
-    return arr.includes(value);
+  return arr.includes(value);
 }
 
 export function getConfig(): Config {
-    const env = getEnvironment();
-    return { hahtuva, dev, qa, prod }[env];
+  const env = getEnvironment();
+  return { hahtuva, dev, qa, prod }[env];
 }
 
 export const hahtuva: Config = {
-    ...defaultConfig,
-    opintopolkuHost: "hahtuvaopintopolku.fi",
-    vardaRekisterointiCapacity: 1,
-    features: {
-        "organisaatio.tasks.datantuonti.import.enabled": true
-    },
-    oauthJwtIssuerUri: "https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
-  oppijanumerorekisteriBaseUrl: "https://hahtuva.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
+  ...defaultConfig,
+  opintopolkuHost: "hahtuvaopintopolku.fi",
+  vardaRekisterointiCapacity: 1,
+  features: {
+    "organisaatio.tasks.datantuonti.import.enabled": true,
+  },
+  oauthJwtIssuerUri:
+    "https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+  oppijanumerorekisteriBaseUrl:
+    "https://hahtuva.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
 
 export const dev: Config = {
-    ...defaultConfig,
-    opintopolkuHost: "untuvaopintopolku.fi",
-    vardaRekisterointiCapacity: 1,
-    features: {
-        "organisaatio.tasks.datantuonti.import.enabled": true
-    },
-    lampiExport: {
-      enabled: true,
-      bucketName: "oph-lampi-dev",
-    },
-    oauthJwtIssuerUri: "https://kayttooikeus.dev.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
-  oppijanumerorekisteriBaseUrl: "https://dev.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
+  ...defaultConfig,
+  opintopolkuHost: "untuvaopintopolku.fi",
+  vardaRekisterointiCapacity: 1,
+  features: {
+    "organisaatio.tasks.datantuonti.import.enabled": true,
+  },
+  lampiExport: {
+    enabled: true,
+    bucketName: "oph-lampi-dev",
+  },
+  oauthJwtIssuerUri:
+    "https://kayttooikeus.dev.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+  oppijanumerorekisteriBaseUrl:
+    "https://dev.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
 
 export const qa: Config = {
-    ...defaultConfig,
-    opintopolkuHost: "testiopintopolku.fi",
-    vardaRekisterointiCapacity: 1,
-    features: {
-        "organisaatio.tasks.datantuonti.import.enabled": true
-    },
-    lampiExport: {
-      enabled: true,
-      bucketName: "oph-lampi-qa",
-    },
-    oauthJwtIssuerUri: "https://kayttooikeus.qa.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
-  oppijanumerorekisteriBaseUrl: "https://qa.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
+  ...defaultConfig,
+  opintopolkuHost: "testiopintopolku.fi",
+  vardaRekisterointiCapacity: 1,
+  features: {
+    "organisaatio.tasks.datantuonti.import.enabled": true,
+  },
+  lampiExport: {
+    enabled: true,
+    bucketName: "oph-lampi-qa",
+  },
+  oauthJwtIssuerUri:
+    "https://kayttooikeus.qa.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+  oppijanumerorekisteriBaseUrl:
+    "https://qa.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
 
 export const prod: Config = {
-    ...defaultConfig,
-    opintopolkuHost: "opintopolku.fi",
-    vardaRekisterointiCapacity: 1,
-    lampiExport: {
-      enabled: true,
-      bucketName: "oph-lampi-prod",
-    },
-    oauthJwtIssuerUri: "https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
-  oppijanumerorekisteriBaseUrl: "https://prod.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
+  ...defaultConfig,
+  opintopolkuHost: "opintopolku.fi",
+  vardaRekisterointiCapacity: 1,
+  lampiExport: {
+    enabled: true,
+    bucketName: "oph-lampi-prod",
+  },
+  oauthJwtIssuerUri:
+    "https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+  oppijanumerorekisteriBaseUrl:
+    "https://prod.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };

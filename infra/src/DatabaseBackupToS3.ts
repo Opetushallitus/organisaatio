@@ -20,7 +20,10 @@ type DatabaseBackupToS3Props = {
   alarmTopic: sns.ITopic;
 };
 
-export class DatabaseBackupToS3 extends constructs.Construct implements ec2.IConnectable {
+export class DatabaseBackupToS3
+  extends constructs.Construct
+  implements ec2.IConnectable
+{
   readonly connections: ec2.Connections;
 
   constructor(
@@ -167,7 +170,7 @@ export class DatabaseBackupToS3 extends constructs.Construct implements ec2.ICon
     );
 
     this.connections = new ec2.Connections({
-      securityGroups: [securityGroup]
+      securityGroups: [securityGroup],
     });
   }
 }
