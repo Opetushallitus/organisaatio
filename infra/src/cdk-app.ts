@@ -24,7 +24,8 @@ import {getConfig, getEnvironment} from "./config";
 import {createHealthCheckStacks} from "./health-check";
 import {DatabaseBackupToS3} from "./DatabaseBackupToS3";
 import {DatantuontiStack} from "./datantuonti";
-import {Bucket} from "aws-cdk-lib/aws-s3";
+
+const config = getConfig();
 
 class CdkApp extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -35,8 +36,6 @@ class CdkApp extends cdk.App {
         region: process.env.CDK_DEPLOY_TARGET_REGION,
       },
     };
-
-    const config = getConfig();
 
     const { hostedZone } = new DnsStack(this, "DnsStack", stackProps);
     const { alarmTopic, alarmsToSlackLambda } = new AlarmStack(this, "AlarmStack", stackProps);
@@ -341,7 +340,6 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       props: OrganisaatioApplicationStackProps,
   ) {
     super(scope, id, props);
-    const conf = getConfig();
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
       logGroupName: "Organisaatio/organisaatio",
       retention: logs.RetentionDays.INFINITE,
@@ -366,12 +364,12 @@ class OrganisaatioApplicationStack extends cdk.Stack {
           },
         });
 
-    const lampiProperties: ecs.ContainerDefinitionProps["environment"] = conf.lampiExport ? {
-      "organisaatio.tasks.export.enabled": conf.lampiExport.enabled.toString(),
+    const lampiProperties: ecs.ContainerDefinitionProps["environment"] = config.lampiExport ? {
+      "organisaatio.tasks.export.enabled": config.lampiExport.enabled.toString(),
       "organisaatio.tasks.export.bucket-name": props.exportBucket.bucketName,
-      "organisaatio.tasks.export.lampi-bucket-name": conf.lampiExport.bucketName
+      "organisaatio.tasks.export.lampi-bucket-name": config.lampiExport.bucketName
     } : {};
-    const lampiSecrets: ecs.ContainerDefinitionProps["secrets"] = conf.lampiExport ? {
+    const lampiSecrets: ecs.ContainerDefinitionProps["secrets"] = config.lampiExport ? {
       "organisaatio.tasks.export.lampi-role-arn": this.ssmString("LampiRoleArn"),
       "organisaatio.tasks.export.lampi-external-id": this.ssmSecret("LampiExternalId"),
     } : {};
@@ -390,10 +388,10 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         "organisaatio.tasks.datantuonti.export.bucket-name": props.datantuontiExportBucket.bucketName,
         "organisaatio.tasks.datantuonti.export.encryption-key-id": props.datantuontiEncryptionKey.keyId,
         "organisaatio.tasks.datantuonti.export.encryption-key-arn": props.datantuontiEncryptionKey.keyArn,
-        "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`,
+        "organisaatio.tasks.datantuonti.import.enabled": `${config.features["organisaatio.tasks.datantuonti.import.enabled"]}`,
         ...lampiProperties,
-        "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
-        "oppijanumerorekisteri.baseurl": conf.oppijanumerorekisteriBaseUrl,
+        "otuva.jwt.issuer-uri": config.oauthJwtIssuerUri,
+        "oppijanumerorekisteri.baseurl": config.oppijanumerorekisteriBaseUrl,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
@@ -429,7 +427,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     props.datantuontiEncryptionKey.grantEncrypt(taskDefinition.taskRole);
     props.datantuontiExportBucket.grantReadWrite(taskDefinition.taskRole);
     props.exportBucket.grantReadWrite(taskDefinition.taskRole);
-    if (conf.lampiExport) {
+    if (config.lampiExport) {
       taskDefinition.addToTaskRolePolicy(
         new iam.PolicyStatement({
           actions: ["sts:AssumeRole"],
@@ -469,7 +467,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     const service = new ecs.FargateService(this, "Service", {
       cluster: props.ecsCluster,
       taskDefinition,
-      desiredCount: conf.minCapacity,
+      desiredCount: config.minCapacity,
       minHealthyPercent: 100,
       maxHealthyPercent: 200,
       circuitBreaker: {
@@ -479,8 +477,8 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       healthCheckGracePeriod: cdk.Duration.minutes(5),
     });
     const scaling = service.autoScaleTaskCount({
-      minCapacity: conf.minCapacity,
-      maxCapacity: conf.maxCapacity,
+      minCapacity: config.minCapacity,
+      maxCapacity: config.maxCapacity,
     });
 
     scaling.scaleOnMetric("ServiceScaling", {
@@ -541,14 +539,14 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       },
     });
 
-    if (conf.lampiExport) {
+    if (config.lampiExport) {
       this.exportFailureAlarm(logGroup, alarmTopic);
     }
     this.datantuontiExportFailureAlarm(logGroup, alarmTopic)
     this.organisaatioUpdateFailureAlarm(logGroup, alarmTopic);
     this.oivaIntegrationAlarm(logGroup, alarmTopic);
 
-    if (conf.features["organisaatio.tasks.datantuonti.import.enabled"]) {
+    if (config.features["organisaatio.tasks.datantuonti.import.enabled"]) {
       this.datantuontiImportFailureAlarm(logGroup, alarmTopic);
     }
   }
@@ -693,7 +691,6 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         },
       });
 
-    const conf = getConfig();
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
@@ -704,7 +701,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         postgresql_port: props.database.clusterEndpoint.port.toString(),
         postgresql_db: "vardarekisterointi",
         aws_region: this.region,
-        "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
+        "otuva.jwt.issuer-uri": config.oauthJwtIssuerUri,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
@@ -737,7 +734,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
     const service = new ecs.FargateService(this, "Service", {
       cluster: props.ecsCluster,
       taskDefinition,
-      desiredCount: conf.vardaRekisterointiCapacity,
+      desiredCount: config.vardaRekisterointiCapacity,
       minHealthyPercent: 100,
       maxHealthyPercent: 200,
       circuitBreaker: {
@@ -844,7 +841,6 @@ class RekisterointiApplicationStack extends cdk.Stack {
         },
       });
 
-    const conf = getConfig();
     const appPort = 8080;
     taskDefinition.addContainer("AppContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
@@ -852,7 +848,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
       environment: {
         ENV: getEnvironment(),
         aws_region: this.region,
-        "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
+        "otuva.jwt.issuer-uri": config.oauthJwtIssuerUri,
       },
       secrets: {
         varda_rekisterointi_service_username: this.ssmSecret("PalvelukayttajaUsername"),
