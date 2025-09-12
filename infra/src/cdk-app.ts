@@ -393,6 +393,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         "organisaatio.tasks.datantuonti.import.enabled": `${conf.features["organisaatio.tasks.datantuonti.import.enabled"]}`,
         ...lampiProperties,
         "otuva.jwt.issuer-uri": conf.oauthJwtIssuerUri,
+        "oppijanumerorekisteri.baseurl": conf.oppijanumerorekisteriBaseUrl,
       },
       secrets: {
         postgresql_username: ecs.Secret.fromSecretsManager(
