@@ -9,27 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        run: ./scripts/ci/run-frontend-tests.sh
+      - run: ./scripts/ci/run-frontend-tests.sh
   run-rekisterointi-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        run: ./scripts/ci/run-rekisterointi-tests.sh
+      - run: ./scripts/ci/run-rekisterointi-tests.sh
   run-java-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        run: ./scripts/ci/run-java-tests.sh
+      - run: ./scripts/ci/run-java-tests.sh
   run-rekisterointi-java-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        run: ./scripts/ci/run-varda-rekisterointi-java-tests.sh
+      - run: ./scripts/ci/run-varda-rekisterointi-java-tests.sh
   run-playwright-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        run: ./scripts/ci/run-playwright-tests.sh
+      - run: ./scripts/ci/run-playwright-tests.sh
       - uses: actions/upload-artifact@v4
         if: always()
         with:
