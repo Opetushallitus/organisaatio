@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 RUN mvn clean package -s settings.xml -DskipTests
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21.0.8@sha256:6f7e12166b3297823f56b9ea9adcae75b701a4f0585f093c10989fcd22c8ee9f
 WORKDIR /app
 
 COPY --from=build /app/target/varda-rekisterointi.jar varda-rekisterointi.jar
