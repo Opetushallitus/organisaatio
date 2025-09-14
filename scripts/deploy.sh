@@ -99,10 +99,6 @@ function setup_cdk_deployment_target_policy {
   POLICY_NAME=${policyName} npx ts-node "${repo}/infra/src/setup-cdk-deployment-target-policy.ts"
 }
 
-function is_running_on_codebuild {
-  [ -n "${CODEBUILD_BUILD_ID:-}" ]
-}
-
 function get_aws_region_of_env {
   local -r env=$1
   get_env_specific_param "${env}" region

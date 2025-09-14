@@ -107,3 +107,7 @@ function npm_ci_if_needed {
   shasum package-lock.json > "$( npm root )/package-lock.json.checksum"
   shasum package.json > "$( npm root )/package.json.checksum"
 }
+
+function is_running_on_codebuild {
+  [ -n "${CODEBUILD_BUILD_ID:-}" ]
+}
