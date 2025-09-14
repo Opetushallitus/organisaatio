@@ -25,7 +25,13 @@ function start_server {
   cd "${repo}/rekisterointi/rekisterointi-ui"
   npm run build
   cd "${repo}/rekisterointi"
-  "${repo}"/mvnw clean package -DskipTests -s ../settings.xml
+
+  if is_running_on_codebuild; then
+    "${repo}"/mvnw clean package -DskipTests -s ../settings.xml
+  else
+    "${repo}"/mvnw clean package -DskipTests
+  fi
+
   java -jar -Dspring.profiles.active=dev target/rekisterointi.jar &
   wait_for_port 3000
 }

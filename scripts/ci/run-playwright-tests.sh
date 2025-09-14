@@ -32,7 +32,13 @@ function start_ui {
 
 function start_server {
   cd "${repo}"
-  "${repo}"/mvnw clean package -DskipTests -s ./settings.xml
+
+  if is_running_on_codebuild; then
+    "${repo}"/mvnw clean package -DskipTests -s ../settings.xml
+  else
+    "${repo}"/mvnw clean package -DskipTests
+  fi
+
   java -jar \
     -Dspring.config.location=classpath:application.properties,classpath:application-test-envs.properties \
     -Dspring.profiles.active=dev \

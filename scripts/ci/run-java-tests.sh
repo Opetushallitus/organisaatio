@@ -10,7 +10,12 @@ function main {
   start_database
 
   cd "${repo}"
-  "${repo}"/mvnw clean install -s ./settings.xml
+
+  if is_running_on_codebuild; then
+    "${repo}"/mvnw clean install -s ../settings.xml
+  else
+    "${repo}"/mvnw clean install
+  fi
 }
 
 function start_database {
