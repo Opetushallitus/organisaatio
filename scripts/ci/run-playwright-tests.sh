@@ -34,7 +34,7 @@ function start_server {
   cd "${repo}"
 
   if is_running_on_codebuild; then
-    "${repo}"/mvnw clean package -DskipTests -s ../settings.xml
+    "${repo}"/mvnw clean package -DskipTests -s ./settings.xml
   else
     "${repo}"/mvnw clean package -DskipTests
   fi

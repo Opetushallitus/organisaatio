@@ -12,7 +12,7 @@ function main {
   cd "${repo}"
 
   if is_running_on_codebuild; then
-    "${repo}"/mvnw clean install -s ../settings.xml
+    "${repo}"/mvnw clean install -s ./settings.xml
   else
     "${repo}"/mvnw clean install
   fi
