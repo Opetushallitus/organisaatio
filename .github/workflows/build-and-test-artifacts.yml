@@ -42,7 +42,7 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
       - run: ./scripts/ci/run-varda-rekisterointi-java-tests.sh
-  run-playwright-tests:
+  run-playwright-tests-organisaatiot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,11 +50,25 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '21'
-      - run: ./scripts/ci/run-playwright-tests.sh
+      - run: ./scripts/ci/run-playwright-tests.sh test:organisaatiot
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
           path: playwright/playwright-report/
           retention-days: 30
-
+  run-playwright-tests-osoitepalvelu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+      - run: ./scripts/ci/run-playwright-tests.sh test:osoitepalvelu
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright/playwright-report/
+          retention-days: 30
