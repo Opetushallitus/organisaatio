@@ -24,6 +24,8 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
       - run: ./scripts/ci/run-rekisterointi-tests.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   run-java-tests:
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +35,8 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
       - run: ./scripts/ci/run-java-tests.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   run-rekisterointi-java-tests:
     runs-on: ubuntu-latest
     steps:
@@ -42,6 +46,8 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
       - run: ./scripts/ci/run-varda-rekisterointi-java-tests.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   run-playwright-tests-organisaatiot:
     runs-on: ubuntu-latest
     steps:
@@ -51,6 +57,8 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
       - run: ./scripts/ci/run-playwright-tests.sh test:organisaatiot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -66,6 +74,8 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
       - run: ./scripts/ci/run-playwright-tests.sh test:osoitepalvelu
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
