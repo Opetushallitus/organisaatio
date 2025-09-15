@@ -5,6 +5,11 @@ on:
   pull_request:
 
 jobs:
+  run-prettuer-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/ci/run-prettier-check.sh
   run-frontend-tests:
     runs-on: ubuntu-latest
     steps:
