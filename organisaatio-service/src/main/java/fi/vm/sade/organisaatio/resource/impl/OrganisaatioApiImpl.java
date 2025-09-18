@@ -161,7 +161,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             log.warn("SadeBusinessException saving new org");
             throw new OrganisaatioResourceException(sbe);
         } catch (Exception t) {
-            log.warn("Throwable saving new org");
+            log.error("Unexpected error saving new org", t);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
