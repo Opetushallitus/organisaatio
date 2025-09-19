@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -152,6 +153,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @CheckAddPermission
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
         try {
+            log.debug(toJson(ordto));
             return organisaatioBusinessService.save(ordto, false);
         } catch (ValidationException ex) {
             log.warn("ValidationException saving new org");
@@ -164,6 +166,14 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             log.error("Unexpected error saving new org", t);
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
+        }
+    }
+
+    private String toJson(Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
