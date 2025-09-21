@@ -153,7 +153,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @CheckAddPermission
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
         try {
-            log.debug(toJson(ordto));
             return organisaatioBusinessService.save(ordto, false);
         } catch (ValidationException ex) {
             log.warn("ValidationException saving new org");
