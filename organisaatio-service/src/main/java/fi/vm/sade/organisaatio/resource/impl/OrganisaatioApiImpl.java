@@ -75,6 +75,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     private OrganisaatioNimiMasking organisaatioNimiMasking;
     @Autowired
     private ProtectedDataListener protectedDataListener;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -170,7 +172,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
 
     private String toJson(Object obj) {
         try {
-            return new ObjectMapper().writeValueAsString(obj);
+            return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
