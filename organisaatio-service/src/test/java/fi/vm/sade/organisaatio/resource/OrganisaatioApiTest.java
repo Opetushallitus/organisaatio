@@ -1,5 +1,7 @@
 package fi.vm.sade.organisaatio.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -208,5 +210,52 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
                 .get()
                 .get("email")
             ).isEqualTo("testi@muusi.com");
+    }
+
+    String organisationJsonWithIdInYhteystieto = """
+            {
+              "nimi": {
+                "fi": "Keuda Koulutuspalvelut Oy"
+              },
+              "alkuPvm": "2016-05-23",
+              "parentOid": "1.2.246.562.24.00000000001",
+              "tyypit": [
+                "organisaatiotyyppi_02"
+              ],
+              "yhteystiedot": [
+                {
+                  "numero": "0927381",
+                  "tyyppi": "puhelin",
+                  "kieli": "kieli_fi#1",
+                  "yhteystietoOid": "1.2.246.562.5.51215678692",
+                  "id": "10987888"
+                }
+              ],
+              "nimet": [
+                {
+                  "nimi": {
+                    "fi": "Keuda Koulutuspalvelut Oy"
+                  },
+                  "alkuPvm": "2024-05-07"
+                }
+              ],
+              "oppilaitosTyyppiUri": "oppilaitostyyppi_xx#1",
+              "kotipaikkaUri": "kunta_186",
+              "maaUri": "maatjavaltiot1_fin",
+              "kieletUris": [
+                "oppilaitoksenopetuskieli_1#1"
+              ],
+              "ytjkieli": "kieli_fi#1"
+            }
+            """;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void newOrganisaatioIgnoresIdInYhteystieto() throws JsonProcessingException {
+        setCurrentUser("1.2.3.4.5", getAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD", OPH_OID));
+        var organisaatio = objectMapper.readValue(organisationJsonWithIdInYhteystieto, OrganisaatioRDTOV4.class);
+        resource.newOrganisaatio(organisaatio);
     }
 }

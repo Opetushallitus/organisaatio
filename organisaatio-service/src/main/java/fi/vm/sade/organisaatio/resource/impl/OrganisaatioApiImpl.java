@@ -155,6 +155,12 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @CheckAddPermission
     public ResultRDTOV4 newOrganisaatio(OrganisaatioRDTOV4 ordto) {
         try {
+            var yhteystiedot = ordto
+                    .getYhteystiedot()
+                    .stream()
+                    .map(this::dropKeyId)
+                    .collect(Collectors.toSet());
+            ordto.setYhteystiedot(yhteystiedot);
             return organisaatioBusinessService.save(ordto, false);
         } catch (ValidationException ex) {
             log.warn("ValidationException saving new org");
@@ -168,6 +174,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR,
                     t.getMessage(), "generic.error");
         }
+    }
+
+    private Map<String, String> dropKeyId(Map<String, String> map) {
+        map.remove("id");
+        return map;
     }
 
     private String toJson(Object obj) {
