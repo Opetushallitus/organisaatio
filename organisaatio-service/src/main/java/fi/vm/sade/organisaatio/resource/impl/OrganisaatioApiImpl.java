@@ -180,7 +180,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         return map.entrySet()
                 .stream()
                 .filter(e -> !"id".equals(e.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .collect(HashMap::new,
+                        (m, e) -> m.put(e.getKey(), e.getValue()),
+                        Map::putAll);
     }
 
     private String toJson(Object obj) {
