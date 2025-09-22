@@ -177,8 +177,10 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     }
 
     private Map<String, String> dropKeyId(Map<String, String> map) {
-        map.remove("id");
-        return map;
+        return map.entrySet()
+                .stream()
+                .filter(e -> !"id".equals(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private String toJson(Object obj) {
