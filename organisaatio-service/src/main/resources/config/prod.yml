@@ -1,5 +1,6 @@
-spring.security.oauth2.resourceserver.jwt.issuer-uri: https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service
-spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service/oauth2/jwks
+#spring.security.oauth2.resourceserver.jwt.issuer-uri: https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service
+#spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service/oauth2/jwks
+organisaatio.jwt-issuers: https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service,https://prod.otuva.opintopolku.fi/kayttooikeus-service
 host.cas: "virkailija.opintopolku.fi"
 host.ilb: "https://virkailija.opintopolku.fi"
 host.virkailija: "virkailija.opintopolku.fi"

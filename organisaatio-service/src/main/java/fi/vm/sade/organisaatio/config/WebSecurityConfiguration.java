@@ -7,19 +7,27 @@ import fi.vm.sade.properties.OphProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas30ProxyTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +35,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -42,6 +51,20 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.KeySourceException;
+import com.nimbusds.jose.JWSAlgorithm.Family;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKMatcher;
+import com.nimbusds.jose.jwk.JWKSelector;
+import com.nimbusds.jose.jwk.KeyType;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+
 @Profile("!dev")
 @Configuration
 @EnableMethodSecurity(jsr250Enabled = false, prePostEnabled = true, securedEnabled = true)
@@ -50,6 +73,13 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class WebSecurityConfiguration {
     private final CasProperties casProperties;
     private final OphProperties ophProperties;
+
+    Map<String, AuthenticationManager> authenticationManagers = new HashMap<>();
+    JwtIssuerAuthenticationManagerResolver authenticationManagerResolver =
+            new JwtIssuerAuthenticationManagerResolver(authenticationManagers::get);
+
+    @Value("#{'${organisaatio.jwt-issuers}'.split(',')}")
+    private List<String> issuerUris;
 
     @Bean
     ServiceProperties serviceProperties() {
@@ -127,8 +157,8 @@ public class WebSecurityConfiguration {
 
     @Bean
     @Order(1)
-    @ConditionalOnProperty(name = "spring.security.oauth2.resourceserver.jwt.jwk-set-uri")
     SecurityFilterChain oauth2FilterChain(HttpSecurity http) throws Exception {
+        issuerUris.stream().forEach(this::addManager);
         return http
                 .headers(headers -> headers.disable())
                 .csrf(csrf -> csrf.disable())
@@ -140,8 +170,49 @@ public class WebSecurityConfiguration {
                 })
                 .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(oauth2JwtConverter())))
+                .oauth2ResourceServer(oauth2 -> oauth2.authenticationManagerResolver(authenticationManagerResolver))
                 .build();
+    }
+
+    public void addManager(String issuer) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(issuer + "/oauth2/jwks").jwtProcessorCustomizer(this::addJWSAlgorithms).build();
+        jwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuer));
+        JwtAuthenticationProvider authenticationProvider = new JwtAuthenticationProvider(jwtDecoder);
+        authenticationProvider.setJwtAuthenticationConverter(oauth2JwtConverter());
+        authenticationManagers.put(issuer, authenticationProvider::authenticate);
+    }
+
+    public <C extends SecurityContext> void addJWSAlgorithms(ConfigurableJWTProcessor<C> jwtProcessor) {
+        JWSKeySelector<C> selector = jwtProcessor.getJWSKeySelector();
+        if (selector instanceof JWSVerificationKeySelector) {
+            JWKSource<C> jwkSource = ((JWSVerificationKeySelector<C>)selector).getJWKSource();
+            Set<JWSAlgorithm> algorithms = getJWSAlgorithms(jwkSource);
+            selector = new JWSVerificationKeySelector<>(algorithms, jwkSource);
+            jwtProcessor.setJWSKeySelector(selector);
+        }
+    }
+
+    public <C extends SecurityContext> Set<JWSAlgorithm> getJWSAlgorithms(JWKSource<C> jwkSource) {
+        JWKMatcher jwkMatcher = (new JWKMatcher.Builder()).publicOnly(true).keyUses(new KeyUse[]{KeyUse.SIGNATURE, null}).keyTypes(new KeyType[]{KeyType.RSA, KeyType.EC}).build();
+        Set<JWSAlgorithm> jwsAlgorithms = new HashSet<>();
+        try {
+            List<? extends JWK> jwks = jwkSource.get(new JWKSelector(jwkMatcher), (C)null);
+            Iterator<? extends JWK> var4 = jwks.iterator();
+            while(var4.hasNext()) {
+                JWK jwk = (JWK)var4.next();
+                if (jwk.getAlgorithm() != null) {
+                    JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(jwk.getAlgorithm().getName());
+                    jwsAlgorithms.add(jwsAlgorithm);
+                } else if (jwk.getKeyType() == KeyType.RSA) {
+                    jwsAlgorithms.addAll(Family.RSA);
+                } else if (jwk.getKeyType() == KeyType.EC) {
+                    jwsAlgorithms.addAll(Family.EC);
+                }
+            }
+        } catch (KeySourceException var7) {
+            throw new IllegalStateException(var7);
+        }
+        return jwsAlgorithms;
     }
 
     @Bean
