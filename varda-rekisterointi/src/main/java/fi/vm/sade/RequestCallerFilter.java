@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
@@ -22,8 +21,7 @@ public class RequestCallerFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            var callerOid = getJwtToken(servletRequest).map(token -> token.getToken().getSubject())
-                    .or(() -> getUserDetails(servletRequest).map(userDetails -> userDetails.getUsername()));
+            var callerOid = getUserDetails(servletRequest).map(userDetails -> userDetails.getUsername());
             callerOid.ifPresent(oid -> {
                 MDC.put(CALLER_HENKILO_OID_ATTRIBUTE, oid);
                 servletRequest.setAttribute(CALLER_HENKILO_OID_ATTRIBUTE, oid);
@@ -32,15 +30,6 @@ public class RequestCallerFilter extends GenericFilterBean {
         } finally {
             MDC.remove(CALLER_HENKILO_OID_ATTRIBUTE);
         }
-    }
-
-    private Optional<JwtAuthenticationToken> getJwtToken(ServletRequest servletRequest) {
-        if (servletRequest instanceof HttpServletRequest request) {
-            if (request.getUserPrincipal() instanceof JwtAuthenticationToken token) {
-                return Optional.of(token);
-            }
-        }
-        return Optional.empty();
     }
 
     private Optional<OphUserDetailsServiceImpl.UserDetailsImpl> getUserDetails(ServletRequest servletRequest) {

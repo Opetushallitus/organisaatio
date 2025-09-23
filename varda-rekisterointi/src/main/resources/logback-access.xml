@@ -1,0 +1,9 @@
+<configuration>
+    <appender name="ACCESS-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>{&quot;timestamp&quot;: &quot;%t{yyyy-MM-dd'T'HH:mm:ss.SSSZ}&quot;, &quot;requestId&quot;: &quot;%reqAttribute{fi.vm.sade.RequestIdFilter.requestId}&quot;, &quot;responseCode&quot;: &quot;%s&quot;, &quot;requestMapping&quot;: &quot;%reqAttribute{org.springframework.web.servlet.HandlerMapping.bestMatchingPattern}&quot;, &quot;request&quot;: &quot;%r&quot;, &quot;responseTime&quot;: &quot;%D&quot;, &quot;requestMethod&quot;: &quot;%m&quot;, &quot;user-agent&quot;: &quot;%i{User-Agent}&quot;, &quot;callerHenkiloOid&quot;: &quot;%reqAttribute{fi.vm.sade.RequestCallerFilter.callerHenkiloOid}&quot;, &quot;caller-id&quot;: &quot;%i{Caller-Id}&quot;, &quot;x-forwarded-for&quot;: &quot;%i{X-Forwarded-For}&quot;, &quot;remote-ip&quot;: &quot;%a&quot;, &quot;session&quot;: &quot;%reqCookie{JSESSIONID}&quot;, &quot;response-size&quot;: &quot;%B&quot;, &quot;referer&quot;: &quot;%i{Referer}&quot;}</pattern>
+        </encoder>
+    </appender>
+    <appender-ref ref="ACCESS-CONSOLE"/>
+</configuration>
