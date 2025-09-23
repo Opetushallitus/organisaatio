@@ -1,4 +1,4 @@
-package fi.vm.sade.organisaatio.service.filters;
+package fi.vm.sade;
 
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -24,13 +24,9 @@ public class RequestCallerFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            getUserDetails(servletRequest).ifPresent(userDetails -> {
-                var oid = userDetails.getUsername();
-                MDC.put(CALLER_HENKILO_OID_ATTRIBUTE, oid);
-                servletRequest.setAttribute(CALLER_HENKILO_OID_ATTRIBUTE, oid);
-            });
-            getJwtToken(servletRequest).ifPresent(jwt -> {
-                var oid = jwt.getName();
+            var callerOid = getJwtToken(servletRequest).map(token -> token.getToken().getSubject())
+                    .or(() -> getUserDetails(servletRequest).map(userDetails -> userDetails.getUsername()));
+            callerOid.ifPresent(oid -> {
                 MDC.put(CALLER_HENKILO_OID_ATTRIBUTE, oid);
                 servletRequest.setAttribute(CALLER_HENKILO_OID_ATTRIBUTE, oid);
             });
@@ -40,24 +36,21 @@ public class RequestCallerFilter extends GenericFilterBean {
         }
     }
 
-    private Optional<OphUserDetailsServiceImpl.UserDetailsImpl> getUserDetails(ServletRequest servletRequest) {
+    private Optional<JwtAuthenticationToken> getJwtToken(ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest request) {
-            var principal = request.getUserPrincipal();
-            if (principal instanceof CasAuthenticationToken token) {
-                var userDetails = token.getUserDetails();
-                if (userDetails instanceof OphUserDetailsServiceImpl.UserDetailsImpl casUserDetails) {
-                    return Optional.of(casUserDetails);
-                }
+            if (request.getUserPrincipal() instanceof JwtAuthenticationToken token) {
+                return Optional.of(token);
             }
         }
         return Optional.empty();
     }
 
-    private Optional<JwtAuthenticationToken> getJwtToken(ServletRequest servletRequest) {
+    private Optional<OphUserDetailsServiceImpl.UserDetailsImpl> getUserDetails(ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest request) {
-            var principal = request.getUserPrincipal();
-            if (principal instanceof JwtAuthenticationToken token) {
-                return Optional.of(token);
+            if (request.getUserPrincipal() instanceof CasAuthenticationToken token) {
+                if (token.getUserDetails() instanceof OphUserDetailsServiceImpl.UserDetailsImpl casUserDetails) {
+                    return Optional.of(casUserDetails);
+                }
             }
         }
         return Optional.empty();
