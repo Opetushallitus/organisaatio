@@ -28,14 +28,14 @@ public class KoodistoUpdateTask extends OneTimeTask<String> {
     @Override
     public void executeOnce(TaskInstance<String> taskInstance, ExecutionContext executionContext) {
         try {
-            MDC.put("requestId", RequestIdFilter.generateRequestId());
+            MDC.put(RequestIdFilter.REQUEST_ID_ATTRIBUTE, RequestIdFilter.generateRequestId());
             authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
             organisaatioKoodisto.paivitaKoodisto(taskInstance.getData());
         } catch (Exception e) {
             log.info("KoodistoUpdateTask failed with exception", e);
             throw e;
         } finally {
-            MDC.remove("requestId");
+            MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
         }
     }
 

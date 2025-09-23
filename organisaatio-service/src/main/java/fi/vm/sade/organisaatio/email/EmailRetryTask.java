@@ -31,14 +31,14 @@ public class EmailRetryTask extends RecurringTask<Void> {
     @Override
     public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
         try {
-            MDC.put("requestId", RequestIdFilter.generateRequestId());
+            MDC.put(RequestIdFilter.REQUEST_ID_ATTRIBUTE, RequestIdFilter.generateRequestId());
             authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
             execute();
         } catch (Exception e) {
             log.info("OsoitepalveluEmailRetryTask failed with exception", e);
             throw e;
         } finally {
-            MDC.remove("requestId");
+            MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
         }
     }
 

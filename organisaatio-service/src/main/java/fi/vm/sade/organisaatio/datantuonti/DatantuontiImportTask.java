@@ -40,7 +40,7 @@ public class DatantuontiImportTask extends RecurringTask<Void> {
     public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
         if (taskEnabled) {
             try {
-                MDC.put("requestId", RequestIdFilter.generateRequestId());
+                MDC.put(RequestIdFilter.REQUEST_ID_ATTRIBUTE, RequestIdFilter.generateRequestId());
                 log.info("Running organisaatio datantuonti import task");
                 importService.importTempTableFromS3();
                 importService.createNewOrganisations();
@@ -49,7 +49,7 @@ public class DatantuontiImportTask extends RecurringTask<Void> {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } finally {
-                MDC.remove("requestId");
+                MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
             }
         } else {
             log.info("Skipping organisaatio datantuonti import since it is not enabled");

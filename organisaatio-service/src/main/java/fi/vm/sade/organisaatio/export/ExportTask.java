@@ -37,7 +37,7 @@ public class ExportTask extends RecurringTask<Void> {
     @Override
     public void executeRecurringly(TaskInstance<Void> taskInstance, ExecutionContext executionContext) {
         try {
-            MDC.put("requestId", RequestIdFilter.generateRequestId());
+            MDC.put(RequestIdFilter.REQUEST_ID_ATTRIBUTE, RequestIdFilter.generateRequestId());
             if (taskEnabled) {
                 log.info("Running organisaatio export task");
                 exportService.createSchema();
@@ -50,7 +50,7 @@ public class ExportTask extends RecurringTask<Void> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            MDC.remove("requestId");
+            MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
         }
     }
 }

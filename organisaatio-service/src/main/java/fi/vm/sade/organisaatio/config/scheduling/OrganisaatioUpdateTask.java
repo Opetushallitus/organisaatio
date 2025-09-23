@@ -48,7 +48,7 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     @Override
     public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
         try {
-            MDC.put("requestId", RequestIdFilter.generateRequestId());
+            MDC.put(RequestIdFilter.REQUEST_ID_ATTRIBUTE, RequestIdFilter.generateRequestId());
             log.info("Running organisaatio update task");
             log.info("scheduledUpdate(): Cron Expression: {}, Current time: {}", nameUpdateCronExpression, new Date());
             authenticationUtil.configureAuthentication(ProtectedDataListener.ROLE_CRUD_OPH);
@@ -60,7 +60,7 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
             log.info("OrganisaatioUpdateTask failed with exception", e);
             throw e;
         } finally {
-            MDC.remove("requestId");
+            MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
         }
     }
 }
