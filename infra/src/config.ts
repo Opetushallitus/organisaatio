@@ -69,8 +69,7 @@ export const dev: Config = {
     enabled: true,
     bucketName: "oph-lampi-dev",
   },
-  oauthJwtIssuerUri:
-    "https://dev.otuva.opintopolku.fi/kayttooikeus-service",
+  oauthJwtIssuerUri: "https://dev.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://dev.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
@@ -86,8 +85,7 @@ export const qa: Config = {
     enabled: true,
     bucketName: "oph-lampi-qa",
   },
-  oauthJwtIssuerUri:
-    "https://qa.otuva.opintopolku.fi/kayttooikeus-service",
+  oauthJwtIssuerUri: "https://qa.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://qa.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
@@ -100,8 +98,7 @@ export const prod: Config = {
     enabled: true,
     bucketName: "oph-lampi-prod",
   },
-  oauthJwtIssuerUri:
-    "https://prod.otuva.opintopolku.fi/kayttooikeus-service",
+  oauthJwtIssuerUri: "https://prod.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://prod.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
