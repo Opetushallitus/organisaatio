@@ -53,7 +53,7 @@ export const hahtuva: Config = {
     "organisaatio.tasks.datantuonti.import.enabled": true,
   },
   oauthJwtIssuerUri:
-    "https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+    "https://hahtuva.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://hahtuva.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
@@ -70,7 +70,7 @@ export const dev: Config = {
     bucketName: "oph-lampi-dev",
   },
   oauthJwtIssuerUri:
-    "https://kayttooikeus.dev.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+    "https://dev.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://dev.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
@@ -87,7 +87,7 @@ export const qa: Config = {
     bucketName: "oph-lampi-qa",
   },
   oauthJwtIssuerUri:
-    "https://kayttooikeus.qa.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+    "https://qa.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://qa.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
@@ -101,7 +101,7 @@ export const prod: Config = {
     bucketName: "oph-lampi-prod",
   },
   oauthJwtIssuerUri:
-    "https://kayttooikeus.prod.yleiskayttoiset.opintopolku.fi/kayttooikeus-service",
+    "https://prod.otuva.opintopolku.fi/kayttooikeus-service",
   oppijanumerorekisteriBaseUrl:
     "https://prod.oppijanumerorekisteri.opintopolku.fi/oppijanumerorekisteri-service",
 };
