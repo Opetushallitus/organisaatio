@@ -49,7 +49,7 @@ public class Oauth2BearerClient {
         if (res.statusCode() != 200) {
             throw new RuntimeException("Oauth2 bearer returned status code " + res.statusCode() + ": " + res.body());
         }
-        log.debug("oauth2 bearer body: " + res.body());
+        log.info("oauth2 bearer body: " + res.body());
         var newToken = objectMapper.readValue(res.body(), Token.class).access_token();
         cachedToken = newToken;
         return newToken;

@@ -33,6 +33,7 @@ public class OtuvaOauth2Client {
             log.info("{} {} {}", response.statusCode(), response.request().method(), response.request().uri());
             return response;
         } catch (IOException|InterruptedException e) {
+            log.error("error while executing request", e);
             throw new RestClientException("error while executing request", e);
         }
     }
