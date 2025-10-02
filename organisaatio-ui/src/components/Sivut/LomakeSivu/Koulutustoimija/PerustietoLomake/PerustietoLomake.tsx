@@ -155,7 +155,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Rivi>
                         <LabelLink
                             value={'PERUSTIETO_YTUNNUS_MUUTOKSET'}
-                            to={'https://www.ytj.fi/index/ilmoittaminen/muutosilmoitus.html'}
+                            to={'https://www.ytj.fi'}
                         />
                     </Rivi>
                 </>
