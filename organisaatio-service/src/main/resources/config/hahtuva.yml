@@ -1,7 +1,6 @@
 spring.flyway.locations: classpath:db/migration,classpath:db/migration-test
-#spring.security.oauth2.resourceserver.jwt.issuer-uri: https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service
-#spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service/oauth2/jwks
-organisaatio.jwt-issuers: https://kayttooikeus.hahtuva.yleiskayttoiset.opintopolku.fi/kayttooikeus-service,https://hahtuva.otuva.opintopolku.fi/kayttooikeus-service
+spring.security.oauth2.resourceserver.jwt.issuer-uri: https://hahtuva.otuva.opintopolku.fi/kayttooikeus-service
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri: https://hahtuva.otuva.opintopolku.fi/kayttooikeus-service/oauth2/jwks
 host.cas: "virkailija.hahtuvaopintopolku.fi"
 host.ilb: "https://virkailija.hahtuvaopintopolku.fi"
 host.virkailija: "virkailija.hahtuvaopintopolku.fi"
