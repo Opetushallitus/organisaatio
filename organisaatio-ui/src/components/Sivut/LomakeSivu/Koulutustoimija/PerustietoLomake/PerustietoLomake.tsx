@@ -153,10 +153,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         ) && <LomakeButton label={'PERUSTIETO_PAIVITA_YTJ_TIEDOT'} onClick={openYtjModal} />}
                     </Rivi>
                     <Rivi>
-                        <LabelLink
-                            value={'PERUSTIETO_YTUNNUS_MUUTOKSET'}
-                            to={'https://www.ytj.fi'}
-                        />
+                        <LabelLink value={'PERUSTIETO_YTUNNUS_MUUTOKSET'} to={'https://www.ytj.fi'} />
                     </Rivi>
                 </>
             )}
