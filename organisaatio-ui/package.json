@@ -40,9 +40,9 @@
     "devDependencies": {
         "@types/joi-phone-number": "^5.0.6",
         "@types/node": "^20.12.11",
-        "@types/react": "^17.0.2",
+        "@types/react": "17.0.83",
         "@types/react-datepicker": "2.11.1",
-        "@types/react-dom": "^17.0.11",
+        "@types/react-dom": "17.0.26",
         "@types/react-notifications-component": "^3.1.2",
         "@types/react-router-dom": "5.1.5",
         "@types/react-table": "^7.0.19",
