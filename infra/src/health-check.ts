@@ -6,6 +6,7 @@ import * as cloudwatch from "aws-cdk-lib/aws-cloudwatch";
 import * as cloudwatch_actions from "aws-cdk-lib/aws-cloudwatch-actions";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as sns_subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
+import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import * as url from "node:url";
 
 export const ROUTE53_HEALTH_CHECK_REGION = "us-east-1";
@@ -130,6 +131,18 @@ class RegionalHealthCheckStack extends cdk.Stack {
     );
     globalAlarmTopic.addSubscription(
       new sns_subscriptions.LambdaSubscription(alarmsToSlackLambda),
+    );
+    const pagerDutyIntegrationUrlSecret =
+      secretsmanager.Secret.fromSecretNameV2(
+        this,
+        "PagerDutyIntegrationUrlSecret",
+        "PagerDutyIntegrationUrl",
+      );
+    globalAlarmTopic.addSubscription(
+      new sns_subscriptions.UrlSubscription(
+        pagerDutyIntegrationUrlSecret.secretValue.toString(),
+        { protocol: sns.SubscriptionProtocol.HTTPS },
+      ),
     );
   }
 }
