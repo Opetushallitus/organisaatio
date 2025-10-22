@@ -55,6 +55,18 @@ class GlobalHealthCheckStack extends cdk.Stack {
     this.globalAlarmTopic = new sns.Topic(this, "AlarmTopic", {
       topicName: "GlobalAlarm",
     });
+    const pagerDutyIntegrationUrlSecret =
+      secretsmanager.Secret.fromSecretNameV2(
+        this,
+        "PagerDutyIntegrationUrlSecret",
+        "PagerDutyIntegrationUrl",
+      );
+    this.globalAlarmTopic.addSubscription(
+      new sns_subscriptions.UrlSubscription(
+        pagerDutyIntegrationUrlSecret.secretValue.toString(),
+        { protocol: sns.SubscriptionProtocol.HTTPS },
+      ),
+    );
 
     for (const healthCheck of healthChecks) {
       const check = new route53.CfnHealthCheck(
@@ -131,18 +143,6 @@ class RegionalHealthCheckStack extends cdk.Stack {
     );
     globalAlarmTopic.addSubscription(
       new sns_subscriptions.LambdaSubscription(alarmsToSlackLambda),
-    );
-    const pagerDutyIntegrationUrlSecret =
-      secretsmanager.Secret.fromSecretNameV2(
-        this,
-        "PagerDutyIntegrationUrlSecret",
-        "PagerDutyIntegrationUrl",
-      );
-    globalAlarmTopic.addSubscription(
-      new sns_subscriptions.UrlSubscription(
-        pagerDutyIntegrationUrlSecret.secretValue.toString(),
-        { protocol: sns.SubscriptionProtocol.HTTPS },
-      ),
     );
   }
 }
