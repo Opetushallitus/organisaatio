@@ -24,6 +24,7 @@ import { getConfig, getEnvironment } from "./config";
 import { createHealthCheckStacks } from "./health-check";
 import { DatabaseBackupToS3 } from "./DatabaseBackupToS3";
 import { DatantuontiStack } from "./datantuonti";
+import { ResponseAlarms } from "./response-alarms";
 
 const config = getConfig();
 
@@ -99,6 +100,7 @@ class CdkApp extends cdk.App {
         database: vardaRekisterointiDatabaseStack.database,
         ecsCluster: ecsStack.cluster,
         ...stackProps,
+        alarmTopic,
       },
     );
     new RekisterointiApplicationStack(
@@ -106,7 +108,7 @@ class CdkApp extends cdk.App {
       "RekisterointiApplication",
       vpc,
       hostedZone,
-      { ecsCluster: ecsStack.cluster, ...stackProps },
+      { ecsCluster: ecsStack.cluster, ...stackProps, alarmTopic },
     );
     new OrganisaatioApplicationStack(
       this,
@@ -631,7 +633,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       certificates: [albCertificate],
     });
 
-    listener.addTargets("ServiceTarget", {
+    const target = listener.addTargets("ServiceTarget", {
       port: appPort,
       targets: [service],
       healthCheck: {
@@ -640,6 +642,15 @@ class OrganisaatioApplicationStack extends cdk.Stack {
         path: "/organisaatio-service/actuator/health",
         port: appPort.toString(),
       },
+    });
+
+    new ResponseAlarms(this, "ResponseAlarms", {
+      prefix: "Organisaatio",
+      alarmTopic,
+      alb,
+      albThreshold: 10,
+      target,
+      targetThreshold: 10,
     });
 
     if (config.lampiExport) {
@@ -772,6 +783,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
 type VardaRekisterointiApplicationStackProps = cdk.StackProps & {
   database: rds.DatabaseCluster;
   ecsCluster: ecs.Cluster;
+  alarmTopic: sns.ITopic;
 };
 
 class VardaRekisterointiApplicationStack extends cdk.Stack {
@@ -910,7 +922,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       certificates: [albCertificate],
     });
 
-    listener.addTargets("ServiceTarget", {
+    const target = listener.addTargets("ServiceTarget", {
       port: appPort,
       targets: [service],
       healthCheck: {
@@ -919,6 +931,14 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
         path: "/varda-rekisterointi/actuator/health",
         port: appPort.toString(),
       },
+    });
+    new ResponseAlarms(this, "ResponseAlarms", {
+      prefix: "VardaRekisterointi",
+      alarmTopic: props.alarmTopic,
+      alb,
+      albThreshold: 10,
+      target,
+      targetThreshold: 10,
     });
   }
 
@@ -935,6 +955,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
 
 type RekisterointiApplicationStackProps = cdk.StackProps & {
   ecsCluster: ecs.Cluster;
+  alarmTopic: sns.ITopic;
 };
 
 class RekisterointiApplicationStack extends cdk.Stack {
@@ -1063,7 +1084,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
       certificates: [albCertificate],
     });
 
-    listener.addTargets("ServiceTarget", {
+    const target = listener.addTargets("ServiceTarget", {
       port: appPort,
       targets: [service],
       healthCheck: {
@@ -1072,6 +1093,14 @@ class RekisterointiApplicationStack extends cdk.Stack {
         path: "/actuator/health",
         port: appPort.toString(),
       },
+    });
+    new ResponseAlarms(this, "ResponseAlarms", {
+      prefix: "Rekisterointi",
+      alarmTopic: props.alarmTopic,
+      alb,
+      albThreshold: 10,
+      target,
+      targetThreshold: 10,
     });
   }
 
