@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,7 +16,6 @@ import java.net.http.HttpResponse;
 @RequiredArgsConstructor
 @Component
 public class Oauth2BearerClient {
-    private static final String CACHE_NAME_OAUTH2_BEARER = "oauth2Bearer";
     private final ObjectMapper objectMapper;
 
     @Value("${organisaatio.palvelukayttaja.client_id}")
@@ -30,7 +27,6 @@ public class Oauth2BearerClient {
 
     private String cachedToken = null;
 
-    @Cacheable(value = CACHE_NAME_OAUTH2_BEARER, sync = true)
     public String getOauth2Bearer() throws IOException, InterruptedException {
         if (cachedToken != null) return cachedToken;
         String tokenUrl = oauth2IssuerUri + "/oauth2/token";
@@ -55,7 +51,6 @@ public class Oauth2BearerClient {
         return newToken;
     }
 
-    @CacheEvict(value = CACHE_NAME_OAUTH2_BEARER, allEntries = true)
     public void evictOauth2Bearer() {
         log.info("evicting oauth2 bearer cache");
         cachedToken = null;
