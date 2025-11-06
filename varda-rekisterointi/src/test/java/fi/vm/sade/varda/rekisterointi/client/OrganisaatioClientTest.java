@@ -43,6 +43,8 @@ public class OrganisaatioClientTest {
         properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
         var bearer = new Oauth2BearerClient(objectMapper);
         bearer.setOauth2IssuerUri("http://localhost:" + wireMockRule.port());
+        bearer.setClientId("dummy");
+        bearer.setClientSecret("dummy");
         client = new OrganisaatioClient(new OtuvaOauth2Client(bearer), properties, objectMapper);
     }
 

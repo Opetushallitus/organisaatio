@@ -39,6 +39,8 @@ public class KayttooikeusClientTest {
         properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
         var bearer = new Oauth2BearerClient(objectMapper);
         bearer.setOauth2IssuerUri("http://localhost:" + wireMockRule.port());
+        bearer.setClientId("dummy");
+        bearer.setClientSecret("dummy");
         client = new KayttooikeusClient(new OtuvaOauth2Client(bearer), properties, objectMapper);
     }
 

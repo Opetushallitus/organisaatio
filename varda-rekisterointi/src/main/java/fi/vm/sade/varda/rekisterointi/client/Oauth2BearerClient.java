@@ -2,6 +2,7 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,10 +24,13 @@ public class Oauth2BearerClient {
     private final ObjectMapper objectMapper;
 
     @Value("${varda-rekisterointi.palvelukayttaja.client-id}")
+    @Setter
     private String clientId;
     @Value("${varda-rekisterointi.palvelukayttaja.client-secret}")
+    @Setter
     private String clientSecret;
     @Value("${otuva.jwt.issuer-uri}")
+    @Setter
     private String oauth2IssuerUri;
 
     private String cachedToken = null;
@@ -68,10 +72,6 @@ public class Oauth2BearerClient {
     public void evictOauth2Bearer() {
         log.info("evicting oauth2 bearer cache");
         cachedToken = null;
-    }
-
-    public void setOauth2IssuerUri(String oauth2IssuerUri) {
-        this.oauth2IssuerUri = oauth2IssuerUri;
     }
 
     public record Token(String access_token, String token_type, Integer expires_in) {}
