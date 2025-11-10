@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { registerLocale } from 'react-datepicker';
 import { enGB, fi, sv } from 'date-fns/locale';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
 import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
@@ -32,6 +32,7 @@ const OrganisaatioApp: React.FC = () => {
                     <Notification />
                     <BrowserRouter basename={BASE_PATH}>
                         <Routes>
+                            <Route path="/" element={<Navigate to="/organisaatiot" replace />} />
                             <Route path="organisaatiot" element={<TaulukkoSivu />} />
                             <Route path="osoitteet/*" element={<OsoitteetSivu frontProperties={frontProperties} />} />
                             <Route path="lomake/uusi" element={<UusiToimijaLomake />} />
