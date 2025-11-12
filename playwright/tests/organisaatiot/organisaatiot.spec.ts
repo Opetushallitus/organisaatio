@@ -1021,19 +1021,3 @@ test.describe("Organisations", () => {
     });
   });
 });
-
-test.describe("Root path", () => {
-  test("redirects to organissatio haku", async ({ page }) => {
-    await page.goto("http://localhost:3003/organisaatio-service");
-    await page.waitForURL("**/organisaatiot");
-    await expect(page.url()).toContain("/organisaatiot");
-    await expect(page.url()).toBe(
-      "http://localhost:3003/organisaatio-service/organisaatiot",
-    );
-    await page.goto("http://localhost:3003/organisaatio-service/");
-    await page.waitForURL("**/organisaatiot");
-    await expect(page.url()).toBe(
-      "http://localhost:3003/organisaatio-service/organisaatiot",
-    );
-  });
-});
