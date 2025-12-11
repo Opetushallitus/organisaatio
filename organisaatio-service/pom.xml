@@ -12,6 +12,9 @@
 
     <artifactId>organisaatio-service</artifactId>
     <packaging>jar</packaging>
+    <properties>
+        <querydslVersion>5.1</querydslVersion>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -177,16 +180,16 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
             <classifier>jakarta</classifier>
-            <version>${querydsl.version}</version>
+            <version>${querydslVersion}</version>
         </dependency>
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <classifier>jakarta</classifier>
-            <version>${querydsl.version}</version>
+            <version>${querydslVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
