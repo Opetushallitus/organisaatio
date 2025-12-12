@@ -6,8 +6,8 @@ function main {
   export NVM_DIR="${NVM_DIR:-$HOME/.cache/nvm}"
   source "$repo/scripts/lib/nvm.sh"
 
-  nvm install -b 20
-  nvm use 20
+  cd "$repo"
+  nvm use || nvm install -b && nvm use
 
   cd "$repo/playwright"
   npm ci

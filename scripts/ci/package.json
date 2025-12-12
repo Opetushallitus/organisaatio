@@ -1,6 +1,6 @@
 {
   "name": "organisaatio-ci",
   "devDependencies": {
-    "@types/node": "20.15.0"
+    "@types/node": "24.10.3"
   }
 }
