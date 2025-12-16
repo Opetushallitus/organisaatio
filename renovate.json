@@ -1,10 +1,9 @@
 {
-  "extends": ["config:best-practices"],
-  "automerge": false,
+  "extends": ["config:best-practices", ":automergePatch"],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security"]
   },
-  "prConcurrentLimit": 5
+  "prConcurrentLimit": 10
 }
