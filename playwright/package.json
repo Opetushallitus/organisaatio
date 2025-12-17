@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@playwright/test": "1.50.0",
+    "@playwright/test": "1.57.0",
     "@types/node": "24.10.3",
     "finnish-business-ids": "3.1.1",
     "moment": "2.30.1",
