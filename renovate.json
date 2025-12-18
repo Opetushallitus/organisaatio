@@ -1,5 +1,5 @@
 {
-  "extends": ["config:best-practices", ":automergePatch"],
+  "extends": ["config:best-practices", ":automergePatch", ":automergeDigest"],
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
