@@ -35,7 +35,7 @@
         "fork-ts-checker-webpack-plugin": "8.0.0",
         "html-webpack-plugin": "5.6.5",
         "playwright-chromium": "1.32.3",
-        "prettier": "2.8.7",
+        "prettier": "2.8.8",
         "style-loader": "3.3.2",
         "ts-loader": "9.5.4",
         "typescript": "5.9.3",
