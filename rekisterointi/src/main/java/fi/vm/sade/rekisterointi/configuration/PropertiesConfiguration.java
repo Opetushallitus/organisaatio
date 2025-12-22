@@ -34,6 +34,7 @@ public class PropertiesConfiguration {
           environment.getRequiredProperty("varda-rekisterointi.username"));
       properties.addDefault("varda-rekisterointi.password",
           environment.getRequiredProperty("varda-rekisterointi.password"));
+      properties.addDefault("lokalisointi.override", environment.getProperty("lokalisointi.override"));
     }
     return properties;
   }

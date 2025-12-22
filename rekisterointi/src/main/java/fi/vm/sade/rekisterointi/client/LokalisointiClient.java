@@ -46,7 +46,9 @@ public class LokalisointiClient {
    *         -&gt; arvo
    */
   public Map<String, Map<String, String>> getByCategory(String category) {
-    return getByUrl(properties.url("lokalisointi.v1.listByCategory", category));
+    var override = properties.getOrElse("lokalisointi.override", null);
+    var url = override != null ? override : properties.url("lokalisointi.v1.listByCategory", category);
+    return getByUrl(url);
   }
 
   private Map<String, Map<String, String>> getByUrl(String url) {
