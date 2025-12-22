@@ -63,7 +63,7 @@
         "prettier": "2.2.1",
         "source-map-loader": "5.0.0",
         "style-loader": "4.0.0",
-        "ts-loader": "9.5.2",
+        "ts-loader": "9.5.4",
         "tsx": "4.19.4",
         "typescript": "5.9.3",
         "webpack": "5.98.0",
