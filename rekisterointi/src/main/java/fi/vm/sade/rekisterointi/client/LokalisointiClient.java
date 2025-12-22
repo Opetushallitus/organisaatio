@@ -3,6 +3,8 @@ package fi.vm.sade.rekisterointi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.properties.OphProperties;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -22,6 +24,9 @@ public class LokalisointiClient {
   private final OphHttpClient httpClient;
   private final OphProperties properties;
   private final ObjectMapper objectMapper;
+
+  @Value("${lokalisointi.override:null}")
+  private String urlOverride;
 
   /**
    * Alusta clientin annetulla HTTP-clientilla, konfiguraatiolla ja
@@ -46,8 +51,9 @@ public class LokalisointiClient {
    *         -&gt; arvo
    */
   public Map<String, Map<String, String>> getByCategory(String category) {
-    var override = properties.getOrElse("lokalisointi.override", null);
-    var url = override != null ? override : properties.url("lokalisointi.v1.listByCategory", category);
+    var url = urlOverride != null && urlOverride.startsWith("http")
+      ? urlOverride
+      : properties.url("lokalisointi.v1.listByCategory", category);
     return getByUrl(url);
   }
 
