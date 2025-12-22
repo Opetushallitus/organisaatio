@@ -1,4 +1,5 @@
 export repo="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
+export CDK_DISABLE_CLI_TELEMETRY=true
 readonly node_version=$( cat "$repo/.nvmrc" )
 
 function wait_for_container_to_be_healthy {
