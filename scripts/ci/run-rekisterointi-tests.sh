@@ -17,7 +17,7 @@ function main {
 }
 
 function start_mock_api {
-  cd "${repo}/rekisterointi/mock-api" && npm start &
+  cd "${repo}/mock-api" && npm run mock-api &
   wait_for_port 9000
 }
 
@@ -38,7 +38,7 @@ function start_server {
 
 function install_npm_dependencies {
   for bom_dir in "${repo}/rekisterointi/rekisterointi-ui" \
-                 "${repo}/rekisterointi/mock-api"; do
+                 "${repo}/mock-api"; do
     cd ${bom_dir}
     npm_ci_if_needed
   done

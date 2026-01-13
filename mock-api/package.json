@@ -11,9 +11,7 @@
         "connect-api-mocker": "1.11.0",
         "cors": "2.8.5",
         "express": "4.22.1",
-        "morgan": "1.10.1",
-        "morgan-body": "2.6.9",
-        "prettier": "2.8.8",
-        "express-xml-bodyparser": "0.4.1"
+        "express-xml-bodyparser": "0.4.1",
+        "morgan-body": "2.6.9"
     }
 }

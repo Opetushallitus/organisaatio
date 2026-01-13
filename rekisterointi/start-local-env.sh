@@ -30,7 +30,7 @@ tmux send-keys "cd rekisterointi-ui && npm run build:watch" C-m
 
 tmux splitw -v
 echo "starting mock-api"
-tmux send-keys "cd mock-api && npm install && npm start" C-m
+tmux send-keys "../scripts/run-mocks.sh" C-m
 
 open "http://localhost:3000/jotpa"
 
