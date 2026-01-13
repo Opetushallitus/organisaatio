@@ -128,10 +128,10 @@
     },
     "overrides": {
         "@opetushallitus/virkailija-ui-components": {
-            "@emotion/react": "11.13.3"
+            "@emotion/react": "11.13.5"
         },
         "react-select": {
-            "@emotion/react": "11.13.3"
+            "@emotion/react": "11.13.5"
         }
     }
 }
