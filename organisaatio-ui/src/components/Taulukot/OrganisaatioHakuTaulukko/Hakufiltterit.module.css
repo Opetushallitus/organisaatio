@@ -1,8 +1,9 @@
 .FiltteriRivi {
     display: flex;
-    flex-direction: row;
     padding: 1rem 0;
     justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }
 
 .InputContainer {
@@ -18,10 +19,6 @@
     display: flex;
     padding-left: 1rem;
     align-items: center;
-}
-
-.FiltteriRivi:first-of-type {
-    padding: 0;
 }
 
 .DropdownContainer {
@@ -44,21 +41,6 @@
 }
 .CheckboxContainer label:first-of-type {
     padding-left: 0;
-}
-
-a.LisatiedotLinkki,
-a.LisatiedotLinkki:visited {
-    border: 4px solid #0a789c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100%;
-    width: 2.3rem;
-    height: 2.3rem;
-    text-decoration: none;
-    color: #0a789c;
-    font-weight: bolder;
-    font-size: 1.7rem;
 }
 
 .TyhjennaNappiKentta {

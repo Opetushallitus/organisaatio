@@ -9,7 +9,6 @@ import IconWrapper from '../../IconWapper/IconWrapper';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
-import { LISATIEDOT_EXTERNAL_URI } from '../../../contexts/constants';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
 import Select, { SingleValue } from 'react-select';
@@ -21,13 +20,11 @@ import {
 import { SelectOptionType } from '../../../types/types';
 import useDebounce from '../../../tools/useDebounce';
 import axios, { CancelTokenSource } from 'axios';
-import LoadingBubbles from '../../Loading/LoadingBubbles';
 import { enrichWithAllNestedData } from './enrichWithAllNestedData';
 
 type HakufiltteritProps = {
     setOrganisaatiot: (data: OrganisaatioHakuOrganisaatio[]) => void;
     setLoading: (loading: boolean) => void;
-    isLoading: boolean;
 };
 
 type HakufiltteritSelectProps = {
@@ -55,7 +52,7 @@ const HakuFilterSelect = (props: HakufiltteritSelectProps) => {
     );
 };
 
-export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: HakufiltteritProps) {
+export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritProps) {
     const [i18n] = useAtom(languageAtom);
     const [remoteFilters, setRemoteFilters] = useAtom(remoteFiltersAtom);
     const [localFilters, setLocalFilters] = useAtom(localFiltersAtom);
@@ -139,35 +136,27 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
         <>
             <div className={styles.FiltteriRivi}>
                 <div className={styles.InputContainer}>
-                    <div>
-                        <Input
-                            className={styles.SearchInput}
-                            placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
-                            value={remoteFilters.searchString || ''}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                setRemoteFilters({ ...remoteFilters, searchString: e.target.value })
-                            }
-                            suffix={
-                                <Button
-                                    variant={'text'}
-                                    style={{ boxShadow: 'none' }}
-                                    onClick={() => setRemoteFilters({ ...remoteFilters, searchString: '' })}
-                                >
-                                    <IconWrapper color={'#999999'} icon={clearIcon} />
-                                </Button>
-                            }
-                        />
-                    </div>
-                    <div className={styles.LoadingBubblesContainer}>{isLoading && <LoadingBubbles />}</div>
+                    <Input
+                        className={styles.SearchInput}
+                        placeholder={i18n.translate('TAULUKKO_TOIMIJA_HAKU_PLACEHOLDER')}
+                        value={remoteFilters.searchString || ''}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setRemoteFilters({ ...remoteFilters, searchString: e.target.value })
+                        }
+                        suffix={
+                            <Button
+                                variant={'text'}
+                                style={{ boxShadow: 'none' }}
+                                onClick={() => setRemoteFilters({ ...remoteFilters, searchString: '' })}
+                            >
+                                <IconWrapper color={'#999999'} icon={clearIcon} />
+                            </Button>
+                        }
+                    />
                 </div>
                 <div>
-                    <a
-                        href={LISATIEDOT_EXTERNAL_URI}
-                        target={'_blank'}
-                        rel={'noreferrer'}
-                        className={styles.LisatiedotLinkki}
-                    >
-                        ?
+                    <a href="https://wiki.eduuni.fi/x/5olcCw" target="_blank" rel="noreferrer">
+                        {i18n.translate('OHJELINKKI')}
                     </a>
                 </div>
             </div>
@@ -177,7 +166,6 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading, isLoading }: Hakuf
                         name={'naytaPassivoidut'}
                         checked={remoteFilters.naytaPassivoidut}
                         onChange={handleRemoteCheckBoxChange}
-                        disabled={isLoading}
                     >
                         {i18n.translate('TAULUKKO_CHECKBOX_NAYTA_PASSIVOIDUT')}
                     </Checkbox>

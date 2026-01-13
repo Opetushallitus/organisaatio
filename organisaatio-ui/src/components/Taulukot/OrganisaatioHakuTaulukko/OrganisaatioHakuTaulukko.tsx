@@ -18,6 +18,7 @@ import { kuntaKoodistoAtom, organisaatioTyypitKoodistoAtom } from '../../../api/
 import { SelectOptionType } from '../../../types/types';
 import { OrganisaatioLink } from '../../OrganisaatioComponents';
 import { containingSomeValueFilter, expandData, includeVakaToimijatFilter } from './OrganisaatioHakuTaulukkoFn';
+import LoadingBubbles from '../../Loading/LoadingBubbles';
 
 const mapPaginationSelectors = (index: number) => {
     if (index < 3) return [0, 5];
@@ -241,7 +242,7 @@ export default function OrganisaatioHakuTaulukko() {
     ]);
     return (
         <div>
-            <Hakufiltterit isLoading={loading} setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
+            <Hakufiltterit setOrganisaatiot={setOrganisaatiot} setLoading={setLoading} />
             <div className={styles.TaulukkoContainer}>
                 <table {...getTableProps()} className={styles.Taulukko}>
                     <thead>
@@ -269,32 +270,40 @@ export default function OrganisaatioHakuTaulukko() {
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {page.map((row, index) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()} key={row.getRowProps().key}>
-                                    {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
-                                        return (
-                                            <td
-                                                {...cell.getCellProps({
-                                                    className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
-                                                        collapse: boolean;
-                                                    }).collapse
-                                                        ? styles.collapse
-                                                        : '',
-                                                })}
-                                                key={cell.getCellProps().key}
-                                                style={{
-                                                    background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
-                                                }}
-                                            >
-                                                {cell.render('Cell')}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                        {loading ? (
+                            <tr>
+                                <td colSpan={7} style={{ textAlign: 'center' }}>
+                                    <LoadingBubbles />
+                                </td>
+                            </tr>
+                        ) : (
+                            page.map((row, index) => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps()} key={row.getRowProps().key}>
+                                        {row.cells.map((cell: Cell<OrganisaatioHakuOrganisaatio>) => {
+                                            return (
+                                                <td
+                                                    {...cell.getCellProps({
+                                                        className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
+                                                            collapse: boolean;
+                                                        }).collapse
+                                                            ? styles.collapse
+                                                            : '',
+                                                    })}
+                                                    key={cell.getCellProps().key}
+                                                    style={{
+                                                        background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
+                                                    }}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })
+                        )}
                     </tbody>
                 </table>
 

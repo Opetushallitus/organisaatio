@@ -7,8 +7,6 @@ export const API_CONTEXT = `/organisaatio-service/internal`;
 export const PUBLIC_API_CONTEXT = `/organisaatio-service/api`;
 export const LEGACY_API_CONTEXT = `/organisaatio-service/rest`;
 export const rakenne = organisaatioRakenne as Rakenne[];
-export const LISATIEDOT_EXTERNAL_URI =
-    'https://wiki.eduuni.fi/display/OPHPALV/Ohjeet+ja+yhteystiedot#Ohjeetjayhteystiedot-Organisaatioidentiedot(Organisaatiopalvelu)';
 export const KOSKIPOSTI_TYYPI_OID = '1.2.246.562.5.79385887983';
 export const KOSKIPOSTI_BASE = {
     'YhteystietojenTyyppi.oid': KOSKIPOSTI_TYYPI_OID,
