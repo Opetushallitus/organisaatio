@@ -12,7 +12,7 @@
         "@lexical/selection": "^0.15.0",
         "@lexical/rich-text": "^0.15.0",
         "@hookform/resolvers": "^2.5.2",
-        "@iconify/icons-fa-solid": "1.1.1",
+        "@iconify/icons-fa-solid": "1.2.4",
         "@iconify/react": "3.2.2",
         "@joi/date": "^2.1.0",
         "@opetushallitus/virkailija-ui-components": "^0.4.6",
