@@ -14,6 +14,7 @@
  */
 package fi.vm.sade.organisaatio.business;
 
+import fi.vm.sade.organisaatio.business.exception.YtjUpdateTaskException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.YtjPaivitysLoki;
 import fi.vm.sade.organisaatio.resource.OrganisaatioResourceException;
@@ -22,7 +23,7 @@ public interface OrganisaatioYtjService {
     /**
     * Päivittää datan YTJ:stä koulutustoimijoille, työelämäjärjestöille ja muu organisaatioille
     */
-    YtjPaivitysLoki updateYTJData(final boolean forceUpdate);
+    YtjPaivitysLoki updateYTJData(final boolean forceUpdate) throws YtjUpdateTaskException;
 
     Organisaatio findOrganisaatioByYtunnus(String ytunnus) throws OrganisaatioResourceException;
 }

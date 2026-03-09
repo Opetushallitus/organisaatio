@@ -26,6 +26,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
 import fi.vm.sade.organisaatio.business.exception.AliorganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
+import fi.vm.sade.organisaatio.business.exception.YtjUpdateTaskException;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
 import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
@@ -47,7 +48,6 @@ import freemarker.template.TemplateException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -71,7 +71,7 @@ import java.io.IOException;
 
 @Slf4j
 @Service("organisaatioYtjService")
-@Transactional(rollbackFor = Throwable.class)
+@Transactional
 public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     private static final Pattern PUHELIN_VALIDATION = Pattern.compile(Puhelinnumero.VALIDATION_REGEXP);
@@ -117,9 +117,6 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     @Autowired
     private OphProperties properties;
 
-    @Autowired
-    private MessageSource messageSource;
-
     private YtjPaivitysLoki ytjPaivitysLoki;
 
     private static final String POSTIOSOITE_PREFIX = "posti_";
@@ -153,7 +150,7 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
     // Updates nimi and other info for all Koulutustoimija, Muu_organisaatio and Tyoelamajarjesto organisations using YTJ api
     @Override
-    public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) {
+    public YtjPaivitysLoki updateYTJData(final boolean forceUpdate) throws YtjUpdateTaskException {
         ytjPaivitysLoki = new YtjPaivitysLoki();
         ytjPaivitysLoki.setPaivitysaika(new Date());
         ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.ONNISTUNUT);
@@ -181,11 +178,10 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         if(ytjdtoList.isEmpty()) {
             log.error("YTJ-tietoja ei saatu haettua, päivitys keskeytetään.");
             ytjPaivitysLoki.setPaivitysTila(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT);
-            ytjPaivitysLoki.setPaivitysTilaSelite(messageSource.getMessage("ilmoitukset.log.virhe.ytjyhteys", null, Locale.of("fi", "FI")));
+            ytjPaivitysLoki.setPaivitysTilaSelite("ilmoitukset.log.virhe.ytjyhteys");
             ytjPaivitysLoki.setPaivitetytLkm(0);
             ytjPaivitysLokiRepository.save(ytjPaivitysLoki);
-            queueEmail(ytjPaivitysLoki);
-            return ytjPaivitysLoki;
+            throw new YtjUpdateTaskException("YTJ-tietoja ei saatu haettua, päivitys keskeytetään.");
         }
         // Update from YTJ data and get list of updated organisations
         List<Organisaatio> updateOrganisaatioList = doUpdate(ytjdtoList, organisaatiosByYtunnus, forceUpdate);
@@ -222,68 +218,49 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
 
         ytjPaivitysLoki.setPaivitetytLkm(updateOrganisaatioList.size());
         ytjPaivitysLokiRepository.save(ytjPaivitysLoki);
-        queueEmail(ytjPaivitysLoki);
+        getLopetettuVirheet(ytjPaivitysLoki).ifPresent(this::queueLopetettuEmail);
         return ytjPaivitysLoki;
     }
 
-    private void queueEmail(YtjPaivitysLoki ytjPaivitysLoki) {
-        String subject = "YTJ-paivitys info";
+    private Optional<List<YtjVirhe>> getLopetettuVirheet(YtjPaivitysLoki ytjPaivitysLoki) {
+        if (ytjPaivitysLoki.getYtjVirheet() == null) {
+            return Optional.empty();
+        }
+        var virheet = ytjPaivitysLoki.getYtjVirheet().stream()
+                .filter(v -> "ilmoitukset.log.virhe.lopetettu".equals(v.getVirheviesti()))
+                .toList();
+        return virheet.size() > 0
+            ? Optional.of(virheet)
+            : Optional.empty();
+    }
+
+    private void queueLopetettuEmail(List<YtjVirhe> lopetettuVirheet) {
+        String subject = "YTJ-päivitysinfo";
         QueuedEmail email = QueuedEmail.builder()
             .subject(subject)
             .recipients(List.of(serviceEmail))
-            .body(createBody(ytjPaivitysLoki, subject))
+            .body(createBody(lopetettuVirheet, subject))
             .build();
         emailService.queueEmail(email);
     }
 
     @Data
     @Builder
-    public static class Virhe {
-        String oid;
-        String nimi;
-        List<String> viestit;
-    }
-
-    @Data
-    @Builder
     public static class PaivityslokiViesti {
         String time;
-        String status;
         String otsikko;
-        List<Virhe> virheet;
+        List<YtjVirhe> virheet;
         String organisaatioUrl;
         String ilmoitusUrl;
     }
 
-    private String createBody(YtjPaivitysLoki ytjPaivitysLoki, String subject) {
-        Map<String, List<YtjVirhe>> virheMap = YtjPaivitysLoki.getYtjVirheetMapByOid(ytjPaivitysLoki.getYtjVirheet());
-
-        String time = ytjPaivitysLoki.getPaivitysaika() != null
-            ? emailFormat.format(ytjPaivitysLoki.getPaivitysaika())
-            : "(aikaa ei asetettu)";
-        String status = ytjPaivitysLoki.getPaivitysTila().equals(YtjPaivitysLoki.YTJPaivitysStatus.EPAONNISTUNUT)
-            ? "epäonnistui (" + ytjPaivitysLoki.getPaivitysTilaSelite() + ")"
-            : "onnistui" + (!ytjPaivitysLoki.getYtjVirheet().isEmpty() ? ", " + Integer.toString(virheMap.size()) + " virheellistä." : ".");
-
-        List<Virhe> virheet = virheMap.entrySet().stream()
-            .<Virhe>map(e -> Virhe.builder()
-                .oid(e.getKey())
-                .nimi(e.getValue().get(0).getOrgNimi())
-                .viestit(e.getValue().stream()
-                    .map(v -> messageSource.getMessage(v.getVirheviesti(), null, Locale.of("fi", "FI")))
-                    .toList()
-                )
-                .build()
-            )
-            .toList();
-
+    private String createBody(List<YtjVirhe> lopetettuVirheet, String subject) {
         PaivityslokiViesti viesti = PaivityslokiViesti.builder()
             .otsikko(subject)
-            .time(time)
-            .status(status)
+            .time(emailFormat.format(new Date()))
             .organisaatioUrl(properties.getProperty("organisaatio.ui.url"))
             .ilmoitusUrl(properties.getProperty("organisaatio.ui.ilmoitukset.url"))
-            .virheet(virheet.isEmpty() ? null : virheet)
+            .virheet(lopetettuVirheet)
             .build();
 
         try {

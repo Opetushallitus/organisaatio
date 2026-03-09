@@ -1,6 +1,7 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioYtjService;
+import fi.vm.sade.organisaatio.business.exception.YtjUpdateTaskException;
 import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Organisaatio;
@@ -41,20 +42,15 @@ class OrganisaatioYtjServiceImplPersistanceTest {
     private YtjPaivitysLokiRepository ytjPaivitysLokiRepository;
 
     @Test
-    void testPersistingChange() {
+    void testPersistingChange() throws Exception {
 
         Organisaatio foo = organisaatioRepository.findFirstByOid("1.2.2004.1");
         assertNull(foo.getYtjPaivitysPvm());
         assertEquals("oy", foo.getYritysmuoto());
 
-        when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of(getDto("2255802-1", "Suomi")));
+        when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of(getDto("2255802-1", "Suomi", false)));
         organisaatioYtjService.updateYTJData(false);
-
-        ArgumentCaptor<QueuedEmail> queuedEmail = ArgumentCaptor.forClass(QueuedEmail.class);
-        verify(emailService).queueEmail(queuedEmail.capture());
-        QueuedEmail email = queuedEmail.getValue();
-        assertThat(email.getBody()).containsPattern("YTJ-Tietojen haku .......... klo ..... onnistui.");
-        assertThat(email.getRecipients()).containsExactly("e@mail.com");
+        verify(emailService, never()).queueEmail(any());
 
         Organisaatio b = organisaatioRepository.findFirstByOid("1.2.2004.1");
         assertNotNull(b.getYtjPaivitysPvm());
@@ -68,23 +64,14 @@ class OrganisaatioYtjServiceImplPersistanceTest {
     }
 
     @Test
-    void testPersistingChangeOneFailure() {
-
+    void testPersistingChangeOneFailure() throws Exception {
         Organisaatio foo = organisaatioRepository.findFirstByOid("1.2.2004.1");
         assertNull(foo.getYtjPaivitysPvm());
         assertEquals("oy", foo.getYritysmuoto());
 
-
-        when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of(getDto("2255802-1", "Suomi"), getDto("1234569-5", null)));
+        when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of(getDto("2255802-1", "Suomi", false), getDto("1234569-5", null, false)));
         organisaatioYtjService.updateYTJData(false);
-
-        ArgumentCaptor<QueuedEmail> queuedEmail = ArgumentCaptor.forClass(QueuedEmail.class);
-        verify(emailService).queueEmail(queuedEmail.capture());
-        QueuedEmail email = queuedEmail.getValue();
-        assertThat(email.getBody()).containsPattern("YTJ-Tietojen haku .......... klo ..... onnistui, 1 virheellistä.");
-        assertThat(email.getBody()).contains("<a href=\"https://localhost:8180/organisaatio-ui/html/organisaatiot/1.2.8000.1\">node23 foo bar</a>");
-        assertThat(email.getBody()).contains("Organisaation kieli puuttuu YTJ:ssä");
-        assertThat(email.getRecipients()).containsExactly("e@mail.com");
+        verify(emailService, never()).queueEmail(any());
 
         Organisaatio a = organisaatioRepository.findFirstByOid("1.2.2004.1");
         assertNotNull(a.getYtjPaivitysPvm());
@@ -105,14 +92,8 @@ class OrganisaatioYtjServiceImplPersistanceTest {
     @Test
     void testYtjConnectionFailureCreatesAccurateLog() {
         when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of());
-
-        organisaatioYtjService.updateYTJData(false);
-
-        ArgumentCaptor<QueuedEmail> queuedEmail = ArgumentCaptor.forClass(QueuedEmail.class);
-        verify(emailService).queueEmail(queuedEmail.capture());
-        QueuedEmail email = queuedEmail.getValue();
-        assertThat(email.getBody()).containsPattern("YTJ-Tietojen haku .......... klo ..... epäonnistui \\(Tietojen haku YTJ-palvelusta epäonnistui\\)");
-        assertThat(email.getRecipients()).containsExactly("e@mail.com");
+        assertThrows(YtjUpdateTaskException.class, () -> organisaatioYtjService.updateYTJData(false));
+        verify(emailService, never()).queueEmail(any());
 
         List<YtjPaivitysLoki> ytjLoki = ytjPaivitysLokiRepository.findLatest(1000);
         assertEquals(1, ytjLoki.size(), "Ytj Pavitys Loki should contain exactly one row");
@@ -121,12 +102,28 @@ class OrganisaatioYtjServiceImplPersistanceTest {
         assertEquals(0, loki.getYtjVirheet().size());
         assertEquals(0, loki.getPaivitetytLkm());
         assertEquals("EPAONNISTUNUT", loki.getPaivitysTila().toString());
-        assertEquals("Tietojen haku YTJ-palvelusta epäonnistui", loki.getPaivitysTilaSelite());
+        assertEquals("ilmoitukset.log.virhe.ytjyhteys", loki.getPaivitysTilaSelite());
     }
 
-    private static YTJDTO getDto(String ytunnus, String kieli) {
+    @Test
+    void updateYTJDataSendsEmailOnOrganisaatioLopetettu() throws Exception {
+        when(ytjResource.doYtjMassSearch(any())).thenReturn(List.of(
+            getDto("2255802-1", "Suomi", true),
+            getDto("1234569-5", null, true))
+        );
+        organisaatioYtjService.updateYTJData(false);
+        ArgumentCaptor<QueuedEmail> queuedEmail = ArgumentCaptor.forClass(QueuedEmail.class);
+        verify(emailService).queueEmail(queuedEmail.capture());
+        QueuedEmail email = queuedEmail.getValue();
+        assertThat(email.getBody()).contains("löydettiin 2 lopetettua organisaatiota:<br/>");
+        assertThat(email.getBody()).contains("- <a href=\"https://localhost:8180/organisaatio-ui/html/organisaatiot/1.2.2004.1\">root test koulutustoimija</a><br />");
+        assertThat(email.getBody()).contains("- <a href=\"https://localhost:8180/organisaatio-ui/html/organisaatiot/1.2.8000.1\">node23 foo bar</a><br />");
+        assertThat(email.getRecipients()).containsExactly("e@mail.com");
+    }
+
+    private static YTJDTO getDto(String ytunnus, String kieli, boolean lopetettu) {
         YTunnusDTO ytdto = new YTunnusDTO();
-        ytdto.setYritysLopetettu(false);
+        ytdto.setYritysLopetettu(lopetettu);
         YTJOsoiteDTO odto = new YTJOsoiteDTO();
         odto.setPostinumero("99999");
         odto.setKatu("Foo street");

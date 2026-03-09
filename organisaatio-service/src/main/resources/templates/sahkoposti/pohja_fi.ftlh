@@ -20,7 +20,7 @@
     <#nested/>
 </div>
 <div class="box" style="text-align: right;">
-    <img src="http://www.oph.fi/instancedata/prime_product_julkaisu/oph/pics/opetushallitus2.gif" alt="Opetushallitus" />
+    <img src="http://www.oph.fi/themes/custom/ophfi/logo.svg" height="48" alt="Opetushallitus" />
 </div>
 </body>
 </html>

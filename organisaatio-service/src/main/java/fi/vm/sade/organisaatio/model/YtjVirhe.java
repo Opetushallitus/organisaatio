@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-// TODO XSS filtteri
 @Entity
 @Table(name = "ytjvirhe")
 @Comment("Sisältää YTJ-massapäivityksessä tulleen virheen oidin, virheellisen kentän ja kuvauksen.")

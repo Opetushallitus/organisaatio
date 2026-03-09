@@ -58,7 +58,7 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
             log.info("Organisaatio update task completed");
         } catch (Exception e) {
             log.info("OrganisaatioUpdateTask failed with exception", e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
             MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
         }

@@ -66,7 +66,7 @@ public class OrganisaatioYtjServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Test
-    public void updateYTJDataTest() {
+    public void updateYTJDataTest() throws Exception {
         service.updateYTJData(false);
         // verify that the database is updated properly
         List<String> oidList = new ArrayList<>();

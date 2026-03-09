@@ -16,13 +16,10 @@
 package fi.vm.sade.organisaatio.model;
 
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import jakarta.persistence.*;
 import java.util.*;
 
-// TODO XSS filtteri
 @Entity
 @Table(name = "ytjpaivitysloki")
 @Comment("Sisältää YTJ-massapäivityksen statuksen ja listan virheistä.")
@@ -47,8 +44,7 @@ public class YtjPaivitysLoki extends BaseEntity {
     @Column(name = "paivitys_tila_selite")
     private String paivitysTilaSelite;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(mappedBy = "ytjPaivitysLoki", cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
     private List<YtjVirhe> ytjVirheet = new ArrayList<YtjVirhe>();
 
     public Date getPaivitysaika() {
@@ -89,18 +85,5 @@ public class YtjPaivitysLoki extends BaseEntity {
 
     public void setYtjVirheet(List<YtjVirhe> ytjVirheet) {
         this.ytjVirheet = ytjVirheet;
-    }
-
-    public static Map<String, List<YtjVirhe>> getYtjVirheetMapByOid(List<YtjVirhe> ytjVirheet) {
-        Map<String, List<YtjVirhe>> virheMap = new HashMap<>();
-        for(final YtjVirhe ytjVirhe : ytjVirheet) {
-            if(virheMap.containsKey(ytjVirhe.getOid())) {
-                virheMap.get(ytjVirhe.getOid()).add(ytjVirhe);
-            }
-            else {
-                virheMap.put(ytjVirhe.getOid(), new ArrayList<YtjVirhe>(){{add(ytjVirhe);}});
-            }
-        }
-        return virheMap;
     }
 }

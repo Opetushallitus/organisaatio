@@ -1,25 +1,13 @@
 <#import "pohja_fi.ftlh" as pohja>
 
 <@pohja.sisalto otsikko>
+    <h1>${otsikko}</h1>
     <p>
-        YTJ-Tietojen haku ${time} ${status}
-    </p>
-    <#if virheet??>
-    <p>
+        YTJ-päivityksessä (${time}) löydettiin ${virheet?size} lopetettua organisaatiota:<br/>
         <#list virheet as virhe>
-        <div>
-            <a href="https://${organisaatioUrl}/${virhe.oid}">${virhe.nimi}</a>
-            <br />
-            <ul>
-                <#list virhe.viestit as viesti>
-                <li>${viesti}</li>
-                </#list>
-            </ul>
-            <br />
-        </div>
+            - <a href="https://${organisaatioUrl}/${virhe.oid}">${virhe.orgNimi}</a><br />
         </#list>
     </p>
-    </#if>
     <p>
         <a href="https://${ilmoitusUrl}">YTJ-päivitykset</a>
     </p>
