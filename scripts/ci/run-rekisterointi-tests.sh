@@ -32,7 +32,10 @@ function start_server {
     "${repo}"/mvnw clean package -DskipTests
   fi
 
-  java -jar -Dspring.profiles.active=dev target/rekisterointi.jar &
+  java -jar \
+    -Dspring.profiles.active=dev \
+    -Dlokalisointi.override=http://localhost:9000/lokalisointi/cxf/rest/v1/localisation\?category=jotpa-rekisterointi \
+    target/rekisterointi.jar &
   wait_for_port 3000
 }
 
