@@ -19,7 +19,7 @@ COPY pom.xml .
 
 RUN mvn clean package -s settings.xml -DskipTests
 
-FROM amazoncorretto:21.0.9@sha256:3664f91eacdcc0e5e804b9cd830ccbe57c1c2773c1e67096872d46901b45230f
+FROM amazoncorretto:21.0.10@sha256:0560910f891ef2d1277539b022de1f6c032d273f0f1e8444f45b7ef8005463c2
 WORKDIR /app
 
 COPY --from=build /app/organisaatio-service/target/organisaatio-service.jar organisaatio-service.jar
