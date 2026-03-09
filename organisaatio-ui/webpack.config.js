@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { createHash } = require('crypto');
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -181,9 +180,6 @@ module.exports = function () {
                     filename: '[name].[contenthash:8].css',
                     chunkFilename: '[name].[contenthash:8].chunk.css',
                 }),
-            new CopyWebpackPlugin({
-                patterns: [{ from: path.resolve(__dirname, 'public', 'favicon.ico') }],
-            }),
             new WebpackManifestPlugin({
                 fileName: 'asset-manifest.json',
                 publicPath: '/organisaatio-service/',
