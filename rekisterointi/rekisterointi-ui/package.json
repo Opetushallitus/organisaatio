@@ -24,7 +24,7 @@
         "yup": "^1.1.1"
     },
     "devDependencies": {
-        "@axe-core/playwright": "4.11.0",
+        "@axe-core/playwright": "4.11.1",
         "@playwright/test": "1.57.0",
         "@types/react": "18.3.27",
         "@types/react-datepicker": "4.10.0",
