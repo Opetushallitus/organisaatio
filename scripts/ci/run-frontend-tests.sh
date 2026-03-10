@@ -10,7 +10,6 @@ function main {
 
   cd "${repo}/organisaatio-ui"
   npm run lint
-  npm run prettier
   CI=true npm run test
   npm run build
 }
