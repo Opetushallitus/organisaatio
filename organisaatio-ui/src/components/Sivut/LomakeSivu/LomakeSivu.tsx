@@ -366,11 +366,18 @@ const LomakeSivu = () => {
         };
         switch (lomakeAvoinna) {
             case PERUSTIEDOTID:
-                readOnly ? setAvoinnaCb() : perustiedotHandleSubmit(setAvoinnaCb)();
-
+                if (readOnly) {
+                    setAvoinnaCb();
+                } else {
+                    perustiedotHandleSubmit(setAvoinnaCb)();
+                }
                 break;
             case YHTEYSTIEDOTID:
-                readOnly ? setAvoinnaCb() : yhteystiedotHandleSubmit(setAvoinnaCb)();
+                if (readOnly) {
+                    setAvoinnaCb();
+                } else {
+                    yhteystiedotHandleSubmit(setAvoinnaCb)();
+                }
                 break;
             default:
                 return setAvoinnaCb();
@@ -413,13 +420,8 @@ const LomakeSivu = () => {
             </PaaOsio>
         );
     }
-    const {
-        ytunnus,
-        organisaatioTyypit,
-        varhaiskasvatuksenToimipaikkaTiedot,
-        alkuPvm,
-        lakkautusPvm,
-    } = getPerustiedotValues();
+    const { ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot, alkuPvm, lakkautusPvm } =
+        getPerustiedotValues();
 
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];

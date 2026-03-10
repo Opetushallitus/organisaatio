@@ -96,8 +96,7 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
             searchRef.current = debouncedSearchString;
         })();
         return () => {
-            cancelTokenRef?.current &&
-                cancelTokenRef.current.cancel('Operation canceled due to exiting or another request came.');
+            cancelTokenRef?.current?.cancel('Operation canceled due to exiting or another request came.');
         };
     }, [
         debouncedSearchString,

@@ -19,7 +19,7 @@ export default function SelectController<T extends FieldValues>({
         <Controller
             control={form}
             name={name}
-            render={({ field: { ref, value, ...rest } }) => {
+            render={({ field: { ref: _, value, ...rest } }) => {
                 return (
                     <Select<KoodistoSelectOption>
                         isDisabled={disabled}

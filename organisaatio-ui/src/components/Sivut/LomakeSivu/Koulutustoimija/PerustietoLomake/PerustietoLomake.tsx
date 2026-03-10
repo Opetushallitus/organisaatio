@@ -74,7 +74,9 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
     const kunnatOptions = koodistot.kuntaKoodisto.selectOptions();
 
     const handleNimenMuutosModaaliClose = (nimiIsUpdated: boolean) => {
-        nimiIsUpdated && handleNimiTallennus();
+        if (nimiIsUpdated) {
+            handleNimiTallennus();
+        }
         setNimenmuutosModaaliAuki(false);
     };
     const { organisaatioTyypit, lakkautusPvm } = getPerustiedotValues();
@@ -121,7 +123,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                         <Controller
                             control={formControl}
                             name={'organisaatioTyypit'}
-                            render={({ field: { ref, ...rest } }) => (
+                            render={({ field: { ref: _, ...rest } }) => (
                                 <CheckboxGroup
                                     disabled={readOnly}
                                     options={resolvedTyypit}
@@ -229,7 +231,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Controller
                         control={formControl}
                         name={'muutKotipaikat'}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <Select
                                 isDisabled={readOnly}
                                 id={'PERUSTIETO_MUUT_KUNNAT_SELECT'}
@@ -247,7 +249,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Controller
                         control={formControl}
                         name={'maa'}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <Select
                                 isDisabled={readOnly}
                                 id={'PERUSTIETO_MAA_SELECT'}
@@ -264,7 +266,7 @@ export default function PerustietoLomake(props: PerustietoLomakeProps) {
                     <Controller
                         control={formControl}
                         name={'kielet'}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <Select
                                 isDisabled={readOnly}
                                 isMulti

@@ -88,9 +88,7 @@ async function readOrganisaatioPath(oids: string[]): Promise<OrganisaatioNimiJaO
     }));
 }
 
-function useOrganisaatioPaivittaja(
-    oid: string
-): {
+function useOrganisaatioPaivittaja(oid: string): {
     data: OrganisaatioPaivittaja;
     loading: boolean;
     error: boolean;

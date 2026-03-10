@@ -44,7 +44,8 @@ type ViestiEditorProps = {
     uploadRef: React.MutableRefObject<HTMLInputElement>;
 };
 
-const URL_REGEX = /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+const URL_REGEX =
+    /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 const autoLinkMatcher = createLinkMatcherWithRegExp(URL_REGEX, (text) => {
     return text.startsWith('http') ? text : `https://${text}`;
 });
@@ -158,8 +159,8 @@ function FormattingButtons() {
                 const type = $isHeadingNode(element)
                     ? element.getTag()
                     : $isListNode(element)
-                    ? element.getListType()
-                    : element.getType();
+                      ? element.getListType()
+                      : element.getType();
                 setBlockType(type);
             }
         }

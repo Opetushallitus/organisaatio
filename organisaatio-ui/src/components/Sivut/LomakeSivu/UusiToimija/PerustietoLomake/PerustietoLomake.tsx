@@ -85,7 +85,7 @@ export default function PerustietoLomake({
                         control={formControl}
                         name={'organisaatioTyypit'}
                         defaultValue={[]}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <CheckboxGroup
                                 {...rest}
                                 error={!!validationErrors['organisaatioTyypit']}
@@ -176,7 +176,7 @@ export default function PerustietoLomake({
                     <Controller
                         control={formControl}
                         name={'muutKotipaikat'}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <Select
                                 id={'PERUSTIETO_MUUT_KUNNAT_SELECT'}
                                 {...rest}
@@ -194,7 +194,7 @@ export default function PerustietoLomake({
                         control={formControl}
                         name={'maa'}
                         defaultValue={koodistot.maatJaValtiotKoodisto.uri2SelectOption('maatjavaltiot1_fin')}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <Select
                                 id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
@@ -210,7 +210,7 @@ export default function PerustietoLomake({
                     <Controller
                         control={formControl}
                         name={'kielet'}
-                        render={({ field: { ref, ...rest } }) => (
+                        render={({ field: { ref: _, ...rest } }) => (
                             <Select
                                 isMulti
                                 id={'PERUSTIETO_OPETUSKIELI_SELECT'}

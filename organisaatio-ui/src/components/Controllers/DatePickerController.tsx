@@ -20,7 +20,7 @@ export default function DatePickerController<T extends FieldValues>({
         <Controller
             control={form}
             name={name}
-            render={({ field: { ref, value, ...controllerRest } }) => (
+            render={({ field: { ref: _, value, ...controllerRest } }) => (
                 <DatePickerInput
                     value={value}
                     error={!!validationErrors[name]}

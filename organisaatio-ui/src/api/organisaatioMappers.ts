@@ -266,13 +266,12 @@ export function mapApiVakaToUi({
             varhaiskasvatuksenToimipaikkaTiedot.kasvatusopillinenJarjestelma
         ),
         paikkojenLukumaara: varhaiskasvatuksenToimipaikkaTiedot.paikkojenLukumaara,
-        varhaiskasvatuksenToiminnallinenpainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset.map(
-            (a) => ({
+        varhaiskasvatuksenToiminnallinenpainotukset:
+            varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenToiminnallinenpainotukset.map((a) => ({
                 painotus: vardatoiminnallinenpainotusKoodisto.uri2SelectOption(a.toiminnallinenpainotus),
                 alkupvm: new Date(a.alkupvm),
                 loppupvm: a.loppupvm ? new Date(a.loppupvm) : undefined,
-            })
-        ),
+            })),
         varhaiskasvatuksenKielipainotukset: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenKielipainotukset.map(
             (a) => {
                 return {
@@ -282,9 +281,10 @@ export function mapApiVakaToUi({
                 };
             }
         ),
-        varhaiskasvatuksenJarjestamismuodot: varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.map(
-            (a) => vardajarjestamismuotoKoodisto.uri2SelectOption(a)
-        ),
+        varhaiskasvatuksenJarjestamismuodot:
+            varhaiskasvatuksenToimipaikkaTiedot.varhaiskasvatuksenJarjestamismuodot.map((a) =>
+                vardajarjestamismuotoKoodisto.uri2SelectOption(a)
+            ),
     };
 }
 const yhteysTietoReducer = (

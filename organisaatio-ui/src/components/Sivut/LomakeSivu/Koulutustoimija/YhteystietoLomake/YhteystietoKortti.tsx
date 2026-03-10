@@ -12,17 +12,12 @@ import { useAtom } from 'jotai';
 import { postinumerotKoodistoAtom } from '../../../../../api/koodisto';
 import { languageAtom } from '../../../../../api/lokalisaatio';
 
-const postiOsoiteToimipaikkaFiName = 'fi.postiOsoiteToimipaikka';
-const postiOsoiteToimipaikkaSvName = 'sv.postiOsoiteToimipaikka';
-const kayntiOsoiteToimipaikkaSvName = 'sv.kayntiOsoiteToimipaikka';
-const kayntiOsoiteToimipaikkaFiName = 'fi.kayntiOsoiteToimipaikka';
-
 type OsoitteentoimipaikkaProps = {
     name:
-        | typeof postiOsoiteToimipaikkaFiName
-        | typeof postiOsoiteToimipaikkaSvName
-        | typeof kayntiOsoiteToimipaikkaSvName
-        | typeof kayntiOsoiteToimipaikkaFiName;
+        | 'fi.postiOsoiteToimipaikka'
+        | 'sv.postiOsoiteToimipaikka'
+        | 'sv.kayntiOsoiteToimipaikka'
+        | 'sv.kayntiOsoiteToimipaikka';
     labelTxt: string;
     control: Control<Yhteystiedot>;
 };

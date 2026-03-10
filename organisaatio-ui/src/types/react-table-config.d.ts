@@ -22,8 +22,10 @@ import {
 declare module 'react-table' {
     // take this file as-is, or comment out the sections that don't apply to your plugin configuration
 
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     export interface TableOptions<D extends object>
-        extends UseExpandedOptions<D>,
+        extends
+            UseExpandedOptions<D>,
             UseFiltersOptions<D>,
             UseGlobalFiltersOptions<D>,
             UseGroupByOptions<D>,
@@ -33,8 +35,10 @@ declare module 'react-table' {
             UseRowStateOptions<D>,
             UseSortByOptions<D> {}
 
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     export interface TableInstance<D extends object>
-        extends UseColumnOrderInstanceProps<D>,
+        extends
+            UseColumnOrderInstanceProps<D>,
             UseExpandedInstanceProps<D>,
             UseFiltersInstanceProps<D>,
             UseGlobalFiltersInstanceProps<D>,
@@ -44,8 +48,10 @@ declare module 'react-table' {
             UseRowStateInstanceProps<D>,
             UseSortByInstanceProps<D> {}
 
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     export interface TableState<D extends object>
-        extends UseColumnOrderState<D>,
+        extends
+            UseColumnOrderState<D>,
             UseExpandedState<D>,
             UseFiltersState<D>,
             UseGlobalFiltersState<D>,
@@ -56,5 +62,6 @@ declare module 'react-table' {
             UseRowStateState<D>,
             UseSortByState<D> {}
 
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     export interface Row<D extends object> extends UseTableRowProps<D>, UseExpandedRowProps<D>, UseGroupByRowProps<D> {}
 }

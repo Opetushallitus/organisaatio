@@ -49,9 +49,10 @@ export function Element({
             return [];
         }
     }, [kayttooikeusryhmat.state]);
-    const koulutustoimijatOptions = useMemo(() => koulutustoimijat.map((_) => ({ value: _.oid, label: _.nimi })), [
-        koulutustoimijat,
-    ]);
+    const koulutustoimijatOptions = useMemo(
+        () => koulutustoimijat.map((_) => ({ value: _.oid, label: _.nimi })),
+        [koulutustoimijat]
+    );
     const description = useMemo(
         () =>
             [

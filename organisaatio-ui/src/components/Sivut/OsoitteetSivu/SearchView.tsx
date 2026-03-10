@@ -111,7 +111,7 @@ export function SearchView({
             const hakutulos = await haeHakutulos(request);
             setHakutulosCache(hakutulos);
             onResult(hakutulos);
-        } catch (e) {
+        } catch (_) {
             setError(true);
         }
         setLoading(false);
@@ -142,24 +142,24 @@ export function SearchView({
         const enabledFilters = deriveEnabledFilters(kohderyhmat);
         const openFilters = currentState?.openFilters.filter((f) => enabledFilters.includes(f)) ?? [];
         const oppilaitosTypes = enabledFilters.includes(oppilaitostyyppiFilter.id)
-            ? currentState?.oppilaitosTypes ?? defaultOppilaitosTypes
+            ? (currentState?.oppilaitosTypes ?? defaultOppilaitosTypes)
             : defaultOppilaitosTypes;
-        const vuosiluokat = enabledFilters.includes(oppilaitostyyppiFilter.id) ? currentState?.vuosiluokat ?? [] : [];
+        const vuosiluokat = enabledFilters.includes(oppilaitostyyppiFilter.id) ? (currentState?.vuosiluokat ?? []) : [];
         const sijainti = enabledFilters.includes(sijaintiFilter.id)
             ? sijaintiFilter.isEmptyValue(currentState?.sijainti)
                 ? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
-                : currentState?.sijainti ?? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat)
+                : (currentState?.sijainti ?? sijaintiFilter.makeDefaultValue(hakuParametrit.maakunnat))
             : sijaintiFilter.makeEmptyValue();
         const anyJarjestamislupa = enabledFilters.includes(jarjestamislupaFilter.id)
-            ? currentState?.anyJarjestamislupa ?? false
+            ? (currentState?.anyJarjestamislupa ?? false)
             : false;
         const jarjestamisluvat = enabledFilters.includes(jarjestamislupaFilter.id)
-            ? currentState?.jarjestamisluvat ?? []
+            ? (currentState?.jarjestamisluvat ?? [])
             : [];
         const kielet = enabledFilters.includes(kieliFilter.id)
             ? !currentState?.kielet.length
                 ? kieliFilter.makeDefaultValue()
-                : currentState?.kielet ?? kieliFilter.makeDefaultValue()
+                : (currentState?.kielet ?? kieliFilter.makeDefaultValue())
             : [];
 
         return {

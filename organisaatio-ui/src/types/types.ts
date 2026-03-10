@@ -206,10 +206,10 @@ export type OrganisaatioHistoria = {
     liittymiset: OrganisaatioSuhde[];
 };
 
-export interface OrganisaatioNimiJaOid {
+export type OrganisaatioNimiJaOid = {
     oid: string;
     nimi: Nimi;
-}
+};
 export type OrganisaatioPaivittaja = {
     paivitysPvm?: LocalDate;
     etuNimet?: string;
@@ -226,10 +226,10 @@ export type FrontProperties = {
     viestinvalityspalveluUrl: string;
 };
 
-export interface Option {
+export type Option = {
     label: string;
     value: string;
-}
+};
 
 export type DynamicField = {
     name: Path<Perustiedot>;

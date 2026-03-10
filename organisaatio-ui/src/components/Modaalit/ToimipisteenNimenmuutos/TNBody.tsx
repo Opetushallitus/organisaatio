@@ -41,7 +41,7 @@ export default function TNBody(props: TNProps) {
                     <Controller
                         control={formControl}
                         name={'muutostyyppi'}
-                        render={({ field: { ref, value = 'CREATE', ...rest } }) => (
+                        render={({ field: { ref: _, value = 'CREATE', ...rest } }) => (
                             <RadioGroup {...rest} value={value}>
                                 <Radio
                                     name={MUUTOSTYYPPI_CREATE}

@@ -147,15 +147,16 @@ export default function OrganisaatioHakuTaulukko() {
         [i18n, kuntaKoodisto, organisaatioTyypitKoodisto, containingFilter, vakatoimijatFilter]
     );
     const sortOrganisations = useMemo(
-        () => (nodes: OrganisaatioHakuOrganisaatio[]): OrganisaatioHakuOrganisaatio[] => {
-            nodes.sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi)));
-            nodes.forEach(function (node) {
-                if (node?.subRows && node.subRows.length > 0) {
-                    sortOrganisations(node.subRows);
-                }
-            });
-            return nodes;
-        },
+        () =>
+            (nodes: OrganisaatioHakuOrganisaatio[]): OrganisaatioHakuOrganisaatio[] => {
+                nodes.sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi)));
+                nodes.forEach(function (node) {
+                    if (node?.subRows && node.subRows.length > 0) {
+                        sortOrganisations(node.subRows);
+                    }
+                });
+                return nodes;
+            },
         [i18n]
     );
     const data = React.useMemo(() => sortOrganisations(organisaatiot), [organisaatiot, sortOrganisations]);
@@ -209,9 +210,8 @@ export default function OrganisaatioHakuTaulukko() {
         useExpanded,
         usePagination
     );
-    const [{ omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi, showVakaToimijat }] = useAtom(
-        localFiltersAtom
-    );
+    const [{ omatOrganisaatiotSelected, organisaatioTyyppi, oppilaitosTyyppi, showVakaToimijat }] =
+        useAtom(localFiltersAtom);
     useEffect(() => {
         setAllFilters([
             {
@@ -251,9 +251,11 @@ export default function OrganisaatioHakuTaulukko() {
                                 {headerGroup.headers.map((column) => (
                                     <th
                                         {...column.getHeaderProps({
-                                            className: (column as HeaderGroup<OrganisaatioHakuOrganisaatio> & {
-                                                collapse: boolean;
-                                            }).collapse
+                                            className: (
+                                                column as HeaderGroup<OrganisaatioHakuOrganisaatio> & {
+                                                    collapse: boolean;
+                                                }
+                                            ).collapse
                                                 ? styles.collapse
                                                 : '',
                                         })}
@@ -285,9 +287,11 @@ export default function OrganisaatioHakuTaulukko() {
                                             return (
                                                 <td
                                                     {...cell.getCellProps({
-                                                        className: (cell.row as Row<OrganisaatioHakuOrganisaatio> & {
-                                                            collapse: boolean;
-                                                        }).collapse
+                                                        className: (
+                                                            cell.row as Row<OrganisaatioHakuOrganisaatio> & {
+                                                                collapse: boolean;
+                                                            }
+                                                        ).collapse
                                                             ? styles.collapse
                                                             : '',
                                                     })}

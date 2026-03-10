@@ -17,7 +17,7 @@ export default function InputController<T extends FieldValues>({
         <Controller
             control={form}
             name={name}
-            render={({ field: { ref, ...rest } }) => {
+            render={({ field: { ref: _, ...rest } }) => {
                 return <Input disabled={disabled} id={name} {...rest} error={!!validationErrors[name]} />;
             }}
         />

@@ -84,8 +84,8 @@ export function Element({ maakunnat, kunnat, value, onChange, open, onToggleOpen
         const alueNimet = isKokoSuomiChecked
             ? [alueKokoSuomi.label]
             : isMannerSuomiChecked
-            ? [alueMannerSuomi.label]
-            : [];
+              ? [alueMannerSuomi.label]
+              : [];
         const ulkomaatNames = value.ulkomaa ? [ulkomaaAlue.label] : [];
         // Kun koko suomi tai manner-suomi on valittu ei tarvitse näyttää maakuntia, koska
         // - manner-suomi kattaa kaiken paitsi ahvenanmaan
@@ -98,9 +98,10 @@ export function Element({ maakunnat, kunnat, value, onChange, open, onToggleOpen
         return [...alueNimet, ...ulkomaatNames, ...maakuntaNimet];
     }
 
-    const kuntaOptions: DropdownOption[] = useMemo(() => kunnat.map((_) => ({ value: _.koodiUri, label: _.nimi })), [
-        kunnat,
-    ]);
+    const kuntaOptions: DropdownOption[] = useMemo(
+        () => kunnat.map((_) => ({ value: _.koodiUri, label: _.nimi })),
+        [kunnat]
+    );
 
     function kuntaOnChange(selection: string[]) {
         const updatedKunnat = kunnat.filter((_) => selection.includes(_.koodiUri)).map((_) => _.koodiUri);
@@ -230,8 +231,8 @@ function AlueTaiMaakuntaFilter({
         isKokoSuomiChecked
             ? [{ value: alueKokoSuomi.id, label: alueKokoSuomi.label }]
             : isMannerSuomiChecked
-            ? [{ value: alueMannerSuomi.id, label: alueMannerSuomi.label }]
-            : groupedOptions[1].options.filter((option) => isMaakuntaChecked(option.value)),
+              ? [{ value: alueMannerSuomi.id, label: alueMannerSuomi.label }]
+              : groupedOptions[1].options.filter((option) => isMaakuntaChecked(option.value)),
         selectedUlkomaa ? [{ value: ulkomaaAlue.id, label: ulkomaaAlue.label }] : [],
     ].flat();
     return (
@@ -249,10 +250,10 @@ function AlueTaiMaakuntaFilter({
                 options={groupedOptions}
                 classNamePrefix="alue-react-select"
                 classNames={{
-                    option: (styles.ReactSelectOption as unknown) as (
+                    option: styles.ReactSelectOption as unknown as (
                         props: OptionProps<DropdownOption, true, GroupBase<DropdownOption>>
                     ) => string,
-                    groupHeading: (styles.ReactSelectGroupHeading as unknown) as (
+                    groupHeading: styles.ReactSelectGroupHeading as unknown as (
                         props: GroupHeadingProps<DropdownOption, true, GroupBase<DropdownOption>>
                     ) => string,
                 }}

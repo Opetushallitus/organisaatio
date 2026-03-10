@@ -4,17 +4,17 @@ import { FrontProperties, KoodiUri } from '../../../types/types';
 import { useEffect, useState } from 'react';
 import { SerializedEditorState } from 'lexical';
 
-interface KayttajaHakutulos {
+type KayttajaHakutulos = {
     id: string;
     type: 'kayttaja';
     rows: KayttajaHakutulosRow[];
-}
+};
 
-interface OrganisaatioHakutulos {
+type OrganisaatioHakutulos = {
     id: string;
     type: 'organisaatio';
     rows: HakutulosRow[];
-}
+};
 
 export type Hakutulos = OrganisaatioHakutulos | KayttajaHakutulos;
 

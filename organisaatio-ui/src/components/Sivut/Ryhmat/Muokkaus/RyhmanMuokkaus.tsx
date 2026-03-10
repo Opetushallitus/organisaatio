@@ -75,7 +75,11 @@ const RyhmanMuokkaus = ({ isNew }: { isNew?: boolean }) => {
                 ryhmatyypit: ryhmatyypit.map((a: { value: string; versio: number }) => `${a.value}#${a.versio}`),
                 kayttoryhmat: kayttoryhmat.map((a: { value: string; versio: number }) => `${a.value}#${a.versio}`),
             };
-            onUusi ? await postRyhma(newRyhma) : await putRyhma(newRyhma);
+            if (onUusi) {
+                await postRyhma(newRyhma);
+            } else {
+                await putRyhma(newRyhma);
+            }
             navigate('/ryhmat');
         }
     };
@@ -85,7 +89,9 @@ const RyhmanMuokkaus = ({ isNew }: { isNew?: boolean }) => {
     };
     const handlePoista = async () => {
         const r = global.window.confirm(i18n.translate('RYHMAT_POISTO_VARMISTUSTEKSTI'));
-        r && (await deleteRyhma(ryhma));
+        if (r) {
+            await deleteRyhma(ryhma);
+        }
         navigate('/ryhmat');
     };
 
@@ -95,7 +101,7 @@ const RyhmanMuokkaus = ({ isNew }: { isNew?: boolean }) => {
         if (status === 'AKTIIVINEN') {
             newRyhma = { ...ryhma, lakkautusPvm: formatUiDateStrToApi() };
         } else {
-            const { lakkautusPvm, ...rest } = ryhma;
+            const { lakkautusPvm: _, ...rest } = ryhma;
             newRyhma = rest;
         }
         const { organisaatio: updatedRyhma } = await putRyhma(newRyhma);

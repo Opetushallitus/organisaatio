@@ -15,9 +15,9 @@ export class I18nImpl implements I18n {
 
     translateWithLang(key: string, language: Language, keyIfEmpty = true): string {
         const translation = this._data[language]?.[key];
-        !translation &&
-            process.env.NODE_ENV !== 'development' &&
+        if (!translation && process.env.NODE_ENV !== 'development') {
             console.info(`Translation is missing for ${key} in language ${language}`);
+        }
         if (translation) return translation;
         return keyIfEmpty ? key : '';
     }
