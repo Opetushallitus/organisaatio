@@ -227,10 +227,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: `/env/${env}/slack-notifications-channel-webhook`,
         },
-        GITHUB_PACKAGES_GRADLE_PROPERTIES: {
-          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-          value: "/gradle/github-packages-gradle-properties",
-        },
         MVN_SETTINGSXML: {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: `/mvn/settingsxml`,
@@ -245,7 +241,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           pre_build: {
             commands: [
               "sudo yum install -y perl-Digest-SHA", // for shasum command
-              "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > github-packages-gradle.properties",
               "echo $MVN_SETTINGSXML > ./settings.xml",
               "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
               "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
@@ -361,10 +356,6 @@ function makeTestProject(
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: "/docker/password",
         },
-        GITHUB_PACKAGES_GRADLE_PROPERTIES: {
-          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-          value: "/gradle/github-packages-gradle-properties",
-        },
         MVN_SETTINGSXML: {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: `/mvn/settingsxml`,
@@ -392,8 +383,6 @@ function makeTestProject(
             commands: [
               "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD",
               ...preBuildCommands,
-              "mkdir -p ~/.gradle && echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ~/.gradle/gradle.properties",
-              "echo $GITHUB_PACKAGES_GRADLE_PROPERTIES | base64 -d > ./organisaatio-service/github-packages-gradle.properties",
               "echo $MVN_SETTINGSXML > ./settings.xml",
               "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
               "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
