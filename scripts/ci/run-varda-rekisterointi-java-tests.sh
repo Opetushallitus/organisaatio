@@ -12,7 +12,7 @@ function main {
   cd "${repo}/varda-rekisterointi"
 
   if is_running_on_codebuild; then
-    "${repo}"/mvnw clean install -s ../settings.xml
+    "${repo}"/mvnw clean install -s codebuild-mvn-settings.xml
   else
     "${repo}"/mvnw clean install
   fi

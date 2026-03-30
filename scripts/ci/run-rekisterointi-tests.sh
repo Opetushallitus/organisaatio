@@ -27,7 +27,7 @@ function start_server {
   cd "${repo}/rekisterointi"
 
   if is_running_on_codebuild; then
-    "${repo}"/mvnw clean package -DskipTests -s ../settings.xml
+    "${repo}"/mvnw clean package -DskipTests -s codebuild-mvn-settings.xml
   else
     "${repo}"/mvnw clean package -DskipTests
   fi

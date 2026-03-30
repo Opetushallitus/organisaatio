@@ -7,6 +7,7 @@ import * as constructs from "constructs";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { ROUTE53_HEALTH_CHECK_REGION } from "./health-check";
+import * as dm from "./dependency-management";
 
 class CdkAppUtil extends cdk.App {
   constructor(props: cdk.AppProps) {
@@ -15,14 +16,27 @@ class CdkAppUtil extends cdk.App {
       account: process.env.CDK_DEFAULT_ACCOUNT,
       region: process.env.CDK_DEFAULT_REGION,
     };
-    new ContinuousDeploymentStack(this, "ContinuousDeploymentStack", {
-      env,
-    });
+    const dependencyManagement = new dm.DependencyManagementStack(
+      this,
+      "DependencyManagementStack",
+      { env },
+    );
+    new ContinuousDeploymentStack(
+      this,
+      "ContinuousDeploymentStack",
+      { env },
+      dependencyManagement,
+    );
   }
 }
 
 class ContinuousDeploymentStack extends cdk.Stack {
-  constructor(scope: constructs.Construct, id: string, props: cdk.StackProps) {
+  constructor(
+    scope: constructs.Construct,
+    id: string,
+    props: cdk.StackProps,
+    dependencyManagement: dm.DependencyManagementStack,
+  ) {
     super(scope, id, props);
 
     new ContinuousDeploymentPipelineStack(
@@ -31,6 +45,7 @@ class ContinuousDeploymentStack extends cdk.Stack {
       "hahtuva",
       { owner: "Opetushallitus", name: "organisaatio", branch: "master" },
       props,
+      dependencyManagement,
     );
     new ContinuousDeploymentPipelineStack(
       this,
@@ -42,6 +57,7 @@ class ContinuousDeploymentStack extends cdk.Stack {
         branch: "green-hahtuva",
       },
       props,
+      dependencyManagement,
     );
     new ContinuousDeploymentPipelineStack(
       this,
@@ -49,6 +65,7 @@ class ContinuousDeploymentStack extends cdk.Stack {
       "qa",
       { owner: "Opetushallitus", name: "organisaatio", branch: "green-dev" },
       props,
+      dependencyManagement,
     );
     new ContinuousDeploymentPipelineStack(
       this,
@@ -56,6 +73,7 @@ class ContinuousDeploymentStack extends cdk.Stack {
       "prod",
       { owner: "Opetushallitus", name: "organisaatio", branch: "green-qa" },
       props,
+      dependencyManagement,
     );
 
     const radiatorAccountId = "905418271050";
@@ -86,6 +104,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
     env: EnvironmentName,
     repository: Repository,
     props: cdk.StackProps,
+    dependencyManagement: dm.DependencyManagementStack,
   ) {
     super(scope, id, props);
     const capitalizedEnv = capitalize(env);
@@ -158,6 +177,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
               env,
               `TestOrganisaatio${test.name}`,
               test.commands,
+              dependencyManagement,
             ),
           }),
         );
@@ -192,6 +212,7 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
               env,
               `TestOrganisaatio${test.name}`,
               test.commands,
+              dependencyManagement,
             ),
           }),
         );
@@ -227,10 +248,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: `/env/${env}/slack-notifications-channel-webhook`,
         },
-        MVN_SETTINGSXML: {
-          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-          value: `/mvn/settingsxml`,
-        },
       },
       buildSpec: codebuild.BuildSpec.fromObject({
         version: "0.2",
@@ -241,9 +258,9 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           pre_build: {
             commands: [
               "sudo yum install -y perl-Digest-SHA", // for shasum command
-              "echo $MVN_SETTINGSXML > ./settings.xml",
-              "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
-              "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
+              ...dependencyManagement.createMavenSettingsXmlCommands(),
+              "cp codebuild-mvn-settings.xml ./varda-rekisterointi/codebuild-mvn-settings.xml",
+              "cp codebuild-mvn-settings.xml ./rekisterointi/codebuild-mvn-settings.xml",
             ],
           },
           build: {
@@ -254,6 +271,8 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
         },
       }),
     });
+
+    dependencyManagement.grantRead(deployProject);
 
     const deploymentTargetAccount = ssm.StringParameter.valueFromLookup(
       this,
@@ -296,6 +315,7 @@ function makeAmazonLinuxTestProject(
   env: string,
   name: string,
   testCommands: string[],
+  dependencyManagement: dm.DependencyManagementStack,
 ): codebuild.PipelineProject {
   return makeTestProject(
     scope,
@@ -306,6 +326,7 @@ function makeAmazonLinuxTestProject(
     [
       "sudo yum install -y perl-Digest-SHA", // for shasum command
     ],
+    dependencyManagement,
   );
 }
 
@@ -314,6 +335,7 @@ function makeUbuntuTestProject(
   env: string,
   name: string,
   testCommands: string[],
+  dependencyManagement: dm.DependencyManagementStack,
 ): codebuild.PipelineProject {
   return makeTestProject(
     scope,
@@ -326,6 +348,7 @@ function makeUbuntuTestProject(
       "sudo apt-get install -y netcat", // for nc command
       "sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb", // For Chromium
     ],
+    dependencyManagement,
   );
 }
 
@@ -336,8 +359,9 @@ function makeTestProject(
   testCommands: string[],
   buildImage: codebuild.IBuildImage,
   preBuildCommands: string[],
+  dependencyManagement: dm.DependencyManagementStack,
 ) {
-  return new codebuild.PipelineProject(
+  const project = new codebuild.PipelineProject(
     scope,
     `${name}${capitalize(env)}Project`,
     {
@@ -355,10 +379,6 @@ function makeTestProject(
         DOCKER_PASSWORD: {
           type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
           value: "/docker/password",
-        },
-        MVN_SETTINGSXML: {
-          type: codebuild.BuildEnvironmentVariableType.PARAMETER_STORE,
-          value: `/mvn/settingsxml`,
         },
         TZ: {
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
@@ -383,9 +403,9 @@ function makeTestProject(
             commands: [
               "docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD",
               ...preBuildCommands,
-              "echo $MVN_SETTINGSXML > ./settings.xml",
-              "echo $MVN_SETTINGSXML > ./varda-rekisterointi/settings.xml",
-              "echo $MVN_SETTINGSXML > ./rekisterointi/settings.xml",
+              ...dependencyManagement.createMavenSettingsXmlCommands(),
+              "cp codebuild-mvn-settings.xml ./varda-rekisterointi/codebuild-mvn-settings.xml",
+              "cp codebuild-mvn-settings.xml ./rekisterointi/codebuild-mvn-settings.xml",
             ],
           },
           build: {
@@ -400,6 +420,8 @@ function makeTestProject(
       }),
     },
   );
+  dependencyManagement.grantRead(project);
+  return project;
 }
 
 function capitalize(s: string) {

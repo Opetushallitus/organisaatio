@@ -14,10 +14,10 @@ RUN npm run build
 WORKDIR /app
 COPY ytj-client ./ytj-client
 COPY organisaatio-service ./organisaatio-service
-COPY settings.xml .
+COPY codebuild-mvn-settings.xml .
 COPY pom.xml .
 
-RUN mvn clean package -s settings.xml -DskipTests
+RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
 FROM amazoncorretto:21.0.10@sha256:0560910f891ef2d1277539b022de1f6c032d273f0f1e8444f45b7ef8005463c2
 WORKDIR /app
