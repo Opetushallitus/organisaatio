@@ -24,7 +24,7 @@ export class DependencyManagementStack extends cdk.Stack {
         domainName: this.domainName,
         repositoryName: this.upstreamRepositoryName,
         externalConnections: ["public:maven-central"],
-      }
+      },
     );
     mavenCentralUpstream.addDependency(domain);
 
