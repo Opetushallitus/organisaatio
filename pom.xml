@@ -38,7 +38,7 @@
         <maven.compiler.release>21</maven.compiler.release>
 
         <aws.java.sdk.version>2.21.46</aws.java.sdk.version>
-        <poi.version>5.4.1</poi.version>
+        <poi.version>5.5.1</poi.version>
     </properties>
 
     <dependencyManagement>
