@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
-FROM amazoncorretto:21.0.10@sha256:704f62cb32e0850ef3bc8d589eb926780bd3a51611df49cc0a0d432f90615372
+FROM amazoncorretto:21.0.11@sha256:2e49e9dd1935ea14ec8746e839987f136fb38cdb89ad66e5ab09d7f2019e0d53
 WORKDIR /app
 
 COPY --from=build /app/target/varda-rekisterointi.jar varda-rekisterointi.jar
