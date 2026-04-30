@@ -1,10 +1,10 @@
 import React, { ReactNode, useContext } from 'react';
 import { Koodi, KoodiArvo, KoodiUri, Language, Lokalisointi, Permission } from './types/types';
 
-export interface I18n {
+export type I18n = {
     translate: (key: string) => string;
     translateWithLang: (key: string, language: Language) => string;
-}
+};
 
 export class I18nImpl implements I18n {
     _data: Lokalisointi;
@@ -41,12 +41,12 @@ export const PermissionContext = React.createContext<Permission>({
     registrationTypes: [],
 });
 
-export interface Koodisto {
+export type Koodisto = {
     uri2Nimi: (uri: KoodiUri) => string;
     arvo2Nimi: (arvo: KoodiArvo) => string;
     nimet: () => string[];
     koodit: () => Koodi[];
-}
+};
 
 export class KoodistoImpl implements Koodisto {
     constructor(

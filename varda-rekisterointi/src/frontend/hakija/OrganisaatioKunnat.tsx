@@ -34,7 +34,7 @@ export default function OrganisaatioKunnat({ readOnly, kaikkiKunnat, kunnat, set
                         onChange={setKunnat}
                     />
                 ) : (
-                    <div tabIndex={0} className="oph-input-container">
+                    <div className="oph-input-container">
                         {kunnat
                             .map((k) => {
                                 const kunta = kaikkiKunnat.find((kk) => kk.uri === k);

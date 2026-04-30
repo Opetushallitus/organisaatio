@@ -39,7 +39,7 @@ export default function RekisteroinnitBase() {
                 );
                 setRekisteroinnit(rekisteroinnit);
                 setLoading(false);
-            } catch (e: unknown) {
+            } catch (_e: unknown) {
                 setError(true);
             }
         };

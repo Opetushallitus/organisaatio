@@ -194,9 +194,7 @@ export default function OrganisaatioYhteystiedot({
                 label={i18n.translate('POSTITOIMIPAIKKA')}
                 ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
-                <div tabIndex={0} className="oph-input-container">
-                    {postitoimipaikka}
-                </div>
+                <div className="oph-input-container">{postitoimipaikka}</div>
             </FormFieldContainer>
             <FormFieldContainer
                 label={i18n.translate('KAYNTIOSOITE')}
@@ -261,9 +259,7 @@ export default function OrganisaatioYhteystiedot({
                 label={i18n.translate('KAYNTIOSOITTEEN_POSTITOIMIPAIKKA')}
                 ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
-                <div tabIndex={0} className="oph-input-container">
-                    {kayntiosoitteenPostitoimipaikka}
-                </div>
+                <div className="oph-input-container">{kayntiosoitteenPostitoimipaikka}</div>
             </FormFieldContainer>
         </>
     );

@@ -149,9 +149,7 @@ export default function OrganisaatioTiedot({
                 label={i18n.translate('ORGANISAATIOTYYPPI')}
                 ariaErrorKoosteId="rekisterointi_organisaatio_virheet"
             >
-                <div tabIndex={0} className="oph-input-container">
-                    {tyypit}
-                </div>
+                <div className="oph-input-container">{tyypit}</div>
             </FormFieldContainer>
             <FormFieldContainer
                 label={i18n.translate('KOTIPAIKKA')}

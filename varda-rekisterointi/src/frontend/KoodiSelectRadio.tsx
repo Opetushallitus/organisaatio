@@ -16,7 +16,7 @@ const KoodiSelectRadio = (props: Props) => {
     const { language } = useContext(LanguageContext);
     if (props.readOnly) {
         const value = props.selectable.find((koodi) => koodi.uri === props.selected);
-        return <div tabIndex={0}>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
+        return <div>{value ? toLocalizedText(value.nimi, language, value.arvo) : ''}</div>;
     }
     return (
         <div role="radiogroup" id={props.id}>

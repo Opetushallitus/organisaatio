@@ -143,7 +143,9 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
                             key={key}
                             variant={tilaFilter === key ? 'contained' : 'outlined'}
                             onClick={() => {
-                                tilaFilter !== key && setTilaFilter(key);
+                                if (tilaFilter !== key) {
+                                    setTilaFilter(key);
+                                }
                             }}
                         >
                             {i18n.translate(`TAULUKKO_TILA_${key}`)}

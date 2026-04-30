@@ -9,7 +9,7 @@
         "@opetushallitus/virkailija-ui-components": "^0.4.7",
         "@tanstack/react-table": "^8.5.13",
         "axios": "1.15.2",
-        "axios-hooks": "^4.0.0",
+        "axios-hooks": "5.1.1",
         "classnames": "^2.5.1",
         "date-fns": "^2.30.0",
         "email-validator": "^2.0.4",
@@ -28,6 +28,7 @@
         "use-debounce": "^3.1.0"
     },
     "devDependencies": {
+        "@eslint/js": "9.39.4",
         "@types/lodash": "4.17.24",
         "@types/node": "24.10.15",
         "@types/react": "16.14.68",
@@ -39,63 +40,33 @@
         "@types/react-select": "3.0.28",
         "@types/styled-components": "5.1.36",
         "@types/styled-system": "5.1.25",
-        "@typescript-eslint/eslint-plugin": "7.9.0",
-        "@typescript-eslint/parser": "7.9.0",
-        "copy-webpack-plugin": "12.0.2",
-        "css-loader": "6.11.0",
-        "eslint": "8.57.1",
-        "eslint-config-prettier": "8.10.2",
-        "eslint-plugin-jsx-a11y": "6.8.0",
-        "eslint-plugin-react": "7.34.4",
+        "css-loader": "7.1.4",
+        "eslint": "9.39.4",
+        "eslint-config-prettier": "10.1.8",
+        "eslint-plugin-jsx-a11y": "6.10.2",
+        "eslint-plugin-prettier": "5.5.5",
+        "eslint-plugin-react": "7.37.5",
         "file-loader": "6.2.0",
         "fork-ts-checker-webpack-plugin": "9.0.3",
         "html-webpack-plugin": "5.6.7",
-        "mini-css-extract-plugin": "2.9.4",
-        "prettier": "3.2.5",
+        "mini-css-extract-plugin": "2.10.2",
+        "prettier": "3.8.3",
         "source-map-loader": "5.0.0",
         "style-loader": "4.0.0",
-        "ts-loader": "9.5.4",
+        "ts-loader": "9.5.7",
         "tsx": "4.21.0",
         "typescript": "5.9.3",
-        "webpack": "5.104.1",
-        "webpack-cli": "5.1.4",
-        "webpack-dev-server": "5.2.2",
+        "typescript-eslint": "8.59.1",
+        "webpack": "5.106.2",
+        "webpack-cli": "7.0.2",
+        "webpack-dev-server": "5.2.3",
         "webpack-manifest-plugin": "5.0.1"
     },
     "scripts": {
         "start": "NODE_ENV=development npx webpack serve",
         "build": "GENERATE_SOURCEMAP=false NODE_ENV=production npx webpack --mode production",
         "test": "node --import tsx --test ./src/**/*.test.ts",
-        "lint": "tsc --noEmit && eslint --ext .ts,.tsx src",
-        "lint:fix": "eslint --ext .ts,.tsx src --fix",
-        "prettier": "prettier --check 'src/**/*{js,jsx,ts,tsx}'",
-        "prettier:fix": "prettier --write 'src/**/*{js,jsx,ts,tsx}'"
-    },
-    "eslintConfig": {
-        "parser": "@typescript-eslint/parser",
-        "plugins": [
-            "@typescript-eslint",
-            "react"
-        ],
-        "extends": [
-            "eslint:recommended",
-            "plugin:@typescript-eslint/eslint-recommended",
-            "plugin:@typescript-eslint/recommended",
-            "plugin:react/recommended"
-        ],
-        "settings": {
-            "react": {
-                "version": "detect"
-            }
-        },
-        "rules": {
-            "@typescript-eslint/no-unused-vars": [
-                "error",
-                {
-                    "ignoreRestSiblings": true
-                }
-            ]
-        }
+        "lint": "eslint -c eslint.config.mjs"
     },
     "browserslist": {
         "production": [
