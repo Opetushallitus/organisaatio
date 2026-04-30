@@ -70,7 +70,7 @@ function aws {
     --volume "$( pwd ):/aws" \
     --rm \
     --interactive \
-    amazon/aws-cli:2.15.21 "$@"
+    public.ecr.aws/aws-cli/aws-cli:2.15.21 "$@"
 }
 
 function init_nodejs {
