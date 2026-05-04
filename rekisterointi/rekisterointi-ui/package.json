@@ -26,7 +26,7 @@
     "devDependencies": {
         "@axe-core/playwright": "4.11.3",
         "@playwright/test": "1.57.0",
-        "@types/react": "18.3.27",
+        "@types/react": "18.3.28",
         "@types/react-datepicker": "4.10.0",
         "@types/react-dom": "18.3.7",
         "@types/react-helmet": "6.1.11",
