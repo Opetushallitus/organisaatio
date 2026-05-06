@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test:organisaatiot": "npx playwright test tests/organisaatiot/",
-    "test:osoitepalvelu": "npx playwright test tests/osoitteet/"
+    "test:osoitepalvelu": "npx playwright test tests/osoitteet/",
+    "test:varda-rekisterointi": "npx playwright test tests/varda-rekisterointi/"
   }
 }
