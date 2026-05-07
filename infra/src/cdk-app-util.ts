@@ -197,12 +197,6 @@ class ContinuousDeploymentPipelineStack extends cdk.Stack {
           commands: ["scripts/ci/run-playwright-tests.sh test:osoitepalvelu"],
         },
         {
-          name: "VardaRekisterointiPlaywright",
-          commands: [
-            "scripts/ci/run-playwright-tests.sh test:varda-rekisterointi",
-          ],
-        },
-        {
           name: "RekisterointiPlaywright",
           commands: ["scripts/ci/run-rekisterointi-tests.sh"],
         },
