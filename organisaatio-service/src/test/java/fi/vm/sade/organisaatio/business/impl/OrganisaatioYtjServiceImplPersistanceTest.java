@@ -116,8 +116,8 @@ class OrganisaatioYtjServiceImplPersistanceTest {
         verify(emailService).queueEmail(queuedEmail.capture());
         QueuedEmail email = queuedEmail.getValue();
         assertThat(email.getBody()).contains("löydettiin 2 lopetettua organisaatiota:<br/>");
-        assertThat(email.getBody()).contains("- <a href=\"https://localhost:8180/organisaatio-ui/html/organisaatiot/1.2.2004.1\">root test koulutustoimija</a><br />");
-        assertThat(email.getBody()).contains("- <a href=\"https://localhost:8180/organisaatio-ui/html/organisaatiot/1.2.8000.1\">node23 foo bar</a><br />");
+        assertThat(email.getBody()).contains("- <a href=\"http://localhost:9000/organisaatio-service/lomake/1.2.2004.1\">root test koulutustoimija</a><br />");
+        assertThat(email.getBody()).contains("- <a href=\"http://localhost:9000/organisaatio-service/lomake/1.2.8000.1\">node23 foo bar</a><br />");
         assertThat(email.getRecipients()).containsExactly("e@mail.com");
     }
 

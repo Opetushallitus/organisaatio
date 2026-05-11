@@ -5,10 +5,7 @@
     <p>
         YTJ-päivityksessä (${time}) löydettiin ${virheet?size} lopetettua organisaatiota:<br/>
         <#list virheet as virhe>
-            - <a href="https://${organisaatioUrl}/${virhe.oid}">${virhe.orgNimi}</a><br />
+            - <a href="${organisaatioUrl}lomake/${virhe.oid}">${virhe.orgNimi}</a><br />
         </#list>
-    </p>
-    <p>
-        <a href="https://${ilmoitusUrl}">YTJ-päivitykset</a>
     </p>
 </@pohja.sisalto>

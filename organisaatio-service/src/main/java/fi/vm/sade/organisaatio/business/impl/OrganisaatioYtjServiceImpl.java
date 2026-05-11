@@ -41,7 +41,6 @@ import fi.vm.sade.organisaatio.ytj.api.YTJKieli;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.vm.sade.organisaatio.ytj.service.YtjDtoMapperHelper;
-import fi.vm.sade.properties.OphProperties;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -114,8 +113,8 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
     @Autowired
     private Configuration freemarker;
 
-    @Autowired
-    private OphProperties properties;
+    @Value("${organisaatio-service.url}")
+    private String organisaatioUrl;
 
     private YtjPaivitysLoki ytjPaivitysLoki;
 
@@ -251,15 +250,13 @@ public class OrganisaatioYtjServiceImpl implements OrganisaatioYtjService {
         String otsikko;
         List<YtjVirhe> virheet;
         String organisaatioUrl;
-        String ilmoitusUrl;
     }
 
     private String createBody(List<YtjVirhe> lopetettuVirheet, String subject) {
         PaivityslokiViesti viesti = PaivityslokiViesti.builder()
             .otsikko(subject)
             .time(emailFormat.format(new Date()))
-            .organisaatioUrl(properties.getProperty("organisaatio.ui.url"))
-            .ilmoitusUrl(properties.getProperty("organisaatio.ui.ilmoitukset.url"))
+            .organisaatioUrl(organisaatioUrl)
             .virheet(lopetettuVirheet)
             .build();
 

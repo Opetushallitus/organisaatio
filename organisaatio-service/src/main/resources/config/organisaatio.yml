@@ -14,8 +14,6 @@ rajapinnat.ytj.avain: ${rajapinnat_ytj_avain}
 organisaatio.service.username: ${organisaatio_service_username}
 organisaatio.service.password: ${organisaatio_service_password}
 organisaatio-service.scheduled.update.cron.expression: "0 0 1 * * ?"
-organisaatio.ui.url: ${host.virkailija}/organisaatio/html/organisaatiot
-organisaatio.ui.ilmoitukset.url: ${organisaatio.ui.url}/ilmoitukset
 ytjpaivitysloki.service.email: ${ytjpaivitysloki_service_email}
 organisaatio-service.postgresql.url: jdbc:postgresql://${postgresql_host}:${postgresql_port}/${postgresql_db}
 organisaatio-service.postgresql.user: ${postgresql_username}
@@ -59,6 +57,7 @@ organisaatio-ui.cas.url: https://${host.virkailija}/cas/myroles
 koodisto-service.url.rest: https://${host.virkailija}/koodisto-service/rest/
 lokalisointi.url.rest: https://${host.virkailija}/lokalisointi/cxf/rest
 organisaatio-service.url.rest: https://${host.virkailija}/organisaatio-service/rest/
+organisaatio-service.url: https://${host.virkailija}/organisaatio-service/
 organisaatio-ui.organisaatio-ui-url: https://${host.virkailija}/organisaatio-service/organisaatiot
 root.organisaatio.oid: "1.2.246.562.10.00000000001"
 web.url.cas: https://${host.cas}/cas
