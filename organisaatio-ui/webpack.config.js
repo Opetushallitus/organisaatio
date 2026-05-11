@@ -27,7 +27,7 @@ module.exports = function () {
         bail: isEnvProduction,
         devtool: isEnvProduction ? (shouldUseSourceMap ? 'source-map' : false) : 'cheap-module-source-map',
         devServer: {
-            allowedHosts: 'auto',
+            allowedHosts: 'all',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': '*',
@@ -120,7 +120,7 @@ module.exports = function () {
             rules: [
                 shouldUseSourceMap && {
                     enforce: 'pre',
-                    test: /\.(js|mjs|jsx|ts|tsx|css)$/,
+                    test: /\.(js|mjs|jsx|ts|tsx)$/,
                     loader: 'source-map-loader',
                     exclude: /virkailija-ui-components/,
                 },
@@ -156,7 +156,18 @@ module.exports = function () {
                         },
                         {
                             test: /\.module\.css$/,
-                            use: ['style-loader', 'css-loader'],
+                            use: [
+                                'style-loader',
+                                {
+                                    loader: 'css-loader',
+                                    options: {
+                                        esModule: false,
+                                        modules: {
+                                            exportLocalsConvention: 'as-is',
+                                        },
+                                    },
+                                },
+                            ],
                         },
                         {
                             exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
