@@ -15,8 +15,7 @@
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
-
-        <cxf.version>4.0.6</cxf.version>
+        <cxf.version>4.1.5</cxf.version>
     </properties>
 
     <dependencies>
