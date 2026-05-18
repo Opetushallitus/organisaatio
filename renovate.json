@@ -10,6 +10,10 @@
     {
       "matchPackageNames": ["aws-cdk", "aws-cdk-lib", "constructs"],
       "automerge": true
+    },
+    {
+      "matchFileNames": [".github/**"],
+      "automerge": true
     }
   ]
 }
