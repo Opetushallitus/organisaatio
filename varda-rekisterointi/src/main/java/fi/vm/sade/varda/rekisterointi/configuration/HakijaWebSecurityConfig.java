@@ -156,18 +156,17 @@ public class HakijaWebSecurityConfig {
     private class CasUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
         @Override
         public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
-            log.info("principal {}", token.getPrincipal());
-            log.info("credentials {}", token.getCredentials());
-            log.info("details {}", token.getDetails());
-            var keys = token.getAssertion().getPrincipal().getAttributes().keySet();
-            log.info("attributes:");
-            for (var key : keys) {
-                log.info("{}: {}", key, token.getAssertion().getPrincipal().getAttributes().get(key));
+            var username = token.getAssertion()
+                    .getPrincipal()
+                    .getAttributes()
+                    .get("nationalIdentificationNumber");
+            if (username == null) {
+                throw new UsernameNotFoundException("nationalIdentificationNumber not found for " + token.getPrincipal());
+            } else {
+                List<SimpleGrantedAuthority> authorities = singletonList(
+                    new SimpleGrantedAuthority(String.format("ROLE_%s", HAKIJA_ROLE)));
+                return new User((String) username, "", true, true, true, true, authorities);
             }
-            String[] principal = ((String) token.getPrincipal()).split(",");
-            List<SimpleGrantedAuthority> authorities = singletonList(
-                new SimpleGrantedAuthority(String.format("ROLE_%s", HAKIJA_ROLE)));
-            return new User(principal[1], "", true, true, true, true, authorities);
         }
     }
 }
