@@ -159,10 +159,10 @@ public class HakijaWebSecurityConfig {
             log.info("principal {}", token.getPrincipal());
             log.info("credentials {}", token.getCredentials());
             log.info("details {}", token.getDetails());
-            var keys = token.getAssertion().getAttributes().keySet();
+            var keys = token.getAssertion().getPrincipal().getAttributes().keySet();
             log.info("attributes:");
             for (var key : keys) {
-                log.info("{}: {}", key, token.getAssertion().getAttributes().get(key));
+                log.info("{}: {}", key, token.getAssertion().getPrincipal().getAttributes().get(key));
             }
             String[] principal = ((String) token.getPrincipal()).split(",");
             List<SimpleGrantedAuthority> authorities = singletonList(
