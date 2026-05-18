@@ -10,7 +10,7 @@
         "body-parser": "1.20.5",
         "connect-api-mocker": "1.11.0",
         "cors": "2.8.6",
-        "express": "4.22.1",
+        "express": "4.22.2",
         "express-xml-bodyparser": "0.4.1",
         "morgan-body": "2.6.9"
     }
