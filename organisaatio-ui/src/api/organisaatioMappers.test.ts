@@ -1,5 +1,5 @@
-import moment from 'moment';
 import assert from 'assert/strict';
+import { format, subDays } from 'date-fns';
 import { describe, it } from 'node:test';
 
 import { Koodisto, LocalDate, Perustiedot, Yhteystiedot } from '../types/types';
@@ -37,8 +37,8 @@ const postinumerotKoodisto: Partial<Koodisto> = {
     uri2Arvo: (uri) => (uri ? '00530' : ''),
 };
 
-const Uiyesterday = moment(new Date(Date.now() - 86400000)).format('D.M.yyyy') as LocalDate;
-const Apiyesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] as APIEndpontDate;
+const Uiyesterday = format(subDays(new Date(), 1), 'd.M.yyyy') as LocalDate;
+const Apiyesterday = subDays(new Date(), 1).toISOString().split('T')[0] as APIEndpontDate;
 
 const oldApiyhteystiedot = [
     {
