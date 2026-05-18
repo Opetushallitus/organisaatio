@@ -37,6 +37,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 
 import static fi.vm.sade.varda.rekisterointi.util.ServletUtils.findSessionAttribute;
@@ -44,6 +46,7 @@ import static java.util.Collections.singletonList;
 
 import java.io.IOException;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class HakijaWebSecurityConfig {
@@ -153,6 +156,14 @@ public class HakijaWebSecurityConfig {
     private class CasUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
         @Override
         public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
+            log.info("principal {}", token.getPrincipal());
+            log.info("credentials {}", token.getCredentials());
+            log.info("details {}", token.getDetails());
+            var keys = token.getAssertion().getAttributes().keySet();
+            log.info("attributes:");
+            for (var key : keys) {
+                log.info("{}: {}", key, token.getAssertion().getAttributes().get(key));
+            }
             String[] principal = ((String) token.getPrincipal()).split(",");
             List<SimpleGrantedAuthority> authorities = singletonList(
                 new SimpleGrantedAuthority(String.format("ROLE_%s", HAKIJA_ROLE)));
