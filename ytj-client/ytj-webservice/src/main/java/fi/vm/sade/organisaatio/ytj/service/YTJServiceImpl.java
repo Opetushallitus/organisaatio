@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjConnectionException;
 import fi.vm.sade.organisaatio.ytj.api.exception.YtjExceptionType;
 import fi.ytj.*;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +16,7 @@ import java.security.MessageDigest;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class YTJServiceImpl implements YTJService {
             MessageDigest md = MessageDigest.getInstance(HASH_ALGORITHM);
             byte[] digestBytes = md.digest(strBytes);
 
-            return Hex.encodeHexString(digestBytes).toUpperCase();
+            return HexFormat.of().withUpperCase().formatHex(digestBytes);
         } catch (Exception exp) {
             return null;
         }
