@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,7 @@ public class MockOivaResource {
     private String loadFromResource(String filename) throws IOException {
         try (InputStream is = this.getClass().getResourceAsStream(filename)) {
             Objects.requireNonNull(is);
-            return IOUtils.toString(is, StandardCharsets.UTF_8);
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
 }
