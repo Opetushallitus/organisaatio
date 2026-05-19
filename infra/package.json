@@ -3,11 +3,11 @@
     "@aws-sdk/client-iam": "^3.691.0",
     "@aws-sdk/client-sts": "^3.693.0",
     "@types/node": "24.10.15",
-    "aws-cdk": "2.1121.0",
-    "aws-cdk-lib": "2.252.0",
+    "aws-cdk": "2.1122.0",
+    "aws-cdk-lib": "2.255.0",
     "constructs": "10.6.0",
-    "prettier": "3.7.4",
+    "prettier": "3.8.3",
     "ts-node": "10.9.2",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   }
 }
