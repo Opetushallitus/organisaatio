@@ -40,7 +40,7 @@
         "@types/react-select": "3.0.28",
         "@types/styled-components": "5.1.36",
         "@types/styled-system": "5.1.25",
-        "css-loader": "6.7.4",
+        "css-loader": "6.11.0",
         "eslint": "9.39.4",
         "eslint-config-prettier": "10.1.8",
         "eslint-plugin-jsx-a11y": "6.10.2",
