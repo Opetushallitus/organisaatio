@@ -296,10 +296,11 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
             tulos.setPaivittaja(org.getPaivittaja());
             tulos.setPaivitysPvm(org.getPaivitysPvm());
             try {
-                OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
-                tulos.setEtuNimet(henkilo.etunimet());
-                tulos.setSukuNimi(henkilo.sukunimi());
-
+                if (org.getPaivittaja() != null) {
+                    OppijanumeroClient.OppijanumeroDto henkilo = oppijanumeroClient.henkilo(org.getPaivittaja());
+                    tulos.setEtuNimet(henkilo.etunimet());
+                    tulos.setSukuNimi(henkilo.sukunimi());
+                }
             } catch (Exception ex) {
                 log.error(ex.getMessage());
                 tulos.setSukuNimi(org.getPaivittaja());
