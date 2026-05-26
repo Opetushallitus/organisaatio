@@ -2,7 +2,6 @@ package fi.vm.sade.organisaatio.client;
 
 import com.google.gson.Gson;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioOppijanumeroException;
-import fi.vm.sade.properties.OphProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import java.net.http.HttpRequest;
 @RequiredArgsConstructor
 public class OppijanumeroClient {
     private final OtuvaOauth2Client httpClient;
-    private final OphProperties properties;
 
     private Gson gson = new Gson();
 
@@ -23,7 +21,7 @@ public class OppijanumeroClient {
     private String oppijanumerorekisteriBaseurl;
 
     public OppijanumeroDto henkilo(String oid) {
-        var url = path("/henkilo/").pathSegment(oid).toUriString();
+        var url = path("/henkilo/" + oid).toUriString();
         try {
             var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
             var response = httpClient.executeRequest(request);
