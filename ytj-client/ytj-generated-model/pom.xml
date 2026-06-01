@@ -87,7 +87,7 @@
                     <dependency>
                         <groupId>org.apache.cxf.xjcplugins</groupId>
                         <artifactId>cxf-xjc-boolean</artifactId>
-                        <version>4.1.3</version>
+                        <version>4.2.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
