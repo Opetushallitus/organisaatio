@@ -1,4 +1,4 @@
-package fi.vm.sade.security.cas;
+package fi.vm.sade.organisaatio.config.cas;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.cas.ServiceProperties;
