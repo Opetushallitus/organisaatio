@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,10 @@ public class OpintopolkuUserDetailsService implements AuthenticationUserDetailsS
     @Override
     public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
         Map<String, Object> attributes =  token.getAssertion().getPrincipal().getAttributes();
-        List<String> roles = attributes.containsKey("roles") ? (List<String>) attributes.get("roles") : new ArrayList<>();
+        Object rolesAttribute = attributes.get("roles");
+        List<String> roles = rolesAttribute instanceof List<?> roleList
+                ? roleList.stream().map(String.class::cast).toList()
+                : List.of();
         return new UserDetailsImpl((String) attributes.get("oidHenkilo"), roles);
     }
 

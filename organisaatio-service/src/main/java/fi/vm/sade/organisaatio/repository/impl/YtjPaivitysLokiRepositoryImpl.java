@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +34,9 @@ public class YtjPaivitysLokiRepositoryImpl implements YtjPaivitysLokiRepositoryC
 
     @Override
     public List<YtjPaivitysLoki> findByDateRange(Date alkupvm, Date loppupvm) {
-        Query query = em.createQuery("SELECT loki FROM YtjPaivitysLoki loki WHERE loki.paivitysaika BETWEEN :alkupvm AND :loppupvm");
+        TypedQuery<YtjPaivitysLoki> query = em.createQuery(
+                "SELECT loki FROM YtjPaivitysLoki loki WHERE loki.paivitysaika BETWEEN :alkupvm AND :loppupvm",
+                YtjPaivitysLoki.class);
         query.setParameter("alkupvm", alkupvm);
         query.setParameter("loppupvm", loppupvm);
         return query.getResultList();
@@ -42,7 +44,9 @@ public class YtjPaivitysLokiRepositoryImpl implements YtjPaivitysLokiRepositoryC
 
     @Override
     public List<YtjPaivitysLoki> findLatest(int limit) {
-        Query query = em.createQuery("SELECT loki FROM YtjPaivitysLoki loki ORDER BY loki.paivitysaika DESC, loki.id DESC");
+        TypedQuery<YtjPaivitysLoki> query = em.createQuery(
+                "SELECT loki FROM YtjPaivitysLoki loki ORDER BY loki.paivitysaika DESC, loki.id DESC",
+                YtjPaivitysLoki.class);
         query.setFirstResult(0);
         query.setMaxResults(limit);
         return query.getResultList();

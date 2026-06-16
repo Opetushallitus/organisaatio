@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,10 +44,10 @@ public class YhteystietojenTyyppiRepositoryImpl implements YhteystietojenTyyppiR
     @Override
     public List<YhteystietojenTyyppi> findLisatietoMetadataForOrganisaatio(Collection<String> organisaatioTyyppis) {
 
-        Query query = em.createQuery(QUERY1);
+        TypedQuery<YhteystietojenTyyppi> query = em.createQuery(QUERY1, YhteystietojenTyyppi.class);
         query.setParameter("organisaatioTyyppis", organisaatioTyyppis);
         List<YhteystietojenTyyppi> matches = query.getResultList();
-        query = em.createQuery(QUERY2);
+        query = em.createQuery(QUERY2, YhteystietojenTyyppi.class);
         query.setParameter("organisaatioTyyppis", organisaatioTyyppis);
         matches.addAll(union(matches, query.getResultList()));
         return matches;//query.getResultList();

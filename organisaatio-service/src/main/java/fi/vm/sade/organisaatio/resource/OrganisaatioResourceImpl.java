@@ -82,7 +82,7 @@ public class OrganisaatioResourceImpl implements OrganisaatioResource {
         //sorttaa
         final Ordering<OrganisaatioPerustieto> ordering = Ordering.natural()
                 .nullsFirst()
-                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(new Locale("fi"), input));
+                .onResultOf((Function<OrganisaatioPerustieto, Comparable<String>>) input -> OrganisaatioDisplayHelper.getClosestBasic(Locale.of("fi"), input));
 
         organisaatiot = ordering.immutableSortedCopy(organisaatiot);
 

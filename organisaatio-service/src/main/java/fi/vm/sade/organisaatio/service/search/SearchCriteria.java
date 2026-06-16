@@ -163,7 +163,7 @@ public class SearchCriteria {
         return oid;
     }
 
-    public void setOid(Collection oid) {
+    public void setOid(Collection<String> oid) {
         this.oid.clear();
         if (oid != null) {
             this.oid.addAll(oid);
