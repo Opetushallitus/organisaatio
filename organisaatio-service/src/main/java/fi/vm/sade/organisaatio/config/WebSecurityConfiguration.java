@@ -164,6 +164,7 @@ public class WebSecurityConfiguration {
             .authorizeHttpRequests(authz -> authz
                     .requestMatchers("/actuator/health").permitAll()
                     .requestMatchers("/swagger-ui.html").permitAll()
+                    .requestMatchers("/swagger-ui").permitAll()
                     .requestMatchers("/swagger-ui/").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/swagger-resources/**").permitAll()
@@ -198,9 +199,7 @@ public class WebSecurityConfiguration {
             }
 
             private List<GrantedAuthority> extractRoles(Jwt jwt) {
-                Map<String, List<String>> roleClaim = jwt.getClaims().get("roles") != null
-                        ? (Map<String, List<String>>) jwt.getClaims().get("roles")
-                        : Map.of();
+                Map<String, List<String>> roleClaim = extractRoleClaim(jwt);
                 var roles = roleClaim.keySet()
                         .stream()
                         .map((oid) -> {
@@ -215,6 +214,19 @@ public class WebSecurityConfiguration {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.<GrantedAuthority>toList());
                 return roles;
+            }
+
+            private Map<String, List<String>> extractRoleClaim(Jwt jwt) {
+                Object rolesClaim = jwt.getClaims().get("roles");
+                if (!(rolesClaim instanceof Map<?, ?> roleClaim)) {
+                    return Map.of();
+                }
+                return roleClaim.entrySet().stream()
+                        .filter(entry -> entry.getKey() instanceof String && entry.getValue() instanceof List<?>)
+                        .collect(Collectors.toMap(
+                                entry -> (String) entry.getKey(),
+                                entry -> ((List<?>) entry.getValue()).stream().map(String.class::cast).toList()
+                        ));
             }
         };
     }

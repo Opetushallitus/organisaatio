@@ -4,7 +4,8 @@ import fi.vm.sade.organisaatio.service.filters.CacheFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.core.Ordered;
+import org.springframework.web.filter.UrlHandlerFilter;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -36,8 +37,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         return registrationBean;
     }
 
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-      configurer.setUseTrailingSlashMatch(true);
+    @Bean
+    FilterRegistrationBean<UrlHandlerFilter> trailingSlashFilterRegistrationBean() {
+        FilterRegistrationBean<UrlHandlerFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(UrlHandlerFilter.trailingSlashHandler("/**").wrapRequest().build());
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 }
