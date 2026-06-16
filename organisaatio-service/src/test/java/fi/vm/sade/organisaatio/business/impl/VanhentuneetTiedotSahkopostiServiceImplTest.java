@@ -6,7 +6,6 @@ import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.properties.OphProperties;
 import freemarker.template.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,11 +37,8 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
     @Mock
     private EmailService emailServiceMock;
 
-    private OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
-
     @BeforeEach
     public void setup() throws Exception {
-        properties.addFiles("/application.properties");
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:Messages");
         messageSource.setDefaultEncoding("UTF-8");
@@ -53,7 +49,7 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
         Configuration freemarker = freeMarkerConfigurationFactoryBean.getObject();
 
         service = new VanhentuneetTiedotSahkopostiServiceImpl(kayttooikeusClientMock, emailServiceMock,
-                organisaatioRepositoryMock, messageSource, freemarker, properties);
+                organisaatioRepositoryMock, messageSource, freemarker);
     }
 
     @Test

@@ -26,14 +26,17 @@ import fi.vm.sade.organisaatio.model.KoodiType;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.KoodiType.KoodiMetadataType;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.properties.OphProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -53,27 +56,23 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final OrganisaatioKoodistoClient client;
-
     private final OrganisaatioRepository organisaatioRepository;
-
     private final Gson gson;
-
     private final ObjectMapper objectMapper;
 
-    private final OphProperties properties;
-
     private final static String INFO_CODE_SAVE_FAILED = "organisaatio.koodisto.tallennusvirhe";
+
+    @Value("${url-virkailija}")
+    private String urlVirkailija;
 
     /**
      * Luo instanssin ja alustaa gson:in
      */
     public OrganisaatioKoodistoImpl(OrganisaatioKoodistoClient client,
                                     OrganisaatioRepository organisaatioRepository,
-                                    OphProperties properties,
                                     ObjectMapper objectMapper) {
         this.client = client;
         this.organisaatioRepository = organisaatioRepository;
-        this.properties = properties;
         this.objectMapper = objectMapper;
         gson = new GsonBuilder().create();
     }
@@ -92,7 +91,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
      */
     private OrganisaatioKoodistoKoodi haeKoodi(String koodistoUri, String tunniste) {
         tunniste = tunniste.replace("-", "");
-        String url = this.properties.url("organisaatio-service.koodisto-service.koodi.v1", koodistoUri, tunniste);
+        String url = urlVirkailija + "/koodisto-service/rest/codeelement/" + URLEncoder.encode(koodistoUri, Charset.defaultCharset()) + "_" + URLEncoder.encode(tunniste, Charset.defaultCharset())  + "/1";
         String json = getClient().get(url);
         LOG.debug("Haettiin koodi: " + (json));
         return (json == null ? null : gson.fromJson(json, OrganisaatioKoodistoKoodi.class));
@@ -504,10 +503,12 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
 
     @Override
     public List<Koodi> haeKoodit(KoodistoUri koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
-        Map<String, Object> parametrit = new HashMap<>();
-        versio.ifPresent(value -> parametrit.put("koodistoVersio", value));
-        onlyValid.ifPresent(value -> parametrit.put("onlyValidKoodis", value));
-        String url = properties.url("organisaatio-service.koodisto-service.koodisto.koodit", koodisto.uri(), parametrit);
+        String url = UriComponentsBuilder
+                .fromUriString(urlVirkailija + "/koodisto-service/rest/json/" + koodisto.uri() + "/koodi")
+                .queryParamIfPresent("koodistoVersio", versio)
+                .queryParamIfPresent("onlyValidKoodis", onlyValid)
+                .build()
+                .toUriString();
         return fetchKoodiTypeList(url)
                 .stream()
                 .map(new KoodiTypeToKoodiMapper())
@@ -545,7 +546,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
     }
 
     private Set<String> haeKoodistonKoodit(String koodistoUri) {
-        String url = this.properties.url("organisaatio-service.koodisto-service.koodisto.koodit", koodistoUri);
+        String url = urlVirkailija + "/koodisto-service/rest/json/" + koodistoUri + "/koodi";
         String json = this.client.get(url);
         CollectionType listType = objectMapper.getTypeFactory().
                 constructCollectionType(List.class, KoodiType.class);

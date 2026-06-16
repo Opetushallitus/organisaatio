@@ -9,10 +9,11 @@ import fi.vm.sade.organisaatio.email.EmailService;
 import fi.vm.sade.organisaatio.email.QueuedEmail;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.properties.OphProperties;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,20 +43,20 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
     private final OrganisaatioRepository organisaatioRepository;
     private final MessageSource messageSource;
     private final Configuration freemarker;
-    private final OphProperties properties;
+
+    @Value("${url-virkailija}")
+    private String urlVirkailija;
 
     public VanhentuneetTiedotSahkopostiServiceImpl(KayttooikeusClient kayttooikeusClient,
                                                    EmailService emailService,
                                                    OrganisaatioRepository organisaatioRepository,
                                                    MessageSource messageSource,
-                                                   Configuration freemarker,
-                                                   OphProperties properties) {
+                                                   Configuration freemarker) {
         this.kayttooikeusClient = kayttooikeusClient;
         this.emailService = emailService;
         this.organisaatioRepository = organisaatioRepository;
         this.messageSource = messageSource;
         this.freemarker = freemarker;
-        this.properties = properties;
     }
 
     public void lahetaSahkopostit() {
@@ -119,7 +120,7 @@ public class VanhentuneetTiedotSahkopostiServiceImpl implements VanhentuneetTied
             Template template = freemarker.getTemplate("sahkoposti/vanhentuneettiedot_" + kieli + ".ftlh");
             Map<String, Object> model = new HashMap<>();
             model.put("otsikko", otsikko);
-            model.put("linkki", properties.url("organisaatio-ui.organisaatio.byOid", organisaatioOid));
+            model.put("linkki", urlVirkailija + "/organisaatio-service/lomake/" + organisaatioOid);
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException ex) {
             throw new RuntimeException(ex);

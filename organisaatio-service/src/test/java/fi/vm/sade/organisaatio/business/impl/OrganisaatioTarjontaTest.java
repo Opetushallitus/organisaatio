@@ -1,13 +1,10 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.gson.JsonParser;
-import fi.vm.sade.properties.OphProperties;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Date;
@@ -24,14 +21,6 @@ public class OrganisaatioTarjontaTest {
 
     @Mock
     private OrganisaatioRestToStream restToStream;
-
-    @Spy
-    private OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
-
-    @BeforeEach
-    public void setup() {
-        properties.addFiles("/application.properties");
-    }
 
     @Test
     public void alkavaKoulutusSeuraavanaPaivana() {

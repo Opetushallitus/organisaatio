@@ -8,14 +8,16 @@ import fi.vm.sade.organisaatio.config.JsonJavaSqlDateSerializer;
 import fi.vm.sade.organisaatio.config.ObjectMapperConfiguration;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
-import fi.vm.sade.properties.OphProperties;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
+import static fi.vm.sade.organisaatio.business.OrganisaatioKoodisto.KoodistoUri.KIELI;
 import static fi.vm.sade.organisaatio.ResourceUtils.classPathResourceAsString;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -27,15 +29,14 @@ public class OrganisaatioKoodistoImplTest {
     private OrganisaatioKoodistoClient clientMock;
     private OrganisaatioRepository daoMock;
 
-    private OphProperties properties = new OphProperties("/organisaatio-service-oph.properties");
     private ObjectMapper mapper = new ObjectMapperConfiguration().objectMapper(new JsonJavaSqlDateSerializer());
 
     @BeforeEach
     public void setup() {
-        properties.addFiles("/application.properties");
         clientMock = mock(OrganisaatioKoodistoClient.class);
         daoMock = mock(OrganisaatioRepository.class);
-        impl = new OrganisaatioKoodistoImpl(clientMock, daoMock, properties, mapper);
+        impl = new OrganisaatioKoodistoImpl(clientMock, daoMock, mapper);
+        ReflectionTestUtils.setField(impl, "urlVirkailija", "https://virkailija.testiopintopolku.fi");
     }
 
     @Test
@@ -78,6 +79,15 @@ public class OrganisaatioKoodistoImplTest {
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(clientMock).put(stringArgumentCaptor.capture());
         assertEquals(classPathResourceAsString("json/paivita-koodisto-oppilaitosnumero-passive/put-koodisto-oppilaitosnumero-passive.json"), stringArgumentCaptor.getValue(), true);
+    }
+
+    @Test
+    public void haeKooditAddsOptionalQueryParametersToUrl() {
+        when(clientMock.get(anyString())).thenReturn("[]");
+
+        impl.haeKoodit(KIELI, Optional.of(1), Optional.of(false));
+
+        verify(clientMock).get("https://virkailija.testiopintopolku.fi/koodisto-service/rest/json/kieli/koodi?koodistoVersio=1&onlyValidKoodis=false");
     }
 
 }

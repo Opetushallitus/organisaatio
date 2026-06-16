@@ -17,7 +17,6 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.gson.*;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioTarjontaException;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.HakukohdeHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.KoulutusHakutulosV1RDTO;
 import fi.vm.sade.tarjonta.service.resources.v1.dto.ResultV1RDTO.ResultStatus;
@@ -26,6 +25,7 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -45,10 +45,10 @@ public class OrganisaatioTarjonta {
     @Autowired
     private OrganisaatioRestToStream restToStream;
 
-    @Autowired
-    private OphProperties properties;
-
     private Gson gson;
+
+    @Value("${url-virkailija}")
+    private String urlVirkailija;
 
     public OrganisaatioTarjonta() {
         initGson();
@@ -101,8 +101,7 @@ public class OrganisaatioTarjonta {
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         JsonElement json;
-        String tarjontaServiceWebappUrl = properties.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku", "koulutus");
-        String url = tarjontaServiceWebappUrl + "?organisationOid=" + oid;
+        String url = urlVirkailija + "/tarjonta-service/rest/v1/koulutus/search?organisationOid=" + oid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);
@@ -238,9 +237,7 @@ public class OrganisaatioTarjonta {
     private List<HakukohdeHakutulosV1RDTO> haeHakukohteet(String ryhmaOid) {
         List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
         JsonElement json;
-
-        String tarjontaServiceWebappUrl = properties.getProperty("organisaatio-service.tarjonta-service.rest.tarjonta.haku", "hakukohde");
-        String url = tarjontaServiceWebappUrl + "?organisaatioRyhmaOid=" + ryhmaOid;
+        String url = urlVirkailija + "/tarjonta-service/rest/v1/hakukohde/search?organisationOid=" + ryhmaOid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);

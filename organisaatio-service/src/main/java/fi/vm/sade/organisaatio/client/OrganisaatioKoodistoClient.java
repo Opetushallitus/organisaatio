@@ -15,9 +15,9 @@
 package fi.vm.sade.organisaatio.client;
 
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKoodistoException;
-import fi.vm.sade.properties.OphProperties;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -27,11 +27,13 @@ import java.net.http.HttpRequest;
 @RequiredArgsConstructor
 public class OrganisaatioKoodistoClient {
     private final OtuvaOauth2Client httpClient;
-    private final OphProperties properties;
+
+    @Value("${url-virkailija}")
+    private String urlVirkailija;
 
     public String get(String uri) throws OrganisaatioKoodistoException {
         try {
-            var request = HttpRequest.newBuilder().uri(new URI(uri)).GET();
+            var request = HttpRequest.newBuilder().uri(URI.create(uri)).GET();
             var response = httpClient.executeRequest(request);
             if (response.statusCode() == 200) {
                 return response.body();
@@ -48,9 +50,9 @@ public class OrganisaatioKoodistoClient {
 
     public void put(String json) throws OrganisaatioKoodistoException {
         try {
-            var uri = properties.getProperty("organisaatio-service.koodisto-service.rest.codeelement", "save");
+            var uri = urlVirkailija + "/koodisto-service/rest/codeelement/save";
             var request = HttpRequest.newBuilder()
-                    .uri(new URI(uri))
+                    .uri(URI.create(uri))
                     .PUT(HttpRequest.BodyPublishers.ofString(json))
                     .header("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
             var response = httpClient.executeRequest(request);
@@ -64,10 +66,11 @@ public class OrganisaatioKoodistoClient {
         }
     }
 
-    public void post(String json, String uri) throws OrganisaatioKoodistoException {
+    public void post(String json, String koodistoUri) throws OrganisaatioKoodistoException {
         try {
+            var uri = urlVirkailija + "/koodisto-service/rest/codeelement/" + koodistoUri;
             var request = HttpRequest.newBuilder()
-                    .uri(new URI(properties.getProperty("organisaatio-service.koodisto-service.rest.codeelement", uri)))
+                    .uri(URI.create(uri))
                     .header("Content-Type", ContentType.APPLICATION_JSON.getMimeType())
                     .POST(HttpRequest.BodyPublishers.ofString(json));
             var response = httpClient.executeRequest(request);

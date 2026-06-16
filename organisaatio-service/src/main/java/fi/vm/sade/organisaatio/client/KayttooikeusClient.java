@@ -16,10 +16,11 @@ import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
 import fi.vm.sade.organisaatio.model.Kayttaja;
 import fi.vm.sade.organisaatio.model.KayttajaKutsu;
-import fi.vm.sade.properties.OphProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,16 +32,16 @@ import java.util.Set;
 
 @Component
 public class KayttooikeusClient {
-    private final OphProperties properties;
     private final ObjectReader objectReader;
     private final ObjectWriter objectWriter;
 
     @Autowired
     private OtuvaOauth2Client httpClient;
 
-    public KayttooikeusClient(OphProperties properties) {
-        this.properties = properties;
+    @Value("${url-virkailija}")
+    private String urlVirkailija;
 
+    public KayttooikeusClient() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModule(new Jdk8Module())
@@ -50,9 +51,20 @@ public class KayttooikeusClient {
     }
 
     public Collection<String> listOrganisaatioOid(HenkiloOrganisaatioCriteria criteria) {
-        String url = properties.url("kayttooikeus-service.organisaatiohenkilo.organisaatiooid", criteria.asMap());
+        UriComponentsBuilder urlBuilder = UriComponentsBuilder
+                .fromUriString(urlVirkailija + "/kayttooikeus-service/organisaatiohenkilo/organisaatioOid");
+        criteria.asMap().forEach((key, value) -> {
+            if (value instanceof Collection<?> values) {
+                if (!values.isEmpty()) {
+                    urlBuilder.queryParam(key, values.toArray());
+                }
+            } else if (value != null) {
+                urlBuilder.queryParam(key, value);
+            }
+        });
+        String url = urlBuilder.build().toUriString();
         try {
-            var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
+            var request = HttpRequest.newBuilder().uri(URI.create(url)).GET();
             var response = httpClient.executeRequest(request);
             if (response.statusCode() == 200) {
                 return fromJson(response.body(), new TypeReference<>() {});
@@ -67,7 +79,7 @@ public class KayttooikeusClient {
     }
 
     public Collection<VirkailijaDto> listVirkailija(VirkailijaCriteria criteria) {
-        String url = properties.url("kayttooikeus-service.virkailija.haku");
+        String url = urlVirkailija + "/kayttooikeus-service/virkailija/haku";
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -101,7 +113,7 @@ public class KayttooikeusClient {
                                 LocalDate.now().plusYears(1))
                         ))
                 .build();
-        String url = properties.url("kayttooikeus-service.kutsu");
+        String url = urlVirkailija + "/kayttooikeus-service/kutsu";
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
