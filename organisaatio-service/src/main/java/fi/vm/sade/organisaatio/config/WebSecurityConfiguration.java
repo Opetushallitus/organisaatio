@@ -2,8 +2,6 @@ package fi.vm.sade.organisaatio.config;
 
 import fi.vm.sade.organisaatio.config.cas.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.organisaatio.config.cas.OpintopolkuUserDetailsService;
-import fi.vm.sade.organisaatio.config.properties.CasProperties;
-import fi.vm.sade.properties.OphProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +18,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -47,14 +46,18 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
-    private final CasProperties casProperties;
-    private final OphProperties ophProperties;
+    @Value("${cas.base}")
+    private String casBase;
+    @Value("${cas.service}")
+    private String casService;
+    @Value("${cas.login}")
+    private String casLogin;
 
     @Bean
     ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(casProperties.getService() + "/j_spring_cas_security_check");
-        serviceProperties.setSendRenew(casProperties.getSendRenew());
+        serviceProperties.setService(casService + "/j_spring_cas_security_check");
+        serviceProperties.setSendRenew(false);
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
     }
@@ -69,13 +72,13 @@ public class WebSecurityConfiguration {
         casAuthenticationProvider.setAuthenticationUserDetailsService(new OpintopolkuUserDetailsService());
         casAuthenticationProvider.setServiceProperties(serviceProperties);
         casAuthenticationProvider.setTicketValidator(ticketValidator);
-        casAuthenticationProvider.setKey(casProperties.getKey());
+        casAuthenticationProvider.setKey("organisaatio-service");
         return casAuthenticationProvider;
     }
 
     @Bean
     TicketValidator ticketValidator() {
-        Cas30ProxyTicketValidator ticketValidator = new Cas30ProxyTicketValidator(this.ophProperties.url("cas.base"));
+        Cas30ProxyTicketValidator ticketValidator = new Cas30ProxyTicketValidator(casBase);
         ticketValidator.setAcceptAnyProxy(true);
         return ticketValidator;
     }
@@ -119,7 +122,7 @@ public class WebSecurityConfiguration {
     @Bean
     CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-        casAuthenticationEntryPoint.setLoginUrl(ophProperties.url("cas.login"));
+        casAuthenticationEntryPoint.setLoginUrl(casLogin);
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
     }

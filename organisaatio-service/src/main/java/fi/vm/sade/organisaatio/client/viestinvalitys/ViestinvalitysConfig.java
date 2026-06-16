@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.client.viestinvalitys;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,13 +15,15 @@ import java.time.Duration;
 public class ViestinvalitysConfig {
     @Value("${viestinvalitys.baseurl}")
     private String viestinvalitysUrl;
+    @Value("${organisaatio.service.username}")
+    private String username;
+    @Value("${organisaatio.service.password}")
+    private String password;
+    @Value("${cas.base}")
+    private String casBase;
 
     @Bean
-    public ViestinvalitysClient viestinvalitysClient(OphProperties properties, ObjectMapper objectMapper) {
-        var username = properties.require("organisaatio.service.username");
-        var password = properties.require("organisaatio.service.password");
-        var casBase = properties.require("cas.base");
-
+    public ViestinvalitysClient viestinvalitysClient(ObjectMapper objectMapper) {
         var httpClient = HttpClient.newBuilder()
                 .cookieHandler(new CookieManager())
                 .connectTimeout(Duration.ofSeconds(10))
