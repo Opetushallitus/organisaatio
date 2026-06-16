@@ -28,7 +28,7 @@ public class ObjectMapperConfiguration {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .setDateFormat(dateFormat)
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
                 .registerModule(module)
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule());

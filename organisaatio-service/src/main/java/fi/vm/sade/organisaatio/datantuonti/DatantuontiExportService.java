@@ -30,8 +30,7 @@ public class DatantuontiExportService {
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new Jdk8Module())
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+            .setDefaultPropertyInclusion(JsonInclude.Include.NON_ABSENT);
     private final static String V1_PREFIX = "organisaatio/v1";
     public final static String MANIFEST_OBJECT_KEY = V1_PREFIX + "/manifest.json";
     private final String CREATE_ORGANISAATIO_SQL = """
