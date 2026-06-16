@@ -32,7 +32,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         super();
     }
 
-    @Schema(description = "Otetaanko aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko aktiiviset organisaatiot mukaan hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getAktiiviset() {
         return aktiiviset;
     }
@@ -41,7 +41,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.aktiiviset = aktiiviset;
     }
 
-    @Schema(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getSuunnitellut() {
         return suunnitellut;
     }
@@ -50,7 +50,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.suunnitellut = value;
     }
 
-    @Schema(description = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko lakkautetut organisaatiot mukaan hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getLakkautetut() {
         return lakkautetut;
     }
@@ -59,7 +59,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.lakkautetut = lakkautetut;
     }
 
-    @Schema(description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", required = true)
+    @Schema(description = "Haettavan organisaation yritysmuoto tai lista yritysmuodoista", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getYritysmuoto() {
         return yritysmuoto;
     }
@@ -68,7 +68,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.yritysmuoto = yritysmuoto;
     }
 
-    @Schema(description = "Haettavan organisaation kunta tai lista kunnista", required = true)
+    @Schema(description = "Haettavan organisaation kunta tai lista kunnista", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKunta() {
         return kunta;
     }
@@ -79,7 +79,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         }
     }
 
-    @Schema(description = "Haettavan organisaation tyyppi", required = true)
+    @Schema(description = "Haettavan organisaation tyyppi", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOrganisaatiotyyppi() {
         return organisaatiotyyppi;
     }
@@ -88,7 +88,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.organisaatiotyyppi = value;
     }
 
-    @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
+    @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getOppilaitostyyppi() {
         return oppilaitostyyppi;
     }
@@ -99,7 +99,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         }
     }
 
-    @Schema(description = "Haettavan organisaation kieli tai lista kielistä", required = true)
+    @Schema(description = "Haettavan organisaation kieli tai lista kielistä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKieli() {
         return kieli;
     }
@@ -110,7 +110,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         }
     }
 
-    @Schema(description = "Lista sallituista organisaatioiden oid:stä", required = true)
+    @Schema(description = "Lista sallituista organisaatioiden oid:stä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getOidRestrictionList() {
         if (this.oidRestrictionList == null) {
             this.oidRestrictionList = new HashSet<>();
@@ -122,7 +122,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.oidRestrictionList.addAll(oidRestrictionList);
     }
 
-    @Schema(description = "Hakutermit", required = true)
+    @Schema(description = "Hakutermit", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getSearchStr() {
         return searchStr;
     }
@@ -131,7 +131,7 @@ public class OrganisaatioSearchCriteriaDTOV2 {
         this.searchStr = searchStr;
     }
 
-    @Schema(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
+    @Schema(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getSkipParents() {
         return skipParents;
     }

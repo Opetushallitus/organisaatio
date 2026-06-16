@@ -19,14 +19,14 @@ public class OrganisaatioPerustieto implements Serializable {
 
     private final static long serialVersionUID = 100L;
 
-    @Schema(description = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     private String oid;
 
-    @Schema(description = "Aloituspäivämäärä", required = true)
+    @Schema(description = "Aloituspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date alkuPvm;
 
-    @Schema(description = "Lakkautuspäivämäärä", required = true)
+    @Schema(description = "Lakkautuspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date lakkautusPvm;
 
@@ -35,48 +35,48 @@ public class OrganisaatioPerustieto implements Serializable {
     @Setter
     private boolean maskingActive;
 
-    @Schema(description = "Tarkastuspäivämäärä", required = true)
+    @Schema(description = "Tarkastuspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private Date tarkastusPvm;
 
-    @Schema(description = "Yläorganisaation oid", required = true)
+    @Schema(description = "Yläorganisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     private String parentOid;
 
-    @Schema(description = "Yläorganisaation oid-polku", required = true)
+    @Schema(description = "Yläorganisaation oid-polku", requiredMode = Schema.RequiredMode.REQUIRED)
     private String parentOidPath;
 
-    @Schema(description = "Y-tunnus", required = true)
+    @Schema(description = "Y-tunnus", requiredMode = Schema.RequiredMode.REQUIRED)
     private String ytunnus;
 
     private String virastotunnus;
 
     private long aliorganisaatioMaara;
 
-    @Schema(description = "Oppilaitoksen koodi", required = true)
+    @Schema(description = "Oppilaitoksen koodi", requiredMode = Schema.RequiredMode.REQUIRED)
     private String oppilaitosKoodi;
 
-    @Schema(description = "Oppilaitoksen tyyppi", required = true)
+    @Schema(description = "Oppilaitoksen tyyppi", requiredMode = Schema.RequiredMode.REQUIRED)
     private String oppilaitostyyppi;
 
-    @Schema(description = "Toimipisteen koodi", required = true)
+    @Schema(description = "Toimipisteen koodi", requiredMode = Schema.RequiredMode.REQUIRED)
     private String toimipistekoodi;
 
-    @Schema(description = "Osuiko hakutuloksiin", required = true)
+    @Schema(description = "Osuiko hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean match = false;
 
-    @Schema(description = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> nimi = new HashMap<String, String>();
     private Map<String, String> lyhytNimi = new HashMap<>();
 
     private Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
 
-    @Schema(description = "Kielten URIt", required = true)
+    @Schema(description = "Kielten URIt", requiredMode = Schema.RequiredMode.REQUIRED)
     private Set<String> kieletUris = new HashSet<>();
 
-    @Schema(description = "Kotipaikan URI", required = true)
+    @Schema(description = "Kotipaikan URI", requiredMode = Schema.RequiredMode.REQUIRED)
     private String kotipaikkaUri;
 
-    @Schema(description = "Organisaation alaorganisaatiot", required = true)
+    @Schema(description = "Organisaation alaorganisaatiot", requiredMode = Schema.RequiredMode.REQUIRED)
     private Set<OrganisaatioPerustieto> children = new HashSet<>();
 
     public Set<OrganisaatioPerustieto> getChildren() {
@@ -246,7 +246,7 @@ public class OrganisaatioPerustieto implements Serializable {
      * @return possible object is {@link String }
      *
      */
-    @Schema(description = "Virastotunnus", required = true)
+    @Schema(description = "Virastotunnus", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getVirastoTunnus() {
         return virastotunnus;
     }
@@ -266,7 +266,7 @@ public class OrganisaatioPerustieto implements Serializable {
      * Gets the value of the aliOrganisaatioMaara property.
      *
      */
-    @Schema(description = "Aliorganisaatioiden määrä", required = true)
+    @Schema(description = "Aliorganisaatioiden määrä", requiredMode = Schema.RequiredMode.REQUIRED)
     public long getAliOrganisaatioMaara() {
         return aliorganisaatioMaara;
     }
@@ -338,7 +338,7 @@ public class OrganisaatioPerustieto implements Serializable {
      */
     public void setToimipistekoodi(String value) { this.toimipistekoodi = value; }
 
-    @Schema(description = "Organisaation tyypit", required = true)
+    @Schema(description = "Organisaation tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<OrganisaatioTyyppi> getOrganisaatiotyypit() {
         if (tyypit == null) {
             tyypit = new HashSet<>();
@@ -350,7 +350,7 @@ public class OrganisaatioPerustieto implements Serializable {
         this.tyypit = organisaatiotyypit;
     }
 
-    @Schema(description = "Kielten URIt", required = true)
+    @Schema(description = "Kielten URIt", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKieletUris() {
         if (kieletUris == null) {
             kieletUris = new HashSet<>();
@@ -362,7 +362,7 @@ public class OrganisaatioPerustieto implements Serializable {
         this.kieletUris = kieletUris;
     }
 
-    @Schema(description = "Kotipaikan URI", required = true)
+    @Schema(description = "Kotipaikan URI", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getKotipaikkaUri() {
         return kotipaikkaUri;
     }

@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Varda-organisaation rekisteröinti")
 public class VardaRekisterointi {
     @NotNull
-    @Schema(description = "Y-tunnus", required = true)
+    @Schema(description = "Y-tunnus", requiredMode = Schema.RequiredMode.REQUIRED)
     private String ytunnus;
 
     @NotNull
-    @Schema(description = "Pääkäyttäjän tiedot", required = true)
+    @Schema(description = "Pääkäyttäjän tiedot", requiredMode = Schema.RequiredMode.REQUIRED)
     private Kayttaja paakayttaja;
 }

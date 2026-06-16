@@ -8,10 +8,10 @@ import java.util.HashSet;
 @Schema(description = "Organisaation hakutulos")
 public class OrganisaatioHakutulos {
 
-    @Schema(description = "Tulosjoukon koko", required = true)
+    @Schema(description = "Tulosjoukon koko", requiredMode = Schema.RequiredMode.REQUIRED)
     private int numHits;
 
-    @Schema(description = "Organisaatiot", required = true)
+    @Schema(description = "Organisaatiot", requiredMode = Schema.RequiredMode.REQUIRED)
     private Collection<OrganisaatioPerustieto> organisaatiot = new HashSet<>();
 
     public int getNumHits() {

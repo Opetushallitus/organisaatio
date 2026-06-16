@@ -16,7 +16,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the oid
      */
-    @Schema(description = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOid() {
         return oid;
     }
@@ -31,7 +31,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the status
      */
-    @Schema(description = "Organisaation tila", required = true)
+    @Schema(description = "Organisaation tila", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getStatus() {
         return status;
     }
@@ -46,7 +46,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the _tyypit
      */
-    @Schema(description = "Organisaation tyypit", required = true)
+    @Schema(description = "Organisaation tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getTyypit() {
         return _tyypit;
     }
@@ -61,7 +61,7 @@ public class OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the nimi
      */
-    @Schema(description = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getNimi() {
         return nimi;
     }

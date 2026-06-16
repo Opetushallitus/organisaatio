@@ -18,6 +18,7 @@ public class OrganisaatioHakutulosV4 {
     private int numHits;
 
     @Schema(description = "Organisaatiot", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Builder.Default
     private Set<OrganisaatioPerustietoV4> organisaatiot = new HashSet<>();
 
     public int getNumHits() {

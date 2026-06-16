@@ -29,7 +29,7 @@ public class OrganisaatioLOPTietoDTOV2 {
 
     private Map<String, Map<String, String>> _data = new HashMap<String, Map<String, String>>();
 
-    @Schema(description = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOid() {
         return _oid;
     }
@@ -38,7 +38,7 @@ public class OrganisaatioLOPTietoDTOV2 {
         this._oid = _oid;
     }
 
-    @Schema(description = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getNimi() {
         return nimi;
     }
@@ -47,7 +47,7 @@ public class OrganisaatioLOPTietoDTOV2 {
         this.nimi = nimi;
     }
 
-    @Schema(description = "Organisaation LOP tiedot", required = true)
+    @Schema(description = "Organisaation LOP tiedot", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, Map<String, String>> getData() {
         return _data;
     }

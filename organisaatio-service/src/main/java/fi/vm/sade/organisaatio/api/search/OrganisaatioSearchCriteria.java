@@ -44,7 +44,7 @@ public class OrganisaatioSearchCriteria {
      *
      * @return possible object is {@link String }
      */
-    @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", required = true)
+    @Schema(description = "Haettavan oppilaitoksen tyyppi tai lista tyypeistä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getOppilaitostyyppi() {
         return oppilaitostyyppi;
     }
@@ -65,7 +65,7 @@ public class OrganisaatioSearchCriteria {
      *
      * @return possible object is {@link String }
      */
-    @Schema(description = "Haettavan organisaation tyyppi", required = true)
+    @Schema(description = "Haettavan organisaation tyyppi", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOrganisaatiotyyppi() {
         return organisaatiotyyppi;
     }
@@ -82,7 +82,7 @@ public class OrganisaatioSearchCriteria {
     /**
      * Gets the value of the suunnitellut property.
      */
-    @Schema(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko suunnitellut organisaatiot mukaan hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getSuunnitellut() {
         return suunnitellut;
     }
@@ -94,7 +94,7 @@ public class OrganisaatioSearchCriteria {
         this.suunnitellut = value;
     }
 
-    @Schema(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", required = true)
+    @Schema(description = "Jätetäänkö yläorganisaatiot pois hakutuloksista", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getSkipParents() {
         return skipParents;
     }
@@ -113,7 +113,7 @@ public class OrganisaatioSearchCriteria {
      *
      * @return possible object is {@link String }
      */
-    @Schema(description = "Haettavan organisaation kunta tai lista kunnista", required = true)
+    @Schema(description = "Haettavan organisaation kunta tai lista kunnista", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKunta() {
         return kunta;
     }
@@ -129,12 +129,12 @@ public class OrganisaatioSearchCriteria {
         }
     }
 
-    @Schema(description = "Lista sallituista organisaatioiden oid:stä", required = true)
+    @Schema(description = "Lista sallituista organisaatioiden oid:stä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getOidRestrictionList() {
         return this.oidRestrictionList;
     }
 
-    @Schema(description = "Hakutermit", required = true)
+    @Schema(description = "Hakutermit", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getSearchStr() {
         return searchStr;
     }
@@ -146,7 +146,7 @@ public class OrganisaatioSearchCriteria {
     /**
      * Gets the value of the vainLakkautetut property.
      */
-    @Schema(description = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko vain lakkautetut organisaatiot mukaan hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getVainLakkautetut() {
         return vainLakkautetut;
     }
@@ -161,7 +161,7 @@ public class OrganisaatioSearchCriteria {
     /**
      * Gets the value of the vainAktiiviset property.
      */
-    @Schema(description = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", required = true)
+    @Schema(description = "Otetaanko vain aktiiviset organisaatiot mukaan hakutuloksiin", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean getVainAktiiviset() {
         return vainAktiiviset;
     }

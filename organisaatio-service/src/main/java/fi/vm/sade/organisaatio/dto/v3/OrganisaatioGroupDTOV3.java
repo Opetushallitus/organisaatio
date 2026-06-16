@@ -20,7 +20,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the version
      */
-    @Schema(description = "Versio", required = true)
+    @Schema(description = "Versio", requiredMode = Schema.RequiredMode.REQUIRED)
     public int getVersion() {
         return version;
     }
@@ -35,7 +35,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the alkuPvm
      */
-    @Schema(description = "Ryhmän voimassaolon alkupäivämäärä", required = true)
+    @Schema(description = "Ryhmän voimassaolon alkupäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getAlkuPvm() {
         return alkuPvm;
     }
@@ -50,7 +50,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the lakkautusPvm
      */
-    @Schema(description = "Ryhmän lakkautuspäivämäärä", required = true)
+    @Schema(description = "Ryhmän lakkautuspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getLakkautusPvm() {
         return lakkautusPvm;
     }
@@ -65,7 +65,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the kuvaus
      */
-    @Schema(description = "Ryhmän kuvaus", required = true)
+    @Schema(description = "Ryhmän kuvaus", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getKuvaus() {
         return kuvaus;
     }
@@ -80,7 +80,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the ryhmatyypit
      */
-    @Schema(description = "Ryhmätyypit", required = true)
+    @Schema(description = "Ryhmätyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getRyhmatyypit() {
         return ryhmatyypit;
     }
@@ -95,7 +95,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the kayttoryhmat
      */
-    @Schema(description = "Ryhmän käyttöryhmät", required = true)
+    @Schema(description = "Ryhmän käyttöryhmät", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKayttoryhmat() {
         return kayttoryhmat;
     }
@@ -110,7 +110,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the parentOid
      */
-    @Schema(description = "Parent oid", required = true)
+    @Schema(description = "Parent oid", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getParentOid() {
         return parentOid;
     }
@@ -125,7 +125,7 @@ public class OrganisaatioGroupDTOV3 extends OrganisaatioCoreInfoDTOV3 {
     /**
      * @return the parentOidPath
      */
-    @Schema(description = "Parent oid polkuna", required = true)
+    @Schema(description = "Parent oid polkuna", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getParentOidPath() {
         return parentOidPath;
     }

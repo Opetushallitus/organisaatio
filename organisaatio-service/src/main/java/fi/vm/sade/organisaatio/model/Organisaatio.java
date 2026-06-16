@@ -14,6 +14,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
@@ -411,7 +413,12 @@ public class Organisaatio extends OrganisaatioBaseEntity {
 
     private Date truncateToDay(Date pvm) {
         // implemented as is since this method is called with both java.sql.Date and java.util.Date
-        return pvm == null ? null : new Date(pvm.getYear(), pvm.getMonth(), pvm.getDate());
+        if (pvm == null) {
+            return null;
+        }
+        var zone = ZoneId.systemDefault();
+        var date = Instant.ofEpochMilli(pvm.getTime()).atZone(zone).toLocalDate();
+        return Date.from(date.atStartOfDay(zone).toInstant());
     }
 
     public void setAlkuPvm(Date alkuPvm) {

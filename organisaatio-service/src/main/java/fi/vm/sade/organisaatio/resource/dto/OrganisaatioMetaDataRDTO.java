@@ -52,7 +52,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         _data.put(key, map);
     }
 
-    @Schema(description = "Data", required = true)
+    @Schema(description = "Data", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, Map<String, String>> getData() {
         return _data;
     }
@@ -61,7 +61,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._data = _data;
     }
 
-    @Schema(description = "Hakutoimiston ECTS sähköpostiosoite", required = true)
+    @Schema(description = "Hakutoimiston ECTS sähköpostiosoite", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getHakutoimistoEctsEmail() {
         return _hakutoimistoEctsEmail;
     }
@@ -70,7 +70,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsEmail = _hakutoimistoEctsEmail;
     }
 
-    @Schema(description = "Hakutoimiston ECTS nimi", required = true)
+    @Schema(description = "Hakutoimiston ECTS nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getHakutoimistoEctsNimi() {
         return _hakutoimistoEctsNimi;
     }
@@ -79,7 +79,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsNimi = _hakutoimistoEctsNimi;
     }
 
-    @Schema(description = "Hakutoimiston ECTS puhelinnumero", required = true)
+    @Schema(description = "Hakutoimiston ECTS puhelinnumero", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getHakutoimistoEctsPuhelin() {
         return _hakutoimistoEctsPuhelin;
     }
@@ -88,7 +88,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsPuhelin = _hakutoimistoEctsPuhelin;
     }
 
-    @Schema(description = "Hakutoimiston ECTS tehtävänimike", required = true)
+    @Schema(description = "Hakutoimiston ECTS tehtävänimike", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getHakutoimistoEctsTehtavanimike() {
         return _hakutoimistoEctsTehtavanimike;
     }
@@ -97,7 +97,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistoEctsTehtavanimike = _hakutoimistoEctsTehtavanimike;
     }
 
-    @Schema(description = "Hakutoimiston nimi", required = true)
+    @Schema(description = "Hakutoimiston nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getHakutoimistonNimi() {
         return _hakutoimistonNimi;
     }
@@ -106,7 +106,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._hakutoimistonNimi = _hakutoimistonNimi;
     }
 
-    @Schema(description = "Koodi", required = true)
+    @Schema(description = "Koodi", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getKoodi() {
         return _koodi;
     }
@@ -115,7 +115,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._koodi = _koodi;
     }
 
-    @Schema(description = "Enkoodattu kuva", required = true)
+    @Schema(description = "Enkoodattu kuva", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getKuvaEncoded() {
         return _kuvaEncoded;
     }
@@ -124,7 +124,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._kuvaEncoded = _kuvaEncoded;
     }
 
-    @Schema(description = "Luontipäivämäärä", required = true)
+    @Schema(description = "Luontipäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getLuontiPvm() {
         return _luontiPvm;
     }
@@ -133,7 +133,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._luontiPvm = _luontiPvm;
     }
 
-    @Schema(description = "Muokkauspäivämäärä", required = true)
+    @Schema(description = "Muokkauspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getMuokkausPvm() {
         return _muokkausPvm;
     }
@@ -142,7 +142,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._muokkausPvm = _muokkausPvm;
     }
 
-    @Schema(description = "Nimi", required = true)
+    @Schema(description = "Nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getNimi() {
         return _nimi;
     }
@@ -151,7 +151,7 @@ public class OrganisaatioMetaDataRDTO implements Serializable {
         this._nimi = _nimi;
     }
 
-    @Schema(description = "Yhteystiedot", required = true)
+    @Schema(description = "Yhteystiedot", requiredMode = Schema.RequiredMode.REQUIRED)
     public List<Map<String, String>> getYhteystiedot() {
         if (_yhteystiedot == null) {
             _yhteystiedot = new ArrayList<Map<String, String>>();

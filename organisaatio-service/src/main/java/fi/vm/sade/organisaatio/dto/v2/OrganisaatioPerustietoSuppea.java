@@ -13,16 +13,16 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
 
     private final static long serialVersionUID = 100L;
 
-    @Schema(description = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     private String oid;
 
-    @Schema(description = "Organisaation nimi", required = true)
+    @Schema(description = "Organisaation nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> nimi = new HashMap<String, String>();
 
-    @Schema(description = "Organisaation tyypit", required = true)
+    @Schema(description = "Organisaation tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     private Set<OrganisaatioTyyppi> tyypit = new HashSet<>();
 
-    @Schema(description = "Oppilaitoksen tyyppi", required = true)
+    @Schema(description = "Oppilaitoksen tyyppi", requiredMode = Schema.RequiredMode.REQUIRED)
     private String oppilaitostyyppi;
 
     private Collection<OrganisaatioPerustietoSuppea> children = new HashSet<>();
@@ -90,7 +90,7 @@ public class OrganisaatioPerustietoSuppea implements Serializable {
         return this.nimi.get(language);
     }
 
-    @Schema(description = "Organisaation tyypit", required = true)
+    @Schema(description = "Organisaation tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<OrganisaatioTyyppi> getOrganisaatiotyypit() {
         if (tyypit == null) {
             return null;

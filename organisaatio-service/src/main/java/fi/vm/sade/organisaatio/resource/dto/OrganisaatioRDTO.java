@@ -102,7 +102,7 @@ public class OrganisaatioRDTO implements Serializable {
 
     private Timestamp _tarkastusPvm; // täytyy olla Timestamp jotta päivityksen vastauksessa formaatti on oikea
 
-    @Schema(description = "Organisaation oid", required = true)
+    @Schema(description = "Organisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOid() {
         return _oid;
     }
@@ -111,7 +111,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._oid = _oid;
     }
 
-    @Schema(description = "Versio", required = true)
+    @Schema(description = "Versio", requiredMode = Schema.RequiredMode.REQUIRED)
     public int getVersion() {
         return _version;
     }
@@ -120,7 +120,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._version = _version;
     }
 
-    @Schema(description = "Alkamispäivämäärä", required = true)
+    @Schema(description = "Alkamispäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getAlkuPvm() {
         return _alkuPvm;
     }
@@ -129,7 +129,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._alkuPvm = _alkuPvm;
     }
 
-    @Schema(description = "Lakkautuspäivämäärä", required = true)
+    @Schema(description = "Lakkautuspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getLakkautusPvm() {
         return _lakkautusPvm;
     }
@@ -138,7 +138,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._lakkautusPvm = _lakkautusPvm;
     }
 
-    @Schema(description = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", required = true)
+    @Schema(description = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getYTJKieli() {
         return _ytjKieli;
     }
@@ -147,7 +147,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._ytjKieli = _ytjKieli;
     }
 
-    @Schema(description = "YTJ:n päivityspäivämäärä", required = true)
+    @Schema(description = "YTJ:n päivityspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
     public Date getYTJPaivitysPvm() {
         return _ytjPaivitysPvm;
     }
@@ -156,7 +156,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._ytjPaivitysPvm = _ytjPaivitysPvm;
     }
 
-    @Schema(description = "Kielten URIt", required = true)
+    @Schema(description = "Kielten URIt", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKieletUris() {
         if (_kieletUris == null) {
             _kieletUris = new HashSet<>();
@@ -168,7 +168,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kieletUris = _kieletUris;
     }
 
-    @Schema(description = "Maan URI", required = true)
+    @Schema(description = "Maan URI", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getMaaUri() {
         return _maaUri;
     }
@@ -177,7 +177,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._maaUri = _maaUri;
     }
 
-    @Schema(description = "Domain", required = true)
+    @Schema(description = "Domain", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getDomainNimi() {
         return _domainNimi;
     }
@@ -186,7 +186,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._domainNimi = _domainNimi;
     }
 
-    @Schema(description = "Kotipaikan URI", required = true)
+    @Schema(description = "Kotipaikan URI", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getKotipaikkaUri() {
         return _kotipaikkaUri;
     }
@@ -195,7 +195,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kotipaikkaUri = _kotipaikkaUri;
     }
 
-    @Schema(description = "Nimi", required = true)
+    @Schema(description = "Nimi", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getNimi() {
         if (_nimi == null) {
             _nimi = new HashMap<>();
@@ -207,7 +207,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._nimi = _nimi;
     }
 
-    @Schema(description = "Organisaation nimihistoria", required = true)
+    @Schema(description = "Organisaation nimihistoria", requiredMode = Schema.RequiredMode.REQUIRED)
     public List<OrganisaatioNimiRDTO> getNimet() {
          if (_nimet == null) {
             _nimet = new ArrayList<>();
@@ -219,7 +219,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._nimet = _nimet;
     }
 
-    @Schema(description = "Oppilaitoksen koodi", required = true)
+    @Schema(description = "Oppilaitoksen koodi", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOppilaitosKoodi() {
         return _oppilaitosKoodi;
     }
@@ -228,7 +228,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._oppilaitosKoodi = _oppilaitosKoodi;
     }
 
-    @Schema(description = "Oppilaitoksen tyypin URI", required = true)
+    @Schema(description = "Oppilaitoksen tyypin URI", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getOppilaitosTyyppiUri() {
         return _oppilaitosTyyppiUri;
     }
@@ -237,7 +237,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._oppilaitosTyyppiUri = _oppilaitosTyyppiUri;
     }
 
-    @Schema(description = "Y-tunnus", required = true)
+    @Schema(description = "Y-tunnus", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getYTunnus() {
         return _yTunnus;
     }
@@ -246,7 +246,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._yTunnus = _yTunnus;
     }
 
-    @Schema(description = "Tyypit", required = true)
+    @Schema(description = "Tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getTyypit() {
         if (_tyypit == null) {
             _tyypit = new HashSet<>();
@@ -258,7 +258,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._tyypit = _tyypit;
     }
 
-    @Schema(description = "Toimipisteen koodi", required = true)
+    @Schema(description = "Toimipisteen koodi", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getToimipistekoodi() {
         return _toimipistekoodi;
     }
@@ -267,7 +267,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._toimipistekoodi = _toimipistekoodi;
     }
 
-    @Schema(description = "Yritysmuoto", required = true)
+    @Schema(description = "Yritysmuoto", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getYritysmuoto() {
         return _yritysmuoto;
     }
@@ -276,7 +276,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._yritysmuoto = _yritysmuoto;
     }
 
-    @Schema(description = "Vuosiluokat", required = true)
+    @Schema(description = "Vuosiluokat", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getVuosiluokat() {
         if (_vuosiluokat == null) {
             _vuosiluokat = new HashSet<>();
@@ -288,7 +288,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._vuosiluokat = _vuosiluokat;
     }
 
-    @Schema(description = "Ryhmatyypit", required = true)
+    @Schema(description = "Ryhmatyypit", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getRyhmatyypit() {
         if (_ryhmatyypit == null) {
             _ryhmatyypit = new HashSet<>();
@@ -300,7 +300,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._ryhmatyypit = _ryhmatyypit;
     }
 
-    @Schema(description = "Kayttoryhmat", required = true)
+    @Schema(description = "Kayttoryhmat", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<String> getKayttoryhmat() {
         if (_kayttoryhmat == null) {
             _kayttoryhmat = new HashSet<>();
@@ -312,7 +312,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kayttoryhmat = _kayttoryhmat;
     }
 
-    @Schema(description = "Käyntiosoite", required = true)
+    @Schema(description = "Käyntiosoite", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getKayntiosoite() {
         if (_kayntiosoite == null) {
             _kayntiosoite = new HashMap<String, String>();
@@ -324,7 +324,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kayntiosoite = _kayntiosoite;
     }
 
-    @Schema(description = "Postiosoite", required = true)
+    @Schema(description = "Postiosoite", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getPostiosoite() {
         if (_postiosoite == null) {
             _postiosoite = new HashMap<String, String>();
@@ -336,7 +336,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._postiosoite = _postiosoite;
     }
 
-    @Schema(description = "Kuvaus", required = true)
+    @Schema(description = "Kuvaus", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getKuvaus() {
         return _kuvaus;
     }
@@ -345,7 +345,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kuvaus = _kuvaus;
     }
 
-    @Schema(description = "Toinen kuvaus", required = true)
+    @Schema(description = "Toinen kuvaus", requiredMode = Schema.RequiredMode.REQUIRED)
     public Map<String, String> getKuvaus2() {
         if (_kuvaus2 == null) {
             _kuvaus2 = new HashMap<String, String>();
@@ -357,7 +357,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._kuvaus2 = _kuvaus2;
     }
 
-    @Schema(description = "Yläorganisaation oid", required = true)
+    @Schema(description = "Yläorganisaation oid", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getParentOid() {
         return _parentOid;
     }
@@ -366,7 +366,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._parentOid = _parentOid;
     }
 
-    @Schema(description = "Yläorganisaation oid-polku", required = true)
+    @Schema(description = "Yläorganisaation oid-polku", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getParentOidPath() {
         return _parentOidPath;
     }
@@ -375,7 +375,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._parentOidPath = _parentOidPath;
     }
 
-    @Schema(description = "Metatiedot", required = true)
+    @Schema(description = "Metatiedot", requiredMode = Schema.RequiredMode.REQUIRED)
     public OrganisaatioMetaDataRDTO getMetadata() {
         return _metadata;
     }
@@ -389,7 +389,7 @@ public class OrganisaatioRDTO implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @Schema(description = "Sähköpostiosoite", required = true)
+    @Schema(description = "Sähköpostiosoite", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getEmailOsoite() {
         return _emailOsoite;
     }
@@ -408,7 +408,7 @@ public class OrganisaatioRDTO implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @Schema(description = "Puhelinnumero", required = true)
+    @Schema(description = "Puhelinnumero", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getPuhelinnumero() {
         return _puhelinnumero;
     }
@@ -427,7 +427,7 @@ public class OrganisaatioRDTO implements Serializable {
      * @deprecated Do not use this method! Use getYhteystiedot() instead!
      */
     @Deprecated
-    @Schema(description = "WWW-osoite", required = true)
+    @Schema(description = "WWW-osoite", requiredMode = Schema.RequiredMode.REQUIRED)
     public String getWwwOsoite() {
         return _wwwOsoite;
     }
@@ -441,7 +441,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._wwwOsoite = _wwwOsoite;
     }
 
-    @Schema(description = "Yhteishaun koulukoodi", required = true)
+    @Schema(description = "Yhteishaun koulukoodi", requiredMode = Schema.RequiredMode.REQUIRED)
     @Deprecated
     public String getYhteishaunKoulukoodi() {
         return yhteishaunKoulukoodi;
@@ -452,7 +452,7 @@ public class OrganisaatioRDTO implements Serializable {
         this.yhteishaunKoulukoodi = yhteishaunKoulukoodi;
     }
 
-    @Schema(description = "Yhteystiedot", required = true)
+    @Schema(description = "Yhteystiedot", requiredMode = Schema.RequiredMode.REQUIRED)
     public Set<Map<String, String>> getYhteystietoArvos() {
         return _yhteystietoArvos;
     }
