@@ -182,7 +182,7 @@ class OrganisaatioFindBusinessServiceImplTest {
         when(organisaatioDaoMock.findModifiedSince(
                     excludesPiilotettuCaptor.capture(),
                     any(LocalDateTime.class),
-                    any(List.class),
+                    anyList(),
                     anyBoolean()))
                 .thenReturn(asList(new Organisaatio()));
         organisaatioFindBusinessServiceImpl.haeMuutetut(

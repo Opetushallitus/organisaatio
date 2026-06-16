@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -39,7 +40,7 @@ class OrganisaatioApiSearchTest {
                                 "{\"oid\":\"1.2.2004.2\",\"alkuPvm\":1372453200000,\"parentOid\":\"1.2.2004.1\",\"parentOidPath\":\"1.2.2004.2/1.2.2004.1/1.2.246.562.24.00000000001\",\"ytunnus\":\"1234567-2\",\"oppilaitostyyppi\":\"oppilaitostyyppi_41#1\",\"toimipistekoodi\":\"123451\",\"match\":true,\"nimi\":{\"fi\":\"root test koulutustoimija, node1 asd\"},\"lyhytNimi\":{\"fi\":\"node1 asd\"},\"kieletUris\":[],\"kotipaikkaUri\":\"Helsinki\",\"children\":[],\"subRows\":[],\"status\":\"AKTIIVINEN\",\"organisaatiotyypit\":[\"organisaatiotyyppi_02\",\"organisaatiotyyppi_04\",\"organisaatiotyyppi_03\"],\"aliOrganisaatioMaara\":0}," +
                                 "{\"oid\":\"1.2.2005.4\",\"alkuPvm\":1283029200000,\"parentOid\":\"1.2.2004.3\",\"parentOidPath\":\"1.2.2005.4/1.2.2004.3/1.2.2004.1/1.2.246.562.24.00000000001\",\"ytunnus\":\"1234568-4\",\"oppilaitostyyppi\":\"oppilaitostyyppi_42#1\",\"match\":true,\"nimi\":{\"fi\":\"root test koulutustoimija, node2 foo, node23 foo bar\"},\"lyhytNimi\":{\"fi\":\"node23 foo bar\"},\"kieletUris\":[],\"kotipaikkaUri\":\"Helsinki\",\"children\":[],\"subRows\":[],\"status\":\"AKTIIVINEN\",\"organisaatiotyypit\":[\"organisaatiotyyppi_02\",\"organisaatiotyyppi_04\",\"organisaatiotyyppi_03\"],\"aliOrganisaatioMaara\":0}" +
                                 "]}",
-                        false));
+                        JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -61,7 +62,7 @@ class OrganisaatioApiSearchTest {
                                 "{\"oid\":\"1.2.2005.4\",\"nimi\":{\"fi\":\"root test koulutustoimija, node2 foo, node23 foo bar\"}}," +
                                 "{\"oid\":\"1.2.2004.2\",\"nimi\":{\"fi\":\"root test koulutustoimija, node1 asd\"}}" +
                                 "]}",
-                        false));
+                        JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -89,6 +90,6 @@ class OrganisaatioApiSearchTest {
                                 "\"oppilaitostyyppi\":\"oppilaitostyyppi_42#1\"," +
                                 "\"tyypit\":[\"organisaatiotyyppi_02\",\"organisaatiotyyppi_04\",\"organisaatiotyyppi_03\"]}" +
                                 "]}",
-                        true));
+                        JsonCompareMode.STRICT));
     }
 }

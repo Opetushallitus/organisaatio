@@ -60,11 +60,14 @@ public class VanhentuneetTiedotSahkopostiServiceImplTest {
     public void lahetaSahkopostit() {
         when(kayttooikeusClientMock.listOrganisaatioOid(any())).thenReturn(singletonList("org1"));
         when(organisaatioRepositoryMock.findByTarkastusPvm(any(), any(), any(), anyLong()))
-                .thenAnswer((InvocationOnMock invocation) -> invocation.getArgument(2, Collection.class).stream().map(oid -> {
-                    Organisaatio organisaatio = new Organisaatio();
-                    organisaatio.setOid((String) oid);
-                    return organisaatio;
-                }).toList());
+                .thenAnswer((InvocationOnMock invocation) -> {
+                    Collection<String> oids = invocation.getArgument(2);
+                    return oids.stream().map(oid -> {
+                        Organisaatio organisaatio = new Organisaatio();
+                        organisaatio.setOid(oid);
+                        return organisaatio;
+                    }).toList();
+                });
         VirkailijaDto virkailija1 = new VirkailijaDto();
         virkailija1.setSahkoposti("example1@example.com");
         VirkailijaDto virkailija2 = new VirkailijaDto();

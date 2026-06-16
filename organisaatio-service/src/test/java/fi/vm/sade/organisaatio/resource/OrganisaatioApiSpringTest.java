@@ -8,9 +8,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.json.JsonCompareMode;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -30,7 +31,7 @@ class OrganisaatioApiSpringTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @SpyBean
+    @MockitoSpyBean
     OrganisaatioFindBusinessService organisaatioFindBusinessService;
 
 
@@ -52,7 +53,7 @@ class OrganisaatioApiSpringTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{" +
                         "\"errorMessage\":\"organisaatio.exception.organisaatio.not.found\"," +
-                        "\"errorKey\":\"organisaatio.exception.organisaatio.not.found\"}", true));
+                        "\"errorKey\":\"organisaatio.exception.organisaatio.not.found\"}", JsonCompareMode.STRICT));
     }
 
     @Test
@@ -65,7 +66,7 @@ class OrganisaatioApiSpringTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{" +
                         "\"errorMessage\":\"organisaatio.exception.delete.parent\"," +
-                        "\"errorKey\":\"organisaatio.exception.delete.parent\"}", true));
+                        "\"errorKey\":\"organisaatio.exception.delete.parent\"}", JsonCompareMode.STRICT));
     }
 
     @Test

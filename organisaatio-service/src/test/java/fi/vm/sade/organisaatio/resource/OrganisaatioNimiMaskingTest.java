@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.resource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,7 +55,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                         "\"tyypit\":[\"Varhaiskasvatuksen toimipaikka\"]" +
                         "}," +
                         "\"alkuPvm\":\"2014-12-02\"" +
-                        "}]", false));
+                        "}]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -76,7 +77,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"tyypit\":[\"Varhaiskasvatuksen toimipaikka\"]}" +
                                 ",\"alkuPvm\":\"2014-12-02\"" +
-                                "}]", false));
+                                "}]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -98,7 +99,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"tyypit\":[\"Varhaiskasvatuksen toimipaikka\"]}" +
                                 ",\"alkuPvm\":\"2014-12-02\"" +
-                                "}]", false));
+                                "}]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -110,7 +111,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                 .andExpect(content().json(
                         "[{\"nimi\":" +
                                 "{\"fi\":\"Piilotustesti\"},\"alkuPvm\":\"1970-01-01\",\"version\":0}]",
-                        false));
+                        JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -126,7 +127,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
                                 "\"en\":\"Private trader (6165189-7)\"}," +
                                 "\"alkuPvm\":\"1970-01-01\",\"version\":0}" +
-                                "]", false));
+                                "]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -142,7 +143,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"sv\":\"Enskild näringsidkare (6165189-7)\"," +
                                 "\"en\":\"Private trader (6165189-7)\"}," +
                                 "\"alkuPvm\":\"1970-01-01\",\"version\":0}" +
-                                "]", false));
+                                "]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -187,7 +188,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "{\"kieli\":\"kieli_sv#1\",\"numero\":\"0400123456\",\"tyyppi\":\"puhelin\",\"yhteystietoOid\":\"1674212916.456323\",\"id\":\"57\"}," +
                                 "{\"osoiteTyyppi\":\"kaynti\",\"kieli\":\"kieli_sv#1\",\"postinumeroUri\":\"posti_02970\",\"yhteystietoOid\":\"1674212916.132425\",\"id\":\"54\",\"postitoimipaikka\":\"Helsinki\",\"osoite\":\"Örkkiniityntie 1\"}" +
                                 "]" +
-                                "}]", false));
+                                "}]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -223,7 +224,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"ytunnus\":\"6165189-7\"," +
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"yhteystiedot\":[]" +
-                                "}]", false));
+                                "}]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -266,7 +267,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"ytunnus\":\"6165189-7\"," +
                                 "\"status\":\"AKTIIVINEN\"," +
                                 "\"yhteystiedot\":[]" +
-                                "}]", false));
+                                "}]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -294,7 +295,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"}" +
                                 "]" +
-                                "}", false));
+                                "}", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -328,7 +329,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"}" +
                                 "]" +
-                                "}", false));
+                                "}", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -362,7 +363,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
                                 "\"tyypit\":[\"organisaatiotyyppi_07\"]," +
                                 "\"ytunnus\":\"6165189-7\"}" +
                                 "]" +
-                                "}", false));
+                                "}", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -372,7 +373,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
         mvc.perform(get("/api/{oid}", "1.2.8001.2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"maskingActive\": true}", false));
+                .andExpect(content().json("{\"maskingActive\": true}", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -382,7 +383,7 @@ class OrganisaatioNimiMaskingTest extends BaseOrganisaatioApiTest {
         mvc.perform(get("/api/{oid}", "1.2.8001.2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"maskingActive\": false}", false));
+                .andExpect(content().json("{\"maskingActive\": false}", JsonCompareMode.LENIENT));
     }
 
 

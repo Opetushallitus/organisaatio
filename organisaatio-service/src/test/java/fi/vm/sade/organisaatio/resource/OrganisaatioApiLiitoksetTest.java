@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,7 +26,7 @@ class OrganisaatioApiLiitoksetTest {
     void testLiitoksetApiEmpty() throws Exception {
         this.mockMvc.perform(get("/api/liitokset"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[]",false));
+                .andExpect(content().json("[]", JsonCompareMode.LENIENT));
     }
 
     @Test
@@ -50,6 +51,6 @@ class OrganisaatioApiLiitoksetTest {
                         "\"tyypit\":[\"Varhaiskasvatuksen toimipaikka\"]" +
                         "}," +
                         "\"alkuPvm\":\"2014-12-02\"" +
-                        "}]",false));
+                        "}]", JsonCompareMode.LENIENT));
     }
 }
