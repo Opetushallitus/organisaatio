@@ -18,11 +18,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>fi.vm.sade.organisaatio</groupId>
-            <artifactId>organisaatio-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>fi.vm.sade.organisaatio.ytj</groupId>
             <artifactId>ytj-api</artifactId>
             <version>${project.version}</version>
