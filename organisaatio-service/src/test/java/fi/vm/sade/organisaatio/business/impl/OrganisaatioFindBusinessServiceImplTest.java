@@ -3,6 +3,7 @@ package fi.vm.sade.organisaatio.business.impl;
 import fi.vm.sade.organisaatio.OrganisaatioBuilder;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.auth.PermissionChecker;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.repository.OrganisaatioSuhdeRepository;
@@ -10,10 +11,11 @@ import fi.vm.sade.organisaatio.service.search.SearchConfig;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @Transactional
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class OrganisaatioFindBusinessServiceImplTest {
 
     @Mock
@@ -50,16 +52,16 @@ class OrganisaatioFindBusinessServiceImplTest {
     @BeforeEach
     void setup() {
         ReflectionTestUtils.setField(organisaatioFindBusinessServiceImpl, "rootOrganisaatioOid", "rootOid");
+    }
+
+    @Test
+    void findBy() {
         when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
             Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
             OrganisaatioPerustieto dto = new OrganisaatioPerustieto();
             dto.setOid(entity.getOid());
             return dto;
         });
-    }
-
-    @Test
-    void findBy() {
         SearchCriteria criteria = new SearchCriteria();
         SearchConfig config = new SearchConfig(true, false, false);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
@@ -80,6 +82,12 @@ class OrganisaatioFindBusinessServiceImplTest {
 
     @Test
     void findByIncludeParents() {
+        when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
+            OrganisaatioPerustieto dto = new OrganisaatioPerustieto();
+            dto.setOid(entity.getOid());
+            return dto;
+        });
         SearchCriteria criteria = new SearchCriteria();
         criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(true, false, false);
@@ -102,6 +110,12 @@ class OrganisaatioFindBusinessServiceImplTest {
 
     @Test
     void findByIncludeChildren() {
+        when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
+            OrganisaatioPerustieto dto = new OrganisaatioPerustieto();
+            dto.setOid(entity.getOid());
+            return dto;
+        });
         SearchCriteria criteria = new SearchCriteria();
         criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(false, true, false);
@@ -125,6 +139,12 @@ class OrganisaatioFindBusinessServiceImplTest {
 
     @Test
     void findByCountChildren() {
+        when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioPerustieto.class))).thenAnswer(invocation -> {
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
+            OrganisaatioPerustieto dto = new OrganisaatioPerustieto();
+            dto.setOid(entity.getOid());
+            return dto;
+        });
         SearchCriteria criteria = new SearchCriteria();
         SearchConfig config = new SearchConfig(true, false, true);
         Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
@@ -145,12 +165,24 @@ class OrganisaatioFindBusinessServiceImplTest {
 
     @Test
     void findByOidsV4ExcludesPiilotettu() {
+        when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioRDTOV4.class))).thenAnswer(invocation -> {
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
+            OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
+            dto.setOid(entity.getOid());
+            return dto;
+        });
         boolean excludedPiilotettu = invokeFindByOidsV4(false);
         assertThat(excludedPiilotettu).isTrue();
     }
 
     @Test
     void findByOidsV4IncludesPiilotettuIfReadAccessToAll() {
+        when(conversionServiceMock.convert(any(Organisaatio.class), eq(OrganisaatioRDTOV4.class))).thenAnswer(invocation -> {
+            Organisaatio entity = invocation.getArgument(0, Organisaatio.class);
+            OrganisaatioRDTOV4 dto = new OrganisaatioRDTOV4();
+            dto.setOid(entity.getOid());
+            return dto;
+        });
         boolean excludedPiilotettu = invokeFindByOidsV4(true);
         assertThat(excludedPiilotettu).isFalse();
     }

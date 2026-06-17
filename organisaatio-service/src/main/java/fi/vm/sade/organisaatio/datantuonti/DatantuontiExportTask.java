@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.time.Duration;
 
 @Slf4j
@@ -40,7 +39,7 @@ public class DatantuontiExportTask extends RecurringTask<Void> {
             String secondsFromEpoch = datantuontiExportService.createSchemaAndReturnTransactionTimestampFromEpoch();
             datantuontiExportService.generateExportFiles(secondsFromEpoch);
             log.info("Organisaatio datantuonti export task completed");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             MDC.remove(RequestIdFilter.REQUEST_ID_ATTRIBUTE);
