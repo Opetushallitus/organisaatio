@@ -29,7 +29,7 @@ import java.util.Date;
 /**
  * @author Antti
  */
-@Entity  // TODO XSS filtteri
+@Entity
 public class Osoite extends Yhteystieto {
 
 	private static final long serialVersionUID = 1L;
@@ -47,21 +47,21 @@ public class Osoite extends Yhteystieto {
 
     @NotNull
     @Size(min = 3, max = 100)
-    private String osoite; // TODO XSS filtteri
+    private String osoite;
 
     //@NotNull
     //Postinumero can be null because of the foreign addresses
     //Postinumero is stored as koodistouri so no validation can be done
     //@Pattern(regexp = ZIPCODE_PATTERN, message = "{validation.invalid.zipcode}")
-    private String postinumero; // TODO XSS filtteri
+    private String postinumero;
 
     //Postitoimipaikka can be null because of the foreign addresses
     //@NotNull
     //@Size(min = GENERIC_MIN, max = GENERIC_MAX)
-    private String postitoimipaikka; // TODO XSS filtteri
-    private String osavaltio;  // TODO XSS filtteri
-    private String extraRivi; // TODO XSS filtteri
-    private String maa; // TODO XSS filtteri
+    private String postitoimipaikka;
+    private String osavaltio;
+    private String extraRivi;
+    private String maa;
 
     //Should these be strings
     private Double lat;

@@ -19,16 +19,11 @@ package fi.vm.sade.organisaatio.model;
 import jakarta.persistence.*;
 import java.util.Date;
 
-import org.hibernate.annotations.Comment;
-
 /**
  * Entity luokka organisaation nimelle ja nimihistorialle.
- *
- * TODO xssfiltteri
  */
 @Entity
-@Table(name = "organisaatio_nimi")
-@Comment("Sisältää organisaation nimen ja nimihistorian.")
+@Table(name = "organisaatio_nimi", comment = "Sisältää organisaation nimen ja nimihistorian.")
 @NamedQuery(
         name = "OrganisaatioNimiDAO.findNimet",
         query = "SELECT n FROM OrganisaatioNimi n WHERE n.organisaatio.oid = :organisaatioOid"

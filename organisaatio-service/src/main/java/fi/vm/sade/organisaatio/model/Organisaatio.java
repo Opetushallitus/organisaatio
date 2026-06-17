@@ -9,7 +9,6 @@ import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
@@ -26,10 +25,9 @@ import static java.util.stream.Collectors.toSet;
         name = "organisaatio",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"oid"}),
-                @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})}
+                @UniqueConstraint(columnNames = {"ytunnus", "organisaatioPoistettu"})},
+        comment = "Sisältää kaikki organisaatiot."
 )
-@Comment("Sisältää kaikki organisaatiot.")
-
 @SqlResultSetMapping(
         name = "Organisaatio.findAllDescendants.jalkelaisetRivi",
         classes = @ConstructorResult(
@@ -131,11 +129,10 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     private String nimihaku;
 
     @Column
-    // TODO regex validointi?
     private String ytunnus;
 
     @Column
-    private String virastoTunnus; // TODO XSS filtteri
+    private String virastoTunnus;
 
     @OneToMany(mappedBy = "organisaatio", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 200)

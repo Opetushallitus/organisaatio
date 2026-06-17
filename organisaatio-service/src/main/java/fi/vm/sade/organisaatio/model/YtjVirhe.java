@@ -12,10 +12,7 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 */
-
 package fi.vm.sade.organisaatio.model;
-
-import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,8 +20,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "ytjvirhe")
-@Comment("Sisältää YTJ-massapäivityksessä tulleen virheen oidin, virheellisen kentän ja kuvauksen.")
+@Table(name = "ytjvirhe", comment = "Sisältää YTJ-massapäivityksessä tulleen virheen oidin, virheellisen kentän ja kuvauksen.")
 public class YtjVirhe extends BaseEntity {
 
     public enum YTJVirheKohde {

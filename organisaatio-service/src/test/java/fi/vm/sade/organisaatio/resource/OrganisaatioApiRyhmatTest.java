@@ -9,11 +9,6 @@ import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,9 +53,5 @@ class OrganisaatioApiRyhmatTest {
     void testRyhmatInvalidLakkautusPvmParam() throws Exception {
         this.mockMvc.perform(get("/api/ryhmat?lakkautusPvm=foobar"))
                 .andExpect(status().isBadRequest());
-    }
-
-    private String readFile(String fileName) throws Exception {
-        return Files.readString(Paths.get(Objects.requireNonNull(getClass().getResource(fileName)).toURI()), StandardCharsets.UTF_8);
     }
 }

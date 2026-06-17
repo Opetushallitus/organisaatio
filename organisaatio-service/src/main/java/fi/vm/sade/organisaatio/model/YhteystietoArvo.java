@@ -42,8 +42,8 @@ public class YhteystietoArvo extends OrganisaatioBaseEntity {
     @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true)
     private Yhteystieto arvoYhteystieto;
     @Size(min = 3, max = 100)
-    private String arvoText; // TODO XSS filtteri
-    private String kieli;  // TODO XSS filtteri
+    private String arvoText;
+    private String kieli;
 
     @NotNull
     private String yhteystietoArvoOid;
