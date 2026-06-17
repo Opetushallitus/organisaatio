@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @SpringBootTest
 @Sql("/data/truncate_tables.sql")
-public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4SpringContextTests {
+public class LisatietoTyyppiDaoImplTest {
     @Autowired
     private LisatietoTyyppiRepository lisatietoTyyppiRepository;
 
@@ -57,7 +56,6 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
         organisaatiotyyppiRajoite.setArvo("Oppilaitos");
         organisaatiotyyppiRajoite.setLisatietotyyppi(lisatietotyyppi2);
         lisatietotyyppi2.setRajoitteet(Collections.singleton(organisaatiotyyppiRajoite));
-        // this.lisatietoTyyppiRepository.getEntityManager().persist(organisaatiotyyppiRajoite); //TODO check id rajoite is actually saved
         this.lisatietoTyyppiRepository.save(lisatietotyyppi2);
 
         Lisatietotyyppi lisatietotyyppi3 = new Lisatietotyyppi();
@@ -66,7 +64,6 @@ public class LisatietoTyyppiDaoImplTest extends AbstractTransactionalJUnit4Sprin
         oppilaitostyyppiRajoite.setArvo("Oppilaitos");
         oppilaitostyyppiRajoite.setLisatietotyyppi(lisatietotyyppi3);
         lisatietotyyppi3.setRajoitteet(Collections.singleton(oppilaitostyyppiRajoite));
-        //this.lisatietoTyyppiRepository.getEntityManager().persist(oppilaitostyyppiRajoite); //TODO check id rajoite is actually saved
         this.lisatietoTyyppiRepository.save(lisatietotyyppi3);
 
         List<Lisatietotyyppi> lisatietotyyppiList = StreamSupport.stream(this.lisatietoTyyppiRepository.findAll().spliterator(), false)

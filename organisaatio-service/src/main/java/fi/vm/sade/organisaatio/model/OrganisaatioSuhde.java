@@ -20,8 +20,6 @@ package fi.vm.sade.organisaatio.model;
 import jakarta.persistence.*;
 import java.util.Date;
 
-import org.hibernate.annotations.Comment;
-
 
 /**
  * This entity is used to manage relationships between Organisaatio's.
@@ -30,8 +28,7 @@ import org.hibernate.annotations.Comment;
  * @author mlyly
  */
 @Entity
-@Table(name = "organisaatiosuhde")
-@Comment("Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
+@Table(name = "organisaatiosuhde", comment = "Sisältää organisaatioiden väliset suhteet. Suhteen tyyppejä ovat LIITOS ja HISTORIA.")
 public class OrganisaatioSuhde extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;

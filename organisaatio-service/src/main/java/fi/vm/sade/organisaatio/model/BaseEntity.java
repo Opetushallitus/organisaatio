@@ -18,7 +18,6 @@ package fi.vm.sade.organisaatio.model;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.*;

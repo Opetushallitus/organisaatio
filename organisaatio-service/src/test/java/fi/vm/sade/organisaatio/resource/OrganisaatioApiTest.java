@@ -12,8 +12,6 @@ import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,10 +41,8 @@ import static fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil.OPH_OID;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ComponentScan(basePackages = "fi.vm.sade.organisaatio")
 @SpringBootTest
-@Sql("/data/truncate_tables.sql")
+@Sql(scripts = {"/data/truncate_tables.sql","/data/basic_organisaatio_data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class OrganisaatioApiTest extends SecurityAwareTestBase {
-
-
     @TestConfiguration
     static class TestContextConfiguration {
 
@@ -77,16 +73,6 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
 
     @Autowired
     private OrganisaatioApi resource;
-
-    @BeforeEach
-    public void setup() {
-        executeSqlScript("classpath:data/basic_organisaatio_data.sql", false);
-    }
-
-    @AfterEach
-    public void cleanup() {
-        executeSqlScript("classpath:data/truncate_tables.sql", false);
-    }
 
     @Test
     void findByOids() {

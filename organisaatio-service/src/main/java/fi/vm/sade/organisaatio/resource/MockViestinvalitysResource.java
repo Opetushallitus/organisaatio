@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +25,7 @@ public class MockViestinvalitysResource {
     private static final Pattern TIEDOSTONIMIPATTERN = Pattern.compile("^[0-9A-Za-z\\s\\._\\-+]+$");
 
     @PostMapping(path = "/v1/liitteet", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostAttachmentResponse uploadAttachment(@NonNull @RequestParam("liite") MultipartFile liite) throws IOException {
+    public PostAttachmentResponse uploadAttachment(@RequestParam("liite") MultipartFile liite) throws IOException {
         if (!TIEDOSTONIMIPATTERN.matcher(liite.getOriginalFilename()).matches()) {
             throw new BadRequestException(new ApiResponse(400, """
                     {

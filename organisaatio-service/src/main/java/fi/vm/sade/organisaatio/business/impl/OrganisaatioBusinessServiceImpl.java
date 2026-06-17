@@ -227,7 +227,10 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         String opJarjNro;
         if (oldOrg != null && isEmpty(oldOrg.getOpetuspisteenJarjNro()) && isEmpty(oldOrg.getToimipisteKoodi())) {
-            opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit());
+            opJarjNro = getCurrentParentOpetuspisteenJarjNro(entity, parentOrg);
+            if (isEmpty(opJarjNro)) {
+                opJarjNro = generateOpetuspisteenJarjNro(entity, parentOrg, entity.getTyypit());
+            }
             entity.setOpetuspisteenJarjNro(opJarjNro);
         } else {
             opJarjNro = entity.getOpetuspisteenJarjNro();
@@ -437,7 +440,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (o != null) {
                 o.setArvoText(ya.getArvoText());
                 o.setKieli(ya.getKieli());
-                yhteystietoArvoRepository.save(o); // TODO check if works?
+                yhteystietoArvoRepository.save(o);
                 ret.add(o);
             } else {
                 ya.setOrganisaatio(org);
@@ -447,7 +450,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
                     throw new OrganisaatioResourceException(HttpStatus.INTERNAL_SERVER_ERROR, em.getMessage());
                 }
                 if (updating) {
-                    yhteystietoArvoRepository.save(ya); // TODO works?
+                    yhteystietoArvoRepository.save(ya);
                 }
                 ret.add(ya);
             }
@@ -568,6 +571,20 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         log.warn("Failed to generate opetuspisteenjarjnro (oppilaitoskoodi={})", parentOppilaitos.getOppilaitosKoodi());
         return null;
 
+    }
+
+    private String getCurrentParentOpetuspisteenJarjNro(Organisaatio entity, Organisaatio parent) {
+        if (entity.getId() == null || parent == null || parent.getId() == null) {
+            return null;
+        }
+        OrganisaatioSuhde currentSuhde = organisaatioSuhdeRepository.findParentTo(entity.getId(), null);
+        if (currentSuhde == null || currentSuhde.getParent() == null) {
+            return null;
+        }
+        if (!Objects.equals(currentSuhde.getParent().getId(), parent.getId())) {
+            return null;
+        }
+        return currentSuhde.getOpetuspisteenJarjNro();
     }
 
     private void setParentPath(Organisaatio entity, String parentOid) {
@@ -818,7 +835,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             if (!OrganisaatioSuhde.OrganisaatioSuhdeTyyppi.LIITOS.equals(os.getSuhdeTyyppi())) {
                 log.info("Setting org {} parent to {}", child.getOid(), os.getParent().getOid());
                 setParentPath(child, os.getParent().getOid());
-                organisaatioRepository.save(child); // TODO works?
+                organisaatioRepository.save(child);
             }
 
             updateParentForChildrenRecursive(child);
@@ -861,7 +878,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         previousDay.setTime(date);
         previousDay.add(Calendar.DAY_OF_MONTH, -1);
         organisaatio.setLakkautusPvm(previousDay.getTime());
-        organisaatioRepository.save(organisaatio); // TODO WOrkds
+        organisaatioRepository.save(organisaatio);
 
         // Lisätään uusi organisaatioiden liitos
         addLiitos(organisaatio, newParent, date);
@@ -904,7 +921,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         OrganisaatioSuhde currentParentRelationship = organisaatioSuhdeRepository.findParentTo(organisaatio.getId(), null);
         currentParentRelationship.setLoppuPvm(date);
-        organisaatioSuhdeRepository.save(currentParentRelationship); // TODO Works?
+        organisaatioSuhdeRepository.save(currentParentRelationship);
 
         // Luodaan uusi suhde
         // HUOM! Tässä pitää laittaa organisaatiosuhde "organisaation kautta --> näin parent laskenta pysyy mukana"
@@ -949,8 +966,7 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         Date today = new Date();
         if (date.before(today) || OrganisaatioUtil.isSameDay(date, today)) {
             setParentPath(organisaatio, newParent.getOid());
-            organisaatioRepository.save(organisaatio); // TODO worrks?
-
+            organisaatioRepository.save(organisaatio);
             updateParentForChildrenRecursive(organisaatio);
         }
     }

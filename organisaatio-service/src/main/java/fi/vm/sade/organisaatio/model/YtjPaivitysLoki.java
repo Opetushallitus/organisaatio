@@ -15,14 +15,11 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "ytjpaivitysloki")
-@Comment("Sisältää YTJ-massapäivityksen statuksen ja listan virheistä.")
+@Table(name = "ytjpaivitysloki", comment = "Sisältää YTJ-massapäivityksen statuksen ja listan virheistä.")
 public class YtjPaivitysLoki extends BaseEntity {
 
     public enum YTJPaivitysStatus {
