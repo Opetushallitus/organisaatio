@@ -76,14 +76,14 @@ class YTJResourceTest extends SecurityAwareTestBase {
 
     @Test
     void findByYTunnus() {
-        OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
+        Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
             ytjResource.findByYTunnus("");
         });
     }
 
     @Test
     void findByYNimi1() {
-        OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
+        Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
             ytjResource.findByYNimi("-");
         });
     }
@@ -96,7 +96,7 @@ class YTJResourceTest extends SecurityAwareTestBase {
 
     @Test
     void findByYNimi3() {
-        OrganisaatioResourceException thrown = Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
+        Assertions.assertThrows(OrganisaatioResourceException.class, () -> {
             ytjResource.findByYNimi("x");
         });
     }

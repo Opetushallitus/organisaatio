@@ -37,11 +37,11 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isList(JsonNode node) {
-        return "list".equals(node.get("type").textValue());
+        return "list".equals(node.get("type").stringValue());
     }
 
     private void renderList(JsonNode node) {
-        var listType = node.get("listType").textValue();
+        var listType = node.get("listType").stringValue();
         var ol = "number".equals(listType);
         var ul = "bullet".equals(listType);
 
@@ -53,7 +53,7 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isListItem(JsonNode node) {
-        return "listitem".equals(node.get("type").textValue());
+        return "listitem".equals(node.get("type").stringValue());
     }
 
     private void renderListItem(JsonNode node) {
@@ -63,11 +63,11 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isAutoLink(JsonNode node) {
-        return "autolink".equals(node.get("type").textValue());
+        return "autolink".equals(node.get("type").stringValue());
     }
 
     private void renderAutoLink(JsonNode node) {
-        var url = node.get("url").textValue();
+        var url = node.get("url").stringValue();
         html("<a href=\"" + HtmlUtils.htmlEscape(url, "UTF-8") + "\">");
         renderChildren(node);
         html("</a>");
@@ -78,13 +78,13 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isHeadingNode(JsonNode node) {
-        return "heading".equals(node.get("type").textValue());
+        return "heading".equals(node.get("type").stringValue());
     }
 
     private static final List<String> headingTags = List.of("h1", "h2", "h3", "h4");
 
     private void renderHeading(JsonNode node) {
-        var tag = headingTags.stream().filter(t -> t.equals(node.get("tag").textValue())).findFirst();
+        var tag = headingTags.stream().filter(t -> t.equals(node.get("tag").stringValue())).findFirst();
 
         if (tag.isPresent()) {
             html("<" + tag.get() + ">");
@@ -96,7 +96,7 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isLinebreak(JsonNode node) {
-        return "linebreak".equals(node.get("type").textValue());
+        return "linebreak".equals(node.get("type").stringValue());
     }
 
     private void renderLinebreak() {
@@ -104,7 +104,7 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isParagraph(JsonNode node) {
-        return "paragraph".equals(node.get("type").textValue());
+        return "paragraph".equals(node.get("type").stringValue());
     }
 
     private void renderParagraph(JsonNode node) {
@@ -114,11 +114,11 @@ public class LexicalEditorStateRenderer {
     }
 
     private boolean isText(JsonNode node) {
-        return "text".equals(node.get("type").textValue());
+        return "text".equals(node.get("type").stringValue());
     }
 
     private void renderText(JsonNode node) {
-        var text = node.get("text").textValue();
+        var text = node.get("text").stringValue();
         int format = node.get("format").intValue();
 
         var bold = (format & 0x1) == 0x1;

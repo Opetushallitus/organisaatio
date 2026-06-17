@@ -17,8 +17,6 @@ package fi.vm.sade.organisaatio.business.exception;
 
 import java.util.Date;
 
-
-//TODO generic errorit pois!
 public class OrganisaatioNimiNotFoundException extends OrganisaatioBusinessException {
 
     public OrganisaatioNimiNotFoundException(String oid) {

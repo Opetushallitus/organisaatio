@@ -28,7 +28,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.validation.ValidationException;
 import java.text.ParseException;
@@ -61,6 +64,7 @@ import static fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil.OPH_OID;
 @SpringBootTest
 @Sql("/data/truncate_tables.sql")
 @Sql("/data/basic_organisaatio_data.sql")
+@Transactional
 public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
 
     @TestConfiguration
@@ -100,6 +104,8 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
     }
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private OrganisaatioRepository organisaatioRepository;
     @Autowired
     private OrganisaatioBusinessService service;
@@ -123,7 +129,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         long childId = 4L;
         String newParentOid = "1.2.2004.5";
 
-        int rowCount = countRowsInTable("organisaatiosuhde");
+        int rowCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, "organisaatiosuhde");
         // Make new organisaatiosuhde change
         Date time = new Date();
         jdbcTemplate.update("insert into organisaatiosuhde (id, version, suhdetyyppi, child_id, parent_id, alkupvm) values (-1, 1, 'HISTORIA', ?, ?, ?)",
@@ -131,7 +137,7 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
         // End old organisaatiosuhde
         jdbcTemplate.update("update organisaatiosuhde set loppupvm = ? where id = ?", new Object[]{time, 3});
 
-        assertEquals(rowCount + 1, countRowsInTable("organisaatiosuhde"));
+        assertEquals(rowCount + 1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "organisaatiosuhde"));
 
         Set<Organisaatio> results = service.processNewOrganisaatioSuhdeChanges();
         assertNotNull(results);

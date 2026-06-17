@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
@@ -22,14 +21,14 @@ import java.util.List;
 /**
  * By default executes tests as CRUD_USER, override before to customize
  */
-public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4SpringContextTests {
+public abstract class SecurityAwareTestBase {
 
     @Value("${root.organisaatio.oid}")
     protected String ophOid;
-    
+
     @Autowired
     protected OrganisationHierarchyAuthorizer authorizer;
-    
+
     @Autowired
     private OidProvider oidProvider;
 
@@ -44,7 +43,7 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
 //                Lists.newArrayList(ophOid, otherOrgOid));
 //        Mockito.stub(oidProvider.getSelfAndParentOids(userOrgOid)).toReturn(
 //                ophOid, userOrgOid));
-        
+
         Mockito.when(oidProvider.getSelfAndParentOids(ophOid)).thenReturn(
                 Lists.newArrayList(ophOid));
 
@@ -56,18 +55,18 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
         this.oidProvider = (OidProvider) ReflectionTestUtils.getField(authorizer, "oidProvider");
         ReflectionTestUtils.setField(authorizer, "oidProvider", oidProvider);
     }
-    
+
     @AfterEach
     public void after(){
         ReflectionTestUtils.setField(authorizer, "oidProvider", this.oidProvider);
     }
-    
+
     protected final List<GrantedAuthority> getAuthority(String appPermission, String oid) {
         GrantedAuthority orgAuthority = new SimpleGrantedAuthority(String.format("%s", appPermission));
         GrantedAuthority roleAuthority = new SimpleGrantedAuthority(String.format("%s_%s", appPermission, oid));
         return Lists.newArrayList(orgAuthority, roleAuthority);
     }
-    
+
     protected final void setCurrentUser(final String oid, final List<GrantedAuthority> grantedAuthorities) {
         Authentication auth = new TestingAuthenticationToken(oid, null, grantedAuthorities);
         setAuthentication(auth);
@@ -76,5 +75,5 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
     protected final void setAuthentication(Authentication auth) {
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
-    
+
 }

@@ -41,7 +41,7 @@ public class OrganisaatioSearchApiImpl implements OrganisaatioSearchApi {
         SearchCriteria searchCriteria = searchCriteriaService.getServiceSearchCriteria(hakuEhdot);
         SearchConfig searchConfig = new SearchConfig(false, false, true);
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
-        return OrganisaatioHakutulosV4.<OrganisaatioPerustietoV4>builder().numHits(organisaatiot.size()).organisaatiot(organisaatiot.stream()
+        return OrganisaatioHakutulosV4.builder().numHits(organisaatiot.size()).organisaatiot(organisaatiot.stream()
                 .map(a -> organisaatioDTOV4ModelMapper.map(a, OrganisaatioPerustietoV4.class))
                 .sorted(Comparator.comparing(OrganisaatioPerustietoV4::getOid))
                 .collect(Collectors.toCollection(LinkedHashSet::new))).build();
