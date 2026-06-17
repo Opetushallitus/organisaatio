@@ -67,7 +67,11 @@ class ContinuousDeploymentStack extends cdk.Stack {
       this,
       "QaContinuousDeploymentPipelineStack",
       "qa",
-      { owner: "Opetushallitus", name: "organisaatio", branch: "green-dev" },
+      {
+        owner: "Opetushallitus",
+        name: "organisaatio",
+        branch: "green-hahtuva",
+      },
       props,
       dependencyManagement,
     );
@@ -75,7 +79,7 @@ class ContinuousDeploymentStack extends cdk.Stack {
       this,
       "ProdContinuousDeploymentPipelineStack",
       "prod",
-      { owner: "Opetushallitus", name: "organisaatio", branch: "green-qa" },
+      { owner: "Opetushallitus", name: "organisaatio", branch: "green-dev" },
       props,
       dependencyManagement,
     );
