@@ -34,7 +34,7 @@ public class Puhelinnumero extends Yhteystieto {
 
     @NotNull
     @Pattern(regexp = VALIDATION_REGEXP, message = "{validation.invalid.phone}")
-    private String puhelinnumero; // TODO XSS filtteri
+    private String puhelinnumero;
 
     @NotNull
     @Pattern(regexp = TYYPPI_PUHELIN)

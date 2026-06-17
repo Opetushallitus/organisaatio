@@ -31,7 +31,7 @@ public class Www extends Yhteystieto {
 
     @NotNull
     @Pattern(regexp = "^((https?)(:\\/\\/))?([-a-zA-Z0-9+&@#\\/%ÅåÄäÖö?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%ÅåÄäÖö=~_|])", message = "{validation.invalid.www}")
-    private String wwwOsoite;  // TODO XSS filtteri
+    private String wwwOsoite;
 
     public Www() {
         this.yhteystietoOid = "" + System.currentTimeMillis() + Math.random();

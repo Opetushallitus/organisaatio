@@ -64,10 +64,10 @@ class OrganisaatioFindBusinessServiceImplTest {
         });
         SearchCriteria criteria = new SearchCriteria();
         SearchConfig config = new SearchConfig(true, false, false);
-        Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
-        Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
-        Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
-        Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
+        Organisaatio rootOrganisaatio = new OrganisaatioBuilder<>("rootOid").build();
+        Organisaatio organisaatio1 = new OrganisaatioBuilder<>("oid1").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio2 = new OrganisaatioBuilder<>("oid2").parent(organisaatio1).build();
+        Organisaatio organisaatio3 = new OrganisaatioBuilder<>("oid3").parent(organisaatio1).build();
         when(organisaatioDaoMock.findBy(criteria)).thenReturn(asList(organisaatio1, organisaatio2, organisaatio3));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
@@ -91,10 +91,10 @@ class OrganisaatioFindBusinessServiceImplTest {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(true, false, false);
-        Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
-        Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
-        Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(rootOrganisaatio).build();
-        Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio2).build();
+        Organisaatio rootOrganisaatio = new OrganisaatioBuilder<>("rootOid").build();
+        Organisaatio organisaatio1 = new OrganisaatioBuilder<>("oid1").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio2 = new OrganisaatioBuilder<>("oid2").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio3 = new OrganisaatioBuilder<>("oid3").parent(organisaatio2).build();
         when(organisaatioDaoMock.findBy(criteria)).thenReturn(asList(organisaatio1, organisaatio3));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
@@ -119,12 +119,12 @@ class OrganisaatioFindBusinessServiceImplTest {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setSearchStr("foo");
         SearchConfig config = new SearchConfig(false, true, false);
-        Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
-        Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
-        Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
-        Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
-        Organisaatio organisaatio4 = new OrganisaatioBuilder("oid4").parent(rootOrganisaatio).build();
-        Organisaatio organisaatio5 = new OrganisaatioBuilder("oid5").parent(organisaatio4).build();
+        Organisaatio rootOrganisaatio = new OrganisaatioBuilder<>("rootOid").build();
+        Organisaatio organisaatio1 = new OrganisaatioBuilder<>("oid1").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio2 = new OrganisaatioBuilder<>("oid2").parent(organisaatio1).build();
+        Organisaatio organisaatio3 = new OrganisaatioBuilder<>("oid3").parent(organisaatio1).build();
+        Organisaatio organisaatio4 = new OrganisaatioBuilder<>("oid4").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio5 = new OrganisaatioBuilder<>("oid5").parent(organisaatio4).build();
         when(organisaatioDaoMock.findBy(criteria)).thenReturn(asList(organisaatio1, organisaatio2, organisaatio3, organisaatio4, organisaatio5));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);
@@ -147,10 +147,10 @@ class OrganisaatioFindBusinessServiceImplTest {
         });
         SearchCriteria criteria = new SearchCriteria();
         SearchConfig config = new SearchConfig(true, false, true);
-        Organisaatio rootOrganisaatio = new OrganisaatioBuilder("rootOid").build();
-        Organisaatio organisaatio1 = new OrganisaatioBuilder("oid1").parent(rootOrganisaatio).build();
-        Organisaatio organisaatio2 = new OrganisaatioBuilder("oid2").parent(organisaatio1).build();
-        Organisaatio organisaatio3 = new OrganisaatioBuilder("oid3").parent(organisaatio1).build();
+        Organisaatio rootOrganisaatio = new OrganisaatioBuilder<>("rootOid").build();
+        Organisaatio organisaatio1 = new OrganisaatioBuilder<>("oid1").parent(rootOrganisaatio).build();
+        Organisaatio organisaatio2 = new OrganisaatioBuilder<>("oid2").parent(organisaatio1).build();
+        Organisaatio organisaatio3 = new OrganisaatioBuilder<>("oid3").parent(organisaatio1).build();
         when(organisaatioDaoMock.findBy(criteria)).thenReturn(asList(organisaatio1, organisaatio2, organisaatio3));
 
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessServiceImpl.findBy(criteria, config);

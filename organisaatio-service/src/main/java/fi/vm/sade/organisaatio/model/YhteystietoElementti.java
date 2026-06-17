@@ -38,9 +38,9 @@ public class YhteystietoElementti extends OrganisaatioBaseEntity {
 
     @NotNull
     @Size(min = 3, max = 100)
-    private String nimi;  // TODO XSS filtteri
-    private String nimiSv;  // TODO XSS filtteri
-    private String nimiEn; // TODO XSS filtteri
+    private String nimi;
+    private String nimiSv;
+    private String nimiEn;
 
 
     @NotNull

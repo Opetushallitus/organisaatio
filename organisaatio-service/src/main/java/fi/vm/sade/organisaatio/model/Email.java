@@ -22,7 +22,6 @@ import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-//TODO xss filtering
 @Entity
 public class Email extends Yhteystieto {
 
@@ -33,7 +32,7 @@ public class Email extends Yhteystieto {
 
     @NotNull
     @Pattern(regexp = EMAIL_PATTERN, message = "{validation.invalid.email}")
-    private String email; // TODO filterxss
+    private String email;
 
     public Email() {
         this.yhteystietoOid = "" + System.currentTimeMillis() + Math.random();

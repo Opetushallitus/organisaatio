@@ -17,8 +17,6 @@
 
 package fi.vm.sade.organisaatio.model;
 
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -27,9 +25,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name="yhteystieto")
+@Table(name="yhteystieto", comment = "Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Comment("Sisältää organisaation yhteystiedot. Kaikki yhteystietotyypit tallennetaan tähän samaan tauluun.")
 public class Yhteystieto extends OrganisaatioBaseEntity {
 
     @ManyToOne(optional = true)
@@ -38,7 +35,7 @@ public class Yhteystieto extends OrganisaatioBaseEntity {
     @NotNull
     protected String yhteystietoOid;
 
-    private String kieli;  // TODO XSS filtteri
+    private String kieli;
 
     public String getYhteystietoOid() {
         return yhteystietoOid;
