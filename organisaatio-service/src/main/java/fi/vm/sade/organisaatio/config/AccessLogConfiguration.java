@@ -3,7 +3,8 @@ package fi.vm.sade.organisaatio.config;
 import ch.qos.logback.access.tomcat.LogbackValve;
 import fi.vm.sade.RequestCallerFilter;
 import fi.vm.sade.RequestIdFilter;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+
+import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

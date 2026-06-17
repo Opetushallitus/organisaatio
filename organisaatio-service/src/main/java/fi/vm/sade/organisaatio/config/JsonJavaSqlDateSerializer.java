@@ -1,20 +1,24 @@
 package fi.vm.sade.organisaatio.config;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ser.std.StdSerializer;
+
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 
 @Component
-public class JsonJavaSqlDateSerializer extends JsonSerializer<Timestamp> {
-    @Override
-    public void serialize(Timestamp serializable, JsonGenerator jsonGenerator, SerializerProvider arg2)
-            throws IOException, JsonProcessingException {
-        jsonGenerator.writeNumber(serializable.getTime());
+public class JsonJavaSqlDateSerializer extends StdSerializer<Timestamp> {
+
+    public JsonJavaSqlDateSerializer() {
+        super(Timestamp.class);
     }
 
+    @Override
+    public void serialize(Timestamp serializable, JsonGenerator jsonGenerator, SerializationContext serializationContext)
+            throws JacksonException {
+        jsonGenerator.writeNumber(serializable.getTime());
+    }
 }

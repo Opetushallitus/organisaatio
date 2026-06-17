@@ -1,17 +1,17 @@
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.organisaatio.KoulutustoimijaBuilder;
 import fi.vm.sade.organisaatio.OppilaitosBuilder;
 import fi.vm.sade.organisaatio.client.OrganisaatioKoodistoClient;
-import fi.vm.sade.organisaatio.config.JsonJavaSqlDateSerializer;
-import fi.vm.sade.organisaatio.config.ObjectMapperConfiguration;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -23,13 +23,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
+@SpringBootTest
 public class OrganisaatioKoodistoImplTest {
     private OrganisaatioKoodistoImpl impl;
 
     private OrganisaatioKoodistoClient clientMock;
     private OrganisaatioRepository daoMock;
 
-    private ObjectMapper mapper = new ObjectMapperConfiguration().objectMapper(new JsonJavaSqlDateSerializer());
+    @Autowired
+    private ObjectMapper mapper;
 
     @BeforeEach
     public void setup() {

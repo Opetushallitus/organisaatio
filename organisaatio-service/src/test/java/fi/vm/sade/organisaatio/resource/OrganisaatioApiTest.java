@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.SecurityAwareTestBase;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
@@ -252,7 +251,7 @@ class OrganisaatioApiTest extends SecurityAwareTestBase {
     private ObjectMapper objectMapper;
 
     @Test
-    void newOrganisaatioIgnoresIdInYhteystieto() throws JsonProcessingException {
+    void newOrganisaatioIgnoresIdInYhteystieto() {
         setCurrentUser("1.2.3.4.5", getAuthority("ROLE_APP_ORGANISAATIOHALLINTA_CRUD", OPH_OID));
         var organisaatio = objectMapper.readValue(organisationJsonWithIdInYhteystieto, OrganisaatioRDTOV4.class);
         resource.newOrganisaatio(organisaatio);
