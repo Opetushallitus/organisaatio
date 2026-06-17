@@ -7,7 +7,6 @@ import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-import org.powermock.reflect.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -16,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -52,17 +52,14 @@ public abstract class SecurityAwareTestBase extends AbstractTransactionalJUnit4S
                 Lists.newArrayList(ophOid, "1.2.2004.2"));
 //        Mockito.stub(oidProvider.getSelfAndParentOids(Mockito.anyString())).toReturn(
 //                Lists.newArrayList(ophOid));
-        
-        //save original oidprovider
-        this.oidProvider = Whitebox.getInternalState(authorizer, "oidProvider");
-        //set mock oidprovider
-        Whitebox.setInternalState(authorizer, "oidProvider", oidProvider);
+
+        this.oidProvider = (OidProvider) ReflectionTestUtils.getField(authorizer, "oidProvider");
+        ReflectionTestUtils.setField(authorizer, "oidProvider", oidProvider);
     }
     
     @AfterEach
     public void after(){
-        //restore original oidprovider
-        Whitebox.setInternalState(authorizer, "oidProvider", this.oidProvider);
+        ReflectionTestUtils.setField(authorizer, "oidProvider", this.oidProvider);
     }
     
     protected final List<GrantedAuthority> getAuthority(String appPermission, String oid) {

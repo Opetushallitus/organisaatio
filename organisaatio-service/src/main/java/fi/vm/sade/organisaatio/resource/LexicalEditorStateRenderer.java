@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.resource;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;

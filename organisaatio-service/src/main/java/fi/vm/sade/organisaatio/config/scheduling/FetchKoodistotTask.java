@@ -1,7 +1,6 @@
 package fi.vm.sade.organisaatio.config.scheduling;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.github.kagkarlsson.scheduler.task.ExecutionContext;
 import com.github.kagkarlsson.scheduler.task.FailureHandler;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
@@ -123,14 +122,10 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
 
 
     private Stream<Relaatio> fetchKoodistoWithRelations(String koodisto, Long version) {
-        try {
-            String url = koodistoBaseurl + "/rest/codeelement/codes/withrelations/" + koodisto + "/" + version;
-            log.info("Getting koodisto values from {}", url);
-            String json = koodistoClient.get(url);
-            return Stream.of(objectMapper.readValue(json, Relaatio[].class));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        String url = koodistoBaseurl + "/rest/codeelement/codes/withrelations/" + koodisto + "/" + version;
+        log.info("Getting koodisto values from {}", url);
+        String json = koodistoClient.get(url);
+        return Stream.of(objectMapper.readValue(json, Relaatio[].class));
     }
 
     private KoodistoRow mapToRow(Relaatio k) {
@@ -166,14 +161,10 @@ public class FetchKoodistotTask extends RecurringTask<Void> {
     }
 
     private Stream<KoodistoKoodi> fetchKoodisto(String koodisto, boolean onlyValidKoodis) {
-        try {
-            String url = koodistoBaseurl + "/rest/json/" + koodisto + "/koodi?onlyValidKoodis=" + (onlyValidKoodis ? "true" : "false");
-            log.info("Getting koodisto values from {}", url);
-            String json = koodistoClient.get(url);
-            return Stream.of(objectMapper.readValue(json, KoodistoKoodi[].class));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        String url = koodistoBaseurl + "/rest/json/" + koodisto + "/koodi?onlyValidKoodis=" + (onlyValidKoodis ? "true" : "false");
+        log.info("Getting koodisto values from {}", url);
+        String json = koodistoClient.get(url);
+        return Stream.of(objectMapper.readValue(json, KoodistoKoodi[].class));
     }
 }
 

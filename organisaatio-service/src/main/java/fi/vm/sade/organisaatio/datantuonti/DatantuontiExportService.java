@@ -1,11 +1,9 @@
 package fi.vm.sade.organisaatio.datantuonti;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import tools.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -18,19 +16,17 @@ import software.amazon.awssdk.services.s3.model.ServerSideEncryption;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DatantuontiExportService {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private S3AsyncClient opintopolkuS3Client;
+    private final JdbcTemplate jdbcTemplate;
+    private final S3AsyncClient opintopolkuS3Client;
+    private final ObjectMapper objectMapper;
+
     @Value("${organisaatio.tasks.datantuonti.export.bucket-name}")
     private String bucketName;
     @Value("${organisaatio.tasks.datantuonti.export.encryption-key-arn}")
     private String encryptionKeyArn;
 
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new Jdk8Module())
-            .setDefaultPropertyInclusion(JsonInclude.Include.NON_ABSENT);
     private final static String V1_PREFIX = "organisaatio/v1";
     public final static String MANIFEST_OBJECT_KEY = V1_PREFIX + "/manifest.json";
     private final String CREATE_ORGANISAATIO_SQL = """
@@ -210,7 +206,7 @@ public class DatantuontiExportService {
         return jdbcTemplate.queryForObject("SELECT extract(epoch from transaction_timestamp())", String.class);
     }
 
-    public void generateExportFiles(String timestamp) throws JsonProcessingException {
+    public void generateExportFiles(String timestamp) {
         var organisaatioObjectKey = V1_PREFIX + "/csv/organisaatio-" + timestamp + ".csv";
         exportQueryToS3(organisaatioObjectKey, ORGANISAATIO_QUERY);
         reEncryptFile(organisaatioObjectKey);
@@ -230,7 +226,7 @@ public class DatantuontiExportService {
         log.info("Exported {} rows to S3 object {}", rowsUploaded, objectKey);
     }
 
-    private void writeManifest(String objectKey, DatantuontiManifest manifest) throws JsonProcessingException {
+    private void writeManifest(String objectKey, DatantuontiManifest manifest) {
         log.info("Writing manifest file {}/{}: {}", bucketName, objectKey, manifest);
         var manifestJson = objectMapper.writeValueAsString(manifest);
         var response = opintopolkuS3Client.putObject(

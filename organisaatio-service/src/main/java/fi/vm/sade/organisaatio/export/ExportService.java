@@ -1,9 +1,6 @@
 package fi.vm.sade.organisaatio.export;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import tools.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +30,6 @@ import java.util.stream.Stream;
 @Service
 public class ExportService {
     private static final String V3_PREFIX = "fulldump/organisaatio/v3";
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new Jdk8Module())
-            .setDefaultPropertyInclusion(JsonInclude.Include.NON_ABSENT);
 
     @Value("${organisaatio.tasks.export.bucket-name}")
     private String bucketName;
@@ -47,6 +41,8 @@ public class ExportService {
     private final S3AsyncClient opintopolkuS3Client;
     private final S3AsyncClient lampiS3Client;
     private final JdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper;
+
     private final String CREATE_EXPORT_ORGANISAATIO_SQL = """
             CREATE TABLE exportnew.organisaatio AS
             SELECT
@@ -340,7 +336,7 @@ public class ExportService {
         }
     }
 
-    private void writeManifest(String objectKey, ExportManifest manifest) throws JsonProcessingException {
+    private void writeManifest(String objectKey, ExportManifest manifest) {
         log.info("Writing manifest file {}/{}: {}", lampiBucketName, objectKey, manifest);
         var manifestJson = objectMapper.writeValueAsString(manifest);
         var response = lampiS3Client.putObject(

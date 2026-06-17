@@ -14,8 +14,8 @@
  */
 package fi.vm.sade.organisaatio.business.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.type.CollectionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -555,7 +554,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             koodiCollectionType = this.objectMapper
                     .readerFor(listType)
                     .readValue(json);
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             throw new RestClientException("Error while parsing koodisto return koodiValue for " + koodistoUri, ioe);
         }
         return koodiCollectionType.stream()
@@ -569,7 +568,7 @@ public class OrganisaatioKoodistoImpl implements OrganisaatioKoodisto {
             return this.objectMapper
                     .readerFor(objectMapper.getTypeFactory().constructCollectionType(List.class, KoodiType.class))
                     .readValue(json);
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             throw new RestClientException("Error while parsing koodisto return koodiValue for " + url, ioe);
         }
     }
