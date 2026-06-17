@@ -1,13 +1,7 @@
 package fi.vm.sade.organisaatio.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import fi.vm.sade.organisaatio.business.exception.KayttooikeusInternalServerErrorException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioKayttooikeusException;
@@ -16,13 +10,13 @@ import fi.vm.sade.organisaatio.dto.VirkailijaCriteria;
 import fi.vm.sade.organisaatio.dto.VirkailijaDto;
 import fi.vm.sade.organisaatio.model.Kayttaja;
 import fi.vm.sade.organisaatio.model.KayttajaKutsu;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -31,24 +25,13 @@ import java.util.Collection;
 import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class KayttooikeusClient {
-    private final ObjectReader objectReader;
-    private final ObjectWriter objectWriter;
-
-    @Autowired
-    private OtuvaOauth2Client httpClient;
+    private final ObjectMapper objectMapper;
+    private final OtuvaOauth2Client httpClient;
 
     @Value("${url-virkailija}")
     private String urlVirkailija;
-
-    public KayttooikeusClient() {
-        ObjectMapper objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule());
-        this.objectReader = objectMapper.reader();
-        this.objectWriter = objectMapper.writer();
-    }
 
     public Collection<String> listOrganisaatioOid(HenkiloOrganisaatioCriteria criteria) {
         UriComponentsBuilder urlBuilder = UriComponentsBuilder
@@ -136,16 +119,16 @@ public class KayttooikeusClient {
 
     String toJson(Object object) {
         try {
-                return objectWriter.writeValueAsString(object);
-        } catch (JsonProcessingException ex) {
-                throw new ClientException(ex.getMessage());
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception ex) {
+            throw new ClientException(ex.getMessage());
         }
     }
 
     <T> T fromJson(String json, TypeReference<T> javaType) {
         try {
-            return objectReader.forType(javaType).readValue(json);
-        } catch (IOException ex) {
+            return objectMapper.reader().forType(javaType).readValue(json);
+        } catch (Exception ex) {
             throw new ClientException(ex.getMessage());
         }
     }

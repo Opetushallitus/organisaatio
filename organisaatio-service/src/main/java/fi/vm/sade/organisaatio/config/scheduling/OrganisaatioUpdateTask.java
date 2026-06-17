@@ -46,7 +46,7 @@ public class OrganisaatioUpdateTask extends RecurringTask<Void> {
     }
 
     @Override
-    public void executeRecurringly(TaskInstance taskInstancex, ExecutionContext executionContext) {
+    public void executeRecurringly(TaskInstance<Void> taskInstancex, ExecutionContext executionContext) {
         try {
             MDC.put(RequestIdFilter.REQUEST_ID_ATTRIBUTE, RequestIdFilter.generateRequestId());
             log.info("Running organisaatio update task");

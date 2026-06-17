@@ -1,6 +1,6 @@
 package fi.vm.sade.organisaatio.resource.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import fi.vm.sade.organisaatio.SadeBusinessException;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;

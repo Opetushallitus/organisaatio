@@ -1,7 +1,7 @@
 package fi.vm.sade.organisaatio.config.cas;
 
 import org.springframework.security.cas.ServiceProperties;
-import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetails;
+import org.springframework.security.cas.authentication.ServiceAuthenticationDetails;
 import org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
