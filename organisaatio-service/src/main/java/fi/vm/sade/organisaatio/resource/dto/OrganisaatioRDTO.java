@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -484,6 +485,7 @@ public class OrganisaatioRDTO implements Serializable {
         this._opetuspisteenJarjNro = _opetuspisteenJarjNro;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     public Timestamp getTarkastusPvm() {
         return _tarkastusPvm;
     }

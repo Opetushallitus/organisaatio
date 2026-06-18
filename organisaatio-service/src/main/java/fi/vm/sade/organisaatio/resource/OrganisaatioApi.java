@@ -1,5 +1,4 @@
 package fi.vm.sade.organisaatio.resource;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiDTO;
 import fi.vm.sade.organisaatio.dto.OrganisaatioNimiUpdateDTO;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -151,7 +149,7 @@ public interface OrganisaatioApi {
     @Hidden
     @Operation(summary = "Operaatio asettaa organisaatiolle nykyhetken tarkastuspäivämääräksi ja palauttaa tarkastuksen aikaleiman.")
     @PutMapping(path = "/{oid}/tarkasta", produces = MediaType.APPLICATION_JSON_VALUE)
-    Timestamp updateTarkastusPvm(@Parameter(description = "Organisaation oid", required = true) @PathVariable("oid") String oid);
+    Long updateTarkastusPvm(@Parameter(description = "Organisaation oid", required = true) @PathVariable("oid") String oid);
 
     @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid);
