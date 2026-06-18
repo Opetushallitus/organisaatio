@@ -1,15 +1,21 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static fi.vm.sade.varda.rekisterointi.util.Constants.CALLER_ID;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -19,7 +25,9 @@ import static java.util.stream.Collectors.*;
 @Component
 public class LokalisointiClient {
 
-    private final OphHttpClient httpClient;
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(35);
+
+    private final HttpClient httpClient;
     private final String virkailijaUrl;
     private final ObjectMapper objectMapper;
 
@@ -30,7 +38,7 @@ public class LokalisointiClient {
      * @param virkailijaUrl virkailijan palveluosoite
      * @param objectMapper  Jackson object mapper
      */
-    public LokalisointiClient(OphHttpClient httpClient,
+    public LokalisointiClient(HttpClient httpClient,
                               @Value("${varda-rekisterointi.url-virkailija}") String virkailijaUrl,
                               ObjectMapper objectMapper) {
         this.httpClient = httpClient;
@@ -41,7 +49,7 @@ public class LokalisointiClient {
     public String getKutsujaForKutsuEmail(String kutsujaKey, String locale) {
         String url = virkailijaUrl + "/lokalisointi/cxf/rest/v1/localisation"
                 + "?category=varda-rekisterointi&key=" + kutsujaKey + "&locale=" + locale;
-        return httpClient.get(url).execute(response -> objectMapper.readTree(response.asInputStream()).get(0).get("value").asString());
+        return objectMapper.readTree(get(url)).get(0).get("value").asString();
 
     }
 
@@ -72,7 +80,27 @@ public class LokalisointiClient {
     }
 
     private Dto[] getAsArray(String url) {
-        return httpClient.get(url).execute(response -> objectMapper.readValue(response.asInputStream(), Dto[].class));
+        return objectMapper.readValue(get(url), Dto[].class);
+    }
+
+    private String get(String url) {
+        try {
+            var request = HttpRequest.newBuilder(URI.create(url))
+                    .timeout(REQUEST_TIMEOUT)
+                    .header("Caller-Id", CALLER_ID)
+                    .GET()
+                    .build();
+            var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new RuntimeException(String.format("Url %s returned status %d", url, response.statusCode()));
+            }
+            return response.body();
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Error while executing GET %s", url), e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(String.format("Interrupted while executing GET %s", url), e);
+        }
     }
 
     private static class Dto {

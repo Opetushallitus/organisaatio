@@ -1,7 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
+import java.net.http.HttpClient;
 import java.util.Collection;
 import java.util.Map;
 
@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.tuple;
 public class KoodistoClientTest {
 
     @Autowired
-    private OphHttpClient httpClient;
+    private HttpClient httpClient;
     @Value("${varda-rekisterointi.url-virkailija}")
     private String virkailijaUrl;
     @Autowired
