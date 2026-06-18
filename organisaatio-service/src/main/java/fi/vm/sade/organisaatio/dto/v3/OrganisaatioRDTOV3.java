@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.dto.v3;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -141,19 +142,23 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @Schema(description = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("ytjkieli")
     public String getYTJKieli() {
         return _ytjKieli;
     }
 
+    @JsonProperty("ytjkieli")
     public void setYTJKieli(String _ytjKieli) {
         this._ytjKieli = _ytjKieli;
     }
 
     @Schema(description = "YTJ:n päivityspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("ytjpaivitysPvm")
     public Date getYTJPaivitysPvm() {
         return _ytjPaivitysPvm;
     }
 
+    @JsonProperty("ytjpaivitysPvm")
     public void setYTJPaivitysPvm(Date _ytjPaivitysPvm) {
         this._ytjPaivitysPvm = _ytjPaivitysPvm;
     }
@@ -240,10 +245,12 @@ public class OrganisaatioRDTOV3 implements Serializable {
     }
 
     @Schema(description = "Y-tunnus", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("ytunnus")
     public String getYTunnus() {
         return _yTunnus;
     }
 
+    @JsonProperty("ytunnus")
     public void setYTunnus(String _yTunnus) {
         this._yTunnus = _yTunnus;
     }

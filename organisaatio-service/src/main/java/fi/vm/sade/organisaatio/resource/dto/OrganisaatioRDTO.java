@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.resource.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
@@ -139,19 +140,23 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @Schema(description = "Kieli, jolla YTJ:stä haetut tiedot on päivitetty", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("ytjkieli")
     public String getYTJKieli() {
         return _ytjKieli;
     }
 
+    @JsonProperty("ytjkieli")
     public void setYTJKieli(String _ytjKieli) {
         this._ytjKieli = _ytjKieli;
     }
 
     @Schema(description = "YTJ:n päivityspäivämäärä", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("ytjpaivitysPvm")
     public Date getYTJPaivitysPvm() {
         return _ytjPaivitysPvm;
     }
 
+    @JsonProperty("ytjpaivitysPvm")
     public void setYTJPaivitysPvm(Date _ytjPaivitysPvm) {
         this._ytjPaivitysPvm = _ytjPaivitysPvm;
     }
@@ -238,10 +243,12 @@ public class OrganisaatioRDTO implements Serializable {
     }
 
     @Schema(description = "Y-tunnus", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty("ytunnus")
     public String getYTunnus() {
         return _yTunnus;
     }
 
+    @JsonProperty("ytunnus")
     public void setYTunnus(String _yTunnus) {
         this._yTunnus = _yTunnus;
     }
