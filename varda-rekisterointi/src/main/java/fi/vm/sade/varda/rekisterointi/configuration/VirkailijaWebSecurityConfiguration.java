@@ -45,7 +45,6 @@ public class VirkailijaWebSecurityConfiguration {
     @Order(1)
     SecurityFilterChain virkailiSecurityFilterChain(HttpSecurity http, SecurityContextRepository securityContextRepository) throws Exception {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
-        requestCache.setPortResolver(request -> request.getServerPort()); // override default PortResolverImpl
         requestCache.setMatchingRequestParameterName(null);
         return http
             .headers(headers -> headers.disable())

@@ -1,10 +1,10 @@
 package fi.vm.sade.varda.rekisterointi.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_ROLE;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 

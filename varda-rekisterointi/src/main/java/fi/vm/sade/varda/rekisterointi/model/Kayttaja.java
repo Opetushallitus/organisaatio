@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
@@ -7,7 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 @EqualsAndHashCode
-@AllArgsConstructor(staticName = "of")
+@AllArgsConstructor(staticName = "of", onConstructor_ = @JsonCreator)
 @Builder
 public class Kayttaja {
 

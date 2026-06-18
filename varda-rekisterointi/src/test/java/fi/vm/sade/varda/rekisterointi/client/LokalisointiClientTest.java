@@ -1,40 +1,27 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import fi.vm.sade.properties.OphProperties;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
 
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@EnableWireMock(@ConfigureWireMock(
+        baseUrlProperties = "varda-rekisterointi.url-virkailija",
+        filesUnderDirectory = "src/test/resources"))
 public class LokalisointiClientTest {
 
     @Autowired
     private LokalisointiClient client;
-    @Autowired
-    private OphProperties properties;
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
-
-    @Before
-    public void setup() {
-        properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
-    }
 
     @Test
     public void getByCategory() {

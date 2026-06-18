@@ -1,6 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.javautils.httpclient.apache.ApacheOphHttpClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;

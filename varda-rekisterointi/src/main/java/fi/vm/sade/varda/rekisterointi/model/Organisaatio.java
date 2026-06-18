@@ -1,5 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @EqualsAndHashCode
-@AllArgsConstructor(staticName = "of")
+@AllArgsConstructor(staticName = "of", onConstructor_ = @JsonCreator)
 public class Organisaatio {
 
     @NotNull

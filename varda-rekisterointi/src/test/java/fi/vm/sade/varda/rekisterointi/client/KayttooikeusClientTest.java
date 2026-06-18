@@ -1,28 +1,27 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaCriteria;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaDto;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.wiremock.spring.ConfigureWireMock;
+import org.wiremock.spring.EnableWireMock;
 
 import java.util.Collection;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@EnableWireMock(@ConfigureWireMock(
+        baseUrlProperties = "varda-rekisterointi.url-virkailija",
+        filesUnderDirectory = "src/test/resources"))
 public class KayttooikeusClientTest {
     @Autowired
     private OphProperties properties;
@@ -31,14 +30,10 @@ public class KayttooikeusClientTest {
 
     private KayttooikeusClient client;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort());
-
-    @Before
+    @BeforeEach
     public void setup() {
-        properties.addOverride("url-virkailija", "http://localhost:" + wireMockRule.port());
         var bearer = new Oauth2BearerClient(objectMapper);
-        bearer.setOauth2IssuerUri("http://localhost:" + wireMockRule.port());
+        bearer.setOauth2IssuerUri(properties.getProperty("url-virkailija"));
         bearer.setClientId("dummy");
         bearer.setClientSecret("dummy");
         client = new KayttooikeusClient(new OtuvaOauth2Client(bearer), properties, objectMapper);

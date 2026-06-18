@@ -1,7 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.varda.rekisterointi.dao.ScheduledTaskDao;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Set;

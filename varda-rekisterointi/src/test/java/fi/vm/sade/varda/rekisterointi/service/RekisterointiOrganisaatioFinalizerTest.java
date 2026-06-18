@@ -3,14 +3,14 @@ package fi.vm.sade.varda.rekisterointi.service;
 import fi.vm.sade.varda.rekisterointi.client.KoodistoClient;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -20,7 +20,7 @@ public class RekisterointiOrganisaatioFinalizerTest {
     private OrganisaatioClient organisaatioClient;
     private RekisterointiOrganisaatioFinalizer finalizer;
 
-    @Before
+    @BeforeEach
     public void setup() {
         organisaatioService = new OrganisaatioService(mock(KoodistoClient.class), mock(OrganisaatioClient.class));
         organisaatioClient = mock(OrganisaatioClient.class);

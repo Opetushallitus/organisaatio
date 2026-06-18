@@ -1,7 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
 import com.github.kagkarlsson.scheduler.task.Task;
-import com.github.kagkarlsson.scheduler.task.TaskWithoutDataDescriptor;
+import com.github.kagkarlsson.scheduler.task.TaskDescriptor;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
 import com.github.kagkarlsson.scheduler.task.schedule.FixedDelay;
 
@@ -90,7 +90,7 @@ public class SchedulingConfiguration {
     @Bean
     Task<Void> emailRetryTask() {
         return Tasks
-                .recurring(new TaskWithoutDataDescriptor("email-retry-task"), FixedDelay.ofMinutes(1))
+                .recurring(TaskDescriptor.of("email-retry-task"), FixedDelay.ofMinutes(1))
                 .execute((instance, ctx) -> queueingEmailService.emailRetryTask());
     }
 }

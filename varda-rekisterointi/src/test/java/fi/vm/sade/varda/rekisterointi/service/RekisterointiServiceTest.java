@@ -10,16 +10,14 @@ import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.exception.UnauthorizedException;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.repository.RekisterointiRepository;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,11 +26,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class RekisterointiServiceTest {
 
@@ -112,7 +109,7 @@ public class RekisterointiServiceTest {
                 };
         }
 
-        @Before
+    @BeforeEach
         public void mockRepositoryCalls() {
                 when(rekisterointiRepository.save(any(Rekisterointi.class)))
                                 .thenReturn(SAVED_REKISTEROINTI.withId(SAVED_REKISTEROINTI_ID));
@@ -142,16 +139,17 @@ public class RekisterointiServiceTest {
                 verify(rekisterointiRepository).save(rekisterointi);
         }
 
-        @Test(expected = InvalidInputException.class)
+        @Test
         public void resolveThrowsOnInvalidRekisterointiId() {
                 PaatosDto paatos = new PaatosDto(
                                 INVALID_REKISTEROINTI_ID,
                                 true,
                                 "Miksipä ei?");
-                rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null));
+                assertThrows(InvalidInputException.class,
+                                () -> rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null)));
         }
 
-        @Test(expected = IllegalStateException.class)
+        @Test
         public void resolveThrowsOnInvalidRekisterointiTila() {
                 PaatosDto paatos = new PaatosDto(123L, false, "Juuh elikkäs");
                 Rekisterointi hylatty = TestiRekisterointi.validiVardaRekisterointi()
@@ -159,25 +157,29 @@ public class RekisterointiServiceTest {
                                 .withPaatos(new Paatos(paatos.hyvaksytty, LocalDateTime.now(), PAATTAJA_OID,
                                                 paatos.perustelu));
                 when(rekisterointiRepository.findById(hylatty.id)).thenReturn(Optional.of(hylatty));
-                rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null));
+                assertThrows(IllegalStateException.class,
+                                () -> rekisterointiService.resolve(getAuthentication(OPH_AUTHORITIES), paatos, requestContext(null)));
         }
 
-        @Test(expected = UnauthorizedException.class)
+        @Test
         public void resolveThrowsUnauthorizedForJotpaAuthoritiesOnVardaRekisterointi() {
-                rekisterointiService.resolve(getAuthentication(JOTPA_AUTHORITIES), paatos, requestContext(null));
+                assertThrows(UnauthorizedException.class,
+                                () -> rekisterointiService.resolve(getAuthentication(JOTPA_AUTHORITIES), paatos, requestContext(null)));
         }
 
-        @Test(expected = UnauthorizedException.class)
+        @Test
         public void resolveThrowsUnauthorizedIfVardaVirkailijaHasWrongKunta() {
                 OrganisaatioDto kunta = new OrganisaatioDto();
                 kunta.kotipaikkaUri = "kunta_200";
                 when(organisaatioClient.getKuntaByOid(eq("1.2.3.4.5"))).thenReturn(Optional.of(kunta));
-                rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null));
+                assertThrows(UnauthorizedException.class,
+                                () -> rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null)));
         }
 
-        @Test(expected = UnauthorizedException.class)
+        @Test
         public void resolveThrowsUnauthorizedIfVardaVirkailijaDoesNotHaveAnyKunta() {
-                rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null));
+                assertThrows(UnauthorizedException.class,
+                                () -> rekisterointiService.resolve(getAuthentication(VARDA_AUTHORITIES), paatos, requestContext(null)));
         }
 
         @Test

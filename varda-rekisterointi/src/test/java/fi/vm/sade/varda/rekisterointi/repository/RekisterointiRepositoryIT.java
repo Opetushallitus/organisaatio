@@ -2,26 +2,21 @@ package fi.vm.sade.varda.rekisterointi.repository;
 
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"integration-test", "dev"})
 @Transactional
-@AutoConfigureTestDatabase
 public class RekisterointiRepositoryIT {
 
     @Autowired
@@ -127,9 +122,11 @@ public class RekisterointiRepositoryIT {
         assertTrue(uudelleenRekisterointi.organisaatio.uudelleenRekisterointi);
     }
 
-    @Test(expected = DbActionExecutionException.class)
+    @Test
     public void oidMustBeUniqueUnlessUudelleenRekisterointi() {
-        rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
-        rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
+        assertThrows(DbActionExecutionException.class, () -> {
+            rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
+            rekisterointiRepository.save(TestiRekisterointi.validiVardaRekisterointi());
+        });
     }
 }

@@ -1,6 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client.viestinvalitys;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

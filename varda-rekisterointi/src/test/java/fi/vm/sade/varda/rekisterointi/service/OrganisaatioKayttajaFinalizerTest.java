@@ -6,7 +6,7 @@ import fi.vm.sade.varda.rekisterointi.client.LokalisointiClient;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 

@@ -5,13 +5,14 @@ import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.model.*;
 import fi.vm.sade.varda.rekisterointi.util.Constants;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,11 +21,11 @@ public class OrganisaatioServiceTest {
 
     private final OrganisaatioService service = organisaatioService();
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void kuranttiNimiThrowsWhenNoName() {
         OrganisaatioDto dto = new OrganisaatioDto();
         dto.nimet = Collections.emptyList();
-        service.kuranttiNimi(dto);
+        assertThrows(IllegalStateException.class, () -> service.kuranttiNimi(dto));
     }
 
     @Test

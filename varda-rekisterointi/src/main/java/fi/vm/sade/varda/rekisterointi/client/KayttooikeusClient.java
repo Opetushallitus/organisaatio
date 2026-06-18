@@ -1,7 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.dto.KayttooikeusKutsuDto;
 import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -31,19 +29,11 @@ public class KayttooikeusClient {
     private final ObjectMapper objectMapper;
 
     private String toJson(Object object) {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException ex) {
-            throw new RuntimeException(ex);
-        }
+        return objectMapper.writeValueAsString(object);
     }
 
     private <T> T fromJson(String json, Class<T> type) {
-        try {
-            return objectMapper.readValue(json, type);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        return objectMapper.readValue(json, type);
     }
 
     /**

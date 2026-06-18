@@ -1,6 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.properties.OphProperties;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class LokalisointiClient {
 
     public String getKutsujaForKutsuEmail(String kutsujaKey, String locale) {
         String url = this.properties.url("lokalisointi.v1.kutsujaForEmail", "varda-rekisterointi", kutsujaKey, locale);
-        return httpClient.get(url).execute(response -> objectMapper.readTree(response.asInputStream()).get(0).get("value").asText());
+        return httpClient.get(url).execute(response -> objectMapper.readTree(response.asInputStream()).get(0).get("value").asString());
 
     }
 
