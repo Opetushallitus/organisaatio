@@ -36,7 +36,7 @@ public class LokalisointiClient {
         this.objectMapper = objectMapper;
     }
 
-    public String getKutsujaForKutsuEmail(String kutsujaKey, String locale) { // TODO kategoria
+    public String getKutsujaForKutsuEmail(String kutsujaKey, String locale) {
         String url = this.properties.url("lokalisointi.v1.kutsujaForEmail", "varda-rekisterointi", kutsujaKey, locale);
         return httpClient.get(url).execute(response -> objectMapper.readTree(response.asInputStream()).get(0).get("value").asText());
 

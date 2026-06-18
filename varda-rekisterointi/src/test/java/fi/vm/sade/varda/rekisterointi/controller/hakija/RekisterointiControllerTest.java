@@ -1,7 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.controller.hakija;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import fi.vm.sade.varda.rekisterointi.model.TestiRekisterointi;
 import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;

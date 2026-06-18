@@ -23,7 +23,7 @@ import static java.util.stream.Collectors.toList;
 public class TemplateServiceTest {
 
     private static final Collection<String> LANGUAGES = List.of("fi", "sv");
-    private static final Collection<Locale> LOCALES = LANGUAGES.stream().map(Locale::new).collect(toList());
+    private static final Collection<Locale> LOCALES = LANGUAGES.stream().map(Locale::of).collect(toList());
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -55,7 +55,7 @@ public class TemplateServiceTest {
     public void renderWorks() {
         Map<String, Object> variables = Map.of("messageSource", messageSource, "locales", LOCALES);
         String tyyppi = Set.of("taskien-virheraportti.html", "kasittelemattomat.html").contains(template.getPath()) ? "generic" : "varda";
-        String content = templateService.getContent(tyyppi, template, new Locale(language), variables);
+        String content = templateService.getContent(tyyppi, template, Locale.of(language), variables);
         System.out.println(content);
     }
 

@@ -1,23 +1,18 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
 import fi.vm.sade.properties.OphProperties;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class HakijaLogoutService {
-
     private final OphProperties properties;
-    private final Environment environment;
-
-    public HakijaLogoutService(OphProperties properties, Environment environment) {
-        this.properties = properties;
-        this.environment = environment;
-    }
 
     /**
      * Kirjaa käyttäjän ulos.

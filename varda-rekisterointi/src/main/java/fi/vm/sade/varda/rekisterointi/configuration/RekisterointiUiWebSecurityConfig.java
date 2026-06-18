@@ -47,8 +47,7 @@ public class RekisterointiUiWebSecurityConfig {
     }
 
     AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService());
         return new ProviderManager(authenticationProvider);
     }
 

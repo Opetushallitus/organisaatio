@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

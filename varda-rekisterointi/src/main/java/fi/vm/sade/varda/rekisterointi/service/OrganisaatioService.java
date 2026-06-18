@@ -7,7 +7,6 @@ import fi.vm.sade.varda.rekisterointi.util.Constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +43,7 @@ public class OrganisaatioService {
     private static final Pattern YRITYSMUOTOURI_PATTERN = Pattern.compile("yritysmuoto_\\d+");
     public static final String OPH_OID = "1.2.246.562.10.00000000001";
 
-    @Autowired
     private final KoodistoClient koodistoClient;
-    @Autowired
     private final OrganisaatioClient organisaatioClient;
     private final Map<String,Koodi> yritysmuotoUriToKoodi = new HashMap<>();
 
