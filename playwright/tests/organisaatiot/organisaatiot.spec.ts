@@ -265,7 +265,7 @@ test.describe("Organisations", () => {
       const organisaatiotPage = new OrganisaatiotView(page);
       await organisaatiotPage.goto();
 
-      organisaatiotPage.filterByName("Mustikkalan testi op");
+      await organisaatiotPage.filterByName("Mustikkalan testi op");
 
       await expect(
         organisaatiotPage.organisaatioLink("Mustikkalan testi opisto")
