@@ -1,7 +1,7 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
-import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.properties.OphProperties;
+import fi.vm.sade.varda.rekisterointi.configuration.cas.OpintopolkuUserDetailsService;
 
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas20ProxyTicketValidator;
@@ -92,7 +92,7 @@ public class VirkailijaWebSecurityConfiguration {
 
     AuthenticationProvider virkailijaAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
-        casAuthenticationProvider.setAuthenticationUserDetailsService(new OphUserDetailsServiceImpl());
+        casAuthenticationProvider.setAuthenticationUserDetailsService(new OpintopolkuUserDetailsService());
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         casAuthenticationProvider.setTicketValidator(ticketValidator());
         casAuthenticationProvider.setKey("varda-rekisterointi");

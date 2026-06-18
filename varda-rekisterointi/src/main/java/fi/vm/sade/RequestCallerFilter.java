@@ -1,6 +1,5 @@
 package fi.vm.sade;
 
-import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -10,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
+
+import fi.vm.sade.varda.rekisterointi.configuration.cas.OpintopolkuUserDetailsService;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -32,10 +33,10 @@ public class RequestCallerFilter extends GenericFilterBean {
         }
     }
 
-    private Optional<OphUserDetailsServiceImpl.UserDetailsImpl> getUserDetails(ServletRequest servletRequest) {
+    private Optional<OpintopolkuUserDetailsService.UserDetailsImpl> getUserDetails(ServletRequest servletRequest) {
         if (servletRequest instanceof HttpServletRequest request) {
             if (request.getUserPrincipal() instanceof CasAuthenticationToken token) {
-                if (token.getUserDetails() instanceof OphUserDetailsServiceImpl.UserDetailsImpl casUserDetails) {
+                if (token.getUserDetails() instanceof OpintopolkuUserDetailsService.UserDetailsImpl casUserDetails) {
                     return Optional.of(casUserDetails);
                 }
             }
