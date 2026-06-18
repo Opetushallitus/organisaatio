@@ -1,6 +1,5 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
-import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import fi.vm.sade.properties.OphProperties;
 
@@ -26,8 +25,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-
-import jakarta.servlet.Filter;
 
 import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_UI_ROLES;
 
@@ -78,8 +75,9 @@ public class VirkailijaWebSecurityConfiguration {
         return serviceProperties;
     }
 
-    Filter virkailijaAuthenticationProcessingFilter() throws Exception {
-        OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
+    CasAuthenticationFilter virkailijaAuthenticationProcessingFilter() throws Exception {
+        CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
+        casAuthenticationFilter.setServiceProperties(serviceProperties());
         casAuthenticationFilter.setAuthenticationManager(new ProviderManager(virkailijaAuthenticationProvider()));
         casAuthenticationFilter.setFilterProcessesUrl("/virkailija/j_spring_cas_security_check");
         return casAuthenticationFilter;
