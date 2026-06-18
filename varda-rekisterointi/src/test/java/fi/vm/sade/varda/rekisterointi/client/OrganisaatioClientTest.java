@@ -1,12 +1,12 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.wiremock.spring.ConfigureWireMock;
@@ -27,8 +27,8 @@ import static org.assertj.core.api.Assertions.tuple;
         baseUrlProperties = "varda-rekisterointi.url-virkailija",
         filesUnderDirectory = "src/test/resources"))
 public class OrganisaatioClientTest {
-    @Autowired
-    private OphProperties properties;
+    @Value("${varda-rekisterointi.url-virkailija}")
+    private String virkailijaUrl;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -37,10 +37,13 @@ public class OrganisaatioClientTest {
     @BeforeEach
     public void setup() {
         var bearer = new Oauth2BearerClient(objectMapper);
-        bearer.setOauth2IssuerUri(properties.getProperty("url-virkailija"));
+        bearer.setOauth2IssuerUri(virkailijaUrl);
         bearer.setClientId("dummy");
         bearer.setClientSecret("dummy");
-        client = new OrganisaatioClient(new OtuvaOauth2Client(bearer), properties, objectMapper);
+        client = new OrganisaatioClient(
+                new OtuvaOauth2Client(bearer),
+                virkailijaUrl,
+                objectMapper);
     }
 
     @Test

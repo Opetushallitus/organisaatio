@@ -1,11 +1,11 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.configuration.cas.OpintopolkuUserDetailsService;
 
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas20ProxyTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -34,10 +34,10 @@ import static fi.vm.sade.varda.rekisterointi.util.Constants.VIRKAILIJA_UI_ROLES;
 public class VirkailijaWebSecurityConfiguration {
     private static final String VIRKAILIJA_PATH_CLOB = "/virkailija/**";
 
-    private final OphProperties ophProperties;
+    private final String virkailijaBaseUrl;
 
-    VirkailijaWebSecurityConfiguration(OphProperties ophProperties) {
-        this.ophProperties = ophProperties;
+    VirkailijaWebSecurityConfiguration(@Value("${varda-rekisterointi.url-virkailija}") String virkailijaBaseUrl) {
+        this.virkailijaBaseUrl = virkailijaBaseUrl;
     }
 
     @Profile("!dev")
@@ -68,7 +68,7 @@ public class VirkailijaWebSecurityConfiguration {
 
     ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(ophProperties.url("varda-rekisterointi.virkailija") + "/j_spring_cas_security_check");
+        serviceProperties.setService(virkailijaBaseUrl + "/varda-rekisterointi/virkailija/j_spring_cas_security_check");
         serviceProperties.setSendRenew(false);
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
@@ -84,7 +84,7 @@ public class VirkailijaWebSecurityConfiguration {
 
     AuthenticationEntryPoint virkailijaAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-        casAuthenticationEntryPoint.setLoginUrl(ophProperties.url("cas.login"));
+        casAuthenticationEntryPoint.setLoginUrl(virkailijaBaseUrl + "/cas/login");
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
     }
@@ -99,7 +99,7 @@ public class VirkailijaWebSecurityConfiguration {
     }
 
     TicketValidator ticketValidator() {
-        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(ophProperties.url("cas.base"));
+        Cas20ProxyTicketValidator ticketValidator = new Cas20ProxyTicketValidator(virkailijaBaseUrl + "/cas");
         ticketValidator.setAcceptAnyProxy(true);
         return ticketValidator;
     }

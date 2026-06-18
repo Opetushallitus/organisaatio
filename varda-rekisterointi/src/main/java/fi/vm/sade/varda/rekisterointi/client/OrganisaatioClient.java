@@ -1,12 +1,12 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.varda.rekisterointi.model.OrganisaatioDto;
-import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -18,13 +18,20 @@ import java.util.Optional;
  * Client organisaatiopalvelun käyttämiseen.
  */
 @Component
-@RequiredArgsConstructor
 public class OrganisaatioClient {
 
     private static final String KUNTA_YRITYSMUOTO = "Kunta";
     private final OtuvaOauth2Client httpClient;
-    private final OphProperties properties;
+    private final String virkailijaUrl;
     private final ObjectMapper objectMapper;
+
+    public OrganisaatioClient(OtuvaOauth2Client httpClient,
+                              @Value("${varda-rekisterointi.url-virkailija}") String virkailijaUrl,
+                              ObjectMapper objectMapper) {
+        this.httpClient = httpClient;
+        this.virkailijaUrl = virkailijaUrl;
+        this.objectMapper = objectMapper;
+    }
 
     private String toJson(Object object) {
         return objectMapper.writeValueAsString(object);
@@ -42,7 +49,7 @@ public class OrganisaatioClient {
      * @return organisaatio, tai <code>empty</code> mikäli ei löydy.
      */
     public Optional<OrganisaatioDto> getOrganisaatioByYtunnus(String ytunnus) {
-        String url = properties.url("organisaatio-service.organisaatio.api.byYtunnus", ytunnus);
+        String url = virkailijaUrl + "/organisaatio-service/api/" + ytunnus;
         return getOrganisaatioFromUrl(url);
     }
 
@@ -54,7 +61,7 @@ public class OrganisaatioClient {
      * @return organisaatio, tai <code>empty</code> mikäli ei löydy.
      */
     public Optional<OrganisaatioDto> getOrganisaatioByYtunnusFromYtj(String ytunnus) {
-        String url = properties.url("organisaatio-service.vtj.ytunnus", ytunnus);
+        String url = virkailijaUrl + "/organisaatio-service/rest/ytj/" + ytunnus + "/v4";
         return getOrganisaatioFromUrl(url);
     }
 
@@ -66,7 +73,7 @@ public class OrganisaatioClient {
      * @return organisaatio, tai <code>empty</code> mikäli ei löydy.
      */
     public Optional<OrganisaatioDto> getOrganisaatioByOid(String oid) {
-        String url = properties.url("organisaatio-service.organisaatio.api.byOid", oid);
+        String url = virkailijaUrl + "/organisaatio-service/api/" + oid;
         return getOrganisaatioFromUrl(url);
     }
 
@@ -85,7 +92,7 @@ public class OrganisaatioClient {
     }
 
     public Collection<OrganisaatioDto> getOrganisaatioJalkelaisetByOid(String oid) {
-        String url = properties.url("organisaatio-service.organisaatio.api.jalkelaisetByOid", oid);
+        String url = virkailijaUrl + "/organisaatio-service/api/" + oid + "/jalkelaiset";
         try {
             var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
             var response = httpClient.executeRequest(request);
@@ -127,7 +134,7 @@ public class OrganisaatioClient {
      */
     public OrganisaatioDto create(OrganisaatioDto organisaatio) {
         assert organisaatio.oid == null;
-        String url = properties.url("organisaatio-service.organisaatio.api", organisaatio.oid);
+        String url = virkailijaUrl + "/organisaatio-service/api/";
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -153,7 +160,7 @@ public class OrganisaatioClient {
      */
     public OrganisaatioDto update(OrganisaatioDto organisaatio) {
         assert organisaatio.oid != null;
-        String url = properties.url("organisaatio-service.organisaatio.api.byOid", organisaatio.oid);
+        String url = virkailijaUrl + "/organisaatio-service/api/" + organisaatio.oid;
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -178,7 +185,15 @@ public class OrganisaatioClient {
      * @return lista ehtoihin täsmäävistä organisaatioista.
      */
     public Collection<OrganisaatioDto> listBy(OrganisaatioCriteria criteria) {
-        String url = properties.url("organisaatio-service.organisaatio.api.hae", criteria.asMap());
+        var urlBuilder = UriComponentsBuilder.fromUriString(virkailijaUrl + "/organisaatio-service/api/hae");
+        criteria.asMap().forEach((key, value) -> {
+            if (value instanceof Iterable<?> iterable) {
+                iterable.forEach(item -> urlBuilder.queryParam(key, item));
+            } else {
+                urlBuilder.queryParam(key, value);
+            }
+        });
+        String url = urlBuilder.build().toUriString();
         try {
             var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
             var response = httpClient.executeRequest(request);

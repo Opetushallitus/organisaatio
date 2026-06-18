@@ -2,9 +2,9 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +16,10 @@ import java.util.Optional;
 @Component
 public class KoodistoClientStub extends KoodistoClient {
 
-    public KoodistoClientStub(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
-        super(httpClient, properties, objectMapper);
+    public KoodistoClientStub(OphHttpClient httpClient,
+                              @Value("${varda-rekisterointi.url-virkailija}") String virkailijaUrl,
+                              ObjectMapper objectMapper) {
+        super(httpClient, virkailijaUrl, objectMapper);
     }
 
     @Override

@@ -2,12 +2,12 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.wiremock.spring.ConfigureWireMock;
@@ -29,8 +29,8 @@ public class KoodistoClientTest {
 
     @Autowired
     private OphHttpClient httpClient;
-    @Autowired
-    private OphProperties properties;
+    @Value("${varda-rekisterointi.url-virkailija}")
+    private String virkailijaUrl;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -38,7 +38,7 @@ public class KoodistoClientTest {
 
     @BeforeEach
     public void setup() {
-        client = new KoodistoClient(httpClient, properties, objectMapper);
+        client = new KoodistoClient(httpClient, virkailijaUrl, objectMapper);
     }
 
     @Test

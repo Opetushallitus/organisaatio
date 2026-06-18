@@ -2,7 +2,7 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
-import fi.vm.sade.properties.OphProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -20,24 +20,27 @@ import static java.util.stream.Collectors.*;
 public class LokalisointiClient {
 
     private final OphHttpClient httpClient;
-    private final OphProperties properties;
+    private final String virkailijaUrl;
     private final ObjectMapper objectMapper;
 
     /**
      * Alusta clientin annetulla HTTP-clientilla, konfiguraatiolla ja <code>ObjectMapper</code>illä.
      *
      * @param httpClient    HTTP-client
-     * @param properties    konfiguraatio
+     * @param virkailijaUrl virkailijan palveluosoite
      * @param objectMapper  Jackson object mapper
      */
-    public LokalisointiClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
+    public LokalisointiClient(OphHttpClient httpClient,
+                              @Value("${varda-rekisterointi.url-virkailija}") String virkailijaUrl,
+                              ObjectMapper objectMapper) {
         this.httpClient = httpClient;
-        this.properties = properties;
+        this.virkailijaUrl = virkailijaUrl;
         this.objectMapper = objectMapper;
     }
 
     public String getKutsujaForKutsuEmail(String kutsujaKey, String locale) {
-        String url = this.properties.url("lokalisointi.v1.kutsujaForEmail", "varda-rekisterointi", kutsujaKey, locale);
+        String url = virkailijaUrl + "/lokalisointi/cxf/rest/v1/localisation"
+                + "?category=varda-rekisterointi&key=" + kutsujaKey + "&locale=" + locale;
         return httpClient.get(url).execute(response -> objectMapper.readTree(response.asInputStream()).get(0).get("value").asString());
 
     }
@@ -50,7 +53,7 @@ public class LokalisointiClient {
      * @return lokalisaatiot sisäkkäisinä <code>Map</code>peinä: lokaali -&gt; avain -&gt; arvo
      */
     public Map<String, Map<String, String>> getByCategory(String category) {
-        return getByUrl(properties.url("lokalisointi.v1.listByCategory", category));
+        return getByUrl(virkailijaUrl + "/lokalisointi/cxf/rest/v1/localisation?category=" + category);
     }
 
     private Map<String, Map<String, String>> getByUrl(String url) {

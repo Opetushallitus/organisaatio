@@ -1,11 +1,11 @@
 package fi.vm.sade.varda.rekisterointi.configuration;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.ServletUtils;
 
 import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -53,10 +53,13 @@ public class HakijaWebSecurityConfig {
     private static final String HAKIJA_ROLE = "APP_VARDAREKISTEROINTI_HAKIJA";
     private static final String HAKIJA_PATH_CLOB = "/hakija/**";
 
-    private final OphProperties ophProperties;
+    private final String oppijaBaseUrl;
+    private final String virkailijaBaseUrl;
 
-    public HakijaWebSecurityConfig(OphProperties ophProperties) {
-        this.ophProperties = ophProperties;
+    public HakijaWebSecurityConfig(@Value("${varda-rekisterointi.url-oppija}") String oppijaBaseUrl,
+                                   @Value("${varda-rekisterointi.url-virkailija}") String virkailijaBaseUrl) {
+        this.oppijaBaseUrl = oppijaBaseUrl;
+        this.virkailijaBaseUrl = virkailijaBaseUrl;
     }
 
     @Bean
@@ -78,12 +81,12 @@ public class HakijaWebSecurityConfig {
     }
 
     private TicketValidator ticketValidator() {
-        return new Cas30ServiceTicketValidator(ophProperties.url("varda-rekisterointi.cas.oppija.url"));
+        return new Cas30ServiceTicketValidator(oppijaBaseUrl + "/cas-oppija");
     }
 
     private ServiceProperties serviceProperties() {
         ServiceProperties properties = new ServiceProperties();
-        properties.setService(ophProperties.url("varda-rekisterointi.hakija.login") + "/j_spring_cas_security_check");
+        properties.setService(virkailijaBaseUrl + "/varda-rekisterointi/hakija/login/j_spring_cas_security_check");
         properties.setSendRenew(false);
         properties.setAuthenticateAllArtifacts(true);
         return properties;
@@ -91,7 +94,7 @@ public class HakijaWebSecurityConfig {
 
     private AuthenticationEntryPoint authenticationEntryPoint() {
         CasAuthenticationEntryPoint authenticationEntryPoint = new CasAuthenticationEntryPoint();
-        authenticationEntryPoint.setLoginUrl(ophProperties.url("varda-rekisterointi.cas.oppija.url"));
+        authenticationEntryPoint.setLoginUrl(oppijaBaseUrl + "/cas-oppija");
         authenticationEntryPoint.setServiceProperties(serviceProperties());
         return authenticationEntryPoint;
     }
@@ -102,7 +105,7 @@ public class HakijaWebSecurityConfig {
         casAuthenticationFilter.setServiceProperties(serviceProperties());
         casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
         casAuthenticationFilter.setAuthenticationSuccessHandler(
-            new SimpleUrlAuthenticationSuccessHandler(ophProperties.url("varda-rekisterointi.hakija.valtuudet.redirect")));
+            new SimpleUrlAuthenticationSuccessHandler(virkailijaBaseUrl + "/varda-rekisterointi/hakija/valtuudet/redirect"));
         casAuthenticationFilter.setSecurityContextRepository(securityContextRepository);
         return casAuthenticationFilter;
     }

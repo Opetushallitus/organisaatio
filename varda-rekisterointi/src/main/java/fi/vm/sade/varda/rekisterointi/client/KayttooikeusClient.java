@@ -1,13 +1,12 @@
 package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.dto.KayttooikeusKutsuDto;
 import fi.vm.sade.varda.rekisterointi.model.Kayttaja;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaCriteria;
 import fi.vm.sade.varda.rekisterointi.model.VirkailijaDto;
-import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -22,11 +21,18 @@ import java.util.Set;
  * Client käyttöoikeuspalvelun käyttämiseen.
  */
 @Component
-@RequiredArgsConstructor
 public class KayttooikeusClient {
     private final OtuvaOauth2Client httpClient;
-    private final OphProperties properties;
+    private final String virkailijaUrl;
     private final ObjectMapper objectMapper;
+
+    public KayttooikeusClient(OtuvaOauth2Client httpClient,
+                              @Value("${varda-rekisterointi.url-virkailija}") String virkailijaUrl,
+                              ObjectMapper objectMapper) {
+        this.httpClient = httpClient;
+        this.virkailijaUrl = virkailijaUrl;
+        this.objectMapper = objectMapper;
+    }
 
     private String toJson(Object object) {
         return objectMapper.writeValueAsString(object);
@@ -44,7 +50,7 @@ public class KayttooikeusClient {
      * @return  lista hakuehtoihin täsmäävistä virkailijoista
      */
     public Collection<VirkailijaDto> listVirkailijaBy(VirkailijaCriteria criteria) {
-        String url = properties.url("kayttooikeus-service.virkailija.haku");
+        String url = virkailijaUrl + "/kayttooikeus-service/virkailija/haku";
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -85,7 +91,7 @@ public class KayttooikeusClient {
                                 LocalDate.now().plusYears(1))
                         ))
                 .build();
-        String url = properties.url("kayttooikeus-service.kutsu");
+        String url = virkailijaUrl + "/kayttooikeus-service/kutsu";
         try {
             var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))

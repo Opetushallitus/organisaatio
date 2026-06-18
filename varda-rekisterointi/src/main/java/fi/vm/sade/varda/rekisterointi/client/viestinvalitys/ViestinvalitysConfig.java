@@ -1,7 +1,6 @@
 package fi.vm.sade.varda.rekisterointi.client.viestinvalitys;
 
 import tools.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +19,12 @@ public class ViestinvalitysConfig {
     private String username;
     @Value("${varda-rekisterointi.service.password}")
     private String password;
+    @Value("${varda-rekisterointi.url-virkailija}")
+    private String virkailijaUrl;
 
     @Bean
-    public ViestinvalitysClient viestinvalitysClient(OphProperties properties, ObjectMapper objectMapper) {
-        var casBase = properties.require("cas.base");
-
+    public ViestinvalitysClient viestinvalitysClient(ObjectMapper objectMapper) {
+        var casBase = virkailijaUrl + "/cas";
         var httpClient = HttpClient.newBuilder()
                 .cookieHandler(new CookieManager())
                 .connectTimeout(Duration.ofSeconds(10))
@@ -34,4 +34,3 @@ public class ViestinvalitysConfig {
         return new ViestinvalitysClient(httpClient, casClient, viestinvalitysUrl, objectMapper);
     }
 }
-

@@ -1,6 +1,5 @@
 package fi.vm.sade.varda.rekisterointi.controller.virkailija;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.OrganisaatioClient;
 import fi.vm.sade.varda.rekisterointi.exception.InvalidInputException;
 import fi.vm.sade.varda.rekisterointi.model.*;
@@ -9,9 +8,9 @@ import fi.vm.sade.varda.rekisterointi.service.RekisterointiService;
 import fi.vm.sade.varda.rekisterointi.util.AuthenticationUtils;
 import fi.vm.sade.varda.rekisterointi.util.Constants;
 import fi.vm.sade.varda.rekisterointi.util.RequestContextImpl;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,7 +25,6 @@ import static fi.vm.sade.varda.rekisterointi.util.FunctionalUtils.exceptionToEmp
 @RestController
 @PreAuthorize(Constants.VIRKAILIJA_PRE_AUTH)
 @RequestMapping(VirkailijaController.BASE_PATH)
-@RequiredArgsConstructor
 public class VirkailijaController {
 
     static final String BASE_PATH = "/virkailija/api";
@@ -40,7 +38,17 @@ public class VirkailijaController {
     private final OrganisaatioClient organisaatioClient;
     private final OrganisaatioService organisaatioService;
     private final RekisterointiService rekisterointiService;
-    private final OphProperties properties;
+    private final String virkailijaBaseUrl;
+
+    public VirkailijaController(OrganisaatioClient organisaatioClient,
+                                OrganisaatioService organisaatioService,
+                                RekisterointiService rekisterointiService,
+                                @Value("${varda-rekisterointi.url-virkailija}") String virkailijaBaseUrl) {
+        this.organisaatioClient = organisaatioClient;
+        this.organisaatioService = organisaatioService;
+        this.rekisterointiService = rekisterointiService;
+        this.virkailijaBaseUrl = virkailijaBaseUrl;
+    }
 
     /**
      * Hakee organisaation y-tunnuksella.
@@ -75,7 +83,7 @@ public class VirkailijaController {
         List<String> roles = AuthenticationUtils.getRoles(authentication);
         if (roles.contains("OPH")) {
             rekisterointiService.create(Rekisterointi.from(dto), RequestContextImpl.of(request));
-            return properties.url("varda-rekisterointi.virkailija");
+            return virkailijaBaseUrl + "/varda-rekisterointi/virkailija";
         }
         return null;
     }

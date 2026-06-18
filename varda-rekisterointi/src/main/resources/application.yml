@@ -41,6 +41,11 @@ varda-rekisterointi:
   rekisterointi-ui:
     username: varda-rekisterointi
     password: varda-rekisterointi
+  valtuudet:
+    host: https://asiointivaltuustarkastus.test.suomi.fi
+    client-id: dummy
+    api-key: dummy
+    oauth-password: dummy
 varda-rekisterointi.palvelukayttaja.client-id: dummy
 varda-rekisterointi.palvelukayttaja.client-secret: dummy
 

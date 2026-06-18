@@ -2,10 +2,10 @@ package fi.vm.sade.varda.rekisterointi.client;
 
 import tools.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.model.BaseDto;
 import fi.vm.sade.varda.rekisterointi.model.Koodi;
 import fi.vm.sade.varda.rekisterointi.model.KoodistoType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -23,19 +23,21 @@ import static java.util.stream.Collectors.toMap;
 public class KoodistoClient {
 
     private final OphHttpClient httpClient;
-    private final OphProperties properties;
+    private final String virkailijaUrl;
     private final ObjectMapper objectMapper;
 
     /**
      * Alustaa clientin annetulla HTTP-clientillä, konfiguraatiolla ja <code>ObjectMapper</code>illa.
      *
      * @param httpClient    HTTP-client
-     * @param properties    konfiguraatio
+     * @param virkailijaUrl virkailijan palveluosoite
      * @param objectMapper  Jackson object mapper
      */
-    public KoodistoClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
+    public KoodistoClient(OphHttpClient httpClient,
+                          @Value("${varda-rekisterointi.url-virkailija}") String virkailijaUrl,
+                          ObjectMapper objectMapper) {
         this.httpClient = httpClient;
-        this.properties = properties;
+        this.virkailijaUrl = virkailijaUrl;
         this.objectMapper = objectMapper;
     }
 
@@ -60,10 +62,13 @@ public class KoodistoClient {
      * @return koodiston koodit.
      */
     public Collection<Koodi> listKoodit(KoodistoType koodisto, Optional<Integer> versio, Optional<Boolean> onlyValid) {
-        Map<String, Object> parameters = new LinkedHashMap<>();
-        versio.ifPresent(value -> parameters.put("koodistoVersio", value));
-        onlyValid.ifPresent(value -> parameters.put("onlyValidKoodis", value));
-        String url = properties.url("koodisto-service.koodi", koodisto.uri, parameters);
+        String url = virkailijaUrl + "/koodisto-service/rest/json/" + koodisto.uri + "/koodi";
+        List<String> parameters = new ArrayList<>();
+        versio.ifPresent(value -> parameters.add("koodistoVersio=" + value));
+        onlyValid.ifPresent(value -> parameters.add("onlyValidKoodis=" + value));
+        if (!parameters.isEmpty()) {
+            url += "?" + String.join("&", parameters);
+        }
         return listKoodit(url);
     }
 

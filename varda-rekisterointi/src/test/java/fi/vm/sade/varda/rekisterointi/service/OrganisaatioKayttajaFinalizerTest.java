@@ -1,6 +1,5 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
 import fi.vm.sade.varda.rekisterointi.client.LokalisointiClient;
 import fi.vm.sade.varda.rekisterointi.model.Paatos;
@@ -24,13 +23,14 @@ public class OrganisaatioKayttajaFinalizerTest {
     public void kutsuuToimintamuodonMukaiseenRyhmaan() {
         KayttooikeusClient kayttooikeusClient = mock(KayttooikeusClient.class);
         LokalisointiClient lokalisointiClient = mock(LokalisointiClient.class);
-        OphProperties properties = mock(OphProperties.class);
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY)).thenReturn(PK_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY)).thenReturn(PPH_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY)).thenReturn(RPPH_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_JOTPA_PROPERTY)).thenReturn(JOTPA_RYHMA_ID.toString());
         when(lokalisointiClient.getKutsujaForKutsuEmail("VARDA_EMAIL_KUTSUJA", "fi")).thenReturn("VARDA");
-        OrganisaatioKayttajaFinalizer finalizer = new OrganisaatioKayttajaFinalizer(kayttooikeusClient, lokalisointiClient, properties);
+        OrganisaatioKayttajaFinalizer finalizer = new OrganisaatioKayttajaFinalizer(
+                kayttooikeusClient,
+                lokalisointiClient,
+                PK_RYHMA_ID,
+                PPH_RYHMA_ID,
+                RPPH_RYHMA_ID,
+                JOTPA_RYHMA_ID);
 
         Rekisterointi rekisterointi = TestiRekisterointi.validiVardaRekisterointi().withPaatos(
                 new Paatos(true, LocalDateTime.now(), "123", null));
@@ -48,14 +48,15 @@ public class OrganisaatioKayttajaFinalizerTest {
     public void kutsuuJotpaRyhmaan() {
         KayttooikeusClient kayttooikeusClient = mock(KayttooikeusClient.class);
         LokalisointiClient lokalisointiClient = mock(LokalisointiClient.class);
-        OphProperties properties = mock(OphProperties.class);
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY)).thenReturn(PK_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY)).thenReturn(PPH_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY)).thenReturn(RPPH_RYHMA_ID.toString());
-        when(properties.getProperty(KAYTTOOIKEUSRYHMA_JOTPA_PROPERTY)).thenReturn(JOTPA_RYHMA_ID.toString());
         when(lokalisointiClient.getKutsujaForKutsuEmail("JOTPA_EMAIL_KUTSUJA", "fi")).thenReturn("JOTPA");
 
-        OrganisaatioKayttajaFinalizer finalizer = new OrganisaatioKayttajaFinalizer(kayttooikeusClient, lokalisointiClient, properties);
+        OrganisaatioKayttajaFinalizer finalizer = new OrganisaatioKayttajaFinalizer(
+                kayttooikeusClient,
+                lokalisointiClient,
+                PK_RYHMA_ID,
+                PPH_RYHMA_ID,
+                RPPH_RYHMA_ID,
+                JOTPA_RYHMA_ID);
 
         Rekisterointi rekisterointi = TestiRekisterointi.validiJotpaRekisterointi().withPaatos(
                 new Paatos(true, LocalDateTime.now(), "123", null));

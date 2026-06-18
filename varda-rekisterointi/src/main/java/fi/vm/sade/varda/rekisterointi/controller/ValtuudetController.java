@@ -1,12 +1,12 @@
 package fi.vm.sade.varda.rekisterointi.controller;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.suomifi.valtuudet.OrganisationDto;
 import fi.vm.sade.suomifi.valtuudet.SessionDto;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +29,12 @@ public class ValtuudetController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValtuudetController.class);
 
-    private final OphProperties properties;
+    private final String virkailijaBaseUrl;
     private final ValtuudetClient valtuudetClient;
 
-    public ValtuudetController(OphProperties properties, ValtuudetClient valtuudetClient) {
-        this.properties = properties;
+    public ValtuudetController(@Value("${varda-rekisterointi.url-virkailija}") String virkailijaBaseUrl,
+                               ValtuudetClient valtuudetClient) {
+        this.virkailijaBaseUrl = virkailijaBaseUrl;
         this.valtuudetClient = valtuudetClient;
     }
 
@@ -48,7 +49,7 @@ public class ValtuudetController {
     public View getRedirect(HttpServletRequest request, Locale locale) {
         Principal principal = request.getUserPrincipal();
         String nationalIdentificationNumber = principal.getName();
-        String callbackUrl = properties.url("varda-rekisterointi.hakija.valtuudet.callback");
+        String callbackUrl = virkailijaBaseUrl + "/varda-rekisterointi/hakija/valtuudet/callback";
         SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
         String redirectUrl = valtuudetClient.getRedirectUrl(session.userId, callbackUrl, locale.getLanguage());
 
@@ -81,14 +82,14 @@ public class ValtuudetController {
     private View handleCallback(HttpServletRequest request) {
         String code = request.getParameter("code");
         if (code == null) {
-            String redirectUrl = properties.url("varda-rekisterointi.hakija.logout");
+            String redirectUrl = virkailijaBaseUrl + "/varda-rekisterointi/hakija/logout";
             return new RedirectView(redirectUrl);
         }
 
         Optional<String> callbackUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_CALLBACK_URL, String.class);
         Optional<String> sessionId = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_SESSION_ID, String.class);
         if (!callbackUrl.isPresent() || !sessionId.isPresent()) {
-            String redirectUrl = properties.url("varda-rekisterointi.hakija.logout");
+            String redirectUrl = virkailijaBaseUrl + "/varda-rekisterointi/hakija/logout";
             return new RedirectView(redirectUrl);
         }
 
@@ -102,7 +103,7 @@ public class ValtuudetController {
         if (redirectUrl.isPresent()) {
           removeSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST);
         }
-        return new RedirectView(redirectUrl.orElse(properties.url("varda-rekisterointi.hakija")));
+        return new RedirectView(redirectUrl.orElse(virkailijaBaseUrl + "/varda-rekisterointi/hakija"));
     }
 
 }

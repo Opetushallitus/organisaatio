@@ -1,11 +1,11 @@
 package fi.vm.sade.varda.rekisterointi.service;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.varda.rekisterointi.client.KayttooikeusClient;
 import fi.vm.sade.varda.rekisterointi.client.LokalisointiClient;
 import fi.vm.sade.varda.rekisterointi.model.Rekisterointi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,14 +17,6 @@ import java.util.Map;
 public class OrganisaatioKayttajaFinalizer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganisaatioKayttajaFinalizer.class);
-    static final String KAYTTOOIKEUSRYHMA_JOTPA_PROPERTY =
-            "varda-rekisterointi.kayttooikeus.ryhma.jotpa";
-    static final String KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY =
-            "varda-rekisterointi.kayttooikeus.ryhma.paivakoti";
-    static final String KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY =
-            "varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja";
-    static final String KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY =
-            "varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti";
     static final String VARDA_TOIMINTAMUOTO_PAIVAKOTI = "vardatoimintamuoto_tm01";
     static final String VARDA_KUTSUJA_KEY = "VARDA_EMAIL_KUTSUJA";
     static final String JOTPA_KUTSUJA_KEY = "JOTPA_EMAIL_KUTSUJA";
@@ -34,23 +26,26 @@ public class OrganisaatioKayttajaFinalizer {
 
     private final KayttooikeusClient kayttooikeusClient;
     private final LokalisointiClient lokalisointiClient;
-    private final Map<String,Long> toimintamuotoKayttooikeusRyhmaId;
+    private final Map<String, Long> toimintamuotoKayttooikeusRyhmaId;
     private final Long jotpaKayttooikeusRyhmaId;
 
     public OrganisaatioKayttajaFinalizer(KayttooikeusClient kayttooikeusClient,
                                          LokalisointiClient lokalisointiClient,
-                                  OphProperties properties) {
+                                         @Value("${varda-rekisterointi.kayttooikeus.ryhma.paivakoti}") Long paivakotiRyhmaId,
+                                         @Value("${varda-rekisterointi.kayttooikeus.ryhma.perhepaivahoitaja}") Long perhepaivahoitajaRyhmaId,
+                                         @Value("${varda-rekisterointi.kayttooikeus.ryhma.ryhmaperhepaivakoti}") Long ryhmaperhepaivakotiRyhmaId,
+                                         @Value("${varda-rekisterointi.kayttooikeus.ryhma.jotpa}") Long jotpaKayttooikeusRyhmaId) {
         this.kayttooikeusClient = kayttooikeusClient;
         this.lokalisointiClient = lokalisointiClient;
         toimintamuotoKayttooikeusRyhmaId = Map.of(
                 VARDA_TOIMINTAMUOTO_PAIVAKOTI,
-                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PAIVAKOTI_PROPERTY)),
+                paivakotiRyhmaId,
                 VARDA_TOIMINTAMUOTO_PERHEPAIVAHOITO,
-                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_PERHEPAIVAHOITAJA_PROPERTY)),
+                perhepaivahoitajaRyhmaId,
                 VARDA_TOIMINTAMUOTO_RYHMAPERHEPAIVAHOITO,
-                Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_RYHMAPERHEPAIVAKOTI_PROPERTY))
+                ryhmaperhepaivakotiRyhmaId
         );
-        jotpaKayttooikeusRyhmaId = Long.valueOf(properties.getProperty(KAYTTOOIKEUSRYHMA_JOTPA_PROPERTY));
+        this.jotpaKayttooikeusRyhmaId = jotpaKayttooikeusRyhmaId;
     }
 
     /**
