@@ -32,13 +32,15 @@ public class ObjectMapperConfigurationTest {
     }
 
     @Test
-    public void javaSqlTimestampSerializer() throws IOException {
+    public void tarkastusPvmSerializerUsesLegacyTimestampFormat() throws IOException {
         OffsetDateTime dateTime = OffsetDateTime.of(2018, 8, 29, 05, 25, 54, 0, ZoneOffset.ofHours(-1));
         Timestamp timestamp = new Timestamp(dateTime.toInstant().toEpochMilli());
+        OrganisaatioRDTOV4 organisaatio = new OrganisaatioRDTOV4();
+        organisaatio.setTarkastusPvm(timestamp);
 
-        String json = objectMapper.writeValueAsString(timestamp);
+        String json = objectMapper.writeValueAsString(organisaatio);
 
-        assertThat(json).isEqualTo("1535523954000");
+        assertThat(json).contains("\"tarkastusPvm\":1535523954000");
     }
 
     @Test

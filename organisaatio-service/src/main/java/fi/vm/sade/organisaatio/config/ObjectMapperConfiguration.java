@@ -9,20 +9,18 @@ import fi.ytj.YritysHakuDTO;
 import fi.ytj.YritysTunnusHistoriaDTO;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.MapperFeature;
-import tools.jackson.databind.module.SimpleModule;
 
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Configuration
 public class ObjectMapperConfiguration {
     @Bean
-    JsonMapperBuilderCustomizer customizer(JsonJavaSqlDateSerializer jsonJavaSqlDateSerializer) {
+    JsonMapperBuilderCustomizer customizer() {
         return builder -> builder
             .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -34,8 +32,7 @@ public class ObjectMapperConfiguration {
             .addMixIn(ArrayOfYTieto.class, ArrayOfYTietoMixin.class)
             .changeDefaultPropertyInclusion(value ->
                 JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
-            .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
-            .addModule(new SimpleModule().addSerializer(Timestamp.class, jsonJavaSqlDateSerializer));
+            .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
     }
 
     abstract static class YTunnusMixin {

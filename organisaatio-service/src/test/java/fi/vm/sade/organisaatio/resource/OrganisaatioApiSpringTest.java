@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -171,6 +172,18 @@ class OrganisaatioApiSpringTest {
         expectForbiddenAtPath(put("/api/{oid}/tarkasta", oid)
                         .contentType(MediaType.APPLICATION_JSON),
                 "{\"errorMessage\":\"Not authorized to update tarkastus for organisation: " + oid + "\",\"errorKey\":\"no.permission\"}");
+    }
+
+    @Test
+    @DisplayName("Test tarkasta returns timestamp as epoch millis")
+    @Sql("/data/truncate_tables.sql")
+    @Sql("/data/basic_organisaatio_data.sql")
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOHALLINTA", "APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.24.00000000001"})
+    void testTarkastaReturnsTimestampMillis() throws Exception {
+        mockMvc.perform(put("/api/1.2.2004.1/tarkasta")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(matchesPattern("\\d{13}")));
     }
 
     @Test

@@ -367,8 +367,8 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
     @CheckTarkastusPermission
-    public Timestamp updateTarkastusPvm(String oid) {
-        return organisaatioBusinessService.updateTarkastusPvm(oid);
+    public Long updateTarkastusPvm(String oid) {
+        return organisaatioBusinessService.updateTarkastusPvm(oid).getTime();
     }
 
     // GET /api/{oid}/childoids

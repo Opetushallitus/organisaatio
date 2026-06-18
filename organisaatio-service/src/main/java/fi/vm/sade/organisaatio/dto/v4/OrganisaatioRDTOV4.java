@@ -1,5 +1,6 @@
 package fi.vm.sade.organisaatio.dto.v4;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.organisaatio.dto.VarhaiskasvatuksenToimipaikkaTiedotDto;
 import fi.vm.sade.organisaatio.resource.dto.OrganisaatioMetaDataRDTO;
@@ -540,6 +541,7 @@ public class OrganisaatioRDTOV4 implements Serializable {
         this._opetuspisteenJarjNro = _opetuspisteenJarjNro;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     public Timestamp getTarkastusPvm() {
         return _tarkastusPvm;
     }
