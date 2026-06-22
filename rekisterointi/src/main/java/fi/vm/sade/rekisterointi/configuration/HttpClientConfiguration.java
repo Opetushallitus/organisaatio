@@ -1,7 +1,5 @@
 package fi.vm.sade.rekisterointi.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fi.vm.sade.javautils.httpclient.apache.ApacheOphHttpClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClientImpl;
@@ -10,6 +8,7 @@ import fi.vm.sade.suomifi.valtuudet.ValtuudetPropertiesImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.net.http.HttpClient;
 
@@ -24,7 +23,7 @@ public class HttpClientConfiguration {
   }
 
   @Bean
-  public ValtuudetClient valtuudetClient(ObjectMapper objectMapper,
+  public ValtuudetClient valtuudetClient(JsonMapper jsonMapper,
       @Value("${rekisterointi.valtuudet.host}") String host,
       @Value("${rekisterointi.valtuudet.client-id}") String clientId,
       @Value("${rekisterointi.valtuudet.api-key}") String apiKey,
@@ -36,6 +35,6 @@ public class HttpClientConfiguration {
             .apiKey(apiKey)
             .oauthPassword(oauthPassword)
             .build();
-    return new ValtuudetClientImpl(httpClient, objectMapper::readValue, properties);
+    return new ValtuudetClientImpl(httpClient, jsonMapper::readValue, properties);
   }
 }

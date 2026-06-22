@@ -1,15 +1,13 @@
 package fi.vm.sade.rekisterointi.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.rekisterointi.model.OrganisaatioV4Dto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import tools.jackson.databind.json.JsonMapper;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
@@ -24,31 +22,23 @@ public class OrganisaatioClient {
 
   private static final String KUNTA_YRITYSMUOTO = "Kunta";
   private final OtuvaOauth2Client httpClient;
-  private final ObjectMapper objectMapper;
+  private final JsonMapper jsonMapper;
   private final String urlVirkailija;
 
   public OrganisaatioClient(OtuvaOauth2Client httpClient,
-      ObjectMapper objectMapper,
+      JsonMapper jsonMapper,
       @Value("${url-virkailija}") String urlVirkailija) {
     this.httpClient = httpClient;
-    this.objectMapper = objectMapper;
+    this.jsonMapper = jsonMapper;
     this.urlVirkailija = urlVirkailija;
   }
 
   private String toJson(Object object) {
-    try {
-      return objectMapper.writeValueAsString(object);
-    } catch (JsonProcessingException ex) {
-      throw new RuntimeException(ex);
-    }
+    return jsonMapper.writeValueAsString(object);
   }
 
   private <T> T fromJson(String json, Class<T> type) {
-    try {
-      return objectMapper.readValue(json, type);
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    }
+    return jsonMapper.readValue(json, type);
   }
 
   /**

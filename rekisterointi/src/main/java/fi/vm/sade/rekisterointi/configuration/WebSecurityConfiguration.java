@@ -1,6 +1,5 @@
 package fi.vm.sade.rekisterointi.configuration;
 
-import org.apache.http.HttpStatus;
 import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
 import org.springframework.beans.factory.annotation.Value;
@@ -165,7 +164,7 @@ public class WebSecurityConfiguration {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String encodedRedirectURL = httpResponse.encodeRedirectURL(
             httpRequest.getContextPath() + "/hakija/valtuudet/redirect");
-        httpResponse.setStatus(HttpStatus.SC_TEMPORARY_REDIRECT);
+        httpResponse.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
         httpResponse.setHeader("Location", encodedRedirectURL);
       }
       chain.doFilter(request, response);

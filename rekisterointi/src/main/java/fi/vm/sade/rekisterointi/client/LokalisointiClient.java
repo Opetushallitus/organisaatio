@@ -1,10 +1,9 @@
 package fi.vm.sade.rekisterointi.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.net.URI;
@@ -28,25 +27,25 @@ public class LokalisointiClient {
 
   private final HttpClient httpClient;
   private final String urlVirkailija;
-  private final ObjectMapper objectMapper;
+  private final JsonMapper jsonMapper;
 
   @Value("${lokalisointi.override:null}")
   private String urlOverride;
 
   /**
    * Alusta clientin annetulla HTTP-clientilla, konfiguraatiolla ja
-   * <code>ObjectMapper</code>illä.
+   * <code>JsonMapper</code>illä.
    *
    * @param httpClient   HTTP-client
    * @param urlVirkailija virkailijan palveluiden base URL
-   * @param objectMapper Jackson object mapper
+   * @param jsonMapper Jackson JSON mapper
    */
   public LokalisointiClient(HttpClient httpClient,
       @Value("${url-virkailija}") String urlVirkailija,
-      ObjectMapper objectMapper) {
+      JsonMapper jsonMapper) {
     this.httpClient = httpClient;
     this.urlVirkailija = urlVirkailija;
-    this.objectMapper = objectMapper;
+    this.jsonMapper = jsonMapper;
   }
 
   /**
@@ -97,7 +96,7 @@ public class LokalisointiClient {
         throw new RuntimeException(
             "Url " + url + " returned status code " + response.statusCode() + ": " + response.body());
       }
-      return objectMapper.readValue(response.body(), Dto[].class);
+      return jsonMapper.readValue(response.body(), Dto[].class);
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(ex);

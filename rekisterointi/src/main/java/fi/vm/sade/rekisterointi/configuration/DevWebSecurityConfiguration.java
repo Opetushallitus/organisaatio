@@ -33,8 +33,8 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 @EnableMethodSecurity(jsr250Enabled = false, prePostEnabled = false, securedEnabled = true)
 public class DevWebSecurityConfiguration {
 
-  UserDetailsService userDetailsService;
-  PasswordEncoder passwordEncoder;
+  private final UserDetailsService userDetailsService;
+  private final PasswordEncoder passwordEncoder;
 
   public DevWebSecurityConfiguration(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
     this.userDetailsService = userDetailsService;
@@ -43,9 +43,8 @@ public class DevWebSecurityConfiguration {
 
   @Bean
   public DaoAuthenticationProvider authProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService);
-    authProvider.setPasswordEncoder(this.passwordEncoder);
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder);
     return authProvider;
   }
 

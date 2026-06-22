@@ -1,10 +1,10 @@
 package fi.vm.sade.rekisterointi.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class Oauth2BearerClient {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     @Value("${rekisterointi.palvelukayttaja.client-id}")
     private String clientId;
@@ -49,7 +49,7 @@ public class Oauth2BearerClient {
         if (res.statusCode() != 200) {
             throw new RuntimeException("Oauth2 bearer returned status code " + res.statusCode() + ": " + res.body());
         }
-        var newToken = objectMapper.readValue(res.body(), Token.class).access_token();
+        var newToken = jsonMapper.readValue(res.body(), Token.class).access_token();
         cachedToken = newToken;
         return newToken;
     }
