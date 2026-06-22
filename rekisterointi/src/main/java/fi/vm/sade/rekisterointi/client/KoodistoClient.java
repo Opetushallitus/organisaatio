@@ -1,7 +1,6 @@
 package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.httpclient.OphHttpClient;
 import fi.vm.sade.rekisterointi.model.BaseDto;
 import fi.vm.sade.rekisterointi.model.Koodi;
 import fi.vm.sade.rekisterointi.model.KoodistoType;
@@ -9,9 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.function.Function;
 
+import static fi.vm.sade.rekisterointi.util.Constants.CALLER_ID;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -21,7 +26,7 @@ import static java.util.stream.Collectors.toMap;
 @Component
 public class KoodistoClient {
 
-  private final OphHttpClient httpClient;
+  private final HttpClient httpClient;
   private final String urlVirkailija;
   private final ObjectMapper objectMapper;
 
@@ -33,7 +38,7 @@ public class KoodistoClient {
    * @param urlVirkailija virkailijan palveluiden base URL
    * @param objectMapper Jackson object mapper
    */
-  public KoodistoClient(OphHttpClient httpClient,
+  public KoodistoClient(HttpClient httpClient,
       @Value("${url-virkailija}") String urlVirkailija,
       ObjectMapper objectMapper) {
     this.httpClient = httpClient;
@@ -73,9 +78,29 @@ public class KoodistoClient {
   }
 
   private Collection<Koodi> listKoodit(String url) {
-    KoodiDto[] koodit = httpClient.get(url)
-        .execute(response -> objectMapper.readValue(response.asInputStream(), KoodiDto[].class));
+    KoodiDto[] koodit = get(url);
     return Arrays.stream(koodit).map(KoodistoClient::dtoToKoodi).collect(toList());
+  }
+
+  private KoodiDto[] get(String url) {
+    try {
+      var request = HttpRequest.newBuilder()
+          .uri(URI.create(url))
+          .header("Caller-Id", CALLER_ID)
+          .GET()
+          .build();
+      var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+      if (response.statusCode() != 200) {
+        throw new RuntimeException(
+            "Url " + url + " returned status code " + response.statusCode() + ": " + response.body());
+      }
+      return objectMapper.readValue(response.body(), KoodiDto[].class);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+      throw new RuntimeException(ex);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   private static Koodi dtoToKoodi(KoodiDto dto) {

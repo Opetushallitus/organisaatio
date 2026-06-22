@@ -1,17 +1,22 @@
 package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.javautils.httpclient.OphHttpClient;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static fi.vm.sade.rekisterointi.util.Constants.CALLER_ID;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -21,7 +26,7 @@ import static java.util.stream.Collectors.*;
 @Component
 public class LokalisointiClient {
 
-  private final OphHttpClient httpClient;
+  private final HttpClient httpClient;
   private final String urlVirkailija;
   private final ObjectMapper objectMapper;
 
@@ -36,7 +41,7 @@ public class LokalisointiClient {
    * @param urlVirkailija virkailijan palveluiden base URL
    * @param objectMapper Jackson object mapper
    */
-  public LokalisointiClient(OphHttpClient httpClient,
+  public LokalisointiClient(HttpClient httpClient,
       @Value("${url-virkailija}") String urlVirkailija,
       ObjectMapper objectMapper) {
     this.httpClient = httpClient;
@@ -81,7 +86,24 @@ public class LokalisointiClient {
   }
 
   private Dto[] getAsArray(String url) {
-    return httpClient.get(url).execute(response -> objectMapper.readValue(response.asInputStream(), Dto[].class));
+    try {
+      var request = HttpRequest.newBuilder()
+          .uri(URI.create(url))
+          .header("Caller-Id", CALLER_ID)
+          .GET()
+          .build();
+      var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+      if (response.statusCode() != 200) {
+        throw new RuntimeException(
+            "Url " + url + " returned status code " + response.statusCode() + ": " + response.body());
+      }
+      return objectMapper.readValue(response.body(), Dto[].class);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+      throw new RuntimeException(ex);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
   }
 
   private static class Dto {
