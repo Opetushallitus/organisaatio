@@ -16,6 +16,7 @@ import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.User;
@@ -55,20 +56,21 @@ public class WebSecurityConfiguration {
   public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter,
       AuthenticationEntryPoint authenticationEntryPoint, SecurityContextRepository securityContextRepository)
       throws Exception {
-    http.headers().disable().csrf().disable()
+    http
+        .headers(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)
         .securityMatcher("/hakija/**")
         .authorizeHttpRequests(authz -> authz
             .requestMatchers("/hakija/**").hasRole(HAKIJA_ROLE)
-            .anyRequest().authenticated()
-            .and()
-            .addFilterAt(casAuthenticationFilter, CasAuthenticationFilter.class)
-            .addFilterBefore(new SaveLoginRedirectFilter(), CasAuthenticationFilter.class)
-            .addFilterAfter(new ValtuudetRedirectFilter(), CasAuthenticationFilter.class))
+            .anyRequest().authenticated())
+        .addFilterAt(casAuthenticationFilter, CasAuthenticationFilter.class)
+        .addFilterBefore(new SaveLoginRedirectFilter(), CasAuthenticationFilter.class)
+        .addFilterAfter(new ValtuudetRedirectFilter(), CasAuthenticationFilter.class)
         .securityContext(securityContext -> securityContext
             .requireExplicitSave(true)
             .securityContextRepository(securityContextRepository))
-        .exceptionHandling()
-        .authenticationEntryPoint(authenticationEntryPoint);
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+            .authenticationEntryPoint(authenticationEntryPoint));
     return http.build();
   }
 
