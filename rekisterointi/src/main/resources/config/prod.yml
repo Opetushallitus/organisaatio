@@ -3,7 +3,5 @@ server.servlet.session.cookie.domain: opintopolku.fi
 url-oppija:  https://opintopolku.fi
 url-virkailija: https://virkailija.opintopolku.fi
 url-rekisterointi: https://rekisterointi.opintopolku.fi
-url-alb: opintopolku.fi
 
 rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.suomi.fi"
-varda-rekisterointi.url: https://virkailija.opintopolku.fi/varda-rekisterointi/api/rekisterointi

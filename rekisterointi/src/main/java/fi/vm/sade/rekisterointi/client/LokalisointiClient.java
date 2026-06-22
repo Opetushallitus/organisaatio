@@ -2,10 +2,10 @@ package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
-import fi.vm.sade.properties.OphProperties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.*;
 public class LokalisointiClient {
 
   private final OphHttpClient httpClient;
-  private final OphProperties properties;
+  private final String urlVirkailija;
   private final ObjectMapper objectMapper;
 
   @Value("${lokalisointi.override:null}")
@@ -33,12 +33,14 @@ public class LokalisointiClient {
    * <code>ObjectMapper</code>illä.
    *
    * @param httpClient   HTTP-client
-   * @param properties   konfiguraatio
+   * @param urlVirkailija virkailijan palveluiden base URL
    * @param objectMapper Jackson object mapper
    */
-  public LokalisointiClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
+  public LokalisointiClient(OphHttpClient httpClient,
+      @Value("${url-virkailija}") String urlVirkailija,
+      ObjectMapper objectMapper) {
     this.httpClient = httpClient;
-    this.properties = properties;
+    this.urlVirkailija = urlVirkailija;
     this.objectMapper = objectMapper;
   }
 
@@ -53,7 +55,12 @@ public class LokalisointiClient {
   public Map<String, Map<String, String>> getByCategory(String category) {
     var url = urlOverride != null && urlOverride.startsWith("http")
       ? urlOverride
-      : properties.url("lokalisointi.v1.listByCategory", category);
+      : UriComponentsBuilder.fromUriString(urlVirkailija)
+          .path("/lokalisointi/cxf/rest/v1/localisation")
+          .queryParam("category", "{category}")
+          .encode()
+          .buildAndExpand(category)
+          .toUriString();
     return getByUrl(url);
   }
 

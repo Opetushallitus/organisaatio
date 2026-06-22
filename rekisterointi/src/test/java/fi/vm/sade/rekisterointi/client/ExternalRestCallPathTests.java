@@ -2,7 +2,6 @@ package fi.vm.sade.rekisterointi.client;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.configuration.HttpClientConfiguration;
 import fi.vm.sade.rekisterointi.model.Kayttaja;
 import fi.vm.sade.rekisterointi.model.KielistettyNimi;
@@ -12,16 +11,12 @@ import fi.vm.sade.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.rekisterointi.model.OrganisaatioV4Dto;
 import fi.vm.sade.rekisterointi.model.RekisterointiDto;
 import fi.vm.sade.rekisterointi.model.Yhteystiedot;
-import fi.vm.sade.rekisterointi.properties.ValtuudetPropertiesImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
@@ -43,16 +38,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
-@SpringBootTest(
-    classes = ExternalRestCallPathTests.TestApplication.class,
-    properties = {
-        "varda-rekisterointi.username=varda-rekisterointi",
-        "varda-rekisterointi.password=varda-rekisterointi",
-        "rekisterointi.valtuudet.host=http://localhost",
-        "rekisterointi.valtuudet.client-id=test-client-id",
-        "rekisterointi.valtuudet.api-key=test-api-key",
-        "rekisterointi.valtuudet.oauth-password=test-oauth-password"
-    })
+@SpringBootTest(classes = ExternalRestCallPathTests.TestApplication.class)
 @ActiveProfiles("test")
 @EnableWireMock({
     @ConfigureWireMock(
@@ -65,7 +51,6 @@ class ExternalRestCallPathTests {
 
   @SpringBootConfiguration
   @EnableAutoConfiguration
-  @EnableConfigurationProperties(ValtuudetPropertiesImpl.class)
   @Import({
       HttpClientConfiguration.class,
       KoodistoClient.class,
@@ -76,21 +61,6 @@ class ExternalRestCallPathTests {
       RekisterointiClient.class
   })
   static class TestApplication {
-
-    @Bean("properties")
-    OphProperties properties(Environment environment) {
-      var properties = new OphProperties("/rekisterointi_oph.properties");
-      var urlVirkailija = environment.getRequiredProperty("url-virkailija");
-      properties.addDefault("url-oppija", environment.getRequiredProperty("url-oppija"));
-      properties.addDefault("url-virkailija", urlVirkailija);
-      properties.addDefault("url-rekisterointi", environment.getRequiredProperty("url-rekisterointi"));
-      properties.addDefault("varda-rekisterointi.url", urlVirkailija + "/varda-rekisterointi/api/rekisterointi");
-      properties.addDefault("varda-rekisterointi.username",
-          environment.getRequiredProperty("varda-rekisterointi.username"));
-      properties.addDefault("varda-rekisterointi.password",
-          environment.getRequiredProperty("varda-rekisterointi.password"));
-      return properties;
-    }
   }
 
   @Autowired

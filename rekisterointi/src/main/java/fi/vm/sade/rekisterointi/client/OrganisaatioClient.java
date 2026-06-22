@@ -2,12 +2,12 @@ package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.model.OrganisaatioCriteria;
 import fi.vm.sade.rekisterointi.model.OrganisaatioV4Dto;
-import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,13 +20,20 @@ import java.util.Optional;
  * Client organisaatiopalvelun käyttämiseen.
  */
 @Component
-@RequiredArgsConstructor
 public class OrganisaatioClient {
 
   private static final String KUNTA_YRITYSMUOTO = "Kunta";
   private final OtuvaOauth2Client httpClient;
-  private final OphProperties properties;
   private final ObjectMapper objectMapper;
+  private final String urlVirkailija;
+
+  public OrganisaatioClient(OtuvaOauth2Client httpClient,
+      ObjectMapper objectMapper,
+      @Value("${url-virkailija}") String urlVirkailija) {
+    this.httpClient = httpClient;
+    this.objectMapper = objectMapper;
+    this.urlVirkailija = urlVirkailija;
+  }
 
   private String toJson(Object object) {
     try {
@@ -52,7 +59,11 @@ public class OrganisaatioClient {
    * @return organisaatio, tai <code>empty</code> mikäli ei löydy.
    */
   public Optional<OrganisaatioV4Dto> getV4ByYtunnus(String ytunnus) {
-    String url = properties.url("organisaatio-service.organisaatio.v4.byYtunnus", ytunnus);
+    String url = UriComponentsBuilder.fromUriString(
+        urlVirkailija + "/organisaatio-service/rest/organisaatio/v4/{ytunnus}")
+        .encode()
+        .buildAndExpand(ytunnus)
+        .toUriString();
     return getV4FromUrl(url);
   }
 
@@ -64,7 +75,11 @@ public class OrganisaatioClient {
    * @return organisaatio, tai <code>empty</code> mikäli ei löydy.
    */
   public Optional<OrganisaatioV4Dto> getV4ByYtunnusFromYtj(String ytunnus) {
-    String url = properties.url("organisaatio-service.vtj.ytunnus", ytunnus);
+    String url = UriComponentsBuilder.fromUriString(
+        urlVirkailija + "/organisaatio-service/rest/ytj/{ytunnus}/v4")
+        .encode()
+        .buildAndExpand(ytunnus)
+        .toUriString();
     return getV4FromUrl(url);
   }
 
@@ -76,7 +91,11 @@ public class OrganisaatioClient {
    * @return organisaatio, tai <code>empty</code> mikäli ei löydy.
    */
   public Optional<OrganisaatioV4Dto> getV4ByOid(String oid) {
-    String url = properties.url("organisaatio-service.organisaatio.v4.byOid", oid);
+    String url = UriComponentsBuilder.fromUriString(
+        urlVirkailija + "/organisaatio-service/rest/organisaatio/v4/{oid}")
+        .encode()
+        .buildAndExpand(oid)
+        .toUriString();
     return getV4FromUrl(url);
   }
 
@@ -122,8 +141,7 @@ public class OrganisaatioClient {
    */
   public OrganisaatioV4Dto create(OrganisaatioV4Dto organisaatio) {
     assert organisaatio.oid == null;
-    String url = properties.url("organisaatio-service.organisaatio.v4", organisaatio.oid);
-    return postOrganisaatio(url, organisaatio);
+    return postOrganisaatio(urlVirkailija + "/organisaatio-service/rest/organisaatio/v4", organisaatio);
   }
 
   /**
@@ -135,7 +153,11 @@ public class OrganisaatioClient {
    */
   public OrganisaatioV4Dto update(OrganisaatioV4Dto organisaatio) {
     assert organisaatio.oid != null;
-    String url = properties.url("organisaatio-service.organisaatio.v4.byOid", organisaatio.oid);
+    String url = UriComponentsBuilder.fromUriString(
+        urlVirkailija + "/organisaatio-service/rest/organisaatio/v4/{oid}")
+        .encode()
+        .buildAndExpand(organisaatio.oid)
+        .toUriString();
     return postOrganisaatio(url, organisaatio);
   }
 
@@ -164,7 +186,16 @@ public class OrganisaatioClient {
    * @return lista ehtoihin täsmäävistä organisaatioista.
    */
   public Collection<OrganisaatioV4Dto> listBy(OrganisaatioCriteria criteria) {
-    String url = properties.url("organisaatio-service.organisaatio.v4.hae", criteria.asMap());
+    var builder = UriComponentsBuilder.fromUriString(
+        urlVirkailija + "/organisaatio-service/rest/organisaatio/v4/hae");
+    criteria.asMap().forEach((name, value) -> {
+      if (value instanceof Collection<?> values) {
+        values.forEach(queryValue -> builder.queryParam(name, queryValue));
+      } else {
+        builder.queryParam(name, value);
+      }
+    });
+    String url = builder.build().encode().toUriString();
     try {
       var request = HttpRequest.newBuilder().uri(new URI(url)).GET();
       var response = httpClient.executeRequest(request);

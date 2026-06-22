@@ -1,12 +1,12 @@
 package fi.vm.sade.rekisterointi.rest;
 
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.suomifi.valtuudet.OrganisationDto;
 import fi.vm.sade.suomifi.valtuudet.SessionDto;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetClient;
 import fi.vm.sade.suomifi.valtuudet.ValtuudetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,12 +31,13 @@ public class ValtuudetController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ValtuudetController.class);
 
-  private final OphProperties properties;
   private final ValtuudetClient valtuudetClient;
+  private final String urlRekisterointi;
 
-  public ValtuudetController(OphProperties properties, ValtuudetClient valtuudetClient) {
-    this.properties = properties;
+  public ValtuudetController(ValtuudetClient valtuudetClient,
+      @Value("${url-rekisterointi}") String urlRekisterointi) {
     this.valtuudetClient = valtuudetClient;
+    this.urlRekisterointi = urlRekisterointi;
   }
 
   /**
@@ -50,7 +51,7 @@ public class ValtuudetController {
   public View getRedirect(HttpServletRequest request, Locale locale) {
     Principal principal = request.getUserPrincipal();
     String nationalIdentificationNumber = principal.getName();
-    String callbackUrl = properties.url("rekisterointi.hakija.valtuudet.callback");
+    String callbackUrl = urlRekisterointi + "/hakija/valtuudet/callback";
     SessionDto session = valtuudetClient.createSession(ValtuudetType.ORGANISATION, nationalIdentificationNumber);
     String redirectUrl = valtuudetClient.getRedirectUrl(session.userId, callbackUrl, locale.getLanguage());
 
@@ -83,15 +84,13 @@ public class ValtuudetController {
   private View handleCallback(HttpServletRequest request) {
     String code = request.getParameter("code");
     if (code == null) {
-      String redirectUrl = properties.url("rekisterointi.hakija.logout");
-      return new RedirectView(redirectUrl);
+      return new RedirectView(urlRekisterointi + "/hakija/logout");
     }
 
     Optional<String> callbackUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_CALLBACK_URL, String.class);
     Optional<String> sessionId = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_SESSION_ID, String.class);
     if (!callbackUrl.isPresent() || !sessionId.isPresent()) {
-      String redirectUrl = properties.url("rekisterointi.hakija.logout");
-      return new RedirectView(redirectUrl);
+      return new RedirectView(urlRekisterointi + "/hakija/logout");
     }
 
     String accessToken = valtuudetClient.getAccessToken(code, callbackUrl.get());
@@ -104,7 +103,7 @@ public class ValtuudetController {
     if (redirectUrl.isPresent()) {
       removeSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST);
     }
-    return new RedirectView(redirectUrl.orElse(properties.url("rekisterointi.hakija")));
+    return new RedirectView(redirectUrl.orElse(urlRekisterointi + "/hakija"));
   }
 
 }

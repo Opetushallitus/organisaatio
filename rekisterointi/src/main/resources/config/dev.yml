@@ -3,7 +3,5 @@ server.servlet.session.cookie.domain: untuvaopintopolku.fi
 url-oppija:  https://untuvaopintopolku.fi
 url-virkailija: https://virkailija.untuvaopintopolku.fi
 url-rekisterointi: https://rekisterointi.untuvaopintopolku.fi
-url-alb: untuvaopintopolku.fi
 
 rekisterointi.valtuudet.host: "https://asiointivaltuustarkastus.test.suomi.fi"
-varda-rekisterointi.url: https://virkailija.untuvaopintopolku.fi/varda-rekisterointi/api/rekisterointi

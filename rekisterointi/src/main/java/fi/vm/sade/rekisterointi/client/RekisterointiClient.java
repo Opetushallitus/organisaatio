@@ -2,11 +2,11 @@ package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.model.RekisterointiDto;
 
 import java.util.Base64;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,11 +15,18 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class RekisterointiClient {
-  private final OphProperties properties;
+  private final String urlVirkailija;
+  private final String username;
+  private final String password;
   private final ObjectMapper objectMapper;
 
-  public RekisterointiClient(OphProperties properties, ObjectMapper objectMapper) {
-    this.properties = properties;
+  public RekisterointiClient(@Value("${url-virkailija}") String urlVirkailija,
+      @Value("${varda-rekisterointi.username}") String username,
+      @Value("${varda-rekisterointi.password}") String password,
+      ObjectMapper objectMapper) {
+    this.urlVirkailija = urlVirkailija;
+    this.username = username;
+    this.password = password;
     this.objectMapper = objectMapper;
   }
 
@@ -32,9 +39,7 @@ public class RekisterointiClient {
   }
 
   public void create(RekisterointiDto rekisterointiDto) {
-    var uri = properties.getProperty("varda-rekisterointi.url");
-    var username = properties.getProperty("varda-rekisterointi.username");
-    var password = properties.getProperty("varda-rekisterointi.password");
+    var uri = urlVirkailija + "/varda-rekisterointi/api/rekisterointi";
     var basicAuth = Base64.getEncoder().encodeToString(new String(username + ":" + password).getBytes());
     var restTemplate = new RestTemplate();
     var headers = new HttpHeaders();

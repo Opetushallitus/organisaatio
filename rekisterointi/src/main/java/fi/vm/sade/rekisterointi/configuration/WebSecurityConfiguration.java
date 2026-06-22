@@ -1,10 +1,9 @@
 package fi.vm.sade.rekisterointi.configuration;
 
-import fi.vm.sade.properties.OphProperties;
-
 import org.apache.http.HttpStatus;
 import org.apereo.cas.client.validation.Cas30ServiceTicketValidator;
 import org.apereo.cas.client.validation.TicketValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -51,11 +50,6 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.setSessionAttribute;
 @EnableWebSecurity
 public class WebSecurityConfiguration {
   private static final String HAKIJA_ROLE = "APP_REKISTEROINTI_HAKIJA";
-  private final OphProperties ophProperties;
-
-  public WebSecurityConfiguration(OphProperties ophProperties) {
-    this.ophProperties = ophProperties;
-  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, CasAuthenticationFilter casAuthenticationFilter,
@@ -79,8 +73,8 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public TicketValidator casOppijaticketValidator() {
-    return new Cas30ServiceTicketValidator(ophProperties.url("cas-oppija.url"));
+  public TicketValidator casOppijaticketValidator(@Value("${url-oppija}") String urlOppija) {
+    return new Cas30ServiceTicketValidator(urlOppija + "/cas-oppija");
   }
 
   @Bean
@@ -89,9 +83,9 @@ public class WebSecurityConfiguration {
   }
 
   @Bean
-  public ServiceProperties casServiceProperties() {
+  public ServiceProperties casServiceProperties(@Value("${url-rekisterointi}") String urlRekisterointi) {
     ServiceProperties properties = new ServiceProperties();
-    properties.setService(ophProperties.url("rekisterointi.hakija.login") + "/j_spring_cas_security_check");
+    properties.setService(urlRekisterointi + "/hakija/login/j_spring_cas_security_check");
     properties.setSendRenew(false);
     properties.setAuthenticateAllArtifacts(true);
     return properties;
@@ -101,21 +95,23 @@ public class WebSecurityConfiguration {
   public CasAuthenticationFilter casAuthenticationFilter(
       AuthenticationConfiguration authenticationConfiguration,
       ServiceProperties serviceProperties,
-      SecurityContextRepository securityContextRepository) throws Exception {
+      SecurityContextRepository securityContextRepository,
+      @Value("${url-rekisterointi}") String urlRekisterointi) throws Exception {
     CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
     casAuthenticationFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
     casAuthenticationFilter.setServiceProperties(serviceProperties);
     casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
     casAuthenticationFilter.setAuthenticationSuccessHandler(
-        new SimpleUrlAuthenticationSuccessHandler(ophProperties.url("rekisterointi.hakija.valtuudet.redirect")));
+        new SimpleUrlAuthenticationSuccessHandler(urlRekisterointi + "/hakija/valtuudet/redirect"));
     casAuthenticationFilter.setSecurityContextRepository(securityContextRepository);
     return casAuthenticationFilter;
   }
 
   @Bean
-  public AuthenticationEntryPoint authenticationEntryPoint(ServiceProperties serviceProperties) {
+  public AuthenticationEntryPoint authenticationEntryPoint(ServiceProperties serviceProperties,
+      @Value("${url-oppija}") String urlOppija) {
     CasAuthenticationEntryPoint authenticationEntryPoint = new CasAuthenticationEntryPoint();
-    authenticationEntryPoint.setLoginUrl(ophProperties.url("cas-oppija.login"));
+    authenticationEntryPoint.setLoginUrl(urlOppija + "/cas-oppija/login");
     authenticationEntryPoint.setServiceProperties(serviceProperties);
     return authenticationEntryPoint;
   }

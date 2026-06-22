@@ -2,11 +2,12 @@ package fi.vm.sade.rekisterointi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.javautils.httpclient.OphHttpClient;
-import fi.vm.sade.properties.OphProperties;
 import fi.vm.sade.rekisterointi.model.BaseDto;
 import fi.vm.sade.rekisterointi.model.Koodi;
 import fi.vm.sade.rekisterointi.model.KoodistoType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 import java.util.function.Function;
@@ -21,7 +22,7 @@ import static java.util.stream.Collectors.toMap;
 public class KoodistoClient {
 
   private final OphHttpClient httpClient;
-  private final OphProperties properties;
+  private final String urlVirkailija;
   private final ObjectMapper objectMapper;
 
   /**
@@ -29,12 +30,14 @@ public class KoodistoClient {
    * <code>ObjectMapper</code>illa.
    *
    * @param httpClient   HTTP-client
-   * @param properties   konfiguraatio
+   * @param urlVirkailija virkailijan palveluiden base URL
    * @param objectMapper Jackson object mapper
    */
-  public KoodistoClient(OphHttpClient httpClient, OphProperties properties, ObjectMapper objectMapper) {
+  public KoodistoClient(OphHttpClient httpClient,
+      @Value("${url-virkailija}") String urlVirkailija,
+      ObjectMapper objectMapper) {
     this.httpClient = httpClient;
-    this.properties = properties;
+    this.urlVirkailija = urlVirkailija;
     this.objectMapper = objectMapper;
   }
 
@@ -62,7 +65,10 @@ public class KoodistoClient {
     Map<String, Object> parameters = new LinkedHashMap<>();
     versio.ifPresent(value -> parameters.put("koodistoVersio", value));
     onlyValid.ifPresent(value -> parameters.put("onlyValidKoodis", value));
-    String url = properties.url("koodisto-service.koodi", koodisto.uri, parameters);
+    var builder = UriComponentsBuilder.fromUriString(
+        urlVirkailija + "/koodisto-service/rest/json/{koodisto}/koodi");
+    parameters.forEach((name, value) -> builder.queryParam(name, value));
+    String url = builder.encode().buildAndExpand(koodisto.uri).toUriString();
     return listKoodit(url);
   }
 

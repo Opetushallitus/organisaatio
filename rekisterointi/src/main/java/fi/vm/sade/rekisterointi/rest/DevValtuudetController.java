@@ -1,6 +1,6 @@
 package fi.vm.sade.rekisterointi.rest;
 
-import fi.vm.sade.properties.OphProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +19,10 @@ import static fi.vm.sade.rekisterointi.util.ServletUtils.*;
 @RequestMapping("/hakija")
 public class DevValtuudetController {
 
-  private final OphProperties properties;
+  private final String urlRekisterointi;
 
-  public DevValtuudetController(OphProperties properties) {
-    this.properties = properties;
+  public DevValtuudetController(@Value("${url-rekisterointi}") String urlRekisterointi) {
+    this.urlRekisterointi = urlRekisterointi;
   }
 
   /**
@@ -38,7 +38,7 @@ public class DevValtuudetController {
     setSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORGANISATION_NAME, "Meyer Turku Oy");
 
     String redirectUrl = findSessionAttribute(request, SESSION_ATTRIBUTE_NAME_ORIGINAL_REQUEST, String.class)
-        .orElse(properties.url("rekisterointi.hakija"));
+        .orElse(urlRekisterointi + "/hakija");
     return new RedirectView(redirectUrl);
   }
 
