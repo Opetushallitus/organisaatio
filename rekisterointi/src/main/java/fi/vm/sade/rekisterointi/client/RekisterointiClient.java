@@ -19,6 +19,9 @@ public class RekisterointiClient {
   private final String password;
   private final JsonMapper jsonMapper;
 
+  @Value("${virkailija.override:null}")
+  private String virkailijaOverride;
+
   public RekisterointiClient(@Value("${url-virkailija}") String urlVirkailija,
       @Value("${varda-rekisterointi.username}") String username,
       @Value("${varda-rekisterointi.password}") String password,
@@ -34,7 +37,10 @@ public class RekisterointiClient {
   }
 
   public void create(RekisterointiDto rekisterointiDto) {
-    var uri = urlVirkailija + "/varda-rekisterointi/api/rekisterointi";
+    var host = virkailijaOverride != null && virkailijaOverride.startsWith("http")
+      ? virkailijaOverride
+      : urlVirkailija;
+    var uri = host + "/varda-rekisterointi/api/rekisterointi";
     var basicAuth = Base64.getEncoder().encodeToString(new String(username + ":" + password).getBytes());
     var restTemplate = new RestTemplate();
     var headers = new HttpHeaders();

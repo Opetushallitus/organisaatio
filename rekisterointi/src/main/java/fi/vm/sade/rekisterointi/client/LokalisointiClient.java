@@ -29,8 +29,8 @@ public class LokalisointiClient {
   private final String urlVirkailija;
   private final JsonMapper jsonMapper;
 
-  @Value("${lokalisointi.override:null}")
-  private String urlOverride;
+  @Value("${virkailija.override:null}")
+  private String virkailijaOverride;
 
   /**
    * Alusta clientin annetulla HTTP-clientilla, konfiguraatiolla ja
@@ -57,9 +57,10 @@ public class LokalisointiClient {
    *         -&gt; arvo
    */
   public Map<String, Map<String, String>> getByCategory(String category) {
-    var url = urlOverride != null && urlOverride.startsWith("http")
-      ? urlOverride
-      : UriComponentsBuilder.fromUriString(urlVirkailija)
+    var host = virkailijaOverride != null && virkailijaOverride.startsWith("http")
+      ? virkailijaOverride
+      : urlVirkailija;
+    var url = UriComponentsBuilder.fromUriString(host)
           .path("/lokalisointi/cxf/rest/v1/localisation")
           .queryParam("category", "{category}")
           .encode()
