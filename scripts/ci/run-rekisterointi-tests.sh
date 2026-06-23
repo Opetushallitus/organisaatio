@@ -35,6 +35,7 @@ function start_server {
   java -jar \
     -Dspring.profiles.active=dev \
     -Dlokalisointi.override=http://localhost:9000/lokalisointi/cxf/rest/v1/localisation\?category=jotpa-rekisterointi \
+    -Dotuva.jwt.issuer-uri=http://localhost:9000 \
     target/rekisterointi.jar &
   wait_for_port 3000
 }
