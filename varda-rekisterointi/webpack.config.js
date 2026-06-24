@@ -27,12 +27,7 @@ module.exports = function () {
         bail: isEnvProduction,
         devtool: isEnvProduction ? (shouldUseSourceMap ? 'source-map' : false) : 'cheap-module-source-map',
         devServer: {
-            allowedHosts: 'auto',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*',
-            },
+            allowedHosts: ['localhost'],
             compress: true,
             static: {
                 directory: path.resolve(__dirname, 'public'),
@@ -69,6 +64,7 @@ module.exports = function () {
                         '/varda-rekisterointi/virkailija/api',
                         '/varda-rekisterointi/virkailija/j_spring_cas_security_check',
                     ],
+                    changeOrigin: true,
                 },
             ],
         },
