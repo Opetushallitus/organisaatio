@@ -13,7 +13,7 @@ public class OpintopolkuAwsClients {
 
     @Bean
     public AwsCredentialsProvider opintopolkuCredentialsProvider() {
-        return DefaultCredentialsProvider.create();
+        return DefaultCredentialsProvider.builder().build();
     }
 
     @Bean
