@@ -94,6 +94,8 @@ export const prod: Config = {
   ...defaultConfig,
   opintopolkuHost: "opintopolku.fi",
   vardaRekisterointiCapacity: 1,
+  minCapacity: 2,
+  maxCapacity: 2,
   lampiExport: {
     enabled: true,
     bucketName: "oph-lampi-prod",
