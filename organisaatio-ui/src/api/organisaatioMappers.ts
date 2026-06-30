@@ -23,7 +23,6 @@ import {
     YhteystiedotWww,
 } from '../types/apiTypes';
 import { KOSKIPOSTI_BASE, KOSKIPOSTI_TYYPI_OID, ROOT_OID } from '../contexts/constants';
-import { UnpackNestedValue } from 'react-hook-form';
 import { formatUiDateStrToApi, getUiDateStr } from '../tools/mappers';
 
 const NAME_WWW = 'www';
@@ -140,9 +139,9 @@ export function mapUiOrganisaatioToApiToUpdate(
     originalOrganisaatio: ApiOrganisaatio,
     postinumerotKoodisto: Koodisto,
     organisaatioBase: UiOrganisaatioBase,
-    yhteystiedotFormValues: UnpackNestedValue<Yhteystiedot>,
-    perustiedotFormValues: UnpackNestedValue<Perustiedot>,
-    yhteystietoArvoFormValuet: UnpackNestedValue<YhteystietoArvot>
+    yhteystiedotFormValues: Yhteystiedot,
+    perustiedotFormValues: Perustiedot,
+    yhteystietoArvoFormValuet: YhteystietoArvot
 ): ApiOrganisaatio {
     const yhteystiedot = mapUiYhteystiedotToApi({
         postinumerotKoodisto,
