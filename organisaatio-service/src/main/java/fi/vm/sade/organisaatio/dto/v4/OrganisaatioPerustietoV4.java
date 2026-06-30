@@ -2,6 +2,7 @@ package fi.vm.sade.organisaatio.dto.v4;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioStatus;
@@ -63,6 +64,11 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     @Schema(description = "Oppilaitoksen tyyppi", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonView(Views.Tyyppi.class)
     private String oppilaitostyyppi;
+
+    @Schema(description = "Oppilaitoksen muut tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonView(Views.Basic.class)
+    private Set<String> muutOppilaitosTyyppiUris = new LinkedHashSet<>();
 
     @Schema(description = "Toimipisteen koodi", requiredMode = Schema.RequiredMode.REQUIRED)
     private String toimipistekoodi;
@@ -336,6 +342,19 @@ public class OrganisaatioPerustietoV4 implements Serializable {
     public void setOppilaitostyyppi(String value) {
         this.oppilaitostyyppi = value;
     }
+
+    @Schema(description = "Oppilaitoksen muut tyypit", requiredMode = Schema.RequiredMode.REQUIRED)
+    public Set<String> getMuutOppilaitosTyyppiUris() {
+        if (muutOppilaitosTyyppiUris == null) {
+            muutOppilaitosTyyppiUris = new LinkedHashSet<>();
+        }
+        return muutOppilaitosTyyppiUris;
+    }
+
+    public void setMuutOppilaitosTyyppiUris(Set<String> muutOppilaitosTyyppiUris) {
+        this.muutOppilaitosTyyppiUris = muutOppilaitosTyyppiUris;
+    }
+
     /**
      * Gets the koodiValue of the toimipistekoodi property.
      *

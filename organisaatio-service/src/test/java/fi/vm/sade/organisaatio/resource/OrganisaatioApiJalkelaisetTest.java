@@ -14,8 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -48,6 +50,18 @@ class OrganisaatioApiJalkelaisetTest {
                 .andExpect(content().json(
                         readFile("/fixtures/resource/api/jalkelaiset-masked.json")
                         , JsonCompareMode.LENIENT));
+    }
+
+    @Test
+    @DisplayName("Basic data, get jalkelaiset with muut oppilaitostyypit")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    @Sql(statements = "insert into organisaatio_muut_oppilaitostyypit (organisaatio_id, oppilaitostyyppi) values (3, 'oppilaitostyyppi_99#1')")
+    @OrganisaatioNimiMaskingTest.OPHUser
+    void testJalkelaisetReturnsMuutOppilaitostyypit() throws Exception {
+        this.mockMvc.perform(get("/api/{rootOid}/jalkelaiset", "1.2.246.562.24.00000000001"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..muutOppilaitosTyyppiUris[0]").value(hasItem("oppilaitostyyppi_99#1")));
     }
 
     private String readFile(String fileName) throws Exception {

@@ -33,6 +33,8 @@ public interface OrganisaatioRepositoryCustom {
      */
     Map<String, Long> countActiveChildrenByOid(Date now);
 
+    Map<String, Set<String>> findAllMuutOppilaitosTyyppiUris();
+
     /**
      * Haetaan organisaatioita annetuilla hakukriteereillä
      *

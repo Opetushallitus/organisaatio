@@ -41,10 +41,12 @@ public class OrganisaatioSearchApiImpl implements OrganisaatioSearchApi {
         SearchCriteria searchCriteria = searchCriteriaService.getServiceSearchCriteria(hakuEhdot);
         SearchConfig searchConfig = new SearchConfig(false, false, true);
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
-        return OrganisaatioHakutulosV4.builder().numHits(organisaatiot.size()).organisaatiot(organisaatiot.stream()
+        LinkedHashSet<OrganisaatioPerustietoV4> items = organisaatiot.stream()
                 .map(a -> organisaatioDTOV4ModelMapper.map(a, OrganisaatioPerustietoV4.class))
                 .sorted(Comparator.comparing(OrganisaatioPerustietoV4::getOid))
-                .collect(Collectors.toCollection(LinkedHashSet::new))).build();
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        organisaatioFindBusinessService.populateMuutOppilaitosTyyppiUris(items);
+        return OrganisaatioHakutulosV4.builder().numHits(organisaatiot.size()).organisaatiot(items).build();
     }
 
     // GET /api/hae/nimi
@@ -53,7 +55,7 @@ public class OrganisaatioSearchApiImpl implements OrganisaatioSearchApi {
         return search(hakuEhdot);
     }
 
-    // GET /api/hae/nimi
+    // GET /api/hae/tyyppi
     @Override
     public HakuTulos<OrganisaatioPerustietoV4> searchOrganisaatiotTyypit(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         return search(hakuEhdot);
@@ -63,9 +65,11 @@ public class OrganisaatioSearchApiImpl implements OrganisaatioSearchApi {
         SearchCriteria searchCriteria = searchCriteriaService.getServiceSearchCriteria(hakuEhdot);
         SearchConfig searchConfig = new SearchConfig(false, false, false);
         List<OrganisaatioPerustieto> organisaatiot = organisaatioFindBusinessService.findBy(searchCriteria, searchConfig);
-        return HakuTulos.<OrganisaatioPerustietoV4>builder().numHits(organisaatiot.size()).items(organisaatiot.stream()
+        LinkedHashSet<OrganisaatioPerustietoV4> items = organisaatiot.stream()
                 .map(a -> organisaatioDTOV4ModelMapper.map(a, OrganisaatioPerustietoV4.class))
                 .sorted(Comparator.comparing(OrganisaatioPerustietoV4::getOid))
-                .collect(Collectors.toCollection(LinkedHashSet::new))).build();
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        organisaatioFindBusinessService.populateMuutOppilaitosTyyppiUris(items);
+        return HakuTulos.<OrganisaatioPerustietoV4>builder().numHits(organisaatiot.size()).items(items).build();
     }
 }

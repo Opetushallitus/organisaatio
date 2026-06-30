@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.ValidationException;
 import java.lang.reflect.Type;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -243,6 +242,7 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     public OrganisaatioHakutulosV4 searchOrganisaatioHierarkia(OrganisaatioSearchCriteriaDTOV4 hakuEhdot) {
         OrganisaatioSearchCriteriaDTOV2 organisaatioSearchCriteriaDTOV2 = this.organisaatioDTOV4ModelMapper.map(hakuEhdot, OrganisaatioSearchCriteriaDTOV2.class);
         OrganisaatioHakutulosV4 hakutulos = this.organisaatioDTOV4ModelMapper.map(this.organisaatioResourceV2.searchOrganisaatioHierarkia(organisaatioSearchCriteriaDTOV2), OrganisaatioHakutulosV4.class);
+        organisaatioFindBusinessService.populateMuutOppilaitosTyyppiUris(hakutulos.getOrganisaatiot());
         for (OrganisaatioPerustietoV4 org : hakutulos.getOrganisaatiot()) {
             organisaatioNimiMasking.maskOrganisaatioPerustietoV4(org);
         }
@@ -255,7 +255,9 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
     @Override
     @CheckReadPermission
     public OrganisaatioHakutulosV4 findDescendants(String oid) {
-        return processRows(organisaatioFindBusinessService.findDescendants(oid));
+        OrganisaatioHakutulosV4 hakutulos = processRows(organisaatioFindBusinessService.findDescendants(oid));
+        organisaatioFindBusinessService.populateMuutOppilaitosTyyppiUris(hakutulos.getOrganisaatiot());
+        return hakutulos;
     }
 
     @Override

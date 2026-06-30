@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -164,6 +165,19 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
 
         query.where(qOrganisaatio.oid.notEqualsIgnoreCase(rootOrganisaatioOid));
         return query.fetch();
+    }
+
+    @Override
+    public Map<String, Set<String>> findAllMuutOppilaitosTyyppiUris() {
+        Map<String, Set<String>> result = new HashMap<>();
+        namedParameterJdbcTemplate.query("""
+                        SELECT o.oid, m.oppilaitostyyppi
+                        FROM organisaatio_muut_oppilaitostyypit m
+                        JOIN organisaatio o ON o.id = m.organisaatio_id
+                        """,
+                (RowCallbackHandler) rs -> result.computeIfAbsent(rs.getString("oid"), ignored -> new LinkedHashSet<>())
+                        .add(rs.getString("oppilaitostyyppi")));
+        return result;
     }
 
     private static com.querydsl.core.types.Predicate getStatusPredicate(SearchCriteria criteria, QOrganisaatio qOrganisaatio) {

@@ -4,6 +4,7 @@ import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.api.search.OrganisaatioPerustieto;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
@@ -28,6 +29,8 @@ public interface OrganisaatioFindBusinessService {
      * @return organisaatioiden perustiedot
      */
     List<OrganisaatioPerustieto> findBy(SearchCriteria criteria, SearchConfig config);
+
+    void populateMuutOppilaitosTyyppiUris(Collection<OrganisaatioPerustietoV4> organisaatiot);
 
     /**
      * Hakee v4 rajapinnan mukaiset organisaatiotiedot oidien perusteella

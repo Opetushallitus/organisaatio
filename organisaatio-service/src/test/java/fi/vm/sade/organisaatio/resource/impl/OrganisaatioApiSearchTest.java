@@ -10,8 +10,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -63,6 +65,73 @@ class OrganisaatioApiSearchTest {
                                 "{\"oid\":\"1.2.2004.2\",\"nimi\":{\"fi\":\"root test koulutustoimija, node1 asd\"}}" +
                                 "]}",
                         JsonCompareMode.LENIENT));
+    }
+
+    @Test
+    @DisplayName("Test /api/hae/nimi returns muut oppilaitostyypit")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    @Sql(statements = "insert into organisaatio_muut_oppilaitostyypit (organisaatio_id, oppilaitostyyppi) values (3, 'oppilaitostyyppi_99#1')")
+    void testApiHaeNimiReturnsMuutOppilaitostyypit() throws Exception {
+        mockMvc.perform(get("/api/hae/nimi")
+                        .param("aktiiviset", "true")
+                        .param("suunnitellut", "false")
+                        .param("lakkautetut", "false")
+                        .param("oidRestrictionList", "1.2.2004.2"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[*].muutOppilaitosTyyppiUris[0]").value(hasItem("oppilaitostyyppi_99#1")));
+    }
+
+    @Test
+    @DisplayName("Test /api/hierarkia/hae returns muut oppilaitostyypit")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    @Sql(statements = "insert into organisaatio_muut_oppilaitostyypit (organisaatio_id, oppilaitostyyppi) values (3, 'oppilaitostyyppi_99#1')")
+    void testApiHierarkiaHaeReturnsMuutOppilaitostyypit() throws Exception {
+        mockMvc.perform(get("/api/hierarkia/hae")
+                        .param("aktiiviset", "true")
+                        .param("suunnitellut", "false")
+                        .param("lakkautetut", "false")
+                        .param("skipParents", "true")
+                        .param("oid", "1.2.2004.2"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.organisaatiot[0].oid").value("1.2.2004.2"))
+                .andExpect(jsonPath("$.organisaatiot[0].muutOppilaitosTyyppiUris[0]").value("oppilaitostyyppi_99#1"));
+    }
+
+    @Test
+    @DisplayName("Test /api/hae returns muut oppilaitostyypit")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    @Sql(statements = "insert into organisaatio_muut_oppilaitostyypit (organisaatio_id, oppilaitostyyppi) values (3, 'oppilaitostyyppi_99#1')")
+    void testApiHaeReturnsMuutOppilaitostyypit() throws Exception {
+        mockMvc.perform(get("/api/hae")
+                        .param("aktiiviset", "true")
+                        .param("suunnitellut", "false")
+                        .param("lakkautetut", "false")
+                        .param("oidRestrictionList", "1.2.2004.2"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.organisaatiot[0].oid").value("1.2.2004.2"))
+                .andExpect(jsonPath("$.organisaatiot[0].muutOppilaitosTyyppiUris[0]").value("oppilaitostyyppi_99#1"));
+    }
+
+    @Test
+    @DisplayName("Test /api/hae/tyyppi returns muut oppilaitostyypit")
+    @Sql({"/data/truncate_tables.sql"})
+    @Sql({"/data/basic_organisaatio_data.sql"})
+    @Sql(statements = "insert into organisaatio_muut_oppilaitostyypit (organisaatio_id, oppilaitostyyppi) values (3, 'oppilaitostyyppi_99#1')")
+    void testApiHaeTyyppiReturnsMuutOppilaitostyypit() throws Exception {
+        mockMvc.perform(get("/api/hae/tyyppi")
+                        .param("aktiiviset", "true")
+                        .param("suunnitellut", "false")
+                        .param("lakkautetut", "false")
+                        .param("oidRestrictionList", "1.2.2004.2"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[*].muutOppilaitosTyyppiUris[0]").value(hasItem("oppilaitostyyppi_99#1")));
     }
 
     @Test

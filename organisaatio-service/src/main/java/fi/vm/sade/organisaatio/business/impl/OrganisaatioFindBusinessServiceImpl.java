@@ -23,6 +23,7 @@ import fi.vm.sade.organisaatio.business.OrganisaatioFindBusinessService;
 import fi.vm.sade.organisaatio.dto.ChildOidsCriteria;
 import fi.vm.sade.organisaatio.dto.mapping.RyhmaCriteriaDto;
 import fi.vm.sade.organisaatio.dto.v3.OrganisaatioRDTOV3;
+import fi.vm.sade.organisaatio.dto.v4.OrganisaatioPerustietoV4;
 import fi.vm.sade.organisaatio.dto.v4.OrganisaatioRDTOV4;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioSuhde;
@@ -126,6 +127,30 @@ public class OrganisaatioFindBusinessServiceImpl implements OrganisaatioFindBusi
                     dto.setMatch(oids.contains(dto.getOid()));
                     return dto;
                 }).collect(toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void populateMuutOppilaitosTyyppiUris(Collection<OrganisaatioPerustietoV4> organisaatiot) {
+        if (organisaatiot == null || organisaatiot.isEmpty()) {
+            return;
+        }
+        Map<String, Set<String>> muutOppilaitosTyyppiUris = organisaatioRepository.findAllMuutOppilaitosTyyppiUris();
+        if (muutOppilaitosTyyppiUris.isEmpty()) {
+            return;
+        }
+        populateMuutOppilaitosTyyppiUris(organisaatiot, muutOppilaitosTyyppiUris);
+    }
+
+    private void populateMuutOppilaitosTyyppiUris(Collection<OrganisaatioPerustietoV4> organisaatiot, Map<String, Set<String>> muutOppilaitosTyyppiUris) {
+        if (organisaatiot == null) {
+            return;
+        }
+        for (OrganisaatioPerustietoV4 organisaatio : organisaatiot) {
+            Optional.ofNullable(muutOppilaitosTyyppiUris.get(organisaatio.getOid()))
+                    .ifPresent(organisaatio::setMuutOppilaitosTyyppiUris);
+            populateMuutOppilaitosTyyppiUris(organisaatio.getChildren(), muutOppilaitosTyyppiUris);
+        }
     }
 
     // onko muita, kuin statusehtoja?
