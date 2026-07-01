@@ -1,39 +1,48 @@
-import 'react-day-picker/lib/style.css';
+import '@daypicker/react/style.css';
 
 import { createGlobalStyle } from 'styled-components';
 
 const DatePickerStyle = createGlobalStyle`
   .DatePicker__ {
-    .DayPicker-Caption {
-      color: ${({ theme }) => theme.colors.text.primary} !important;
-    }
-
-    .DayPicker-wrapper {
+    .rdp-root {
+      --rdp-accent-color: ${({ theme }) => theme.colors.primary.main};
+      --rdp-selected-border: 2px solid ${({ theme }) => theme.colors.primary.main};
+      --rdp-today-color: ${({ theme }) => theme.colors.primary.main};
+      margin: 0;
       font-family: ${({ theme }) => theme.fonts.main};
     }
 
-    .DayPicker-Day {
-      color: ${({ theme }) => theme.colors.text.primary};
-
-      &:not(.DayPicker-Day--outside):not(.DayPicker-Day--selected) {
-        &:hover {
-          background-color: rgba(0, 0, 0, .05) !important;
-        }
-      }
+    .rdp-caption_label {
+      color: ${({ theme }) => theme.colors.text.primary} !important;
     }
-    
-    .DayPicker-Day--today {
+
+    .rdp-day_button {
+      color: ${({ theme }) => theme.colors.text.primary};
+      font: inherit;
+    }
+
+    .rdp-day:not(.rdp-outside):not(.rdp-selected) .rdp-day_button:hover {
+      background-color: rgba(0, 0, 0, .05) !important;
+    }
+
+    .rdp-today:not(.rdp-outside) .rdp-day_button {
       color: ${({ theme }) => theme.colors.primary.main};
       font-weight: normal !important;
     }
 
-    .DayPicker-Day--selected:not(.DayPicker-Day--outside) {
+    .rdp-selected .rdp-day_button {
       background-color: ${({ theme }) => theme.colors.primary.main} !important;
+      color: ${({ theme }) => theme.colors.primary.contrastText} !important;
       font-weight: ${({ theme }) => theme.fontWeights.bold} !important;
     }
 
-    .DayPicker-Weekday {
+    .rdp-weekday {
       color: ${({ theme }) => theme.colors.text.secondary} !important;
+      opacity: 1;
+    }
+
+    .rdp-chevron {
+      fill: ${({ theme }) => theme.colors.primary.main};
     }
   }
 
