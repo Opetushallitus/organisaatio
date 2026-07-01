@@ -10,6 +10,7 @@ import fi.vm.sade.organisaatio.resource.dto.OrganisaatioNimiRDTO;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.flywaydb.core.Flyway;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +31,13 @@ public class MockInitResource {
     private final FetchKoodistotTask fetchKoodistotTask;
     private final FetchKoulutusluvatTask fetchKoulutusluvatTask;
     private final OrganisaatioBusinessService organisaatioBusinessService;
+    private final Flyway flyway;
 
     @PostMapping
-    public void createTestData() {
+    public synchronized void createTestData() {
         log.info("Initializing test data");
+        flyway.clean();
+        flyway.migrate();
         fetchKoodistotTask.execute();
         createTestOrganizations();
         fetchKoulutusluvatTask.execute();
@@ -61,4 +65,3 @@ public class MockInitResource {
         }
     }
 }
-
