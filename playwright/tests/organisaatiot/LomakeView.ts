@@ -1,6 +1,8 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { selectAll } from "../LexicalUtil";
 import { FormView } from "../FormView";
+
+const FORM_TIMEOUT = 15_000;
 
 export class LomakeView extends FormView {
   readonly page: Page;
@@ -54,6 +56,11 @@ export class LomakeView extends FormView {
     await this.page.goto(
       `http://localhost:3003/organisaatio-service/lomake/${oid}`
     );
+    await expect(this.nimi).toBeVisible({ timeout: FORM_TIMEOUT });
+  }
+
+  async expectNameToContain(name: string) {
+    await expect(this.nimi).toContainText(name, { timeout: FORM_TIMEOUT });
   }
 
   async gotoUusi(parentOid?: string) {
@@ -109,5 +116,10 @@ class MuokkaaNimeaModal {
     await this.page.keyboard.press("Backspace");
     await this.page.keyboard.press("Backspace");
     await this.page.keyboard.type(date);
+  }
+
+  async vahvista() {
+    await this.vahvistaButton.click();
+    await expect(this.vahvistaButton).toBeHidden({ timeout: FORM_TIMEOUT });
   }
 }

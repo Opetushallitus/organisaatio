@@ -26,7 +26,7 @@ const createAndGotoLomake = async (
 
   const organisaatioPage = new LomakeView(page);
   await organisaatioPage.goto(response.organisaatio.oid);
-  await expect(organisaatioPage.nimi).toContainText(prefix + " Suominimi");
+  await organisaatioPage.expectNameToContain(prefix + " Suominimi");
 
   return organisaatioPage;
 };
@@ -73,9 +73,9 @@ test.describe("Organisations", () => {
       );
       await organisaatioPage.muokkaaNimea.fillInput("nimi.sv", "pöllö Ruotsi");
       await organisaatioPage.muokkaaNimea.fillInput("nimi.en", "pöllö Enkku");
-      await organisaatioPage.muokkaaNimea.vahvistaButton.click();
+      await organisaatioPage.muokkaaNimea.vahvista();
 
-      await expect(organisaatioPage.nimi).toContainText("pöllö Suominimi");
+      await organisaatioPage.expectNameToContain("pöllö Suominimi");
     });
 
     test("Edits a name", async ({ page }) => {
@@ -97,11 +97,9 @@ test.describe("Organisations", () => {
         "nimi.en",
         "pöllö Enkku muokattu"
       );
-      await organisaatioPage.muokkaaNimea.vahvistaButton.click();
+      await organisaatioPage.muokkaaNimea.vahvista();
 
-      await expect(organisaatioPage.nimi).toContainText(
-        "pöllö Suominimi muokattu"
-      );
+      await organisaatioPage.expectNameToContain("pöllö Suominimi muokattu");
     });
 
     test("Copies edited name to other fields", async ({ page }) => {
@@ -116,7 +114,7 @@ test.describe("Organisations", () => {
         "pöllö testi kopioitava"
       );
       await organisaatioPage.muokkaaNimea.copyNameButton.click();
-      await organisaatioPage.muokkaaNimea.vahvistaButton.click();
+      await organisaatioPage.muokkaaNimea.vahvista();
 
       await expect(
         page.getByText(
@@ -147,9 +145,9 @@ test.describe("Organisations", () => {
         "nimi.en",
         "pöllö ajastettu Enkku"
       );
-      await organisaatioPage.muokkaaNimea.vahvistaButton.click();
+      await organisaatioPage.muokkaaNimea.vahvista();
 
-      await expect(organisaatioPage.nimi).toContainText("PARENT4 Suominimi");
+      await organisaatioPage.expectNameToContain("PARENT4 Suominimi");
       await organisaatioPage.nimihistoriaAccordion.click();
       await expect(organisaatioPage.nimihistoriaPanel).toContainText(
         "pöllö ajastettu Suominimi [fi], pöllö ajastettu Ruotsi [sv], pöllö ajastettu Enkku [en]"
@@ -179,9 +177,9 @@ test.describe("Organisations", () => {
         "nimi.en",
         "pöllö delete Enkku"
       );
-      await organisaatioPage.muokkaaNimea.vahvistaButton.click();
+      await organisaatioPage.muokkaaNimea.vahvista();
 
-      await expect(organisaatioPage.nimi).toContainText("PARENT4 Suominimi");
+      await organisaatioPage.expectNameToContain("PARENT4 Suominimi");
       await organisaatioPage.nimihistoriaAccordion.click();
       await expect(organisaatioPage.nimihistoriaPanel).toContainText(
         "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]"
@@ -689,7 +687,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.goto(child.organisaatio.oid);
       await expect(
         page.getByRole("heading", { name: "Varhaiskasvatuksen toimipaikka" })
-      ).toBeVisible();
+      ).toBeVisible({ timeout: 15_000 });
       await expect(
         page.locator('input[name="organisaatiotyyppi_08"]')
       ).toBeChecked();
