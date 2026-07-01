@@ -37,7 +37,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
 
-        <aws.java.sdk.version>2.46.18</aws.java.sdk.version>
+        <aws.java.sdk.version>2.46.19</aws.java.sdk.version>
         <poi.version>5.5.1</poi.version>
     </properties>
 
