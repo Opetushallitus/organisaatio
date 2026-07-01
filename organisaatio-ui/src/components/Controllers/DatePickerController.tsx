@@ -1,7 +1,6 @@
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
-import DatePickerInput from '@opetushallitus/virkailija-ui-components/DatePickerInput';
+import DatePickerInput, { DatePickerInputProps } from '@opetushallitus/virkailija-ui-components/DatePickerInput';
 import * as React from 'react';
-import { DayPickerProps } from 'react-day-picker/types/Props';
 
 export default function DatePickerController<T extends FieldValues>({
     name,
@@ -14,7 +13,7 @@ export default function DatePickerController<T extends FieldValues>({
     validationErrors: { [x: string]: unknown };
     name: Path<T>;
     disabled?: boolean;
-    dayPickerProps?: DayPickerProps;
+    dayPickerProps?: DatePickerInputProps['dayPickerProps'];
 }) {
     return (
         <Controller

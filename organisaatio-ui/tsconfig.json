@@ -22,6 +22,15 @@
       "noUnusedParameters": true,
       "module": "esnext",
       "moduleResolution": "node",
+      "baseUrl": ".",
+      "paths": {
+        "@opetushallitus/virkailija-ui-components": [
+          "src/virkailija-ui-components"
+        ],
+        "@opetushallitus/virkailija-ui-components/*": [
+          "src/virkailija-ui-components/*"
+        ]
+      },
       "resolveJsonModule": true,
       "isolatedModules": true,
       "jsx": "react",
