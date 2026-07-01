@@ -1,5 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 
+const OSOITEPALVELU_TIMEOUT = 15_000;
+
 export class SearchView {
   readonly page: Page;
   readonly kohderyhmaInstructions: Locator;
@@ -59,10 +61,43 @@ export class SearchView {
     });
   }
 
-  async goto() {
+  async goto(waitFor: "search" | "error" = "search") {
     await this.page.goto(
       "http://localhost:3003/organisaatio-service/osoitteet"
     );
+    if (waitFor === "search") {
+      await this.waitForSearchForm();
+    } else {
+      await this.waitForGenericError();
+    }
+  }
+
+  async waitForSearchForm() {
+    await expect(this.filterInstructions).toHaveText(
+      "Haun rajausmahdollisuudet",
+      { timeout: OSOITEPALVELU_TIMEOUT }
+    );
+  }
+
+  async waitForGenericError() {
+    await expect(this.page.getByText("Osoitepalvelu ei vastaa")).toBeVisible({
+      timeout: OSOITEPALVELU_TIMEOUT,
+    });
+  }
+
+  async retryFromGenericError() {
+    const retryButton = this.page.getByRole("button", {
+      name: "Yritä uudelleen",
+    });
+    await expect(retryButton).toBeVisible({ timeout: OSOITEPALVELU_TIMEOUT });
+    await retryButton.click({ force: true });
+    await this.waitForSearchForm();
+  }
+
+  async expectSelectedResults(text: string) {
+    await expect(this.page.getByText(text)).toBeVisible({
+      timeout: OSOITEPALVELU_TIMEOUT,
+    });
   }
 }
 

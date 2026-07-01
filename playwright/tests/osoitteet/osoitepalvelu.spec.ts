@@ -151,7 +151,7 @@ test.describe("Osoitepalvelu", () => {
     await osoitepalveluPage.kieliFilter.clear();
     await osoitepalveluPage.haeButton.click();
 
-    await expect(page.getByText("4 hakutulosta valittu")).toBeVisible();
+    await osoitepalveluPage.expectSelectedResults("4 hakutulosta valittu");
     await expect(page.getByText("Mansikkalan testi kunta")).toBeVisible();
     await expect(
       page.getByText("Testi Koulutuskuntayhtymä Puolukka")
@@ -1166,10 +1166,8 @@ test.describe("Osoitepalvelu generic error page", () => {
   }) => {
     await blockRequestOnce(page, "**/osoitteet/parametrit");
     const osoitepalveluPage = new SearchView(page);
-    await osoitepalveluPage.goto();
-    await expect(page.getByText("Osoitepalvelu ei vastaa")).toBeVisible();
-    await page.getByText("Yritä uudelleen").click();
-    await expect(page.getByText("Haun rajausmahdollisuudet")).toBeVisible();
+    await osoitepalveluPage.goto("error");
+    await osoitepalveluPage.retryFromGenericError();
   });
 });
 
