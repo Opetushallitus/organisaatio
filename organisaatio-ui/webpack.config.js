@@ -63,6 +63,7 @@ module.exports = function () {
         },
         output: {
             path: path.resolve(__dirname, 'build'),
+            clean: true,
             filename: isEnvProduction ? 'static/js/[name].[contenthash:8].js' : 'static/js/[name].bundle.js',
             chunkFilename: isEnvProduction ? 'static/js/[name].[contenthash:8].chunk.js' : 'static/js/[name].chunk.js',
             assetModuleFilename: '[name].[hash][ext]',

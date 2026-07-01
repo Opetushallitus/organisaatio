@@ -2,21 +2,21 @@ import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
-import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
-import TaulukkoSivu from './components/Sivut/TaulukkoSivu/TaulukkoSivu';
-import Ryhmat from './components/Sivut/Ryhmat/Ryhmat';
-import RyhmanMuokkaus from './components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus';
-import UusiToimijaLomake from './components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake';
 import Notification from './components/Notification/Notification';
 import { BASE_PATH } from './contexts/constants';
 import Loading from './components/Loading/Loading';
 import { ErrorBoundary } from './index';
-import OsoitteetSivu from './components/Sivut/OsoitteetSivu/OsoitteetSivu';
 import { frontPropertiesAtom } from './api/config';
 import { useAtom } from 'jotai';
 
 const theme = createTheme();
+const VirheSivu = React.lazy(() => import('./components/Sivut/VirheSivu/VirheSivu'));
+const LomakeSivu = React.lazy(() => import('./components/Sivut/LomakeSivu/LomakeSivu'));
+const TaulukkoSivu = React.lazy(() => import('./components/Sivut/TaulukkoSivu/TaulukkoSivu'));
+const Ryhmat = React.lazy(() => import('./components/Sivut/Ryhmat/Ryhmat'));
+const RyhmanMuokkaus = React.lazy(() => import('./components/Sivut/Ryhmat/Muokkaus/RyhmanMuokkaus'));
+const UusiToimijaLomake = React.lazy(() => import('./components/Sivut/LomakeSivu/UusiToimija/UusiToimijaLomake'));
+const OsoitteetSivu = React.lazy(() => import('./components/Sivut/OsoitteetSivu/OsoitteetSivu'));
 
 const OrganisaatioApp: React.FC = () => {
     const [frontProperties] = useAtom(frontPropertiesAtom);

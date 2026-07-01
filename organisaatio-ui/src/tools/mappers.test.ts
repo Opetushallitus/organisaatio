@@ -1,6 +1,8 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
-import { addDays, format, subDays } from 'date-fns';
+import { addDays } from 'date-fns/addDays';
+import { format } from 'date-fns/format';
+import { subDays } from 'date-fns/subDays';
 
 import {
     checkHasSomeValueByKieli,

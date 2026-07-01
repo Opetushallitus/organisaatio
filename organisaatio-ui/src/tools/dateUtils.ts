@@ -1,4 +1,6 @@
-import { format, isValid, parse } from 'date-fns';
+import { format } from 'date-fns/format';
+import { isValid } from 'date-fns/isValid';
+import { parse } from 'date-fns/parse';
 
 export const UI_DATE_FORMAT = 'd.M.yyyy';
 export const API_DATE_FORMAT = 'yyyy-MM-dd';

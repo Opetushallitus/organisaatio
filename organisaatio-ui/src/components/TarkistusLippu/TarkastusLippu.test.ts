@@ -1,6 +1,8 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
-import { addYears, subMonths, subYears } from 'date-fns';
+import { addYears } from 'date-fns/addYears';
+import { subMonths } from 'date-fns/subMonths';
+import { subYears } from 'date-fns/subYears';
 
 import { hasWarning } from './hasWarning';
 

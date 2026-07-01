@@ -1,5 +1,5 @@
 import { CustomHelpers } from 'joi';
-import { isValid } from 'date-fns';
+import { isValid } from 'date-fns/isValid';
 import { parseDateInput, UI_DATE_FORMAT } from '../tools/dateUtils';
 
 export const uiDateValidator = (value: unknown, helpers: CustomHelpers) => {

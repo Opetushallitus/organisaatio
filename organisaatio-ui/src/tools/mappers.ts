@@ -1,6 +1,7 @@
 import { Koodi, LocalDate, Nimi, UiOrganisaationNimetNimi, Ryhma, Yhteystiedot, Language } from '../types/types';
 import { APIEndpontDate } from '../types/apiTypes';
-import { format, isAfter } from 'date-fns';
+import { format } from 'date-fns/format';
+import { isAfter } from 'date-fns/isAfter';
 import { API_DATE_FORMAT, formatDateInput, parseDateInput, UI_DATE_FORMAT } from './dateUtils';
 
 export const dropKoodiVersionSuffix = (koodi: string) => {

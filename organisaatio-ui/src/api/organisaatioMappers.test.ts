@@ -1,5 +1,6 @@
 import assert from 'assert/strict';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns/format';
+import { subDays } from 'date-fns/subDays';
 import { describe, it } from 'node:test';
 
 import { Koodisto, LocalDate, Perustiedot, Yhteystiedot } from '../types/types';

@@ -5,7 +5,7 @@ import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
 import IconWrapper from '../../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
-import { isAfter } from 'date-fns';
+import { isAfter } from 'date-fns/isAfter';
 import { parseDateInput, UI_DATE_FORMAT } from '../../../../../tools/dateUtils';
 
 type nimiHistoriaNimiProps = {

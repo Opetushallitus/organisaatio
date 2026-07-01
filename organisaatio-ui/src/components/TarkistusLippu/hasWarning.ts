@@ -1,4 +1,6 @@
-import { isAfter, isBefore, subYears } from 'date-fns';
+import { isAfter } from 'date-fns/isAfter';
+import { isBefore } from 'date-fns/isBefore';
+import { subYears } from 'date-fns/subYears';
 
 export const hasWarning = ({
     tarkastusDate,

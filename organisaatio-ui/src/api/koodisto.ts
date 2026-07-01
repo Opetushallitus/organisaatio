@@ -5,7 +5,7 @@ import { Atom, atom } from 'jotai';
 import { casMeLangAtom } from './kayttooikeus';
 import { KoodistoImpl } from '../contexts/KoodistoContext';
 import { atomFamily } from 'jotai/utils';
-import { isBefore } from 'date-fns';
+import { isBefore } from 'date-fns/isBefore';
 import { API_DATE_FORMAT, parseDateInput } from '../tools/dateUtils';
 
 const baseUrl = `${API_CONTEXT}/koodisto/`;

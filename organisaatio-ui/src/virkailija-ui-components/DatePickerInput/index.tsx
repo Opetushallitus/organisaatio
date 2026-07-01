@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { DayPicker, DayPickerProps } from '@daypicker/react';
-import { format as formatDate, isValid as isValidDate, parse as parseDate } from 'date-fns';
+import { format as formatDate } from 'date-fns/format';
+import { isValid as isValidDate } from 'date-fns/isValid';
+import { parse as parseDate } from 'date-fns/parse';
 import styled from 'styled-components';
 
 import DatePickerStyle from '../DatePickerStyle';

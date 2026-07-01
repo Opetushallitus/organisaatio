@@ -9,7 +9,7 @@ import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
 import Loading from '../../../../Loading/Loading';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
-import { isBefore } from 'date-fns';
+import { isBefore } from 'date-fns/isBefore';
 import { parseDateInput, UI_DATE_FORMAT } from '../../../../../tools/dateUtils';
 
 type nimiHistoriaProps = {

@@ -3,7 +3,7 @@ import { AvainKevyestiBoldattu, ReadOnly, Rivi, Ruudukko, UloinKehys } from '../
 import { KoodistoSelectOption, Perustiedot, VakaPainotus, VakaToimipaikkaTiedot } from '../../../../../types/types';
 import { Control, Controller } from 'react-hook-form';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
-import { format } from 'date-fns';
+import { format } from 'date-fns/format';
 import { UI_DATE_FORMAT } from '../../../../../tools/dateUtils';
 const ShowPair = ({ label, value, first }: { label: string; value: string; first: boolean }) => {
     return (
