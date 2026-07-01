@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
-import { registerLocale } from 'react-datepicker';
-import { enGB, fi, sv } from 'date-fns/locale';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import VirheSivu from './components/Sivut/VirheSivu/VirheSivu';
 import LomakeSivu from './components/Sivut/LomakeSivu/LomakeSivu';
@@ -21,9 +19,6 @@ import { useAtom } from 'jotai';
 const theme = createTheme();
 
 const OrganisaatioApp: React.FC = () => {
-    registerLocale('fi', fi);
-    registerLocale('sv', sv);
-    registerLocale('en', enGB);
     const [frontProperties] = useAtom(frontPropertiesAtom);
     return (
         <ErrorBoundary>
