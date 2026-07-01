@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Kentta, Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
-import { UseFormRegister } from 'react-hook-form/dist/types/form';
+import { UseFormRegister } from 'react-hook-form';
 import { YhteystietoArvot } from '../../../../../types/types';
 
 type Props = {

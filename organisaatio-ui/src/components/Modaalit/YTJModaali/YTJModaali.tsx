@@ -1,7 +1,7 @@
 import React from 'react';
 import PohjaModaali from '../PohjaModaali/PohjaModaali';
 import YTJBody from './YTJBody';
-import { UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { UseFormSetValue } from 'react-hook-form';
 import { Nimi, Perustiedot, Yhteystiedot } from '../../../types/types';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';

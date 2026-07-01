@@ -5,14 +5,14 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
 import Select from 'react-select';
 import RadioGroup from '@opetushallitus/virkailija-ui-components/RadioGroup';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import {
+import type {
     Control,
+    FieldErrors,
     UseFormGetValues,
     UseFormRegister,
     UseFormSetValue,
     UseFormWatch,
-} from 'react-hook-form/dist/types/form';
+} from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import {
     KenttaError,

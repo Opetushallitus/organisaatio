@@ -6,7 +6,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import { Ryhma } from '../../../../types/types';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import PohjaSivu from '../../PohjaSivu/PohjaSivu';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
+import { FieldValues } from 'react-hook-form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Link } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import { UseFormGetValues } from 'react-hook-form/dist/types/form';
+import { UseFormGetValues } from 'react-hook-form';
 
 import { DynamicField, Perustiedot } from '../../../../../types/types';
 

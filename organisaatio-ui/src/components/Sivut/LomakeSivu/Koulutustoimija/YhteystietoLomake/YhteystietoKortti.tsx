@@ -3,7 +3,7 @@ import styles from './YhteystietoLomake.module.css';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
-import { Control, UseFormRegister, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { Control, UseFormRegister, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
 import { KenttaError, Language, Yhteystiedot } from '../../../../../types/types';
 import { Path, useWatch } from 'react-hook-form';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';

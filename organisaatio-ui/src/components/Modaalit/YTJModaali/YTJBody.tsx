@@ -6,7 +6,7 @@ import { isYTunnus } from '../../../tools/ytj';
 import { getByYTunnus, isYtjData, searchByName, YtjData, YtjHaku } from '../../../api/ytj';
 import { warning } from '../../Notification/Notification';
 import { Nimi, Perustiedot, Yhteystiedot } from '../../../types/types';
-import { UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { UseFormSetValue } from 'react-hook-form';
 import { BodyKehys, BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
 import clearIcon from '@iconify/icons-fa-solid/times-circle';
 import IconWrapper from '../../IconWapper/IconWrapper';

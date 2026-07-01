@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DynamicField, Koodistot, Perustiedot } from '../../../../../types/types';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormGetValues } from 'react-hook-form/dist/types/form';
+import { FieldErrors } from 'react-hook-form';
+import { Control, UseFormGetValues } from 'react-hook-form';
 import { Kentta, LabelLink, Rivi } from '../../LomakeFields/LomakeFields';
 import InputController from '../../../../Controllers/InputController';
 import SelectController from '../../../../Controllers/SelectController';

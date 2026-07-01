@@ -10,8 +10,8 @@ import {
     ResolvedRakenne,
     UiOrganisaatioBase,
 } from '../../../../../types/types';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { FieldErrors } from 'react-hook-form';
+import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import ToimipisteenNimenmuutosModaali from '../../../../Modaalit/ToimipisteenNimenmuutos/ToimipisteenNimenmuutosModaali';
 import DatePickerController from '../../../../Controllers/DatePickerController';

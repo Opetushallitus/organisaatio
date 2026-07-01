@@ -21,14 +21,13 @@
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "module": "esnext",
-      "moduleResolution": "node",
-      "baseUrl": ".",
+      "moduleResolution": "bundler",
       "paths": {
         "@opetushallitus/virkailija-ui-components": [
-          "src/virkailija-ui-components"
+          "./src/virkailija-ui-components"
         ],
         "@opetushallitus/virkailija-ui-components/*": [
-          "src/virkailija-ui-components/*"
+          "./src/virkailija-ui-components/*"
         ]
       },
       "resolveJsonModule": true,

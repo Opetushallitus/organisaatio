@@ -3,13 +3,7 @@ import { useState } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import type { Language, Yhteystiedot } from '../../../../../types/types';
 import { enAltSchema, fiAltSchema, svAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
-import {
-    Control,
-    UseFormGetValues,
-    UseFormRegister,
-    UseFormSetValue,
-    UseFormWatch,
-} from 'react-hook-form/dist/types/form';
+import type { Control, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import { YhteystietoKortti } from './YhteystietoKortti';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';

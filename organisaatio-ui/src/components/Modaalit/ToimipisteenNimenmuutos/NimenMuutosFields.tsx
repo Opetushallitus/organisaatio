@@ -1,8 +1,8 @@
 import React from 'react';
 import { BodyKentta, BodyRivi } from '../ModalFields/ModalFields';
-import { FieldErrors } from 'react-hook-form/dist/types/errors';
+import { FieldErrors } from 'react-hook-form';
 import { NimenmuutosLomake } from '../../../types/types';
-import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form';
+import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import DatePickerController from '../../Controllers/DatePickerController';
 import { NimiGroup } from '../../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 
