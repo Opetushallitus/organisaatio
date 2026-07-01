@@ -54,7 +54,6 @@
         "eslint-plugin-react": "7.37.5",
         "fork-ts-checker-webpack-plugin": "9.1.0",
         "html-webpack-plugin": "5.6.7",
-        "mini-css-extract-plugin": "2.10.2",
         "prettier": "3.8.5",
         "source-map-loader": "5.0.0",
         "style-loader": "4.0.0",
@@ -64,8 +63,7 @@
         "typescript-eslint": "8.62.0",
         "webpack": "5.108.1",
         "webpack-cli": "7.0.3",
-        "webpack-dev-server": "5.2.5",
-        "webpack-manifest-plugin": "5.0.1"
+        "webpack-dev-server": "5.2.5"
     },
     "scripts": {
         "start": "NODE_ENV=development npx webpack serve",
