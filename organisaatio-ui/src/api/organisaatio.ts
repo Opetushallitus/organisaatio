@@ -1,4 +1,5 @@
 import Axios, { CancelToken } from 'axios';
+import { useCallback } from 'react';
 import {
     LiitaOrganisaatioon,
     OrganisaatioNimiJaOid,
@@ -99,11 +100,18 @@ function useOrganisaatioPaivittaja(oid: string): {
             { url: `${baseUrl}${oid}/paivittaja`, method: 'GET' },
             { manual: true }
         );
+        const executeWithoutUnhandledRejection = useCallback(() => {
+            execute().catch((error) => {
+                if (!Axios.isCancel(error)) {
+                    console.error(error);
+                }
+            });
+        }, [execute]);
         return {
             data,
             loading,
             error,
-            execute,
+            execute: executeWithoutUnhandledRejection,
         };
     });
 }
@@ -182,11 +190,18 @@ async function mergeOrganisaatio({
 function useOrganisaatioHistoria(oid: string) {
     return useErrorHandlingWrapper(function useHorse() {
         const [{ data, loading, error }, execute] = useAxios<APIOrganisaatioHistoria>(`${baseUrl}${oid}/historia`);
+        const executeHistoriaWithoutUnhandledRejection = useCallback(() => {
+            execute().catch((error) => {
+                if (!Axios.isCancel(error)) {
+                    console.error(error);
+                }
+            });
+        }, [execute]);
         return {
             historia: data && transformData(data),
             historiaLoading: loading,
             historiaError: error,
-            executeHistoria: execute,
+            executeHistoria: executeHistoriaWithoutUnhandledRejection,
         };
     });
 }

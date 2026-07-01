@@ -33,12 +33,12 @@ type props = {
     isYtj: boolean;
 };
 
-const RiviKentta: React.FC<{ error?: KenttaError; label: string; isRequired?: boolean }> = ({
+const RiviKentta = ({
     error,
     label,
     children,
     isRequired = false,
-}) => {
+}: React.PropsWithChildren<{ error?: KenttaError; label: string; isRequired?: boolean }>) => {
     return (
         <Rivi>
             <Kentta isRequired={isRequired} error={error} label={label}>

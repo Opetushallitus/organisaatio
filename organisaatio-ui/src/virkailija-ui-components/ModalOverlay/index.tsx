@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { animated } from 'react-spring';
 
-const ModalOverlay = styled(animated.div)`
+const ModalOverlay = styled.div`
     background-color: ${({ theme }) => theme.colors.modalOverlay};
     position: absolute;
     top: 0px;

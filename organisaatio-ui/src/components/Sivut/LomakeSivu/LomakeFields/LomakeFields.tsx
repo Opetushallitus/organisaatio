@@ -23,7 +23,7 @@ const MuokattuKolumni = (props: { children: ReactNode }) => (
 );
 const Ruudukko = (props: { children: ReactNode }) => <div className={styles.Ruudukko}>{props.children}</div>;
 const Rivi = (props: { children: ReactNode }) => <div className={styles.Rivi}>{props.children}</div>;
-const ErrorWrapper: React.FC<{ error?: KenttaError[] }> = ({ error = [], children }) => {
+const ErrorWrapper = ({ error = [], children }: React.PropsWithChildren<{ error?: KenttaError[] }>) => {
     const [i18n] = useAtom(languageAtom);
     return (
         <>
@@ -66,12 +66,12 @@ const LabelLink = ({ value, to }: { value: string; to: string }) => {
 const ReadOnlyDate = ({ value }: { value: LocalDate }) => {
     return <div className={styles.Kentta}>{value}</div>;
 };
-const Kentta: React.FC<{ error?: KenttaError | KenttaError[]; label: string; isRequired?: boolean }> = ({
+const Kentta = ({
     error,
     label,
     children,
     isRequired = false,
-}) => {
+}: React.PropsWithChildren<{ error?: KenttaError | KenttaError[]; label: string; isRequired?: boolean }>) => {
     const [i18n] = useAtom(languageAtom);
     return (
         <div className={styles.Kentta}>
@@ -190,25 +190,29 @@ const KenttaLyhyt = ({
     );
 };
 type LomakeButtonProps = {
-    onClick: () => void;
+    onClick: React.MouseEventHandler<HTMLElement>;
     label: string;
-    disabled?: boolean;
-    name?: string;
     icon?: () => ReactNode;
-};
-const LomakeButton = (props: LomakeButtonProps) => {
-    return <LomakeIconButton {...props} />;
-};
+} & Omit<React.ComponentProps<typeof Button>, 'children' | 'onClick' | 'variant'>;
+
+const LomakeButton = React.forwardRef<HTMLElement, LomakeButtonProps>((props, ref) => {
+    return <LomakeIconButton {...props} ref={ref} />;
+});
+LomakeButton.displayName = 'LomakeButton';
+
 type LomakeIconButtonProps = LomakeButtonProps;
-const LomakeIconButton = ({ onClick, label, icon, disabled, name }: LomakeIconButtonProps) => {
-    const [i18n] = useAtom(languageAtom);
-    return (
-        <Button variant={'outlined'} onClick={onClick} disabled={disabled} name={name}>
-            {!!icon && <div className={`${styles.IconContainer}`}>{icon()}</div>}
-            {i18n.translate(label)}
-        </Button>
-    );
-};
+const LomakeIconButton = React.forwardRef<HTMLElement, LomakeIconButtonProps>(
+    ({ onClick, label, icon, ...buttonProps }, ref) => {
+        const [i18n] = useAtom(languageAtom);
+        return (
+            <Button {...buttonProps} ref={ref} variant={'outlined'} onClick={onClick}>
+                {!!icon && <div className={`${styles.IconContainer}`}>{icon()}</div>}
+                {i18n.translate(label)}
+            </Button>
+        );
+    }
+);
+LomakeIconButton.displayName = 'LomakeIconButton';
 
 const HiddenForm = () => {
     const [i18n] = useAtom(languageAtom);

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
-import { useTransition, animated } from 'react-spring';
 
 import ModalOverlay from '../ModalOverlay';
 import { notIn } from '../utils/notIn';
@@ -15,7 +14,7 @@ const Wrapper = styled.div.attrs({ role: 'dialog' })`
     right: 0px;
 `;
 
-const ContentWrapper = styled(animated.div)`
+const ContentWrapper = styled.div`
     position: absolute;
     top: 0px;
     left: 0px;
@@ -28,7 +27,7 @@ const ContentWrapper = styled(animated.div)`
     padding: ${({ theme }) => theme.space[2]}px;
 `;
 
-const Content = styled(animated.div).withConfig({
+const Content = styled.div.withConfig({
     shouldForwardProp: notIn(['fullWidth', 'maxWidth']),
 })<{ fullWidth: boolean; maxWidth: string }>`
     width: 100%;
@@ -59,11 +58,7 @@ type ModalBaseProps = {
 type ModalProps = Omit<React.ComponentProps<typeof Content>, keyof ModalBaseProps> & ModalBaseProps;
 
 const createTarget = (): HTMLDivElement => {
-    const target = document.createElement('div');
-
-    document.body.appendChild(target);
-
-    return target;
+    return document.createElement('div');
 };
 
 const Modal = ({
@@ -81,40 +76,30 @@ const Modal = ({
     }
 
     React.useEffect(() => {
+        const target = targetRef.current;
+        if (!target) {
+            return undefined;
+        }
+
+        document.body.appendChild(target);
+
         return () => {
-            if (targetRef.current) {
-                document.body.removeChild(targetRef.current);
+            if (target.parentNode) {
+                target.parentNode.removeChild(target);
             }
         };
     }, []);
 
-    const transition = useTransition(open, null, {
-        enter: {
-            transform: 'scale(1)',
-            opacity: 1,
-        },
-        leave: {
-            transform: 'scale(0.5)',
-            opacity: 0,
-        },
-        from: {
-            transform: 'scale(0.5)',
-            opacity: 0,
-        },
-    });
-
-    const content = transition.map(({ item, props: transitionProps, key }) => {
-        return item ? (
-            <Wrapper key={key}>
-                <ContentWrapper>
-                    <ModalOverlay onClick={onClose} style={{ opacity: transitionProps.opacity }} />
-                    <Content maxWidth={maxWidth} fullWidth={fullWidth} style={transitionProps} {...props}>
-                        {children}
-                    </Content>
-                </ContentWrapper>
-            </Wrapper>
-        ) : null;
-    });
+    const content = open ? (
+        <Wrapper>
+            <ContentWrapper>
+                <ModalOverlay onClick={onClose} />
+                <Content maxWidth={maxWidth} fullWidth={fullWidth} {...props}>
+                    {children}
+                </Content>
+            </ContentWrapper>
+        </Wrapper>
+    ) : null;
 
     return createPortal(content, targetRef.current);
 };

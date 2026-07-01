@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
@@ -19,8 +19,10 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-export class ErrorBoundary extends React.Component<unknown, { hasError: boolean }> {
-    constructor(props: unknown) {
+type ErrorBoundaryProps = React.PropsWithChildren;
+
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, { hasError: boolean }> {
+    constructor(props: ErrorBoundaryProps) {
         super(props);
         this.state = { hasError: false };
     }
@@ -40,7 +42,12 @@ export class ErrorBoundary extends React.Component<unknown, { hasError: boolean 
 }
 
 async function main() {
-    ReactDOM.render(
+    const rootElement = document.getElementById('root');
+    if (!rootElement) {
+        throw new Error('Root element not found');
+    }
+
+    createRoot(rootElement).render(
         <React.StrictMode>
             <Provider>
                 <ErrorBoundary>
@@ -51,8 +58,7 @@ async function main() {
                     </React.Suspense>
                 </ErrorBoundary>
             </Provider>
-        </React.StrictMode>,
-        document.getElementById('root')
+        </React.StrictMode>
     );
 }
 

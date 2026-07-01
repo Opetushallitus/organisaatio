@@ -83,7 +83,6 @@ import {
 } from '../../../api/koodisto';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { DecoratedNimi } from '../../OrganisaatioComponents';
-import Popup from 'reactjs-popup';
 import { Confirmation } from '../../Modaalit/Confirmation/Confirmation';
 
 const PERUSTIEDOTID = 'perustietolomake';
@@ -98,6 +97,7 @@ const LomakeSivu = () => {
     const [YTJModaaliAuki, setYTJModaaliAuki] = useState<boolean>(false);
     const [yhdistaOrganisaatioModaaliAuki, setYhdistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [siirraOrganisaatioModaaliAuki, setSiirraOrganisaatioModaaliAuki] = useState<boolean>(false);
+    const [poistaOrganisaatioModaaliAuki, setPoistaOrganisaatioModaaliAuki] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const initialYhdista = {
         merge: true,
@@ -591,37 +591,15 @@ const LomakeSivu = () => {
                             />
                         )}
                     {casMe.isOphUser() && (
-                        <Popup
-                            position="bottom right"
-                            trigger={() => (
-                                <LomakeButton
-                                    disabled={isDirty}
-                                    onClick={() => {
-                                        deleteOrganisaatio(organisaatioBase.oid);
-                                    }}
-                                    label={'LOMAKE_POISTA_ORGANISAATIO'}
-                                    name={'LOMAKE_POISTA_ORGANISAATIO'}
-                                    icon={() => <IconWrapper inline={true} icon="ci:trash-full" height={'1.2rem'} />}
-                                />
-                            )}
-                        >
-                            {(close: () => void) => (
-                                <Confirmation
-                                    header={'POISTO_VAHVISTUS_TITLE'}
-                                    message={'POISTO_VAHVISTUS_MESSAGE'}
-                                    replacements={[]}
-                                    tallennaCallback={async () => {
-                                        setIsLoading(true);
-                                        await deleteOrganisaatio(organisaatioBase.oid);
-                                        close();
-                                        await findAndResetOrganisaatio(organisaatioBase.oid);
-                                        setIsLoading(false);
-                                    }}
-                                    peruutaCallback={close}
-                                    suljeCallback={close}
-                                />
-                            )}
-                        </Popup>
+                        <LomakeButton
+                            disabled={isDirty}
+                            onClick={() => {
+                                setPoistaOrganisaatioModaaliAuki(true);
+                            }}
+                            label={'LOMAKE_POISTA_ORGANISAATIO'}
+                            name={'LOMAKE_POISTA_ORGANISAATIO'}
+                            icon={() => <IconWrapper inline={true} icon="ci:trash-full" height={'1.2rem'} />}
+                        />
                     )}
                 </ValiNappulat>
             </ValiContainer>
@@ -639,6 +617,25 @@ const LomakeSivu = () => {
                     )}
                 </ValiNappulat>
             </AlaBanneri>
+            {poistaOrganisaatioModaaliAuki && (
+                <Confirmation
+                    header={'POISTO_VAHVISTUS_TITLE'}
+                    message={'POISTO_VAHVISTUS_MESSAGE'}
+                    replacements={[]}
+                    tallennaCallback={async () => {
+                        setIsLoading(true);
+                        try {
+                            await deleteOrganisaatio(organisaatioBase.oid);
+                            setPoistaOrganisaatioModaaliAuki(false);
+                            await findAndResetOrganisaatio(organisaatioBase.oid);
+                        } finally {
+                            setIsLoading(false);
+                        }
+                    }}
+                    peruutaCallback={() => setPoistaOrganisaatioModaaliAuki(false)}
+                    suljeCallback={() => setPoistaOrganisaatioModaaliAuki(false)}
+                />
+            )}
             {yhdistaOrganisaatioModaaliAuki && (
                 <LiitaOrganisaatio
                     liitaOrganisaatioon={yhdistaOrganisaatio}

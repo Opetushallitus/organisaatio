@@ -4,7 +4,7 @@ import styles from './PohjaSivu.module.css';
 type PohjaSivuProps = {
     backgroundColor?: string;
 };
-const PohjaSivu: React.FC<PohjaSivuProps> = (props) => {
+const PohjaSivu = (props: React.PropsWithChildren<PohjaSivuProps>) => {
     const style = props.backgroundColor ? { backgroundColor: props.backgroundColor } : {};
     return (
         <div className={styles.OrganisaatioKehys} style={style}>
