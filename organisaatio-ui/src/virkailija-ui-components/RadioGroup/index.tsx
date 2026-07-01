@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { isArray } from 'lodash';
 import styled, { css } from 'styled-components';
 import Radio from '../Radio';
 
@@ -64,7 +63,7 @@ export const RadioGroup = ({
                 </Container>
             );
         });
-    } else if (isArray(options)) {
+    } else if (Array.isArray(options)) {
         children = options.map(({ value: optionValue, label }, index) => (
             <Container isLast={index === options.length - 1} key={optionValue}>
                 <Radio
