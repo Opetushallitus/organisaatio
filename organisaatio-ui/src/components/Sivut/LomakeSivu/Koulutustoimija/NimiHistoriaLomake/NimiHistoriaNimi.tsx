@@ -2,10 +2,11 @@ import * as React from 'react';
 import { LocalDate, Nimi, UiOrganisaationNimetNimi } from '../../../../../types/types';
 import styles from './NimiHistoriaNimi.module.css';
 import { ReadOnlyNimi } from '../../LomakeFields/LomakeFields';
-import moment from 'moment';
 import IconWrapper from '../../../../IconWapper/IconWrapper';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
+import { isAfter } from 'date-fns';
+import { parseDateInput, UI_DATE_FORMAT } from '../../../../../tools/dateUtils';
 
 type nimiHistoriaNimiProps = {
     nimi: Nimi;
@@ -19,7 +20,8 @@ export default function NimiHistoriaNimi({ nimi, alkuPvm, version, handleDeleteN
     function handleDeleteClick() {
         handleDeleteNimi({ nimi, alkuPvm, version });
     }
-    const isAlkuPvmInFuture = moment(alkuPvm, 'D.M.YYYY') > moment();
+    const parsedAlkuPvm = parseDateInput(alkuPvm, UI_DATE_FORMAT);
+    const isAlkuPvmInFuture = parsedAlkuPvm ? isAfter(parsedAlkuPvm, new Date()) : false;
     return (
         <div className={styles.NimiHistoriaCell}>
             <ReadOnlyNimi value={nimi} />

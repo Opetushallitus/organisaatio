@@ -1,18 +1,17 @@
-import moment, { Moment } from 'moment';
+import { isAfter, isBefore, subYears } from 'date-fns';
 
 export const hasWarning = ({
     tarkastusDate,
     alkuDate,
     lakkautusDate,
 }: {
-    tarkastusDate?: Moment;
-    alkuDate?: Moment;
-    lakkautusDate?: Moment;
+    tarkastusDate?: Date;
+    alkuDate?: Date;
+    lakkautusDate?: Date;
 }): boolean => {
-    const now = moment();
-    const lastYear = moment();
-    lastYear.subtract(1, 'years');
-    const tarkastusOk = tarkastusDate?.isAfter(lastYear);
-    const activeNow = alkuDate && alkuDate.isBefore(now) && (!lakkautusDate || lakkautusDate.isAfter(now));
+    const now = new Date();
+    const lastYear = subYears(now, 1);
+    const tarkastusOk = tarkastusDate && isAfter(tarkastusDate, lastYear);
+    const activeNow = alkuDate && isBefore(alkuDate, now) && (!lakkautusDate || isAfter(lakkautusDate, now));
     return !tarkastusOk && !!activeNow;
 };

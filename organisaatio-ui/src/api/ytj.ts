@@ -3,7 +3,7 @@ import { isYTunnus } from '../tools/ytj';
 import { errorHandlingWrapper } from './errorHandling';
 import { KoodistoSelectOption, Koodistot, LocalDate, YhteystiedotBase } from '../types/types';
 import { LEGACY_API_CONTEXT } from '../contexts/constants';
-import moment from 'moment';
+import { formatDateInput, API_DATE_FORMAT } from '../tools/dateUtils';
 
 const baseUrl = `${LEGACY_API_CONTEXT}/ytj/`;
 
@@ -65,7 +65,7 @@ const mapApiToUI = (ytj: YtjAPIData, koodistot: Koodistot): YtjData => {
         ...ytj,
         kunta: selectedKuntaSelector,
         kieli: selectedKieli,
-        aloitusPvm: moment(ytj.aloitusPvm, 'DD-MM-YYYY').format('YYYY-MM-DD') as LocalDate,
+        aloitusPvm: formatDateInput(ytj.aloitusPvm, API_DATE_FORMAT, 'dd-MM-yyyy') as LocalDate,
         yhteysTiedot: {
             postiOsoite: ytj.postiOsoite.katu,
             postiOsoitePostiNro: ytj.postiOsoite.postinumero,

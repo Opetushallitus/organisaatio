@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { AvainKevyestiBoldattu, ReadOnly, Rivi, Ruudukko, UloinKehys } from '../../LomakeFields/LomakeFields';
 import { KoodistoSelectOption, Perustiedot, VakaPainotus, VakaToimipaikkaTiedot } from '../../../../../types/types';
-import moment from 'moment';
 import { Control, Controller } from 'react-hook-form';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
+import { format } from 'date-fns';
+import { UI_DATE_FORMAT } from '../../../../../tools/dateUtils';
 const ShowPair = ({ label, value, first }: { label: string; value: string; first: boolean }) => {
     return (
         <>
@@ -23,8 +24,8 @@ const painotus = ({ data, label }: { data: VakaPainotus[]; label: string }) => {
                     key={a.painotus.arvo}
                     first={index === 0}
                     label={label}
-                    value={`${a.painotus.label} ${moment(a.alkupvm).format('D.M.yyyy')}${
-                        a.loppupvm ? ' - ' + moment(a.loppupvm).format('D.M.yyyy') : ''
+                    value={`${a.painotus.label} ${format(a.alkupvm, UI_DATE_FORMAT)}${
+                        a.loppupvm ? ' - ' + format(a.loppupvm, UI_DATE_FORMAT) : ''
                     }`}
                 />
             );

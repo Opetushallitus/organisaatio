@@ -1,13 +1,11 @@
-import JoiLess, { Root } from 'joi';
-import JoiDate from '@joi/date';
-
-const Joi = JoiLess.extend(JoiDate) as Root;
+import Joi from 'joi';
+import { uiDateValidator } from './DateValidator';
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).required(),
     alkuPvm: Joi.when('muutostyyppi', {
         is: 'CREATE',
-        then: Joi.date().format(['D.M.YYYY']).required(),
+        then: Joi.custom(uiDateValidator).required(),
         otherwise: Joi.optional(),
     }),
     muutostyyppi: Joi.string().allow('CREATE', 'EDIT').required(),

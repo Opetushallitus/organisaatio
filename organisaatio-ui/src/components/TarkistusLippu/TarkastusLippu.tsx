@@ -1,4 +1,3 @@
-import moment, { Moment } from 'moment';
 import React from 'react';
 import { LocalDate } from '../../types/types';
 import isNumber from '@opetushallitus/virkailija-ui-components/utils/isNumber';
@@ -9,10 +8,11 @@ import { LomakeButton } from '../Sivut/LomakeSivu/LomakeFields/LomakeFields';
 import { languageAtom } from '../../api/lokalisaatio';
 import { ORGANIAATIOTYYPPI_VARHAISKASVATUKSEN_TOIMIPAIKKA } from '../../api/koodisto';
 import { hasWarning } from './hasWarning';
+import { parseDateInput, UI_DATE_FORMAT } from '../../tools/dateUtils';
 
-const inputToDate = (input?: number | LocalDate): Moment | undefined => {
+const inputToDate = (input?: number | LocalDate): Date | undefined => {
     if (!input) return undefined;
-    return isNumber(input) ? moment.unix(input / 1000) : moment(input, 'DD.MM.yyyy');
+    return isNumber(input) ? new Date(input) : parseDateInput(input, UI_DATE_FORMAT);
 };
 
 type TarkastusLippuProps = {
@@ -38,7 +38,7 @@ const TarkastusLippu: React.FC<TarkastusLippuProps> = ({
     const iconColor = warning ? '#e44e4e' : '#159ecb';
     const message = tarkastusDate
         ? i18n.enrichMessage('VIIMEINEN_TARKASTUS_{tarkastusPvm}', [
-              { key: 'tarkastusPvm', value: getUiDateStr(tarkastusDate?.toDate()) },
+              { key: 'tarkastusPvm', value: getUiDateStr(tarkastusDate) },
           ])
         : i18n.translate('TARKASTUS_PUUTTUU');
     return (

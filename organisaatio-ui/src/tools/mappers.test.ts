@@ -1,6 +1,6 @@
-import moment from 'moment';
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
+import { addDays, format, subDays } from 'date-fns';
 
 import {
     checkHasSomeValueByKieli,
@@ -117,12 +117,12 @@ describe('mappers', () => {
         it('Sorts nimet based on alkupvm date to past and future and setsCurrentName', () => {
             const pastNimi = {
                 nimi: { fi: 'mennyt' },
-                alkuPvm: moment().subtract(1, 'days').format('D.M.yyyy') as LocalDate,
+                alkuPvm: format(subDays(new Date(), 1), 'd.M.yyyy') as LocalDate,
                 version: 0,
             };
             const futureNimi = {
                 nimi: { fi: 'tuleva' },
-                alkuPvm: moment().add(1, 'days').format('D.M.yyyy') as LocalDate,
+                alkuPvm: format(addDays(new Date(), 1), 'd.M.yyyy') as LocalDate,
                 version: 0,
             };
             const expectedPastNimet = [pastNimi];
@@ -137,9 +137,9 @@ describe('mappers', () => {
     });
 
     describe('getUiDateStr', () => {
-        const expectedTodayDate = moment().format('D.M.yyyy');
-        const expectedTestDayDate = moment('2020-1-22').format('D.M.yyyy');
-        const expectedTestDayLongDate = moment('2020-10-22').format('D.M.yyyy HH:mm:ss');
+        const expectedTodayDate = format(new Date(), 'd.M.yyyy');
+        const expectedTestDayDate = '22.1.2020';
+        const expectedTestDayLongDate = '22.10.2020 00:00:00';
         it('Handles invalid input to empty string', () => {
             assert.strictEqual(getUiDateStr('dsdsds', undefined, false), '');
         });
@@ -166,8 +166,8 @@ describe('mappers', () => {
         });
     });
     describe('formatUiDateStrToApi', () => {
-        const expectedTodayDate = moment().format('yyyy-MM-DD');
-        const expectedTestDayDate = moment('09-22-2020').format('yyyy-MM-DD');
+        const expectedTodayDate = format(new Date(), 'yyyy-MM-dd');
+        const expectedTestDayDate = '2020-09-22';
         it('Handles invalid input to empty string', () => {
             assert.strictEqual(formatUiDateStrToApi('dsdsds'), '');
         });

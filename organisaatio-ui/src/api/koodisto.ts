@@ -4,8 +4,9 @@ import axios from 'axios';
 import { Atom, atom } from 'jotai';
 import { casMeLangAtom } from './kayttooikeus';
 import { KoodistoImpl } from '../contexts/KoodistoContext';
-import moment from 'moment';
 import { atomFamily } from 'jotai/utils';
+import { isBefore } from 'date-fns';
+import { API_DATE_FORMAT, parseDateInput } from '../tools/dateUtils';
 
 const baseUrl = `${API_CONTEXT}/koodisto/`;
 export const ORGANIAATIOTYYPPI_OPETUSHALLITUS = 'opetushallitus';
@@ -42,9 +43,15 @@ const koodistoAtom = atomFamily(
 export const kuntaKoodistoAtom = koodistoAtom({
     koodi: 'KUNTA',
     disableOption: (koodi: Koodi) => {
+        const voimassaLoppuPvm = koodi.voimassaLoppuPvm
+            ? parseDateInput(koodi.voimassaLoppuPvm, API_DATE_FORMAT)
+            : undefined;
         return (
             koodi.tila === 'PASSIIVINEN' ||
-            (koodi.voimassaLoppuPvm !== '1990-01-01' && moment(koodi.voimassaLoppuPvm, 'yyyy-MM-DD').isBefore(moment()))
+            (!!koodi.voimassaLoppuPvm &&
+                koodi.voimassaLoppuPvm !== '1990-01-01' &&
+                !!voimassaLoppuPvm &&
+                isBefore(voimassaLoppuPvm, new Date()))
         );
     },
 });

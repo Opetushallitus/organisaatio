@@ -1,30 +1,30 @@
 import assert from 'assert/strict';
 import { describe, it } from 'node:test';
+import { addYears, subMonths, subYears } from 'date-fns';
 
 import { hasWarning } from './hasWarning';
-import moment from 'moment';
 
 describe('TarkastusLippu', () => {
     describe('hasWarning', () => {
         const tests = [
             {
                 message: 'is true when tarkastus is > 1 years old',
-                tarkastusDate: moment().subtract(5, 'years'),
-                alkuDate: moment().subtract(22, 'years'),
+                tarkastusDate: subYears(new Date(), 5),
+                alkuDate: subYears(new Date(), 22),
                 lakkautusDate: undefined,
                 shouldWarn: true,
             },
             {
                 message: 'is true when tarkastus is undefined',
                 tarkastusDate: undefined,
-                alkuDate: moment().subtract(22, 'years'),
+                alkuDate: subYears(new Date(), 22),
                 lakkautusDate: undefined,
                 shouldWarn: true,
             },
             {
                 message: 'is false when tarkastus is < 1 years old',
-                tarkastusDate: moment().subtract(5, 'months'),
-                alkuDate: moment().subtract(22, 'years'),
+                tarkastusDate: subMonths(new Date(), 5),
+                alkuDate: subYears(new Date(), 22),
 
                 lakkautusDate: undefined,
 
@@ -32,17 +32,17 @@ describe('TarkastusLippu', () => {
             },
             {
                 message: 'is false when lakkautettu',
-                tarkastusDate: moment().subtract(5, 'years'),
-                alkuDate: moment().subtract(22, 'years'),
+                tarkastusDate: subYears(new Date(), 5),
+                alkuDate: subYears(new Date(), 22),
 
-                lakkautusDate: moment().subtract(1, 'years'),
+                lakkautusDate: subYears(new Date(), 1),
 
                 shouldWarn: false,
             },
             {
                 message: 'is false when in future',
                 tarkastusDate: undefined,
-                alkuDate: moment().add(1, 'years'),
+                alkuDate: addYears(new Date(), 1),
                 lakkautusDate: undefined,
                 shouldWarn: false,
             },

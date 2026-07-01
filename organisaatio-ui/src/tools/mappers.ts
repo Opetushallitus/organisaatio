@@ -1,8 +1,7 @@
 import { Koodi, LocalDate, Nimi, UiOrganisaationNimetNimi, Ryhma, Yhteystiedot, Language } from '../types/types';
-import moment from 'moment';
 import { APIEndpontDate } from '../types/apiTypes';
-
-moment.locale('fi');
+import { format, isAfter } from 'date-fns';
+import { API_DATE_FORMAT, formatDateInput, parseDateInput, UI_DATE_FORMAT } from './dateUtils';
 
 export const dropKoodiVersionSuffix = (koodi: string) => {
     const hasVersioningHashtag = koodi.search('#');
@@ -50,9 +49,10 @@ export const sortNimet = (
     pastNimet: UiOrganisaationNimetNimi[];
     futureNimet: UiOrganisaationNimetNimi[];
 } => {
-    const nowTime = moment();
+    const nowTime = new Date();
     const alkuPvmInFuture = (n: UiOrganisaationNimetNimi) => {
-        return moment(n.alkuPvm, 'D.M.YYYY').isAfter(nowTime);
+        const alkuPvm = parseDateInput(n.alkuPvm, UI_DATE_FORMAT);
+        return alkuPvm ? isAfter(alkuPvm, nowTime) : false;
     };
     const [mappedFutureNimet, mappedPastNimet] = nimet
         .reduce(
@@ -68,7 +68,9 @@ export const sortNimet = (
         )
         .map((nimetArr) =>
             [...nimetArr].sort((a, b) => {
-                return moment(a.alkuPvm, 'D.M.YYYY').isAfter(moment(b.alkuPvm, 'D.M.YYYY')) ? -1 : 1;
+                const alkuPvmA = parseDateInput(a.alkuPvm, UI_DATE_FORMAT);
+                const alkuPvmB = parseDateInput(b.alkuPvm, UI_DATE_FORMAT);
+                return alkuPvmA && alkuPvmB && isAfter(alkuPvmA, alkuPvmB) ? -1 : 1;
             })
         );
     const currentNimiIndex = mappedPastNimet.findIndex(
@@ -84,25 +86,15 @@ export const sortNimet = (
     return { currentNimi, pastNimet: mappedPastNimet, futureNimet: mappedFutureNimet };
 };
 
-const makeDate = (date: Date | string | undefined, format: string[] | string | undefined) => {
-    if (date) {
-        return moment(date, format);
-    }
-    return moment();
-};
-
 export const getUiDateStr = (
     dateStr?: Date | string,
-    format: string[] | string | undefined = ['D-M-YYYY', 'YYYY-M-D', 'YYYY-D-M', 'M-D-YYYY'],
+    dateFormats: string[] | string | undefined = ['d-M-yyyy', 'yyyy-M-d', 'yyyy-d-M', 'M-d-yyyy'],
     long = false
 ): LocalDate => {
-    const dateWithoutFormat = makeDate(dateStr, format);
-    return dateWithoutFormat.isValid()
-        ? (dateWithoutFormat.format(`D.M.yyyy${long ? ' HH:mm:ss' : ''}`) as LocalDate)
-        : '';
+    return formatDateInput(dateStr, `${UI_DATE_FORMAT}${long ? ' HH:mm:ss' : ''}`, dateFormats, true) as LocalDate;
 };
 
 export const formatUiDateStrToApi = (date?: Date | string): APIEndpontDate => {
-    const dateWithoutFormat = makeDate(date, 'DD.MM.YYYY');
-    return dateWithoutFormat.isValid() ? (dateWithoutFormat.format('yyyy-MM-DD') as APIEndpontDate) : '';
+    const parsedDate = parseDateInput(date, UI_DATE_FORMAT, true);
+    return parsedDate ? (format(parsedDate, API_DATE_FORMAT) as APIEndpontDate) : '';
 };

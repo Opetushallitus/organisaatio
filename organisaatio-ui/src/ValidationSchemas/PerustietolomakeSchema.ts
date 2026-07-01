@@ -1,9 +1,7 @@
-import JoiLess, { Root } from 'joi';
-import JoiDate from '@joi/date';
+import Joi from 'joi';
 import { ytunnusJoiValidator } from './YtunnusValidator';
 import { ORGANIAATIOTYYPPI_KUNTA } from '../api/koodisto';
-
-const Joi = JoiLess.extend(JoiDate) as Root;
+import { uiDateValidator } from './DateValidator';
 
 const perustietoOptionSchemaRequired = Joi.object({
     label: Joi.string().required(),
@@ -26,7 +24,7 @@ const virastoTunnus = Joi.string()
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
     ytunnus: Joi.custom(ytunnusJoiValidator),
-    alkuPvm: Joi.date().format(['D.M.YYYY']).required(),
+    alkuPvm: Joi.custom(uiDateValidator).required(),
     organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not(ORGANIAATIOTYYPPI_KUNTA).required()),
     kotipaikka: perustietoOptionSchemaRequired,
     muutKotipaikat: Joi.array(),
@@ -36,7 +34,7 @@ export default Joi.object({
     oppilaitosKoodi: Joi.string().allow(''),
     muutOppilaitosTyyppiUris: Joi.array().min(0),
     vuosiluokat: Joi.array().min(0),
-    lakkautusPvm: Joi.date().format(['D.M.YYYY']).allow(''),
+    lakkautusPvm: Joi.custom(uiDateValidator).allow(''),
     varhaiskasvatuksenToimipaikkaTiedot: Joi.optional(),
     piilotettu: Joi.optional(),
     yritysmuoto: Joi.optional(),
