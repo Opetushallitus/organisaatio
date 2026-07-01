@@ -1164,10 +1164,15 @@ test.describe("Osoitepalvelu generic error page", () => {
   test("shows generic error page when required request to backend fails", async ({
     page,
   }) => {
-    await blockRequestOnce(page, "**/osoitteet/parametrit");
+    const parametritFailure = await failParametritRequestsUntilStopped(page);
     const osoitepalveluPage = new SearchView(page);
-    await osoitepalveluPage.goto("error");
-    await osoitepalveluPage.retryFromGenericError();
+    await Promise.all([
+      parametritFailure.waitForFailure(),
+      osoitepalveluPage.goto("error"),
+    ]);
+    await osoitepalveluPage.retryFromGenericError(
+      parametritFailure.stopFailing
+    );
   });
 });
 
@@ -1259,16 +1264,49 @@ function stringOfLength(n: number) {
   return "x".repeat(n);
 }
 
-async function blockRequestOnce(page: Page, url: string) {
-  let requestBlockedOnce = false;
-  await page.route(url, (route) => {
-    if (!requestBlockedOnce) {
-      route.abort();
-      requestBlockedOnce = true;
-    } else {
-      route.continue();
-    }
+async function failParametritRequestsUntilStopped(
+  page: Page
+): Promise<{
+  waitForFailure: () => Promise<void>;
+  stopFailing: () => void;
+}> {
+  let shouldFailRequests = true;
+  let requestFailedOnce = false;
+  let resolveParametritFailure = () => {};
+  const parametritFailure = new Promise<void>((resolve) => {
+    resolveParametritFailure = () => resolve();
   });
+
+  await page.setExtraHTTPHeaders({
+    "Cache-Control": "no-cache",
+    Pragma: "no-cache",
+  });
+
+  await page.route("**/*", (route) => {
+    if (
+      shouldFailRequests &&
+      route.request().url().includes("/osoitteet/parametrit")
+    ) {
+      if (!requestFailedOnce) {
+        requestFailedOnce = true;
+        resolveParametritFailure();
+      }
+      return route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Forced test failure" }),
+      });
+    }
+
+    return route.continue();
+  });
+
+  return {
+    waitForFailure: () => parametritFailure,
+    stopFailing: () => {
+      shouldFailRequests = false;
+    },
+  };
 }
 
 async function uploadFile(page: Page, locator: Locator, fileName: string) {

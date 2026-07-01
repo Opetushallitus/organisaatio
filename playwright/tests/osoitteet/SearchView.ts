@@ -85,12 +85,13 @@ export class SearchView {
     });
   }
 
-  async retryFromGenericError() {
+  async retryFromGenericError(beforeRetry?: () => void) {
     const retryButton = this.page.getByRole("button", {
       name: "Yritä uudelleen",
     });
     await expect(retryButton).toBeVisible({ timeout: OSOITEPALVELU_TIMEOUT });
-    await retryButton.click({ force: true });
+    beforeRetry?.();
+    await this.page.reload();
     await this.waitForSearchForm();
   }
 
