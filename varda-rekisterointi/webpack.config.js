@@ -112,6 +112,7 @@ module.exports = function () {
                 '.jsx',
             ],
             alias: {
+                '@opetushallitus/virkailija-ui-components': path.resolve(__dirname, 'src', 'virkailija-ui-components'),
                 ...(isEnvProductionProfile && {
                     'react-dom$': 'react-dom/profiling',
                     'scheduler/tracing': 'scheduler/tracing-profiling',
@@ -125,7 +126,6 @@ module.exports = function () {
                     enforce: 'pre',
                     test: /\.(js|mjs|jsx|ts|tsx|css)$/,
                     loader: 'source-map-loader',
-                    exclude: /virkailija-ui-components/,
                 },
                 {
                     oneOf: [

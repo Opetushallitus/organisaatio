@@ -104,7 +104,6 @@ module.exports = function () {
                     enforce: 'pre',
                     test: /\.(js|mjs|jsx|ts|tsx)$/,
                     loader: 'source-map-loader',
-                    exclude: /virkailija-ui-components/,
                 },
                 {
                     oneOf: [
