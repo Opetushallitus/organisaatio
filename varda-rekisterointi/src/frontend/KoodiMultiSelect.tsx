@@ -3,8 +3,7 @@ import { Koodi } from './types/types';
 import { toLocalizedText } from './LocalizableTextUtils';
 import { LanguageContext } from './contexts';
 import classNames from 'classnames';
-import Select from 'react-select';
-import { OptionTypeBase } from 'react-select/src/types';
+import Select, { MultiValue } from 'react-select';
 
 type Props = {
     labelledBy?: string;
@@ -16,6 +15,11 @@ type Props = {
     onChange: (uris: string[]) => void;
 };
 
+type SelectOption = {
+    value: string;
+    label: string;
+};
+
 export default function KoodiMultiSelect(props: Props) {
     const { language } = useContext(LanguageContext);
     const classes = classNames({
@@ -24,7 +28,7 @@ export default function KoodiMultiSelect(props: Props) {
     const options = props.selectable
         .map((koodi) => ({ value: koodi.uri, label: toLocalizedText(koodi.nimi, language, koodi.arvo) }))
         .sort((option1, option2) => option1.label.localeCompare(option2.label, language));
-    const defaultValue: OptionTypeBase[] = props.selected
+    const defaultValue: SelectOption[] = props.selected
         ? options.filter((option) => (props.selected ? props.selected.some((select) => select === option.value) : []))
         : [];
     return (
@@ -39,12 +43,8 @@ export default function KoodiMultiSelect(props: Props) {
                 isMulti
                 isClearable={false}
                 hideSelectedOptions={true}
-                onChange={(selectionOptions) =>
-                    props.onChange(
-                        selectionOptions
-                            ? selectionOptions.map((selectedOption: OptionTypeBase) => selectedOption.value)
-                            : []
-                    )
+                onChange={(selectionOptions: MultiValue<SelectOption>) =>
+                    props.onChange(selectionOptions.map((selectedOption) => selectedOption.value))
                 }
             />
         </div>
