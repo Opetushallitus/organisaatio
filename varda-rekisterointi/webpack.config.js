@@ -1,10 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const { createHash } = require('crypto');
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
@@ -13,15 +10,8 @@ const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
 const isEnvProductionProfile = isEnvProduction && process.argv.includes('--profile');
 
-const createEnvironmentHash = () => {
-    const hash = createHash('md5');
-    hash.update(JSON.stringify({ NODE_ENV: process.env.NODE_ENV }));
-    return hash.digest('hex');
-};
-
 module.exports = function () {
     return {
-        target: ['browserslist'],
         stats: 'errors-warnings',
         mode: isEnvProduction ? 'production' : 'development',
         bail: isEnvProduction,
@@ -50,7 +40,6 @@ module.exports = function () {
                 index: '/varda-rekisterointi/',
             },
             host: '127.0.0.1',
-            hot: true,
             port: 3000,
             proxy: [
                 {
@@ -73,27 +62,15 @@ module.exports = function () {
         },
         output: {
             path: path.resolve(__dirname, 'build'),
-            pathinfo: isEnvDevelopment,
-            filename: isEnvProduction
-                ? 'static/js/[name].[contenthash:8].js'
-                : isEnvDevelopment && 'static/js/[name].bundle.js',
-            chunkFilename: isEnvProduction
-                ? 'static/js/[name].[contenthash:8].chunk.js'
-                : isEnvDevelopment && 'static/js/[name].chunk.js',
+            clean: true,
+            filename: isEnvProduction ? 'static/js/[name].[contenthash:8].js' : 'static/js/[name].bundle.js',
+            chunkFilename: isEnvProduction ? 'static/js/[name].[contenthash:8].chunk.js' : 'static/js/[name].chunk.js',
             assetModuleFilename: 'static/media/[name].[hash][ext]',
             publicPath: '/varda-rekisterointi/',
-            devtoolModuleFilenameTemplate: isEnvProduction
-                ? (info) => path.relative(path.resolve(__dirname, 'src'), info.absoluteResourcePath).replace(/\\/g, '/')
-                : isEnvDevelopment && ((info) => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
         },
         cache: {
             type: 'filesystem',
-            version: createEnvironmentHash(),
-            cacheDirectory: path.resolve(__dirname, 'node_modules', '.cache'),
-            store: 'pack',
             buildDependencies: {
-                defaultWebpack: ['webpack/lib/'],
-                config: [__filename],
                 tsconfig: [path.resolve(__dirname, 'tsconfig.json')],
             },
         },
@@ -176,34 +153,6 @@ module.exports = function () {
                 favicon: path.resolve(__dirname, 'public', 'favicon.ico'),
                 chunks: ['main'],
             }),
-            new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-            }),
-            isEnvProduction &&
-                new MiniCssExtractPlugin({
-                    filename: 'static/css/[name].[contenthash:8].css',
-                    chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-                }),
-            new WebpackManifestPlugin({
-                fileName: 'asset-manifest.json',
-                publicPath: '/varda-rekisterointi/',
-                generate: (seed, files, entrypoints) => {
-                    const manifestFiles = files.reduce((manifest, file) => {
-                        manifest[file.name] = file.path;
-                        return manifest;
-                    }, seed);
-                    const entrypointFiles = entrypoints.main.filter((fileName) => !fileName.endsWith('.map'));
-
-                    return {
-                        files: manifestFiles,
-                        entrypoints: entrypointFiles,
-                    };
-                },
-            }),
-            new webpack.IgnorePlugin({
-                resourceRegExp: /^\.\/locale$/,
-                contextRegExp: /moment$/,
-            }),
             new ForkTsCheckerWebpackPlugin({
                 typescript: {
                     configOverwrite: {
@@ -220,6 +169,6 @@ module.exports = function () {
                     mode: 'write-references',
                 },
             }),
-        ].filter(Boolean),
+        ],
     };
 };

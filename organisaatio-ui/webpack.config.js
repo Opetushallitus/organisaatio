@@ -17,12 +17,7 @@ module.exports = function () {
         bail: isEnvProduction,
         devtool: isEnvProduction ? (shouldUseSourceMap ? 'source-map' : false) : 'cheap-module-source-map',
         devServer: {
-            allowedHosts: 'all',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': '*',
-            },
+            allowedHosts: ['localhost'],
             compress: true,
             static: {
                 directory: path.resolve(__dirname, 'public'),
@@ -55,6 +50,7 @@ module.exports = function () {
                         '/organisaatio-service/internal',
                         '/organisaatio-service/mock',
                     ],
+                    changeOrigin: true,
                 },
             ],
         },
