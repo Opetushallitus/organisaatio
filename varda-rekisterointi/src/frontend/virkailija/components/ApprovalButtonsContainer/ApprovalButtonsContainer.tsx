@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 
@@ -32,9 +32,9 @@ function CheckOutlinedIcon() {
 
 export default function ApprovalButtonsContainer({ chosenRekisteroinnit, approvalCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
-    const [buttonsInUse, setButtonsInUse] = useState(false);
     const { setModal } = useModalContext();
     const chosen = chosenRekisteroinnit.length;
+    const buttonsInUse = chosen > 0;
 
     function confirmApprovalSelection(hyvaksytty: boolean) {
         setModal(
@@ -45,10 +45,6 @@ export default function ApprovalButtonsContainer({ chosenRekisteroinnit, approva
             />
         );
     }
-
-    useEffect(() => {
-        setButtonsInUse(chosen > 0);
-    }, [chosen]);
 
     return (
         <Box className={styles.approvalButtonsContainer}>

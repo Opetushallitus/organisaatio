@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import createTheme from '@opetushallitus/virkailija-ui-components/createTheme';
 import { ThemeProvider } from 'styled-components';
 import useAxios from 'axios-hooks';
@@ -27,21 +27,37 @@ export default function VirkailijaLandingPage() {
     const [{ data: permission, loading: permissionLoading, error: permissionError }] = useAxios<Permission>(
         '/varda-rekisterointi/virkailija/api/permission/rekisterointi'
     );
+    const sortedPermission = useMemo(
+        () =>
+            permission
+                ? {
+                      ...permission,
+                      registrationTypes: [...permission.registrationTypes].sort(),
+                  }
+                : undefined,
+        [permission]
+    );
+    const maatJaValtiotKoodisto = useMemo(
+        () => new KoodistoImpl(maatJaValtiot ?? [], language),
+        [maatJaValtiot, language]
+    );
+    const maatJaValtiotContextValue = useMemo(() => ({ koodisto: maatJaValtiotKoodisto }), [maatJaValtiotKoodisto]);
+    const closeModal = useCallback(() => setModal(undefined), []);
+    const modalContextValue = useMemo(() => ({ modal, setModal, closeModal }), [modal, closeModal]);
+
     if (maatJaValtiotLoading || permissionLoading) {
         return <Spinner />;
     }
 
-    if (maatJaValtiotError || permissionError || !maatJaValtiot || !permission) {
+    if (maatJaValtiotError || permissionError || !maatJaValtiot || !sortedPermission) {
         return <ErrorPage>Tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen</ErrorPage>;
     }
 
-    permission.registrationTypes.sort();
-    const maatJaValtiotKoodisto = new KoodistoImpl(maatJaValtiot, language);
     return (
-        <PermissionContext.Provider value={permission}>
-            <MaatJaValtiotKoodistoContext.Provider value={{ koodisto: maatJaValtiotKoodisto }}>
+        <PermissionContext.Provider value={sortedPermission}>
+            <MaatJaValtiotKoodistoContext.Provider value={maatJaValtiotContextValue}>
                 <Raamit>
-                    <ModalContext.Provider value={{ modal, setModal, closeModal: () => setModal(undefined) }}>
+                    <ModalContext.Provider value={modalContextValue}>
                         <ThemeProvider theme={theme}>
                             <RekisteroinnitBase />
                         </ThemeProvider>

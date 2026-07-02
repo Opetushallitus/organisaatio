@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import axios from 'axios';
@@ -45,26 +45,31 @@ export default function RekisteroinnitBase() {
         };
 
         void fetchRekisteroinnit();
-    }, [registrationTypes]);
+    }, []);
 
-    const approvalCallback = (
-        approvalRegistrations: Rekisterointihakemus[],
-        hyvaksytty: boolean,
-        perustelu?: string
-    ) => {
-        const approvalIds = approvalRegistrations.map((r) => r.id);
-        const registrations = rekisteroinnit.map((r) =>
-            approvalIds.includes(r.id)
-                ? {
-                      ...r,
-                      tila: hyvaksytty ? ('HYVAKSYTTY' as const) : ('HYLATTY' as const),
-                      paatos: { hyvaksytty, paatetty: new Date().toISOString(), perustelu },
-                  }
-                : r
-        );
-        setRekisteroinnit(registrations);
-        toast.success(i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTY' : 'REKISTEROINNIT_HYLATTY'));
-    };
+    const approvalCallback = useCallback(
+        (approvalRegistrations: Rekisterointihakemus[], hyvaksytty: boolean, perustelu?: string) => {
+            const approvalIds = approvalRegistrations.map((r) => r.id);
+            setRekisteroinnit((currentRekisteroinnit) =>
+                currentRekisteroinnit.map((r) =>
+                    approvalIds.includes(r.id)
+                        ? {
+                              ...r,
+                              tila: hyvaksytty ? ('HYVAKSYTTY' as const) : ('HYLATTY' as const),
+                              paatos: { hyvaksytty, paatetty: new Date().toISOString(), perustelu },
+                          }
+                        : r
+                )
+            );
+            toast.success(i18n.translate(hyvaksytty ? 'REKISTEROINNIT_HYVAKSYTTY' : 'REKISTEROINNIT_HYLATTY'));
+        },
+        [i18n]
+    );
+
+    const filteredRekisteroinnit = useMemo(
+        () => rekisteroinnit.filter((r) => r.tyyppi === registrationType),
+        [rekisteroinnit, registrationType]
+    );
 
     if (error) {
         return <ErrorPage>{i18n.translate('REKISTEROINNIT_LATAUSVIRHE')}</ErrorPage>;
@@ -106,7 +111,7 @@ export default function RekisteroinnitBase() {
                     <Spinner />
                 ) : (
                     <RekisteroinnitTable
-                        rekisteroinnit={rekisteroinnit.filter((r) => r.tyyppi === registrationType)}
+                        rekisteroinnit={filteredRekisteroinnit}
                         rekisterointityyppi={registrationType ?? 'varda'}
                         approvalCallback={approvalCallback}
                     />

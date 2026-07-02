@@ -41,8 +41,9 @@ export default function RekisteroinnitTable({
     const { kunnat } = useKoodistoContext();
     const { setModal } = useModalContext();
     const data = useMemo<Rekisterointihakemus[]>(() => {
-        rekisteroinnit.sort((a, b) => a.organisaatio.ytjNimi.nimi.localeCompare(b.organisaatio.ytjNimi.nimi));
-        return [...rekisteroinnit];
+        return [...rekisteroinnit].sort((a, b) =>
+            a.organisaatio.ytjNimi.nimi.localeCompare(b.organisaatio.ytjNimi.nimi)
+        );
     }, [rekisteroinnit]);
 
     const columns = useMemo<ColumnDef<Rekisterointihakemus>[]>(() => {
