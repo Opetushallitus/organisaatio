@@ -6,6 +6,7 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
+    PaginationState,
     Row,
     useReactTable,
 } from '@tanstack/react-table';
@@ -55,8 +56,10 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
     const [globalFilter, setGlobalFilter] = useState('');
     const [tilaFilter, setTilaFilter] = useState<Tila>('KASITTELYSSA');
     const kasittelyssa = data.filter((r) => r.tila === 'KASITTELYSSA');
-    const [pageSize, setPageSize] = useState(20);
-    const [pageIndex, setPageIndex] = useState(0);
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 20,
+    });
 
     const renderOrganizationDetails = React.useCallback(
         (row: Row<Rekisterointihakemus>) => (
@@ -109,6 +112,7 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
     const table = useReactTable({
         data,
         columns,
+        getRowId: (row) => `${row.id}`,
         state: {
             rowSelection,
             globalFilter,
@@ -120,13 +124,11 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
                 hylatty: tilaFilter === 'HYLATTY',
                 hyvaksytty: tilaFilter === 'HYVAKSYTTY',
             },
-            pagination: {
-                pageIndex,
-                pageSize,
-            },
+            pagination,
         },
-        autoResetPageIndex: true,
+        autoResetPageIndex: false,
         onRowSelectionChange: setRowSelection,
+        onPaginationChange: setPagination,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -134,7 +136,9 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
 
     const filteredRowLength = table.getFilteredRowModel().rows.length;
     useEffect(() => {
-        setPageIndex(0);
+        setPagination((currentPagination) =>
+            currentPagination.pageIndex === 0 ? currentPagination : { ...currentPagination, pageIndex: 0 }
+        );
     }, [filteredRowLength]);
 
     const selectedRows = filterOnlyKasittelyssa(table.getSelectedRowModel().rows);
@@ -197,12 +201,15 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
                                 <tr
                                     className={`${styles.row} ${idx % 2 === 1 ? styles.evenRow : ''}`}
                                     style={{ zIndex: 150 - idx }}
-                                    onClick={(e) =>
-                                        e.target instanceof HTMLButtonElement ||
-                                        (e.target instanceof HTMLInputElement &&
-                                            e.target.getAttribute('class')?.includes('checkbox')) ||
-                                        row.toggleExpanded()
-                                    }
+                                    onClick={(e) => {
+                                        if (
+                                            e.target instanceof Element &&
+                                            e.target.closest('button, a, input, textarea, select, label')
+                                        ) {
+                                            return;
+                                        }
+                                        row.toggleExpanded();
+                                    }}
                                     role="button"
                                     aria-pressed={row.getIsExpanded()}
                                     aria-label={i18n.translate('AVAA_REKISTEROINNIN_TIEDOT')}
@@ -269,11 +276,11 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
                 </div>
             ) : (
                 <Pagination
-                    pageIndex={pageIndex}
-                    setPageIndex={setPageIndex}
+                    pageIndex={pagination.pageIndex}
+                    setPageIndex={(pageIndex) => setPagination((current) => ({ ...current, pageIndex }))}
                     pageOptions={table.getPageOptions()}
-                    pageSize={pageSize}
-                    setPageSize={setPageSize}
+                    pageSize={pagination.pageSize}
+                    setPageSize={(pageSize) => setPagination((current) => ({ ...current, pageSize }))}
                 />
             )}
             {(tilaFilter === 'KASITTELYSSA' || selectedRows.length > 0) && (
