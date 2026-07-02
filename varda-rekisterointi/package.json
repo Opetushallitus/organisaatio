@@ -4,8 +4,6 @@
     "private": true,
     "homepage": "/varda-rekisterointi",
     "dependencies": {
-        "@material-ui/core": "^4.7.2",
-        "@material-ui/icons": "^4.5.1",
         "@tanstack/react-table": "^8.5.13",
         "axios": "1.18.1",
         "axios-hooks": "5.1.1",
@@ -66,7 +64,7 @@
         "start": "NODE_ENV=development npx webpack serve",
         "build": "GENERATE_SOURCEMAP=false NODE_ENV=production npx webpack --mode production",
         "test": "node --import tsx --test ./src/**/*.test.ts",
-        "lint": "eslint -c eslint.config.mjs"
+        "lint": "eslint -c eslint.config.mjs src"
     },
     "browserslist": {
         "production": [

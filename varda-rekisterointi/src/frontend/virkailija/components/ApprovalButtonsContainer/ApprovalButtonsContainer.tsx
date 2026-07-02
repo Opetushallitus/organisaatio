@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Clear from '@material-ui/icons/Clear';
-import { CheckOutlined } from '@material-ui/icons';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Box from '@opetushallitus/virkailija-ui-components/Box';
 
@@ -15,6 +13,22 @@ type Props = {
     chosenRekisteroinnit: Rekisterointihakemus[];
     approvalCallback: ApprovalCallback;
 };
+
+function ClearIcon() {
+    return (
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+            <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        </svg>
+    );
+}
+
+function CheckOutlinedIcon() {
+    return (
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+            <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+        </svg>
+    );
+}
 
 export default function ApprovalButtonsContainer({ chosenRekisteroinnit, approvalCallback }: Props) {
     const { i18n } = useContext(LanguageContext);
@@ -44,11 +58,11 @@ export default function ApprovalButtonsContainer({ chosenRekisteroinnit, approva
                 variant="outlined"
                 color="secondary"
             >
-                <Clear /> {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
+                <ClearIcon /> {i18n.translate('REKISTEROINNIT_HYLKAA_VALITUT')}
                 {chosen ? ` (${chosen})` : ''}
             </Button>
             <Button disabled={!buttonsInUse} onClick={() => confirmApprovalSelection(true)}>
-                <CheckOutlined /> {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
+                <CheckOutlinedIcon /> {i18n.translate('REKISTEROINNIT_HYVAKSY_VALITUT')}
                 {chosen ? ` (${chosen})` : ''}
             </Button>
         </Box>

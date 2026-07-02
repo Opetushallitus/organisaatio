@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import SearchIcon from '@material-ui/icons/Search';
 import { parseISO, format } from 'date-fns';
 import {
     ColumnDef,
@@ -28,6 +27,22 @@ type TableProps = {
     rekisterointityyppi: Rekisterointityyppi;
     approvalCallback: ApprovalCallback;
 };
+
+function SearchIcon() {
+    return (
+        <svg
+            aria-hidden="true"
+            focusable="false"
+            viewBox="0 0 24 24"
+            width="1em"
+            height="1em"
+            fill="currentColor"
+            color="rgba(0, 0, 0, 0.26)"
+        >
+            <path d="M9.5 3a6.5 6.5 0 0 0 0 13c1.61 0 3.09-.59 4.23-1.57L19.29 20l1.41-1.41-5.56-5.56A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z" />
+        </svg>
+    );
+}
 
 const filterOnlyKasittelyssa = (rows: Row<Rekisterointihakemus>[]) => {
     return rows.filter((rh: Row<Rekisterointihakemus>) => rh.original.tila === 'KASITTELYSSA').map((r) => r.original);
@@ -131,7 +146,7 @@ export const Table = ({ columns, data, rekisterointityyppi, approvalCallback }: 
                     <Input
                         value={globalFilter}
                         placeholder={i18n.translate('HAKU_PLACEHOLDER')}
-                        suffix={<SearchIcon color="disabled" />}
+                        suffix={<SearchIcon />}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGlobalFilter(e.target.value)}
                         className={styles.filterInput}
                     />

@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import Button from './Button';
 import { LanguageContext } from './contexts';
 import styles from './InputMultiple.module.css';
-import ClearIcon from '@material-ui/icons/Clear';
 import classNames from 'classnames';
 
 type Props = {
@@ -12,6 +11,14 @@ type Props = {
     hasError?: boolean;
     onChange: (values: string[]) => void;
 };
+
+function ClearIcon() {
+    return (
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+            <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        </svg>
+    );
+}
 
 export default function InputMultiple(props: Props) {
     const { i18n } = useContext(LanguageContext);
