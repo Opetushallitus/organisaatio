@@ -1,0 +1,134 @@
+[
+    {
+        "id": 1001,
+        "tyyppi": "jotpa",
+        "toimintamuoto": null,
+        "kunnat": [],
+        "sahkopostit": ["testi.jotpa@testiyrit2.ys"],
+        "organisaatio": {
+            "ytunnus": "0000000-1",
+            "ytjNimi": {
+                "nimi": "Jotpa-yritys",
+                "kieli": "fi",
+                "alkuPvm": "2024-01-01"
+            },
+            "alkuPvm": "2024-01-01",
+            "yritysmuoto": "yritysmuoto_26",
+            "tyypit": ["organisaatiotyyppi_01"],
+            "kotipaikkaUri": "kunta_091",
+            "maaUri": "maatjavaltiot1_fin",
+            "kieletUris": [],
+            "yhteystiedot": {
+                "puhelinnumero": "+35812112121",
+                "sahkoposti": "testi.yritys1@testiyrit2.ys",
+                "postiosoite": {
+                    "katuosoite": "Haapaniemenkatu 12",
+                    "postinumeroUri": "posti_00530",
+                    "postitoimipaikka": "Helsinki"
+                },
+                "kayntiosoite": {
+                    "katuosoite": "Haapaniemenkatu 12",
+                    "postinumeroUri": "posti_00530",
+                    "postitoimipaikka": "Helsinki"
+                }
+            }
+        },
+        "kayttaja": {
+            "etunimi": "kingi",
+            "sukunimi": "Kayttaja",
+            "sahkoposti": "testi.kayttaja1@testiyrit2.ys",
+            "asiointikieli": "fi",
+            "saateteksti": null
+        },
+        "vastaanotettu": "2024-01-01T12:00:00",
+        "tila": "KASITTELYSSA"
+    },
+    {
+        "id": 1006,
+        "tyyppi": "jotpa",
+        "toimintamuoto": null,
+        "kunnat": [],
+        "sahkopostit": ["testi.jotpa@testiyrit6.ys"],
+        "organisaatio": {
+            "ytunnus": "0000000-6",
+            "ytjNimi": {
+                "nimi": "Jotpa-yritys 2",
+                "kieli": "fi",
+                "alkuPvm": "2024-01-01"
+            },
+            "alkuPvm": "2024-01-01",
+            "yritysmuoto": "yritysmuoto_26",
+            "tyypit": ["organisaatiotyyppi_01"],
+            "kotipaikkaUri": "kunta_091",
+            "maaUri": "maatjavaltiot1_fin",
+            "kieletUris": [],
+            "yhteystiedot": {
+                "puhelinnumero": "+35812112126",
+                "sahkoposti": "testi.yritys6@testiyrit6.ys",
+                "postiosoite": {
+                    "katuosoite": "Haapaniemenkatu 12",
+                    "postinumeroUri": "posti_00530",
+                    "postitoimipaikka": "Helsinki"
+                },
+                "kayntiosoite": {
+                    "katuosoite": "Haapaniemenkatu 12",
+                    "postinumeroUri": "posti_00530",
+                    "postitoimipaikka": "Helsinki"
+                }
+            }
+        },
+        "kayttaja": {
+            "etunimi": "kingi",
+            "sukunimi": "Kayttaja",
+            "sahkoposti": "testi.kayttaja6@testiyrit6.ys",
+            "asiointikieli": "fi",
+            "saateteksti": null
+        },
+        "vastaanotettu": "2024-01-02T12:00:00",
+        "tila": "KASITTELYSSA"
+    },
+    {
+        "id": 1007,
+        "tyyppi": "jotpa",
+        "toimintamuoto": null,
+        "kunnat": [],
+        "sahkopostit": ["testi.jotpa@testiyrit7.ys"],
+        "organisaatio": {
+            "ytunnus": "0000000-7",
+            "ytjNimi": {
+                "nimi": "Jotpa-yritys 3",
+                "kieli": "fi",
+                "alkuPvm": "2024-01-01"
+            },
+            "alkuPvm": "2024-01-01",
+            "yritysmuoto": "yritysmuoto_26",
+            "tyypit": ["organisaatiotyyppi_01"],
+            "kotipaikkaUri": "kunta_091",
+            "maaUri": "maatjavaltiot1_fin",
+            "kieletUris": [],
+            "yhteystiedot": {
+                "puhelinnumero": "+35812112127",
+                "sahkoposti": "testi.yritys7@testiyrit7.ys",
+                "postiosoite": {
+                    "katuosoite": "Haapaniemenkatu 12",
+                    "postinumeroUri": "posti_00530",
+                    "postitoimipaikka": "Helsinki"
+                },
+                "kayntiosoite": {
+                    "katuosoite": "Haapaniemenkatu 12",
+                    "postinumeroUri": "posti_00530",
+                    "postitoimipaikka": "Helsinki"
+                }
+            }
+        },
+        "kayttaja": {
+            "etunimi": "kingi",
+            "sukunimi": "Kayttaja",
+            "sahkoposti": "testi.kayttaja7@testiyrit7.ys",
+            "asiointikieli": "fi",
+            "saateteksti": null
+        },
+        "vastaanotettu": "2024-01-03T12:00:00",
+        "tila": "KASITTELYSSA"
+    }
+]
