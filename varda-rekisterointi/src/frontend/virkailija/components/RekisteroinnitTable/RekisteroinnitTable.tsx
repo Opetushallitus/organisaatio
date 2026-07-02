@@ -29,15 +29,7 @@ function IndeterminateCheckbox({ indeterminate, ...rest }: { indeterminate?: boo
         }
     }, [ref, indeterminate, rest.checked]);
 
-    return (
-        <Checkbox
-            // @ts-expect-error ref
-            ref={ref}
-            className="checkbox"
-            {...rest}
-            indeterminate={indeterminate}
-        />
-    );
+    return <Checkbox ref={ref} className="checkbox" {...rest} indeterminate={indeterminate} />;
 }
 
 export default function RekisteroinnitTable({

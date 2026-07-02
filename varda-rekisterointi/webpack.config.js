@@ -115,7 +115,7 @@ module.exports = function () {
                                 },
                             },
                         },
-                        { test: /\.svg/, type: 'asset/inline' },
+                        { test: /\.svg$/, type: 'asset/inline' },
                         {
                             test: /\.(js|mjs|jsx|ts|tsx)?$/,
                             exclude: /node_modules/,
