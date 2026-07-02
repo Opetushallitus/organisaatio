@@ -33,7 +33,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react",
-    "types": []
+    "types": [
+      "react-datepicker"
+    ]
   },
   "include": [
     "src"
