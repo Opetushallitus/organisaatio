@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     entry: {
         index: './src/index',
     },
