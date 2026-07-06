@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router';
 import * as yup from 'yup';
 import { JotpaRekisterointiState, useJotpaRekisterointiSelector } from './store';
 
+type ValidatedFormSlice = 'organisation' | 'user';
+
 type ValidatedForm = {
-    slice: keyof JotpaRekisterointiState;
+    slice: ValidatedFormSlice;
     schema: yup.AnySchema;
     redirectPath: string;
 };

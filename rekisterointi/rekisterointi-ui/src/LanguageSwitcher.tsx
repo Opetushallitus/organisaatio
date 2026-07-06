@@ -4,13 +4,14 @@ import { useLanguageContext } from './LanguageContext';
 import { Language } from './types';
 
 import styles from './LanguageSwitcher.module.css';
-import axios from 'axios';
+import { useSetLanguageMutation } from './rekisterointiApi';
 
 export function LanguageSwitcher() {
-    const { language, setLanguage } = useLanguageContext();
+    const { language } = useLanguageContext();
+    const [setLanguageMutation, { isLoading }] = useSetLanguageMutation();
+
     const onChange = async (lang: Language) => {
-        await axios.put(`/api/lokalisointi/kieli?locale=${lang}`);
-        setLanguage(lang);
+        await setLanguageMutation(lang).unwrap();
     };
 
     return (
@@ -18,14 +19,14 @@ export function LanguageSwitcher() {
             <button
                 className={`${styles.languageButton} ${styles.leftButton}`}
                 onClick={() => onChange('fi')}
-                disabled={language === 'fi'}
+                disabled={language === 'fi' || isLoading}
             >
                 Suomeksi
             </button>
             <button
                 className={`${styles.languageButton} ${styles.rightButton}`}
                 onClick={() => onChange('sv')}
-                disabled={language === 'sv'}
+                disabled={language === 'sv' || isLoading}
             >
                 På svenska
             </button>

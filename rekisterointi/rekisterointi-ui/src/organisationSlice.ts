@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import * as yup from 'yup';
 
 import {
@@ -12,11 +11,6 @@ import {
     PuhelinnumeroSchema,
 } from './yupSchemas';
 import { Koodi, Organisation, SelectOption } from './types';
-
-export const fetchOrganisation = createAsyncThunk<Organisation, void>('organisation/fetchOrganisation', async () => {
-    const resp = await axios.get<Organisation>('/hakija/api/organisaatiot');
-    return resp.data;
-});
 
 export interface OrganisationFormState {
     yritysmuoto: SelectOption;
@@ -33,14 +27,11 @@ export interface OrganisationFormState {
 }
 
 interface State {
-    loading: boolean;
     initialOrganisation?: Organisation;
     form?: OrganisationFormState;
 }
 
-const initialState: State = {
-    loading: true,
-};
+const initialState: State = {};
 
 const organisationSlice = createSlice({
     name: 'organisation',
@@ -49,25 +40,15 @@ const organisationSlice = createSlice({
         setForm: (state, action: PayloadAction<OrganisationFormState>) => {
             state.form = action.payload;
         },
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchOrganisation.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(fetchOrganisation.fulfilled, (state, action) => {
-                state.loading = false;
-                state.initialOrganisation = action.payload;
-            })
-            .addCase(fetchOrganisation.rejected, () => {
-                window.location.href = '/hakija/logout?redirect=/jotpa';
-            });
+        setInitialOrganisation: (state, action: PayloadAction<Organisation>) => {
+            state.initialOrganisation = action.payload;
+        },
     },
 });
 
 export default organisationSlice.reducer;
 
-export const { setForm } = organisationSlice.actions;
+export const { setForm, setInitialOrganisation } = organisationSlice.actions;
 
 export const OrganisationSchema = (
     yritysmuodot: Koodi[],

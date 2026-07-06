@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Markdown from 'react-markdown';
-import axios, { AxiosResponse } from 'axios';
 import { format, parse } from 'date-fns';
 
 import { useJotpaRekisterointiSelector } from './store';
@@ -13,6 +12,7 @@ import { RegistrationProgressBar } from '../RegistrationProgressBar';
 import { getLanguageName, RekisterointiRequest } from '../types';
 import { OrganisationFormState } from '../organisationSlice';
 import { UserFormState } from '../userSlice';
+import { useSubmitRegistrationMutation } from '../rekisterointiApi';
 
 import styles from './jotpa.module.css';
 
@@ -24,8 +24,8 @@ export function JotpaYhteenveto() {
         organisation: { initialOrganisation, form: organisationForm },
         user: { form: userForm },
     } = useJotpaRekisterointiSelector((state) => state);
-    const [submitDisabled, setSubmitDisabled] = useState(false);
     const [submitError, setSubmitError] = useState('');
+    const [submitRegistration, { isLoading: submitDisabled }] = useSubmitRegistrationMutation();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -44,9 +44,8 @@ export function JotpaYhteenveto() {
         const organisation: OrganisationFormState = organisationForm!;
         const user: UserFormState = userForm!;
         setSubmitError('');
-        setSubmitDisabled(true);
         try {
-            await axios.post<string, AxiosResponse<string>, RekisterointiRequest>('/hakija/api/rekisterointi', {
+            await submitRegistration({
                 ...organisation,
                 yritysmuoto: organisation.yritysmuoto.value!,
                 kotipaikka: organisation.kotipaikka.value!,
@@ -58,11 +57,10 @@ export function JotpaYhteenveto() {
                 kayntipostitoimipaikka: findPostitoimipaikka(kayntipostinumero, posti, language)!,
                 emails: organisation.emails.map((e) => e.email).filter((e) => !!e) as string[],
                 ...user,
-            });
+            }).unwrap();
             window.location.href = '/hakija/logout?redirect=/jotpa/valmis';
         } catch (e) {
             setSubmitError(i18n.translate('lahetysvirhe'));
-            setSubmitDisabled(false);
         }
     };
 
