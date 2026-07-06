@@ -32,7 +32,7 @@ export default function DateSelect(props: Props) {
             dateFormat={UI_FORMAT}
             selected={value}
             readOnly={props.readOnly}
-            onChange={(date) => props.onChange(date != null ? format(date, LOCAL_DATE_FORMAT) : null)}
+            onChange={(date: Date | null) => props.onChange(date != null ? format(date, LOCAL_DATE_FORMAT) : null)}
             customInput={<input aria-describedby="datepickerohje" />}
         />
     );
