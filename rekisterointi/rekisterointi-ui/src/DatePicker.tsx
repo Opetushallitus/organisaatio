@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { Control, Controller, FieldError, FieldValues, Path } from 'react-hook-form';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
+import { format } from 'date-fns/format';
+import { parse } from 'date-fns/parse';
 
 import { FormError } from './FormError';
 import { useLanguageContext } from './LanguageContext';
@@ -34,11 +34,13 @@ export const DatePicker = <T extends FieldValues>({ name, control, error }: Date
                     <ReactDatePicker
                         id={name}
                         locale={language}
-                        aria-invalid={!!error}
+                        aria-invalid={error ? 'true' : 'false'}
                         aria-errormessage={`#error-${name}`}
                         aria-live="polite"
-                        aria-required={true}
-                        onChange={(e) => field.onChange(e && format(e, dateFormat))}
+                        aria-required="true"
+                        selectsRange={false}
+                        selectsMultiple={false}
+                        onChange={(date: Date | null) => field.onChange(date ? format(date, dateFormat) : null)}
                         selected={parseDate(field.value as string)}
                         dateFormat={dateFormat}
                         className={error ? 'invalid_date' : ''}

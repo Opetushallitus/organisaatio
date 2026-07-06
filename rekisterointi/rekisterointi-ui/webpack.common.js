@@ -35,4 +35,11 @@ export default {
         ],
     },
     resolve: { extensions: ['.ts', '.tsx', '.js'] },
+    // react-datepicker probes optional date-fns-tz support with a dynamic require.
+    ignoreWarnings: [
+        {
+            module: /react-datepicker[\\/]dist[\\/]index\.es\.js/,
+            message: /Critical dependency: the request of a dependency is an expression/,
+        },
+    ],
 };
