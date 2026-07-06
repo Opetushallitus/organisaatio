@@ -5,7 +5,6 @@ import { fi } from 'date-fns/locale/fi';
 import { sv } from 'date-fns/locale/sv';
 
 // import global styles first
-import 'oph-virkailija-style-guide/oph-styles.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import './styles.css';
 
