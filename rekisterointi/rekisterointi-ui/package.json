@@ -6,7 +6,7 @@
         "@hookform/resolvers": "3.10.0",
         "@reduxjs/toolkit": "^1.9.5",
         "axios": "1.18.1",
-        "date-fns": "^2.29.2",
+        "date-fns": "4.4.0",
         "normalize.css": "^8.0.1",
         "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
         "react": "18.3.1",
