@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Outlet, Route, Routes } from 'react-router';
 import { registerLocale } from 'react-datepicker';
 import { fi } from 'date-fns/locale/fi';
 import { sv } from 'date-fns/locale/sv';

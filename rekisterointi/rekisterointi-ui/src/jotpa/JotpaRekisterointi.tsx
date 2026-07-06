@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { setLocale } from 'yup';
 
 import { useJotpaRekisterointiDispatch } from './store';
