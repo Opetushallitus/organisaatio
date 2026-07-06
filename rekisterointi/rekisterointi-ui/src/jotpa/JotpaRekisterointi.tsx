@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { setLocale } from 'yup';
-import { Helmet } from 'react-helmet';
 
 import { useJotpaRekisterointiDispatch } from './store';
 import { JotpaOrganisaatio } from './JotpaOrganisaatio';
@@ -14,6 +13,7 @@ import { useLanguageContext } from '../LanguageContext';
 import { UserSchema } from '../userSlice';
 import { JotpaYhteenveto } from './JotpaYhteenveto';
 import { useGetKoodistoQuery, useGetOrganisationQuery } from '../rekisterointiApi';
+import { usePageTitle } from '../documentHead';
 
 setLocale({
     mixed: {
@@ -32,6 +32,8 @@ const koodistoNimiComparator = (language: Language) => (a: Koodi, b: Koodi) =>
 export function JotpaRekisterointi() {
     const dispatch = useJotpaRekisterointiDispatch();
     const { language, i18n } = useLanguageContext();
+    usePageTitle(i18n.translate('title'));
+
     const { data: organisation, isError: organisationError } = useGetOrganisationQuery();
     const { data: kunnat = [] } = useGetKoodistoQuery('KUNTA');
     const { data: yritysmuodot = [] } = useGetKoodistoQuery('YRITYSMUOTO');
@@ -74,9 +76,6 @@ export function JotpaRekisterointi() {
 
     return (
         <KoodistoContext.Provider value={koodisto}>
-            <Helmet>
-                <title>{i18n.translate('title')}</title>
-            </Helmet>
             <Routes>
                 <Route path="/organisaatio" element={<JotpaOrganisaatio />} />
                 <Route

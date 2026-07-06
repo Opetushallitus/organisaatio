@@ -1,10 +1,10 @@
 import React from 'react';
 import Markdown from 'react-markdown';
-import { Helmet } from 'react-helmet';
 
 import { Header } from './JotpaHeader';
 import { useLanguageContext } from '../LanguageContext';
 import { KayttajaLogo, OdotusLogo } from './JotpaProsessikuvaus';
+import { usePageTitle, useRobotsMeta } from '../documentHead';
 
 import styles from './JotpaValmis.module.css';
 import processStyles from './JotpaProsessikuvaus.module.css';
@@ -21,11 +21,11 @@ const SuccessLogo = () => (
 
 export function JotpaValmis() {
     const { i18n } = useLanguageContext();
+    usePageTitle(i18n.translate('title'));
+    useRobotsMeta('noindex');
+
     return (
         <>
-            <Helmet>
-                <meta name="robots" content="noindex" />
-            </Helmet>
             <Header title={i18n.translate('otsikko_valmis')} />
             <main id="main">
                 <div className="content" data-test-id="valmis-content">
