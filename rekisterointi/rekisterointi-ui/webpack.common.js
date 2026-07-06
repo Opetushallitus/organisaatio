@@ -10,8 +10,23 @@ export default {
                 loader: 'ts-loader',
             },
             {
+                test: /\.module\.css$/,
+                use: [
+                    { loader: 'style-loader' },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                namedExport: false,
+                            },
+                        },
+                    },
+                ],
+            },
+            {
                 test: /\.css$/,
-                use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+                exclude: /\.module\.css$/,
+                use: [{ loader: 'style-loader' }, { loader: 'css-loader', options: { modules: false } }],
             },
             {
                 test: /\.(?:png|gif|jpe?g|svg)$/,

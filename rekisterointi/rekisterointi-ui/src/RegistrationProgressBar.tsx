@@ -52,8 +52,8 @@ export const RegistrationProgressBar = ({ currentPhase, phaseTranslationKeys }: 
                     idx === 0
                         ? styles.leftLine
                         : idx === phaseTranslationKeys.length - 1
-                        ? styles.rightLine
-                        : styles.fullLine;
+                          ? styles.rightLine
+                          : styles.fullLine;
                 const LogoElement =
                     idx === currentPhase - 1 ? (
                         <ActivePhase phase={currentPhase} />

@@ -13,13 +13,10 @@ import {
 } from './yupSchemas';
 import { Koodi, Organisation, SelectOption } from './types';
 
-export const fetchOrganisation = createAsyncThunk<Organisation, void>(
-    'organisation/fetchOrganisation',
-    async () => {
-        const resp = await axios.get<Organisation>('/hakija/api/organisaatiot');
-        return resp.data;
-    }
-);
+export const fetchOrganisation = createAsyncThunk<Organisation, void>('organisation/fetchOrganisation', async () => {
+    const resp = await axios.get<Organisation>('/hakija/api/organisaatiot');
+    return resp.data;
+});
 
 export interface OrganisationFormState {
     yritysmuoto: SelectOption;
@@ -63,7 +60,7 @@ const organisationSlice = createSlice({
                 state.initialOrganisation = action.payload;
             })
             .addCase(fetchOrganisation.rejected, () => {
-                window.location.href = '/hakija/logout?redirect=/jotpa'
+                window.location.href = '/hakija/logout?redirect=/jotpa';
             });
     },
 });
