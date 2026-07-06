@@ -5,7 +5,7 @@
     "type": "module",
     "dependencies": {
         "@hookform/resolvers": "3.10.0",
-        "@reduxjs/toolkit": "1.9.7",
+        "@reduxjs/toolkit": "2.12.0",
         "axios": "1.18.1",
         "date-fns": "4.4.0",
         "oph-virkailija-style-guide": "github:Opetushallitus/virkailija-styles#master",
@@ -19,7 +19,6 @@
         "react-router": "6.30.4",
         "react-router-dom": "6.30.4",
         "react-select": "5.10.2",
-        "redux": "4.2.1",
         "yup": "1.7.1"
     },
     "devDependencies": {
