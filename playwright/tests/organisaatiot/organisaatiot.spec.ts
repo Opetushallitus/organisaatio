@@ -59,6 +59,16 @@ const allRestrictedButtons = [
   ...generalRestrictedButtons,
 ];
 
+const expectToast = async (
+  page: Page,
+  message: string,
+  role: "status" | "alert" = "status"
+) => {
+  await expect(
+    page.getByRole(role).filter({ hasText: message }).last()
+  ).toBeVisible();
+};
+
 test.describe("Organisations", () => {
   test.describe("Name Change", () => {
     test("Saves a new name", async ({ page }) => {
@@ -75,6 +85,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimea.fillInput("nimi.en", "pöllö Enkku");
       await organisaatioPage.muokkaaNimea.vahvista();
 
+      await expectToast(page, "MESSAGE_NIMEN_TALLENNUS_ONNISTUI");
       await organisaatioPage.expectNameToContain("pöllö Suominimi");
     });
 
@@ -99,6 +110,7 @@ test.describe("Organisations", () => {
       );
       await organisaatioPage.muokkaaNimea.vahvista();
 
+      await expectToast(page, "MESSAGE_NIMEN_MUOKKAUS_ONNISTUI");
       await organisaatioPage.expectNameToContain("pöllö Suominimi muokattu");
     });
 
@@ -116,6 +128,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimea.copyNameButton.click();
       await organisaatioPage.muokkaaNimea.vahvista();
 
+      await expectToast(page, "MESSAGE_NIMEN_MUOKKAUS_ONNISTUI");
       await expect(
         page.getByText(
           "pöllö testi kopioitava [fi], pöllö testi kopioitava [sv], pöllö testi kopioitava [en]"
@@ -147,6 +160,7 @@ test.describe("Organisations", () => {
       );
       await organisaatioPage.muokkaaNimea.vahvista();
 
+      await expectToast(page, "MESSAGE_NIMEN_TALLENNUS_ONNISTUI");
       await organisaatioPage.expectNameToContain("PARENT4 Suominimi");
       await organisaatioPage.nimihistoriaAccordion.click();
       await expect(organisaatioPage.nimihistoriaPanel).toContainText(
@@ -179,6 +193,7 @@ test.describe("Organisations", () => {
       );
       await organisaatioPage.muokkaaNimea.vahvista();
 
+      await expectToast(page, "MESSAGE_NIMEN_TALLENNUS_ONNISTUI");
       await organisaatioPage.expectNameToContain("PARENT4 Suominimi");
       await organisaatioPage.nimihistoriaAccordion.click();
       await expect(organisaatioPage.nimihistoriaPanel).toContainText(
@@ -186,6 +201,7 @@ test.describe("Organisations", () => {
       );
       page.on("dialog", (dialog) => dialog.accept());
       await organisaatioPage.poistaAjastettuNimenmuutos.click();
+      await expectToast(page, "MESSAGE_NIMEN_POISTO_ONNISTUI");
       await expect(organisaatioPage.nimihistoriaPanel).not.toContainText(
         "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]"
       );
@@ -335,6 +351,7 @@ test.describe("Organisations", () => {
         await expect(
           page.getByTitle(`VIIMEINEN_TARKASTUS_${today.format(ui_date_format)}`)
         ).toBeVisible();
+        await expectToast(page, "MESSAGE_TARKASTUS_AIKA_TALLENNETTU");
       });
 
       await test.step("shows new tarkastus date", async () => {
@@ -625,9 +642,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.fillInput("koskiposti.en", "muokattuen@testi.com");
       await organisaatioPage.fillYhteystiedot("sv");
       await organisaatioPage.tallennaButton.click();
-      await expect(
-        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
-      ).toBeVisible();
+      await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
 
       organisaatioPage.goto(childResponse.organisaatio.oid);
       await organisaatioPage.koskiPostiAccordion.click();
@@ -736,6 +751,7 @@ test.describe("Organisations", () => {
       ).toBeVisible();
       await page.locator("button[name=LOMAKE_POISTA_ORGANISAATIO]").click();
       await page.locator("button[name=BUTTON_VAHVISTA]").click();
+      await expectToast(page, "MESSAGE_POISTO_ONNISTUI");
 
       await organisaatioPage.goto(response.organisaatio.oid);
       await expect(
@@ -763,9 +779,7 @@ test.describe("Organisations", () => {
       await page.getByText("BUTTON_JATKA").click();
       await organisaatioPage.tallennaButton.click();
 
-      await expect(
-        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
-      ).toBeVisible();
+      await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
       await expect(page.locator("h1")).toHaveText(
         " Hameen ammatti-instituutti Oy 4"
       );
@@ -789,9 +803,7 @@ test.describe("Organisations", () => {
       await page.getByText("Hameen ammatti").click();
       await organisaatioPage.tallennaButton.click();
 
-      await expect(
-        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
-      ).toBeVisible();
+      await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
       await expect(page.locator("h1")).toHaveText(
         " Hameen ammatti-instituutti Oy 4"
       );
@@ -831,9 +843,7 @@ test.describe("Organisations", () => {
 
       await organisaatioPage.tallennaButton.click();
 
-      await expect(
-        page.getByText("MESSAGE_TALLENNUS_ONNISTUI_FI")
-      ).toBeVisible();
+      await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
       await page.reload();
       await expect(
         page.getByText("VERSIOHISTORIA_MUOKATTU_VIIMEKSI_FI")
@@ -880,6 +890,7 @@ test.describe("Organisations", () => {
         page.getByText("TOIMIPISTEEN_YHDISTYS_VAHVISTUS_TITLE")
       ).toBeVisible();
       await page.getByText("BUTTON_VAHVISTA").click();
+      await expectToast(page, "MESSAGE_LIITOS_ONNISTUI");
       await organisaatioPage.rakenneAccordion.click();
       await expect(
         organisaatioPage.rakennePanel.getByText("CHILD3")
@@ -920,6 +931,7 @@ test.describe("Organisations", () => {
         page.getByText("Siirretäänkö CHILD Suominimi")
       ).toBeVisible();
       await page.getByText("BUTTON_VAHVISTA").click();
+      await expectToast(page, "MESSAGE_LIITOS_ONNISTUI");
       await organisaatioPage.rakenneAccordion.click();
       await expect(
         organisaatioPage.rakennePanel.getByText("PARENT1 Suominimi")

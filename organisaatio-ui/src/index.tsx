@@ -9,6 +9,7 @@ import OrganisaatioApp from './OrganisaatioApp';
 import { Provider } from 'jotai';
 import Loading from './components/Loading/Loading';
 import ErrorPage from './components/Sivut/VirheSivu/VirheSivu';
+import { createJotaiStore } from './jotaiStore';
 
 const cookies = new Cookies();
 axios.interceptors.request.use((config) => {
@@ -49,7 +50,7 @@ async function main() {
 
     createRoot(rootElement).render(
         <React.StrictMode>
-            <Provider>
+            <Provider unstable_createStore={createJotaiStore}>
                 <ErrorBoundary>
                     <React.Suspense fallback={<Loading />}>
                         <InitializeApp>
