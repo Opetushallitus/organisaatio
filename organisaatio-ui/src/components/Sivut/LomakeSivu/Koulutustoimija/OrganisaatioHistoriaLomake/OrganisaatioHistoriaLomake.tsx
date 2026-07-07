@@ -7,7 +7,7 @@ import {
     OrganisaatioSuhde,
     UiOrganisaationNimetNimi,
 } from '../../../../../types/types';
-import { Column } from 'react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
 import { OrganisaatioLink } from '../../../../OrganisaatioComponents';
@@ -48,12 +48,12 @@ const historiaMapper = (a: OrganisaatioSuhde, key: 'child' | 'parent') => {
 export const mapColumnsToTableFormat = (
     i18n: I18nImpl,
     orginalColumns: string[][] = []
-): Column<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[] => {
+): ColumnDef<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[] => {
     const columnMapper = (column: string[]) => ({
-        Header: i18n.translate(column[0]),
-        accessor: column[1] as 'alkuPvm' | 'loppuPvm' | 'nimiHref',
+        header: i18n.translate(column[0]),
+        accessorKey: column[1] as 'alkuPvm' | 'loppuPvm' | 'nimiHref',
     });
-    return orginalColumns.map(columnMapper) as Column<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[];
+    return orginalColumns.map(columnMapper) as ColumnDef<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[];
 };
 
 export default function OrganisaatioHistoriaLomake({ historia }: { historia: OrganisaatioHistoria }) {

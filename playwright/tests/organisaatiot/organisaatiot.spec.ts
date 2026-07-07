@@ -345,6 +345,9 @@ test.describe("Organisations", () => {
         await organisaatiotPage
           .organisaatioLink(`${now} TARKASTUS IS CHECKED LONG AGO`)
           .click();
+        await expect(page.locator("h1")).toContainText(
+          `${now} TARKASTUS IS CHECKED LONG AGO`
+        );
         await page
           .getByTitle(`VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`)
           .click();

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styles from './NimiHistoriaLomake.module.css';
 import YksinkertainenTaulukko from '../../../../Taulukot/YksinkertainenTaulukko';
 import { HistoriaTaulukkoData, UiOrganisaationNimetNimi } from '../../../../../types/types';
-import { Column } from 'react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import NimiHistoriaNimi from './NimiHistoriaNimi';
 import { deleteOrganisaatioNimi } from '../../../../../api/organisaatio';
 import Loading from '../../../../Loading/Loading';
@@ -41,22 +41,25 @@ export default function NimiHistoriaLomake(props: nimiHistoriaProps) {
 
     const columns = [
         {
-            Header: i18n.translate('NIMIHISTORIA_NIMEN_VOIMASSAOLO'),
-            accessor: 'alkuPvm',
+            header: i18n.translate('NIMIHISTORIA_NIMEN_VOIMASSAOLO'),
+            accessorKey: 'alkuPvm',
         },
         {
-            Header: i18n.translate('NIMIHISTORIA_NIMI'),
-            Cell: ({
-                row: {
-                    original: { nimi, alkuPvm, version },
-                },
-            }: {
-                row: { original: UiOrganisaationNimetNimi };
-            }) => (
-                <NimiHistoriaNimi handleDeleteNimi={handleDeleteNimi} nimi={nimi} alkuPvm={alkuPvm} version={version} />
-            ),
+            header: i18n.translate('NIMIHISTORIA_NIMI'),
+            id: 'nimi',
+            cell: ({ row }) => {
+                const { nimi, alkuPvm, version } = row.original as UiOrganisaationNimetNimi;
+                return (
+                    <NimiHistoriaNimi
+                        handleDeleteNimi={handleDeleteNimi}
+                        nimi={nimi}
+                        alkuPvm={alkuPvm}
+                        version={version}
+                    />
+                );
+            },
         },
-    ] as Column<UiOrganisaationNimetNimi | HistoriaTaulukkoData>[];
+    ] as ColumnDef<UiOrganisaationNimetNimi | HistoriaTaulukkoData>[];
     if (isLoading) {
         return <Loading />;
     }

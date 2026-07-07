@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import { getJalkelaiset } from '../../../api/organisaatio';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
-import { useTable } from 'react-table';
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { languageAtom } from '../../../api/lokalisaatio';
 import { useAtom } from 'jotai';
 import styles from './LiitosDescription.module.css';
@@ -26,26 +26,26 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
                 .sort((a, b) => i18n.translateNimi(a.nimi).localeCompare(i18n.translateNimi(b.nimi))) || [],
         [i18n, organisaatiot]
     );
-    const columns = useMemo(
+    const columns = useMemo<ColumnDef<OrganisaatioHakuOrganisaatio>[]>(
         () => [
             {
-                Header: i18n.translate('LIITOS_TAULUKKO_NIMI'),
+                header: i18n.translate('LIITOS_TAULUKKO_NIMI'),
                 id: 'nimi',
-                accessor: (row: OrganisaatioHakuOrganisaatio) => {
+                accessorFn: (row) => {
                     return i18n.translateNimi(row.nimi);
                 },
             },
             {
-                Header: i18n.translate('LIITOS_TAULUKKO_OID'),
+                header: i18n.translate('LIITOS_TAULUKKO_OID'),
                 id: 'oid',
-                accessor: (row: OrganisaatioHakuOrganisaatio) => {
+                accessorFn: (row) => {
                     return row.oid;
                 },
             },
             {
-                Header: i18n.translate('LIITOS_TAULUKKO_TYYPIT'),
+                header: i18n.translate('LIITOS_TAULUKKO_TYYPIT'),
                 id: 'tyypit',
-                accessor: (row: OrganisaatioHakuOrganisaatio) => {
+                accessorFn: (row) => {
                     return row.organisaatiotyypit.map((a) => organisaatioTyypit.uri2Nimi(a)).join(', ');
                 },
             },
@@ -61,9 +61,14 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
             setOrganisaatiot(jalkelaiset);
         })();
     }, [sourceOid]);
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+
+    const table = useReactTable({
         columns,
         data,
+        defaultColumn: {
+            cell: ({ getValue }) => getValue() as React.ReactNode,
+        },
+        getCoreRowModel: getCoreRowModel(),
     });
 
     if (!organisaatiot || !data) {
@@ -71,27 +76,30 @@ const LiitosDescription: React.FC<{ sourceOid: string }> = ({ sourceOid }) => {
     }
     return (
         <BodyRivi>
-            <table {...getTableProps()} className={styles.LiitosDescriptionTable}>
+            <table className={styles.LiitosDescriptionTable}>
                 <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                            {headerGroup.headers.map((column) => (
-                                <th {...column.getHeaderProps()} key={column.getHeaderProps().key}>
-                                    {column.render('Header')}
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
+                                <th key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(header.column.columnDef.header, header.getContext())}
                                 </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
-                <tbody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row);
+                <tbody>
+                    {table.getRowModel().rows.map((row) => {
                         return (
-                            <tr {...row.getRowProps()} key={row.getRowProps().key}>
-                                {row.cells.map((cell) => {
+                            <tr key={row.id}>
+                                {row.getVisibleCells().map((cell) => {
                                     return (
-                                        <td {...cell.getCellProps()} key={cell.getCellProps().key}>
-                                            {cell.render('Cell')}
+                                        <td key={cell.id}>
+                                            {cell.column.columnDef.cell
+                                                ? flexRender(cell.column.columnDef.cell, cell.getContext())
+                                                : (cell.getValue() as React.ReactNode)}
                                         </td>
                                     );
                                 })}

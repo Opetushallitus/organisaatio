@@ -2,18 +2,17 @@ import * as React from 'react';
 import { useState } from 'react';
 import styles from './NormaaliTaulukko.module.css';
 import {
-    Column,
-    FilterValue,
-    HeaderGroup,
-    Row,
-    TableInstance,
-    useExpanded,
-    useFilters,
-    useGlobalFilter,
-    usePagination,
-    useSortBy,
-    useTable,
-} from 'react-table';
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    PaginationState,
+    SortingState,
+    useReactTable,
+} from '@tanstack/react-table';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import searchIcon from '@iconify/icons-fa-solid/search';
@@ -33,18 +32,24 @@ const mapPaginationSelectors = (index: number) => {
 
 export type NormaaliTaulukkoProps = {
     ryhmatData?: Ryhma[];
-    ryhmatColumns?: Column<Ryhma>[];
+    ryhmatColumns?: ColumnDef<Ryhma>[];
     useHakuFiltteri?: boolean;
 };
 
 export type FiltteritProps = {
     setFilter: (columnId: string, updater: string | undefined | (string | null | undefined)[]) => void;
-    setGlobalFilter: (filterValue: FilterValue) => void;
-    globalFilter:
-        string | ((rows: Row<Ryhma>[], columnIds: string[], filterValue: unknown) => Row<Ryhma>[]) | undefined;
+    setGlobalFilter: (filterValue: string | undefined) => void;
+    globalFilter: string | undefined;
 };
 
-export const chooseTaulukkoData = (ryhmatData: Ryhma[], ryhmatColumns: Column<Ryhma>[]) => {
+type ColumnMeta = {
+    collapse?: boolean;
+};
+
+const getColumnClassName = (columnDef: ColumnDef<Ryhma>) =>
+    (columnDef.meta as ColumnMeta | undefined)?.collapse ? styles.collapse : '';
+
+export const chooseTaulukkoData = (ryhmatData: Ryhma[], ryhmatColumns: ColumnDef<Ryhma>[]) => {
     if (ryhmatData && ryhmatData.length > 0) {
         return { data: ryhmatData, columns: ryhmatColumns };
     }
@@ -74,7 +79,7 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGlobalFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
                             }}
-                            value={globalFilter}
+                            value={globalFilter ?? ''}
                             suffix={<IconWrapper color={'#999999'} icon={searchIcon} />}
                         />
                     </div>
@@ -138,47 +143,51 @@ export const Hakufiltterit = ({ setFilter, globalFilter, setGlobalFilter }: Filt
 
 const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri = false }: NormaaliTaulukkoProps) => {
     const [i18n] = useAtom(languageAtom);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [globalFilter, setGlobalFilter] = useState<string | undefined>(undefined);
+    const [sorting, setSorting] = useState<SortingState>([
+        {
+            id: 'Nimi',
+            desc: false,
+        },
+    ]);
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    });
 
     const { data, columns } = chooseTaulukkoData(ryhmatData, ryhmatColumns);
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        prepareRow,
-        page, // Instead of using 'rows', we'll use page,
-        // which has only the rows for the active page
-
-        globalFilter,
-        setGlobalFilter,
-        setFilter,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        gotoPage,
-        nextPage,
-        previousPage,
-        setPageSize,
-        state: { pageIndex, pageSize },
-    } = useTable(
-        {
-            columns,
-            data,
-            initialState: {
-                pageIndex: 0,
-                sortBy: [
-                    {
-                        id: 'Nimi',
-                        desc: false,
-                    },
-                ],
-            },
+    const table = useReactTable({
+        columns,
+        data,
+        state: {
+            columnFilters,
+            globalFilter,
+            pagination,
+            sorting,
         },
-        useFilters,
-        useGlobalFilter,
-        useSortBy,
-        useExpanded,
-        usePagination
-    ) as TableInstance<Ryhma>;
+        onColumnFiltersChange: setColumnFilters,
+        onGlobalFilterChange: setGlobalFilter,
+        onPaginationChange: setPagination,
+        onSortingChange: setSorting,
+        defaultColumn: {
+            cell: ({ getValue }) => getValue() as React.ReactNode,
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        globalFilterFn: 'includesString',
+    });
+    const pageIndex = pagination.pageIndex;
+    const pageSize = pagination.pageSize;
+    const pageOptions = Array.from({ length: table.getPageCount() }, (_, index) => index);
+    const setFilter = React.useCallback(
+        (columnId: string, updater: string | undefined | (string | null | undefined)[]) => {
+            table.getColumn(columnId)?.setFilterValue(updater);
+        },
+        [table]
+    );
     return (
         <div>
             {useHakuFiltteri && (
@@ -190,46 +199,40 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                     />
                 </div>
             )}
-            <table {...getTableProps()} style={{ width: '100%', borderSpacing: 0 }}>
+            <table style={{ width: '100%', borderSpacing: 0 }}>
                 <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                            {headerGroup.headers.map((column) => (
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
                                 <th
-                                    {...column.getHeaderProps({
-                                        className: (column as HeaderGroup<Ryhma> & { collapse: boolean }).collapse
-                                            ? styles.collapse
-                                            : '',
-                                    })}
-                                    key={column.getHeaderProps().key}
+                                    className={getColumnClassName(header.column.columnDef)}
+                                    key={header.id}
                                     style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                                 >
-                                    {column.render('Header')}
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(header.column.columnDef.header, header.getContext())}
                                 </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row, index) => {
-                        prepareRow(row);
+                <tbody>
+                    {table.getRowModel().rows.map((row, index) => {
                         return (
-                            <tr {...row.getRowProps()} key={row.getRowProps().key}>
-                                {row.cells.map((cell) => {
+                            <tr key={row.id}>
+                                {row.getVisibleCells().map((cell) => {
                                     return (
                                         <td
-                                            {...cell.getCellProps({
-                                                className: (cell.column as HeaderGroup<Ryhma> & { collapse: boolean })
-                                                    .collapse
-                                                    ? styles.collapse
-                                                    : '',
-                                            })}
-                                            key={cell.getCellProps().key}
+                                            className={getColumnClassName(cell.column.columnDef)}
+                                            key={cell.id}
                                             style={{
                                                 background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
                                             }}
                                         >
-                                            {cell.render('Cell')}
+                                            {cell.column.columnDef.cell
+                                                ? flexRender(cell.column.columnDef.cell, cell.getContext())
+                                                : (cell.getValue() as React.ReactNode)}
                                         </td>
                                     );
                                 })}
@@ -240,23 +243,38 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
             </table>
             <div className={styles.PaginationContainer}>
                 <div className={styles.PaginationSivunvaihto}>
-                    <Button variant={'text'} color={'secondary'} onClick={previousPage} disabled={!canPreviousPage}>
+                    <Button
+                        variant={'text'}
+                        color={'secondary'}
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
                         <IconWrapper icon={chevronLeft} />
                     </Button>
                     {pageOptions.slice(...mapPaginationSelectors(pageIndex)).map((option) => {
                         if (option === pageIndex)
                             return (
-                                <Button key={option} onClick={() => gotoPage(option)}>
+                                <Button key={option} onClick={() => table.setPageIndex(option)}>
                                     {option + 1}
                                 </Button>
                             );
                         return (
-                            <Button key={option} variant={'text'} color={'secondary'} onClick={() => gotoPage(option)}>
+                            <Button
+                                key={option}
+                                variant={'text'}
+                                color={'secondary'}
+                                onClick={() => table.setPageIndex(option)}
+                            >
                                 {option + 1}
                             </Button>
                         );
                     })}
-                    <Button variant={'text'} color={'secondary'} onClick={nextPage} disabled={!canNextPage}>
+                    <Button
+                        variant={'text'}
+                        color={'secondary'}
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
                         <IconWrapper icon={chevronRight} />
                     </Button>
                 </div>
@@ -266,7 +284,7 @@ const NormaaliTaulukko = ({ ryhmatData = [], ryhmatColumns = [], useHakuFiltteri
                         className={styles.NaytaSivullaSelect}
                         value={pageSize}
                         onChange={(e) => {
-                            setPageSize(Number(e.target.value));
+                            table.setPageSize(Number(e.target.value));
                         }}
                     >
                         {[10, 20, 30, 40, 50].map((pageSize) => (

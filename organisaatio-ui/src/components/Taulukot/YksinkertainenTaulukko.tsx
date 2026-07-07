@@ -1,51 +1,59 @@
 import * as React from 'react';
-import { Column, useTable } from 'react-table';
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { HistoriaTaulukkoData, UiOrganisaationNimetNimi } from '../../types/types';
+
+type YksinkertainenTaulukkoData = HistoriaTaulukkoData | UiOrganisaationNimetNimi;
 
 export default function YksinkertainenTaulukko({
     data: inputData = [],
     tableColumns = [],
 }: {
-    data: (HistoriaTaulukkoData | UiOrganisaationNimetNimi)[];
-    tableColumns: Column<HistoriaTaulukkoData | UiOrganisaationNimetNimi>[];
+    data: YksinkertainenTaulukkoData[];
+    tableColumns: ColumnDef<YksinkertainenTaulukkoData>[];
 }) {
     const columns = React.useMemo(() => tableColumns, [tableColumns]);
     const data = React.useMemo(() => inputData, [inputData]);
-    const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable<
-        HistoriaTaulukkoData | UiOrganisaationNimetNimi
-    >({ columns, data });
+    const table = useReactTable({
+        columns,
+        data,
+        defaultColumn: {
+            cell: ({ getValue }) => getValue() as React.ReactNode,
+        },
+        getCoreRowModel: getCoreRowModel(),
+    });
     return (
-        <table {...getTableProps()} style={{ borderSpacing: 0, paddingTop: 20 }}>
+        <table style={{ borderSpacing: 0, paddingTop: 20 }}>
             <thead>
-                {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                        {headerGroup.headers.map((column) => (
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
                             <th
-                                {...column.getHeaderProps()}
-                                key={column.getHeaderProps().key}
+                                key={header.id}
                                 style={{ textAlign: 'left', borderBottom: '1px solid rgba(151,151,151,0.5)' }}
                             >
-                                {column.render('Header')}
+                                {header.isPlaceholder
+                                    ? null
+                                    : flexRender(header.column.columnDef.header, header.getContext())}
                             </th>
                         ))}
                     </tr>
                 ))}
             </thead>
-            <tbody {...getTableBodyProps()}>
-                {rows.map((row, index) => {
-                    prepareRow(row);
+            <tbody>
+                {table.getRowModel().rows.map((row, index) => {
                     return (
-                        <tr {...row.getRowProps()} key={row.getRowProps().key} style={{ height: '3.125rem' }}>
-                            {row.cells.map((cell) => {
+                        <tr key={row.id} style={{ height: '3.125rem' }}>
+                            {row.getVisibleCells().map((cell) => {
                                 return (
                                     <td
-                                        {...cell.getCellProps()}
-                                        key={cell.getCellProps().key}
+                                        key={cell.id}
                                         style={{
                                             background: index % 2 === 0 ? '#F5F5F5' : '#FFFFFF',
                                         }}
                                     >
-                                        {cell.render('Cell')}
+                                        {cell.column.columnDef.cell
+                                            ? flexRender(cell.column.columnDef.cell, cell.getContext())
+                                            : (cell.getValue() as React.ReactNode)}
                                     </td>
                                 );
                             })}

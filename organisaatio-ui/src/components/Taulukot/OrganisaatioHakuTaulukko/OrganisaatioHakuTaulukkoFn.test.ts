@@ -3,7 +3,13 @@ import { describe, it } from 'node:test';
 
 import { containingSomeValueFilter, expandData, includeVakaToimijatFilter } from './OrganisaatioHakuTaulukkoFn';
 import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
-import { Row } from 'react-table';
+import { Row } from '@tanstack/react-table';
+
+const runContainingSomeValueFilter = (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: string[]) =>
+    rows.filter((row) => containingSomeValueFilter(row, id, filterValue, () => undefined));
+
+const runIncludeVakaToimijatFilter = (rows: Row<OrganisaatioHakuOrganisaatio>[], id: string, filterValue: boolean) =>
+    rows.filter((row) => includeVakaToimijatFilter(row, id, filterValue, () => undefined));
 
 describe('OrganisaatioHakuTaulukko', () => {
     describe('expandData', () => {
@@ -66,19 +72,13 @@ describe('OrganisaatioHakuTaulukko', () => {
     describe('containingSomeValueFilter', () => {
         const rows1 = [
             {
-                values: {
-                    organisaatiotyypit: ['1'],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                getValue: () => ['1'],
             } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
             {
-                values: {
-                    organisaatiotyypit: ['2'],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                getValue: () => ['2'],
             } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
             {
-                values: {
-                    organisaatiotyypit: ['2'],
-                } as Partial<OrganisaatioHakuOrganisaatio>,
+                getValue: () => ['2'],
             } as Partial<Row<OrganisaatioHakuOrganisaatio>>,
         ] as Row<OrganisaatioHakuOrganisaatio>[];
         const id = 'organisaatiotyypit';
@@ -115,7 +115,7 @@ describe('OrganisaatioHakuTaulukko', () => {
         ];
         tests.forEach(({ message, rows, id, filter, expected }) => {
             it(message, () => {
-                assert.deepStrictEqual(containingSomeValueFilter(rows, id, filter), expected);
+                assert.deepStrictEqual(runContainingSomeValueFilter(rows, id, filter), expected);
             });
         });
     });
@@ -140,11 +140,11 @@ describe('OrganisaatioHakuTaulukko', () => {
         const id = 'showVakaToimijat';
 
         it('Passes all rows when include vaka toimijat is set to true', () => {
-            assert.deepStrictEqual(includeVakaToimijatFilter(rows, id, true), [...rows]);
+            assert.deepStrictEqual(runIncludeVakaToimijatFilter(rows, id, true), [...rows]);
         });
 
         it('Filters out organisaatiotyyppi_07 and organisaatiotyyppi_08 if include vaka toimijat is set to false', () => {
-            assert.deepStrictEqual(includeVakaToimijatFilter(rows, id, false), [rows[1]]);
+            assert.deepStrictEqual(runIncludeVakaToimijatFilter(rows, id, false), [rows[1]]);
         });
     });
 });

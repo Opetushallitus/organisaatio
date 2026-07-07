@@ -7,7 +7,7 @@ import { dropKoodiVersionSuffix } from '../../../tools/mappers';
 import { getRyhmat } from '../../../api/ryhma';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
-import { Column, Row } from 'react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../Loading/Loading';
 import { useAtom } from 'jotai';
@@ -20,27 +20,28 @@ const Ryhmat = () => {
     const [kayttoRyhmatKoodisto] = useAtom(kayttoRyhmatKoodistoAtom);
     const [ryhmat, setRyhmat] = useState<Ryhma[]>();
     const navigate = useNavigate();
-    const RyhmatColumns: Column<Ryhma>[] = React.useMemo(
+    const RyhmatColumns: ColumnDef<Ryhma>[] = React.useMemo(
         () => [
             {
-                Header: i18n.translate('RYHMAT_RYHMAN_NIMI'),
-                collapse: true,
+                header: i18n.translate('RYHMAT_RYHMAN_NIMI'),
                 id: 'Nimi',
-                Cell: ({ row }: { row: Row<Ryhma> }) => {
+                meta: { collapse: true },
+                sortingFn: 'basic',
+                cell: ({ row }) => {
                     return (
                         <Link to={`/ryhmat/${row.original.oid}`} className={styles.nimenMaksimiPituus}>
                             {i18n.translateNimi(row.original.nimi)}
                         </Link>
                     );
                 },
-                accessor: (values) => {
+                accessorFn: (values) => {
                     return i18n.translateNimi(values.nimi);
                 },
             },
             {
-                Header: i18n.translate('RYHMAT_RYHMAN_TYYPPI'),
+                header: i18n.translate('RYHMAT_RYHMAN_TYYPPI'),
                 id: 'Tyyppi',
-                Cell: ({ row }: { row: Row<Ryhma> }) => {
+                cell: ({ row }) => {
                     if (row.original.ryhmatyypit.length > 0) {
                         return (
                             <span>
@@ -54,7 +55,7 @@ const Ryhmat = () => {
                     }
                     return <span></span>;
                 },
-                accessor: (row) => {
+                accessorFn: (row) => {
                     if (row.ryhmatyypit.length > 0) {
                         return row.ryhmatyypit
                             .map((tyyppi: string) => ryhmaTyypitKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi)))
@@ -64,9 +65,9 @@ const Ryhmat = () => {
                 },
             },
             {
-                Header: i18n.translate('RYHMAT_KAYTTOTARKOITUS'),
+                header: i18n.translate('RYHMAT_KAYTTOTARKOITUS'),
                 id: 'Kayttotarkoitus',
-                Cell: ({ row }: { row: Row<Ryhma> }) => {
+                cell: ({ row }) => {
                     if (row.original.kayttoryhmat.length > 0) {
                         return (
                             <span>
@@ -80,7 +81,7 @@ const Ryhmat = () => {
                     }
                     return <span></span>;
                 },
-                accessor: (row) => {
+                accessorFn: (row) => {
                     if (row.kayttoryhmat.length > 0) {
                         return row.kayttoryhmat
                             .map((tyyppi: string) => kayttoRyhmatKoodisto.uri2Nimi(dropKoodiVersionSuffix(tyyppi)))
@@ -90,12 +91,12 @@ const Ryhmat = () => {
                 },
             },
             {
-                Header: i18n.translate('RYHMAT_RYHMAN_TILA'),
-                accessor: 'status',
+                header: i18n.translate('RYHMAT_RYHMAN_TILA'),
+                accessorKey: 'status',
             },
             {
-                Header: i18n.translate('LABEL_OID'),
-                accessor: 'oid',
+                header: i18n.translate('LABEL_OID'),
+                accessorKey: 'oid',
             },
         ],
         [i18n, kayttoRyhmatKoodisto, ryhmaTyypitKoodisto]
