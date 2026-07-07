@@ -66,8 +66,8 @@ export function Hakufiltterit({ setOrganisaatiot, setLoading }: HakufiltteritPro
         oppilaitostyyppi: oppilaitostyyppiWoVersion,
     } = remoteFilters;
     const debouncedSearchString = useDebounce<string>(searchString, 500);
-    const searchRef = useRef<string | undefined>();
-    const cancelTokenRef = useRef<undefined | CancelTokenSource>();
+    const searchRef = useRef<string | undefined>(undefined);
+    const cancelTokenRef = useRef<undefined | CancelTokenSource>(undefined);
     useEffect(() => {
         (async () => {
             searchRef.current = debouncedSearchString;

@@ -19,7 +19,11 @@ export function Checkbox({ children, checked, onChange, disabled, indeterminate,
                 disabled={disabled}
                 onChange={() => onChange(!checked)}
                 data-testid={dataTestid}
-                ref={(el) => el && (el.indeterminate = !!indeterminate)}
+                ref={(el) => {
+                    if (el) {
+                        el.indeterminate = !!indeterminate;
+                    }
+                }}
             />
             {children}
         </label>

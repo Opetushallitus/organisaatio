@@ -1,5 +1,6 @@
 import { APIEndpontDate, ApiOrganisaatio, ApiVakaTiedot, ApiYhteystiedot, OrganisaatioBase } from './apiTypes';
 import { Path } from 'react-hook-form';
+import type { ReactElement } from 'react';
 import {
     ORGANIAATIOTYYPPI_KOULUTUSTOIMIJA,
     ORGANIAATIOTYYPPI_KUNTA,
@@ -299,7 +300,7 @@ export type Koodistot = {
 
 export type Opetuskieli = 'suomi' | 'ruotsi' | 'suomi/ruotsi' | 'saame' | 'muu';
 
-export type HistoriaTaulukkoData = { oid: string; nimiHref: JSX.Element; alkuPvm: string; status: string };
+export type HistoriaTaulukkoData = { oid: string; nimiHref: ReactElement; alkuPvm: string; status: string };
 
 export type RemoteFilters = {
     searchString: string;

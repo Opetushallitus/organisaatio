@@ -69,11 +69,12 @@ const Modal = ({
     onClose = () => {},
     ...props
 }: ModalProps) => {
-    const targetRef = React.useRef<HTMLDivElement>();
+    const targetRef = React.useRef<HTMLDivElement | null>(null);
 
     if (!targetRef.current) {
         targetRef.current = createTarget();
     }
+    const target = targetRef.current;
 
     React.useEffect(() => {
         const target = targetRef.current;
@@ -101,7 +102,7 @@ const Modal = ({
         </Wrapper>
     ) : null;
 
-    return createPortal(content, targetRef.current);
+    return createPortal(content, target);
 };
 
 export default Modal;
