@@ -5,7 +5,7 @@ import RekisterointiHakija from './hakija/RekisterointiHakija';
 import { registerLocale } from 'react-datepicker';
 import { fi, sv, enGB } from 'date-fns/locale';
 import { LanguageContext, I18nImpl, KoodistoImpl, KoodistoContext } from './contexts';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router';
 import { Koodi, Language, Lokalisointi } from './types/types';
 import useAxios from 'axios-hooks';
 import Spinner from './Spinner';
@@ -77,20 +77,14 @@ const App: React.FC = () => {
                         vardaToimintamuodot: vardaToimintamuotoKoodisto,
                     }}
                 >
-                    <Switch>
-                        <Route path="/" exact component={RekisterointiAloitus} />
-                        <Route path="/hakija" exact component={RekisterointiHakija} />
-                        <Route path="/valmis" exact component={RekisterointiValmis} />
-                        <Route path="/virkailija" exact component={VirkailijaLandingPage} />
-                        <Route
-                            path="/virkailija/rekisterointi/luonti/:ytunnus"
-                            exact
-                            component={RekisterointiVirkailija}
-                        />
-                        <Route path="*">
-                            <ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>
-                        </Route>
-                    </Switch>
+                    <Routes>
+                        <Route path="/" element={<RekisterointiAloitus />} />
+                        <Route path="/hakija" element={<RekisterointiHakija />} />
+                        <Route path="/valmis" element={<RekisterointiValmis />} />
+                        <Route path="/virkailija" element={<VirkailijaLandingPage />} />
+                        <Route path="/virkailija/rekisterointi/luonti/:ytunnus" element={<RekisterointiVirkailija />} />
+                        <Route path="*" element={<ErrorPage>{i18n.translate('ERROR_404')}</ErrorPage>} />
+                    </Routes>
                 </KoodistoContext.Provider>
             </LanguageContext.Provider>
         </Router>

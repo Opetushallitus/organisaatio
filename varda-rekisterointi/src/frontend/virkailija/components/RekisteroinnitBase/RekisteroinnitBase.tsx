@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import classNames from 'classnames';
 import axios from 'axios';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
