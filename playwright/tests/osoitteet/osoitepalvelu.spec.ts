@@ -13,6 +13,10 @@ import { HakutulosView } from "./HakutulosView";
 
 const XLSX = require("xlsx");
 
+const TEXT_FORMAT_BOLD = 1;
+const TEXT_FORMAT_ITALIC = 2;
+const TEXT_FORMAT_UNDERLINE = 8;
+
 test.describe("Osoitepalvelu", () => {
   test.beforeAll(async ({ request }) => {
     await test.step("Load initial mock data", async () => {
@@ -1025,6 +1029,63 @@ test.describe("Osoitepalvelu", () => {
     });
   });
 
+  test("Rich text editor formatting is included in the message body", async ({
+    page,
+  }) => {
+    const osoitepalveluPage = new SearchView(page);
+    const hakutulosView = new HakutulosView(page);
+    const kirjoitaViestiForm = new ViestiView(page);
+
+    await osoitepalveluPage.haeButton.click();
+    await hakutulosView.kirjoitaSahkopostiButton.click();
+
+    await kirjoitaViestiForm.aiheField.input.fill("Aihe");
+    await kirjoitaViestiForm.viestiField.input.focus();
+
+    await kirjoitaViestiForm.boldButton.click();
+    await page.keyboard.type("Lihavoitu");
+    await kirjoitaViestiForm.boldButton.click();
+    await page.keyboard.type(" ");
+
+    await kirjoitaViestiForm.italicButton.click();
+    await page.keyboard.type("Kursivoitu");
+    await kirjoitaViestiForm.italicButton.click();
+    await page.keyboard.type(" ");
+
+    await kirjoitaViestiForm.underlineButton.click();
+    await page.keyboard.type("Alleviivattu");
+    await kirjoitaViestiForm.underlineButton.click();
+    await page.keyboard.press("Enter");
+
+    await kirjoitaViestiForm.unorderedListButton.click();
+    await page.keyboard.type("Listakohta");
+
+    await expect(kirjoitaViestiForm.lahetaButton).toBeEnabled();
+
+    const emailRequestPromise = page.waitForRequest(
+      (request) =>
+        request.method() === "POST" &&
+        request
+          .url()
+          .includes("/organisaatio-service/internal/osoitteet/hakutulos/") &&
+        request.url().endsWith("/email")
+    );
+    await kirjoitaViestiForm.lahetaButton.click();
+
+    const requestBody = emailRequestBody(await emailRequestPromise);
+    const nodes = lexicalNodes(requestBody.body.root);
+
+    expectTextFormat(nodes, "Lihavoitu", TEXT_FORMAT_BOLD);
+    expectTextFormat(nodes, "Kursivoitu", TEXT_FORMAT_ITALIC);
+    expectTextFormat(nodes, "Alleviivattu", TEXT_FORMAT_UNDERLINE);
+    expect(nodes).toContainEqual(
+      expect.objectContaining({ type: "list", listType: "bullet" })
+    );
+    expect(nodes).toContainEqual(
+      expect.objectContaining({ text: "Listakohta" })
+    );
+  });
+
   test("Email recipients can be filtered", async ({ page }) => {
     const osoitepalveluPage = new SearchView(page);
     const hakutulosView = new HakutulosView(page);
@@ -1262,6 +1323,43 @@ function getItemsByCheckState(page: Page, checked: boolean) {
 
 function stringOfLength(n: number) {
   return "x".repeat(n);
+}
+
+type SerializedLexicalNode = {
+  type?: string;
+  text?: string;
+  format?: number;
+  listType?: string;
+  children?: SerializedLexicalNode[];
+};
+
+type EmailRequestBody = {
+  body: {
+    root: SerializedLexicalNode;
+  };
+};
+
+function emailRequestBody(request: { postDataJSON: () => unknown }) {
+  return request.postDataJSON() as EmailRequestBody;
+}
+
+function lexicalNodes(node: SerializedLexicalNode): SerializedLexicalNode[] {
+  return [
+    node,
+    ...(node.children ?? []).flatMap((child) => lexicalNodes(child)),
+  ];
+}
+
+function expectTextFormat(
+  nodes: SerializedLexicalNode[],
+  text: string,
+  expectedFormat: number
+) {
+  const textNode = nodes.find(
+    (node) => node.type === "text" && node.text === text
+  );
+  expect(textNode).toBeDefined();
+  expect((textNode?.format ?? 0) & expectedFormat).toBe(expectedFormat);
 }
 
 async function failParametritRequestsUntilStopped(

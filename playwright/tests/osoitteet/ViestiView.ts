@@ -8,6 +8,10 @@ export class ViestiView {
   readonly viestiField: ViestiField;
   readonly replyToField: FormField;
   readonly fileUploadButton: Locator;
+  readonly boldButton: Locator;
+  readonly italicButton: Locator;
+  readonly underlineButton: Locator;
+  readonly unorderedListButton: Locator;
 
   constructor(page: Page) {
     this.lahetaButton = page.getByRole("button", { name: "Lähetä" });
@@ -15,6 +19,12 @@ export class ViestiView {
     this.viestiField = new ViestiField(page);
     this.replyToField = new ReplyToField(page);
     this.fileUploadButton = page.getByLabel("Lataa liitetiedosto");
+    this.boldButton = page.locator('[aria-label="Lihavoi"]');
+    this.italicButton = page.locator('[aria-label="Kursivoi"]');
+    this.underlineButton = page.locator('[aria-label="Alleviivaa"]');
+    this.unorderedListButton = page.locator(
+      '[aria-label="Numeroimaton lista"]'
+    );
   }
 }
 
