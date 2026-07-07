@@ -41,9 +41,7 @@ export type FiltteritProps = {
     setFilter: (columnId: string, updater: string | undefined | (string | null | undefined)[]) => void;
     setGlobalFilter: (filterValue: FilterValue) => void;
     globalFilter:
-        | string
-        | ((rows: Row<Ryhma>[], columnIds: string[], filterValue: unknown) => Row<Ryhma>[])
-        | undefined;
+        string | ((rows: Row<Ryhma>[], columnIds: string[], filterValue: unknown) => Row<Ryhma>[]) | undefined;
 };
 
 export const chooseTaulukkoData = (ryhmatData: Ryhma[], ryhmatColumns: Column<Ryhma>[]) => {

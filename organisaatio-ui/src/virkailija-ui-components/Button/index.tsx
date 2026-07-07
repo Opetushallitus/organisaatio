@@ -179,10 +179,10 @@ const ButtonBase = styled.button.withConfig({
 
     ${getVariantStyle}
     ${getSizeStyle}
-  ${disabledStyle}
-  ${getLoadingStyle}
+    ${disabledStyle}
+    ${getLoadingStyle}
 
-  ${({ fullWidth }) =>
+    ${({ fullWidth }) =>
         fullWidth &&
         css`
             width: 100%;

@@ -52,13 +52,13 @@ export const InputBase = styled.input.attrs({ type: 'text' })<{
 
     ${disabledStyle}
 
-  ${({ hasPrefix }) =>
+    ${({ hasPrefix }) =>
         hasPrefix &&
         css`
             padding-left: 40px;
         `}
 
-  ${({ hasSuffix }) =>
+    ${({ hasSuffix }) =>
         hasSuffix &&
         css`
             padding-right: 40px;
