@@ -5,7 +5,7 @@ import styles from './Wizard.module.css';
 
 type Props = {
     getNavigation: (currentStep: number) => React.ReactNode;
-    children: React.ReactNodeArray;
+    children: React.ReactNode[];
     disabled: boolean;
     validate: (currentStep: number) => boolean;
     submit: () => Promise<void>;
