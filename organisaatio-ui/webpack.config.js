@@ -1,7 +1,10 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
@@ -10,7 +13,7 @@ const isEnvDevelopment = process.env.NODE_ENV === 'development';
 const isEnvProduction = process.env.NODE_ENV === 'production';
 const isEnvProductionProfile = isEnvProduction && process.argv.includes('--profile');
 
-module.exports = function () {
+export default function () {
     return {
         stats: 'errors-warnings',
         mode: isEnvProduction ? 'production' : 'development',
@@ -179,4 +182,4 @@ module.exports = function () {
             }),
         ],
     };
-};
+}

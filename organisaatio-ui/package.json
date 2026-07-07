@@ -2,6 +2,7 @@
     "homepage": "/organisaatio-service",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "dependencies": {
         "@daypicker/react": "^10.0.1",
         "@hookform/resolvers": "^2.5.2",
