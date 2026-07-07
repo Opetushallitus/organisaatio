@@ -1,23 +1,20 @@
-import React, { FormEvent, ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import styles from './Accordion.module.css';
-import {
-    Accordion as ReactAccordion,
-    AccordionItem,
-    AccordionItemButton,
-    AccordionItemHeading,
-    AccordionItemPanel,
-} from 'react-accessible-accordion';
 
-type props = {
+type Props = {
     lomakkeet: ReactElement[];
     otsikot: string[];
     preExpanded?: string;
     handlePreExpanded?: (lomakeuuid: string) => void;
-    handleItemChange?: (event: FormEvent<HTMLDivElement>) => void;
+    handleItemChange?: (lomakeuuid: string) => void;
     handleUuidChange?: (Uuids: string[]) => void;
 };
 
-export default function Accordion(props: props) {
+function getLomakeId(lomake: ReactElement, index: number): string {
+    return lomake.key ? String(lomake.key) : `${index}`;
+}
+
+export default function Accordion(props: Props) {
     const {
         lomakkeet,
         otsikot,
@@ -26,33 +23,59 @@ export default function Accordion(props: props) {
         handlePreExpanded = () => {},
         handleUuidChange = () => {},
     } = props;
-    const isPreExpandedInUse = !!preExpanded;
+    const [expandedLomake, setExpandedLomake] = useState<string | undefined>();
+    const isControlled = preExpanded !== undefined;
+    const selectedLomake = isControlled ? preExpanded : expandedLomake;
+
+    function selectLomake(id: string) {
+        handlePreExpanded(id);
+
+        if (selectedLomake === id) {
+            return;
+        }
+
+        handleItemChange?.(id);
+        handleUuidChange([id]);
+
+        if (!isControlled) {
+            setExpandedLomake(id);
+        }
+    }
+
     return (
-        <ReactAccordion onChange={handleUuidChange} className={styles.Accordion}>
+        <div className={styles.Accordion}>
             {lomakkeet.map((lomake, index) => {
-                const id = (lomake.key as string) || `${index}`;
+                const id = getLomakeId(lomake, index);
+                const headingId = `accordion__heading-${id}`;
+                const panelId = `accordion__panel-${id}`;
+                const expanded = selectedLomake === id;
+
                 return (
-                    <AccordionItem
-                        key={lomake.key}
-                        {...(isPreExpandedInUse ? { dangerouslySetExpanded: preExpanded === id } : {})}
-                        onChange={handleItemChange}
-                        uuid={id}
-                        className={styles.AccordionItem}
-                    >
-                        <AccordionItemHeading
-                            className={styles.AccordionHeadingItem}
-                            {...(isPreExpandedInUse ? { onClick: () => handlePreExpanded(id) } : {})}
-                        >
-                            <AccordionItemButton className={styles.AccordionButton}>
+                    <div key={id} className={styles.AccordionItem}>
+                        <div id={headingId} className={styles.AccordionHeadingItem}>
+                            <button
+                                type="button"
+                                className={styles.AccordionButton}
+                                aria-expanded={expanded}
+                                aria-controls={panelId}
+                                onClick={() => selectLomake(id)}
+                            >
                                 <span className={styles.OtsikkoTeksti}>{`${index + 1}. ${otsikot[index]}`}</span>
-                            </AccordionItemButton>
-                        </AccordionItemHeading>
-                        {preExpanded === id && (
-                            <AccordionItemPanel className={styles.AccordionPanel}>{lomake}</AccordionItemPanel>
+                            </button>
+                        </div>
+                        {expanded && (
+                            <div
+                                id={panelId}
+                                role="region"
+                                aria-labelledby={headingId}
+                                className={styles.AccordionPanel}
+                            >
+                                {lomake}
+                            </div>
                         )}
-                    </AccordionItem>
+                    </div>
                 );
             })}
-        </ReactAccordion>
+        </div>
     );
 }

@@ -19,7 +19,13 @@
 }
 
 .AccordionButton {
+    background: transparent;
+    border: 0;
+    color: inherit;
     cursor: pointer;
+    display: block;
+    font: inherit;
+    height: 100%;
     padding: 1.5rem 0;
     width: 100%;
     text-align: left;
