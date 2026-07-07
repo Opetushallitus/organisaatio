@@ -5,7 +5,7 @@ import Button from '@opetushallitus/virkailija-ui-components/Button';
 import { ErrorBanner } from './ErrorBanner';
 import Spin from '@opetushallitus/virkailija-ui-components/Spin';
 import { LinklikeButton } from './LinklikeButton';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import * as sijaintiFilter from './SijaintiFilter';
 import { KoodiUri } from '../../../types/types';
 import * as jarjestamislupaFilter from './JarjestamislupaFilter';

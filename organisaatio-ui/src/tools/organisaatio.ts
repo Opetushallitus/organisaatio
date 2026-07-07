@@ -9,7 +9,7 @@ import {
 } from '../types/types';
 import { ROOT_OID } from '../contexts/constants';
 import { ApiOrganisaatio } from '../types/apiTypes';
-import { Location } from 'react-router-dom';
+import { Location } from 'react-router';
 
 type ResolvingOrganisaatio = { organisaatioTyypit: KoodiUri[]; oppilaitosTyyppiUri?: string; oid?: string };
 export const resolveOrganisaatio = (rakenne: Rakenne[], organisaatio: ResolvingOrganisaatio): ResolvedRakenne => {

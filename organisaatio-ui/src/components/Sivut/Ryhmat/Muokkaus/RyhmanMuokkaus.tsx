@@ -9,7 +9,7 @@ import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { formatUiDateStrToApi } from '../../../../tools/mappers';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../api/lokalisaatio';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 export type RyhmanMuokausProps = {
     oid?: string;

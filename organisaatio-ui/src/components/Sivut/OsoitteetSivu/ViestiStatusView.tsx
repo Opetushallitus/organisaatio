@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { getEmail, GetEmailResponse } from './OsoitteetApi';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import searchStyles from './SearchView.module.css';

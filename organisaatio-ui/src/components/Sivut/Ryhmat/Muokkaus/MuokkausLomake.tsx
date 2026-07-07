@@ -9,7 +9,7 @@ import PohjaSivu from '../../PohjaSivu/PohjaSivu';
 import { FieldValues } from 'react-hook-form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import RyhmatLomakeSchema from '../../../../ValidationSchemas/RyhmatLomakeSchema';
 import { AlaBanneri, LomakeButton, VersioContainer } from '../../LomakeSivu/LomakeFields/LomakeFields';
 import Muokattu from '../../../Muokattu/Muokattu';

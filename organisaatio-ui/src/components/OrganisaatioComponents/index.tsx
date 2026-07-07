@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Nimi } from '../../types/types';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../api/lokalisaatio';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const DecoratedNimi: React.FC<{ nimi: Nimi; status: string }> = ({ nimi, status }) => {
     const [i18n] = useAtom(languageAtom);

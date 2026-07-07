@@ -7,7 +7,7 @@ import OrganisaatioHakuTaulukko from '../../Taulukot/OrganisaatioHakuTaulukko/Or
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const TaulukkoSivu = () => {
     const navigate = useNavigate();

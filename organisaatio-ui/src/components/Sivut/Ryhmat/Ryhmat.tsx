@@ -8,7 +8,7 @@ import { getRyhmat } from '../../../api/ryhma';
 import { Ryhma } from '../../../types/types';
 import NormaaliTaulukko from '../../Taulukot/NormaaliTaulukko';
 import { ColumnDef } from '@tanstack/react-table';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import Loading from '../../Loading/Loading';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../api/lokalisaatio';
