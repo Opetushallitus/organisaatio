@@ -23,7 +23,6 @@
         "joi-phone-number": "^5.1.1",
         "jotai": "2.20.1",
         "lexical": "0.46.0",
-        "oph-urls-js": "github:Opetushallitus/oph-urls-js#master",
         "polished": "^4.1.1",
         "react": "19.2.7",
         "react-dom": "19.2.7",
