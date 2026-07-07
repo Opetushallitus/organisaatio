@@ -4,7 +4,6 @@ import axios from 'axios';
 import { Atom, atom } from 'jotai';
 import { casMeLangAtom } from './kayttooikeus';
 import { KoodistoImpl } from '../contexts/KoodistoContext';
-import { atomFamily } from 'jotai/utils';
 import { isBefore } from 'date-fns/isBefore';
 import { API_DATE_FORMAT, parseDateInput } from '../tools/dateUtils';
 
@@ -30,15 +29,31 @@ type Param = {
     onlyValid?: boolean;
     disableOption?: (koodi: Koodi) => boolean;
 };
-const koodistoAtom = atomFamily(
-    ({ koodi, onlyValid = false, disableOption }: Param): Atom<Promise<Koodisto>> =>
-        atom(async (get) => {
-            const lang = get(casMeLangAtom);
-            const koodisto = await getKoodisto(koodi, onlyValid);
-            return new KoodistoImpl({ koodisto, kieli: lang, disableOption });
-        }),
-    (a, b) => a.koodi === b.koodi && a.onlyValid === b.onlyValid && a.disableOption === b.disableOption
-);
+type NormalizedParam = {
+    koodi: string;
+    onlyValid: boolean;
+    disableOption?: (koodi: Koodi) => boolean;
+};
+const koodistoAtoms: { param: NormalizedParam; value: Atom<Promise<Koodisto>> }[] = [];
+const koodistoAtom = ({ koodi, onlyValid = false, disableOption }: Param): Atom<Promise<Koodisto>> => {
+    const param = { koodi, onlyValid, disableOption };
+    const cached = koodistoAtoms.find(
+        ({ param: cachedParam }) =>
+            cachedParam.koodi === param.koodi &&
+            cachedParam.onlyValid === param.onlyValid &&
+            cachedParam.disableOption === param.disableOption
+    );
+    if (cached) {
+        return cached.value;
+    }
+    const value = atom(async (get) => {
+        const lang = await get(casMeLangAtom);
+        const koodisto = await getKoodisto(koodi, onlyValid);
+        return new KoodistoImpl({ koodisto, kieli: lang, disableOption });
+    });
+    koodistoAtoms.push({ param, value });
+    return value;
+};
 
 export const kuntaKoodistoAtom = koodistoAtom({
     koodi: 'KUNTA',
@@ -72,20 +87,20 @@ export const vardajarjestamismuotoKoodistoAtom = koodistoAtom({ koodi: 'VARDAJAR
 export const kielikoodistoAtom = koodistoAtom({ koodi: 'KIELI' });
 export const postinumerotKoodistoAtom = koodistoAtom({ koodi: 'POSTI' });
 
-export const koodistotAtom = atom<Koodistot>((get) => ({
-    kuntaKoodisto: get(kuntaKoodistoAtom),
-    maatJaValtiotKoodisto: get(maatJaValtiotKoodistoAtom),
-    oppilaitoksenOpetuskieletKoodisto: get(oppilaitoksenOpetuskieletKoodistoAtom),
-    oppilaitostyyppiKoodisto: get(oppilaitostyyppiKoodistoAtom),
-    vuosiluokatKoodisto: get(vuosiluokatKoodistoAtom),
-    kayttoRyhmatKoodisto: get(kayttoRyhmatKoodistoAtom),
-    ryhmaTyypitKoodisto: get(ryhmaTyypitKoodistoAtom),
-    organisaatioTyypitKoodisto: get(organisaatioTyypitKoodistoAtom),
-    ryhmanTilaKoodisto: get(ryhmanTilaKoodistoAtom),
-    vardatoimintamuotoKoodisto: get(vardatoimintamuotoKoodistoAtom),
-    vardakasvatusopillinenjarjestelmaKoodisto: get(vardakasvatusopillinenjarjestelmaKoodistoAtom),
-    vardatoiminnallinenpainotusKoodisto: get(vardatoiminnallinenpainotusKoodistoAtom),
-    vardajarjestamismuotoKoodisto: get(vardajarjestamismuotoKoodistoAtom),
-    kielikoodisto: get(kielikoodistoAtom),
-    postinumerotKoodisto: get(postinumerotKoodistoAtom),
+export const koodistotAtom = atom(async (get): Promise<Koodistot> => ({
+    kuntaKoodisto: await get(kuntaKoodistoAtom),
+    maatJaValtiotKoodisto: await get(maatJaValtiotKoodistoAtom),
+    oppilaitoksenOpetuskieletKoodisto: await get(oppilaitoksenOpetuskieletKoodistoAtom),
+    oppilaitostyyppiKoodisto: await get(oppilaitostyyppiKoodistoAtom),
+    vuosiluokatKoodisto: await get(vuosiluokatKoodistoAtom),
+    kayttoRyhmatKoodisto: await get(kayttoRyhmatKoodistoAtom),
+    ryhmaTyypitKoodisto: await get(ryhmaTyypitKoodistoAtom),
+    organisaatioTyypitKoodisto: await get(organisaatioTyypitKoodistoAtom),
+    ryhmanTilaKoodisto: await get(ryhmanTilaKoodistoAtom),
+    vardatoimintamuotoKoodisto: await get(vardatoimintamuotoKoodistoAtom),
+    vardakasvatusopillinenjarjestelmaKoodisto: await get(vardakasvatusopillinenjarjestelmaKoodistoAtom),
+    vardatoiminnallinenpainotusKoodisto: await get(vardatoiminnallinenpainotusKoodistoAtom),
+    vardajarjestamismuotoKoodisto: await get(vardajarjestamismuotoKoodistoAtom),
+    kielikoodisto: await get(kielikoodistoAtom),
+    postinumerotKoodisto: await get(postinumerotKoodistoAtom),
 }));

@@ -14,6 +14,6 @@ const lokalisaatio = async () => {
 
 export const languageAtom = atom(async (get) => {
     const lokals = await lokalisaatio();
-    const casData = get(casMeAtom);
+    const casData = await get(casMeAtom);
     return new I18nImpl(lokals, casData.lang);
 });

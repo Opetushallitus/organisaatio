@@ -20,7 +20,7 @@
         "date-fns": "^4.4.0",
         "joi": "^17.4.0",
         "joi-phone-number": "^5.1.1",
-        "jotai": "^1.5.3",
+        "jotai": "2.20.1",
         "lexical": "^0.15.0",
         "oph-urls-js": "github:Opetushallitus/oph-urls-js#master",
         "polished": "^4.1.1",

@@ -18,11 +18,11 @@ export const mapApiToUI = (api: CASMeApi): CASMe => {
     return new CASMeImpl({ ...api, roles: JSON.parse(api?.roles || '[]'), lang: (api?.lang || 'fi') as Language });
 };
 
-const urlAtom = atom((get) => `${get(frontPropertiesAtom).urlVirkailija}/kayttooikeus-service/`);
+const urlAtom = atom(async (get) => `${(await get(frontPropertiesAtom)).urlVirkailija}/kayttooikeus-service/`);
 export const casMeAtom = atom(async (get) => {
-    const { data } = await axios.get<CASMeApi>(`${get(urlAtom)}cas/me`);
+    const { data } = await axios.get<CASMeApi>(`${await get(urlAtom)}cas/me`);
     return mapApiToUI(data);
 });
-export const casMeLangAtom = atom((get) => {
-    return get(casMeAtom).lang;
+export const casMeLangAtom = atom(async (get) => {
+    return (await get(casMeAtom)).lang;
 });
