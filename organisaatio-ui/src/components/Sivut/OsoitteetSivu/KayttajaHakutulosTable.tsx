@@ -1,5 +1,5 @@
 import React from 'react';
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import { List, RowComponentProps } from 'react-window';
 
 import { KayttajaHakutulosRow } from './OsoitteetApi';
 import styles from './HakutulosTable.module.css';
@@ -10,6 +10,30 @@ type HakutulosTableProps = {
     selection: Set<string>;
     setSelection: (selection: Set<string>) => void;
 };
+
+type KayttajaRowProps = {
+    rows: KayttajaHakutulosRow[];
+    selection: Set<string>;
+    toggle: (oid: string) => void;
+};
+
+function Row({ index, style, rows, selection, toggle }: RowComponentProps<KayttajaRowProps>) {
+    const _ = rows[index];
+    const rowStyle = index % 2 ? styles.Odd : styles.Even;
+    return (
+        <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
+            <div className={styles.ColumnHalf + ' ' + styles.Fade}>
+                <span className={styles.Checkbox}>
+                    <Checkbox checked={selection.has(_.oid)} onChange={() => toggle(_.oid)} disabled={false}>
+                        {_.etunimet + ' ' + _.sukunimi}
+                    </Checkbox>
+                </span>
+            </div>
+            <div className={styles.ColumnHalf + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</div>
+        </div>
+    );
+}
+
 export function KayttajaHakutulosTable({ rows, selection, setSelection }: HakutulosTableProps) {
     const toggle = (oid: string) => {
         const newSelection = new Set(selection);
@@ -28,23 +52,6 @@ export function KayttajaHakutulosTable({ rows, selection, setSelection }: Hakutu
         } else {
             setSelection(new Set(rows.map((r) => r.oid)));
         }
-    };
-
-    const Row = ({ index, style }: ListChildComponentProps) => {
-        const _ = rows[index];
-        const rowStyle = index % 2 ? styles.Odd : styles.Even;
-        return (
-            <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
-                <div className={styles.ColumnHalf + ' ' + styles.Fade}>
-                    <span className={styles.Checkbox}>
-                        <Checkbox checked={selection.has(_.oid)} onChange={() => toggle(_.oid)} disabled={false}>
-                            {_.etunimet + ' ' + _.sukunimi}
-                        </Checkbox>
-                    </span>
-                </div>
-                <div className={styles.ColumnHalf + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</div>
-            </div>
-        );
     };
 
     return (
@@ -67,9 +74,13 @@ export function KayttajaHakutulosTable({ rows, selection, setSelection }: Hakutu
                 </div>
             </div>
             <div role="rowgroup">
-                <List itemSize={50} height={490} width={1320} itemCount={rows.length}>
-                    {Row}
-                </List>
+                <List
+                    rowComponent={Row}
+                    rowCount={rows.length}
+                    rowHeight={50}
+                    rowProps={{ rows, selection, toggle }}
+                    style={{ height: 490, width: 1320 }}
+                />
             </div>
         </div>
     );

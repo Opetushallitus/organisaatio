@@ -1,5 +1,5 @@
 import React from 'react';
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import { List, RowComponentProps } from 'react-window';
 
 import { HakutulosRow, Osoite } from './OsoitteetApi';
 import styles from './HakutulosTable.module.css';
@@ -10,6 +10,46 @@ type HakutulosTableProps = {
     selection: Set<string>;
     setSelection: (selection: Set<string>) => void;
 };
+
+type OrganisaatioRowProps = {
+    rows: HakutulosRow[];
+    selection: Set<string>;
+    toggle: (oid: string) => void;
+    stringifyOsoite: (osoite?: Osoite) => string;
+};
+
+function Row({ index, style, rows, selection, toggle, stringifyOsoite }: RowComponentProps<OrganisaatioRowProps>) {
+    const _ = rows[index];
+    const rowStyle = index % 2 ? styles.Odd : styles.Even;
+    return (
+        <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
+            <div className={styles.ColumnCheckbox + ' ' + styles.Fade}>
+                <span className={styles.Checkbox}>
+                    <Checkbox
+                        checked={selection.has(_.oid)}
+                        onChange={() => toggle(_.oid)}
+                        disabled={false}
+                        dataTestid={`select-${_.oid}`}
+                    >
+                        {_.nimi}
+                    </Checkbox>
+                </span>
+            </div>
+            <div className={styles.ColumnEmail + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</div>
+            <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.puhelinnumero ?? '-'}</div>
+            <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.kunta}</div>
+            <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.yritysmuoto}</div>
+            <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.opetuskieli ?? '-'}</div>
+            <div className={styles.ColumnEmail + ' ' + styles.Fade}>{_.koskiVirheilmoituksenOsoite ?? '-'}</div>
+            <div className={styles.ColumnOid + ' ' + styles.Fade}>{_.oid}</div>
+            <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.oppilaitostunnus ?? '-'}</div>
+            <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.ytunnus}</div>
+            <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{stringifyOsoite(_.postiosoite)}</div>
+            <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{stringifyOsoite(_.kayntiosoite)}</div>
+        </div>
+    );
+}
+
 export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: HakutulosTableProps) {
     const toggle = (oid: string) => {
         const newSelection = new Set(selection);
@@ -37,38 +77,6 @@ export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: Ha
             const postiosoite = osoite.postinumero ? `, ${osoite.postinumero} ${osoite.postitoimipaikka}` : '';
             return osoite.osoite + postiosoite;
         }
-    };
-
-    const Row = ({ index, style }: ListChildComponentProps) => {
-        const _ = rows[index];
-        const rowStyle = index % 2 ? styles.Odd : styles.Even;
-        return (
-            <div role="row" className={styles.Body + ' ' + rowStyle} style={style}>
-                <div className={styles.ColumnCheckbox + ' ' + styles.Fade}>
-                    <span className={styles.Checkbox}>
-                        <Checkbox
-                            checked={selection.has(_.oid)}
-                            onChange={() => toggle(_.oid)}
-                            disabled={false}
-                            dataTestid={`select-${_.oid}`}
-                        >
-                            {_.nimi}
-                        </Checkbox>
-                    </span>
-                </div>
-                <div className={styles.ColumnEmail + ' ' + styles.Fade}>{_.sahkoposti ?? '-'}</div>
-                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.puhelinnumero ?? '-'}</div>
-                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.kunta}</div>
-                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.yritysmuoto}</div>
-                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.opetuskieli ?? '-'}</div>
-                <div className={styles.ColumnEmail + ' ' + styles.Fade}>{_.koskiVirheilmoituksenOsoite ?? '-'}</div>
-                <div className={styles.ColumnOid + ' ' + styles.Fade}>{_.oid}</div>
-                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.oppilaitostunnus ?? '-'}</div>
-                <div className={styles.ColumnShortInfo + ' ' + styles.Fade}>{_.ytunnus}</div>
-                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{stringifyOsoite(_.postiosoite)}</div>
-                <div className={styles.ColumnOsoite + ' ' + styles.Fade}>{stringifyOsoite(_.kayntiosoite)}</div>
-            </div>
-        );
     };
 
     return (
@@ -102,9 +110,13 @@ export function OrganisaatioHakutulosTable({ rows, selection, setSelection }: Ha
                 </div>
             </div>
             <div role="rowgroup" className={styles.Results}>
-                <List itemSize={50} height={490} width={3200} itemCount={rows.length}>
-                    {Row}
-                </List>
+                <List
+                    rowComponent={Row}
+                    rowCount={rows.length}
+                    rowHeight={50}
+                    rowProps={{ rows, selection, toggle, stringifyOsoite }}
+                    style={{ height: 490, width: 3200 }}
+                />
             </div>
         </div>
     );

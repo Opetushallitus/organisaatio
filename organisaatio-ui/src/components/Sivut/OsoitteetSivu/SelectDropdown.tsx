@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SelectDropdown.module.css';
 import Select, { components, createFilter, MenuListProps, MultiValue, OptionProps } from 'react-select';
-import { FixedSizeList as List } from 'react-window';
+import { List, RowComponentProps } from 'react-window';
 import { CheckedIcon, UncheckedIcon } from './Checkbox';
 
 export type DropdownProps = {
@@ -95,17 +95,29 @@ export function SelectionItem({ value, label, onRemove }: SelectionItemProps) {
     );
 }
 
+type MenuRowProps = {
+    childrenOptions: React.ReactNode[];
+};
+
+function MenuRow({ index, style, childrenOptions }: RowComponentProps<MenuRowProps>) {
+    return (
+        <div style={style} key={index}>
+            {childrenOptions[index]}
+        </div>
+    );
+}
+
 const CustomMenuList = (props: MenuListProps<DropdownOption, true>) => {
     const { children, maxHeight } = props;
     const childrenOptions = React.Children.toArray(children);
     return (
-        <List itemSize={36} height={maxHeight} width="100%" itemCount={childrenOptions.length}>
-            {({ index, style }) => (
-                <div style={style} key={index}>
-                    {childrenOptions[index]}
-                </div>
-            )}
-        </List>
+        <List
+            rowComponent={MenuRow}
+            rowCount={childrenOptions.length}
+            rowHeight={36}
+            rowProps={{ childrenOptions }}
+            style={{ height: maxHeight, width: '100%' }}
+        />
     );
 };
 
