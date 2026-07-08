@@ -15,7 +15,8 @@
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
-        <cxf.version>4.1.7</cxf.version>
+        <cxf.version>4.2.2</cxf.version>
+        <cxf.plugin.version>4.2.0</cxf.plugin.version>
     </properties>
 
     <dependencies>
@@ -82,12 +83,12 @@
                     <dependency>
                         <groupId>org.apache.cxf.xjcplugins</groupId>
                         <artifactId>cxf-xjc-ts</artifactId>
-                        <version>4.1.3</version>
+                        <version>${cxf.plugin.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.cxf.xjcplugins</groupId>
                         <artifactId>cxf-xjc-boolean</artifactId>
-                        <version>4.1.3</version>
+                        <version>${cxf.plugin.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
