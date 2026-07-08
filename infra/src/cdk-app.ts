@@ -419,7 +419,7 @@ class OrganisaatioApplicationStack extends cdk.Stack {
     super(scope, id, props);
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
       logGroupName: "Organisaatio/organisaatio",
-      retention: logs.RetentionDays.INFINITE,
+      retention: logs.RetentionDays.FIVE_YEARS,
     });
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {
@@ -798,7 +798,7 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
 
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
       logGroupName: "Organisaatio/varda-rekisterointi",
-      retention: logs.RetentionDays.INFINITE,
+      retention: logs.RetentionDays.FIVE_YEARS,
     });
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {
@@ -970,7 +970,7 @@ class RekisterointiApplicationStack extends cdk.Stack {
 
     const logGroup = new logs.LogGroup(this, "AppLogGroup", {
       logGroupName: "Organisaatio/rekisterointi",
-      retention: logs.RetentionDays.INFINITE,
+      retention: logs.RetentionDays.FIVE_YEARS,
     });
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {

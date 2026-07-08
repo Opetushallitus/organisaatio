@@ -75,7 +75,9 @@ export class DatabaseBackupToS3
     );
     backupBucket.grantReadWrite(taskDefinition.taskRole);
 
-    const logGroup = new logs.LogGroup(this, "LogGroup", {});
+    const logGroup = new logs.LogGroup(this, "LogGroup", {
+      retention: logs.RetentionDays.FIVE_YEARS,
+    });
     const metricFilter = logGroup.addMetricFilter("BackupSizeMetricFilter", {
       metricNamespace: "Database backup to S3",
       metricName: "BackupSize",
