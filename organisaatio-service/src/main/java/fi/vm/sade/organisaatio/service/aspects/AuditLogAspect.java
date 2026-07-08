@@ -87,12 +87,6 @@ public class AuditLogAspect {
         return genericAdvice(pjp,OrganisaatioOperation.ORG_DELETE);
     }
 
-    // PUT /<oid>/tarkasta
-    @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.updateTarkastusPvm(..))")
-    private Object tarkastaAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        return genericAdvice(pjp,OrganisaatioOperation.ORG_TARKASTA);
-    }
-
     // POST /<oid>/nimet
     @Around("execution(public * fi.vm.sade.organisaatio.resource.OrganisaatioApi.newOrganisaatioNimi(..))")
     private Object newNimiAdvice(ProceedingJoinPoint pjp) throws Throwable {

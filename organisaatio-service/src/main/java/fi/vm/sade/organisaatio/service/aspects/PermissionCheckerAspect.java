@@ -76,14 +76,4 @@ public class PermissionCheckerAspect {
                     , NO_PERMISSION);
         }
     }
-    @Before("@annotation(CheckTarkastusPermission) && args(oid,..)")
-    public void checkTarkastusPermission(String oid) {
-        try {
-            permissionChecker.checkUpdateOrganisation(oid);
-        } catch (NotAuthorizedException nae) {
-            throw new OrganisaatioResourceException(HttpStatus.FORBIDDEN,
-                    String.format("Not authorized to update tarkastus for organisation: %s", oid)
-                    , NO_PERMISSION);
-        }
-    }
 }

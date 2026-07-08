@@ -248,6 +248,13 @@ public class Organisaatio extends OrganisaatioBaseEntity {
     @OrderColumn(name = "parent_position")
     private List<String> parentOids = new ArrayList<>();
 
+    /**
+     * @deprecated
+     * Ei käytetä mihinkään. Tarkastuslippu poistettu organisaatio-ui:sta ja vastuukäyttäjiä
+     * organisaation tietojen päivityksestä muistuttava sähköposti siirretty Otuvaan.
+     * Säilytetään API-yhteensopivuuden vuoksi toistaiseksi.
+     */
+    @Deprecated
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarkastusPvm;
 

@@ -20,7 +20,6 @@ import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
-import { TarkastusLippu } from '../../TarkistusLippu/TarkastusLippu';
 import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
@@ -145,20 +144,6 @@ export default function OrganisaatioHakuTaulukko() {
             {
                 header: i18n.translate('LABEL_OID'),
                 accessorKey: 'oid',
-            },
-            {
-                header: i18n.translate('TAULUKKO_TARKASTUS'),
-                id: 'tarkistus',
-                cell: ({ row }) => {
-                    return (
-                        <TarkastusLippu
-                            tarkastusPvm={row.original.tarkastusPvm}
-                            lakkautusPvm={row.original.lakkautusPvm}
-                            alkuPvm={row.original.alkuPvm}
-                            organisaatioTyypit={row.original.organisaatiotyypit}
-                        />
-                    );
-                },
             },
             {
                 header: 'allOids',

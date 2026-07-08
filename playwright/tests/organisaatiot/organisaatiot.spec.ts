@@ -20,7 +20,7 @@ import { before } from "node:test";
 const createAndGotoLomake = async (
   page: Page,
   prefix: string,
-  override: Partial<NewApiOrganisaatio>
+  override: Partial<NewApiOrganisaatio>,
 ) => {
   const response = await persistOrganisationWithPrefix(prefix, override);
 
@@ -62,10 +62,10 @@ const allRestrictedButtons = [
 const expectToast = async (
   page: Page,
   message: string,
-  role: "status" | "alert" = "status"
+  role: "status" | "alert" = "status",
 ) => {
   await expect(
-    page.getByRole(role).filter({ hasText: message }).last()
+    page.getByRole(role).filter({ hasText: message }).last(),
   ).toBeVisible();
 };
 
@@ -79,7 +79,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimeaButton.click();
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.fi",
-        "pöllö Suominimi"
+        "pöllö Suominimi",
       );
       await organisaatioPage.muokkaaNimea.fillInput("nimi.sv", "pöllö Ruotsi");
       await organisaatioPage.muokkaaNimea.fillInput("nimi.en", "pöllö Enkku");
@@ -98,15 +98,15 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimea.editRadioButton.click();
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.fi",
-        "pöllö Suominimi muokattu"
+        "pöllö Suominimi muokattu",
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.sv",
-        "pöllö Ruotsi muokattu"
+        "pöllö Ruotsi muokattu",
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.en",
-        "pöllö Enkku muokattu"
+        "pöllö Enkku muokattu",
       );
       await organisaatioPage.muokkaaNimea.vahvista();
 
@@ -123,7 +123,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimea.editRadioButton.click();
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.fi",
-        "pöllö testi kopioitava"
+        "pöllö testi kopioitava",
       );
       await organisaatioPage.muokkaaNimea.copyNameButton.click();
       await organisaatioPage.muokkaaNimea.vahvista();
@@ -131,8 +131,8 @@ test.describe("Organisations", () => {
       await expectToast(page, "MESSAGE_NIMEN_MUOKKAUS_ONNISTUI");
       await expect(
         page.getByText(
-          "pöllö testi kopioitava [fi], pöllö testi kopioitava [sv], pöllö testi kopioitava [en]"
-        )
+          "pöllö testi kopioitava [fi], pöllö testi kopioitava [sv], pöllö testi kopioitava [en]",
+        ),
       ).toBeVisible();
     });
 
@@ -144,19 +144,19 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimeaButton.click();
       const date = new Date();
       await organisaatioPage.muokkaaNimea.setDate(
-        `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`
+        `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`,
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.fi",
-        "pöllö ajastettu Suominimi"
+        "pöllö ajastettu Suominimi",
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.sv",
-        "pöllö ajastettu Ruotsi"
+        "pöllö ajastettu Ruotsi",
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.en",
-        "pöllö ajastettu Enkku"
+        "pöllö ajastettu Enkku",
       );
       await organisaatioPage.muokkaaNimea.vahvista();
 
@@ -164,7 +164,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.expectNameToContain("PARENT4 Suominimi");
       await organisaatioPage.nimihistoriaAccordion.click();
       await expect(organisaatioPage.nimihistoriaPanel).toContainText(
-        "pöllö ajastettu Suominimi [fi], pöllö ajastettu Ruotsi [sv], pöllö ajastettu Enkku [en]"
+        "pöllö ajastettu Suominimi [fi], pöllö ajastettu Ruotsi [sv], pöllö ajastettu Enkku [en]",
       );
       await expect(organisaatioPage.poistaAjastettuNimenmuutos).toBeVisible();
     });
@@ -177,19 +177,19 @@ test.describe("Organisations", () => {
       await organisaatioPage.muokkaaNimeaButton.click();
       const date = new Date();
       await organisaatioPage.muokkaaNimea.setDate(
-        `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`
+        `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`,
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.fi",
-        "pöllö delete Suominimi"
+        "pöllö delete Suominimi",
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.sv",
-        "pöllö delete Ruotsi"
+        "pöllö delete Ruotsi",
       );
       await organisaatioPage.muokkaaNimea.fillInput(
         "nimi.en",
-        "pöllö delete Enkku"
+        "pöllö delete Enkku",
       );
       await organisaatioPage.muokkaaNimea.vahvista();
 
@@ -197,13 +197,13 @@ test.describe("Organisations", () => {
       await organisaatioPage.expectNameToContain("PARENT4 Suominimi");
       await organisaatioPage.nimihistoriaAccordion.click();
       await expect(organisaatioPage.nimihistoriaPanel).toContainText(
-        "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]"
+        "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]",
       );
       page.on("dialog", (dialog) => dialog.accept());
       await organisaatioPage.poistaAjastettuNimenmuutos.click();
       await expectToast(page, "MESSAGE_NIMEN_POISTO_ONNISTUI");
       await expect(organisaatioPage.nimihistoriaPanel).not.toContainText(
-        "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]"
+        "pöllö delete Suominimi [fi], pöllö delete Ruotsi [sv], pöllö delete Enkku [en]",
       );
     });
   });
@@ -228,7 +228,7 @@ test.describe("Organisations", () => {
               roles:
                 '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD"]',
             }),
-          })
+          }),
         );
 
         const organisaatiotPage = new OrganisaatiotView(page);
@@ -244,7 +244,7 @@ test.describe("Organisations", () => {
               ...baseCasMe,
               roles: `["APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_${parent}"]`,
             }),
-          })
+          }),
         );
 
         const organisaatiotPage = new OrganisaatiotView(page);
@@ -266,7 +266,7 @@ test.describe("Organisations", () => {
                 '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001","LANG_fi","USER_mbender","VIRKAILIJA"]',
               lang: "fi",
             }),
-          })
+          }),
         );
 
         const organisaatiotPage = new OrganisaatiotView(page);
@@ -282,90 +282,8 @@ test.describe("Organisations", () => {
       await organisaatiotPage.filterByName("Mustikkalan testi op");
 
       await expect(
-        organisaatiotPage.organisaatioLink("Mustikkalan testi opisto")
+        organisaatiotPage.organisaatioLink("Mustikkalan testi opisto"),
       ).toBeVisible();
-    });
-
-    test("Organisaatiotarkastus", async ({ page }) => {
-      const now = moment().format("yyyyMMDDssS");
-      const today = moment();
-      const timesPast = moment().subtract(2, "years");
-      const recent = moment().subtract(23, "days");
-      const prefix = `${now} TARKASTUS IS `;
-      const ui_date_format = "D.M.yyyy";
-
-      const org1 = await persistOrganisationWithPrefix(`${prefix}NOT CHECKED`, {
-        tyypit: [`organisaatiotyyppi_01`],
-      });
-      const org2 = await persistOrganisationWithPrefix(
-        `${prefix}CHECKED LONG AGO`,
-        {
-          tyypit: [`organisaatiotyyppi_01`],
-          tarkastusPvm: timesPast.unix() * 1000,
-        }
-      );
-      const org3 = await persistOrganisationWithPrefix(
-        `${prefix}CHECKED LATELY`,
-        {
-          tyypit: [`organisaatiotyyppi_01`],
-          tarkastusPvm: recent.unix() * 1000,
-        }
-      );
-      const organisaatiotPage = new OrganisaatiotView(page);
-      await organisaatiotPage.goto();
-      await organisaatiotPage.filterByName(prefix);
-
-      await test.step("shows flags when tarkastus missing", async () => {
-        await expect(
-          page
-            .getByRole("row", { name: `${now} TARKASTUS IS NOT` })
-            .getByTitle("TARKASTUS_PUUTTUU")
-        ).toBeVisible();
-      });
-
-      await test.step("shows flags when tarkastus done", async () => {
-        await expect(
-          page
-            .getByRole("row", { name: `${now} TARKASTUS IS CHECKED LATELY` })
-            .getByTitle(`VIIMEINEN_TARKASTUS_${recent.format(ui_date_format)}`)
-        ).toBeVisible();
-      });
-
-      await test.step("shows flags when tarkastus old", async () => {
-        await expect(
-          page
-            .getByRole("row", { name: `${now} TARKASTUS IS CHECKED LONG AGO` })
-            .getByTitle(
-              `VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`
-            )
-        ).toBeVisible();
-      });
-
-      await test.step("sets tarkastus date", async () => {
-        await organisaatiotPage
-          .organisaatioLink(`${now} TARKASTUS IS CHECKED LONG AGO`)
-          .click();
-        await expect(page.locator("h1")).toContainText(
-          `${now} TARKASTUS IS CHECKED LONG AGO`
-        );
-        await page
-          .getByTitle(`VIIMEINEN_TARKASTUS_${timesPast.format(ui_date_format)}`)
-          .click();
-        await expect(
-          page.getByTitle(`VIIMEINEN_TARKASTUS_${today.format(ui_date_format)}`)
-        ).toBeVisible();
-        await expectToast(page, "MESSAGE_TARKASTUS_AIKA_TALLENNETTU");
-      });
-
-      await test.step("shows new tarkastus date", async () => {
-        await organisaatiotPage.goto();
-        await organisaatiotPage.filterByName(prefix);
-        await expect(
-          page
-            .getByRole("row", { name: `${now} TARKASTUS IS CHECKED LONG AGO` })
-            .getByTitle(`VIIMEINEN_TARKASTUS_${today.format(ui_date_format)}`)
-        ).toBeVisible();
-      });
     });
   });
 
@@ -399,7 +317,7 @@ test.describe("Organisations", () => {
               roles:
                 '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD"]',
             }),
-          })
+          }),
         );
 
         const organisaatioPage = new LomakeView(page);
@@ -437,7 +355,7 @@ test.describe("Organisations", () => {
               ...baseCasMe,
               roles: `["APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_${parent}"]`,
             }),
-          })
+          }),
         );
 
         const organisaatioPage = new LomakeView(page);
@@ -505,7 +423,7 @@ test.describe("Organisations", () => {
                 '["APP_ORGANISAATIOHALLINTA","APP_ORGANISAATIOHALLINTA_CRUD","APP_ORGANISAATIOHALLINTA_CRUD_1.2.246.562.10.00000000001","LANG_fi","USER_mbender","VIRKAILIJA"]',
               lang: "fi",
             }),
-          })
+          }),
         );
 
         const organisaatioPage = new LomakeView(page);
@@ -582,31 +500,31 @@ test.describe("Organisations", () => {
       await expect(page.getByText("PERUSTIETO_OPPILAITOSKOODI")).toBeVisible();
       await expect(page.getByText("PERUSTIETO_OPPILAITOSTYYPPI")).toBeVisible();
       await expect(
-        page.getByText("PERUSTIETO_MUUT_OPPILAITOSTYYPPI")
+        page.getByText("PERUSTIETO_MUUT_OPPILAITOSTYYPPI"),
       ).toBeVisible();
       await expect(
-        page.getByText("PERUSTIETO_OPPILAITOS_MUUTOKSET")
+        page.getByText("PERUSTIETO_OPPILAITOS_MUUTOKSET"),
       ).toBeVisible();
 
       await expect(page.getByText("VUOSILUOKAT")).not.toBeVisible();
       await organisaatioPage.selectFromDropdown(
         "oppilaitosTyyppiUri",
-        "Peruskoulut"
+        "Peruskoulut",
       );
       await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
       await organisaatioPage.selectFromDropdown(
         "oppilaitosTyyppiUri",
-        "Lukiot"
+        "Lukiot",
       );
       await expect(page.getByText("VUOSILUOKAT")).not.toBeVisible();
       await organisaatioPage.selectFromDropdown(
         "oppilaitosTyyppiUri",
-        "Perus- ja lukioasteen koulut"
+        "Perus- ja lukioasteen koulut",
       );
       await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
       await organisaatioPage.selectFromDropdown(
         "oppilaitosTyyppiUri",
-        "Peruskouluasteen erityiskoulut"
+        "Peruskouluasteen erityiskoulut",
       );
       await expect(page.getByText("VUOSILUOKAT")).toBeVisible();
     });
@@ -650,13 +568,13 @@ test.describe("Organisations", () => {
       organisaatioPage.goto(childResponse.organisaatio.oid);
       await organisaatioPage.koskiPostiAccordion.click();
       await expect(page.locator('input[name="koskiposti.fi"]')).toHaveValue(
-        "muokattufi@testi.com"
+        "muokattufi@testi.com",
       );
       await expect(page.locator('input[name="koskiposti.sv"]')).toHaveValue(
-        "muokattusv@testi.com"
+        "muokattusv@testi.com",
       );
       await expect(page.locator('input[name="koskiposti.en"]')).toHaveValue(
-        "muokattuen@testi.com"
+        "muokattuen@testi.com",
       );
     });
 
@@ -704,43 +622,43 @@ test.describe("Organisations", () => {
       const organisaatioPage = new LomakeView(page);
       await organisaatioPage.goto(child.organisaatio.oid);
       await expect(
-        page.getByRole("heading", { name: "Varhaiskasvatuksen toimipaikka" })
+        page.getByRole("heading", { name: "Varhaiskasvatuksen toimipaikka" }),
       ).toBeVisible({ timeout: 15_000 });
       await expect(
-        page.locator('input[name="organisaatiotyyppi_08"]')
+        page.locator('input[name="organisaatiotyyppi_08"]'),
       ).toBeChecked();
       await expect(
-        page.locator('input[name="organisaatiotyyppi_08"]')
+        page.locator('input[name="organisaatiotyyppi_08"]'),
       ).toBeDisabled();
       await organisaatioPage.vakaAccordion.click();
       await expect(
-        organisaatioPage.vakaPanel.getByText("Perhepäivähoito")
+        organisaatioPage.vakaPanel.getByText("Perhepäivähoito"),
       ).toBeVisible();
       await expect(
-        organisaatioPage.vakaPanel.getByText("Ei painotusta")
+        organisaatioPage.vakaPanel.getByText("Ei painotusta"),
       ).toBeVisible();
       await expect(
-        organisaatioPage.vakaPanel.getByText("Ympäristö ja luonto")
+        organisaatioPage.vakaPanel.getByText("Ympäristö ja luonto"),
       ).toBeVisible();
       await expect(
-        organisaatioPage.vakaPanel.getByText("Seikkailu")
+        organisaatioPage.vakaPanel.getByText("Seikkailu"),
       ).toBeVisible();
       await expect(
         organisaatioPage.vakaPanel.getByText(
           "Kunnan tai kuntayhtymän järjestämä",
-          { exact: true }
-        )
+          { exact: true },
+        ),
       ).toBeVisible();
       await expect(
         organisaatioPage.vakaPanel.getByText(
-          "Ostopalvelu, kunnan tai kuntayhtymän järjestämä"
-        )
+          "Ostopalvelu, kunnan tai kuntayhtymän järjestämä",
+        ),
       ).toBeVisible();
       await expect(
-        organisaatioPage.vakaPanel.getByText("tuntematon 1.11.2005")
+        organisaatioPage.vakaPanel.getByText("tuntematon 1.11.2005"),
       ).toBeVisible();
       await expect(
-        organisaatioPage.vakaPanel.getByText("suomi 1.11.2021")
+        organisaatioPage.vakaPanel.getByText("suomi 1.11.2021"),
       ).toBeVisible();
     });
 
@@ -750,7 +668,7 @@ test.describe("Organisations", () => {
       await organisaatioPage.goto(response.organisaatio.oid);
 
       await expect(
-        page.getByText("Helsingin kaupunki", { exact: true })
+        page.getByText("Helsingin kaupunki", { exact: true }),
       ).toBeVisible();
       await page.locator("button[name=LOMAKE_POISTA_ORGANISAATIO]").click();
       await page.locator("button[name=BUTTON_VAHVISTA]").click();
@@ -758,7 +676,7 @@ test.describe("Organisations", () => {
 
       await organisaatioPage.goto(response.organisaatio.oid);
       await expect(
-        page.getByText("Helsingin kaupunki (LABEL_POISTETTU)", { exact: true })
+        page.getByText("Helsingin kaupunki (LABEL_POISTETTU)", { exact: true }),
       ).toBeVisible();
     });
 
@@ -768,7 +686,7 @@ test.describe("Organisations", () => {
         route.fulfill({
           status: 200,
           body: JSON.stringify(ytjHameen(yTunnus)),
-        })
+        }),
       );
 
       const organisaatioPage = new LomakeView(page);
@@ -784,7 +702,7 @@ test.describe("Organisations", () => {
 
       await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
       await expect(page.locator("h1")).toHaveText(
-        " Hameen ammatti-instituutti Oy 4"
+        " Hameen ammatti-instituutti Oy 4",
       );
     });
 
@@ -794,7 +712,7 @@ test.describe("Organisations", () => {
         route.fulfill({
           status: 200,
           body: JSON.stringify(ytjHameen(yTunnus)),
-        })
+        }),
       );
 
       const response = await persistOrganisation(organisaatio("BERFORE_FETCH"));
@@ -808,7 +726,7 @@ test.describe("Organisations", () => {
 
       await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
       await expect(page.locator("h1")).toHaveText(
-        " Hameen ammatti-instituutti Oy 4"
+        " Hameen ammatti-instituutti Oy 4",
       );
     });
 
@@ -827,15 +745,15 @@ test.describe("Organisations", () => {
       await organisaatioPage.fillInput("nimi.en", "CHILD Enkku");
       await organisaatioPage.selectFromDropdown(
         "PERUSTIETO_PAASIJAINTIKUNTA_SELECT",
-        "Ranua"
+        "Ranua",
       );
       await organisaatioPage.selectFromDropdown(
         "PERUSTIETO_MAA_SELECT",
-        "Andorra"
+        "Andorra",
       );
       await organisaatioPage.selectFromDropdown(
         "PERUSTIETO_OPETUSKIELI_SELECT",
-        "ruotsi"
+        "ruotsi",
       );
       await organisaatioPage.setDate("PERUSTAMISPAIVA", "2.9.2021");
 
@@ -849,11 +767,11 @@ test.describe("Organisations", () => {
       await expectToast(page, "MESSAGE_TALLENNUS_ONNISTUI_FI");
       await page.reload();
       await expect(
-        page.getByText("VERSIOHISTORIA_MUOKATTU_VIIMEKSI_FI")
+        page.getByText("VERSIOHISTORIA_MUOKATTU_VIIMEKSI_FI"),
       ).toBeVisible();
       await organisaatioPage.rakenneAccordion.click();
       await expect(
-        organisaatioPage.rakennePanel.getByText("PARENT Suominimi")
+        organisaatioPage.rakennePanel.getByText("PARENT Suominimi"),
       ).toBeVisible();
     });
 
@@ -886,20 +804,20 @@ test.describe("Organisations", () => {
       await page.getByText("LOMAKE_YHDISTA_ORGANISAATIO").click();
       await organisaatioPage.selectFromDropdown(
         "ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO",
-        child3.organisaatio.ytunnus
+        child3.organisaatio.ytunnus,
       );
       await page.getByText("BUTTON_VAHVISTA").click();
       await expect(
-        page.getByText("TOIMIPISTEEN_YHDISTYS_VAHVISTUS_TITLE")
+        page.getByText("TOIMIPISTEEN_YHDISTYS_VAHVISTUS_TITLE"),
       ).toBeVisible();
       await page.getByText("BUTTON_VAHVISTA").click();
       await expectToast(page, "MESSAGE_LIITOS_ONNISTUI");
       await organisaatioPage.rakenneAccordion.click();
       await expect(
-        organisaatioPage.rakennePanel.getByText("CHILD3")
+        organisaatioPage.rakennePanel.getByText("CHILD3"),
       ).toBeVisible();
       await expect(
-        organisaatioPage.rakennePanel.getByText("PARENT2")
+        organisaatioPage.rakennePanel.getByText("PARENT2"),
       ).toBeVisible();
     });
 
@@ -927,20 +845,20 @@ test.describe("Organisations", () => {
       await page.getByText("LOMAKE_SIIRRA_ORGANISAATIO").click();
       await organisaatioPage.selectFromDropdown(
         "ORGANISAATIO_SIIRTO_TOINEN_ORGANISAATIO",
-        parent3.organisaatio.ytunnus
+        parent3.organisaatio.ytunnus,
       );
       await page.getByText("BUTTON_VAHVISTA").click();
       await expect(
-        page.getByText("Siirretäänkö CHILD Suominimi")
+        page.getByText("Siirretäänkö CHILD Suominimi"),
       ).toBeVisible();
       await page.getByText("BUTTON_VAHVISTA").click();
       await expectToast(page, "MESSAGE_LIITOS_ONNISTUI");
       await organisaatioPage.rakenneAccordion.click();
       await expect(
-        organisaatioPage.rakennePanel.getByText("PARENT1 Suominimi")
+        organisaatioPage.rakennePanel.getByText("PARENT1 Suominimi"),
       ).toBeVisible();
       await expect(
-        organisaatioPage.rakennePanel.getByText("PARENT3 Suominimi")
+        organisaatioPage.rakennePanel.getByText("PARENT3 Suominimi"),
       ).toBeVisible();
     });
   });
@@ -950,7 +868,7 @@ test.describe("Organisations", () => {
       route.fulfill({
         status: 200,
         body: JSON.stringify(ryhmat),
-      })
+      }),
     );
 
     const ryhmatPage = new RyhmatView(page);
@@ -986,8 +904,8 @@ test.describe("Organisations", () => {
       await expect(ryhmatPage.ryhmaLink("ADSDAS")).not.toBeVisible();
       await expect(
         ryhmatPage.ryhmaLink(
-          "AMK hakukohde kevät II 2020: EB, IB, RP ja DIA arvosanat"
-        )
+          "AMK hakukohde kevät II 2020: EB, IB, RP ja DIA arvosanat",
+        ),
       ).toBeVisible();
       await ryhmatPage.setPageNumber(1);
       await expect(ryhmatPage.ryhmaLink("ADSDAS")).toBeVisible();

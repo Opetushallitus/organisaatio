@@ -359,20 +359,6 @@ public class OrganisaatioApiImpl implements OrganisaatioApi {
         organisaatioBusinessService.deleteOrganisaatioNimi(oid, nimidto);
     }
 
-    /**
-     * PUT /{oid}/tarkasta
-     *
-     * @param oid of organisationthat was checked
-     * @return timestamp when information was checked
-     */
-
-    @Override
-    @PreAuthorize("hasRole('ROLE_APP_ORGANISAATIOHALLINTA') or hasRole('ROLE_APP_ORGANISAATIOHALLINTA_CRUD')")
-    @CheckTarkastusPermission
-    public Long updateTarkastusPvm(String oid) {
-        return organisaatioBusinessService.updateTarkastusPvm(oid).getTime();
-    }
-
     // GET /api/{oid}/childoids
     @Override
     @CheckReadPermission

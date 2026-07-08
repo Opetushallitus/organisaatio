@@ -146,11 +146,6 @@ public interface OrganisaatioApi {
     @DeleteMapping(path = "/{oid}/nimet")
     void deleteOrganisaatioNimi(@Parameter(description = "Organisaation oid", required = true) @PathVariable("oid") String oid, @RequestBody OrganisaatioNimiDTO nimidto);
 
-    @Hidden
-    @Operation(summary = "Operaatio asettaa organisaatiolle nykyhetken tarkastuspäivämääräksi ja palauttaa tarkastuksen aikaleiman.")
-    @PutMapping(path = "/{oid}/tarkasta", produces = MediaType.APPLICATION_JSON_VALUE)
-    Long updateTarkastusPvm(@Parameter(description = "Organisaation oid", required = true) @PathVariable("oid") String oid);
-
     @GetMapping(path = "/{oid}/nimet", produces = MediaType.APPLICATION_JSON_VALUE)
     List<OrganisaatioNimiDTO> getOrganisaatioNimet(@PathVariable("oid") String oid);
 

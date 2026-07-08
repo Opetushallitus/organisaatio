@@ -356,24 +356,6 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
                 .fetch();
     }
 
-    @Override
-    public Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvmLocalDate, Collection<String> oids, long limit) {
-        java.sql.Date voimassaPvm = java.sql.Date.valueOf(voimassaPvmLocalDate);
-        QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
-        return jpa()
-                .from(qOrganisaatio)
-                .where(qOrganisaatio.organisaatioPoistettu.isFalse())
-                .where(anyOf(qOrganisaatio.alkuPvm.loe(voimassaPvm), qOrganisaatio.alkuPvm.isNull()))
-                .where(anyOf(qOrganisaatio.lakkautusPvm.after(voimassaPvm), qOrganisaatio.lakkautusPvm.isNull()))
-                .where(qOrganisaatio.oid.in(oids))
-                .where(anyOf(qOrganisaatio.tarkastusPvm.before(tarkastusPvm), qOrganisaatio.tarkastusPvm.isNull()))
-                .select(qOrganisaatio)
-                .distinct()
-                .orderBy(qOrganisaatio.tarkastusPvm.asc().nullsFirst(), qOrganisaatio.id.asc())
-                .limit(limit)
-                .fetch();
-    }
-
     private BooleanExpression getVoimassaoloExpression(boolean suunnitellut, boolean lakkautetut, QOrganisaatio qOrganisaatio) {
         logger.debug("getVoimassaoloExpression()");
         BooleanExpression voimassaoloExpr = null;

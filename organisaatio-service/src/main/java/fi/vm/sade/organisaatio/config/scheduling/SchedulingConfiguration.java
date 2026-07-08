@@ -24,7 +24,6 @@ public class SchedulingConfiguration {
 
     @Bean(destroyMethod = "stop")
     Scheduler scheduler(DataSource dataSource,
-                        VanhentuneetTiedotSahkopostiTask vanhentuneetTiedotSahkopostiTask,
                         KoodistoUpdateTask koodistoUpdateTask,
                         FetchKoodistotTask fetchKoodistotTask,
                         FetchKoulutusluvatTask fetchKoulutusluvatTask,
@@ -34,8 +33,7 @@ public class SchedulingConfiguration {
                         DatantuontiImportTask datantuontiImportTask,
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         Scheduler scheduler = Scheduler.create(dataSource, koodistoUpdateTask)
-                .startTasks(vanhentuneetTiedotSahkopostiTask,
-                            organisaatioUpdateTask,
+                .startTasks(organisaatioUpdateTask,
                             fetchKoodistotTask,
                             fetchKoulutusluvatTask,
                             emailRetryTask,

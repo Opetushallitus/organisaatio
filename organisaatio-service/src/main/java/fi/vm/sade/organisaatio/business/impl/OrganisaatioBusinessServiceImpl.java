@@ -51,7 +51,6 @@ import org.springframework.util.CollectionUtils;
 
 import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ValidationException;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -894,14 +893,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
 
         // Päivitetään tiedot koodistoon.
         koodistoService.addKoodistoSyncByOid(organisaatio.getOid());
-    }
-
-    @Override
-    public Timestamp updateTarkastusPvm(String oid) {
-        Organisaatio org = getOrganisaatio(oid);
-        org.setTarkastusPvm(new Date());
-        setPaivittajaData(org);
-        return new Timestamp(org.getTarkastusPvm().getTime());
     }
 
     @Override

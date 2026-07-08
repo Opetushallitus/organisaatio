@@ -9,7 +9,6 @@ import fi.vm.sade.organisaatio.repository.impl.OrganisaatioRepositoryImpl;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
 
 import jakarta.persistence.EntityManager;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -182,17 +181,6 @@ public interface OrganisaatioRepositoryCustom {
             LocalDateTime lastModifiedSince,
             List<OrganisaatioTyyppi> organizationTypes,
             boolean excludeDiscontinued);
-
-    /**
-     * Palauttaa aktiiviset organisaatiot joille ei ole tehty tietojen tarkastusta annetulla päivämäärällä.
-     *
-     * @param tarkastusPvm aikaleima jonka jälkeen tarkastus tulee olla tehtynä
-     * @param voimassaPvm aikaleima jolla organisaatiot halutaan olevan aktiivisia
-     * @param oids organisaatiot joita haetaan
-     * @param limit palautettavien rivien maksimimäärä
-     * @return tarkastamattomat organisaatiot
-     */
-    Collection<Organisaatio> findByTarkastusPvm(Date tarkastusPvm, LocalDate voimassaPvm, Collection<String> oids, long limit);
 
     EntityManager getJpaEntityManager();
 

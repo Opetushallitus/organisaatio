@@ -12,7 +12,6 @@ public enum OrganisaatioOperation implements Operation {
     ORG_NIMI_UPDATE,
     ORG_NIMI_DELETE,
     ORG_UPDATE,
-    ORG_TARKASTA,
     ORG_REKISTEROINTI
 
 }

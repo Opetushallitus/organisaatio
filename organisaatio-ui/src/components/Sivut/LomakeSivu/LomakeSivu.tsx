@@ -35,7 +35,6 @@ import {
     deleteOrganisaatio,
     mergeOrganisaatio,
     readOrganisaatio,
-    setTarkastusPvm,
     updateOrganisaatio,
     useOrganisaatioHistoria,
 } from '../../../api/organisaatio';
@@ -61,7 +60,6 @@ import VakaToimipaikka from './Koulutustoimija/VakaToimipaikka/VakaToimipaikka';
 import KoskiPostiLomake from './Koulutustoimija/KoskiPostiLomake/KoskiPostiLomake';
 import { getUiDateStr, sortNimet } from '../../../tools/mappers';
 import IconWrapper from '../../IconWapper/IconWrapper';
-import { TarkastusLippuButton } from '../../TarkistusLippu/TarkastusLippu';
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import {
@@ -420,8 +418,7 @@ const LomakeSivu = () => {
             </PaaOsio>
         );
     }
-    const { ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot, alkuPvm, lakkautusPvm } =
-        getPerustiedotValues();
+    const { ytunnus, organisaatioTyypit, varhaiskasvatuksenToimipaikkaTiedot } = getPerustiedotValues();
 
     const resolvedTyypit = resolveOrganisaatioTyypit(rakenne, organisaatioTyypitKoodisto, parentTiedot);
     const opetusKielet = getPerustiedotValues('kielet')?.map((kieliOption) => kieliOption.label) || [];
@@ -546,20 +543,6 @@ const LomakeSivu = () => {
                     </h1>
                 </ValiOtsikko>
                 <ValiNappulat>
-                    <TarkastusLippuButton
-                        alkuPvm={alkuPvm}
-                        lakkautusPvm={lakkautusPvm}
-                        tarkastusPvm={organisaatioBase.tarkastusPvm}
-                        organisaatioTyypit={organisaatioTyypit}
-                        isDirty={isDirty}
-                        onClick={async () => {
-                            setOrganisaatioBase({
-                                ...organisaatioBase,
-                                tarkastusPvm: await setTarkastusPvm(organisaatioBase.oid),
-                            });
-                            setMuokattu(muokattu + 1);
-                        }}
-                    />
                     {resolvedOrganisaatioRakenne?.moveTargetType.length > 0 &&
                         casMe.canHaveButton('LOMAKE_SIIRRA_ORGANISAATIO', params.oid, organisaatioNimiPolku) && (
                             <LomakeButton

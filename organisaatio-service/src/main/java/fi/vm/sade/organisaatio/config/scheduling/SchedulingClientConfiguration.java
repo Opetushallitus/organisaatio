@@ -14,7 +14,6 @@ import fi.vm.sade.organisaatio.email.EmailRetryTask;
 public class SchedulingClientConfiguration {
     @Bean
     SchedulerClient schedulerClient(DataSource dataSource,
-                        VanhentuneetTiedotSahkopostiTask vanhentuneetTiedotSahkopostiTask,
                         KoodistoUpdateTask koodistoUpdateTask,
                         FetchKoodistotTask fetchKoodistotTask,
                         FetchKoulutusluvatTask fetchKoulutusluvatTask,
@@ -22,7 +21,7 @@ public class SchedulingClientConfiguration {
                         @Lazy OrganisaatioUpdateTask organisaatioUpdateTask) {
         return SchedulerClient
             .Builder
-            .create(dataSource, koodistoUpdateTask, vanhentuneetTiedotSahkopostiTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask, emailRetryTask)
+            .create(dataSource, koodistoUpdateTask, organisaatioUpdateTask, fetchKoodistotTask, fetchKoulutusluvatTask, emailRetryTask)
             .build();
     }
 }
