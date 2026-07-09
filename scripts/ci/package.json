@@ -1,7 +1,7 @@
 {
   "name": "organisaatio-ci",
+  "type": "module",
   "devDependencies": {
-    "@types/node": "24.13.2",
-    "ts-node": "10.9.2"
+    "@types/node": "24.13.2"
   }
 }

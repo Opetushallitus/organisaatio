@@ -6,8 +6,9 @@ function main {
   local -r env=$(parse_env_from_script_name)
 
   cd "$repo/scripts/ci"
-  npm ci
-  ENVIRONMENT_NAME=${env} npx ts-node publish-release-notes.ts
+  init_nodejs
+  npm_ci_if_needed
+  ENVIRONMENT_NAME=${env} node publish-release-notes.ts
 }
 
 main "$@"
