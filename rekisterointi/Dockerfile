@@ -15,7 +15,7 @@ RUN npm run build
 WORKDIR /app
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
-FROM amazoncorretto:21.0.11@sha256:975b191f99b2f0fb9e76397b7d85523e9904dcb679e54d5f9099c1cdeab21cf1
+FROM amazoncorretto:25.0.4@sha256:10a3c794ac57ecfc386938283fba9da351c5f0bda3a155482a1193b9806f1854
 WORKDIR /app
 
 COPY --from=build /app/target/rekisterointi.jar rekisterointi.jar
