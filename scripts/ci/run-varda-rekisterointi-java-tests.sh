@@ -8,6 +8,7 @@ trap stop_database EXIT
 
 function main {
   start_database
+  select_java_version "21"
 
   cd "${repo}/varda-rekisterointi"
 

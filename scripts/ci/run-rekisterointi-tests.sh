@@ -22,6 +22,8 @@ function start_mock_api {
 }
 
 function start_server {
+  select_java_version "21"
+
   cd "${repo}/rekisterointi/rekisterointi-ui"
   npm run build
   cd "${repo}/rekisterointi"

@@ -34,6 +34,7 @@ function start_uis {
 
 function start_servers {
   cd "${repo}"
+  select_java_version "21"
 
   if is_running_on_codebuild; then
     "${repo}"/mvnw clean package -DskipTests -s ./codebuild-mvn-settings.xml
