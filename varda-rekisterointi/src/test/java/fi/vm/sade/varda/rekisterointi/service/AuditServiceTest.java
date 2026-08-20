@@ -79,7 +79,7 @@ public class AuditServiceTest {
 
         auditService.log(event);
 
-        verify(auditMock).log(userCaptor.capture(), eq(Operation.CREATE), any(), any());
+        verify(auditMock).log(userCaptor.capture(), eq(Operation.CREATE), any(), any(Changes.class));
         assertThat(userCaptor.getValue()).returns(user(null, "127.0.0.1"), User::asJson);
     }
 
@@ -119,7 +119,7 @@ public class AuditServiceTest {
 
         auditService.log(event);
 
-        verify(auditMock).log(userCaptor.capture(), eq(Operation.UPDATE), any(), any());
+        verify(auditMock).log(userCaptor.capture(), eq(Operation.UPDATE), any(), any(Changes.class));
         assertThat(userCaptor.getValue()).returns(user(null, "127.0.0.1"), User::asJson);
     }
 
@@ -158,7 +158,7 @@ public class AuditServiceTest {
 
         auditService.log(event);
 
-        verify(auditMock).log(userCaptor.capture(), eq(Operation.DELETE), any(), any());
+        verify(auditMock).log(userCaptor.capture(), eq(Operation.DELETE), any(), any(Changes.class));
         assertThat(userCaptor.getValue()).returns(user(null, "127.0.0.1"), User::asJson);
     }
 
