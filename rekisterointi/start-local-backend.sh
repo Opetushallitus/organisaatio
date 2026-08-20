@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
+source "$( dirname "${BASH_SOURCE[0]}" )/.../scripts/lib/common-functions.sh"
 
 function main {
   select_java_version "21"
@@ -23,17 +24,6 @@ function main {
       -DbaseUrl=https://virkailija.untuvaopintopolku.fi
       -Drekisterointi.baseUrl=http://localhost:3000
       -Dcas-oppija.baseUrl=https://untuvaopintopolku.fi"
-}
-
-function select_java_version {
-  java_version="$1"
-  JAVA_HOME="$(/usr/libexec/java_home --failfast --version "${java_version}" > /dev/null 2>&1 || fatal "JDK version ${java_version} required but not installed")"
-  export JAVA_HOME
-}
-
-function fatal {
-  log "ERROR" "$1"
-  exit 1
 }
 
 function log {

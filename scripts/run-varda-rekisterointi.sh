@@ -27,12 +27,6 @@ function main {
       -Dvarda-rekisterointi.url-virkailija=https://virkailija.untuvaopintopolku.fi"
 }
 
-function select_java_version {
-  java_version="$1"
-  JAVA_HOME="$(/usr/libexec/java_home --failfast --version "${java_version}" > /dev/null 2>&1 || fatal "JDK version ${java_version} required but not installed")"
-  export JAVA_HOME
-}
-
 function wait_for_local_db_to_be_healthy {
   wait_for_container_to_be_healthy varda-rekisterointi-db
 }
