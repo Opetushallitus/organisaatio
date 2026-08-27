@@ -25,6 +25,7 @@ import fi.ytj.YTunnusDTO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +57,21 @@ public class RekisterointiResourceTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_API_VARDA"})
+    public void vardaRekisterointiRejectsEmptyRequestBody() throws Exception {
+        mockMvc.perform(post("/api/rekisterointi/varda")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(value = "1.2.3.4.5", roles = {"APP_ORGANISAATIOIDEN_REKISTEROITYMINEN_API_VARDA"})
+    public void vardaRekisterointiGetFails() throws Exception {
+        mockMvc.perform(get("/api/rekisterointi/varda"))
+                .andExpect(status().isMethodNotAllowed());
     }
 
     private YTJDTO getYtjOrganisation(String ytunnus) {
