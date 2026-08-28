@@ -2,6 +2,13 @@ const environments = ["hahtuva", "dev", "qa", "prod"] as const;
 type EnvironmentName = (typeof environments)[number];
 
 export type Config = {
+  organisaatioTaskCpu: number;
+  organisaatioTaskMemoryMiB: number;
+  vardaTaskCpu: number;
+  vardaTaskMemoryMiB: number;
+  rekisterointiTaskCpu: number;
+  rekisterointiTaskMemoryMiB: number;
+  useGraviton4MainDatabase: boolean;
   opintopolkuHost: string;
   minCapacity: number;
   maxCapacity: number;
@@ -17,6 +24,13 @@ export type Config = {
   oppijanumerorekisteriBaseUrl: string;
 };
 const defaultConfig = {
+  organisaatioTaskCpu: 2048,
+  organisaatioTaskMemoryMiB: 4096,
+  vardaTaskCpu: 256,
+  vardaTaskMemoryMiB: 1024,
+  rekisterointiTaskCpu: 256,
+  rekisterointiTaskMemoryMiB: 1024,
+  useGraviton4MainDatabase: true,
   minCapacity: 1,
   maxCapacity: 1,
   vardaRekisterointiCapacity: 0,
@@ -92,6 +106,13 @@ export const qa: Config = {
 
 export const prod: Config = {
   ...defaultConfig,
+  organisaatioTaskCpu: 4096,
+  organisaatioTaskMemoryMiB: 12288,
+  vardaTaskCpu: 512,
+  vardaTaskMemoryMiB: 2048,
+  rekisterointiTaskCpu: 512,
+  rekisterointiTaskMemoryMiB: 2048,
+  useGraviton4MainDatabase: false,
   opintopolkuHost: "opintopolku.fi",
   vardaRekisterointiCapacity: 1,
   lampiExport: {

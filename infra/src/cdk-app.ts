@@ -331,7 +331,9 @@ class OrganisaatioDatabaseStack extends cdk.Stack {
       writer: rds.ClusterInstance.provisioned("writer", {
         enablePerformanceInsights: true,
         instanceType: ec2.InstanceType.of(
-          ec2.InstanceClass.R6G,
+          config.useGraviton4MainDatabase
+            ? ec2.InstanceClass.R8G
+            : ec2.InstanceClass.R6G,
           ec2.InstanceSize.XLARGE,
         ),
       }),
@@ -433,8 +435,8 @@ class OrganisaatioApplicationStack extends cdk.Stack {
       this,
       "TaskDefinition",
       {
-        cpu: 4096,
-        memoryLimitMiB: 12288,
+        cpu: config.organisaatioTaskCpu,
+        memoryLimitMiB: config.organisaatioTaskMemoryMiB,
         runtimePlatform: {
           operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
@@ -811,8 +813,8 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
       this,
       "TaskDefinition",
       {
-        cpu: 512,
-        memoryLimitMiB: 2048,
+        cpu: config.vardaTaskCpu,
+        memoryLimitMiB: config.vardaTaskMemoryMiB,
         runtimePlatform: {
           operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
@@ -983,8 +985,8 @@ class RekisterointiApplicationStack extends cdk.Stack {
       this,
       "TaskDefinition",
       {
-        cpu: 512,
-        memoryLimitMiB: 2048,
+        cpu: config.rekisterointiTaskCpu,
+        memoryLimitMiB: config.rekisterointiTaskMemoryMiB,
         runtimePlatform: {
           operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
