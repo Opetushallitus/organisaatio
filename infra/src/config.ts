@@ -32,7 +32,7 @@ const defaultConfig = {
   rekisterointiTaskMemoryMiB: 1024,
   useGraviton4MainDatabase: true,
   minCapacity: 1,
-  maxCapacity: 1,
+  maxCapacity: 2,
   vardaRekisterointiCapacity: 0,
   features: {
     "organisaatio.tasks.datantuonti.import.enabled": false,
@@ -114,6 +114,7 @@ export const prod: Config = {
   rekisterointiTaskMemoryMiB: 2048,
   useGraviton4MainDatabase: false,
   opintopolkuHost: "opintopolku.fi",
+  maxCapacity: 1,
   vardaRekisterointiCapacity: 1,
   lampiExport: {
     enabled: true,
