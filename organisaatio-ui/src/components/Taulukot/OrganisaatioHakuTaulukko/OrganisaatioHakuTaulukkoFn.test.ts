@@ -16,6 +16,12 @@ describe('OrganisaatioHakuTaulukko', () => {
         it('empty array should return empty object', () => {
             assert.deepStrictEqual(expandData([]), {});
         });
+        it('does not expand rows when organization type is selected', () => {
+            assert.deepStrictEqual(
+                expandData([{ subRows: [] as OrganisaatioHakuOrganisaatio[] } as OrganisaatioHakuOrganisaatio], false),
+                {}
+            );
+        });
         it('single item, no childs, should result in one key', () => {
             assert.deepStrictEqual(
                 expandData([{ subRows: [] as OrganisaatioHakuOrganisaatio[] } as OrganisaatioHakuOrganisaatio]),

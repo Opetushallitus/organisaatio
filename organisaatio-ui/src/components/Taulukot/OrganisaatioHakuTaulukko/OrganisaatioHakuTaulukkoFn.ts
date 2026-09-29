@@ -6,14 +6,17 @@ const MAX_EXPAND_ROWS = 10;
 
 export const expandData = (
     data: OrganisaatioHakuOrganisaatio[],
+    shouldExpand = true,
     parent?: string,
     initial: Record<string, boolean> = {}
 ) => {
+    if (!shouldExpand) return initial;
+
     return data.reduce((p, c, i) => {
         const me = parent ? `${parent}.${i}` : `${i}`;
         if (!!c.subRows && c.subRows.length <= MAX_EXPAND_ROWS) {
             p[me] = true;
-            expandData(c.subRows, me, p);
+            expandData(c.subRows, shouldExpand, me, p);
         }
         return p;
     }, initial);
