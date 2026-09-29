@@ -20,7 +20,7 @@ import { OrganisaatioHakuOrganisaatio } from '../../../types/apiTypes';
 import IconWrapper from '../../IconWapper/IconWrapper';
 import { Hakufiltterit } from './Hakufiltterit';
 import chevronDown from '@iconify/icons-fa-solid/chevron-down';
-import { localFiltersAtom } from '../../../contexts/SearchFiltersContext';
+import { localFiltersAtom, remoteFiltersAtom } from '../../../contexts/SearchFiltersContext';
 import { useAtom } from 'jotai';
 import { casMeAtom } from '../../../api/kayttooikeus';
 import { languageAtom } from '../../../api/lokalisaatio';
@@ -77,6 +77,7 @@ export default function OrganisaatioHakuTaulukko() {
     });
     const [kuntaKoodisto] = useAtom(kuntaKoodistoAtom);
     const [organisaatioTyypitKoodisto] = useAtom(organisaatioTyypitKoodistoAtom);
+    const [remoteFilters] = useAtom(remoteFiltersAtom);
 
     const containingFilter = React.useCallback(containingSomeValueFilter, []);
     const vakatoimijatFilter = React.useCallback(includeVakaToimijatFilter, []);
@@ -181,7 +182,11 @@ export default function OrganisaatioHakuTaulukko() {
         [i18n]
     );
     const data = React.useMemo(() => sortOrganisations(organisaatiot), [organisaatiot, sortOrganisations]);
-    const initialExpanded = React.useMemo(() => expandData(data), [data]);
+
+    const initialExpanded = React.useMemo(
+        () => expandData(data, remoteFilters.organisaatiotyyppi === ''),
+        [data, remoteFilters.organisaatiotyyppi]
+    );
 
     useEffect(() => {
         setExpanded(initialExpanded);
