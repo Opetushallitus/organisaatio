@@ -23,6 +23,7 @@ Add steps a reviewer can follow to test the changes. Delete this if unnecessary
 - [ ] I have ensured that the code has been linted/formatted correctly
 - [ ] I have updated the documentation (if needed)
 - [ ] I have added/modified tests (if needed)
+- [ ] I have ensured that the changes will be applied to the correct environments (i.e. no feature flags/branches needed)
 
 ## Notes for reviewers
 
