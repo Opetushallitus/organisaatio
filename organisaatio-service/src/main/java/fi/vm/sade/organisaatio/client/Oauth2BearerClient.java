@@ -32,11 +32,8 @@ public class Oauth2BearerClient {
     @Value("${otuva.jwt.issuer-uri}")
     private String oauth2IssuerUri;
 
-    private String cachedToken = null;
-
     @Cacheable(value = CACHE_NAME_OAUTH2_BEARER, sync = true)
     public String getOauth2Bearer() throws IOException, InterruptedException {
-        if (cachedToken != null) return cachedToken;
         String tokenUrl = oauth2IssuerUri + "/oauth2/token";
         log.info("refetching oauth2 bearer from " + tokenUrl);
         var request = HttpRequest.newBuilder()
@@ -53,9 +50,7 @@ public class Oauth2BearerClient {
         if (res.statusCode() != 200) {
             throw new RuntimeException("Oauth2 bearer returned status code " + res.statusCode() + ": " + res.body());
         }
-        var newToken = objectMapper.readValue(res.body(), Token.class).access_token();
-        cachedToken = newToken;
-        return newToken;
+        return objectMapper.readValue(res.body(), Token.class).access_token();
     }
 
     private HttpRequest.BodyPublisher encodeFormBody(Map<String, String> params) {
@@ -72,7 +67,6 @@ public class Oauth2BearerClient {
     @CacheEvict(value = CACHE_NAME_OAUTH2_BEARER, allEntries = true)
     public void evictOauth2Bearer() {
         log.info("evicting oauth2 bearer cache");
-        cachedToken = null;
     }
 
     public record Token(String access_token, String token_type, Integer expires_in) {}
