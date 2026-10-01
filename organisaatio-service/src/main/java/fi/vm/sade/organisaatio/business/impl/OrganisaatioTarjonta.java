@@ -101,7 +101,7 @@ public class OrganisaatioTarjonta {
     private List<KoulutusHakutulosV1RDTO> haeKoulutukset(String oid) {
         List<KoulutusHakutulosV1RDTO> koulutukset = new ArrayList<>();
         JsonElement json;
-        String url = urlVirkailija + "/tarjonta-service/rest/v1/koulutus/search?organisationOid=" + oid;
+        String url = urlVirkailija + "/kouta-internal/koulutus/search?organisationOid=" + oid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);
@@ -237,7 +237,7 @@ public class OrganisaatioTarjonta {
     private List<HakukohdeHakutulosV1RDTO> haeHakukohteet(String ryhmaOid) {
         List<HakukohdeHakutulosV1RDTO> hakukohteet = new ArrayList<>();
         JsonElement json;
-        String url = urlVirkailija + "/tarjonta-service/rest/v1/hakukohde/search?organisationOid=" + ryhmaOid;
+        String url = urlVirkailija + "/kouta-internal/hakukohde/search?organisationOid=" + ryhmaOid;
 
         try {
             json = restToStream.getInputStreamFromUri(url);
