@@ -15,16 +15,13 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import fi.vm.sade.organisaatio.business.OrganisaatioDeleteBusinessService;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteHakukohteitaException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDeleteParentException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
 import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +33,11 @@ import java.util.Date;
  */
 @Transactional
 @Service("organisaatioDeleteBusinessService")
+@Slf4j
+@RequiredArgsConstructor
 public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDeleteBusinessService {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private OrganisaatioRepository organisaatioRepository;
-
-    @Autowired
-    private OrganisaatioTarjonta organisaatioTarjonta;
+    private final OrganisaatioRepository organisaatioRepository;
 
     @Override
     public Organisaatio deleteOrganisaatio(String oid) {
@@ -53,35 +46,23 @@ public class OrganisaatioDeleteBusinessServiceImpl implements OrganisaatioDelete
         // Haetaan poistettava organisaatio
         Organisaatio org = organisaatioRepository.findFirstByOid(oid);
         if (org == null) {
-            LOG.warn("Cannot find organisaatio to be deleted: " + oid);
+            log.warn("Cannot find organisaatio to be deleted: " + oid);
             throw new OrganisaatioNotFoundException(oid);
         }
 
         // Poistettavalla organisaatiolla ei saa olla lapsia
         if (org.getChildCount(new Date()) != 0) {
-            LOG.warn("Organisaatio to be deleted: " + oid + " contains child organisations: " +
+            log.warn("Organisaatio to be deleted: " + oid + " contains child organisations: " +
                     org.getChildCount(new Date()));
             throw new OrganisaatioDeleteParentException();
         }
 
         // Ryhmä ja organisaatio käsitellään eri tavalla
         if (OrganisaatioUtil.isRyhma(org)) {
-            // Poistettavalla ryhmällä ei saa olla hakukohteita
-            if (organisaatioTarjonta.hakukohteita(org.getOid())) {
-                LOG.warn("Cannot delete group: " + oid + " contains 'hakukohteita'");
-                throw new OrganisaatioDeleteHakukohteitaException();
-            }
-
             // Merkitään ryhmä poistetuksi
             parent = organisaatioRepository.markRemoved(oid);
         }
         else {
-            // Poistettavalla organisaatiolla ei saa olla alkavia koulutuksia
-            if (organisaatioTarjonta.alkaviaKoulutuksia(org.getOid())) {
-                LOG.warn("Cannot delete organisaatio: " + oid + " contains 'koulutuksia'");
-                throw new OrganisaatioDeleteKoulutuksiaException();
-            }
-
             // Merkitään organisaatio poistetuksi
             parent = organisaatioRepository.markRemoved(oid);
         }

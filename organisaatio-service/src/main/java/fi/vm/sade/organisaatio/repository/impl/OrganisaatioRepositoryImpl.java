@@ -25,7 +25,6 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioCrudException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNotFoundException;
@@ -37,23 +36,21 @@ import fi.vm.sade.organisaatio.model.*;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepositoryCustom;
 import fi.vm.sade.organisaatio.service.converter.v3.OrganisaatioToOrganisaatioRDTOV3ProjectionFactory;
 import fi.vm.sade.organisaatio.service.search.SearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,21 +69,18 @@ import static java.util.stream.Collectors.toSet;
  * @author mlyly
  */
 @Repository
+@Slf4j
+@RequiredArgsConstructor
 public class OrganisaatioRepositoryImpl extends AbstractRepository implements OrganisaatioRepositoryCustom {
-
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${root.organisaatio.oid}")
     private String ophOid;
 
-    @Autowired
-    EntityManager em;
+    private final EntityManager em;
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
-    private OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
+    private final OrganisaatioNimiModelMapper organisaatioNimiModelMapper;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -255,7 +249,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public List<Organisaatio> findChildren(Long parentId) {
-        logger.debug("findChildren({})", parentId);
+        log.debug("findChildren({})", parentId);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
@@ -279,7 +273,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public List<Organisaatio> findChildren(String parentOid, boolean myosPoistetut, boolean myosLakkautetut) {
-        logger.debug("findChildren({})", parentOid);
+        log.debug("findChildren({})", parentOid);
 
         Organisaatio parent = findByOids(List.of(parentOid), false).stream().findFirst().orElse(null);
         List<Organisaatio> result = new ArrayList<>();
@@ -328,7 +322,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
             boolean excludeDiscontinued) {
         Date lastModifiedSince = java.sql.Timestamp.valueOf(lastModifiedSinceLocalDate);
 
-        logger.debug("findModifiedSince({})", lastModifiedSince);
+        log.debug("findModifiedSince({})", lastModifiedSince);
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
 
@@ -357,7 +351,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
     }
 
     private BooleanExpression getVoimassaoloExpression(boolean suunnitellut, boolean lakkautetut, QOrganisaatio qOrganisaatio) {
-        logger.debug("getVoimassaoloExpression()");
+        log.debug("getVoimassaoloExpression()");
         BooleanExpression voimassaoloExpr = null;
 
         Date currentDate = Calendar.getInstance().getTime();
@@ -377,7 +371,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
 
     @Override
     public List<OrganisaatioRDTOV3> findByOids(Collection<String> oids) {
-        logger.debug("findByOids(Number of OIDs = {})", oids.size());
+        log.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
 
         return jpa()
@@ -394,7 +388,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
 
     @Override
     public List<Organisaatio> findByOids(Collection<String> oids, boolean excludePoistettu, boolean excludePiilotettu) {
-        logger.debug("findByOids(Number of OIDs = {})", oids.size());
+        log.debug("findByOids(Number of OIDs = {})", oids.size());
         QOrganisaatio org = QOrganisaatio.organisaatio;
         QOrganisaatioMetaData metaData = QOrganisaatioMetaData.organisaatioMetaData;
         QMonikielinenTeksti metadatanimi = new QMonikielinenTeksti("metadatanimi");
@@ -434,7 +428,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
 
     @Override
     public List<Organisaatio> findByOidList(List<String> oidList, int maxResults) {
-        logger.debug("findByOidList({}, {})", oidList, maxResults);
+        log.debug("findByOidList({}, {})", oidList, maxResults);
 
         // first drop nulls from oidList
         List<String> oidListFiltered = new ArrayList<>();
@@ -490,7 +484,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
 
     public List<String> findParentOidsTo(String oid) {
-        logger.debug("findParentOidsTo({})", oid);
+        log.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
 
         Organisaatio org = findByOids(List.of(oid), false).stream().findFirst()
@@ -517,7 +511,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public List<Organisaatio> findParentsTo(String oid) {
-        logger.debug("findParentOidsTo({})", oid);
+        log.debug("findParentOidsTo({})", oid);
         Preconditions.checkNotNull(oid);
         List<Organisaatio> parents = Lists.newArrayList();
 
@@ -543,7 +537,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
     @Override
     public List<String> findOidsBy(Boolean requireYtunnus, int count, int startIndex, OrganisaatioTyyppi type) {
 
-        logger.debug("findOidsBy({}, {}, {}, {})", requireYtunnus, count, startIndex, type);
+        log.debug("findOidsBy({}, {}, {}, {})", requireYtunnus, count, startIndex, type);
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
         BooleanBuilder whereExpr = new BooleanBuilder();
@@ -567,7 +561,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
             q.offset(startIndex);
         }
 
-        logger.debug("  q = {}", q);
+        log.debug("  q = {}", q);
 
         return q.select(org.oid).orderBy(org.id.asc()).fetch();
     }
@@ -580,7 +574,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public Organisaatio findByYTunnus(String oid) {
-        logger.debug("findByYtunnus({})", oid);
+        log.debug("findByYtunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return jpa().from(org).where(org.ytunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
@@ -593,7 +587,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public Organisaatio findByVirastoTunnus(String oid) {
-        logger.debug("findByVirastotunnus({})", oid);
+        log.debug("findByVirastotunnus({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return jpa().from(org).where(org.virastoTunnus.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
@@ -606,7 +600,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public Organisaatio findByOppilaitoskoodi(String oid) {
-        logger.debug("findByOppilaitoskoodi({})", oid);
+        log.debug("findByOppilaitoskoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return jpa().from(org).where(org.oppilaitosKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
@@ -619,7 +613,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      */
     @Override
     public Organisaatio findByToimipistekoodi(String oid) {
-        logger.debug("findByToimipisteKoodi({})", oid);
+        log.debug("findByToimipisteKoodi({})", oid);
         QOrganisaatio org = QOrganisaatio.organisaatio;
         return jpa().from(org).where(org.toimipisteKoodi.eq(oid).and(org.organisaatioPoistettu.isFalse())).select(org).fetchFirst();
     }
@@ -634,7 +628,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
             Set<String> oidList,
             int limit) {
 
-        logger.debug("findBySearchCriteria()");
+        log.debug("findBySearchCriteria()");
 
         QOrganisaatio org = QOrganisaatio.organisaatio;
 
@@ -682,7 +676,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
                 //.distinct()
                 .fetch();
 
-        logger.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
+        log.debug("Query took {} ms", System.currentTimeMillis() - qstarted);
 
         return new HashSet<>(organisaatiot);
     }
@@ -809,7 +803,7 @@ public class OrganisaatioRepositoryImpl extends AbstractRepository implements Or
      **/
     @Override
     public List<Organisaatio> findGroups(RyhmaCriteriaDto criteria) {
-        logger.debug("findGroups()");
+        log.debug("findGroups()");
 
         QOrganisaatio qOrganisaatio = QOrganisaatio.organisaatio;
         QMonikielinenTeksti qNimi = new QMonikielinenTeksti("nimi");
