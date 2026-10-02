@@ -15,10 +15,8 @@
 package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Maps;
-
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioDateException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioHierarchyException;
-import fi.vm.sade.organisaatio.business.exception.OrganisaatioLakkautusKoulutuksiaException;
 import fi.vm.sade.organisaatio.business.exception.OrganisaatioNameHistoryNotValidException;
 import fi.vm.sade.organisaatio.business.exception.YtunnusException;
 import fi.vm.sade.organisaatio.dto.v2.OrganisaatioMuokkausTiedotDTO;
@@ -26,8 +24,7 @@ import fi.vm.sade.organisaatio.model.Organisaatio;
 import fi.vm.sade.organisaatio.model.OrganisaatioNimi;
 import fi.vm.sade.organisaatio.repository.OrganisaatioRepository;
 import fi.vm.sade.organisaatio.service.OrganisationHierarchyValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,27 +32,18 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
  * @author simok
  */
 @Component
+@Slf4j
 public class OrganisaatioBusinessChecker {
-
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private OrganisaatioRepository organisaatioRepository;
-
-    @Autowired
-    private OrganisaatioTarjonta organisaatioTarjonta;
 
     @Value("${root.organisaatio.oid}")
     private String rootOrganisaatioOid;
@@ -108,7 +96,7 @@ public class OrganisaatioBusinessChecker {
         List<Organisaatio> orgs = organisaatioRepository.findByToimipisteKoodi(toimipistekoodi.trim());
         if (orgs != null && orgs.size() > 0) {
             // toimipistekoodi on jo olemassa
-            LOG.debug("Toimipistekoodi already exists: " + toimipistekoodi);
+            log.debug("Toimipistekoodi already exists: " + toimipistekoodi);
             return false;
         }
 
@@ -128,7 +116,7 @@ public class OrganisaatioBusinessChecker {
     }
 
     public void checkOrganisaatioHierarchy(Organisaatio organisaatio, String parentOid) {
-        LOG.debug("checkOrganisaatioHierarchy()");
+        log.debug("checkOrganisaatioHierarchy()");
 
         final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
         Organisaatio parentOrg = (parentOid != null) ? this.organisaatioRepository.findFirstByOid(parentOid) : null;
@@ -148,18 +136,12 @@ public class OrganisaatioBusinessChecker {
     }
 
     public void checkParentChildHierarchy(Organisaatio organisaatio, Organisaatio parentOrg) {
-        LOG.debug("checkParentChildHierarchy()");
+        log.debug("checkParentChildHierarchy()");
 
         final OrganisationHierarchyValidator validator = new OrganisationHierarchyValidator(rootOrganisaatioOid);
 
         if (validator.apply(Maps.immutableEntry(parentOrg, organisaatio)) == false) {
             throw new OrganisaatioHierarchyException();
-        }
-    }
-
-    public void checkLakkautusAlkavatKoulutukset(Organisaatio entity) {
-        if (organisaatioTarjonta.alkaviaKoulutuksia(entity.getOid(), entity.getLakkautusPvm())) {
-            throw new OrganisaatioLakkautusKoulutuksiaException();
         }
     }
 
@@ -178,12 +160,12 @@ public class OrganisaatioBusinessChecker {
 
         if (actualStart != null && actualEnd != null && actualStart.isAfter(actualEnd)) {
             String virhe = String.format("oid: %s: käytetty alkuPvm (%s) > käytetty loppuPvm (%s)", organisaatio.getOid(), actualStart, actualEnd);
-            LOG.warn(virhe);
+            log.warn(virhe);
             throw new OrganisaatioDateException();
         }
         if (actualEnd != null && maxPvm != null && actualEnd.isAfter(maxPvm)) {
             String virhe = String.format("oid: %s: käytetty loppuPvm (%s) > max päivämäärä (%s)", organisaatio.getOid(), actualEnd, maxPvm);
-            LOG.warn(virhe);
+            log.warn(virhe);
             throw new OrganisaatioDateException();
         }
 

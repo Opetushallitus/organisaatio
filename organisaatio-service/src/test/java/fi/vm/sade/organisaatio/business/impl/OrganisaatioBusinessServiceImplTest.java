@@ -21,7 +21,7 @@ import fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil;
 import fi.vm.sade.organisaatio.ytj.api.YTJService;
 import fi.vm.sade.security.OidProvider;
 import fi.vm.sade.security.OrganisationHierarchyAuthorizer;
-
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,29 +33,20 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.validation.ValidationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import static fi.vm.sade.organisaatio.util.OrganisaatioRDTOTestUtil.OPH_OID;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link OrganisaatioBusinessServiceImpl} class.
@@ -94,13 +85,6 @@ public class OrganisaatioBusinessServiceImplTest extends SecurityAwareTestBase {
             return new OIDServiceMock();
         }
 
-        @Bean
-        @Primary
-        public OrganisaatioTarjonta organisaatioTarjonta() {
-            OrganisaatioTarjonta mocked = mock(OrganisaatioTarjonta.class);
-            when(mocked.alkaviaKoulutuksia(any())).thenReturn(false);
-            return mocked;
-        }
     }
 
     @Autowired

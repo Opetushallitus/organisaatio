@@ -16,8 +16,8 @@ package fi.vm.sade.organisaatio.business.impl;
 
 import com.google.common.collect.Maps;
 import fi.vm.sade.oid.ExceptionMessage;
-import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.oid.NodeClassCode;
+import fi.vm.sade.oid.OIDService;
 import fi.vm.sade.organisaatio.api.model.types.OrganisaatioTyyppi;
 import fi.vm.sade.organisaatio.business.OrganisaatioBusinessService;
 import fi.vm.sade.organisaatio.business.OrganisaatioKoodisto;
@@ -36,6 +36,8 @@ import fi.vm.sade.organisaatio.service.KoodistoService;
 import fi.vm.sade.organisaatio.service.OrganisationDateValidator;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioNimiUtil;
 import fi.vm.sade.organisaatio.service.util.OrganisaatioUtil;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.persistence.OptimisticLockException;
-import jakarta.validation.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -96,9 +96,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
     @Autowired
     @Lazy
     private KoodistoService koodistoService;
-
-    @Autowired
-    private OrganisaatioTarjonta organisaatioTarjonta;
 
     @Autowired
     private OrganisaatioKoodisto organisaatioKoodisto;
@@ -389,11 +386,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
             checker.checkOrganisaatioHierarchy(entity, parentOid);
         }
 
-        // Tarkistetaan ettei lakkautuspäivämäärän jälkeen ole alkavia koulutuksia
-        if (!OrganisaatioUtil.isSameDay(entity.getLakkautusPvm(), oldOrg.getLakkautusPvm())) {
-            log.info("Lakkautuspäivämäärä muuttunut, tarkastetaan alkavat koulutukset.");
-            checker.checkLakkautusAlkavatKoulutukset(entity);
-        }
         return oldParent;
     }
 
@@ -805,19 +797,6 @@ public class OrganisaatioBusinessServiceImpl implements OrganisaatioBusinessServ
         // tarkistetaan ettei minkään juuriorganisaatio alta löydy päivämääriä jotka rikkovat rajat
         for (Organisaatio o : roots) {
             checker.checkPvmConstraints(o, givenData);
-        }
-        for (Map.Entry<String, Organisaatio> entry : organisaatioMap.entrySet()) {
-            String oid = entry.getKey();
-            OrganisaatioMuokkausTiedotDTO tieto = givenData.get(oid);
-            Organisaatio org = entry.getValue();
-
-            if (tieto != null) {
-                log.debug("bulkUpdatePvm(): testataan onko Organisaatiolla (oid {}) koulutuksia loppupäivämäärän {} jälkeen", org.getOid(), tieto.getLoppuPvm());
-                if ((tieto.getLoppuPvm() != null) && !tieto.getLoppuPvm().equals(org.getLakkautusPvm()) && (organisaatioTarjonta.alkaviaKoulutuksia(oid, tieto.getLoppuPvm()))) {
-                    log.warn("Organisaatiolla (oid {}) koulutuksia jotka alkavat lakkautuspäivämäärän ({}) jälkeen", oid, tieto.getLoppuPvm());
-                    throw new AliorganisaatioLakkautusKoulutuksiaException();
-                }
-            }
         }
     }
 
