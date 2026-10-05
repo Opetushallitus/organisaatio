@@ -2,16 +2,15 @@ import * as React from 'react';
 import { useState } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import type { Language, Yhteystiedot } from '../../../../../types/types';
-import { enAltSchema, fiAltSchema, svAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
-import type { Control, UseFormGetValues, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form';
+import { useFormState, type Control, type UseFormGetValues, type UseFormRegister, type UseFormSetValue, type UseFormWatch } from 'react-hook-form';
 import { YhteystietoKortti } from './YhteystietoKortti';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
 import { checkHasSomeValueByKieli, mapVisibleKieletFromOpetuskielet } from '../../../../../tools/mappers';
 import { Rivi, UloinKehys } from '../../LomakeFields/LomakeFields';
-import { useFormState } from 'react-hook-form';
 import { useAtom } from 'jotai';
 import { languageAtom } from '../../../../../api/lokalisaatio';
+import { fiAltSchema, svAltSchema, enAltSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 
 export type Props = {
     opetusKielet: string[];
@@ -25,9 +24,7 @@ export type Props = {
     readOnly?: boolean;
     isYtj: boolean;
 };
-
 const kaikkiOpetuskielet: Language[] = ['fi', 'sv', 'en'];
-
 const validationSchemas = {
     fi: fiAltSchema,
     sv: svAltSchema,
@@ -90,8 +87,14 @@ const YhteystietoLomake = ({
                         setYhteystiedotValue={setYhteystiedotValue}
                         validationErrors={
                             isSubmitted && hasValidationErrors
-                                ? validationSchemas[kieli].validate(yhteystiedotValues)
-                                : { value: yhteystiedotValues, error: undefined }
+                                ? validationSchemas[kieli].validate(
+                                    yhteystiedotValues,
+                                    { abortEarly: false }
+                                )
+                                : {
+                                    value: yhteystiedotValues,
+                                    error: undefined,
+                                }
                         }
                         formControl={formControl}
                     />
@@ -101,11 +104,12 @@ const YhteystietoLomake = ({
                         .filter((kieli: Language) => !visibleKielet.includes(kieli))
                         .map((kieli: Language) => (
                             <YhteystietoKortti
+                                isYtj={isYtj}
                                 readOnly={readOnly}
                                 key={kieli}
+                                yhteystiedotRegister={formRegister}
                                 osoitteetOnEri={osoitteetOnEri}
                                 kieli={kieli}
-                                yhteystiedotRegister={formRegister}
                                 setYhteystiedotValue={setYhteystiedotValue}
                                 validationErrors={
                                     isSubmitted && hasValidationErrors
@@ -113,7 +117,6 @@ const YhteystietoLomake = ({
                                         : { value: yhteystiedotValues, error: undefined }
                                 }
                                 formControl={formControl}
-                                isYtj={false}
                             />
                         ))}
             </div>

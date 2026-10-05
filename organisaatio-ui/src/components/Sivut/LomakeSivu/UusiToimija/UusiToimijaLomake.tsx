@@ -171,7 +171,9 @@ const UusiToimijaLomake = () => {
                 setYhteystiedotValue={setYhteystiedotValue}
                 watch={watch}
                 formControl={yhteystiedotControl}
-                hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
+                hasValidationErrors={
+                    Object.keys(yhteystiedotValidationErrors).length > 0
+                }
                 formRegister={registerYhteystiedot}
                 key={YHTEYSTIEDOTUUID}
                 isYtj={!!getPerustiedotValues('ytunnus')}

@@ -111,7 +111,7 @@ export default function PerustietoLomake({
                     </Rivi>
                     {onYunnus && (
                         <Rivi>
-                            <Kentta isRequired label="Y-TUNNUS" error={validationErrors.ytunnus}>
+                            <Kentta isRequired label="Y-TUNNUS" error={validationErrors.ytunnus as KenttaError}>
                                 <Input
                                     readOnly={true}
                                     error={!!validationErrors['ytunnus']}
@@ -156,7 +156,7 @@ export default function PerustietoLomake({
                 <Kentta
                     isRequired
                     label={'PERUSTIETO_PAASIJAINTIKUNTA'}
-                    error={validationErrors.kotipaikka as KenttaError}
+                    error={validationErrors.kotipaikka}
                 >
                     <Controller
                         control={formControl}
@@ -167,7 +167,20 @@ export default function PerustietoLomake({
                                 {...field}
                                 ref={undefined}
                                 options={koodistot.kuntaKoodisto.selectOptions()}
-                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                                styles={{
+                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                        control: (base) =>
+                                            validationErrors.kotipaikka
+                                                ? {
+                                                    ...base,
+                                                    borderColor: "rgb(228,78,78)",
+                                                    boxShadow: '0 0 0 0.2px rgb(228,78,78)',
+                                                    '&:hover': {
+                                                        borderColor: 'rgb(228,78,78)',
+                                                    },
+                                                }
+                                                : base,
+                                    }}
                             />
                         )}
                     />
@@ -189,7 +202,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_MAA'} error={validationErrors.maa as KenttaError}>
+                <Kentta isRequired label={'PERUSTIETO_MAA'} error={validationErrors.maa}>
                     <Controller
                         control={formControl}
                         name={'maa'}
@@ -199,14 +212,27 @@ export default function PerustietoLomake({
                                 id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
-                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                                styles={{
+                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                        control: (base) =>
+                                            validationErrors.maa
+                                                ? {
+                                                    ...base,
+                                                    borderColor: "rgb(228,78,78)",
+                                                    boxShadow: '0 0 0 0.2px rgb(228,78,78)',
+                                                    '&:hover': {
+                                                        borderColor: 'rgb(228,78,78)',
+                                                    },
+                                                }
+                                                : base,
+                                    }}
                             />
                         )}
                     />
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta isRequired label={'PERUSTIETO_OPETUSKIELI'} error={validationErrors.kielet as KenttaError}>
+                <Kentta isRequired label={'PERUSTIETO_OPETUSKIELI'} error={validationErrors.kielet}>
                     <Controller
                         control={formControl}
                         name={'kielet'}
@@ -216,7 +242,20 @@ export default function PerustietoLomake({
                                 id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
-                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                                styles={{
+                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                        control: (base) =>
+                                            validationErrors.kielet
+                                                ? {
+                                                    ...base,
+                                                    borderColor: "rgb(228,78,78)",
+                                                    boxShadow: '0 0 0 0.2px rgb(228,78,78)',
+                                                    '&:hover': {
+                                                        borderColor: 'rgb(228,78,78)',
+                                                    },
+                                                }
+                                                : base,
+                                    }}
                             />
                         )}
                     />

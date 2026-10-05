@@ -456,7 +456,7 @@ const LomakeSivu = () => {
                     watch={watchYhteystiedot}
                     setYhteystiedotValue={setYhteystiedotValue}
                     formControl={yhteystiedotControl}
-                    hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
+                    hasValidationErrors={Object.keys(yhteystiedotValidationErrors).length > 0}
                     formRegister={yhteystiedotRegister}
                     key={YHTEYSTIEDOTID}
                     isYtj={!!ytunnus}
