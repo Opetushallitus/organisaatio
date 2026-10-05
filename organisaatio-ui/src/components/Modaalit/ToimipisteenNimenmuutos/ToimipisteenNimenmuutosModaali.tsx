@@ -86,7 +86,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
                     });
                 } else {
                     reset({
-                        nimi: { fi: '', sv: '', en: '' },
+                        nimi: getValues('nimi'),
                         alkuPvm: value.alkuPvm,
                         muutostyyppi: MUUTOSTYYPPI_CREATE,
                         oid,
@@ -98,7 +98,7 @@ export default function ToimipisteenNimenmuutosModaali(props: ModaaliProps) {
         return () => {
             return subscription.unsubscribe();
         };
-    }, [watch, currentNimi, oid, reset, nimet]);
+    }, [watch, currentNimi, oid, reset, nimet, getValues]);
 
     const handleTallenna = async () => {
         setIsLoading(true);

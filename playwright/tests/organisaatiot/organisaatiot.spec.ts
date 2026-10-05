@@ -89,6 +89,37 @@ test.describe("Organisations", () => {
       await organisaatioPage.expectNameToContain("pöllö Suominimi");
     });
 
+    test("Does not clear name fields when selecting a date", async ({
+      page,
+    }) => {
+      const organisaatioPage = await createAndGotoLomake(page, "PARENT1", {
+        tyypit: [`organisaatiotyyppi_01`],
+      });
+
+      await organisaatioPage.muokkaaNimeaButton.click();
+      await organisaatioPage.muokkaaNimea.createRadioButton.click();
+      await organisaatioPage.muokkaaNimea.fillInput(
+        "nimi.fi",
+        "pöllö Suominimi",
+      );
+      await organisaatioPage.muokkaaNimea.fillInput("nimi.sv", "pöllö Ruotsi");
+      await organisaatioPage.muokkaaNimea.fillInput("nimi.en", "pöllö Enkku");
+      const date = new Date();
+      await organisaatioPage.muokkaaNimea.setDate(
+        `2.${date.getMonth() + 1}.${date.getFullYear() + 1}`,
+      );
+
+      await expect(page.locator('input[name="nimi.fi"]')).toHaveValue(
+        "pöllö Suominimi",
+      );
+      await expect(page.locator('input[name="nimi.sv"]')).toHaveValue(
+        "pöllö Ruotsi",
+      );
+      await expect(page.locator('input[name="nimi.en"]')).toHaveValue(
+        "pöllö Enkku",
+      );
+    });
+
     test("Edits a name", async ({ page }) => {
       const organisaatioPage = await createAndGotoLomake(page, "PARENT2", {
         tyypit: [`organisaatiotyyppi_01`],
