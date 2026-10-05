@@ -25,7 +25,7 @@ export type Config = {
 };
 const defaultConfig = {
   organisaatioTaskCpu: 2048,
-  organisaatioTaskMemoryMiB: 4096,
+  organisaatioTaskMemoryMiB: 8192,
   vardaTaskCpu: 256,
   vardaTaskMemoryMiB: 1024,
   rekisterointiTaskCpu: 256,
