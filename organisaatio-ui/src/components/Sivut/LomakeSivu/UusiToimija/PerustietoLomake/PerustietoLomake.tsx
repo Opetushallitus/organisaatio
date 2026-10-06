@@ -153,11 +153,7 @@ export default function PerustietoLomake({
                 </Kentta>
             </Rivi>
             <Rivi>
-                <Kentta
-                    isRequired
-                    label={'PERUSTIETO_PAASIJAINTIKUNTA'}
-                    error={validationErrors.kotipaikka}
-                >
+                <Kentta isRequired label={'PERUSTIETO_PAASIJAINTIKUNTA'} error={validationErrors.kotipaikka}>
                     <Controller
                         control={formControl}
                         name={'kotipaikka'}
@@ -168,19 +164,19 @@ export default function PerustietoLomake({
                                 ref={undefined}
                                 options={koodistot.kuntaKoodisto.selectOptions()}
                                 styles={{
-                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                        control: (base) =>
-                                            validationErrors.kotipaikka
-                                                ? {
-                                                    ...base,
-                                                    borderColor: "rgb(228,78,78)",
-                                                    boxShadow: '0 0 0 0.2px rgb(228,78,78)',
-                                                    '&:hover': {
-                                                        borderColor: 'rgb(228,78,78)',
-                                                    },
-                                                }
-                                                : base,
-                                    }}
+                                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                    control: (base) =>
+                                        validationErrors.kotipaikka
+                                            ? {
+                                                  ...base,
+                                                  borderColor: 'rgb(228,78,78)',
+                                                  boxShadow: '0 0 0 0.2px rgb(228,78,78)',
+                                                  '&:hover': {
+                                                      borderColor: 'rgb(228,78,78)',
+                                                  },
+                                              }
+                                            : base,
+                                }}
                             />
                         )}
                     />
@@ -213,19 +209,19 @@ export default function PerustietoLomake({
                                 {...rest}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
                                 styles={{
-                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                        control: (base) =>
-                                            validationErrors.maa
-                                                ? {
-                                                    ...base,
-                                                    borderColor: "rgb(228,78,78)",
-                                                    boxShadow: '0 0 0 0.2px rgb(228,78,78)',
-                                                    '&:hover': {
-                                                        borderColor: 'rgb(228,78,78)',
-                                                    },
-                                                }
-                                                : base,
-                                    }}
+                                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                    control: (base) =>
+                                        validationErrors.maa
+                                            ? {
+                                                  ...base,
+                                                  borderColor: 'rgb(228,78,78)',
+                                                  boxShadow: '0 0 0 0.2px rgb(228,78,78)',
+                                                  '&:hover': {
+                                                      borderColor: 'rgb(228,78,78)',
+                                                  },
+                                              }
+                                            : base,
+                                }}
                             />
                         )}
                     />
@@ -243,19 +239,19 @@ export default function PerustietoLomake({
                                 {...rest}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
                                 styles={{
-                                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                        control: (base) =>
-                                            validationErrors.kielet
-                                                ? {
-                                                    ...base,
-                                                    borderColor: "rgb(228,78,78)",
-                                                    boxShadow: '0 0 0 0.2px rgb(228,78,78)',
-                                                    '&:hover': {
-                                                        borderColor: 'rgb(228,78,78)',
-                                                    },
-                                                }
-                                                : base,
-                                    }}
+                                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                    control: (base) =>
+                                        validationErrors.kielet
+                                            ? {
+                                                  ...base,
+                                                  borderColor: 'rgb(228,78,78)',
+                                                  boxShadow: '0 0 0 0.2px rgb(228,78,78)',
+                                                  '&:hover': {
+                                                      borderColor: 'rgb(228,78,78)',
+                                                  },
+                                              }
+                                            : base,
+                                }}
                             />
                         )}
                     />

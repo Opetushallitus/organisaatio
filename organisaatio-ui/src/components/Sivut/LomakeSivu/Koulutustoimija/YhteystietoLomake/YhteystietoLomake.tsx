@@ -2,7 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import styles from './YhteystietoLomake.module.css';
 import type { Language, Yhteystiedot } from '../../../../../types/types';
-import { useFormState, type Control, type UseFormGetValues, type UseFormRegister, type UseFormSetValue, type UseFormWatch } from 'react-hook-form';
+import {
+    useFormState,
+    type Control,
+    type UseFormGetValues,
+    type UseFormRegister,
+    type UseFormSetValue,
+    type UseFormWatch,
+} from 'react-hook-form';
 import { YhteystietoKortti } from './YhteystietoKortti';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Checkbox from '@opetushallitus/virkailija-ui-components/Checkbox';
@@ -87,14 +94,11 @@ const YhteystietoLomake = ({
                         setYhteystiedotValue={setYhteystiedotValue}
                         validationErrors={
                             isSubmitted && hasValidationErrors
-                                ? validationSchemas[kieli].validate(
-                                    yhteystiedotValues,
-                                    { abortEarly: false }
-                                )
+                                ? validationSchemas[kieli].validate(yhteystiedotValues, { abortEarly: false })
                                 : {
-                                    value: yhteystiedotValues,
-                                    error: undefined,
-                                }
+                                      value: yhteystiedotValues,
+                                      error: undefined,
+                                  }
                         }
                         formControl={formControl}
                     />
