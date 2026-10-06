@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import Button from '@opetushallitus/virkailija-ui-components/Button';
 import Input from '@opetushallitus/virkailija-ui-components/Input';
 import CheckboxGroup from '@opetushallitus/virkailija-ui-components/CheckboxGroup';
@@ -49,6 +48,23 @@ type UusiOrgPerustiedotProps = {
     watchPerustiedot: UseFormWatch<Perustiedot>;
     getPerustiedotValues: UseFormGetValues<Perustiedot>;
 };
+const selectStyles = (hasError: boolean) => ({
+    menuPortal: (base: any) => ({
+        ...base,
+        zIndex: 9999,
+    }),
+    control: (base: any) =>
+        hasError
+            ? {
+                  ...base,
+                  borderColor: '#e44e4e',
+                  boxShadow: '0 0 0 0.2px #e44e4e',
+                  '&:hover': {
+                      borderColor: '#e44e4e',
+                  },
+              }
+            : base,
+});
 
 export default function PerustietoLomake({
     handleJatka,
@@ -60,10 +76,11 @@ export default function PerustietoLomake({
     resolvedTyypit,
     getPerustiedotValues,
     setPerustiedotValue,
+    watchPerustiedot,
 }: UusiOrgPerustiedotProps) {
     const [i18n] = useAtom(languageAtom);
     const [koodistot] = useAtom(koodistotAtom);
-    const [onYunnus, setOnYtunnus] = useState<boolean>(true);
+    const onYtunnus = watchPerustiedot('onYtunnus') ?? true;
     const { yritysmuoto } = getPerustiedotValues();
     return (
         <UloinKehys>
@@ -97,24 +114,41 @@ export default function PerustietoLomake({
             </Rivi>
             {rakenne.showYtj && (
                 <>
-                    <Rivi>
-                        <Kentta label={''}>
+                    <Controller
+                        control={formControl}
+                        name="onYtunnus"
+                        defaultValue={true}
+                        render={({ field }) => (
                             <RadioGroup
-                                value={onYunnus.toString()}
+                                value={field.value.toString()}
                                 options={[
-                                    { value: 'true', label: i18n.translate('PERUSTIETO_ON_YTUNNUS') },
-                                    { value: 'false', label: i18n.translate('PERUSTIETO_EI_YTUNNUS') },
+                                    {
+                                        value: 'true',
+                                        label: i18n.translate('PERUSTIETO_ON_YTUNNUS'),
+                                    },
+                                    {
+                                        value: 'false',
+                                        label: i18n.translate('PERUSTIETO_EI_YTUNNUS'),
+                                    },
                                 ]}
-                                onChange={() => setOnYtunnus(!onYunnus)}
+                                onChange={(event) => {
+                                    const hasYtunnus = event.target.value === 'true';
+
+                                    field.onChange(hasYtunnus);
+
+                                    if (!hasYtunnus) {
+                                        setPerustiedotValue('ytunnus', '');
+                                    }
+                                }}
                             />
-                        </Kentta>
-                    </Rivi>
-                    {onYunnus && (
+                        )}
+                    />
+                    {onYtunnus && (
                         <Rivi>
                             <Kentta isRequired label="Y-TUNNUS" error={validationErrors.ytunnus as KenttaError}>
                                 <Input
                                     readOnly={true}
-                                    error={!!validationErrors['ytunnus']}
+                                    error={!!validationErrors.ytunnus}
                                     id={'ytunnus'}
                                     {...formRegister('ytunnus')}
                                     defaultValue={''}
@@ -163,20 +197,7 @@ export default function PerustietoLomake({
                                 {...field}
                                 ref={undefined}
                                 options={koodistot.kuntaKoodisto.selectOptions()}
-                                styles={{
-                                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                    control: (base) =>
-                                        validationErrors.kotipaikka
-                                            ? {
-                                                  ...base,
-                                                  borderColor: 'rgb(228,78,78)',
-                                                  boxShadow: '0 0 0 0.2px rgb(228,78,78)',
-                                                  '&:hover': {
-                                                      borderColor: 'rgb(228,78,78)',
-                                                  },
-                                              }
-                                            : base,
-                                }}
+                                styles={selectStyles(!!validationErrors.kotipaikka)}
                             />
                         )}
                     />
@@ -208,20 +229,7 @@ export default function PerustietoLomake({
                                 id={'PERUSTIETO_MAA_SELECT'}
                                 {...rest}
                                 options={koodistot.maatJaValtiotKoodisto.selectOptions()}
-                                styles={{
-                                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                    control: (base) =>
-                                        validationErrors.maa
-                                            ? {
-                                                  ...base,
-                                                  borderColor: 'rgb(228,78,78)',
-                                                  boxShadow: '0 0 0 0.2px rgb(228,78,78)',
-                                                  '&:hover': {
-                                                      borderColor: 'rgb(228,78,78)',
-                                                  },
-                                              }
-                                            : base,
-                                }}
+                                styles={selectStyles(!!validationErrors.maa)}
                             />
                         )}
                     />
@@ -238,20 +246,7 @@ export default function PerustietoLomake({
                                 id={'PERUSTIETO_OPETUSKIELI_SELECT'}
                                 {...rest}
                                 options={koodistot.oppilaitoksenOpetuskieletKoodisto.selectOptions()}
-                                styles={{
-                                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                    control: (base) =>
-                                        validationErrors.kielet
-                                            ? {
-                                                  ...base,
-                                                  borderColor: 'rgb(228,78,78)',
-                                                  boxShadow: '0 0 0 0.2px rgb(228,78,78)',
-                                                  '&:hover': {
-                                                      borderColor: 'rgb(228,78,78)',
-                                                  },
-                                              }
-                                            : base,
-                                }}
+                                styles={selectStyles(!!validationErrors.kielet)}
                             />
                         )}
                     />
