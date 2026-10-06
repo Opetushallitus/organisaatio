@@ -1,2 +1,19 @@
 # Default code owners who will be automatically added as a reviewers when someone opens a pull request
 * @cedric-neergaard @suokamat @santeri-mertakorpi-cgi @JussiKukkonenDev
+
+# No automatic code owner reviews for files Renovate can update.
+# These exclusions also apply to changes made by human contributors.
+package.json
+package-lock.json
+pom.xml
+Dockerfile
+docker-compose.yml
+.nvmrc
+**/.mvn/wrapper/maven-wrapper.properties
+mvnw
+mvnw.cmd
+/.github/workflows/*.yml
+/.github/workflows/*.yaml
+/renovate.json
+yarn.lock
+pnpm-lock.yaml
