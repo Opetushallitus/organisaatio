@@ -154,7 +154,6 @@ export const YhteystietoKortti = ({
 
     const errorFor = (name: YhteystietoField): KenttaError =>
         getKenttaError(validationErrors, kortinKieli, name);
-    console.log(validationErrors);
     if (kortinKieli === 'en')
         return (
             <div className={styles.KorttiKehys}>
