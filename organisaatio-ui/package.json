@@ -64,7 +64,7 @@
         "start": "NODE_ENV=development npx webpack serve",
         "build": "GENERATE_SOURCEMAP=false NODE_ENV=production npx webpack --mode production",
         "test": "node --import tsx --test './src/**/*.test.ts'",
-        "lint": "eslint -c eslint.config.mjs --fix",
+        "lint": "eslint -c eslint.config.mjs",
         "audit": "npm audit --only=prod --audit-level=critical"
     },
     "proxy": "http://localhost:8080",
