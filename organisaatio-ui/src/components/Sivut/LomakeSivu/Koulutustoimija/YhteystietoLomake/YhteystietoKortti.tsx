@@ -4,7 +4,7 @@ import Input from '@opetushallitus/virkailija-ui-components/Input';
 import Textarea from '@opetushallitus/virkailija-ui-components/Textarea';
 import { postinumeroSchema } from '../../../../../ValidationSchemas/YhteystietoLomakeSchema';
 import { Control, UseFormRegister, UseFormRegisterReturn, UseFormSetValue } from 'react-hook-form';
-import { KenttaError, Language, Yhteystiedot } from '../../../../../types/types';
+import { KenttaError, Language, Yhteystiedot, YhteystiedotBase } from '../../../../../types/types';
 import { Path, useWatch } from 'react-hook-form';
 import { Kentta, KenttaLyhyt, Rivi } from '../../LomakeFields/LomakeFields';
 import { ValidationResult } from 'joi';
@@ -85,27 +85,19 @@ const OtsikkoRivi = ({ label }: { label: string }) => {
     );
 };
 
-const getErrorDetails = (validationErrors: ValidationResult) => {
-    const details = validationErrors?.error?.details;
-    if (details && details.length > 0) {
-        const {
-            path: [lang, name],
-            message,
-        } = details[0];
-        return { lang, name, message };
-    } else {
-        return { lang: 'fi', name: 'no error', message: undefined };
-    }
-};
+type YhteystietoField = keyof YhteystiedotBase;
 
-function getError(
-    error: { name: string | number; lang: string | number },
-    kortinKieli: Language,
-    name: string
-): KenttaError {
+function hasFieldError(validationResult: ValidationResult, language: Language, name: YhteystietoField): boolean {
+    return (
+        validationResult.error?.details.some((detail) => detail.path[0] === language && detail.path[1] === name) ??
+        false
+    );
+}
+
+function getKenttaError(validationResult: ValidationResult, language: Language, name: YhteystietoField): KenttaError {
     return {
         ref: {
-            name: (error.lang === kortinKieli && error.name === name && name) || undefined,
+            name: hasFieldError(validationResult, language, name) ? name : undefined,
         },
     };
 }
@@ -143,46 +135,36 @@ export const YhteystietoKortti = ({
         };
         return { onChange, ...rest };
     };
-    const error = getErrorDetails(validationErrors);
+    const hasError = (name: YhteystietoField): boolean => hasFieldError(validationErrors, kortinKieli, name);
+
+    const errorFor = (name: YhteystietoField): KenttaError => getKenttaError(validationErrors, kortinKieli, name);
     if (kortinKieli === 'en')
         return (
             <div className={styles.KorttiKehys}>
                 <OtsikkoRivi label={`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`} />
-                <RiviKentta
-                    label="YHTEYSTIEDOT_POSTIOSOITE_MUU"
-                    isRequired
-                    error={getError(error, kortinKieli, 'postiOsoite')}
-                >
+                <RiviKentta label="YHTEYSTIEDOT_POSTIOSOITE_MUU" isRequired error={errorFor('postiOsoite')}>
                     <Textarea
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)}
-                        error={error.lang === kortinKieli && error.name === 'postiOsoite'}
+                        error={hasError('postiOsoite')}
                     />
                 </RiviKentta>
                 <RiviKentta label="YHTEYSTIEDOT_PUHELINNUMERO">
-                    <Input
-                        disabled={readOnly}
-                        {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)}
-                        error={error.lang === kortinKieli && error.name === 'puhelinnumero'}
-                    />
+                    <Input disabled={readOnly} {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)} />
                 </RiviKentta>
-                <RiviKentta
-                    label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE"
-                    isRequired
-                    error={getError(error, kortinKieli, 'email')}
-                >
+                <RiviKentta label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE" isRequired error={errorFor('email')}>
                     <TietosuojeselosteLinkki />
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.email` as const)}
-                        error={error.lang === kortinKieli && error.name === 'email'}
+                        error={hasError('email')}
                     />
                 </RiviKentta>
                 <RiviKentta label="YHTEYSTIEDOT_WWW_OSOITE">
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.www` as const)}
-                        error={error.lang === kortinKieli && error.name === 'www'}
+                        error={hasError('www')}
                     />
                 </RiviKentta>
             </div>
@@ -190,11 +172,11 @@ export const YhteystietoKortti = ({
     return (
         <div className={styles.KorttiKehys}>
             <OtsikkoRivi label={`YHTEYSTIEDOTKORTTI_OTSIKKO_${kortinKieli}`} />
-            <RiviKentta label="YHTEYSTIEDOT_POSTIOSOITE" isRequired error={getError(error, kortinKieli, 'postiOsoite')}>
+            <RiviKentta label="YHTEYSTIEDOT_POSTIOSOITE" isRequired error={errorFor('postiOsoite')}>
                 <Input
                     disabled={readOnly || ytjReadOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.postiOsoite` as const)}
-                    error={error.lang === kortinKieli && error.name === 'postiOsoite'}
+                    error={hasError('postiOsoite')}
                 />
             </RiviKentta>
             <PostinumeroKentta
@@ -202,7 +184,7 @@ export const YhteystietoKortti = ({
                 label="YHTEYSTIEDOT_POSTINUMERO"
                 toimipaikkaName={`${kortinKieli}.postiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
                 control={formControl}
-                error={getError(error, kortinKieli, 'postiOsoitePostiNro')}
+                error={errorFor('postiOsoitePostiNro')}
             >
                 <Input
                     disabled={readOnly || ytjReadOnly}
@@ -210,7 +192,7 @@ export const YhteystietoKortti = ({
                         `${kortinKieli}.postiOsoiteToimipaikka`,
                         yhteystiedotRegister(`${kortinKieli}.postiOsoitePostiNro` as const)
                     )}
-                    error={error.lang === kortinKieli && error.name === 'postiOsoitePostiNro'}
+                    error={hasError('postiOsoitePostiNro')}
                 />
             </PostinumeroKentta>
             {osoitteetOnEri && [
@@ -218,7 +200,7 @@ export const YhteystietoKortti = ({
                     <Input
                         disabled={readOnly}
                         {...yhteystiedotRegister(`${kortinKieli}.kayntiOsoite` as const)}
-                        error={error.lang === kortinKieli && error.name === 'kayntiOsoite'}
+                        error={hasError('kayntiOsoite')}
                     />
                 </RiviKentta>,
                 <PostinumeroKentta
@@ -226,7 +208,7 @@ export const YhteystietoKortti = ({
                     label="YHTEYSTIEDOT_POSTINUMERO'"
                     toimipaikkaName={`${kortinKieli}.kayntiOsoiteToimipaikka` as OsoitteentoimipaikkaProps['name']}
                     control={formControl}
-                    error={getError(error, kortinKieli, 'kayntiOsoitePostiNro')}
+                    error={errorFor('kayntiOsoitePostiNro')}
                 >
                     <Input
                         disabled={readOnly}
@@ -234,7 +216,7 @@ export const YhteystietoKortti = ({
                             `${kortinKieli}.kayntiOsoiteToimipaikka`,
                             yhteystiedotRegister(`${kortinKieli}.kayntiOsoitePostiNro` as const)
                         )}
-                        error={error.lang === kortinKieli && error.name === 'kayntiOsoitePostiNro'}
+                        error={hasError('kayntiOsoitePostiNro')}
                     />
                 </PostinumeroKentta>,
             ]}
@@ -243,22 +225,22 @@ export const YhteystietoKortti = ({
                     disabled={readOnly || ytjReadOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.puhelinnumero` as const)}
                     name={`${kortinKieli}.puhelinnumero`}
-                    error={error.lang === kortinKieli && error.name === 'puhelinnumero'}
+                    error={hasError('puhelinnumero')}
                 />
             </RiviKentta>
-            <RiviKentta label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE" isRequired error={getError(error, kortinKieli, 'email')}>
+            <RiviKentta label="YHTEYSTIEDOT_SAHKOPOSTIOSOITE" isRequired error={errorFor('email')}>
                 <TietosuojeselosteLinkki />
                 <Input
                     disabled={readOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.email` as const)}
-                    error={error.lang === kortinKieli && error.name === 'email'}
+                    error={hasError('email')}
                 />
             </RiviKentta>
             <RiviKentta label="YHTEYSTIEDOT_WWW_OSOITE">
                 <Input
                     disabled={readOnly}
                     {...yhteystiedotRegister(`${kortinKieli}.www` as const)}
-                    error={error.lang === kortinKieli && error.name === 'www'}
+                    error={hasError('www')}
                 />
             </RiviKentta>
         </div>

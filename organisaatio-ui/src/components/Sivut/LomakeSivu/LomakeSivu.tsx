@@ -231,6 +231,7 @@ const LomakeSivu = () => {
                 muutKotipaikat,
                 alkuPvm: apiAlkuPvm ? getUiDateStr(apiAlkuPvm) : '',
                 lakkautusPvm: apiLakkautusPvm ? getUiDateStr(apiLakkautusPvm) : '',
+                onYtunnus: !!mappingYtunnus,
                 ytunnus: mappingYtunnus,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(

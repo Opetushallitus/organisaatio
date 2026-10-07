@@ -23,7 +23,12 @@ const virastoTunnus = Joi.string()
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
-    ytunnus: Joi.custom(ytunnusJoiValidator),
+    onYtunnus: Joi.boolean().optional(),
+    ytunnus: Joi.when('onYtunnus', {
+        is: true,
+        then: Joi.string().required().custom(ytunnusJoiValidator),
+        otherwise: Joi.string().allow('', null).optional(),
+    }),
     alkuPvm: Joi.custom(uiDateValidator).required(),
     organisaatioTyypit: Joi.array().items(Joi.string()).has(Joi.string().not(ORGANIAATIOTYYPPI_KUNTA).required()),
     kotipaikka: perustietoOptionSchemaRequired,

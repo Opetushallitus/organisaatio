@@ -200,6 +200,7 @@ const uiPerustiedot: Perustiedot = {
         { label: 'Peruskoulut', value: 'oppilaitostyyppi_11', arvo: '11', versio: 1, isDisabled: false },
     ],
     vuosiluokat: [],
+    onYtunnus: false,
 };
 describe('mapApiYhteysTietoArvotToUi', () => {
     it('Maps api yhteystietoarvot to Api format', () => {

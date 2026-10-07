@@ -9,7 +9,7 @@ export async function selectAll(page: Page) {
   await keyUpCtrlOrMeta(page);
 }
 
-export async function keyDownCtrlOrMeta(page) {
+export async function keyDownCtrlOrMeta(page: Page) {
   if (await isMac(page)) {
     await page.keyboard.down('Meta');
   } else {
@@ -17,7 +17,7 @@ export async function keyDownCtrlOrMeta(page) {
   }
 }
 
-export async function keyUpCtrlOrMeta(page) {
+export async function keyUpCtrlOrMeta(page: Page) {
   if (await isMac(page)) {
     await page.keyboard.up('Meta');
   } else {
@@ -25,7 +25,7 @@ export async function keyUpCtrlOrMeta(page) {
   }
 }
 
-export async function isMac(page) {
+export async function isMac(page: Page) {
   return page.evaluate(
     () =>
       typeof window !== 'undefined' &&
