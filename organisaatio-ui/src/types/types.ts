@@ -132,7 +132,7 @@ export type VakaToimipaikkaTiedot = {
 };
 export type Perustiedot = {
     ytunnus?: string;
-    onYtunnus?: boolean;
+    onYtunnus: boolean;
     organisaatioTyypit: OrganisaatioType[];
     alkuPvm: LocalDate;
     kotipaikka: KoodistoSelectOption;

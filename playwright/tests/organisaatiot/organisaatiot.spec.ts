@@ -804,7 +804,7 @@ test.describe("Organisations", () => {
       await page.getByText("LOMAKE_YHDISTA_ORGANISAATIO").click();
       await organisaatioPage.selectFromDropdown(
         "ORGANISAATIO_YHDISTYS_TOINEN_ORGANISAATIO",
-        child3.organisaatio.ytunnus,
+        child3.organisaatio.ytunnus as string,
       );
       await page.getByText("BUTTON_VAHVISTA").click();
       await expect(

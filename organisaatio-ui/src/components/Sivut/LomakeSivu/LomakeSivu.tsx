@@ -231,6 +231,7 @@ const LomakeSivu = () => {
                 muutKotipaikat,
                 alkuPvm: apiAlkuPvm ? getUiDateStr(apiAlkuPvm) : '',
                 lakkautusPvm: apiLakkautusPvm ? getUiDateStr(apiLakkautusPvm) : '',
+                onYtunnus: !!mappingYtunnus,
                 ytunnus: mappingYtunnus,
                 organisaatioTyypit: tyypit,
                 oppilaitosTyyppiUri: oppilaitostyyppiKoodisto.uri2SelectOption(
@@ -456,7 +457,7 @@ const LomakeSivu = () => {
                     watch={watchYhteystiedot}
                     setYhteystiedotValue={setYhteystiedotValue}
                     formControl={yhteystiedotControl}
-                    hasValidationErrors={Object.keys(yhteystiedotValidationErrors).length > 0}
+                    hasValidationErrors={!!Object.keys(yhteystiedotValidationErrors).length}
                     formRegister={yhteystiedotRegister}
                     key={YHTEYSTIEDOTID}
                     isYtj={!!ytunnus}

@@ -23,7 +23,7 @@ const virastoTunnus = Joi.string()
 
 export default Joi.object({
     nimi: Joi.object({ fi: Joi.string(), sv: Joi.string(), en: Joi.string() }).optional(),
-    onYtunnus: Joi.boolean().required(),
+    onYtunnus: Joi.boolean().optional(),
     ytunnus: Joi.when('onYtunnus', {
         is: true,
         then: Joi.string().required().custom(ytunnusJoiValidator),
