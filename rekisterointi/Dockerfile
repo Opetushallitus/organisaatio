@@ -24,7 +24,7 @@ RUN source "$NVM_DIR/nvm.sh" --no-use \
 WORKDIR /app
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
-FROM amazoncorretto:21.0.11@sha256:975b191f99b2f0fb9e76397b7d85523e9904dcb679e54d5f9099c1cdeab21cf1
+FROM amazoncorretto:25.0.5@sha256:be686934052c72a4ff4b087a504af6bf4fb8576eaf4a7bfb7f61b698269abc32
 WORKDIR /app
 
 COPY --from=build /app/target/rekisterointi.jar rekisterointi.jar
