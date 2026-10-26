@@ -1,17 +1,28 @@
 FROM maven:3.9.16-amazoncorretto-21-al2023@sha256:d2dddb696d1c1bd8c0cfb4fe6eb64c1ef4c91197d5eda1f6008db2f8d4aeb811 AS build
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ENV NVM_DIR=/opt/nvm
+
 WORKDIR /app
 
-RUN dnf install -y nodejs24 \
-  && alternatives --install /usr/bin/node node /usr/bin/node-24 90 \
-  && alternatives --install /usr/bin/npm npm /usr/bin/npm-24 90 \
-  && alternatives --install /usr/bin/npx npx /usr/bin/npx-24 90
 
-COPY package.json .
-COPY package-lock.json .
-RUN npm ci
+COPY .nvmrc ./
+COPY scripts/lib/nvm.sh ${NVM_DIR}/nvm.sh
 
-COPY . .
-RUN npm run build
+RUN source "$NVM_DIR/nvm.sh" --no-use \
+  && nvm install
+
+COPY varda-rekisterointi/package.json .
+COPY varda-rekisterointi/package-lock.json .
+RUN source "$NVM_DIR/nvm.sh" --no-use \
+    && nvm use \
+    && npm ci
+
+COPY varda-rekisterointi/ ./
+RUN source "$NVM_DIR/nvm.sh" --no-use \
+    && nvm use \
+    && npm run build
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
 FROM amazoncorretto:21.0.11@sha256:975b191f99b2f0fb9e76397b7d85523e9904dcb679e54d5f9099c1cdeab21cf1

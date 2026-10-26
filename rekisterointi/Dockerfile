@@ -1,16 +1,25 @@
 FROM maven:3.9.16-amazoncorretto-21-al2023@sha256:d2dddb696d1c1bd8c0cfb4fe6eb64c1ef4c91197d5eda1f6008db2f8d4aeb811 AS build
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ENV NVM_DIR=/opt/nvm
+
 WORKDIR /app
 
-RUN dnf install -y nodejs24 \
-  && alternatives --install /usr/bin/node node /usr/bin/node-24 90 \
-  && alternatives --install /usr/bin/npm npm /usr/bin/npm-24 90 \
-  && alternatives --install /usr/bin/npx npx /usr/bin/npx-24 90
 
-COPY . .
+COPY .nvmrc ./
+COPY scripts/lib/nvm.sh ${NVM_DIR}/nvm.sh
+
+RUN source "$NVM_DIR/nvm.sh" --no-use \
+  && nvm install
+
+COPY rekisterointi/ ./
 
 WORKDIR /app/rekisterointi-ui
-RUN npm ci
-RUN npm run build
+RUN source "$NVM_DIR/nvm.sh" --no-use \
+    && nvm use \
+    && npm ci \
+    && npm run build
 
 WORKDIR /app
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
