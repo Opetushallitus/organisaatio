@@ -805,8 +805,8 @@ class VardaRekisterointiApplicationStack extends cdk.Stack {
     });
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {
-      directory: path.join(__dirname, "../../varda-rekisterointi"),
-      file: "Dockerfile",
+      directory: path.join(__dirname, "../../"),
+      file: "varda-rekisterointi/Dockerfile",
       platform: ecr_assets.Platform.LINUX_ARM64,
     });
 
@@ -977,8 +977,8 @@ class RekisterointiApplicationStack extends cdk.Stack {
     });
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "AppImage", {
-      directory: path.join(__dirname, "../../rekisterointi"),
-      file: "Dockerfile",
+      directory: path.join(__dirname, "../../"),
+      file: "rekisterointi/Dockerfile",
       platform: ecr_assets.Platform.LINUX_ARM64,
     });
 
