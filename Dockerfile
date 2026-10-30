@@ -1,4 +1,4 @@
-FROM maven:3.10.0-amazoncorretto-21-al2023@sha256:4afe14b2d5f5f9449c3109c6b71ec7585ac31b1f578d057c3cd81354af604ee0 AS build
+FROM maven:3.10.0-amazoncorretto-21-al2023@sha256:be93cfd9103cf111289f4725d1fb08dfd6f31d77b77da338f87aa470642e8ce5 AS build
 WORKDIR /app
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -26,7 +26,7 @@ COPY pom.xml .
 
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
-FROM amazoncorretto:21@sha256:e1190de49fc07a399060e58c1d40145ce83ac2d15671405376b8fe0c2694c1fd
+FROM amazoncorretto:21@sha256:1a307926702559b0086a5c4d339eaafa9c992b3e8ba54201ac8ebbde31d22f0b
 WORKDIR /app
 
 COPY --from=build /app/organisaatio-service/target/organisaatio-service.jar organisaatio-service.jar
