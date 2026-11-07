@@ -16,7 +16,7 @@
         "@lexical/selection": "0.46.0",
         "@lexical/utils": "0.46.0",
         "@tanstack/react-table": "8.21.3",
-        "axios": "1.18.1",
+        "axios": "1.20.0",
         "axios-hooks": "^5.0.2",
         "date-fns": "^4.4.0",
         "joi": "^17.4.0",
