@@ -138,6 +138,7 @@ function select_java_version {
         ;;
     esac
     export JAVA_HOME
+    export PATH="${JAVA_HOME}/bin:${PATH}"
   fi
   java -version
 }
