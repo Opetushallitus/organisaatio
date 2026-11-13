@@ -102,7 +102,7 @@
         <dependency>
             <groupId>ch.qos.logback.access</groupId>
             <artifactId>logback-access-tomcat</artifactId>
-            <version>2.0.12</version>
+            <version>2.0.15</version>
         </dependency>
 
         <!-- Vendored fi.vm.sade.auditlog sources (from Opetushallitus/auditlogger) -->
