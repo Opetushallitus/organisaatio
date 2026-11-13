@@ -25,7 +25,7 @@ RUN source "$NVM_DIR/nvm.sh" --no-use \
     && npm run build
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
-FROM amazoncorretto:21@sha256:1a307926702559b0086a5c4d339eaafa9c992b3e8ba54201ac8ebbde31d22f0b
+FROM amazoncorretto:21@sha256:90100f194336ef2326f5efe1ee747395fd87d8210ad6d60463196aa0c4b0ad4e
 WORKDIR /app
 
 COPY --from=build /app/target/varda-rekisterointi.jar varda-rekisterointi.jar
