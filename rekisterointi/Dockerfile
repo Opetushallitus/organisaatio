@@ -1,4 +1,4 @@
-FROM maven:3.10.0-amazoncorretto-21-al2023@sha256:f7ccf5b5013cab77ba7f9137f5ce2fb573eb29791069d6cdd9bc9c1486065946 AS build
+FROM maven:3.10.0-amazoncorretto-21-al2023@sha256:c287cc32273f94ac4ab07ba68c92809374db696633307ae06887d902f4bfb93e AS build
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -24,7 +24,7 @@ RUN source "$NVM_DIR/nvm.sh" --no-use \
 WORKDIR /app
 RUN mvn clean package -s codebuild-mvn-settings.xml -DskipTests
 
-FROM amazoncorretto:21@sha256:90100f194336ef2326f5efe1ee747395fd87d8210ad6d60463196aa0c4b0ad4e
+FROM amazoncorretto:21@sha256:3284a05cb82e9bceb4857f9d70788a6f72681d9070b550ae5f477b5e3dc81a5c
 WORKDIR /app
 
 COPY --from=build /app/target/rekisterointi.jar rekisterointi.jar
