@@ -1,4 +1,4 @@
-FROM maven:3.10.0-amazoncorretto-21-al2023@sha256:c287cc32273f94ac4ab07ba68c92809374db696633307ae06887d902f4bfb93e AS build
+FROM maven:3.10.0-amazoncorretto-21-al2023@sha256:2d2f6cfef10fa7b8ef897aa98d61ee1d06ac888bba4daa4740e959ff3e3de351 AS build
 WORKDIR /app
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
